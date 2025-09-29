@@ -6,7 +6,7 @@ declare const navigationShellVariants: (props?: {
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const navigationContentVariants: (props?: {
     maxWidth?: "sm" | "lg" | "xl" | "2xl" | "md" | "full";
-    spacing?: "normal" | "tight" | "loose";
+    spacing?: "normal" | "loose" | "tight";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface NavigationItem {
     id: string;

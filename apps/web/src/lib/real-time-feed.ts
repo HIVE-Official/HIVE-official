@@ -224,7 +224,6 @@ export class RealTimeFeedManager {
         await this.checkForUpdates();
         this.scheduleNextRefresh(state); // Schedule next refresh
       } catch (error) {
-        console.error(`Failed to refresh feed for user ${this._userId}:`, error);
         // Retry with exponential backoff
         setTimeout(() => this.scheduleNextRefresh(state), Math.min(interval * 2, 300000));
       }
@@ -254,7 +253,6 @@ export class RealTimeFeedManager {
         }
       };
     } catch (error) {
-      console.error('Error getting user feed state:', error);
       return null;
     }
   }
@@ -274,7 +272,6 @@ export class RealTimeFeedManager {
         updatedAt: new Date()
       });
     } catch (error) {
-      console.error('Error saving user feed state:', error);
     }
   }
 
@@ -296,7 +293,6 @@ export class RealTimeFeedManager {
       
       return spaceIds;
     } catch (error) {
-      console.error('Error getting user space IDs:', error);
       return [];
     }
   }
@@ -310,7 +306,6 @@ export class RealTimeFeedManager {
       const aggregator = createFeedAggregator(this._userId, [spaceId]);
       return await aggregator.aggregateContent(limit);
     } catch (error) {
-      console.error(`Error getting space content for ${spaceId}:`, error);
       return [];
     }
   }
@@ -334,7 +329,6 @@ export class RealTimeFeedManager {
       
       await batch.commit();
     } catch (error) {
-      console.error('Error tracking view analytics:', error);
     }
   }
 
@@ -405,7 +399,6 @@ class FeedManagerRegistry {
    * Background job to warm feed caches
    */
   async warmAllCaches(): Promise<void> {
-    console.log('🔄 Starting feed cache warming...');
     
     try {
       // Get active users from last 24 hours
@@ -416,7 +409,6 @@ class FeedManagerRegistry {
         .limit(1000) // Process in batches
         .get();
       
-      console.log(`📊 Warming caches for ${activeUsersSnapshot.size} active users`);
       
       // Process users in batches to avoid overwhelming the system
       const batchSize = 10;
@@ -430,7 +422,6 @@ class FeedManagerRegistry {
             const manager = await this.getManager(doc.id);
             await manager.checkForUpdates();
           } catch (error) {
-            console.error(`Failed to warm cache for user ${doc.id}:`, error);
           }
         });
         
@@ -440,9 +431,7 @@ class FeedManagerRegistry {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      console.log('✅ Feed cache warming completed');
     } catch (error) {
-      console.error('❌ Feed cache warming failed:', error);
     }
   }
 }

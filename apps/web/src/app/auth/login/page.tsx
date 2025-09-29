@@ -1,58 +1,141 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Loader2, Mail, ArrowLeft, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import { HiveButton, HiveInput, HiveCard, HiveLogo } from '@hive/ui';
+import { HiveModal, HiveModalContent } from '@hive/ui';
 
 // Force dynamic rendering to avoid SSG issues with auth
 export const dynamic = 'force-dynamic';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { Loader2, Mail, ArrowLeft } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { HiveButton, HiveInput, HiveCard, HiveLogo } from "@hive/ui";
-import { HiveModal } from "@/components/temp-stubs";
 
 interface LoginFormData {
   email: string;
 }
 
+interface School {
+  id: string;
+  name: string;
+  domain: string;
+  location: string;
+}
+
 function LoginPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
-  // Safely get search params with null checks
-  const schoolId = searchParams?.get('schoolId') || null;
-  const schoolName = searchParams?.get('schoolName') || null;
-  const schoolDomain = searchParams?.get('domain') || null;
 
+  // Check for direct school params from URL or use multi-step flow
+  const urlSchoolId = searchParams?.get('schoolId');
+  const urlSchoolName = searchParams?.get('schoolName');
+  const urlSchoolDomain = searchParams?.get('domain');
+
+  // State management
+  const [currentStep, setCurrentStep] = useState<'school-selection' | 'email-input'>(
+    (urlSchoolId && urlSchoolName && urlSchoolDomain) ? 'email-input' : 'school-selection'
+  );
+  const [selectedSchool, setSelectedSchool] = useState<School | null>(
+    (urlSchoolId && urlSchoolName && urlSchoolDomain)
+      ? { id: urlSchoolId, name: urlSchoolName, domain: urlSchoolDomain, location: '' }
+      : null
+  );
   const [formData, setFormData] = useState<LoginFormData>({ email: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [devMagicLink, setDevMagicLink] = useState<string | null>(null);
-   
-  const [_isRedirecting, _setIsRedirecting] = useState(false);
+  const [schools, setSchools] = useState<School[]>([]);
+  const [schoolsLoading, setSchoolsLoading] = useState(true);
 
-  // Redirect if missing required school context
+  // Check if user is returning with school preference
   useEffect(() => {
-    if (!schoolId || !schoolName || !schoolDomain) {
-      router.push('/schools');
-    }
-  }, [schoolId, schoolName, schoolDomain, router]);
+    const lastSchool = localStorage.getItem('hive_last_school');
+    const returningUser = searchParams?.get('returning') === 'true';
 
-  // Show loading if redirecting due to missing school context
-  if (!schoolId || !schoolName || !schoolDomain) {
-    return (
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin mx-auto" />
-          <p className="text-[var(--hive-text-secondary)]">Redirecting to school selection...</p>
-        </div>
-      </div>
-    );
-  }
+    if (lastSchool && returningUser && !selectedSchool) {
+      try {
+        const school = JSON.parse(lastSchool);
+        setSelectedSchool(school);
+        setCurrentStep('email-input');
+      } catch (error) {
+        console.error('Failed to parse stored school:', error);
+        localStorage.removeItem('hive_last_school');
+      }
+    }
+  }, [searchParams, selectedSchool]);
+
+  // Fetch schools for selection
+  useEffect(() => {
+    async function fetchSchools() {
+      try {
+        const response = await fetch('/api/schools');
+        if (response.ok) {
+          const schoolsData = await response.json();
+          const activeSchools = schoolsData
+            .filter((school: any) => school?.status === 'active' && school.name && school.location)
+            .map((school: any) => ({
+              id: school.id,
+              name: school.name,
+              domain: school.domain,
+              location: typeof school.location === 'object'
+                ? [school.location.city, school.location.state].filter(Boolean).join(', ')
+                : school.location
+            }));
+          setSchools(activeSchools);
+        } else {
+          // Fallback for development
+          setSchools([
+            {
+              id: 'test-university',
+              name: 'Test University (Development)',
+              domain: 'test.edu',
+              location: 'Development, NY'
+            },
+            {
+              id: 'ub',
+              name: 'University at Buffalo',
+              domain: 'buffalo.edu',
+              location: 'Buffalo, NY'
+            }
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching schools:', error);
+        setSchools([{
+          id: 'test-university',
+          name: 'Test University (Development)',
+          domain: 'test.edu',
+          location: 'Development, NY'
+        }]);
+      } finally {
+        setSchoolsLoading(false);
+      }
+    }
+
+    if (currentStep === 'school-selection' && !selectedSchool) {
+      fetchSchools();
+    }
+  }, [currentStep, selectedSchool]);
+
+  const handleSchoolSelect = (school: School) => {
+    setSelectedSchool(school);
+    // Store school preference for returning users
+    localStorage.setItem('hive_last_school', JSON.stringify(school));
+    setCurrentStep('email-input');
+  };
+
+  const handleBackToSchoolSelection = () => {
+    setCurrentStep('school-selection');
+    setSelectedSchool(null);
+    setError(null);
+    setFormData({ email: '' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedSchool) return;
+
     setIsLoading(true);
     setError(null);
 
@@ -66,8 +149,8 @@ function LoginPageContent() {
 
     try {
       // Save email for magic link verification
-      window.localStorage.setItem('emailForSignIn', formData.email);
-      
+      localStorage.setItem('emailForSignIn', formData.email);
+
       const response = await fetch('/api/auth/send-magic-link', {
         method: 'POST',
         headers: {
@@ -75,19 +158,15 @@ function LoginPageContent() {
         },
         body: JSON.stringify({
           email: formData.email,
-          schoolId,
+          schoolId: selectedSchool.id,
         }),
       });
 
       const data = await response.json();
 
-
       if (!response.ok) {
         throw new Error(data.error || 'Failed to send magic link');
       }
-
-      // SECURITY: Development auth bypass removed for production safety
-      // All authentication must go through proper magic link verification
 
       // Store dev magic link if available
       if (data.devMode && data.magicLink) {
@@ -98,29 +177,25 @@ function LoginPageContent() {
     } catch (err) {
       console.error('Authentication error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
-      
-      // Provide more specific error messages with actionable advice
+
+      // Provide user-friendly error messages
       let userFriendlyError = errorMessage;
-      
+
       if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
         userFriendlyError = 'Network error. Please check your internet connection and try again.';
       } else if (errorMessage.includes('Invalid email')) {
         userFriendlyError = 'Please enter a valid email address.';
       } else if (errorMessage.includes('unauthorized') || errorMessage.includes('not authorized')) {
-        userFriendlyError = `This email is not authorized for ${schoolName}. Please use your @${schoolDomain} email address.`;
+        userFriendlyError = `This email is not authorized for ${selectedSchool?.name}. Please use your @${selectedSchool?.domain} email address.`;
       } else if (errorMessage.includes('rate limit')) {
         userFriendlyError = 'Too many attempts. Please wait a few minutes before trying again.';
-      } else if (errorMessage.includes('server') || errorMessage.includes('500')) {
-        userFriendlyError = 'Server error. Please try again in a few moments.';
-      } else if (errorMessage.includes('timeout')) {
-        userFriendlyError = 'Request timed out. Please check your connection and try again.';
       } else if (errorMessage.includes('domain')) {
-        userFriendlyError = `Please use your @${schoolDomain} email address for ${schoolName}.`;
+        userFriendlyError = `Please use your @${selectedSchool?.domain} email address for ${selectedSchool?.name}.`;
       }
-      
+
       setError(userFriendlyError);
-      
-      // Auto-clear error after 5 seconds for better UX
+
+      // Auto-clear error after 5 seconds
       setTimeout(() => {
         setError(null);
       }, 5000);
@@ -131,29 +206,29 @@ function LoginPageContent() {
 
   const validateEmail = (email: string): string | null => {
     if (!email) return null;
-    
+
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return 'Please enter a valid email address';
     }
-    
+
     // Domain validation (bypass for test.edu domain)
-    const isTestDomain = schoolDomain === 'test.edu';
-    if (!isTestDomain && schoolDomain && !email.toLowerCase().endsWith(`@${schoolDomain.toLowerCase()}`)) {
-      return `Please use your @${schoolDomain} email address`;
+    const isTestDomain = selectedSchool?.domain === 'test.edu';
+    if (!isTestDomain && selectedSchool?.domain && !email.toLowerCase().endsWith(`@${selectedSchool.domain.toLowerCase()}`)) {
+      return `Please use your @${selectedSchool.domain} email address`;
     }
-    
+
     return null;
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
     setFormData({ email });
-    
+
     // Clear previous errors
     setError(null);
-    
+
     // Validate email if not empty
     if (email.trim()) {
       const validationError = validateEmail(email.trim());
@@ -164,34 +239,48 @@ function LoginPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex flex-col">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-background-primary)] via-[var(--hive-background-secondary)] to-[var(--hive-background-primary)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.02)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.03)_0%,transparent_50%)]" />
-      
+    <div className="min-h-screen bg-[#0A0A0B] text-white flex flex-col relative overflow-hidden">
+      {/* Premium background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0B] via-[#0F0F10] to-[#0A0A0B]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.015)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.025)_0%,transparent_50%)]" />
+
+      {/* Floating glass orbs for ambiance */}
+      <div className="absolute top-20 left-[10%] w-32 h-32 bg-gradient-to-r from-white/[0.02] to-[#FFD700]/[0.03] rounded-full blur-3xl" />
+      <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[#FFD700]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
+
       {/* Header */}
-      <motion.div 
-        className="relative z-10 border-b border-[var(--hive-border-primary)]/20 backdrop-blur-sm"
+      <motion.div
+        className="relative z-10 border-b border-white/[0.08] backdrop-blur-xl"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
       >
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <Link 
-              href="/schools" 
-              className="flex items-center gap-2 text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] transition-colors duration-200 group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-              <span className="text-sm font-medium">Back to schools</span>
-            </Link>
-            
+            {currentStep === 'email-input' && selectedSchool ? (
+              <button
+                onClick={handleBackToSchoolSelection}
+                className="flex items-center gap-2 text-white/60 hover:text-white/90 transition-all duration-300 group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+                <span className="text-sm font-medium">Back to schools</span>
+              </button>
+            ) : (
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-white/60 hover:text-white/90 transition-all duration-300 group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+                <span className="text-sm font-medium">Back to home</span>
+              </Link>
+            )}
+
             <div className="absolute left-1/2 transform -translate-x-1/2">
-              <Link href="/landing" className="hover:opacity-80 transition-opacity duration-200">
+              <Link href="/" className="hover:opacity-80 transition-opacity duration-300">
                 <HiveLogo size="default" variant="gradient" showText={true} />
               </Link>
             </div>
-            
+
             <div className="w-32" />
           </div>
         </div>
@@ -200,216 +289,254 @@ function LoginPageContent() {
       {/* Main Content */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          
+
           {/* Development Mode Badge */}
-          {schoolDomain === 'test.edu' && (
+          {selectedSchool?.domain === 'test.edu' && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.1 }}
               className="mb-8"
             >
-              <HiveCard className="text-center p-4 bg-[var(--hive-overlay-gold-subtle)] border-[var(--hive-border-gold)]">
-                <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
+              <HiveCard className="text-center p-4 bg-[#FFD700]/[0.08] border-[#FFD700]/30 backdrop-blur-xl">
+                <p className="text-sm text-[#FFD700] font-medium">
                   🛠️ Development Mode Active
                 </p>
               </HiveCard>
             </motion.div>
           )}
 
-          {/* Title Section */}
-          <motion.div
-            className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h1 className="text-4xl lg:text-5xl font-bold text-[var(--hive-text-primary)] tracking-tight leading-tight mb-4">
-              Sign in to HIVE
-            </h1>
-            <p className="text-lg text-[var(--hive-text-secondary)] leading-relaxed">
-              Join <span className="text-[var(--hive-brand-primary)] font-semibold">{schoolName}</span> on HIVE
-            </p>
-          </motion.div>
-
-          {/* Login Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-6"
-          >
-            <HiveCard className="p-8 bg-[var(--hive-background-secondary)] border-[var(--hive-border-default)] shadow-[var(--hive-shadow-level2)]">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-[var(--hive-text-primary)] mb-3">
-                      School email address
-                    </label>
-                  <HiveInput
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleEmailChange}
-                    placeholder={schoolDomain === 'test.edu' ? 'Enter any email address (dev mode)' : `Enter your @${schoolDomain} address`}
-                    required
-                    disabled={isLoading}
-                    autoComplete="email"
-                    autoFocus
-                    variant={error ? 'destructive' : 'default'}
-                    size="lg"
-                    className="w-full"
-                    data-testid="email-input"
-                    aria-label={`Email address for ${schoolName}`}
-                    aria-required="true"
-                    aria-invalid={!!error}
-                    aria-describedby={error ? "email-error" : undefined}
-                  />
-                  </div>
-                  
-                  {!error && schoolDomain === 'test.edu' && (
-                    <p className="text-xs text-[var(--hive-text-tertiary)]">
-                      Dev mode: Any email will work for testing
-                    </p>
-                  )}
+          {/* School Selection Step */}
+          <AnimatePresence mode="wait">
+            {currentStep === 'school-selection' && (
+              <motion.div
+                key="school-selection"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 30 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <div className="text-center mb-10">
+                  <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+                    Welcome to HIVE
+                  </h1>
+                  <p className="text-lg text-white/70 leading-relaxed">
+                    Select your university to continue
+                  </p>
                 </div>
 
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div id="email-error" className="p-4 rounded-xl bg-[var(--hive-status-error)]/10 border border-[var(--hive-status-error)]/20">
-                        <p className="text-sm text-[var(--hive-status-error)]" role="alert" aria-live="polite">{error}</p>
+                <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+                  {schoolsLoading ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 text-[#FFD700] animate-spin" />
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <HiveButton
-                  type="submit"
-                  disabled={isLoading || !formData.email || !!error}
-                  variant="default"
-                  size="lg"
-                  className="w-full"
-                  data-testid="send-magic-link-button"
-                  aria-label="Send magic link to email"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>Sending magic link...</span>
+                      <p className="text-sm text-white/50 text-center">Loading universities...</p>
                     </div>
                   ) : (
-                    'Send magic link'
+                    <div className="space-y-3">
+                      {schools.map((school) => (
+                        <motion.button
+                          key={school.id}
+                          onClick={() => handleSchoolSelect(school)}
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          className="w-full p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] hover:border-[#FFD700]/30 hover:bg-[#FFD700]/[0.02] transition-all duration-300 group"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="text-left">
+                              <h3 className="font-semibold text-white group-hover:text-[#FFD700] transition-colors duration-200">
+                                {school.name}
+                              </h3>
+                              <p className="text-sm text-white/60 mt-1">{school.location}</p>
+                              <p className="text-xs text-white/40 mt-1 font-mono">@{school.domain}</p>
+                            </div>
+                            <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-[#FFD700] transition-colors duration-200" />
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
                   )}
-                </HiveButton>
-              </form>
-            </HiveCard>
-          </motion.div>
+                </HiveCard>
+              </motion.div>
+            )}
 
+            {/* Email Input Step */}
+            {currentStep === 'email-input' && selectedSchool && (
+              <motion.div
+                key="email-input"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <div className="text-center mb-10">
+                  <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+                    Sign in to HIVE
+                  </h1>
+                  <p className="text-lg text-white/70 leading-relaxed">
+                    Join <span className="text-[#FFD700] font-semibold">{selectedSchool.name}</span> on HIVE
+                  </p>
+                </div>
 
+                <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-white mb-3">
+                          School email address
+                        </label>
+                        <HiveInput
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleEmailChange}
+                          placeholder={selectedSchool.domain === 'test.edu' ? 'Enter any email address (dev mode)' : `Enter your @${selectedSchool.domain} address`}
+                          required
+                          disabled={isLoading}
+                          autoComplete="email"
+                          autoFocus
+                          variant={error ? 'destructive' : 'default'}
+                          size="lg"
+                          className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[#FFD700]/50 focus:ring-[#FFD700]/20 text-white placeholder-white/40"
+                          data-testid="email-input"
+                        />
+                      </div>
+
+                      {!error && selectedSchool.domain === 'test.edu' && (
+                        <p className="text-xs text-white/50">
+                          Dev mode: Any email will work for testing
+                        </p>
+                      )}
+                    </div>
+
+                    <AnimatePresence>
+                      {error && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                            <p className="text-sm text-red-400">{error}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <HiveButton
+                      type="submit"
+                      disabled={isLoading || !formData.email || !!error}
+                      variant="default"
+                      size="lg"
+                      className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+                      data-testid="send-magic-link-button"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center justify-center gap-3">
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>Sending magic link...</span>
+                        </div>
+                      ) : (
+                        'Send magic link'
+                      )}
+                    </HiveButton>
+                  </form>
+                </HiveCard>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Redirect Success Modal */}
-      <HiveModal
-        open={_isRedirecting}
-        onOpenChange={() => {}}
-        title="Authentication successful"
-        size="sm"
-        showCloseButton={false}
-      >
-        <motion.div 
-          className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
-            <Loader2 className="w-8 h-8 text-[var(--hive-status-success)] animate-spin" />
-          </div>
-          
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)]">
-              Welcome to HIVE!
-            </h3>
-            <p className="text-[var(--hive-text-secondary)]">
-              Redirecting you to the platform...
-            </p>
-          </div>
-        </motion.div>
-      </HiveModal>
-
-      {/* Success Modal */}
+      {/* Success Modal with Recovery Options */}
       <HiveModal
         open={success}
         onOpenChange={() => setSuccess(false)}
-        title="Check your inbox"
         size="sm"
       >
-        <motion.div 
-          className="text-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-status-success)]/20 border border-[var(--hive-status-success)]/30">
-            <Mail className="w-8 h-8 text-[var(--hive-status-success)]" />
-          </div>
-          
-          <div className="space-y-3">
-            <p className="text-[var(--hive-text-secondary)]">
-              Magic link sent to
-            </p>
-            <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
-              {formData.email}
-            </p>
-            
-            {/* Development mode - show the magic link */}
-            {devMagicLink && schoolDomain === 'test.edu' && (
-              <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
-                <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
-                  🛠️ Development Mode - Magic Link:
-                </p>
-                <a 
-                  href={devMagicLink}
-                  className="text-xs text-[var(--hive-brand-primary)] hover:underline break-all"
-                >
-                  {devMagicLink}
-                </a>
-              </HiveCard>
-            )}
-          </div>
+        <HiveModalContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
+          <motion.div
+            className="text-center space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#FFD700]/20 border border-[#FFD700]/30">
+              <Mail className="w-8 h-8 text-[#FFD700]" />
+            </div>
 
-          <div className="space-y-4 pt-4">
-            {devMagicLink && schoolDomain === 'test.edu' && (
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white">
+                Check your inbox!
+              </h3>
+              <p className="text-white/70">
+                We've sent a magic link to:
+              </p>
+              <p className="text-[#FFD700] font-semibold break-all">
+                {formData.email}
+              </p>
+              <p className="text-xs text-white/50">
+                The link will expire in 1 hour
+              </p>
+
+              {/* Development mode - show the magic link */}
+              {devMagicLink && selectedSchool?.domain === 'test.edu' && (
+                <HiveCard className="p-4 bg-[#FFD700]/10 border-[#FFD700]/30 text-left">
+                  <p className="text-xs text-[#FFD700] font-medium mb-2">
+                    🛠️ Development Mode - Magic Link:
+                  </p>
+                  <a
+                    href={devMagicLink}
+                    className="text-xs text-[#FFD700] hover:underline break-all"
+                  >
+                    {devMagicLink}
+                  </a>
+                </HiveCard>
+              )}
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {devMagicLink && selectedSchool?.domain === 'test.edu' && (
+                <HiveButton
+                  variant="default"
+                  size="lg"
+                  className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black"
+                  onClick={() => window.location.href = devMagicLink}
+                >
+                  Use Dev Magic Link
+                </HiveButton>
+              )}
+
               <HiveButton
                 variant="default"
                 size="lg"
-                className="w-full"
-                onClick={() => window.location.href = devMagicLink}
+                className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+                onClick={() => {
+                  setSuccess(false);
+                  setDevMagicLink(null);
+                }}
               >
-                Use Dev Magic Link
+                Close
               </HiveButton>
-            )}
-            <HiveButton
-              variant="secondary"
-              size="lg"
-              className="w-full"
-              onClick={() => {
-                setSuccess(false);
-                setDevMagicLink(null);
-              }}
-            >
-              Send another link
-            </HiveButton>
-          </div>
-        </motion.div>
+
+              <div className="pt-2 border-t border-white/[0.08]">
+                <p className="text-xs text-white/50 mb-2">
+                  Didn't receive the email?
+                </p>
+                <Link
+                  href={`/auth/expired?email=${encodeURIComponent(formData.email)}&schoolId=${selectedSchool?.id}`}
+                  className="text-sm text-[#FFD700] hover:text-[#FFD700]/80 transition-colors"
+                  onClick={() => setSuccess(false)}
+                >
+                  Request a new magic link →
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </HiveModalContent>
       </HiveModal>
     </div>
   );
@@ -418,10 +545,10 @@ function LoginPageContent() {
 function LoginPageWrapper() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
         <div className="flex items-center gap-3">
-          <Loader2 className="h-6 w-6 text-[var(--hive-brand-primary)] animate-spin" />
-          <span className="text-[var(--hive-text-secondary)]">Loading...</span>
+          <Loader2 className="h-6 w-6 text-[#FFD700] animate-spin" />
+          <span className="text-white/70">Loading...</span>
         </div>
       </div>
     }>

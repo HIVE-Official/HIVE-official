@@ -63,7 +63,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       //   authToken = await user.getIdToken();
       // }
 
-      console.log("Searching for:", searchQuery);
 
       const response = await fetch(`/api/spaces/browse?limit=30&search=${encodeURIComponent(searchQuery)}`, {
         headers: {
@@ -74,12 +73,10 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       if (!response.ok) {
         const errorData = await response.text();
-        console.error("API error response:", response.status, errorData);
         throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
-      console.log("Search results:", result.spaces?.length || 0);
       
       // Filter spaces based on user type
       const filteredSpaces = (result.spaces || []).filter((space: Space) => {
@@ -92,7 +89,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         return true;
       });
       
-      console.log("Spaces after filtering out campus living:", filteredSpaces.length);
       
       // Cache the results to avoid redundant API calls
       setSearchCache(prev => ({
@@ -102,7 +98,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       
       setSpaces(filteredSpaces);
     } catch (err) {
-      console.error("Error searching spaces:", err);
       setError(err instanceof Error ? err.message : "Failed to search spaces");
     } finally {
       setIsLoading(false);
@@ -123,8 +118,6 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
     setIsLoading(false);
   }, []);
 
-  console.log("Search term:", searchTerm);
-  console.log("Total spaces found:", spaces.length);
 
   const toggleSpaceSelection = (spaceId: string) => {
     const newSelectedSpaces = selectedSpaces.includes(spaceId)

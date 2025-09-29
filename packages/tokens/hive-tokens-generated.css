@@ -1,44 +1,67 @@
 /* HIVE Design Tokens CSS Custom Properties - Auto-generated from TypeScript tokens */
 :root {
-  /* HIVE Color Tokens */
-  --hive-color-void: #000000;
-  --hive-color-obsidian: #0A0A0B;
-  --hive-color-charcoal: #111113;
-  --hive-color-graphite: #1A1A1C;
-  --hive-color-slate: #222225;
-  --hive-color-steel: #2A2A2D;
-  --hive-color-platinum: #E5E5E7;
-  --hive-color-silver: #C1C1C4;
-  --hive-color-mercury: #9B9B9F;
-  --hive-color-pewter: #6B6B70;
-  --hive-color-smoke: #4A4A4F;
-  --hive-color-gold: #FFD700;
-  --hive-color-champagne: #F7E98E;
-  --hive-color-amber: #FFA500;
-  --hive-color-bronze: #CD7F32;
-  --hive-color-emerald: #10B981;
-  --hive-color-ruby: #EF4444;
-  --hive-color-sapphire: #3B82F6;
-  --hive-color-citrine: #F59E0B;
-  --hive-color-black: #0A0A0B;
-  --hive-color-white: #E5E5E7;
-  --hive-color-textMutedLight: #A1A1AA;
-  --hive-color-textMutedDark: #71717A;
-  --hive-color-backgroundOverlayLight: rgba(255, 255, 255, 0.02);
-  --hive-color-backgroundOverlayMedium: rgba(255, 255, 255, 0.05);
-  --hive-color-borderSubtle: rgba(255, 255, 255, 0.06);
-  --hive-color-borderInteractive: rgba(255, 255, 255, 0.1);
-  --hive-color-goldAccent: #FFD700;
-  --hive-color-goldHover: #FFE255;
-  --hive-color-gray: [object Object];
+  /* Backgrounds */
+  --hive-background-primary: #000000;
+  --hive-background-secondary: #171717;
+  --hive-background-tertiary: #262626;
+  --hive-background-interactive: #404040;
+  
+  /* Text */
+  --hive-text-primary: #FFFFFF;
+  --hive-text-secondary: #D4D4D4;
+  --hive-text-tertiary: #A3A3A3;
+  --hive-text-disabled: #525252;
+  
+  /* Brand */
+  --hive-brand-primary: #FFD700;
+  --hive-brand-secondary: #FFD700;
+  --hive-brand-hover: #FFD700;
+  --hive-brand-on-gold: #000000;
+  
+  /* Interactive */
+  --hive-interactive-hover: rgba(255, 255, 255, 0.04);
+  --hive-interactive-focus: #FFD700;
+  --hive-interactive-active: rgba(255, 255, 255, 0.08);
+  
+  /* Status */
+  --hive-status-success: #00D46A;
+  --hive-status-warning: #FFB800;
+  --hive-status-error: #FF3737;
+  --hive-status-info: #FFD700;
+  
+  /* Borders */
+  --hive-border-default: rgba(255, 255, 255, 0.08);
+  --hive-border-hover: rgba(255, 255, 255, 0.16);
+  --hive-border-focus: #FFD700;
+  --hive-border-strong: #404040;
 
   /* HIVE Semantic Colors */
-  --hive-background: [object Object];
-  --hive-text: [object Object];
-  --hive-brand: [object Object];
-  --hive-interactive: [object Object];
-  --hive-status: [object Object];
-  --hive-border: [object Object];
+  --hive-background-primary: #000000;
+  --hive-background-secondary: #171717;
+  --hive-background-tertiary: #262626;
+  --hive-background-interactive: #404040;
+  --hive-background-overlay: rgba(0, 0, 0, 0.6);
+  --hive-text-primary: #FFFFFF;
+  --hive-text-secondary: #D4D4D4;
+  --hive-text-tertiary: #A3A3A3;
+  --hive-text-disabled: #525252;
+  --hive-text-inverse: #000000;
+  --hive-brand-primary: #FFD700;
+  --hive-brand-secondary: #FFD700;
+  --hive-brand-hover: #FFD700;
+  --hive-brand-onGold: #000000;
+  --hive-interactive-hover: rgba(255, 255, 255, 0.04);
+  --hive-interactive-focus: #FFD700;
+  --hive-interactive-active: rgba(255, 255, 255, 0.08);
+  --hive-interactive-disabled: #404040;
+  --hive-status-success: #00D46A;
+  --hive-status-warning: #FFB800;
+  --hive-status-error: #FF3737;
+  --hive-status-info: #FFD700;
+  --hive-border-default: rgba(255, 255, 255, 0.08);
+  --hive-border-hover: rgba(255, 255, 255, 0.16);
+  --hive-border-focus: #FFD700;
+  --hive-border-strong: #404040;
 
   /* HIVE Overlay Colors */
   --hive-overlay-glass: rgba(255, 255, 255, 0.05);
@@ -244,8 +267,8 @@
 }
 
 .hive-font-display {
-  font-family: var(--hive-font-family-display, 'Space Grotesk', system-ui, sans-serif);
-  font-feature-settings: "ss01", "ss02", "cv01", "cv03";
+  font-family: var(--hive-font-family-sans, 'Geist Sans', system-ui, sans-serif);
+  font-feature-settings: "rlig" 1, "calt" 1;
   font-weight: var(--hive-font-weight-semibold, 600);
   letter-spacing: -0.025em;
 }

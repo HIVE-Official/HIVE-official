@@ -1,7 +1,3 @@
-/**
- * Universal Navigation System
- * Core navigation components that integrate with UniversalShell
- */
 import React from 'react';
 export interface NavItem {
     id: string;

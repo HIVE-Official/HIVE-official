@@ -1,5 +1,5 @@
 /* Import HIVE Design System Tokens - Single Source of Truth */
-@import "@hive/tokens/hive-tokens.css";
+@import "../../tokens/hive-tokens-generated.css";
 
 @tailwind base;
 @tailwind components;
@@ -40,7 +40,7 @@
   body {
     background-color: var(--hive-background-primary);
     color: var(--hive-text-primary);
-    font-family: var(--hive-font-family-sans, 'Geist', 'Inter', sans-serif);
+    font-family: var(--hive-font-family-sans, 'Geist Sans', system-ui, sans-serif);
   }
 
   /* === UTILITY CLASSES INHERITANCE === */

@@ -85,7 +85,6 @@ function VerifyPageContent() {
         if (data.devMode && data.sessionData) {
           // Store session in localStorage for development
           window.localStorage.setItem('hive_session', JSON.stringify(data.sessionData));
-          console.log('🔧 Development session created:', data.sessionData);
         }
 
         setStatus("success");
@@ -97,10 +96,8 @@ function VerifyPageContent() {
 
         // Redirect based on onboarding status
         setTimeout(() => {
-          // In development mode with sessionData, skip onboarding
-          if (data.devMode && data.sessionData) {
-            router.push("/profile");
-          } else if (data.needsOnboarding) {
+          // Check if onboarding is needed first, even in dev mode
+          if (data.needsOnboarding) {
             router.push("/onboarding");
           } else {
             router.push("/profile");
@@ -165,14 +162,41 @@ function VerifyPageContent() {
             "Unable to verify your magic link. The link may have expired or been used already."
           }
           action={
-            <HiveButton
-              variant="secondary"
-              size="lg"
-              className="w-full"
-              onClick={() => router.push("/schools")}
-            >
-              Try again
-            </HiveButton>
+            <div className="space-y-3">
+              {error?.includes("expired") || error?.includes("used") ? (
+                <>
+                  <HiveButton
+                    variant="default"
+                    size="lg"
+                    className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black"
+                    onClick={() => {
+                      const email = localStorage.getItem('emailForSignIn');
+                      const schoolId = new URLSearchParams(window.location.search).get('schoolId');
+                      router.push(`/auth/expired?email=${encodeURIComponent(email || '')}&schoolId=${schoolId}`);
+                    }}
+                  >
+                    Get a new magic link
+                  </HiveButton>
+                  <HiveButton
+                    variant="ghost"
+                    size="lg"
+                    className="w-full text-white/60 hover:text-white"
+                    onClick={() => router.push("/auth/login")}
+                  >
+                    Start over
+                  </HiveButton>
+                </>
+              ) : (
+                <HiveButton
+                  variant="secondary"
+                  size="lg"
+                  className="w-full"
+                  onClick={() => router.push("/auth/login")}
+                >
+                  Try again
+                </HiveButton>
+              )}
+            </div>
           }
         />
       )}

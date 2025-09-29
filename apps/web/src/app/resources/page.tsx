@@ -1,10 +1,31 @@
 "use client";
 
-import { Button, Card } from "@hive/ui";
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect } from 'react';
+
+// Temp fix for chunk 2073 useRef errors
+const Button = ({ children, variant = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
 import { PageContainer } from "@/components/temp-stubs";
 import { BookOpen, ExternalLink, Video, FileText, Code, Users, Star, Download } from 'lucide-react';
 
 export default function ResourcesPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent SSR hydration issues
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
   return (
     <PageContainer
       title="Resources"

@@ -44,7 +44,6 @@ export function AuthGuard({
         return;
       }
       
-      console.log('🔍 Onboarding required, redirecting to onboarding');
       router.push('/onboarding');
       return;
     }
@@ -55,7 +54,6 @@ export function AuthGuard({
       return;
     }
 
-    console.log('🔍 No redirect needed, allowing access');
   }, [isLoading, isAuthenticated, user, pathname, requireAuth, redirectTo, router]);
 
   // Show loading state while auth is initializing

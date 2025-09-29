@@ -178,7 +178,7 @@ const PageTitle = React.forwardRef<HTMLHeadingElement, PageTitleProps>(
 )
 PageTitle.displayName = "PageTitle"
 
-export interface PageDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type PageDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const PageDescription = React.forwardRef<HTMLParagraphElement, PageDescriptionProps>(
   ({ className, ...props }, ref) => {
@@ -212,7 +212,7 @@ const PageContent = React.forwardRef<HTMLDivElement, PageContentProps>(
 )
 PageContent.displayName = "PageContent"
 
-export interface PageFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type PageFooterProps = React.HTMLAttributes<HTMLDivElement>
 
 const PageFooter = React.forwardRef<HTMLDivElement, PageFooterProps>(
   ({ className, ...props }, ref) => {

@@ -1,218 +1,72 @@
 /**
- * HIVE Profile Domain Model
- * Unified data structure for all profile-related functionality
- * Following atomic design principles and HIVE brand system
+ * Profile Aggregate - Student Identity Domain
+ * Based on SPEC.md onboarding flow and profile requirements
  */
-export interface HiveProfileIdentity {
-    /** Unique user identifier */
-    id: string;
-    /** Full display name */
-    fullName: string;
-    /** Unique username handle */
-    handle: string;
-    /** Email address */
+import { UBEmail, Handle, ProfileId, PhotoUrl, Result } from './value-objects';
+export type HiveProfile = Profile;
+export interface ProfileCreationProps {
     email: string;
-    /** Profile avatar URL */
-    avatarUrl?: string;
+    firstName: string;
+    lastName: string;
+    handle: string;
 }
-export interface HiveAcademicInfo {
-    /** Academic major/program */
-    major?: string;
-    /** Academic year classification */
-    academicYear?: 'freshman' | 'sophomore' | 'junior' | 'senior' | 'graduate' | 'alumni' | 'faculty';
-    /** Expected graduation year */
-    graduationYear?: number;
-    /** School/university identifier */
-    schoolId?: string;
-    /** Housing information */
-    housing?: string;
-    /** Preferred pronouns */
-    pronouns?: string;
-}
-export interface HivePersonalInfo {
-    /** Personal bio/description */
+export interface PersonalInfo {
+    firstName: string;
+    lastName: string;
     bio?: string;
-    /** Current status message */
-    statusMessage?: string;
-    /** Location information */
-    location?: string;
-    /** Personal interests/tags */
+    major?: string;
+    graduationYear?: number;
+    dorm?: string;
+}
+export interface ProfileData {
+    id: ProfileId;
+    email: UBEmail;
+    handle: Handle;
+    personalInfo: PersonalInfo;
+    photos: PhotoUrl[];
     interests: string[];
+    connections: ProfileId[];
+    isOnboarded: boolean;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
-export interface HivePrivacySettings {
-    /** Profile visibility */
-    isPublic: boolean;
-    /** Show activity to others */
-    showActivity: boolean;
-    /** Show spaces membership */
-    showSpaces: boolean;
-    /** Show connections/network */
-    showConnections: boolean;
-    /** Allow direct messages */
-    allowDirectMessages: boolean;
-    /** Show online status */
-    showOnlineStatus: boolean;
-    /** Ghost mode settings */
-    ghostMode: {
-        enabled: boolean;
-        level: 'minimal' | 'moderate' | 'maximum';
-    };
+/**
+ * Profile Aggregate Root
+ * Represents a student's identity and campus presence
+ */
+export declare class Profile {
+    private data;
+    protected constructor(data: ProfileData);
+    get id(): ProfileId;
+    get email(): UBEmail;
+    get handle(): Handle;
+    get fullName(): string;
+    get firstName(): string;
+    get lastName(): string;
+    get bio(): string;
+    get major(): string;
+    get graduationYear(): number | undefined;
+    get isVerified(): boolean;
+    get isActive(): boolean;
+    set isActive(active: boolean);
+    get photos(): PhotoUrl[];
+    get interests(): string[];
+    get connections(): ProfileId[];
+    get isOnboarded(): boolean;
+    get createdAt(): Date;
+    static create(props: ProfileCreationProps): Result<Profile>;
+    updatePersonalInfo(info: Partial<PersonalInfo>): Result<void>;
+    addPhoto(photoUrl: string): Result<void>;
+    removePhoto(photoUrl: string): Result<void>;
+    updateInterests(interests: string[]): Result<void>;
+    addConnection(profileId: ProfileId): Result<void>;
+    removeConnection(profileId: ProfileId): Result<void>;
+    completeOnboarding(): Result<void>;
+    canJoinSpaces(): boolean;
+    canCreatePosts(): boolean;
+    toData(): ProfileData;
+    static fromData(data: ProfileData): Profile;
 }
-export interface HiveBuilderInfo {
-    /** Is user a HIVE builder */
-    isBuilder: boolean;
-    /** Has opted into builder program */
-    builderOptIn: boolean;
-    /** Builder experience level */
-    builderLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert';
-    /** Builder specializations */
-    specializations: string[];
-    /** Tools created count */
-    toolsCreated: number;
-}
-export interface HiveActivityStats {
-    /** Spaces joined */
-    spacesJoined: number;
-    /** Spaces actively participating in */
-    spacesActive: number;
-    /** Spaces leading/moderating */
-    spacesLed: number;
-    /** Tools used */
-    toolsUsed: number;
-    /** Social connections count */
-    connectionsCount: number;
-    /** Total platform activity score */
-    totalActivity: number;
-    /** Current activity streak (days) */
-    currentStreak: number;
-    /** Longest activity streak */
-    longestStreak: number;
-    /** Reputation/helpfulness score */
-    reputation: number;
-    /** Achievement count */
-    achievements: number;
-}
-export interface HiveTimestamps {
-    /** Account creation timestamp */
-    createdAt: string;
-    /** Last profile update */
-    updatedAt: string;
-    /** Last activity timestamp */
-    lastActiveAt: string;
-    /** Last seen timestamp */
-    lastSeenAt: string;
-}
-export interface HiveVerificationStatus {
-    /** Email verified */
-    emailVerified: boolean;
-    /** Profile verified by admin */
-    profileVerified: boolean;
-    /** Account status */
-    accountStatus: 'active' | 'suspended' | 'deactivated';
-    /** User type classification */
-    userType: 'student' | 'alumni' | 'faculty' | 'staff';
-    /** Onboarding completion status */
-    onboardingCompleted: boolean;
-}
-export interface HiveProfile {
-    identity: HiveProfileIdentity;
-    academic: HiveAcademicInfo;
-    personal: HivePersonalInfo;
-    privacy: HivePrivacySettings;
-    builder: HiveBuilderInfo;
-    stats: HiveActivityStats;
-    timestamps: HiveTimestamps;
-    verification: HiveVerificationStatus;
-}
-export interface HiveProfileUpdateData {
-    identity?: Partial<Pick<HiveProfileIdentity, 'fullName' | 'avatarUrl'>>;
-    academic?: Partial<HiveAcademicInfo>;
-    personal?: Partial<HivePersonalInfo>;
-    privacy?: Partial<HivePrivacySettings>;
-    builder?: Partial<Pick<HiveBuilderInfo, 'builderOptIn' | 'specializations'>>;
-}
-export interface HiveProfileCreateData {
-    identity: Omit<HiveProfileIdentity, 'id'>;
-    academic?: Partial<HiveAcademicInfo>;
-    personal?: Partial<HivePersonalInfo>;
-    privacy?: Partial<HivePrivacySettings>;
-    builder?: Partial<Pick<HiveBuilderInfo, 'builderOptIn'>>;
-}
-export interface HiveProfileResponse {
-    success: boolean;
-    profile?: HiveProfile;
-    message?: string;
-    error?: string;
-}
-export interface HiveProfileDashboard {
-    profile: HiveProfile;
-    recentSpaces: Array<{
-        id: string;
-        name: string;
-        type: string;
-        lastActivity: string;
-        memberCount: number;
-        role: string;
-    }>;
-    recentTools: Array<{
-        id: string;
-        name: string;
-        category: string;
-        lastUsed: string;
-        usageCount: number;
-        isCreated: boolean;
-    }>;
-    recentActivity: Array<{
-        id: string;
-        type: 'space' | 'tool' | 'social' | 'academic';
-        action: string;
-        title: string;
-        timestamp: string;
-    }>;
-    upcomingEvents: Array<{
-        id: string;
-        title: string;
-        description?: string;
-        startDate: string;
-        type: 'personal' | 'space';
-        spaceId?: string;
-    }>;
-}
-export interface HiveProfileAnalytics {
-    weeklyActivity: Array<{
-        week: string;
-        spacesActive: number;
-        toolsUsed: number;
-        timeSpent: number;
-    }>;
-    topSpaces: Array<{
-        id: string;
-        name: string;
-        timeSpent: number;
-        engagement: number;
-    }>;
-    topTools: Array<{
-        id: string;
-        name: string;
-        usageCount: number;
-        productivity: number;
-    }>;
-    socialMetrics: {
-        connectionsGrowth: number;
-        engagementRate: number;
-        helpfulnessScore: number;
-    };
-}
-export type HiveProfileVisibility = 'public' | 'private' | 'limited';
-export type HiveOnlineStatus = 'online' | 'away' | 'busy' | 'offline';
-export type HiveActivityType = 'space_visit' | 'tool_use' | 'social_interaction' | 'content_creation';
-export declare const DEFAULT_PRIVACY_SETTINGS: HivePrivacySettings;
-export declare const DEFAULT_BUILDER_INFO: HiveBuilderInfo;
-export declare function isValidHandle(handle: string): boolean;
-export declare function isValidEmail(email: string): boolean;
-export declare function getProfileCompleteness(profile: HiveProfile): number;
-export declare function getDisplayName(profile: HiveProfile): string;
-export declare function getProfileUrl(profile: HiveProfile): string;
-export declare function isProfilePublic(profile: HiveProfile): boolean;
-export declare function canViewProfile(viewerProfile: HiveProfile | null, targetProfile: HiveProfile): boolean;
 //# sourceMappingURL=profile.d.ts.map

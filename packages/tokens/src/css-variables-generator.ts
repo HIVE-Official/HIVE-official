@@ -2,12 +2,12 @@
 // Generates CSS custom properties from TypeScript design tokens
 // This ensures single source of truth between TS and CSS
 
-import { colors, semantic, overlay, shadows } from './colors';
+import { prdSemantic, prdCSSVariables } from './colors-prd-aligned';
+import { overlay, shadows } from './colors';
 import { typography } from './typography';
-import { spacing, layoutSizes } from './spacing';
+import { spacing } from './spacing';
 import { radius } from './radius';
 import { motion } from './motion';
-import { effects } from './effects';
 
 /**
  * Generate CSS custom properties from design tokens
@@ -18,16 +18,41 @@ export function generateCSSVariables(): string {
     ':root {',
   ];
 
-  // HIVE Core Colors
-  cssVariables.push('  /* HIVE Color Tokens */');
-  Object.entries(colors).forEach(([key, value]) => {
-    cssVariables.push(`  --hive-color-${key}: ${value};`);
+  // Add the PRD-aligned CSS variables directly (skip the header :root)
+  const prdCSS = prdCSSVariables.split('\n').slice(3, -2); // Skip header and remove closing }
+  cssVariables.push(...prdCSS);
+
+  // Add semantic colors with proper object handling
+  cssVariables.push('\n  /* HIVE Semantic Colors */');
+
+  // Background colors
+  Object.entries(prdSemantic.background).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-background-${key}: ${value};`);
   });
 
-  // Semantic Colors
-  cssVariables.push('\n  /* HIVE Semantic Colors */');
-  Object.entries(semantic).forEach(([key, value]) => {
-    cssVariables.push(`  --hive-${key}: ${value};`);
+  // Text colors
+  Object.entries(prdSemantic.text).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-text-${key}: ${value};`);
+  });
+
+  // Brand colors
+  Object.entries(prdSemantic.brand).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-brand-${key}: ${value};`);
+  });
+
+  // Interactive states
+  Object.entries(prdSemantic.interactive).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-interactive-${key}: ${value};`);
+  });
+
+  // Status colors
+  Object.entries(prdSemantic.status).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-status-${key}: ${value};`);
+  });
+
+  // Border colors
+  Object.entries(prdSemantic.border).forEach(([key, value]) => {
+    cssVariables.push(`  --hive-border-${key}: ${value};`);
   });
 
   // Overlay Colors
@@ -164,11 +189,11 @@ export function generateUtilityClasses(): string {
   transition-duration: var(--hive-duration-quick, 0.2s);
 }`);
 
-  // Typography utilities
+  // Typography utilities - Unified Geist Sans
   utilityClasses.push(`
 .hive-font-display {
-  font-family: var(--hive-font-family-display, 'Space Grotesk', system-ui, sans-serif);
-  font-feature-settings: "ss01", "ss02", "cv01", "cv03";
+  font-family: var(--hive-font-family-sans, 'Geist Sans', system-ui, sans-serif);
+  font-feature-settings: "rlig" 1, "calt" 1;
   font-weight: var(--hive-font-weight-semibold, 600);
   letter-spacing: -0.025em;
 }

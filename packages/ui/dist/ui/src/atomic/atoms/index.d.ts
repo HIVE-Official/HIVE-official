@@ -6,6 +6,7 @@ export { Button, buttonVariants } from "./button";
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card";
 export { Checkbox, checkboxVariants } from "./checkbox";
 export { CheckIcon } from "./check-icon";
+export { Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandShortcut, CommandSeparator, } from "./command";
 export { HiveButton, hiveButtonVariants } from "./hive-button";
 export { HiveCard, HiveCardHeader, HiveCardFooter, HiveCardTitle, HiveCardDescription, HiveCardContent, hiveCardVariants, } from "./hive-card";
 export { HiveInput, hiveInputVariants } from "./hive-input";
@@ -27,4 +28,8 @@ export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants, tabsTrigger
 export { Textarea, textareaVariants } from "./textarea";
 export { TextareaEnhanced, textareaEnhancedVariants } from "./textarea-enhanced";
 export { TopBarNav, topBarNavVariants, topBarNavIconVariants, topBarNavLabelVariants } from "./top-bar-nav";
+export { PresenceIndicator } from "./presence-indicator";
+export type { PresenceIndicatorProps, PresenceStatus } from "./presence-indicator";
+export { NotificationBell } from "./notification-bell";
+export { NotificationItem } from "./notification-item";
 //# sourceMappingURL=index.d.ts.map

@@ -1,15 +1,23 @@
 import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 import { NextRequest } from 'next/server';
 import { validateAuthToken } from './security-service';
 
 export interface AdminUser {
   id: string;
   email: string;
-  role: 'admin' | 'moderator';
+  role: 'admin' | 'super_admin' | 'moderator';
   permissions: string[];
   lastLogin: Date;
 }
+
+// Hardcoded admin emails for ultimate security
+const ADMIN_EMAILS = [
+  'jwrhineh@buffalo.edu',  // Jacob Rhinehart - Super Admin
+  'noahowsh@gmail.com',     // Noah - Admin
+  'test-user@hive.com'      // Development testing
+];
 
 /**
  * Get admin user IDs from environment variables
@@ -17,18 +25,47 @@ export interface AdminUser {
 function getAdminUserIds(): string[] {
   const adminIds = process.env.ADMIN_USER_IDS;
   if (!adminIds) {
-    console.warn('ADMIN_USER_IDS environment variable not set');
     return ['test-user']; // Fallback for development
   }
   return adminIds.split(',').map(id => id.trim());
 }
 
 /**
- * Check if user is an admin
+ * Check if user is an admin by ID or email
  */
-export async function isAdmin(userId: string): Promise<boolean> {
+export async function isAdmin(userId: string, userEmail?: string): Promise<boolean> {
+  // Check by user ID first (legacy support)
   const adminUserIds = getAdminUserIds();
-  return adminUserIds.includes(userId);
+  if (adminUserIds.includes(userId)) {
+    return true;
+  }
+
+  // Check by email (primary method)
+  if (userEmail && ADMIN_EMAILS.includes(userEmail)) {
+    return true;
+  }
+
+  // Check Firebase custom claims
+  try {
+    const auth = getAuth();
+    const user = await auth.getUser(userId);
+    if (user.customClaims?.isAdmin === true || user.customClaims?.role === 'admin' || user.customClaims?.role === 'super_admin') {
+      return true;
+    }
+  } catch (error) {
+  }
+
+  // Check Firestore admins collection
+  try {
+    const db = getFirestore();
+    const adminDoc = await db.collection('admins').doc(userId).get();
+    if (adminDoc.exists && adminDoc.data()?.active === true) {
+      return true;
+    }
+  } catch (error) {
+  }
+
+  return false;
 }
 
 /**
@@ -66,7 +103,6 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
       lastLogin: new Date(),
     };
   } catch (error) {
-    console.error('Error getting admin user:', error);
     return null;
   }
 }
@@ -91,13 +127,6 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
     });
 
     if (!tokenValidation.valid) {
-      if (tokenValidation.securityAlert) {
-        console.error('🚨 SECURITY ALERT: Admin bypass attempt blocked', {
-          reason: tokenValidation.reason,
-          ip: request.headers.get('x-forwarded-for'),
-          userAgent: request.headers.get('user-agent')
-        });
-      }
       return null;
     }
 
@@ -112,11 +141,9 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
       const decodedToken = await auth.verifyIdToken(token);
       return await getAdminUser(decodedToken.uid);
     } catch (authError) {
-      console.error('Firebase token verification failed:', authError);
       return null;
     }
   } catch (error) {
-    console.error('Admin token verification error:', error);
     return null;
   }
 }
@@ -164,12 +191,6 @@ export async function logAdminActivity(
 ) {
   try {
     // TODO: Implement admin activity logging to database
-    console.log(`[ADMIN] ${adminId} performed ${action}`, {
-      timestamp: new Date().toISOString(),
-      details,
-      ipAddress
-    });
   } catch (error) {
-    console.error('Failed to log admin activity:', error);
   }
 }

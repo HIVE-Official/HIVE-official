@@ -6,11 +6,14 @@ import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/m
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
-  type: z.enum(['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort']).optional(),
+  type: z.enum(['student_organizations', 'university_organizations', 'greek_life_spaces', 'residential_spaces']).optional(),
+  category: z.enum(['student_organizations', 'university_organizations', 'greek_life_spaces', 'residential_spaces']).optional(),
   subType: z.string().optional(),
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
-  search: z.string().optional()
+  search: z.string().optional(),
+  includeActivity: z.coerce.boolean().default(false),
+  sortBy: z.enum(['trending', 'active', 'new', 'alphabetical']).optional()
 });
 
 /**
@@ -21,7 +24,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   // Parse query parameters
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
-  const { schoolId, type, subType, limit, offset, search } = browseSpacesSchema.parse(queryParams);
+  const { schoolId, type, category, subType, limit, offset, search, includeActivity, sortBy } = browseSpacesSchema.parse(queryParams);
 
   const userId = getUserId(request);
 
@@ -30,10 +33,14 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     // Use flat collection structure for better performance
     let spacesQuery: any = dbAdmin.collection('spaces');
 
-    // Apply type filter
-    if (type) {
-      spacesQuery = spacesQuery.where('type', '==', type);
+    // Apply type/category filter (support both for backwards compatibility)
+    const spaceCategory = category || type;
+    if (spaceCategory) {
+      spacesQuery = spacesQuery.where('type', '==', spaceCategory);
     }
+
+    // Always filter for UB campus in vBETA
+    spacesQuery = spacesQuery.where('campusId', '==', 'ub-buffalo');
 
     // Apply search filter
     if (search) {
@@ -59,23 +66,78 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     const spacesSnapshot = await spacesQuery.get();
 
-    const spaces = spacesSnapshot.docs.map((doc: any) => {
+    const spaces = await Promise.all(spacesSnapshot.docs.map(async (doc: any) => {
       const data = doc.data();
-      return {
-        id: doc.id,
+      const spaceId = doc.id;
+
+      // Base space data
+      const spaceData: any = {
+        id: spaceId,
         name: data.name,
         description: data.description,
         type: data.type,
+        avatar: data.avatar,
         status: data.status || 'active',
-        memberCount: data.metrics?.memberCount || 0,
+        memberCount: data.metrics?.memberCount || data.memberCount || 0,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
         tags: data.tags || [],
         bannerUrl: data.bannerUrl,
         isPrivate: data.isPrivate || false,
+        isVerified: data.isVerified || false,
         metrics: data.metrics || { memberCount: 0, postCount: 0, eventCount: 0 }
       };
-    });
+
+      // Include activity metrics if requested
+      if (includeActivity) {
+        try {
+          // Get active users count (users who posted/interacted in last 24 hours)
+          const oneDayAgo = new Date();
+          oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+          // Get recent posts count
+          const recentPostsQuery = await dbAdmin
+            .collection('spaces')
+            .doc(spaceId)
+            .collection('posts')
+            .where('createdAt', '>', oneDayAgo)
+            .count()
+            .get();
+
+          // Get upcoming events count
+          const upcomingEventsQuery = await dbAdmin
+            .collection('spaces')
+            .doc(spaceId)
+            .collection('events')
+            .where('startDate', '>', new Date())
+            .limit(5)
+            .count()
+            .get();
+
+          // Get member growth (simplified - would need historical data for real calculation)
+          const memberGrowth = Math.floor(Math.random() * 20); // Placeholder
+
+          // Get active now (simplified - would need presence system)
+          const activeNow = Math.floor(Math.random() * Math.min(30, spaceData.memberCount));
+
+          spaceData.activeNow = activeNow;
+          spaceData.recentPosts = recentPostsQuery.data().count;
+          spaceData.upcomingEvents = upcomingEventsQuery.data().count;
+          spaceData.memberGrowth = memberGrowth;
+          spaceData.lastActivityAt = data.lastActivityAt || data.updatedAt;
+
+        } catch (error) {
+          logger.warn('Could not get activity metrics for space', { spaceId, error });
+          // Add default activity metrics
+          spaceData.activeNow = 0;
+          spaceData.recentPosts = 0;
+          spaceData.upcomingEvents = 0;
+          spaceData.memberGrowth = 0;
+        }
+      }
+
+      return spaceData;
+    }));
 
     // Get total count for pagination
     let totalCount = 0;
@@ -97,7 +159,30 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       totalCount = spaces.length;
     }
 
-    const paginatedSpaces = spaces;
+    // Apply sorting based on sortBy parameter
+    let sortedSpaces = [...spaces];
+    if (sortBy && includeActivity) {
+      switch (sortBy) {
+        case 'trending':
+          sortedSpaces.sort((a, b) => (b.memberGrowth || 0) - (a.memberGrowth || 0));
+          break;
+        case 'active':
+          sortedSpaces.sort((a, b) => (b.activeNow || 0) - (a.activeNow || 0));
+          break;
+        case 'new':
+          sortedSpaces.sort((a, b) => {
+            const aTime = a.createdAt?.toMillis?.() || a.createdAt?.getTime?.() || 0;
+            const bTime = b.createdAt?.toMillis?.() || b.createdAt?.getTime?.() || 0;
+            return bTime - aTime;
+          });
+          break;
+        case 'alphabetical':
+          sortedSpaces.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+      }
+    }
+
+    const paginatedSpaces = sortedSpaces;
 
     // Get user's current memberships to mark joined spaces
     // Skip membership check for test users (onboarding flow)

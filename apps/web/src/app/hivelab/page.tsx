@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import { useState, useCallback } from 'react';
 import { VisualToolComposer } from '@/components/tools/visual-tool-composer';
 
@@ -22,7 +25,6 @@ export default function HiveLabPage() {
     (async () => {
       try {
         // In a real app, this would save to the backend
-        console.log('Saving tool:', tool);
         
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -30,7 +32,6 @@ export default function HiveLabPage() {
         alert(`Tool "${tool.name}" saved successfully!`);
         setCurrentTool(tool);
       } catch (error) {
-        console.error('Failed to save tool:', error);
         alert('Failed to save tool. Please try again.');
       }
     })();
@@ -38,7 +39,6 @@ export default function HiveLabPage() {
 
   // Handle tool preview
   const handleToolPreview = useCallback((tool: Tool) => {
-    console.log('Previewing tool:', tool);
     // Preview is handled within the VisualToolBuilder
   }, []);
 

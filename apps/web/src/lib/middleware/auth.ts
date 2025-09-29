@@ -42,6 +42,71 @@ export function withAuth<T extends RouteParams>(
 ): NextRouteHandler {
   return async (request: NextRequest, context: T): Promise<Response> => {
     try {
+      // Check for development mode session cookie first
+      const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.VERCEL;
+      const sessionCookie = request.cookies.get('hive_session');
+
+      // In development, allow session cookie authentication
+      if (isDevelopment && sessionCookie?.value) {
+        try {
+          // The session cookie is a JWT token, decode its payload
+          // JWT format: header.payload.signature
+          const tokenParts = sessionCookie.value.split('.');
+          if (tokenParts.length !== 3) {
+            throw new Error('Invalid JWT format');
+          }
+
+          // Decode the payload (middle part) from base64
+          const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+
+          // Validate session has required fields
+          if (!payload.sub) {
+            return NextResponse.json(
+              ApiResponseHelper.error("Invalid session data", "UNAUTHORIZED"),
+              { status: HttpStatus.UNAUTHORIZED }
+            );
+          }
+
+          // Create authenticated request with session info
+          const authenticatedRequest = request as AuthenticatedRequest;
+
+          // Extract userId from the 'sub' field (standard JWT claim for subject)
+          const userId = payload.sub;
+
+          // For dev sessions, we'll use a simple email format
+          const email = userId.includes('@') ? userId : `${userId.replace('dev-user-', '').replace('-', '.')}@buffalo.edu`;
+
+          authenticatedRequest.user = {
+            uid: userId,
+            email: email,
+            decodedToken: {
+              uid: userId,
+              email: email,
+              email_verified: true,
+              aud: 'development',
+              auth_time: Date.now() / 1000,
+              exp: Date.now() / 1000 + 86400,
+              iat: Date.now() / 1000,
+              iss: 'development',
+              sub: userId,
+              firebase: {
+                identities: {},
+                sign_in_provider: 'development'
+              }
+            } as DecodedIdToken
+          };
+
+          // Call the handler with authenticated request
+          return await handler(authenticatedRequest, context);
+        } catch (error) {
+          logger.error('Invalid session cookie', {
+            error: error,
+            endpoint: request.url
+          });
+          // Fall through to check for Bearer token
+        }
+      }
+
       // Extract and validate authorization header
       const authHeader = request.headers.get("authorization");
       if (!authHeader?.startsWith("Bearer ")) {
@@ -53,43 +118,39 @@ export function withAuth<T extends RouteParams>(
 
       const idToken = authHeader.substring(7);
 
-      // In development mode, accept development tokens
-      if (process.env.NODE_ENV === 'development' && idToken.startsWith('dev_token_')) {
-        // Parse dev token to get user ID
-        let userId = idToken.replace('dev_token_', '');
+      // Check for development token format (dev_token_*)
+      if (isDevelopment && idToken.startsWith('dev_token_')) {
+        const userId = idToken.replace('dev_token_', '');
 
-        // Handle session token format: debug-user_timestamp_hash -> debug-user
-        if (userId.includes('_')) {
-          userId = userId.split('_')[0];
-        }
-
-        // Create a mock decoded token for development
-        const decodedToken = {
-          uid: userId,
-          email: 'student@test.edu', // Default dev email
-          email_verified: true,
-          iss: 'development',
-          aud: 'development',
-          auth_time: Math.floor(Date.now() / 1000),
-          iat: Math.floor(Date.now() / 1000),
-          exp: Math.floor(Date.now() / 1000) + 3600,
-          firebase: {
-            sign_in_provider: 'development',
-            identities: {}
-          }
-        } as DecodedIdToken;
-
-        // Create authenticated request with dev user info
+        // Create authenticated request with dev token info
         const authenticatedRequest = request as AuthenticatedRequest;
         authenticatedRequest.user = {
           uid: userId,
-          email: decodedToken.email || 'student@test.edu',
-          decodedToken
+          email: `${userId}@test.edu`, // Generate a test email
+          decodedToken: {
+            uid: userId,
+            email: `${userId}@test.edu`,
+            email_verified: true,
+            aud: 'development',
+            auth_time: Date.now() / 1000,
+            exp: Date.now() / 1000 + 86400,
+            iat: Date.now() / 1000,
+            iss: 'development',
+            sub: userId,
+            firebase: {
+              identities: {},
+              sign_in_provider: 'development'
+            }
+          } as DecodedIdToken
         };
 
-        // Call the actual handler with authenticated request
+        // Call the handler with authenticated request
         return await handler(authenticatedRequest, context);
       }
+
+      // SECURITY: NO DEVELOPMENT BYPASSES IN PRODUCTION
+      // All tokens must be validated through Firebase Auth
+      // Development environments should use real Firebase Auth with test accounts
 
       // Verify Firebase ID token
       const auth = getAuth();

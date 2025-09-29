@@ -35,11 +35,9 @@ export interface SelectItemProps extends React.HTMLAttributes<HTMLDivElement>, V
     disabled?: boolean;
 }
 declare const SelectItem: React.ForwardRefExoticComponent<SelectItemProps & React.RefAttributes<HTMLDivElement>>;
-export interface SelectLabelProps extends React.HTMLAttributes<HTMLDivElement> {
-}
+export type SelectLabelProps = React.HTMLAttributes<HTMLDivElement>;
 declare const SelectLabel: React.ForwardRefExoticComponent<SelectLabelProps & React.RefAttributes<HTMLDivElement>>;
-export interface SelectSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
-}
+export type SelectSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 declare const SelectSeparator: React.ForwardRefExoticComponent<SelectSeparatorProps & React.RefAttributes<HTMLDivElement>>;
 export { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectLabel, SelectSeparator, selectVariants, selectContentVariants, selectItemVariants, };
 //# sourceMappingURL=select.d.ts.map

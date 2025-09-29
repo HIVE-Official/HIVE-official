@@ -23,6 +23,11 @@ export function useRealtimeSpaces(options: UseRealtimeSpacesOptions = {}) {
       // Build query constraints
       const constraints: QueryConstraint[] = [];
 
+      // SECURITY: Campus isolation is MANDATORY
+      const campusId = 'ub-buffalo'; // Hardcoded for UB launch
+      constraints.push(where('campusId', '==', campusId));
+      constraints.push(where('isActive', '==', true));
+
       // Add type filter
       if (filterType && filterType !== 'all') {
         constraints.push(where('type', '==', filterType));
@@ -67,17 +72,13 @@ export function useRealtimeSpaces(options: UseRealtimeSpacesOptions = {}) {
             const changes = snapshot.docChanges();
             changes.forEach(change => {
               if (change.type === 'added') {
-                console.log('🆕 New space:', change.doc.data().name);
               } else if (change.type === 'modified') {
-                console.log('📝 Space updated:', change.doc.data().name);
               } else if (change.type === 'removed') {
-                console.log('🗑️ Space removed:', change.doc.data().name);
               }
             });
           }
         },
         (err) => {
-          console.error('Real-time spaces error:', err);
           setError(err as Error);
           setLoading(false);
         }
@@ -85,11 +86,9 @@ export function useRealtimeSpaces(options: UseRealtimeSpacesOptions = {}) {
 
       // Cleanup function
       return () => {
-        console.log('🔌 Unsubscribing from real-time spaces');
         unsubscribe();
       };
     } catch (err) {
-      console.error('Failed to set up real-time listener:', err);
       setError(err as Error);
       setLoading(false);
     }

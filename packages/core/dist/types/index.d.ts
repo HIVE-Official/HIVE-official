@@ -58,7 +58,6 @@ export interface Tool extends BaseEntity {
     usageCount: number;
     rating?: number;
 }
-export type { Post } from '../domain/firestore/post';
 export interface Profile extends BaseEntity {
     userId: string;
     displayName: string;
@@ -142,4 +141,5 @@ export declare enum PostType {
     POLL = "poll",
     EVENT = "event"
 }
+export * from './profile-system';
 //# sourceMappingURL=index.d.ts.map

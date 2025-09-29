@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * HIVE Modal Component
  * Simple modal wrapper that integrates with the design system
@@ -50,7 +52,7 @@ export function HiveModal({
 
       {/* Modal */}
       <div className={cn(
-        'relative w-full mx-4 bg-gray-900 border border-gray-700 rounded-lg shadow-xl',
+        'relative w-full mx-4 bg-hive-background-secondary border border-hive-border-primary rounded-lg shadow-xl',
         sizeClasses[size],
         className
       )}>
@@ -73,13 +75,13 @@ export function HiveModalHeader({
   onClose?: () => void;
 }) {
   return (
-    <div className={cn('px-6 pt-6 pb-4 border-b border-gray-800', className)}>
+    <div className={cn('px-6 pt-6 pb-4 border-b border-hive-border-secondary', className)}>
       <div className="flex items-start justify-between">
         <div className="flex-1">{children}</div>
         {showCloseButton && onClose && (
           <button
             onClick={onClose}
-            className="ml-4 text-gray-400 hover:text-white transition-colors"
+            className="ml-4 text-hive-text-muted hover:text-hive-text-primary transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -97,7 +99,7 @@ export function HiveModalTitle({
   className?: string;
 }) {
   return (
-    <h2 className={cn('text-xl font-semibold text-white', className)}>
+    <h2 className={cn('text-xl font-semibold text-hive-text-primary', className)}>
       {children}
     </h2>
   );
@@ -111,7 +113,7 @@ export function HiveModalDescription({
   className?: string;
 }) {
   return (
-    <p className={cn('mt-2 text-sm text-gray-400', className)}>
+    <p className={cn('mt-2 text-sm text-hive-text-secondary', className)}>
       {children}
     </p>
   );
@@ -139,7 +141,7 @@ export function HiveModalFooter({
   className?: string;
 }) {
   return (
-    <div className={cn('px-6 pb-6 pt-4 border-t border-gray-800', className)}>
+    <div className={cn('px-6 pb-6 pt-4 border-t border-hive-border-secondary', className)}>
       {children}
     </div>
   );

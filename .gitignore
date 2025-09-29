@@ -91,6 +91,10 @@ jspm_packages/
 .env.test.local
 .env.production.local
 .env.local
+.env.production
+.env.development
+.env.staging
+*.env
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
@@ -149,3 +153,4 @@ fix-*.js
 # Archived scripts (one-time fixes)
 scripts/archive/
 firebase/node_modules
+apps/web/.env.production

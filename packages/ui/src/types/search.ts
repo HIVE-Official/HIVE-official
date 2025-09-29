@@ -11,7 +11,7 @@ export interface SearchableItem {
   type: 'space' | 'tool' | 'person' | 'event' | 'post' | 'command';
   keywords?: string[];
   action?: () => void;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SearchResult<T = SearchableItem> {

@@ -274,7 +274,6 @@ class AdminActivityLogger {
     try {
       await dbAdmin.collection('adminActivityLogs').doc(log.id).set(log);
     } catch (error) {
-      console.error('Failed to persist activity log:', error);
     }
   }
 
@@ -294,9 +293,7 @@ class AdminActivityLogger {
       });
 
       await batch.commit();
-      console.log(`Cleaned up ${oldLogs.docs.length} old activity logs`);
     } catch (error) {
-      console.error('Failed to cleanup old logs from database:', error);
     }
   }
 }

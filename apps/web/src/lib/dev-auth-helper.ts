@@ -1,7 +1,13 @@
 /**
  * DEVELOPMENT-ONLY Authentication Helper
+ * SECURITY: This file is completely disabled in production
  * Provides secure development testing without compromising production security
  */
+
+// CRITICAL SECURITY: Throw error if this is imported in production
+if (process.env.NODE_ENV === 'production' || process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
+  throw new Error('SECURITY VIOLATION: dev-auth-helper cannot be used in production');
+}
 
 import { NextRequest, NextResponse } from 'next/server';
 import { SecureSessionManager } from './secure-session-manager';

@@ -6,6 +6,8 @@ import {
   ChevronDown,
   Check,
   BookOpen,
+  User,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HiveInput, HiveCard } from "@hive/ui";
@@ -19,6 +21,7 @@ interface HiveAcademicsStepProps {
 }
 
 type AcademicLevel = "undergraduate" | "graduate" | "doctoral";
+type LivingSituation = "on-campus" | "off-campus" | "commuter" | "not-sure";
 
 export function HiveAcademicsStep({
   data,
@@ -32,6 +35,10 @@ export function HiveAcademicsStep({
     null
   );
   const [showValidationError, setShowValidationError] = useState(false);
+  const [bio, setBio] = useState(data.bio || "");
+  const [livingSituation, setLivingSituation] = useState<LivingSituation | null>(
+    data.livingSituation as LivingSituation || null
+  );
 
   const currentYear = new Date().getFullYear();
   const graduationYears = Array.from({ length: 7 }, (_, i) =>
@@ -94,10 +101,10 @@ export function HiveAcademicsStep({
           transition={{ delay: 0.2 }}
         >
           <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
-            Tell us about your academics
+            Academic & Bio Info
           </h2>
           <p className="text-[var(--hive-text-secondary)] mt-2">
-            This helps us connect you with the right Spaces and classmates.
+            Help us connect you with the right Spaces, classmates, and communities.
           </p>
         </motion.div>
       </div>
@@ -289,6 +296,75 @@ export function HiveAcademicsStep({
               ))}
             </select>
             <ChevronDown className="w-4 h-4 text-[var(--hive-text-muted)] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Bio Field (Optional) */}
+        <div className="space-y-[var(--hive-spacing-3)]">
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)]">
+            Bio <span className="text-[var(--hive-text-muted)] text-xs">(Optional)</span>
+          </label>
+          <div className="relative">
+            <textarea
+              value={bio}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 200);
+                setBio(value);
+                updateData({ bio: value });
+              }}
+              placeholder="What brings you to HIVE?"
+              className="w-full bg-[var(--hive-background-secondary)]/40 backdrop-blur-sm border border-[var(--hive-border-primary)]/30 text-[var(--hive-text-primary)] rounded-xl px-4 py-3 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 focus:border-[var(--hive-brand-primary)]/50 resize-none min-h-[100px]"
+              rows={3}
+            />
+            <div className="absolute bottom-3 right-3 text-xs text-[var(--hive-text-muted)]">
+              {bio.length}/200
+            </div>
+          </div>
+          <p className="text-xs text-[var(--hive-text-muted)]">
+            Share a bit about yourself - your interests, goals, or what you're looking for in your college experience.
+          </p>
+        </div>
+
+        {/* Living Situation (Smart Optional) */}
+        <div className="space-y-[var(--hive-spacing-3)]">
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)]">
+            Living Situation <span className="text-[var(--hive-text-muted)] text-xs">(Helps with matching)</span>
+          </label>
+          <div className="grid grid-cols-2 gap-[var(--hive-spacing-3)]">
+            {[
+              { value: "on-campus", label: "On-campus", icon: "🏫", desc: "Dorms & residence halls" },
+              { value: "off-campus", label: "Off-campus", icon: "🏠", desc: "Apartments & houses" },
+              { value: "commuter", label: "Commuter", icon: "🚗", desc: "Living at home" },
+              { value: "not-sure", label: "Not sure yet", icon: "🤔", desc: "Still deciding" },
+            ].map((option) => (
+              <motion.button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  setLivingSituation(option.value as LivingSituation);
+                  updateData({ livingSituation: option.value });
+                }}
+                className={cn(
+                  "relative p-4 rounded-xl border transition-all duration-200 text-left hover:scale-[1.02] active:scale-[0.98]",
+                  livingSituation === option.value
+                    ? "bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)] text-[var(--hive-brand-primary)]"
+                    : "bg-[var(--hive-background-secondary)]/40 border-[var(--hive-border-primary)]/30 text-[var(--hive-text-secondary)] hover:border-[var(--hive-brand-primary)]/50"
+                )}
+              >
+                <div className="text-lg mb-1">{option.icon}</div>
+                <div className="text-sm font-medium mb-1">{option.label}</div>
+                <div className="text-xs opacity-70">{option.desc}</div>
+                {livingSituation === option.value && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center"
+                  >
+                    <Check className="w-3 h-3 text-white" />
+                  </motion.div>
+                )}
+              </motion.button>
+            ))}
           </div>
         </div>
 

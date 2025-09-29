@@ -185,7 +185,6 @@ export class HivePlatformSearchEngine {
 
       return result;
     } catch (error) {
-      console.error('Search error:', error);
       return {
         results: [],
         suggestions: [],
@@ -243,7 +242,6 @@ export class HivePlatformSearchEngine {
 
       return sortedSuggestions;
     } catch (error) {
-      console.error('Error getting suggestions:', error);
       return [];
     }
   }
@@ -291,7 +289,6 @@ export class HivePlatformSearchEngine {
       const data = await response.json();
       return (data.spaces || []).map((space: any) => this.mapSpaceToSearchResult(space, query.query));
     } catch (error) {
-      console.error('Error searching spaces:', error);
       return [];
     }
   }
@@ -321,7 +318,6 @@ export class HivePlatformSearchEngine {
       const data = await response.json();
       return (data.tools || []).map((tool: any) => this.mapToolToSearchResult(tool, query.query));
     } catch (error) {
-      console.error('Error searching tools:', error);
       return [];
     }
   }
@@ -351,7 +347,6 @@ export class HivePlatformSearchEngine {
       const data = await response.json();
       return (data.posts || []).map((post: any) => this.mapPostToSearchResult(post, query.query));
     } catch (error) {
-      console.error('Error searching feed:', error);
       return [];
     }
   }
@@ -381,7 +376,6 @@ export class HivePlatformSearchEngine {
       const data = await response.json();
       return (data.users || []).map((user: any) => this.mapUserToSearchResult(user, query.query));
     } catch (error) {
-      console.error('Error searching profiles:', error);
       return [];
     }
   }
@@ -843,7 +837,6 @@ export class HivePlatformSearchEngine {
           : session.token;
       }
     } catch (error) {
-      console.error('Error getting auth token:', error);
     }
     
     return '';
@@ -851,7 +844,6 @@ export class HivePlatformSearchEngine {
 
   private initializeSearch(): void {
     // Initialize search engine
-    console.log('HIVE Platform Search Engine initialized');
   }
 }
 

@@ -1,0 +1,4 @@
+dist/
+node_modules/
+scripts/generate-css.d.ts
+scripts/generate-css.js

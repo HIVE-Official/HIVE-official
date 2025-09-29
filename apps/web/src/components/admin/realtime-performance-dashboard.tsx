@@ -68,10 +68,8 @@ export function RealtimePerformanceDashboard() {
     enableAlerts: true,
     alertThresholds: config.alertThresholds,
     onAlert: (alert) => {
-      console.log('Performance alert:', alert);
     },
     onQualityChange: (quality) => {
-      console.log('Connection quality changed:', quality);
     }
   });
 
@@ -91,7 +89,6 @@ export function RealtimePerformanceDashboard() {
         setSystemMetrics(data.metrics.current);
       }
     } catch (error) {
-      console.error('Failed to fetch system metrics:', error);
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +115,6 @@ export function RealtimePerformanceDashboard() {
         }));
       }
     } catch (error) {
-      console.error('Failed to update configuration:', error);
     }
   };
 
@@ -131,7 +127,6 @@ export function RealtimePerformanceDashboard() {
       });
       await fetchSystemMetrics();
     } catch (error) {
-      console.error('Failed to trigger health check:', error);
     }
   };
 

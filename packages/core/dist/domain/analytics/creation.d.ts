@@ -964,7 +964,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement: z.ZodOptional<z.ZodString>;
         nextElement: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        interactionType: "click" | "hover" | "input" | "select" | "drag";
+        interactionType: "click" | "hover" | "drag" | "input" | "select";
         elementPosition: {
             x: number;
             y: number;
@@ -974,7 +974,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
         previousElement?: string | undefined;
         nextElement?: string | undefined;
     }, {
-        interactionType: "click" | "hover" | "input" | "select" | "drag";
+        interactionType: "click" | "hover" | "drag" | "input" | "select";
         elementPosition: {
             x: number;
             y: number;
@@ -992,7 +992,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     optedOut: boolean;
     anonymized: boolean;
     metadata?: {
-        interactionType: "click" | "hover" | "input" | "select" | "drag";
+        interactionType: "click" | "hover" | "drag" | "input" | "select";
         elementPosition: {
             x: number;
             y: number;
@@ -1025,7 +1025,7 @@ export declare const ToolElementInteractedEventSchema: z.ZodObject<{
     eventType: "tool_element_interacted";
     eventId: string;
     metadata?: {
-        interactionType: "click" | "hover" | "input" | "select" | "drag";
+        interactionType: "click" | "hover" | "drag" | "input" | "select";
         elementPosition: {
             x: number;
             y: number;

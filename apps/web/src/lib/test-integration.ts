@@ -24,7 +24,6 @@ export class IntegrationTester {
   async runAllTests(): Promise<IntegrationTestResult[]> {
     this.testResults = [];
     
-    console.log('🧪 Starting HIVE Integration Tests...');
     
     await this.testFeatureFlagEvaluation();
     await this.testRealTimeMessaging();
@@ -34,7 +33,6 @@ export class IntegrationTester {
     const passedTests = this.testResults.filter(r => r.success).length;
     const totalTests = this.testResults.length;
     
-    console.log(`✅ Integration Tests Complete: ${passedTests}/${totalTests} passed`);
     
     return this.testResults;
   }
@@ -69,7 +67,6 @@ export class IntegrationTester {
         result
       });
 
-      console.log(`✅ ${testName}: Feature flag evaluated successfully`);
     } catch (error) {
       this.testResults.push({
         success: false,
@@ -78,7 +75,6 @@ export class IntegrationTester {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
-      console.log(`❌ ${testName}: ${error}`);
     }
   }
 
@@ -115,7 +111,6 @@ export class IntegrationTester {
         result: { messageId }
       });
 
-      console.log(`✅ ${testName}: Message sent with ID ${messageId}`);
     } catch (error) {
       this.testResults.push({
         success: false,
@@ -124,7 +119,6 @@ export class IntegrationTester {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
-      console.log(`❌ ${testName}: ${error}`);
     }
   }
 
@@ -182,7 +176,6 @@ export class IntegrationTester {
         }
       });
 
-      console.log(`✅ ${testName}: Integration working (chat: ${chatEnabled.enabled})`);
     } catch (error) {
       this.testResults.push({
         success: false,
@@ -191,7 +184,6 @@ export class IntegrationTester {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
-      console.log(`❌ ${testName}: ${error}`);
     }
   }
 
@@ -267,7 +259,6 @@ export class IntegrationTester {
         }
       });
 
-      console.log(`✅ ${testName}: CRUD operations completed successfully`);
     } catch (error) {
       this.testResults.push({
         success: false,
@@ -276,7 +267,6 @@ export class IntegrationTester {
         error: error instanceof Error ? error.message : 'Unknown error'
       });
 
-      console.log(`❌ ${testName}: ${error}`);
     }
   }
 
@@ -319,7 +309,6 @@ export class IntegrationTester {
         }
       };
 
-      console.log(`✅ ${testName}: Presence system working correctly`);
       return result;
     } catch (error) {
       const result = {
@@ -329,7 +318,6 @@ export class IntegrationTester {
         error: error instanceof Error ? error.message : 'Unknown error'
       };
 
-      console.log(`❌ ${testName}: ${error}`);
       return result;
     }
   }
@@ -365,7 +353,6 @@ export const integrationTester = new IntegrationTester();
 // Utility function to run a quick smoke test
 export async function runSmokeTest(): Promise<boolean> {
   try {
-    console.log('🔥 Running HIVE smoke test...');
     
     // Test basic feature flag evaluation
     const testResult = await featureFlagService.isFeatureEnabled(
@@ -390,10 +377,8 @@ export async function runSmokeTest(): Promise<boolean> {
       }
     });
 
-    console.log('✅ Smoke test passed');
     return true;
   } catch (error) {
-    console.log('❌ Smoke test failed:', error);
     return false;
   }
 }

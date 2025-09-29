@@ -1,3 +1,8 @@
+'use client';
+
+// Force dynamic rendering to avoid SSG issues with hooks
+export const dynamic = 'force-dynamic';
+
 // Temporary stub components to unblock production build
 // TODO: Fix @hive/ui export resolution and remove these stubs
 

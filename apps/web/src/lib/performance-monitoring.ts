@@ -306,7 +306,6 @@ export class HivePerformanceCollector {
         const metrics = collector();
         collectedMetrics.push(...metrics);
       } catch (error) {
-        console.warn(`Failed to collect metrics from ${name}:`, error);
       }
     }
 
@@ -326,7 +325,6 @@ export class HivePerformanceCollector {
     try {
       await this.sendMetrics(allMetrics);
     } catch (error) {
-      console.error('Failed to send metrics:', error);
       // Re-add metrics for retry (keep only recent ones)
       this.enhancedMetrics.unshift(...allMetrics.slice(-10));
     }
@@ -349,7 +347,6 @@ export class HivePerformanceCollector {
       }
     } else {
       // Server environment - log to console or external service
-      console.log('Performance Metrics:', JSON.stringify(metrics, null, 2));
     }
   }
 
@@ -364,7 +361,6 @@ export class HivePerformanceCollector {
         const truncated = queue.slice(-500);
         localStorage.setItem('hive_metrics_queue', JSON.stringify(truncated));
       } catch (error) {
-        console.warn('Failed to store metrics locally:', error);
       }
     }
   }
@@ -581,9 +577,6 @@ class PerformanceMonitor {
     // In development, log to console
     if (process.env.NODE_ENV === 'development') {
       console.group(`📊 ${metric.name} Performance`);
-      console.log(`Value: ${metric.value.toFixed(2)}ms`);
-      console.log(`Rating: ${metric.rating}`);
-      console.log(`Timestamp: ${new Date(metric.timestamp).toISOString()}`);
       console.groupEnd();
     }
 
@@ -613,7 +606,6 @@ class PerformanceMonitor {
     } catch (error) {
       // Silently fail in production
       if (process.env.NODE_ENV === 'development') {
-        console.error('Failed to send performance metric:', error);
       }
     }
   }

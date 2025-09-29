@@ -8,7 +8,7 @@ import { prdTailwindRadius } from './src/radius-prd-aligned';
 import { hiveTailwindColors } from './src/tailwind-config';
 
 const masterConfig: Config = {
-  darkMode: ['class'],
+  darkMode: 'class',
 
   // COMPREHENSIVE CONTENT PATHS - covers all packages
   content: [
@@ -102,9 +102,9 @@ const masterConfig: Config = {
 
       // TYPOGRAPHY SYSTEM
       fontFamily: {
-        sans: ['Geist Sans', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
       },
 
       // SPACING SYSTEM - Mobile optimized

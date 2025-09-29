@@ -16,6 +16,7 @@ export interface OnboardingData {
   graduationYear: number;
   handle: string;
   avatarUrl?: string;
+  interests?: string[];
   builderRequestSpaces?: string[];
   consentGiven: boolean;
 }
@@ -37,12 +38,6 @@ export function useOnboardingBridge() {
     onboardingData: OnboardingData
   ): Promise<OnboardingResult> => {
     try {
-      console.log('Starting onboarding completion bridge', {
-        handle: onboardingData.handle,
-        userType: onboardingData.userType,
-        major: onboardingData.major,
-      });
-
       if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
         throw new Error('User must be authenticated to complete onboarding');
       }
@@ -78,14 +73,8 @@ export function useOnboardingBridge() {
         throw new Error(result.error || 'Onboarding completion failed');
       }
 
-      console.log('Onboarding completion successful', {
-        userId: result.user?.id,
-        handle: onboardingData.handle,
-      });
-
-      // Handle development user update if provided
+        // Handle development user update if provided
       if (result.devUserUpdate && typeof window !== 'undefined') {
-        console.log('Updating development user in localStorage', result.devUserUpdate);
         localStorage.setItem('dev_auth_mode', 'true');
         localStorage.setItem('dev_user', JSON.stringify(result.devUserUpdate));
 
@@ -108,7 +97,6 @@ export function useOnboardingBridge() {
       };
 
     } catch (error) {
-      console.error('Onboarding completion failed:', error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -132,7 +120,6 @@ export function useOnboardingBridge() {
   const createPostOnboardingSpaces = useCallback(async (onboardingData: OnboardingData) => {
     try {
       // This would normally create cohort spaces based on major/graduation year
-      console.log('Creating post-onboarding spaces for:', onboardingData.major);
       
       return {
         cohortSpaces: [],

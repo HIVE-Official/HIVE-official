@@ -1,0 +1,455 @@
+# HIVE Interest Chips
+*Actually made by students, not 40-year-old product managers*
+
+## Academic (The Grind)
+- CS major (actually cool unlike at other schools)
+- Pre-med stress case
+- Engineering survivor
+- Business school networking
+- Liberal arts defender
+- Math prodigy
+- Biology lab slave
+- Chemistry explosion risk
+- Physics confusion
+- Psychology mind reader
+- Communications (yes it's real)
+- Art major (parents disappointed)
+- Music theory nerd
+- Philosophy arguer
+- Political science debater
+- Economics graph maker
+- History fact dropper
+- Foreign language struggles
+- Study abroad flexer
+- Research grunt
+- Honors program tryhard
+- Dean's list or bust
+- Academic probation comeback
+- Double major masochist
+- Minor collector
+- Thesis writer
+- Lab report procrastinator
+- Office hours regular
+- Professor's favorite (sorry)
+- TA survivor
+- Plagiarism checker beater
+
+## Social (IRL Connections)
+- Party legend
+- Social coordinator
+- Introvert by choice
+- Greek life recruit
+- Club president (resume padding)
+- Event planning stress
+- GroupMe admin hell
+- Wing person duties
+- DD sacrifice
+- Photo documentation specialist
+- IG story curator
+- Professional networker
+- Small talk assassin
+- People watching expert
+- Drama detector
+- Gossip central station
+- Friend group therapist
+- Relationship guru (single though)
+- Perpetually single
+- Serial dater
+- Situationship survivor
+- Long distance relationship
+- Campus couple
+- Breakup recovery specialist
+- Wedding season broke
+- Baby shower attendee (weird)
+
+## Tech & Digital
+- iPhone loyalist (obviously)
+- Android rebel
+- PC gaming superior
+- Mac aesthetic slave
+- Custom setup flexer
+- Coding bootcamp graduate
+- App idea haver
+- Web design freelancer
+- Crypto bag holder
+- NFT right-clicker
+- BeReal authentic faker
+- TikTok algorithm slave
+- Instagram grid perfectionist
+- Twitter main character
+- Reddit karma farmer
+- Discord kitten (ironically)
+- Twitch affiliate wannabe
+- YouTube subscriber (not creator)
+- Spotify DJ
+- Apple Music contrarian
+- SoundCloud rapper supporter
+- Podcast addict
+- Newsletter subscriber
+- Substack reader
+- LinkedIn influencer (cringe)
+- Facebook deactivated
+- Snapchat streak maintainer
+- VSCO girl recovery
+
+## Food & Survival
+- Dining hall strategist
+- Campus food critic
+- Ramen innovator
+- Microwave chef
+- Coffee IV drip
+- Bubble tea bankruptcy
+- Cooking show watcher (not doer)
+- Baking stress reliever
+- Vegan evangelist
+- Vegetarian cheater
+- Keto cultist
+- Intermittent faster
+- Macro counter
+- Protein powder mixer
+- Pre-workout dependent
+- Energy drink tolerance builder
+- Starbucks gold member
+- Local coffee shop supporter
+- Food truck tracker
+- DoorDash VIP
+- Grubhub regular
+- Postmates survivor (RIP)
+- Uber Eats bankrupt
+- Meal prep failure
+- Grocery budget optimizer
+- Couponing expert
+- Food bank volunteer
+
+## Campus Life (UB Specific)
+- North Campus resident
+- South Campus commuter
+- Ellicott Complex survivor
+- Governors enthusiast
+- Alumni quad regular
+- Student Union occupier
+- Lockwood Library hermit
+- Capen Hall navigator
+- Knox 20 frequenter
+- SU food court regular
+- Campus bus timing expert
+- Parking spot warrior
+- Winter clothing expert
+- Snow day prayer
+- Wegmans pilgrim
+- Tops shopper (desperate)
+- Delaware Ave explorer
+- Elmwood hipster
+- Chippewa survivor
+- Allentown artist
+- East Aurora day tripper
+- Canada border crosser
+- Peace Bridge regular
+- Buffalo wing purist
+- Anchor Bar defender
+- Duff's loyalist
+- Bills Mafia member
+- Sabres supporter (masochist)
+
+## Buffalo Culture
+- Wing sauce connoisseur
+- Beef on weck explainer
+- Sponge candy defender
+- Loganberry drinker
+- Fish fry Friday
+- Garbage plate tourist (Rochester sucks)
+- Tim Hortons regular
+- Mighty Taco defender
+- Ted's hot dog loyalist
+- Paula's donuts addict
+- Spot coffee regular
+- Public Market shopper
+- Canalside event goer
+- Albright Knox member
+- Darwin Martin house tourist
+- Frank Lloyd Wright fan
+- Niagara Falls tour guide
+- Maid of the Mist survivor
+- Cave of the Winds warrior
+- Outer Harbor explorer
+- Buffalo Zoo member
+- Elmwood Art Festival regular
+- Taste of Buffalo survivor
+- Music is Art attendee
+- Thursday at the Square regular
+
+## Entertainment & Media
+- Netflix algorithm prisoner
+- Hulu ad sufferer
+- Disney+ adult
+- HBO Max elitist
+- Prime Video settler
+- Apple TV+ forgetter
+- Peacock skeptic
+- Paramount+ who?
+- Spotify premium justified
+- Apple Music defensive
+- YouTube Premium guilt
+- TikTok time waster
+- Instagram reel rabbit hole
+- Twitter timeline poison
+- Reddit front page addict
+- Twitch chat participant
+- Discord voice channel lurker
+- Clubhouse survivor (remember that?)
+- Podcast backlog anxiety
+- Audiobook speed listener
+- Physical book purist
+- E-reader practical
+- Library card flexer
+- Bookstore browser
+- Comic book collector
+- Manga reader
+- Anime sub vs dub fighter
+
+## Gaming & Esports
+- Console peasant
+- PC master race
+- Nintendo switch casual
+- Mobile gaming shame
+- Esports spectator
+- Competitive gamer
+- Casual player
+- Single player story lover
+- Multiplayer toxic survivor
+- Battle royale dropout
+- MMORPG addict
+- Retro gaming collector
+- Indie game supporter
+- AAA game critic
+- Early access beta tester
+- Gaming backlog anxiety
+- Achievement hunter
+- Speedrun watcher
+- Streaming wannabe
+- Discord mod volunteer
+- Guild leader responsibilities
+- Raid coordinator
+- Gaming setup photographer
+- RGB everything
+- Mechanical keyboard snob
+- Gaming chair investor
+- Multiple monitor setup
+- Custom PC builder
+
+## Health & Wellness
+- Gym membership guilt
+- Planet Fitness judge-free zone
+- LA Fitness social hour
+- Campus rec regular
+- Intramural athlete
+- Club sports participant
+- NCAA sport scholarship
+- Division I athlete
+- Walk-on tryouts
+- Injury recovery specialist
+- Physical therapy regular
+- Mental health advocate
+- Therapy appointment keeper
+- Counseling center regular
+- Antidepressant adjuster
+- Anxiety management expert
+- ADHD medication dependent
+- Sleep schedule destroyer
+- All-nighter survivor
+- Energy crash victim
+- Vitamin D deficient
+- Seasonal depression sufferer
+- Stress eating champion
+- Emotional support animal owner
+- Campus health navigator
+- Insurance claim filer
+
+## Work & Money
+- Broke college student
+- Financial aid dependent
+- Scholarship winner
+- Work study grinder
+- Campus job juggler
+- Retail worker survivor
+- Food service veteran
+- Tutoring side hustle
+- Freelance designer
+- Social media manager
+- OnlyFans creator (paying tuition)
+- Sugar baby (rent money)
+- Plasma donor (textbook funds)
+- Uber driver (gas money)
+- DoorDash delivery
+- Instacart shopper
+- Task rabbit handyperson
+- Dog walker professional
+- Baby sitter certified
+- House sitter trusted
+- Moving company muscle
+- Event staff temporary
+- Research study participant
+- Clinical trial volunteer
+- Amazon warehouse survivor
+- Call center nightmare
+
+## Relationships & Dating
+- Tinder swiper
+- Bumble conversation starter
+- Hinge relationship seeker
+- Coffee Meets Bagel optimist
+- Facebook Dating desperate
+- Snapchat flirter
+- Instagram DM slider
+- TikTok comment flirter
+- Discord relationship haver (weird)
+- Long distance relationship maintainer
+- Hometown boyfriend keeper
+- College relationship starter
+- Hookup culture participant
+- Friends with benefits navigator
+- Situationship survivor
+- Talking stage professional
+- Breadcrumb collector
+- Ghosting victim
+- Ghosting perpetrator
+- Dating app conversation killer
+- First date planner
+- Second date rare achiever
+- Relationship anniversary celebrator
+- Breakup song playlist curator
+- Rebound relationship specialist
+- Ex follower (Instagram stalker)
+
+## Creative & Artistic
+- Procrastination artist
+- Creative writing major
+- Journalism student
+- Photography hobbyist
+- Film student pretentious
+- Art major starving
+- Music production bedroom
+- Soundcloud rapper
+- Guitar player basic
+- Piano lessons childhood
+- Singing shower only
+- Dancing TikTok only
+- Theater kid recovered
+- Improv comedy regular
+- Stand-up comedy attempter
+- Poetry slam participant
+- Creative writing workshop
+- Art gallery pretender
+- Museum member
+- Concert photographer
+- Music festival veteran
+- Band merch collector
+- Vinyl record hipster
+- Cassette tape ironic
+- CD collection nostalgic
+- Digital music practical
+- Physical media purist
+
+## Random & Niche
+- Astrology believer (Mercury retrograde excuse)
+- Tarot card reader
+- Crystal collector
+- Sage burner
+- Manifestation journal keeper
+- True crime podcast addict
+- Serial killer documentary binger
+- Conspiracy theory researcher
+- Reddit conspiracy lurker
+- Wikipedia rabbit hole explorer
+- Random fact collector
+- Trivia night champion
+- Pub quiz regular
+- Jeopardy watcher
+- Game show contestant wannabe
+- Reality TV trash watcher
+- Bachelor nation member
+- Love Island obsessed
+- 90 Day Fiance judge
+- RHOA expert
+- Drag Race stan
+- RuPaul devotee
+- Bravo TV scholar
+- E! News follower
+- Celebrity gossip expert
+- Blind item decoder
+
+## Internet Culture & Memes
+- Meme lord
+- TikTok algorithm understander
+- Twitter main character (daily)
+- Reddit karma whore
+- Instagram aesthetic curator
+- Pinterest board organizer
+- Tumblr refugee
+- Facebook marketplace scammer spotter
+- Craigslist risk taker
+- OfferUp negotiator
+- Mercari seller
+- Poshmark closet owner
+- Depop vintage finder
+- Vinted bargain hunter
+- ThredUp returner
+- StockX authenticator truster
+- GOAT sneaker verifier
+- Grailed menswear browser
+- Vestiaire Collective luxury dreamer
+- The RealReal consigner
+- Rebag designer bag flipper
+- Fashionphile window shopper
+- What Goes Around Comes Around admirer
+- TheOutnet sale waiter
+- Net-a-Porter wishlist maker
+
+## Greek Life & Organizations
+- Rush week survivor
+- Bid day celebrator
+- Pledge period trauma
+- Big/little relationship
+- Greek week competitor
+- Philanthropy chair
+- Social chair party planner
+- Treasurer broke
+- Secretary note taker
+- President resume builder
+- VP actual worker
+- Standards board judge
+- Risk management killjoy
+- Recruitment counselor
+- Greek mixer attendee
+- Formal dress broke
+- Semi-formal budget conscious
+- Date party stress
+- Darty participant
+- Mixer coordinator
+- Philanthropy volunteer
+- Community service hour fulfiller
+- Chapter meeting attender
+- Executive board member
+- Alumni relations coordinator
+- Greek advisor nightmare
+
+---
+
+*This list is actually made by students who know what college is really like, not some LinkedIn influencer trying to "connect with Gen Z" 💀*
+
+**Anti-Features:**
+- No LinkedIn integration (we're not LinkedIn, thank god)
+- No "professional networking" cringe
+- No GroupMe chaos import
+- No Facebook connection (that's for boomers)
+- No "campus ambassador" MLM vibes
+- Actually works unlike every other campus app that dies after semester 1
+
+**UB Real Talk:**
+- We know you're just here because SUNY was cheap
+- We know you complain about the weather but stay anyway
+- We know you've gotten lost in Capen at least once
+- We know you've waited 20 minutes for the bus in -10° weather
+- We know you've pretended to be sick to avoid walking to class in a blizzard
+
+*Built different because we actually go here* 🦬

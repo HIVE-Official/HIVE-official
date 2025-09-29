@@ -1,11 +1,31 @@
-// Core analytics types and schemas
-export * from './events';
+/**
+ * Analytics Domain Export
+ * Domain layer for analytics events and processing
+ */
 
-// Creation Engine analytics
-export * from './creation';
+// Value Objects
+export * from './value-objects/creation-event-type.value';
+export * from './value-objects/analytics-config.value';
 
-// Onboarding Analytics
-export * from './onboarding';
+// Events
+export * from './events/creation-analytics.event';
+export * from './events/feed-analytics.event';
+export * from './events/onboarding-analytics.event';
 
-// Re-export commonly used types
-export type { AnalyticsEvent, AnalyticsEventType } from './events'; 
+// Domain Services
+export * from './services/analytics.service';
+export * from './services/event-batching.service';
+export * from './services/privacy.service';
+
+// Aggregates
+export * from './aggregates/analytics-session';
+
+// Types
+export type {
+  CreationAnalyticsEvent,
+  FeedAnalyticsEvent,
+  OnboardingAnalyticsEvent,
+  CreationEventType,
+  FeedAnalyticsConfig,
+  OnboardingStepName,
+} from './types';

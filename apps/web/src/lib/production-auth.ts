@@ -80,7 +80,6 @@ export async function validateProductionToken(
     };
 
     // Log security incident
-    console.error('🚨 CRITICAL SECURITY ALERT: Forbidden token attempted', securityIncident);
     
     // Send to monitoring
     await logSecurityEvent('bypass_attempt', {
@@ -346,7 +345,6 @@ export async function auditAuthEvent(
   };
 
   // Always log security events
-  console.log(`[SECURITY AUDIT] ${event.toUpperCase()}:`, auditData);
 
   // Send to structured logging
   await logSecurityEvent('invalid_token', {

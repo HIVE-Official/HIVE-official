@@ -1,0 +1,294 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================
+    // SECURITY HELPER FUNCTIONS
+    // ========================================
+
+    // CRITICAL: Campus isolation enforcement
+    function enforcesCampusIsolation(campusId) {
+      return isAuthenticated() &&
+        request.auth.token.campusId != null &&
+        request.auth.token.campusId == campusId;
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // CRITICAL: Campus isolation functions
+    function getUserCampus() {
+      // For UB launch, hardcode to UB
+      // Later: get(/databases/$(database)/documents/users/$(request.auth.uid)).data.schoolId
+      return 'ub-buffalo';
+    }
+
+    function isSameCampus(docCampusId) {
+      return getUserCampus() == docCampusId;
+    }
+
+    function isUBUser() {
+      // Verify user has @buffalo.edu email
+      return isAuthenticated() &&
+        request.auth.token.email.matches('.*@buffalo[.]edu$');
+    }
+
+    // Rate limiting helper
+    function notTooFrequent() {
+      // Prevent spam by limiting writes to 1 per second
+      return request.time > resource.data.updatedAt + duration.value(1, 's');
+    }
+
+    // ========================================
+    // USER PROFILES
+    // ========================================
+    match /users/{userId} {
+      // Users can only see other users from their campus
+      allow read: if isAuthenticated() && (
+        isOwner(userId) ||
+        (resource.data.schoolId == getUserCampus() && resource.data.isPublic != false)
+      );
+
+      // Users can only update their own profile
+      allow write: if isOwner(userId) &&
+        request.resource.data.schoolId == getUserCampus() && // Can't change campus
+        notTooFrequent();
+    }
+
+    // ========================================
+    // SPACES - CAMPUS ISOLATED
+    // ========================================
+    match /spaces/{spaceId} {
+      // CRITICAL: Only read spaces from your campus
+      allow read: if isAuthenticated() &&
+        isUBUser() && // Must be UB user
+        resource.data.campusId == getUserCampus() &&
+        resource.data.isActive == true;
+
+      // Create space - must include campus ID
+      allow create: if isAuthenticated() &&
+        isUBUser() &&
+        request.resource.data.campusId == getUserCampus() &&
+        request.resource.data.createdBy == request.auth.uid &&
+        request.resource.data.isActive == true;
+
+      // Update space - can't change campus ID
+      allow update: if isAuthenticated() &&
+        isUBUser() &&
+        resource.data.campusId == getUserCampus() && // Must be same campus
+        request.resource.data.campusId == resource.data.campusId && // Can't change campus
+        (isAdmin() || resource.data.createdBy == request.auth.uid ||
+         exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid)));
+
+      // Delete - admins only
+      allow delete: if isAdmin() &&
+        resource.data.campusId == getUserCampus();
+
+      // ========================================
+      // SPACE SUBCOLLECTIONS
+      // ========================================
+
+      // Posts within a space
+      match /posts/{postId} {
+        allow read: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus() &&
+          resource.data.isDeleted != true;
+
+        allow create: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus() &&
+          request.resource.data.authorId == request.auth.uid &&
+          request.resource.data.campusId == getUserCampus();
+
+        allow update: if isAuthenticated() &&
+          isUBUser() &&
+          resource.data.authorId == request.auth.uid &&
+          request.resource.data.campusId == resource.data.campusId; // Can't change campus
+
+        allow delete: if false; // Soft delete only
+
+        // Comments on posts
+        match /comments/{commentId} {
+          allow read: if isAuthenticated() &&
+            isUBUser() &&
+            get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus();
+
+          allow create: if isAuthenticated() &&
+            isUBUser() &&
+            get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus() &&
+            request.resource.data.authorId == request.auth.uid;
+
+          allow update: if isAuthenticated() &&
+            resource.data.authorId == request.auth.uid;
+
+          allow delete: if false; // Soft delete only
+        }
+      }
+
+      // Space members
+      match /members/{memberId} {
+        allow read: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus();
+
+        allow write: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus() &&
+          (isOwner(memberId) ||
+           exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid)));
+      }
+
+      // Space events
+      match /events/{eventId} {
+        allow read: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus();
+
+        allow write: if isAuthenticated() &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == getUserCampus() &&
+          exists(/databases/$(database)/documents/spaces/$(spaceId)/members/$(request.auth.uid));
+      }
+    }
+
+    // ========================================
+    // SCHOOLS COLLECTION
+    // ========================================
+    match /schools/{schoolId} {
+      // Public read for school list
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ========================================
+    // WAITLIST - CAMPUS SPECIFIC
+    // ========================================
+    match /schools/{schoolId}/waitlist/{email} {
+      allow read: if isAdmin();
+      allow create: if true; // Anyone can join waitlist
+      allow update: if false; // Can't modify waitlist entries
+      allow delete: if isAdmin();
+    }
+
+    // ========================================
+    // ADMIN COLLECTIONS
+    // ========================================
+    match /admins/{adminId} {
+      allow read, write: if isAdmin() && isUBUser();
+    }
+
+    match /builderRequests/{requestId} {
+      allow read: if isAuthenticated() &&
+        isUBUser() &&
+        (isOwner(resource.data.userId) || isAdmin());
+
+      allow create: if isAuthenticated() &&
+        isUBUser() &&
+        isOwner(request.resource.data.userId) &&
+        request.resource.data.campusId == getUserCampus();
+
+      allow update: if isAdmin() && isUBUser();
+      allow delete: if false;
+    }
+
+    // ========================================
+    // FEATURE FLAGS
+    // ========================================
+    match /featureFlags/{flagId} {
+      allow read: if isAuthenticated() && isUBUser();
+      allow write: if isAdmin() && isUBUser();
+    }
+
+    // ========================================
+    // RITUALS - CAMPUS SPECIFIC
+    // ========================================
+    match /rituals/{ritualId} {
+      allow read: if isAuthenticated() &&
+        isUBUser() &&
+        (resource.data.campusId == getUserCampus() ||
+         resource.data.isGlobal == true);
+
+      allow write: if isAdmin() &&
+        isUBUser() &&
+        request.resource.data.campusId == getUserCampus();
+
+      match /participation/{userId} {
+        allow read: if isAuthenticated() &&
+          isUBUser() &&
+          (isOwner(userId) || isAdmin());
+
+        allow write: if isOwner(userId) &&
+          isUBUser() &&
+          get(/databases/$(database)/documents/rituals/$(ritualId)).data.campusId == getUserCampus();
+      }
+    }
+
+    // ========================================
+    // TOOLS - CAMPUS ISOLATED
+    // ========================================
+    match /tools/{toolId} {
+      allow read: if isAuthenticated() &&
+        isUBUser() &&
+        (resource.data.campusId == getUserCampus() ||
+         resource.data.isPublic == true);
+
+      allow write: if isAuthenticated() &&
+        isUBUser() &&
+        request.resource.data.campusId == getUserCampus() &&
+        (isOwner(resource.data.createdBy) || isAdmin());
+    }
+
+    // ========================================
+    // ACTIVITY & ANALYTICS
+    // ========================================
+    match /activityEvents/{eventId} {
+      allow read: if isAuthenticated() &&
+        isUBUser() &&
+        resource.data.campusId == getUserCampus();
+
+      allow create: if isAuthenticated() &&
+        isUBUser() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.campusId == getUserCampus();
+
+      allow update, delete: if false;
+    }
+
+    // ========================================
+    // NOTIFICATIONS
+    // ========================================
+    match /notifications/{userId}/userNotifications/{notificationId} {
+      allow read: if isOwner(userId) && isUBUser();
+      allow write: if isOwner(userId) && isUBUser();
+    }
+
+    // ========================================
+    // PRESENCE & REALTIME
+    // ========================================
+    match /presence/{userId} {
+      allow read: if isAuthenticated() && isUBUser();
+      allow write: if isOwner(userId) &&
+        isUBUser() &&
+        request.resource.data.campusId == getUserCampus();
+    }
+
+    // ========================================
+    // DENY ALL OTHER ACCESS
+    // ========================================
+    // This is the default deny rule - if no rule matches above, deny access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -5,6 +5,27 @@ import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
+// Type definitions
+interface ActivitySummary {
+  userId: string;
+  date: string;
+  totalTimeSpent: number;
+  spacesVisited: string[];
+  toolsUsed: string[];
+  contentCreated: number;
+  socialInteractions: number;
+  peakActivityHour: number;
+  sessionCount: number;
+  createdAt: string;
+}
+
+interface ActivityEvent {
+  userId: string;
+  type: string;
+  details: Record<string, unknown>;
+  timestamp: string;
+}
+
 // Advanced insights interface
 interface ActivityInsight {
   type: 'pattern' | 'achievement' | 'recommendation' | 'trend';
@@ -114,13 +135,13 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error generating activity insights', { error: error, endpoint: '/api/activity/insights' });
+    logger.error('Error generating activity insights', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity/insights' });
     return NextResponse.json(ApiResponseHelper.error("Failed to generate activity insights", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
 // Helper function to generate advanced insights
-async function generateAdvancedInsights(summaries: any[], events: any[], timeRange: string, _analysisType: string): Promise<ActivityInsight[]> {
+async function generateAdvancedInsights(summaries: ActivitySummary[], events: ActivityEvent[], timeRange: string, _analysisType: string): Promise<ActivityInsight[]> {
   const insights: ActivityInsight[] = [];
 
   if (summaries.length === 0) {
@@ -245,8 +266,8 @@ async function generateAdvancedInsights(summaries: any[], events: any[], timeRan
 }
 
 // Helper function to analyze space engagement
-function analyzeSpaceEngagement(summaries: any[], events: any[]): SpaceEngagement[] {
-  const spaceData: Record<string, any> = {};
+function analyzeSpaceEngagement(summaries: ActivitySummary[], events: ActivityEvent[]): SpaceEngagement[] {
+  const spaceData: Record<string, { visits: number; timeSpent: number; lastVisit: string }> = {};
 
   // Aggregate space activity
   summaries.forEach(summary => {
@@ -298,8 +319,8 @@ function analyzeSpaceEngagement(summaries: any[], events: any[]): SpaceEngagemen
 }
 
 // Helper function to analyze tool usage
-function analyzeToolUsage(summaries: any[], events: any[]): ToolUsagePattern[] {
-  const toolData: Record<string, any> = {};
+function analyzeToolUsage(summaries: ActivitySummary[], events: ActivityEvent[]): ToolUsagePattern[] {
+  const toolData: Record<string, { uses: number; lastUsed: string; spaces: string[] }> = {};
 
   // Aggregate tool usage
   summaries.forEach(summary => {
@@ -342,7 +363,7 @@ function analyzeToolUsage(summaries: any[], events: any[]): ToolUsagePattern[] {
 }
 
 // Helper function to detect behavior patterns
-function detectBehaviorPatterns(summaries: any[], events: any[]): Record<string, any> {
+function detectBehaviorPatterns(summaries: ActivitySummary[], events: ActivityEvent[]): BehaviorPattern[] {
   const patterns: Record<string, any> = {};
 
   // Weekly patterns

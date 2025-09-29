@@ -1,9 +1,9 @@
+'use client';
+
 /**
  * Modal and Toast System
  * Global notification and dialog infrastructure for HIVE
  */
-
-"use client";
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -52,7 +52,7 @@ const ModalContext = createContext<ModalContextType>({
   closeAllModals: () => {},
 });
 
-export const useModal = () => useContext(ModalContext);
+const useModal = () => useContext(ModalContext);
 
 // Toast Context
 interface ToastContextType {
@@ -69,10 +69,10 @@ const ToastContext = createContext<ToastContextType>({
   clearToasts: () => {},
 });
 
-export const useToast = () => useContext(ToastContext);
+const useToast = () => useContext(ToastContext);
 
 // Modal Provider
-export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [modals, setModals] = useState<ModalConfig[]>([]);
 
   const openModal = useCallback((modal: Omit<ModalConfig, 'id'>) => {
@@ -101,7 +101,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 };
 
 // Toast Provider
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastConfig[]>([]);
 
   const showToast = useCallback((toast: Omit<ToastConfig, 'id'>) => {
@@ -341,7 +341,7 @@ const ToastItem: React.FC<{
 };
 
 // Combined Provider
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <ModalProvider>
       <ToastProvider>
@@ -352,7 +352,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 };
 
 // Utility Hooks
-export const useConfirm = () => {
+const useConfirm = () => {
   const { openModal, closeModal } = useModal();
 
   const confirm = useCallback((options: {
@@ -396,7 +396,8 @@ export const useConfirm = () => {
   return confirm;
 };
 
-export default {
+// Named exports are preferred over default exports
+export {
   ModalProvider,
   ToastProvider,
   NotificationProvider,

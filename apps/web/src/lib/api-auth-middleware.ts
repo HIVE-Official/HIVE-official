@@ -156,16 +156,27 @@ export async function validateApiAuth(
 /**
  * Check if user has admin privileges
  */
-async function isAdminUser(userId: string): Promise<boolean> {
+async function isAdminUser(userId: string, userEmail?: string): Promise<boolean> {
   try {
+    // Hardcoded admin emails for security
+    const ADMIN_EMAILS = [
+      'jwrhineh@buffalo.edu',  // Jacob Rhinehart - Super Admin
+      'noahowsh@gmail.com',     // Noah - Admin
+    ];
+
     // In development, allow test users to be admin
-    if (!isProductionEnvironment() && userId === 'test-user') {
+    if (!isProductionEnvironment() && (userId === 'test-user' || userId === 'dev-user-1')) {
       return true;
     }
 
-    // TODO: Implement real admin check against database
-    // For now, return false to be safe
-    return false;
+    // Check by email if provided
+    if (userEmail && ADMIN_EMAILS.includes(userEmail)) {
+      return true;
+    }
+
+    // Import the isAdmin function from admin-auth
+    const { isAdmin } = await import('./admin-auth');
+    return await isAdmin(userId, userEmail);
   } catch (error) {
     console.error('Admin check failed:', error);
     return false;
@@ -187,7 +198,7 @@ export function withAuth<T extends any[]>(
       if (error instanceof Response) {
         return error;
       }
-      
+
       console.error('Auth middleware error:', error);
       return new Response(
         JSON.stringify({ error: 'Authentication service error' }),
@@ -195,6 +206,43 @@ export function withAuth<T extends any[]>(
       );
     }
   };
+}
+
+/**
+ * Enhanced wrapper that combines auth and error handling
+ * Used by admin routes and other sensitive endpoints
+ */
+export function withAuthAndErrors<T extends any[]>(
+  handler: (request: NextRequest, context: AuthContext, ...args: T) => Promise<Response> | Response,
+  options: AuthOptions = {}
+) {
+  return withAuth(async (request: NextRequest, context: AuthContext, ...args: T): Promise<Response> => {
+    try {
+      return await handler(request, context, ...args);
+    } catch (error) {
+      console.error('Handler error:', error);
+
+      // If error is already a Response, return it
+      if (error instanceof Response) {
+        return error;
+      }
+
+      // Handle various error types
+      if (error && typeof error === 'object' && 'status' in error) {
+        return ApiResponse.error(
+          error.message || 'Operation failed',
+          error.code || 'UNKNOWN_ERROR',
+          error.status as number || 500
+        );
+      }
+
+      return ApiResponse.error(
+        'Internal server error',
+        'INTERNAL_ERROR',
+        500
+      );
+    }
+  }, options);
 }
 
 /**

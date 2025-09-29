@@ -283,7 +283,6 @@ export class CSRFProtection {
       };
 
     } catch (error) {
-      console.error('CSRF validation error:', error);
       
       await logSecurityEvent('invalid_token', {
         operation: 'validation_error',
@@ -539,7 +538,6 @@ export class CSRFProtection {
     }
 
     if (cleanedCount > 0) {
-      console.log(`CSRF cleanup: removed ${cleanedCount} expired tokens`);
     }
   }
 
@@ -644,7 +642,6 @@ export function withCSRFProtection(
 
       return handler(request, csrfResult.token);
     } catch (error) {
-      console.error('CSRF middleware error:', error);
       return NextResponse.json(
         { error: 'CSRF protection service unavailable' },
         { status: 503 }

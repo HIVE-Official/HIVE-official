@@ -9,17 +9,15 @@
 
 ## Overview
 
-HIVE is a complete Campus Operating System launching October 1st at the University at Buffalo. After 2 years of development, it delivers 7 integrated vertical slices that transform how 32,000 students connect, collaborate, and solve problems together. This isn't an MVP - it's a fully-loaded platform where every feature works on Day 1.
+HIVE is a complete Campus Operating System launching October 1st at the University at Buffalo. It transforms how 32,000 students connect, collaborate, and solve problems together through community-driven spaces and behavioral campaigns.
 
-## 7 Integrated Vertical Slices
+## 5 Core Platform Features
 
-1. **Spaces**: Pre-seeded communities with 3000+ RSS-fed events
-2. **Feed**: Real-time social utility stream with smart filtering
-3. **Profile**: Complete campus identity (academic + social + professional)
-4. **HiveLab**: No-code tool builder for student-created utilities
-5. **Events**: Integrated calendar with RSVP and social proof
-6. **Messaging**: Direct messages, group chats, and following system
-7. **Rituals**: Collective experiences that create campus culture
+1. **Spaces**: Pre-seeded communities with RSS-fed content
+2. **Feed**: Real-time discovery stream (read-only from spaces)
+3. **Profile**: Campus identity with connections system
+4. **HiveLab**: No-code tool builder for space leaders
+5. **Rituals**: Campus-wide behavioral campaigns
 
 ## Key Features
 

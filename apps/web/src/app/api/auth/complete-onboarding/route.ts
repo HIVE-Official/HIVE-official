@@ -9,8 +9,17 @@ import {
 import { createRequestLogger } from "@/lib/structured-logger";
 import { withAuthValidationAndErrors, getUserId, getUserEmail, type AuthenticatedRequest } from "@/lib/middleware";
 import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
-import { isDevUser, getDevSchool } from "@/lib/dev-auth-helper";
 import { NextResponse } from "next/server";
+
+// Conditionally import dev-auth-helper only in development
+let isDevUser: (email: string) => boolean = () => false;
+let getDevSchool: (email: string) => string | null = () => null;
+
+if (process.env.NODE_ENV !== 'production') {
+  const devAuthHelper = require("@/lib/dev-auth-helper");
+  isDevUser = devAuthHelper.isDevUser;
+  getDevSchool = devAuthHelper.getDevSchool;
+}
 
 
 const completeOnboardingSchema = z.object({

@@ -3,6 +3,9 @@ import { ArrowLeft, Calendar, Heart } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 interface LegalDocument {
   version: string;
   effectiveDate: string;

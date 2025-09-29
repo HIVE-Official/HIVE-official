@@ -417,7 +417,6 @@ switch (operation) {
     throw new Error('Invalid operation');
 }
 
-console.log(\`\${a} \${operation} \${b} = \${result}\`);
 return { result, operation: \`\${a} \${operation} \${b}\` };
     `,
     schema: {
@@ -498,7 +497,6 @@ const members = await HIVE.space.getMembers();
 const memberCount = members.length;
 const activeMembers = members.filter(m => m.lastActive > Date.now() - 24 * 60 * 60 * 1000).length;
 
-console.log(\`Space has \${memberCount} total members, \${activeMembers} active in last 24h\`);
 
 return {
   spaceId,

@@ -3,7 +3,7 @@
 import React, { lazy, Suspense } from 'react';
 
 // Lazy load page components for better performance
-const LazyProfilePage = lazy(() => import('../app/(dashboard)/profile/page'));
+// const LazyProfilePage = lazy(() => import('../app/(dashboard)/profile/page')); // Deleted in refactor
 // const LazySpacesPage = lazy(() => import('../app/(dashboard)/spaces/page'));
 // const LazySpaceDetailsPage = lazy(() => import('../app/(dashboard)/spaces/[spaceId]/page'));
 // const LazyToolsPage = lazy(() => import('../app/(dashboard)/tools/page'));
@@ -23,11 +23,12 @@ const LoadingFallback = ({ pageName }: { pageName: string }) => (
 );
 
 // Lazy page components with React Suspense
-export const LazyProfilePageWithSuspense = ({ userId, userName }: { userId?: string; userName?: string }) => (
-  <Suspense fallback={<LoadingFallback pageName="Profile" />}>
-    <LazyProfilePage />
-  </Suspense>
-);
+// Commented out - profile page deleted in refactor
+// export const LazyProfilePageWithSuspense = ({ userId, userName }: { userId?: string; userName?: string }) => (
+//   <Suspense fallback={<LoadingFallback pageName="Profile" />}>
+//     <LazyProfilePage />
+//   </Suspense>
+// );
 
 // Commented out - these pages have been removed
 // export const LazySpacesPageWithSuspense = () => (
@@ -86,7 +87,7 @@ interface LazyPageLoaderProps {
 export function LazyPageLoader({ pageType, context }: LazyPageLoaderProps) {
   switch (pageType) {
     case 'profile':
-      return <LazyProfilePageWithSuspense userId={context?.userId} userName={context?.userName} />;
+      return <LoadingFallback pageName="Profile" />; // Profile page was deleted
     case 'spaces':
     case 'space-details':
     case 'tools':
@@ -97,7 +98,7 @@ export function LazyPageLoader({ pageType, context }: LazyPageLoaderProps) {
       // These pages have been removed - fallback to profile
       return <LoadingFallback pageName="Page Unavailable" />;
     default:
-      return <LazyProfilePageWithSuspense />;
+      return <LoadingFallback pageName="Profile" />; // Profile page was deleted
   }
 }
 

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Universal Navigation System
  * Core navigation components that integrate with UniversalShell

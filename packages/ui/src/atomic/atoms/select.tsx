@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
@@ -280,7 +282,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
 )
 SelectItem.displayName = "SelectItem"
 
-export interface SelectLabelProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type SelectLabelProps = React.HTMLAttributes<HTMLDivElement>
 
 const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
   ({ className, ...props }, ref) => (
@@ -293,7 +295,7 @@ const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
 )
 SelectLabel.displayName = "SelectLabel"
 
-export interface SelectSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type SelectSeparatorProps = React.HTMLAttributes<HTMLDivElement>
 
 const SelectSeparator = React.forwardRef<HTMLDivElement, SelectSeparatorProps>(
   ({ className, ...props }, ref) => (

@@ -10,4 +10,10 @@ export * from "./providers/HiveProvider.js";
 export * from "./hooks/index.js";
 // Export utilities
 export { cn } from "./lib/utils.js";
+// Export notification system
+export { NotificationBell } from "./atomic/atoms/notification-bell.js";
+export { NotificationItem } from "./atomic/atoms/notification-item.js";
+export { NotificationDropdown } from "./atomic/molecules/notification-dropdown.js";
+export { NotificationToastManager, useNotificationToasts } from "./atomic/molecules/notification-toast-manager.js";
+export { NotificationSystem, useNotificationSystem } from "./atomic/organisms/notification-system.js";
 //# sourceMappingURL=index.js.map

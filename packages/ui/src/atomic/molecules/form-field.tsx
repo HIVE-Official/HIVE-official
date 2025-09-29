@@ -21,7 +21,7 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
 )
 FormField.displayName = "FormField"
 
-export interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+export type FormLabelProps = React.LabelHTMLAttributes<HTMLLabelElement>
 
 const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
   ({ className, ...props }, ref) => (
@@ -37,7 +37,7 @@ const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
 )
 FormLabel.displayName = "FormLabel"
 
-export interface FormControlProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type FormControlProps = React.HTMLAttributes<HTMLDivElement>
 
 const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
   ({ ...props }, ref) => (
@@ -46,7 +46,7 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
 )
 FormControl.displayName = "FormControl"
 
-export interface FormDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type FormDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionProps>(
   ({ className, ...props }, ref) => (
@@ -59,7 +59,7 @@ const FormDescription = React.forwardRef<HTMLParagraphElement, FormDescriptionPr
 )
 FormDescription.displayName = "FormDescription"
 
-export interface FormMessageProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type FormMessageProps = React.HTMLAttributes<HTMLParagraphElement>
 
 const FormMessage = React.forwardRef<HTMLParagraphElement, FormMessageProps>(
   ({ className, children, ...props }, ref) => {

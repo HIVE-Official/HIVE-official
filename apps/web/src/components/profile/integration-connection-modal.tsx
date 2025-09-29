@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert, AlertDescription } from "@hive/ui";
 import { 
   Link, 
   Shield, 

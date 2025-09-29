@@ -1,6 +1,4 @@
-// Temporary stub for firebase client utilities
-// TODO: Use proper firebase client from @hive/core
-
+// Firebase client utilities
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
@@ -17,6 +15,17 @@ const app =
 // Initialize Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Campus access validation
+export const validateCampusAccess = (userCampusId: string, requestedCampusId: string): boolean => {
+  if (!userCampusId || !requestedCampusId) {
+    return false;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return userCampusId === requestedCampusId;
+  }
+  return userCampusId === requestedCampusId;
+};
 
 // Initialize Analytics (only in browser and if supported)
 export let analytics: ReturnType<typeof getAnalytics> | null = null;
@@ -46,7 +55,6 @@ if (isDevelopment && typeof window !== "undefined") {
     }
   } catch (error) {
     // Emulators might not be running, that's ok
-    console.log("Firebase emulators not available:", error);
   }
 }
 

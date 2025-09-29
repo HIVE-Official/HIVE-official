@@ -7,6 +7,7 @@ import { withAuth, type AuthenticatedRequest } from "@/lib/middleware/auth";
 import { postCreationRateLimit } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { sseRealtimeService } from "@/lib/sse-realtime-service";
 
 const CreatePostSchema = z.object({
   content: z.string().min(1).max(2000),
@@ -59,6 +60,8 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
     const lastPostId = searchParams.get("lastPostId");
+    const type = searchParams.get("type");
+    const minReplies = parseInt(searchParams.get("minReplies") || "0");
 
     // Check if user is member of the space using nested collection structure
     const memberDoc = await dbAdmin
@@ -76,9 +79,19 @@ export async function GET(
     let query = dbAdmin
       .collection("spaces")
       .doc(spaceId)
-      .collection("posts")
-      .orderBy("createdAt", "desc")
-      .limit(limit);
+      .collection("posts");
+
+    // Handle hot threads request
+    if (type === 'hot_threads') {
+      query = query
+        .where("commentCount", ">=", minReplies)
+        .orderBy("commentCount", "desc")
+        .orderBy("lastActivity", "desc");
+    } else {
+      query = query.orderBy("createdAt", "desc");
+    }
+
+    query = query.limit(limit);
 
     if (lastPostId) {
       const lastPostDoc = await dbAdmin
@@ -262,6 +275,8 @@ export async function POST(
       spaceId: spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
+      lastActivity: new Date(), // For hot threads sorting
+      commentCount: 0, // For hot threads filtering
       reactions: {
         heart: 0,
       },
@@ -293,6 +308,29 @@ export async function POST(
         photoURL: author?.photoURL || null,
       },
     };
+
+    // Broadcast new post to space members via SSE
+    try {
+      await sseRealtimeService.sendMessage({
+        type: 'chat',
+        channel: `space:${spaceId}:posts`,
+        senderId: userId,
+        content: {
+          type: 'new_post',
+          post: createdPost,
+          spaceId: spaceId
+        },
+        metadata: {
+          timestamp: new Date().toISOString(),
+          priority: 'normal',
+          requiresAck: false,
+          retryCount: 0
+        }
+      });
+    } catch (sseError) {
+      // Don't fail the request if SSE fails
+      logger.warn('Failed to broadcast new post via SSE', { sseError, postId: postRef.id });
+    }
 
     return NextResponse.json({ post: createdPost }, { status: HttpStatus.CREATED });
   } catch (error) {

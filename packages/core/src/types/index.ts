@@ -73,7 +73,7 @@ export interface Tool extends BaseEntity {
 }
 
 // Re-export post types from domain
-export type { Post } from '../domain/firestore/post';
+// export type { Post } from '../domain/firestore/post'; // File doesn't exist yet
 
 export interface Profile extends BaseEntity {
   userId: string;
@@ -178,3 +178,6 @@ export enum PostType {
   POLL = 'poll',
   EVENT = 'event'
 }
+
+// Re-export profile system types
+export * from './profile-system';

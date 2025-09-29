@@ -7,6 +7,14 @@ export * from "./providers/HiveProvider";
 export * from "./hooks";
 export { cn } from "./lib/utils";
 export type { ButtonProps } from "./atomic/atoms/button";
+export { NotificationBell } from "./atomic/atoms/notification-bell";
+export { NotificationItem } from "./atomic/atoms/notification-item";
+export { NotificationDropdown } from "./atomic/molecules/notification-dropdown";
+export { NotificationToastManager, useNotificationToasts } from "./atomic/molecules/notification-toast-manager";
+export { NotificationSystem, useNotificationSystem } from "./atomic/organisms/notification-system";
 export type { Event, Comment } from "./types/event";
 export type { SearchableItem, SearchResult, SearchFilters } from "./types/search";
+export type { PresenceStatus, PresenceIndicatorProps } from "./atomic/atoms/presence-indicator";
+export type { PrivacyLevel } from "./atomic/molecules/privacy-control";
+export type { HiveNotification, ToastNotificationData } from "./types/notifications";
 //# sourceMappingURL=index.d.ts.map

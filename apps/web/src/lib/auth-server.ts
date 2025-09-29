@@ -88,7 +88,6 @@ function extractDebugUserFromToken(token: string): AuthenticatedUser | null {
     // Fallback to default debug user if userId not found
     return DEBUG_USERS['debug-user'];
   } catch (error) {
-    console.error('Failed to extract debug user from token:', error);
     return DEBUG_USERS['debug-user'];
   }
 }
@@ -122,7 +121,6 @@ export async function getCurrentUser(request: NextRequest): Promise<Authenticate
       if (token.startsWith('dev_session_')) {
         const debugUser = extractDebugUserFromToken(token);
         if (debugUser) {
-          console.log('🔍 Debug auth: Using debug session token for user:', debugUser.email);
           return debugUser;
         }
       }
@@ -137,7 +135,6 @@ export async function getCurrentUser(request: NextRequest): Promise<Authenticate
       displayName: decodedToken.name
     };
   } catch (error) {
-    console.error('Authentication failed:', error);
     return null;
   }
 }

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { User, Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { cn } from "@/lib/utils";
 import { HiveInput } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -15,14 +16,50 @@ const autoCapitalize = (value: string): string => {
   return value.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
+// Generate handle from first and last name
+const generateHandle = (firstName: string, lastName: string): string => {
+  const first = firstName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const last = lastName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return `${first}${last}`.slice(0, 20);
+};
+
+type ValidationState = "idle" | "checking" | "available" | "taken" | "invalid";
+
 export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   const [showPreview, setShowPreview] = useState(true);
   const [firstName, setFirstName] = useState(data.firstName || "");
   const [lastName, setLastName] = useState(data.lastName || "");
+  const [validationState, setValidationState] = useState<ValidationState>("idle");
+
+  // Validate handle availability
+  const validateHandle = useCallback(async (handle: string) => {
+    if (!handle || handle.length < 3) {
+      setValidationState("idle");
+      return;
+    }
+
+    setValidationState("checking");
+
+    try {
+      const response = await fetch("/api/auth/check-handle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ handle }),
+      });
+
+      const result = await response.json();
+      setValidationState(result.available ? "available" : "taken");
+    } catch (error) {
+      console.error("Handle validation error:", error);
+      setValidationState("invalid");
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (firstName.trim() && lastName.trim()) {
+    if (firstName.trim() && lastName.trim() && validationState === "available") {
       onNext();
     }
   };
@@ -30,20 +67,39 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const capitalized = autoCapitalize(e.target.value);
     setFirstName(capitalized);
-    updateData({ 
+    const newFullName = `${capitalized} ${lastName}`.trim();
+    const newHandle = generateHandle(capitalized, lastName);
+
+    updateData({
       firstName: capitalized,
-      fullName: `${capitalized} ${lastName}`.trim()
+      fullName: newFullName,
+      handle: newHandle
     });
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const capitalized = autoCapitalize(e.target.value);
     setLastName(capitalized);
-    updateData({ 
+    const newFullName = `${firstName} ${capitalized}`.trim();
+    const newHandle = generateHandle(firstName, capitalized);
+
+    updateData({
       lastName: capitalized,
-      fullName: `${firstName} ${capitalized}`.trim()
+      fullName: newFullName,
+      handle: newHandle
     });
   };
+
+  // Validate handle when it changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (data.handle && data.handle.length >= 3) {
+        validateHandle(data.handle);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [data.handle, validateHandle]);
 
   return (
     <motion.div
@@ -71,7 +127,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             What's your name?
           </h2>
           <p className="text-[var(--hive-text-tertiary)] mt-2">
-            This is how you'll appear to other students on HIVE.
+            This is how you'll appear to other students, and we'll create your handle automatically.
           </p>
         </motion.div>
       </div>
@@ -132,24 +188,40 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
                 {showPreview ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </button>
             </div>
-            
+
             {showPreview && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="space-y-2"
+                className="space-y-3"
               >
                 <div className="text-sm text-[var(--hive-text-secondary)]">
                   Hi there, <span className="text-[var(--hive-brand-primary)] font-medium">{firstName}</span>! 👋
                 </div>
+
                 {firstName && lastName && (
-                  <div className="text-xs text-[var(--hive-text-tertiary)]">
-                    Full name: {firstName} {lastName}
-                  </div>
+                  <>
+                    <div className="text-xs text-[var(--hive-text-tertiary)]">
+                      Full name: {firstName} {lastName}
+                    </div>
+
+                    {data.handle && (
+                      <div className="flex items-center gap-2 text-xs">
+                        <AtSign className="w-3 h-3 text-[var(--hive-brand-primary)]" />
+                        <span className="text-[var(--hive-text-tertiary)]">
+                          Handle: <span className="text-[var(--hive-brand-primary)] font-medium">@{data.handle}</span>
+                        </span>
+                        {validationState === "checking" && <Loader2 className="w-3 h-3 animate-spin text-[var(--hive-brand-primary)]" />}
+                        {validationState === "available" && <Check className="w-3 h-3 text-[var(--hive-status-success)]" />}
+                        {validationState === "taken" && <X className="w-3 h-3 text-[var(--hive-status-error)]" />}
+                      </div>
+                    )}
+                  </>
                 )}
+
                 <div className="text-xs text-[var(--hive-text-tertiary)]">
-                  This is how you'll be greeted around HIVE.
+                  This is how you'll appear to other students on HIVE.
                 </div>
               </motion.div>
             )}
@@ -168,8 +240,9 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             Privacy Note
           </h4>
           <p className="text-xs text-[var(--hive-text-tertiary)]">
-            Your name will be visible to other students in your Spaces. You can
-            always update this later in your profile settings.
+            Your name and handle will be visible to other students in your Spaces. Your
+            handle is automatically generated from your name and must be unique. You can
+            always update these later in your profile settings.
           </p>
         </motion.div>
       </motion.form>

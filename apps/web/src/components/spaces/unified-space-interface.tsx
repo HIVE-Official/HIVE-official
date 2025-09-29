@@ -69,13 +69,19 @@ export function UnifiedSpaceInterface({
     }
   }, [spaceId, spaceData]);
 
-  // Set up realtime connection for this space
+  // Set up realtime connection for this space with proper cleanup
   useEffect(() => {
     if (!spaceId) return;
 
     let eventSource: EventSource | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let reconnectTimeoutId: NodeJS.Timeout | null = null;
+    let isUnmounted = false;
 
     const connectToRealtime = () => {
+      // Don't connect if component is unmounted
+      if (isUnmounted) return;
+
       try {
         // Subscribe to space-specific channels
         const channels = [
@@ -88,39 +94,63 @@ export function UnifiedSpaceInterface({
         eventSource = new EventSource(url);
 
         eventSource.onopen = () => {
-          setRealtimeConnected(true);
-          console.log('Connected to space realtime updates');
+          if (!isUnmounted) {
+            setRealtimeConnected(true);
+          }
         };
 
         eventSource.onmessage = (event) => {
+          if (isUnmounted) return;
+
           try {
             const data = JSON.parse(event.data);
             handleRealtimeMessage(data);
           } catch (error) {
-            console.error('Failed to parse realtime message:', error);
           }
         };
 
-        eventSource.onerror = () => {
-          setRealtimeConnected(false);
-          console.log('Realtime connection error, will retry...');
+        eventSource.onerror = (error) => {
+          if (!isUnmounted) {
+            setRealtimeConnected(false);
+
+            // Clean up current connection
+            eventSource?.close();
+            eventSource = null;
+
+            // Attempt reconnection with exponential backoff
+            reconnectTimeoutId = setTimeout(() => {
+              if (!isUnmounted) {
+                connectToRealtime();
+              }
+            }, 3000);
+          }
         };
 
       } catch (error) {
-        console.error('Failed to connect to realtime:', error);
-        setRealtimeConnected(false);
+        if (!isUnmounted) {
+          setRealtimeConnected(false);
+        }
       }
     };
 
     // Connect after a short delay to ensure space data is loaded
-    const timeoutId = setTimeout(connectToRealtime, 1000);
+    timeoutId = setTimeout(connectToRealtime, 1000);
 
     return () => {
-      clearTimeout(timeoutId);
+      // Mark component as unmounted
+      isUnmounted = true;
+
+      // Clear all timeouts
+      if (timeoutId) clearTimeout(timeoutId);
+      if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+
+      // Close EventSource connection
       if (eventSource) {
         eventSource.close();
-        setRealtimeConnected(false);
+        eventSource = null;
       }
+
+      setRealtimeConnected(false);
     };
   }, [spaceId]);
 
@@ -159,11 +189,9 @@ export function UnifiedSpaceInterface({
 
       case 'space_activity':
         // Handle space activity updates (new posts, events, etc.)
-        console.log('Space activity update:', data);
         break;
 
       default:
-        console.log('Unknown realtime message:', data);
     }
   };
 
@@ -209,7 +237,6 @@ export function UnifiedSpaceInterface({
         setInstalledTools(transformedTools);
       }
     } catch (error) {
-      console.error('Error loading space data:', error);
     } finally {
       setLoading(false);
     }
@@ -387,7 +414,7 @@ export function UnifiedSpaceInterface({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
           {/* Left Side - 60% - Post Board */}
-          <div className={`lg:col-span-${contextPanelVisible ? '7' : '12'} space-y-6`}>
+          <div className={contextPanelVisible ? 'lg:col-span-7 space-y-6' : 'lg:col-span-12 space-y-6'}>
 
             {/* Navigation Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -489,7 +516,6 @@ export function UnifiedSpaceInterface({
                 spaceRules={spaceRules}
                 onToolInteraction={(toolId, action) => {
                   // Handle tool interactions
-                  console.log('Tool interaction:', toolId, action);
                 }}
               />
             </div>
@@ -519,7 +545,6 @@ export function UnifiedSpaceInterface({
                   userPermissions={simplePermissions}
                   spaceRules={spaceRules}
                   onToolInteraction={(toolId, action) => {
-                    console.log('Tool interaction:', toolId, action);
                   }}
                 />
               </div>

@@ -158,13 +158,11 @@ export function EventDetailsModal({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (err) {
-      console.error('Failed to copy link:', err);
     }
   };
 
   const handleToolLaunch = (toolId: string, config?: any) => {
     // In a real implementation, this would launch the tool in the context of the event
-    console.log(`Launching tool: ${toolId} for event: ${event.id}`, config);
     // This would integrate with the actual tool system
     alert(`Tool "${toolId}" launching for event attendees...`);
   };

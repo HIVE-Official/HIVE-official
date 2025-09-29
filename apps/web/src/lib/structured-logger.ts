@@ -1,765 +1,266 @@
 /**
- * Structured logging service for HIVE
- * Provides consistent, searchable, and actionable logs across the application
+ * Structured logging service for HIVE platform
+ * Replaces console.log with proper logging levels and metadata
  */
 
-import { currentEnvironment } from './env';
-import { captureError, LogLevel as ErrorLogLevel } from './error-monitoring';
+import type { HiveUser, Space, Post, HiveEvent, AppError } from '@/types/global';
 
-/**
- * Log levels in order of severity
- */
 export enum LogLevel {
-   
-  DEBUG = 'debug',
-   
-  INFO = 'info',
-   
-  WARN = 'warn',
-   
-  ERROR = 'error',
-   
-  FATAL = 'fatal'
+  DEBUG = 0,
+  INFO = 1,
+  WARN = 2,
+  ERROR = 3,
+  CRITICAL = 4,
 }
 
-
-/**
- * Log categories for better organization
- */
-export enum LogCategory {
-   
-  AUTH = 'auth',
-   
-  API = 'api',
-   
-  DATABASE = 'database',
-   
-  SECURITY = 'security',
-   
-  PERFORMANCE = 'performance',
-   
-  USER_ACTION = 'user_action',
-   
-  SYSTEM = 'system',
-   
-  BUSINESS = 'business',
-   
-  INTEGRATION = 'integration'
-}
-
-
-/**
- * Standard log context interface
- */
 export interface LogContext {
-  // User context
   userId?: string;
-  userEmail?: string;
-  isTestUser?: boolean;
-  handle?: string;
-  normalizedHandle?: string;
-  ghostMode?: boolean;
-  userType?: string;
-  major?: string;
-  fullName?: string;
-  schoolId?: string;
-  memberUserId?: string;
-  targetUserId?: string;
-  adminUserId?: string;
-  moderatorId?: string;
-  userUid?: string;
-  isDevelopmentUser?: boolean;
-  
-  // Request context
-  requestId?: string;
-  sessionId?: string;
-  ip?: string;
-  userAgent?: string;
-  endpoint?: string;
-  method?: string;
-  queryParams?: any;
-  requestRefId?: string;
-  
-  // Operation context
-  operation?: string;
-  action?: string;
-  duration?: number;
-  durationMinutes?: number;
-  operationId?: string;
-  operationCount?: number;
-  operationsCompleted?: number | string[];
-  operationsFailed?: number | string[];
-  
-  // Business context
+  campusId?: string;
   spaceId?: string;
-  organizationId?: string;
-  toolId?: string;
-  ritualId?: string;
-  ritualTitle?: string;
-  hasParticipation?: boolean;
-  entryPoint?: string;
-  participationId?: string;
-  spaceName?: string;
-  spaceType?: string;
-  spaceContext?: string;
-  spaceIds?: string[];
-  fromSpaceId?: string;
-  toSpaceId?: string;
-  
-  // Technical context
-  component?: string;
-  version?: string;
-  errorBoundary?: string;
-  componentStack?: string;
-  stack?: string;
-  
-  // Error context
-  error?: Error | string | any;
-  
-  // Data context
-  data?: any;
-  
-  // Additional metadata
-  metadata?: any;
-  tags?: Record<string, string>;
-  extra?: Record<string, any>;
-  
-  // Status and results
-  status?: string | number;
-  result?: any;
-  created?: boolean;
-  exists?: boolean;
-  
-  // Counts and metrics
-  spaceCount?: number;
-  eventCount?: number;
-  ritualCount?: number;
-  connectionCount?: number;
-  currentCount?: number;
-  targetCount?: number;
-  count?: number;
-  size?: number;
-  finalTotal?: number;
-  targetTotal?: number;
-  totalConnections?: number;
-  totalToCreate?: number;
-  cohortSpacesLength?: number;
-  graduationYearsLength?: number;
-  UB_MAJORSLength?: number;
-  
-  // Identifiers
-  builderRequestId?: string;
-  connectionId?: string;
-  id?: string;
-  sourceId?: string;
-  targetId?: string;
-  projectId?: string;
-  notificationId?: string;
-  spaceConfigId?: string;
-  toolDataOwnerId?: string;
-  toolRefId?: string;
-  
-  // Attempts and retries
-  attempt?: number;
-  attempts?: number;
-  
-  // User details
-  email?: string;
-  emailDomain?: string;
-  graduationYear?: number;
-  
-  // Feed and content
-  feedType?: string;
-  type?: string;
-  sourceType?: string;
-  contentType?: string;
-  contentId?: string;
-  
-  // Time ranges
-  timeRange?: string;
-  
-  // Environment flags
-  isLocalEnvironment?: boolean;
-  
-  // Data objects (using specific types where possible)
-  membershipData?: any;
-  auditData?: any;
-  permissionData?: any;
-  bulkData?: any;
-  usersData?: any;
-  userData?: any;
-  oldData?: any;
-  newData?: any;
-  authToken?: string;
-  sessionData?: any;
-  calendarData?: any;
-  eventData?: any;
-  conflictData?: any;
-  feedData?: any;
-  debugData?: any;
-  authData?: any;
-  fileData?: any;
-  notificationData?: any;
-  privacyData?: any;
-  profileData?: any;
-  activityData?: any;
-  completionData?: any;
-  avatarData?: any;
-  spaceData?: any;
-  memberData?: any;
-  postData?: any;
-  widgetData?: any;
-  activationData?: any;
-  joinData?: any;
-  leaveData?: any;
-  migrationData?: any;
-  seedData?: any;
-  socialProofData?: any;
-  testData?: any;
-  updateData?: any;
-  deploymentData?: any;
-  reviewData?: any;
-  stateData?: any;
-  executeData?: any;
-  integrationData?: any;
-  installData?: any;
-  personalData?: any;
-  publishData?: any;
-  recommendationData?: any;
-  usageData?: any;
-  reportData?: any;
-
-  // Additional context fields
-  hasUser?: boolean;
-  matchingReports?: number;
-  batchId?: string;
-  actionId?: string;
-  escalationId?: string;
-  name?: string;
-  updates?: string[];
-  days?: number;
-  latency?: number;
-  errorRate?: number;
-  memoryUsage?: number;
-  sseHealthy?: boolean;
-  firebaseHealthy?: boolean;
-  retryCount?: number;
-  config?: any;
-  path?: string;
-  targetUsers?: any;
-  operations?: any[];
-  isRetriable?: boolean;
-  operationDescription?: string;
-  widgetId?: string;
-  waitlistData?: any;
-  analyticsData?: any;
-  cohortData?: any;
-  spacesData?: any;
-  requestData?: any;
-  autoGeneratedSpaces?: any;
-  matchingSpace?: any;
-  memberships?: any;
-  membershipsSnapshot?: any;
-  oldEventsSnapshot?: any;
-  oldSummariesSnapshot?: any;
-  spaces?: any;
-  spacesSnapshot?: any;
-  spacesWithoutUB?: any;
-  spaceConfig?: any;
-  userSpaceIds?: any;
-  currentRitual?: any;
-  ritualDataName?: string;
-  
-  // Security context
-  threats?: string;
-  securityLevel?: string;
-  
-  // Feed and content-specific properties
-  postId?: string;
-  eventId?: string;
-  memberId?: string;
-  deploymentId?: string;
-  contentUpdates?: any;
-  authorId?: string;
-  organizerId?: string;
-  deployerId?: string;
-  url?: string;
-  feedId?: string;
-  feedName?: string;
-  itemTitle?: string;
-  adminOverride?: boolean;
-  total?: number;
-  
-  // Firebase real-time service properties
-  messageId?: string;
-  channel?: string;
-  userIds?: string;
-
-  // Allow additional properties for flexibility during development
-  [key: string]: any;
+  action?: string;
+  metadata?: Record<string, unknown>;
+  error?: Error | AppError;
+  user?: Partial<HiveUser>;
+  space?: Partial<Space>;
+  post?: Partial<Post>;
+  event?: Partial<HiveEvent>;
 }
 
-/**
- * Structured log entry
- */
-export interface LogEntry {
-  timestamp: string;
-  level: LogLevel;
-  category: LogCategory;
-  message: string;
-  environment: string;
-  context: LogContext;
-  error?: {
-    name: string;
-    message: string;
-    stack?: string;
-  };
-}
+class StructuredLogger {
+  private static instance: StructuredLogger;
+  private logLevel: LogLevel;
+  private isDevelopment: boolean;
+  private logs: Array<Record<string, unknown>> = [];
 
-/**
- * Log configuration
- */
-interface LogConfig {
-  enableConsole: boolean;
-  enableRemote: boolean;
-  minLevel: LogLevel;
-  enableSensitiveData: boolean;
-  enablePerformanceLogging: boolean;
-}
-
-/**
- * Environment-specific configuration
- */
-const LOG_CONFIG: Record<string, LogConfig> = {
-  development: {
-    enableConsole: true,
-    enableRemote: false,
-    minLevel: LogLevel.DEBUG,
-    enableSensitiveData: true,
-    enablePerformanceLogging: true
-  },
-  staging: {
-    enableConsole: true,
-    enableRemote: true,
-    minLevel: LogLevel.INFO,
-    enableSensitiveData: false,
-    enablePerformanceLogging: true
-  },
-  production: {
-    enableConsole: false,
-    enableRemote: true,
-    minLevel: LogLevel.WARN,
-    enableSensitiveData: false,
-    enablePerformanceLogging: false
-  }
-};
-
-/**
- * Get logging configuration for current environment
- */
-function getLogConfig(): LogConfig {
-  return LOG_CONFIG[currentEnvironment] || LOG_CONFIG.development;
-}
-
-/**
- * Level hierarchy for filtering
- */
-const LEVEL_HIERARCHY = {
-  [LogLevel.DEBUG]: 0,
-  [LogLevel.INFO]: 1,
-  [LogLevel.WARN]: 2,
-  [LogLevel.ERROR]: 3,
-  [LogLevel.FATAL]: 4
-};
-
-/**
- * Check if log level should be processed
- */
-function shouldLog(level: LogLevel): boolean {
-  const config = getLogConfig();
-  return LEVEL_HIERARCHY[level] >= LEVEL_HIERARCHY[config.minLevel];
-}
-
-/**
- * Sanitize sensitive data from context
- */
-function sanitizeContext(context: LogContext): LogContext {
-  const config = getLogConfig();
-  
-  if (config.enableSensitiveData) {
-    return context;
+  private constructor() {
+    this.isDevelopment = process.env.NODE_ENV !== 'production';
+    this.logLevel = this.isDevelopment ? LogLevel.DEBUG : LogLevel.INFO;
   }
 
-  const sanitized = { ...context };
-
-  // Mask email addresses
-  if (sanitized.userEmail) {
-    sanitized.userEmail = sanitized.userEmail.replace(/(.{3}).*@/, '$1***@');
+  static getInstance(): StructuredLogger {
+    if (!StructuredLogger.instance) {
+      StructuredLogger.instance = new StructuredLogger();
+    }
+    return StructuredLogger.instance;
   }
 
-  // Remove sensitive extra data
-  if (sanitized.extra) {
-    const { password, token, secret, key, ...safeExtra } = sanitized.extra;
-    sanitized.extra = safeExtra;
+  private formatMessage(
+    level: LogLevel,
+    message: string,
+    context?: LogContext
+  ): Record<string, unknown> {
+    return {
+      timestamp: new Date().toISOString(),
+      level: LogLevel[level],
+      message,
+      ...context,
+      environment: this.isDevelopment ? 'development' : 'production',
+    };
   }
 
-  return sanitized;
-}
-
-/**
- * Format log entry for console output
- */
-function formatConsoleLog(entry: LogEntry): string {
-  const timestamp = new Date(entry.timestamp).toISOString();
-  const level = entry.level.toUpperCase().padEnd(5);
-  const category = entry.category.toUpperCase().padEnd(12);
-  
-  let output = `[${timestamp}] ${level} ${category} ${entry.message}`;
-  
-  // Add context if available
-  if (entry.context.userId) {
-    output += ` | User: ${entry.context.userId}`;
-  }
-  
-  if (entry.context.requestId) {
-    output += ` | Request: ${entry.context.requestId}`;
-  }
-  
-  if (entry.context.operation) {
-    output += ` | Op: ${entry.context.operation}`;
-  }
-  
-  if (entry.context.duration) {
-    output += ` | ${entry.context.duration}ms`;
+  private shouldLog(level: LogLevel): boolean {
+    return level >= this.logLevel;
   }
 
-  return output;
-}
+  private output(logObject: Record<string, unknown>): void {
+    // In production, send to logging service
+    if (!this.isDevelopment) {
+      // TODO: Send to logging service (e.g., Sentry, LogRocket, etc.)
+      this.sendToLoggingService(logObject);
+    }
 
-/**
- * Send log to remote service (Sentry, DataDog, etc.)
- */
-async function sendToRemoteService(entry: LogEntry): Promise<void> {
-  try {
-    // For errors and fatals, use Sentry
-    if (entry.level === LogLevel.ERROR || entry.level === LogLevel.FATAL) {
-      if (entry.error) {
-        const error = new Error(entry.error.message);
-        error.name = entry.error.name;
-        error.stack = entry.error.stack;
-        
-        await captureError(error, {
-          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
-          userId: entry.context.userId,
-          requestId: entry.context.requestId,
-          tags: {
-            category: entry.category,
-            operation: entry.context.operation || 'unknown',
-            environment: entry.environment,
-            ...entry.context.tags
-          },
-          extra: {
-            logMessage: entry.message,
-            context: entry.context,
-            timestamp: entry.timestamp
-          }
-        });
-      } else {
-        // Log message without error object
-        await captureError(new Error(entry.message), {
-          level: entry.level === LogLevel.ERROR ? ErrorLogLevel.ERROR : ErrorLogLevel.FATAL,
-          userId: entry.context.userId,
-          requestId: entry.context.requestId,
-          tags: {
-            category: entry.category,
-            operation: entry.context.operation || 'unknown',
-            environment: entry.environment,
-            ...entry.context.tags
-          },
-          extra: {
-            context: entry.context,
-            timestamp: entry.timestamp
-          }
-        });
+    // In development, output to console with color coding
+    if (this.isDevelopment) {
+      const level = logObject.level;
+      const color = this.getConsoleColor(level);
+
+      // eslint-disable-next-line no-console
+      console.log(
+        `%c[${level}]%c ${logObject.message}`,
+        `color: ${color}; font-weight: bold`,
+        'color: inherit',
+        logObject
+      );
+    }
+
+    // Store in memory for debugging (limited buffer)
+    this.logs.push(logObject);
+    if (this.logs.length > 100) {
+      this.logs.shift();
+    }
+  }
+
+  private getConsoleColor(level: string): string {
+    switch (level) {
+      case 'DEBUG': return '#888';
+      case 'INFO': return '#2196F3';
+      case 'WARN': return '#FF9800';
+      case 'ERROR': return '#F44336';
+      case 'CRITICAL': return '#D32F2F';
+      default: return '#000';
+    }
+  }
+
+  private sendToLoggingService(logObject: Record<string, unknown>): void {
+    // Implementation would send to actual logging service
+    // For now, this is a placeholder
+    if (typeof window !== 'undefined' && window.navigator.sendBeacon) {
+      // Use sendBeacon for reliability
+      const blob = new Blob([JSON.stringify(logObject)], { type: 'application/json' });
+      window.navigator.sendBeacon('/api/logs', blob);
+    }
+  }
+
+  debug(message: string, context?: LogContext): void {
+    if (this.shouldLog(LogLevel.DEBUG)) {
+      this.output(this.formatMessage(LogLevel.DEBUG, message, context));
+    }
+  }
+
+  info(message: string, context?: LogContext): void {
+    if (this.shouldLog(LogLevel.INFO)) {
+      this.output(this.formatMessage(LogLevel.INFO, message, context));
+    }
+  }
+
+  warn(message: string, context?: LogContext): void {
+    if (this.shouldLog(LogLevel.WARN)) {
+      this.output(this.formatMessage(LogLevel.WARN, message, context));
+    }
+  }
+
+  error(message: string, error?: Error, context?: LogContext): void {
+    if (this.shouldLog(LogLevel.ERROR)) {
+      const errorContext = {
+        ...context,
+        error: error ? {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        } : undefined,
+      };
+      this.output(this.formatMessage(LogLevel.ERROR, message, errorContext));
+    }
+  }
+
+  critical(message: string, error?: Error, context?: LogContext): void {
+    if (this.shouldLog(LogLevel.CRITICAL)) {
+      const errorContext = {
+        ...context,
+        error: error ? {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        } : undefined,
+      };
+      this.output(this.formatMessage(LogLevel.CRITICAL, message, errorContext));
+
+      // Critical errors should also trigger alerts in production
+      if (!this.isDevelopment) {
+        this.triggerAlert(message, error);
       }
     }
-
-    // TODO: For other levels, send to structured logging service
-    // This could be DataDog, CloudWatch, etc.
-    
-  } catch (error) {
-    console.error('Failed to send log to remote service:', error);
-  }
-}
-
-/**
- * Core logging function
- */
-async function log(
-  level: LogLevel,
-  category: LogCategory,
-  message: string,
-  context: LogContext = {},
-  error?: Error
-): Promise<void> {
-  if (!shouldLog(level)) {
-    return;
   }
 
-  const config = getLogConfig();
-  const sanitizedContext = sanitizeContext(context);
-  
-  const entry: LogEntry = {
-    timestamp: new Date().toISOString(),
-    level,
-    category,
-    message,
-    environment: currentEnvironment,
-    context: sanitizedContext,
-    error: error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    } : undefined
-  };
+  private triggerAlert(message: string, error?: Error): void {
+    // Would integrate with alerting service (PagerDuty, etc.)
+    // Placeholder implementation
+  }
 
-  // Console logging
-  if (config.enableConsole) {
-    const consoleMessage = formatConsoleLog(entry);
-    
-    switch (level) {
-      case LogLevel.DEBUG:
-        console.debug(consoleMessage, entry.context);
-        break;
-      case LogLevel.INFO:
-        console.info(consoleMessage, entry.context);
-        break;
-      case LogLevel.WARN:
-        console.warn(consoleMessage, entry.context);
-        break;
-      case LogLevel.ERROR:
-      case LogLevel.FATAL:
-        console.error(consoleMessage, entry.context, error);
-        break;
+  // Performance logging
+  time(label: string): void {
+    if (this.isDevelopment) {
+      // eslint-disable-next-line no-console
+      console.time(label);
     }
   }
 
-  // Remote logging
-  if (config.enableRemote) {
-    await sendToRemoteService(entry);
+  timeEnd(label: string): void {
+    if (this.isDevelopment) {
+      // eslint-disable-next-line no-console
+      console.timeEnd(label);
+    }
+  }
+
+  // Analytics event logging
+  logEvent(eventName: string, properties?: Record<string, unknown>): void {
+    this.info(`Event: ${eventName}`, {
+      action: eventName,
+      metadata: properties,
+    });
+  }
+
+  // API request logging
+  logApiRequest(
+    method: string,
+    path: string,
+    statusCode: number,
+    duration: number,
+    userId?: string
+  ): void {
+    const level = statusCode >= 500 ? LogLevel.ERROR :
+                  statusCode >= 400 ? LogLevel.WARN :
+                  LogLevel.INFO;
+
+    if (this.shouldLog(level)) {
+      this.output(this.formatMessage(
+        level,
+        `API ${method} ${path} - ${statusCode}`,
+        {
+          userId,
+          action: `api_${method.toLowerCase()}`,
+          metadata: {
+            path,
+            statusCode,
+            duration: `${duration}ms`,
+          },
+        }
+      ));
+    }
+  }
+
+  // Get recent logs for debugging
+  getRecentLogs(count = 10): Array<Record<string, unknown>> {
+    return this.logs.slice(-count);
+  }
+
+  // Clear logs (useful for testing)
+  clearLogs(): void {
+    this.logs = [];
+  }
+
+  // Set log level dynamically
+  setLogLevel(level: LogLevel): void {
+    this.logLevel = level;
   }
 }
 
-/**
- * Structured logger class with convenience methods
- */
-export class StructuredLogger {
-  private defaultContext: LogContext;
-  
-  constructor(defaultContext: LogContext = {}) {
-    this.defaultContext = defaultContext;
-  }
+// Export singleton instance
+export const logger = StructuredLogger.getInstance();
 
-  /**
-   * Create a child logger with additional context
-   */
-  child(additionalContext: LogContext): StructuredLogger {
-    return new StructuredLogger({
-      ...this.defaultContext,
-      ...additionalContext
-    });
-  }
+// Export convenience functions
+export const logDebug = (message: string, context?: LogContext) =>
+  logger.debug(message, context);
 
-  /**
-   * Log debug message
-   */
-  async debug(message: string, context: LogContext = {}): Promise<void> {
-    await log(LogLevel.DEBUG, LogCategory.SYSTEM, message, {
-      ...this.defaultContext,
-      ...context
-    });
-  }
+export const logInfo = (message: string, context?: LogContext) =>
+  logger.info(message, context);
 
-  /**
-   * Log info message
-   */
-  async info(message: string, context: LogContext = {}): Promise<void> {
-    await log(LogLevel.INFO, LogCategory.SYSTEM, message, {
-      ...this.defaultContext,
-      ...context
-    });
-  }
+export const logWarn = (message: string, context?: LogContext) =>
+  logger.warn(message, context);
 
-  /**
-   * Log warning
-   */
-  async warn(message: string, context: LogContext = {}): Promise<void> {
-    await log(LogLevel.WARN, LogCategory.SYSTEM, message, {
-      ...this.defaultContext,
-      ...context
-    });
-  }
+export const logError = (message: string, error?: Error, context?: LogContext) =>
+  logger.error(message, error, context);
 
-  /**
-   * Log error
-   */
-  async error(message: string, context: LogContext = {}, error?: Error): Promise<void> {
-    await log(LogLevel.ERROR, LogCategory.SYSTEM, message, {
-      ...this.defaultContext,
-      ...context
-    }, error);
-  }
+export const logCritical = (message: string, error?: Error, context?: LogContext) =>
+  logger.critical(message, error, context);
 
-  /**
-   * Log fatal error
-   */
-  async fatal(message: string, context: LogContext = {}, error?: Error): Promise<void> {
-    await log(LogLevel.FATAL, LogCategory.SYSTEM, message, {
-      ...this.defaultContext,
-      ...context
-    }, error);
-  }
+export const logEvent = (eventName: string, properties?: Record<string, any>) =>
+  logger.logEvent(eventName, properties);
 
-  /**
-   * Log with specific category
-   */
-  async logWithCategory(
-    level: LogLevel,
-    category: LogCategory,
-    message: string,
-    context: LogContext = {},
-    error?: Error
-  ): Promise<void> {
-    await log(level, category, message, {
-      ...this.defaultContext,
-      ...context
-    }, error);
-  }
-}
-
-/**
- * Default logger instance
- */
-export const logger = new StructuredLogger();
-
-/**
- * Specialized loggers for common categories
- */
-export const authLogger = new StructuredLogger({ tags: { category: 'auth' } });
-export const apiLogger = new StructuredLogger({ tags: { category: 'api' } });
-export const dbLogger = new StructuredLogger({ tags: { category: 'database' } });
-export const securityLogger = new StructuredLogger({ tags: { category: 'security' } });
-export const performanceLogger = new StructuredLogger({ tags: { category: 'performance' } });
-
-/**
- * Convenience functions for common logging patterns
- */
-
-/**
- * Log authentication events
- */
-export async function logAuthEvent(
-  event: 'login' | 'logout' | 'register' | 'verify' | 'failed_login',
-  context: LogContext = {}
-): Promise<void> {
-  await log(LogLevel.INFO, LogCategory.AUTH, `Authentication event: ${event}`, context);
-}
-
-/**
- * Log API request/response
- */
-export async function logApiCall(
+export const logApiRequest = (
   method: string,
   path: string,
   statusCode: number,
   duration: number,
-  context: LogContext = {}
-): Promise<void> {
-  const level = statusCode >= 500 ? LogLevel.ERROR : 
-               statusCode >= 400 ? LogLevel.WARN : LogLevel.INFO;
-  
-  const message = `${method} ${path} ${statusCode} (${duration}ms)`;
-  
-  await log(level, LogCategory.API, message, {
-    ...context,
-    operation: 'api_call',
-    duration,
-    tags: {
-      ...context.tags,
-      method,
-      path,
-      statusCode: statusCode.toString()
-    }
-  });
-}
-
-/**
- * Log security events
- */
-export async function logSecurityEvent(
-  event: 'bypass_attempt' | 'rate_limit' | 'invalid_token' | 'admin_access',
-  context: LogContext = {}
-): Promise<void> {
-  await log(LogLevel.WARN, LogCategory.SECURITY, `Security event: ${event}`, {
-    ...context,
-    tags: {
-      ...context.tags,
-      securityEvent: event
-    }
-  });
-}
-
-/**
- * Log performance metrics
- */
-export async function logPerformance(
-  operation: string,
-  duration: number,
-  context: LogContext = {}
-): Promise<void> {
-  const config = getLogConfig();
-  
-  if (!config.enablePerformanceLogging) {
-    return;
-  }
-
-  const level = duration > 5000 ? LogLevel.WARN : LogLevel.INFO;
-  const message = `Performance: ${operation} completed in ${duration}ms`;
-  
-  await log(level, LogCategory.PERFORMANCE, message, {
-    ...context,
-    operation,
-    duration,
-    tags: {
-      ...context.tags,
-      performanceMetric: 'true'
-    }
-  });
-}
-
-/**
- * Log user actions for analytics
- */
-export async function logUserAction(
-  action: string,
-  context: LogContext = {}
-): Promise<void> {
-  await log(LogLevel.INFO, LogCategory.USER_ACTION, `User action: ${action}`, {
-    ...context,
-    operation: action,
-    tags: {
-      ...context.tags,
-      userAction: action
-    }
-  });
-}
-
-/**
- * Create request-scoped logger
- */
-export function createRequestLogger(requestId: string, userId?: string): StructuredLogger {
-  return new StructuredLogger({
-    requestId,
-    userId
-  });
-}
+  userId?: string
+) => logger.logApiRequest(method, path, statusCode, duration, userId);

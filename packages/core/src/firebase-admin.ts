@@ -157,13 +157,13 @@ try {
 export { dbAdmin, authAdmin };
 
 // Re-export for compatibility
-export const db = dbAdmin;
-export const auth = authAdmin;
+export const db: admin.firestore.Firestore = dbAdmin;
+export const auth: admin.auth.Auth = authAdmin;
 export const isFirebaseConfigured = firebaseInitialized;
 
 // Function exports for compatibility
-export const getFirestoreAdmin = () => dbAdmin;
-export const getAuthAdmin = () => authAdmin;
+export const getFirestoreAdmin = (): admin.firestore.Firestore => dbAdmin;
+export const getAuthAdmin = (): admin.auth.Auth => authAdmin;
 
 // Environment info for debugging
 export const environmentInfo = {

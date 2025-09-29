@@ -1,10 +1,12 @@
+'use client';
+
 /**
  * Universal Atoms
  * Core UI building blocks for the HIVE platform
  * Uses the gold (var(--hive-brand-secondary)), black, and white color scheme
  */
 
-import React, { forwardRef, ButtonHTMLAttributes, InputHTMLAttributes } from 'react';
+import React, { forwardRef, type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react';
 import { cn } from '../../lib/utils';
 
 // Universal Button

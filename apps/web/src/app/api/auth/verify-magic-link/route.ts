@@ -11,6 +11,7 @@ import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation"
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { createSession, setSessionCookie } from "@/lib/session";
 
 /**
  * PRODUCTION-SAFE magic link verification
@@ -106,8 +107,8 @@ export async function POST(request: NextRequest) {
     const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
     if (isLocalEnvironment) {
       try {
-        // Try to decode the development token
-        const decodedToken = JSON.parse(Buffer.from(token, 'base64').toString());
+        // Try to decode the development token (URL-safe base64)
+        const decodedToken = JSON.parse(Buffer.from(token, 'base64url').toString());
         if (decodedToken.dev && decodedToken.email === email) {
           logger.info('🔧 Development token verified', { email, endpoint: '/api/auth/verify-magic-link' });
 
@@ -120,31 +121,28 @@ export async function POST(request: NextRequest) {
             operation: 'verify_magic_link_dev'
           });
 
-          // Generate session token for development
-          const timestamp = Date.now();
-          const random = Math.random().toString(36).substring(2);
-          const sessionToken = `dev_session_${userId}_${timestamp}_${random}`;
+          // Check if this is a new user who needs onboarding
+          // In dev mode, check localStorage or use a pattern to determine if onboarding is needed
+          const isNewUser = email.includes('onboarding') || email.includes('new');
+
+          // Create signed JWT session for dev
+          const sessionToken = await createSession({
+            userId,
+            email,
+            campusId: schoolId || 'test-university',
+            isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+          });
 
           const response = NextResponse.json({
             success: true,
-            needsOnboarding: false, // Skip onboarding in dev
+            needsOnboarding: isNewUser,
             userId,
-            devMode: true,
-            sessionData: {
-              userId,
-              email,
-              schoolId: schoolId || 'test-university',
-              verifiedAt: new Date().toISOString(),
-              onboardingCompleted: true
-            }
+            devMode: true
           });
 
-          // Set the session cookie for middleware
-          response.cookies.set('session-token', sessionToken, {
-            maxAge: 24 * 60 * 60, // 24 hours
-            secure: false, // Allow non-HTTPS in development
-            sameSite: 'lax',
-            path: '/'
+          // Set signed session cookie
+          setSessionCookie(response, sessionToken, {
+            isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
           });
 
           // Also set dev-mode flag
@@ -273,22 +271,104 @@ export async function POST(request: NextRequest) {
         userId: userRecord.uid,
         operation: 'verify_magic_link'
       });
-      
-      return NextResponse.json({
+
+      // Create signed JWT session
+      const sessionToken = await createSession({
+        userId: userRecord.uid,
+        email,
+        campusId: schoolId || 'ub-buffalo',
+        isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+      });
+
+      const response = NextResponse.json({
         success: true,
         needsOnboarding: true,
-        userId: userRecord.uid });
+        userId: userRecord.uid
+      });
+
+      // Set signed session cookie
+      return setSessionCookie(response, sessionToken, {
+        isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+      });
     } else {
       // Existing user - they can proceed to app
       await auditAuthEvent('success', request, {
         userId: userRecord.uid,
         operation: 'verify_magic_link'
       });
-      
-      return NextResponse.json({
+
+      // Check if user should be granted admin permissions
+      const ADMIN_EMAILS = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'];
+      if (ADMIN_EMAILS.includes(email)) {
+        try {
+          // Check if they already have admin claims
+          const currentClaims = userRecord.customClaims || {};
+          if (!currentClaims.isAdmin) {
+            logger.info('🔐 Auto-granting admin permissions', {
+              userId: userRecord.uid,
+              email: email,
+              endpoint: '/api/auth/verify-magic-link'
+            });
+
+            // Determine role
+            const role = email === 'jwrhineh@buffalo.edu' ? 'super_admin' : 'admin';
+            const permissions = role === 'super_admin' ? ['all'] : [
+              'read', 'write', 'delete', 'moderate',
+              'manage_users', 'manage_spaces', 'feature_flags'
+            ];
+
+            // Set admin claims
+            await auth.setCustomUserClaims(userRecord.uid, {
+              ...currentClaims,
+              role,
+              permissions,
+              isAdmin: true,
+              adminSince: new Date().toISOString()
+            });
+
+            // Update user document
+            await userDoc.ref.set({
+              isAdmin: true,
+              adminRole: role,
+              adminPermissions: permissions,
+              adminGrantedAt: new Date().toISOString(),
+              adminGrantedBy: 'auto-grant-login'
+            }, { merge: true });
+
+            logger.info('✅ Admin permissions granted on login', {
+              userId: userRecord.uid,
+              email: email,
+              role: role
+            });
+          }
+        } catch (adminError) {
+          logger.error('Failed to grant admin permissions', {
+            error: adminError,
+            userId: userRecord.uid,
+            email: email
+          });
+          // Don't fail the login if admin grant fails
+        }
+      }
+
+      // Create signed JWT session
+      const isAdmin = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email);
+      const sessionToken = await createSession({
+        userId: userRecord.uid,
+        email,
+        campusId: schoolId || 'ub-buffalo',
+        isAdmin
+      });
+
+      const response = NextResponse.json({
         success: true,
         needsOnboarding: false,
-        userId: userRecord.uid });
+        userId: userRecord.uid,
+        isAdmin // Include admin flag in response
+      });
+
+      // Set signed session cookie
+      return setSessionCookie(response, sessionToken, { isAdmin });
     }
     
   } catch (error) {

@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * @hive/core - Main export file
+ * Domain-Driven Design architecture with proper bounded contexts
+ */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -14,46 +18,66 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.canViewProfile = exports.isProfilePublic = exports.getProfileUrl = exports.getDisplayName = exports.isValidEmail = exports.isValidProfileHandle = exports.DEFAULT_BUILDER_INFO = exports.DEFAULT_PRIVACY_SETTINGS = exports.getProfileCompleteness = void 0;
-// Domain types - Creation
-__exportStar(require("./domain/creation/element"), exports);
-__exportStar(require("./domain/creation/tool"), exports);
-// Domain types - Firestore
-__exportStar(require("./domain/firestore/handle"), exports);
-__exportStar(require("./domain/firestore/member"), exports);
-__exportStar(require("./domain/firestore/post"), exports);
-__exportStar(require("./domain/firestore/space"), exports);
-__exportStar(require("./domain/firestore/user"), exports);
-var profile_1 = require("./domain/profile/profile");
-Object.defineProperty(exports, "getProfileCompleteness", { enumerable: true, get: function () { return profile_1.getProfileCompleteness; } });
-Object.defineProperty(exports, "DEFAULT_PRIVACY_SETTINGS", { enumerable: true, get: function () { return profile_1.DEFAULT_PRIVACY_SETTINGS; } });
-Object.defineProperty(exports, "DEFAULT_BUILDER_INFO", { enumerable: true, get: function () { return profile_1.DEFAULT_BUILDER_INFO; } });
-Object.defineProperty(exports, "isValidProfileHandle", { enumerable: true, get: function () { return profile_1.isValidHandle; } });
-Object.defineProperty(exports, "isValidEmail", { enumerable: true, get: function () { return profile_1.isValidEmail; } });
-Object.defineProperty(exports, "getDisplayName", { enumerable: true, get: function () { return profile_1.getDisplayName; } });
-Object.defineProperty(exports, "getProfileUrl", { enumerable: true, get: function () { return profile_1.getProfileUrl; } });
-Object.defineProperty(exports, "isProfilePublic", { enumerable: true, get: function () { return profile_1.isProfilePublic; } });
-Object.defineProperty(exports, "canViewProfile", { enumerable: true, get: function () { return profile_1.canViewProfile; } });
-// Domain types - Auth
-__exportStar(require("./domain/auth/emailLink"), exports);
-// Domain types - Analytics
-// Note: Both creation and feed modules export hashUserId - use specific imports if needed
-__exportStar(require("./domain/analytics/creation"), exports);
-__exportStar(require("./domain/analytics/onboarding"), exports);
-__exportStar(require("./domain/analytics/feed"), exports);
-__exportStar(require("./domain/analytics/events"), exports);
-// Cohort utilities
-__exportStar(require("./domain/cohort/cohort-spaces"), exports);
+exports.auth = exports.db = exports.presenceService = exports.EnhancedFeed = exports.FeedItem = exports.EnhancedRitual = exports.RitualId = exports.Widget = exports.Tab = exports.EnhancedSpace = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.EnhancedProfile = void 0;
+// Domain Models - Specific exports to avoid conflicts
+var enhanced_profile_1 = require("./domain/profile/aggregates/enhanced-profile");
+Object.defineProperty(exports, "EnhancedProfile", { enumerable: true, get: function () { return enhanced_profile_1.EnhancedProfile; } });
+var connection_1 = require("./domain/profile/aggregates/connection");
+Object.defineProperty(exports, "Connection", { enumerable: true, get: function () { return connection_1.Connection; } });
+Object.defineProperty(exports, "ConnectionType", { enumerable: true, get: function () { return connection_1.ConnectionType; } });
+Object.defineProperty(exports, "ConnectionSource", { enumerable: true, get: function () { return connection_1.ConnectionSource; } });
+var space_id_value_1 = require("./domain/spaces/value-objects/space-id.value");
+Object.defineProperty(exports, "SpaceId", { enumerable: true, get: function () { return space_id_value_1.SpaceId; } });
+var space_name_value_1 = require("./domain/spaces/value-objects/space-name.value");
+Object.defineProperty(exports, "SpaceName", { enumerable: true, get: function () { return space_name_value_1.SpaceName; } });
+var space_description_value_1 = require("./domain/spaces/value-objects/space-description.value");
+Object.defineProperty(exports, "SpaceDescription", { enumerable: true, get: function () { return space_description_value_1.SpaceDescription; } });
+var space_category_value_1 = require("./domain/spaces/value-objects/space-category.value");
+Object.defineProperty(exports, "SpaceCategory", { enumerable: true, get: function () { return space_category_value_1.SpaceCategory; } });
+var enhanced_space_1 = require("./domain/spaces/aggregates/enhanced-space");
+Object.defineProperty(exports, "EnhancedSpace", { enumerable: true, get: function () { return enhanced_space_1.EnhancedSpace; } });
+var tab_1 = require("./domain/spaces/entities/tab");
+Object.defineProperty(exports, "Tab", { enumerable: true, get: function () { return tab_1.Tab; } });
+var widget_1 = require("./domain/spaces/entities/widget");
+Object.defineProperty(exports, "Widget", { enumerable: true, get: function () { return widget_1.Widget; } });
+var ritual_id_value_1 = require("./domain/rituals/value-objects/ritual-id.value");
+Object.defineProperty(exports, "RitualId", { enumerable: true, get: function () { return ritual_id_value_1.RitualId; } });
+var enhanced_ritual_1 = require("./domain/rituals/aggregates/enhanced-ritual");
+Object.defineProperty(exports, "EnhancedRitual", { enumerable: true, get: function () { return enhanced_ritual_1.EnhancedRitual; } });
+var feed_item_1 = require("./domain/feed/feed-item");
+Object.defineProperty(exports, "FeedItem", { enumerable: true, get: function () { return feed_item_1.FeedItem; } });
+var enhanced_feed_1 = require("./domain/feed/enhanced-feed");
+Object.defineProperty(exports, "EnhancedFeed", { enumerable: true, get: function () { return enhanced_feed_1.EnhancedFeed; } });
+// Application Services - Use Case Orchestration
+__exportStar(require("./application"), exports);
+// Repository Pattern - Data Access Layer
+__exportStar(require("./infrastructure/repositories/interfaces"), exports);
+__exportStar(require("./infrastructure/repositories/factory"), exports);
+// DTOs and Mappers
+__exportStar(require("./application/identity/dtos/profile.dto"), exports);
+__exportStar(require("./infrastructure/mappers/profile.firebase-mapper"), exports);
+// Services
+var presence_service_1 = require("./services/presence-service");
+Object.defineProperty(exports, "presenceService", { enumerable: true, get: function () { return presence_service_1.presenceService; } });
 // Constants
 __exportStar(require("./constants/majors"), exports);
 // Stores
 __exportStar(require("./stores/useAppStore"), exports);
-// Firebase client config
-__exportStar(require("./firebase"), exports);
-// Feature flags
+// Feature Flags
 __exportStar(require("./feature-flags"), exports);
-// Privacy utilities
+// Firebase Configuration (temporary until @hive/firebase is fixed)
+var firebase_1 = require("./firebase");
+Object.defineProperty(exports, "db", { enumerable: true, get: function () { return firebase_1.db; } });
+var firebase_2 = require("./firebase");
+Object.defineProperty(exports, "auth", { enumerable: true, get: function () { return firebase_2.auth; } });
+// Server-side utilities
+__exportStar(require("./server"), exports);
+// Utilities
+__exportStar(require("./utils/activity-tracker"), exports);
 __exportStar(require("./utils/privacy-utils"), exports);
-// Profile system types
-__exportStar(require("./types/profile-system"), exports);
+__exportStar(require("./utils/profile-aggregator"), exports);
+// Analytics convenience functions (for backwards compatibility)
+__exportStar(require("./analytics-temp-exports"), exports);
+// Temporary backward compatibility (will be removed)
+__exportStar(require("./application/shared/temporary-types"), exports);
 //# sourceMappingURL=index.js.map

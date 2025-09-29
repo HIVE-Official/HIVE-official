@@ -72,7 +72,6 @@ export class RSSImportManager {
     };
 
     try {
-      console.log(`🔄 Starting RSS import from ${feedConfig.name} (${feedConfig.url})`);
       
       // Fetch RSS feed
       const response = await fetch(feedConfig.url, {
@@ -92,7 +91,6 @@ export class RSSImportManager {
       const rssItems = this.parseRSSXML(xmlContent);
       result.itemsProcessed = rssItems.length;
 
-      console.log(`📊 Parsed ${rssItems.length} items from RSS feed`);
 
       // Process each item
       for (const item of rssItems) {
@@ -117,7 +115,6 @@ export class RSSImportManager {
           result.itemsImported++;
 
         } catch (itemError) {
-          console.error(`Error processing RSS item: ${item.title}`, itemError);
           const errorMessage = itemError instanceof Error ? itemError.message : String(itemError);
           result.errors.push(`Item "${item.title}": ${errorMessage}`);
         }
@@ -127,10 +124,8 @@ export class RSSImportManager {
       await this.updateFeedLastImport(feedConfig.id, result.lastImportTime);
 
       result.success = true;
-      console.log(`✅ RSS import completed: ${result.itemsImported}/${result.itemsProcessed} items imported`);
 
     } catch (error: any) {
-      console.error(`❌ RSS import failed for ${feedConfig.name}:`, error);
       result.errors.push(error.message);
     }
 
@@ -144,7 +139,6 @@ export class RSSImportManager {
     const feedConfigs = await this.getActiveFeedConfigs();
     const results: ImportResult[] = [];
 
-    console.log(`🔄 Starting batch RSS import for ${feedConfigs.length} feeds`);
 
     // Process feeds in parallel with limited concurrency
     const concurrency = 3;
@@ -158,7 +152,6 @@ export class RSSImportManager {
         if (result.status === 'fulfilled') {
           results.push(result.value);
         } else {
-          console.error(`Failed to import from ${batch[index].name}:`, result.reason);
           results.push({
             feedId: batch[index].id,
             success: false,
@@ -178,7 +171,6 @@ export class RSSImportManager {
     }
 
     const totalImported = results.reduce((sum, r) => sum + r.itemsImported, 0);
-    console.log(`✅ Batch RSS import completed: ${totalImported} total items imported`);
 
     return results;
   }
@@ -211,7 +203,6 @@ export class RSSImportManager {
       }
       
     } catch (error) {
-      console.error('Error parsing RSS XML:', error);
     }
     
     return items;
@@ -300,7 +291,6 @@ export class RSSImportManager {
       return !existingByTitle.empty;
 
     } catch (error) {
-      console.error('Error checking if item exists:', error);
       return false; // If we can't check, assume it doesn't exist
     }
   }
@@ -355,7 +345,6 @@ export class RSSImportManager {
       })) as RSSFeedConfig[];
 
     } catch (error) {
-      console.error('Error getting RSS feed configs:', error);
       return [];
     }
   }
@@ -370,7 +359,6 @@ export class RSSImportManager {
         updatedAt: new Date()
       });
     } catch (error) {
-      console.error('Error updating feed last import time:', error);
     }
   }
 
@@ -471,7 +459,6 @@ export const rssImportManager = new RSSImportManager();
  * Background job to run RSS imports
  */
 export async function runScheduledRSSImports(): Promise<ImportResult[]> {
-  console.log('🔄 Starting scheduled RSS imports...');
   
   try {
     const results = await rssImportManager.importFromAllFeeds();
@@ -479,11 +466,9 @@ export async function runScheduledRSSImports(): Promise<ImportResult[]> {
     const totalImported = results.reduce((sum, r) => sum + r.itemsImported, 0);
     const successfulFeeds = results.filter(r => r.success).length;
     
-    console.log(`✅ Scheduled RSS imports completed: ${totalImported} items from ${successfulFeeds} feeds`);
     
     return results;
   } catch (error) {
-    console.error('❌ Scheduled RSS imports failed:', error);
     throw error;
   }
 }

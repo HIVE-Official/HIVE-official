@@ -4,9 +4,16 @@
  */
 
 import { NextRequest } from 'next/server';
-import { handleDevAuth } from '@/lib/dev-auth-helper';
 import { currentEnvironment } from '@/lib/env';
 import { NextResponse } from 'next/server';
+
+// Conditionally import dev-auth-helper only in development
+let handleDevAuth: any = null;
+
+if (process.env.NODE_ENV !== 'production') {
+  const devAuthHelper = require('@/lib/dev-auth-helper');
+  handleDevAuth = devAuthHelper.handleDevAuth;
+}
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 
 /**

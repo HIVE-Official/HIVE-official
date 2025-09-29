@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
 import { Card } from '../atoms/card.js';
 import { Button } from '../atoms/button.js';
-import { Users, Calendar, Activity, Search, Zap, Settings, GripVertical, Maximize2, Minimize2 } from 'lucide-react';
+import { Users, Calendar, TrendingUp, Activity, Search, Zap, Settings, GripVertical, Maximize2, Minimize2 } from 'lucide-react';
 /**
  * Mobile-first responsive Bento Grid
  * - Mobile: 2 columns max, vertical scroll
@@ -64,6 +64,24 @@ export const ProfileBentoGrid = ({ profile, editable = false, onLayoutChange, cl
             icon: Zap,
             color: 'bg-gradient-to-br from-yellow-500/10 to-yellow-600/10',
             borderColor: 'border-yellow-500/20'
+        },
+        tools_created: {
+            title: 'Tools',
+            icon: Zap,
+            color: 'bg-gradient-to-br from-indigo-500/10 to-indigo-600/10',
+            borderColor: 'border-indigo-500/20'
+        },
+        rituals_active: {
+            title: 'Rituals',
+            icon: Activity,
+            color: 'bg-gradient-to-br from-emerald-500/10 to-emerald-600/10',
+            borderColor: 'border-emerald-500/20'
+        },
+        reputation: {
+            title: 'Reputation',
+            icon: TrendingUp,
+            color: 'bg-gradient-to-br from-amber-500/10 to-amber-600/10',
+            borderColor: 'border-amber-500/20'
         }
     };
     // Handle drag start
@@ -123,7 +141,9 @@ export const ProfileBentoGrid = ({ profile, editable = false, onLayoutChange, cl
     };
     // Render individual card
     const renderCard = (card) => {
-        const config = cardConfigs[card.type] || {};
+        // Handle custom card types
+        const cardType = card.type === 'custom' ? card.customType : card.type;
+        const config = cardConfigs[cardType] || {};
         const Icon = config.icon || Settings;
         // Calculate grid span based on size
         const sizeClasses = {
@@ -153,24 +173,55 @@ export const ProfileBentoGrid = ({ profile, editable = false, onLayoutChange, cl
     };
     // Render card content based on type
     const renderCardContent = (card, profile) => {
-        switch (card.type) {
-            case 'spaces_hub':
-                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: profile.connections.connections.length }), _jsxs("div", { className: "text-xs text-hive-text-secondary", children: ["Active in ", profile.connections.connections.filter(c => c.sharedSpaces.length > 0).length, " spaces"] }), card.size !== '1x1' && (_jsx("div", { className: "mt-3 space-y-1", children: _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Recent activity" }) }))] }));
-            case 'friends_network':
-                return (_jsx("div", { className: "space-y-2 mt-2", children: _jsxs("div", { className: "flex gap-4", children: [_jsxs("div", { children: [_jsx("div", { className: "text-xl font-bold text-hive-text-primary", children: profile.connections.friends.length }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Friends" })] }), _jsxs("div", { children: [_jsx("div", { className: "text-xl font-bold text-hive-text-primary", children: profile.connections.connections.length }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Connections" })] })] }) }));
-            case 'active_now':
-                const activeFriends = profile.connections.friends.filter(f => 
-                // In real app, check real-time presence
-                Math.random() > 0.5);
-                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: activeFriends.length }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Friends online" }), card.size !== '1x1' && (_jsx("div", { className: "flex -space-x-2 mt-2", children: [1, 2, 3].map(i => (_jsx("div", { className: "w-6 h-6 rounded-full bg-hive-accent/20 border border-hive-background-primary" }, i))) }))] }));
-            case 'vibe_check':
-                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-lg font-semibold text-hive-text-primary", children: profile.presence.vibe }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Tap to update your vibe" })] }));
-            case 'schedule_overlap':
-                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsxs("div", { className: "text-sm text-hive-text-primary", children: [profile.intelligence.overlaps.length, " overlaps today"] }), profile.presence.beacon?.active && (_jsxs("div", { className: "flex items-center gap-1 text-xs text-green-400", children: [_jsx("div", { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }), "Beacon active"] }))] }));
-            case 'discovery':
-                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsxs("div", { className: "text-sm text-hive-text-primary", children: [profile.intelligence.suggestions.length, " new suggestions"] }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Based on your interests" })] }));
+        // Handle extended card types and custom types
+        const cardType = card.type === 'custom' ? card.customType : card.type;
+        switch (cardType) {
+            case 'spaces_hub': {
+                const activeSpaces = profile.connections?.connections?.filter(c => c.sharedSpaces?.length > 0) || [];
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: activeSpaces.length || 0 }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Active spaces" }), card.size !== '1x1' && activeSpaces.length > 0 && (_jsxs("div", { className: "mt-3 space-y-1", children: [_jsx("div", { className: "text-xs text-hive-text-secondary mb-1", children: "Recent activity" }), activeSpaces.slice(0, 3).map((conn, idx) => (_jsx("div", { className: "text-xs text-hive-text-primary truncate", children: conn.sharedSpaces[0] }, idx)))] })), card.size === '2x2' && (_jsx(Button, { size: "sm", className: "mt-3 w-full", variant: "outline", children: "Browse Spaces" }))] }));
+            }
+            case 'friends_network': {
+                const friendCount = profile.connections?.friends?.length || 0;
+                const connectionCount = profile.connections?.connections?.length || 0;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsxs("div", { className: "flex gap-4", children: [_jsxs("div", { children: [_jsx("div", { className: "text-xl font-bold text-hive-text-primary", children: friendCount }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Friends" })] }), _jsxs("div", { children: [_jsx("div", { className: "text-xl font-bold text-hive-text-primary", children: connectionCount }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Connections" })] })] }), card.size === '2x2' && (friendCount > 0 || connectionCount > 0) && (_jsxs("div", { className: "mt-3", children: [_jsx("div", { className: "text-xs text-hive-text-secondary mb-2", children: "Recently connected" }), _jsx("div", { className: "flex -space-x-2", children: [...Array(Math.min(5, friendCount + connectionCount))].map((_, i) => (_jsx("div", { className: "w-8 h-8 rounded-full bg-gradient-to-br from-hive-accent/40 to-hive-accent/20 border-2 border-hive-background-primary" }, i))) })] }))] }));
+            }
+            case 'active_now': {
+                const allFriends = profile.connections?.friends || [];
+                // Simulate online status - in production, use real-time presence
+                const activeFriends = allFriends.filter((_, idx) => idx % 2 === 0);
+                const isUserOnline = profile.presence?.isOnline || profile.isOnline || false;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: activeFriends.length }), isUserOnline && (_jsx("div", { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }))] }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Friends online now" }), card.size !== '1x1' && activeFriends.length > 0 && (_jsx("div", { className: "mt-2", children: _jsxs("div", { className: "flex -space-x-2", children: [activeFriends.slice(0, 5).map((friend, i) => (_jsxs("div", { className: "relative", children: [_jsx("div", { className: "w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 border border-hive-background-primary" }), _jsx("div", { className: "absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-hive-background-primary" })] }, i))), activeFriends.length > 5 && (_jsx("div", { className: "w-6 h-6 rounded-full bg-hive-background-secondary border border-hive-background-primary flex items-center justify-center", children: _jsxs("span", { className: "text-xs text-hive-text-secondary", children: ["+", activeFriends.length - 5] }) }))] }) }))] }));
+            }
+            case 'vibe_check': {
+                const currentVibe = profile.presence?.vibe || '🚀 Building';
+                const vibeOptions = ['🎯 Focused', '🚀 Building', '📚 Studying', '🤝 Connecting', '⚡ Energized', '😴 Resting'];
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-lg font-semibold text-hive-text-primary", children: currentVibe }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Campus vibe \u2022 Tap to update" }), card.size === '2x2' && (_jsx("div", { className: "mt-3 grid grid-cols-2 gap-1", children: vibeOptions.slice(0, 4).map((vibe, idx) => (_jsx("button", { className: "text-xs p-2 rounded bg-hive-background-secondary hover:bg-hive-background-tertiary transition-colors", children: vibe }, idx))) }))] }));
+            }
+            case 'schedule_overlap': {
+                const overlaps = profile.intelligence?.overlaps || [];
+                const beaconActive = profile.presence?.beacon?.active || false;
+                const beaconLocation = profile.presence?.beacon?.location || 'Campus';
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-sm text-hive-text-primary", children: overlaps.length > 0 ? `${overlaps.length} overlaps today` : 'No overlaps today' }), beaconActive ? (_jsxs("div", { className: "flex items-center gap-1 text-xs text-green-400", children: [_jsx("div", { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }), "Beacon at ", beaconLocation] })) : (_jsx("div", { className: "text-xs text-hive-text-secondary", children: "Enable beacon to find friends" })), card.size !== '1x1' && overlaps.length > 0 && (_jsx("div", { className: "mt-2 space-y-1", children: overlaps.slice(0, 2).map((overlap, idx) => (_jsxs("div", { className: "text-xs text-hive-text-primary", children: [overlap.time || 'TBD', " \u2022 ", overlap.name || 'Event'] }, idx))) }))] }));
+            }
+            case 'discovery': {
+                const suggestions = profile.intelligence?.suggestions || [];
+                const hasSuggestions = suggestions.length > 0;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-sm text-hive-text-primary", children: hasSuggestions ? `${suggestions.length} new suggestions` : 'Explore HIVE' }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: hasSuggestions ? 'Based on your interests' : 'Discover spaces & tools' }), card.size !== '1x1' && (_jsx("div", { className: "mt-3", children: hasSuggestions ? (_jsx("div", { className: "space-y-2", children: suggestions.slice(0, 2).map((sug, idx) => (_jsxs("div", { className: "p-2 bg-hive-background-secondary rounded", children: [_jsx("div", { className: "text-xs font-medium text-hive-text-primary", children: sug.name || 'Suggestion' }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: sug.reason || sug.reasons?.[0] || 'Recommended for you' })] }, idx))) })) : (_jsxs(Button, { size: "sm", variant: "outline", className: "w-full", children: [_jsx(Search, { size: 12, className: "mr-1" }), "Discover"] })) }))] }));
+            }
+            case 'tools_created': {
+                const toolsCount = profile.stats?.toolsCreated || 0;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: toolsCount }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Tools created" }), card.size !== '1x1' && (_jsx("div", { className: "mt-3", children: _jsxs(Button, { size: "sm", variant: "outline", className: "w-full", children: [_jsx(Zap, { size: 12, className: "mr-1" }), "Create Tool"] }) }))] }));
+            }
+            case 'rituals_active': {
+                const activeRituals = profile.stats?.activeRituals || 0;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: activeRituals }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Active rituals" }), card.size !== '1x1' && (_jsx("div", { className: "mt-2", children: _jsxs("div", { className: "text-xs text-hive-accent", children: ["Current streak: ", profile.stats?.currentStreak || 0, " days"] }) }))] }));
+            }
+            case 'reputation': {
+                const reputation = profile.stats?.reputation || 0;
+                return (_jsxs("div", { className: "space-y-2 mt-2", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("div", { className: "text-2xl font-bold text-hive-text-primary", children: reputation }), _jsx(TrendingUp, { size: 14, className: "text-green-400" })] }), _jsx("div", { className: "text-xs text-hive-text-secondary", children: "Reputation score" }), card.size !== '1x1' && (_jsx("div", { className: "mt-2", children: _jsx("div", { className: "w-full bg-hive-background-secondary rounded-full h-2", children: _jsx("div", { className: "bg-gradient-to-r from-hive-accent to-green-500 rounded-full h-2 transition-all duration-500", style: { width: `${Math.min(100, reputation)}%` } }) }) }))] }));
+            }
             default:
-                return null;
+                return (_jsx("div", { className: "space-y-2 mt-2", children: _jsx("div", { className: "text-sm text-hive-text-secondary", children: "Widget coming soon" }) }));
         }
     };
     return (_jsxs("div", { ref: gridRef, className: `

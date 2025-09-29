@@ -29,14 +29,12 @@ export interface PageTitleProps extends React.HTMLAttributes<HTMLHeadingElement>
     level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 declare const PageTitle: React.ForwardRefExoticComponent<PageTitleProps & React.RefAttributes<HTMLHeadingElement>>;
-export interface PageDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {
-}
+export type PageDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
 declare const PageDescription: React.ForwardRefExoticComponent<PageDescriptionProps & React.RefAttributes<HTMLParagraphElement>>;
 export interface PageContentProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof pageContentVariants> {
 }
 declare const PageContent: React.ForwardRefExoticComponent<PageContentProps & React.RefAttributes<HTMLDivElement>>;
-export interface PageFooterProps extends React.HTMLAttributes<HTMLDivElement> {
-}
+export type PageFooterProps = React.HTMLAttributes<HTMLDivElement>;
 declare const PageFooter: React.ForwardRefExoticComponent<PageFooterProps & React.RefAttributes<HTMLDivElement>>;
 export { PageContainer, PageHeader, PageTitle, PageDescription, PageContent, PageFooter, pageContainerVariants, pageHeaderVariants, pageContentVariants, };
 //# sourceMappingURL=page-container.d.ts.map

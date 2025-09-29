@@ -102,7 +102,6 @@ export function ToolRuntime({
         setGlobalState(result.result.state);
       }
     } catch (err) {
-      console.error('Failed to initialize live state:', err);
     }
   };
 
@@ -123,7 +122,6 @@ export function ToolRuntime({
       try {
         await syncWithBackend(instanceId, data);
       } catch (err) {
-        console.error('Failed to sync with backend:', err);
       }
     }
   }, [composition.connections, deploymentId, mode]);
@@ -197,7 +195,6 @@ export function ToolRuntime({
         }
       }
     } catch (err) {
-      console.error('Backend sync failed:', err);
     }
   };
 
@@ -230,12 +227,10 @@ export function ToolRuntime({
           }].slice(-50));
         }
       } catch (err) {
-        console.error('Action execution failed:', err);
         onError?.(`Failed to execute action: ${action}`);
       }
     } else {
       // Preview mode - just update local state
-      console.log(`Preview action: ${action}`, { instanceId, payload });
     }
   };
 

@@ -1,9 +1,13 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import React, { useState } from 'react';
 import { useAuth } from "@hive/auth-logic";
 import { useQuery } from '@tanstack/react-query';
-import { Badge } from '@hive/ui';
+// Temp fix for chunk 2073 useRef errors
+const Badge = ({ children, variant = "default", className = "", ...props }: any) => <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${className}`} {...props}>{children}</span>;
 import { ErrorBoundary } from '../../components/error-boundary';
 import { 
   Sparkles, 
@@ -383,13 +387,13 @@ export default function RitualsPage() {
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="text-center p-2 bg-hive-background rounded-lg">
                         <div className="text-lg font-semibold text-hive-text-primary">
-                          {Math.round(ritual.metrics.participationRate)}%
+                          {ritual.metrics?.participationRate !== undefined ? Math.round(ritual.metrics.participationRate) : 0}%
                         </div>
                         <div className="text-xs text-hive-text-secondary">Participation</div>
                       </div>
                       <div className="text-center p-2 bg-hive-background rounded-lg">
                         <div className="text-lg font-semibold text-hive-text-primary">
-                          {Math.round(ritual.metrics.engagementScore)}
+                          {ritual.metrics?.engagementScore !== undefined ? Math.round(ritual.metrics.engagementScore) : 0}
                         </div>
                         <div className="text-xs text-hive-text-secondary">Engagement</div>
                       </div>

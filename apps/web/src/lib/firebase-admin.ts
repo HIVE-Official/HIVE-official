@@ -15,8 +15,25 @@ try {
     let credential: admin.credential.Credential | undefined;
 
     // Try different credential formats
-    if (env.FIREBASE_PRIVATE_KEY && env.FIREBASE_CLIENT_EMAIL) {
-      // Format 1: Individual environment variables (Vercel recommended)
+    if (process.env.FIREBASE_PRIVATE_KEY_BASE64) {
+      // Format 1: Base64 encoded private key (Recommended for Vercel)
+      // This prevents multiline string issues in environment variables
+      try {
+        const decodedKey = Buffer.from(
+          process.env.FIREBASE_PRIVATE_KEY_BASE64,
+          "base64"
+        ).toString("utf-8");
+
+        credential = admin.credential.cert({
+          projectId: env.FIREBASE_PROJECT_ID,
+          clientEmail: env.FIREBASE_CLIENT_EMAIL,
+          privateKey: decodedKey,
+        });
+      } catch (error) {
+        console.error("Failed to decode base64 private key:", error);
+      }
+    } else if (env.FIREBASE_PRIVATE_KEY && env.FIREBASE_CLIENT_EMAIL) {
+      // Format 2: Individual environment variables (legacy)
       credential = admin.credential.cert({
         projectId: env.FIREBASE_PROJECT_ID,
         clientEmail: env.FIREBASE_CLIENT_EMAIL,

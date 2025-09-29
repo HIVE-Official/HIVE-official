@@ -3,71 +3,219 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 
-// Mock ritual framework for development
+import * as admin from 'firebase-admin';
+
+// Enhanced ritual participation framework
 const ritualFramework = {
-  joinRitual: async (ritualId: string, userId: string, entryPoint: string): Promise<boolean> => {
+  joinRitual: async (ritualId: string, userId: string, entryPoint: string): Promise<{ success: boolean; participationId?: string; error?: string }> => {
     try {
-      // Create participation record
-      const participationRef = dbAdmin.collection('ritual_participation').doc();
-      await participationRef.set({
-        id: participationRef.id,
+      // Check if ritual exists and is active
+      const ritualDoc = await dbAdmin.collection('rituals').doc(ritualId).get();
+      if (!ritualDoc.exists) {
+        return { success: false, error: 'Ritual not found' };
+      }
+
+      const ritual = ritualDoc.data()!;
+      if (ritual.status !== 'active' && ritual.status !== 'scheduled') {
+        return { success: false, error: 'Ritual is not available for participation' };
+      }
+
+      // Check for existing participation
+      const existingParticipationQuery = await dbAdmin.collection('ritual_participation')
+        .where('ritualId', '==', ritualId)
+        .where('userId', '==', userId)
+        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .limit(1)
+        .get();
+
+      if (!existingParticipationQuery.empty) {
+        const existing = existingParticipationQuery.docs[0].data();
+        if (existing.status !== 'left') {
+          return { success: true, participationId: existingParticipationQuery.docs[0].id };
+        }
+      }
+
+      // Create new participation record
+      const participationData = {
         ritualId,
         userId,
-        status: 'active',
+        status: 'joined',
         joinedAt: new Date(),
         progressPercentage: 0,
         actionsCompleted: [],
+        milestonesReached: [],
+        currentStreak: 0,
+        longestStreak: 0,
         rewardsEarned: [],
         badgesAwarded: [],
         entryPoint,
-        campusId: 'ub-buffalo',
+        campusId: 'ub-buffalo', // Campus isolation
+        metadata: {
+          deviceType: 'web',
+          userAgent: 'unknown'
+        },
         createdAt: new Date(),
+        updatedAt: new Date(),
+        lastActivityAt: new Date()
+      };
+
+      const participationRef = await dbAdmin.collection('ritual_participation').add(participationData);
+
+      // Update ritual stats atomically
+      await dbAdmin.collection('rituals').doc(ritualId).update({
+        'stats.totalParticipants': admin.firestore.FieldValue.increment(1),
+        'stats.activeParticipants': admin.firestore.FieldValue.increment(1),
+        'stats.lastActivityAt': new Date(),
         updatedAt: new Date()
       });
-      return true;
+
+      return { success: true, participationId: participationRef.id };
     } catch (error) {
-      console.error('Error joining ritual:', error);
-      return false;
+      logger.error('Error joining ritual', { error, ritualId, userId });
+      return { success: false, error: 'Failed to join ritual' };
     }
   },
-  
+
   recordAction: async (ritualId: string, userId: string, actionId: string, metadata: any) => {
-    // Record action completion
-    const completionRef = dbAdmin.collection('ritual_action_completions').doc();
-    await completionRef.set({
-      id: completionRef.id,
-      ritualId,
-      userId,
-      actionId,
-      completedAt: new Date(),
-      metadata: metadata || {},
-      campusId: 'ub-buffalo'
-    });
+    try {
+      // Get ritual data to validate action and calculate progress
+      const ritualDoc = await dbAdmin.collection('rituals').doc(ritualId).get();
+      if (!ritualDoc.exists) {
+        throw new Error('Ritual not found');
+      }
 
-    // Update participation progress
-    const participationQuery = await dbAdmin.collection('ritual_participation')
-      .where('ritualId', '==', ritualId)
-      .where('userId', '==', userId)
-      .limit(1)
-      .get();
+      const ritual = ritualDoc.data()!;
+      const ritualAction = ritual.actions?.find((a: any) => a.id === actionId);
 
-    if (!participationQuery.empty) {
+      if (!ritualAction) {
+        throw new Error('Invalid action ID for this ritual');
+      }
+
+      // Get user's participation record
+      const participationQuery = await dbAdmin.collection('ritual_participation')
+        .where('ritualId', '==', ritualId)
+        .where('userId', '==', userId)
+        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .limit(1)
+        .get();
+
+      if (participationQuery.empty) {
+        throw new Error('Must join ritual first');
+      }
+
       const participationRef = participationQuery.docs[0].ref;
       const participationData = participationQuery.docs[0].data();
-      
-      const updatedActionsCompleted = [...(participationData.actionsCompleted || []), actionId];
-      const progressPercentage = Math.min(100, updatedActionsCompleted.length * 25); // Simple progress calc
-      
-      await participationRef.update({
-        actionsCompleted: updatedActionsCompleted,
-        progressPercentage,
-        lastActiveAt: new Date(),
-        updatedAt: new Date(),
-        ...(progressPercentage === 100 && {
-          status: 'completed',
-          completedAt: new Date()
-        })
+
+      // Check if action already completed (for non-repeatable actions)
+      const completedActions = participationData.actionsCompleted || [];
+      if (!ritualAction.maxOccurrences || ritualAction.maxOccurrences === 1) {
+        if (completedActions.some((a: any) => a.actionId === actionId)) {
+          throw new Error('Action already completed');
+        }
+      }
+
+      // Record action completion with proper structure
+      const actionCompletion = {
+        actionId,
+        completedAt: new Date(),
+        weight: ritualAction.weight || 1,
+        metadata: metadata || {}
+      };
+
+      // Also create separate action completion record for analytics
+      await dbAdmin.collection('ritual_action_completions').add({
+        ritualId,
+        userId,
+        actionId,
+        completedAt: new Date(),
+        weight: ritualAction.weight || 1,
+        metadata: metadata || {},
+        campusId: 'ub-buffalo'
       });
+
+      const updatedActions = [...completedActions, actionCompletion];
+
+      // Calculate new progress based on weighted actions
+      const totalWeight = ritual.actions?.reduce((sum: number, action: any) => sum + (action.weight || 1), 0) || 1;
+      const completedWeight = updatedActions.reduce((sum: number, action: any) => sum + action.weight, 0);
+      const progressPercentage = Math.min(100, Math.round((completedWeight / totalWeight) * 100));
+
+      // Update participation record
+      const updateData: any = {
+        actionsCompleted: updatedActions,
+        progressPercentage,
+        lastActivityAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      // Mark as completed if 100% progress
+      if (progressPercentage === 100) {
+        updateData.status = 'completed';
+        updateData.completedAt = new Date();
+      }
+
+      await participationRef.update(updateData);
+
+      // Update ritual stats if completed
+      if (progressPercentage === 100) {
+        await dbAdmin.collection('rituals').doc(ritualId).update({
+          'stats.completedParticipants': admin.firestore.FieldValue.increment(1),
+          'stats.lastActivityAt': new Date(),
+          updatedAt: new Date()
+        });
+      }
+
+      return {
+        success: true,
+        progress: {
+          percentage: progressPercentage,
+          actionsCompleted: updatedActions.length,
+          totalActions: ritual.actions?.length || 0,
+          isCompleted: progressPercentage === 100
+        }
+      };
+
+    } catch (error) {
+      logger.error('Error recording ritual action', { error, ritualId, userId, actionId });
+      throw error;
+    }
+  },
+
+  leaveRitual: async (ritualId: string, userId: string): Promise<boolean> => {
+    try {
+      // Find user's participation
+      const participationQuery = await dbAdmin.collection('ritual_participation')
+        .where('ritualId', '==', ritualId)
+        .where('userId', '==', userId)
+        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .limit(1)
+        .get();
+
+      if (participationQuery.empty) {
+        return false; // Not participating
+      }
+
+      const participationRef = participationQuery.docs[0].ref;
+
+      // Update participation status
+      await participationRef.update({
+        status: 'left',
+        leftAt: new Date(),
+        lastActivityAt: new Date(),
+        updatedAt: new Date()
+      });
+
+      // Update ritual stats
+      await dbAdmin.collection('rituals').doc(ritualId).update({
+        'stats.activeParticipants': admin.firestore.FieldValue.increment(-1),
+        'stats.lastActivityAt': new Date(),
+        updatedAt: new Date()
+      });
+
+      return true;
+    } catch (error) {
+      logger.error('Error leaving ritual', { error, ritualId, userId });
+      return false;
     }
   }
 };
@@ -106,46 +254,80 @@ export const POST = withAuth(async (
 
     switch (action) {
       case 'join': {
-        const joinSuccess = await ritualFramework.joinRitual(ritualId, userId, entryPoint);
-        
-        if (!joinSuccess) {
-          return NextResponse.json(ApiResponseHelper.error("Unable to join ritual. Check eligibility requirements.", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        const joinResult = await ritualFramework.joinRitual(ritualId, userId, entryPoint);
+
+        if (!joinResult.success) {
+          return NextResponse.json(
+            ApiResponseHelper.error(joinResult.error || "Unable to join ritual", "INVALID_INPUT"),
+            { status: HttpStatus.BAD_REQUEST }
+          );
         }
 
         return NextResponse.json({
           success: true,
           message: 'Successfully joined ritual',
-          action: 'joined',
+          participation: {
+            id: joinResult.participationId,
+            ritualId,
+            userId,
+            status: 'joined',
+            joinedAt: new Date().toISOString(),
+            progressPercentage: 0
+          },
           timestamp: new Date().toISOString()
         });
       }
 
-      case 'complete_action':
+      case 'complete_action': {
         if (!actionId) {
-          return NextResponse.json(ApiResponseHelper.error("actionId is required for complete_action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+          return NextResponse.json(
+            ApiResponseHelper.error("actionId is required for complete_action", "INVALID_INPUT"),
+            { status: HttpStatus.BAD_REQUEST }
+          );
         }
 
-        await ritualFramework.recordAction(ritualId, userId, actionId, metadata);
+        try {
+          const actionResult = await ritualFramework.recordAction(ritualId, userId, actionId, metadata);
 
-        return NextResponse.json({
-          success: true,
-          message: 'Action completed successfully',
-          action: 'action_completed',
-          actionId,
-          timestamp: new Date().toISOString()
-        });
+          return NextResponse.json({
+            success: true,
+            message: 'Action completed successfully',
+            action: 'action_completed',
+            actionId,
+            progress: actionResult.progress,
+            timestamp: new Date().toISOString()
+          });
+        } catch (error: any) {
+          return NextResponse.json(
+            ApiResponseHelper.error(error.message || "Failed to complete action", "INVALID_INPUT"),
+            { status: HttpStatus.BAD_REQUEST }
+          );
+        }
+      }
 
-      case 'leave':
-        // TODO: Implement leave ritual functionality
+      case 'leave': {
+        const leaveSuccess = await ritualFramework.leaveRitual(ritualId, userId);
+
+        if (!leaveSuccess) {
+          return NextResponse.json(
+            ApiResponseHelper.error("Not participating in this ritual or failed to leave", "INVALID_INPUT"),
+            { status: HttpStatus.BAD_REQUEST }
+          );
+        }
+
         return NextResponse.json({
           success: true,
           message: 'Left ritual successfully',
           action: 'left',
           timestamp: new Date().toISOString()
         });
+      }
 
       default:
-        return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return NextResponse.json(
+          ApiResponseHelper.error("Invalid action", "INVALID_INPUT"),
+          { status: HttpStatus.BAD_REQUEST }
+        );
     }
 
   } catch (error: any) {

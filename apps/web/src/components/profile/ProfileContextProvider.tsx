@@ -6,21 +6,31 @@
  * Provides both HiveProfile and ProfileSystem formats for maximum compatibility
  */
 
-import React, { createContext, useContext, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useMemo, ReactNode, useEffect, useState } from 'react';
 import { useHiveProfile, UseHiveProfileReturn } from '@/hooks/use-hive-profile';
-import { transformHiveProfileToProfileSystem, createMockProfileSystem } from '@/lib/profile-transformers';
-import type { HiveProfile } from '@hive/core';
-import type { ProfileSystem } from '@/lib/profile-transformers';
+import { toUnifiedProfile, toProfileSystem, createMockProfileSystem } from '@/lib/profile-transformers';
+import type { HiveProfile, UnifiedHiveProfile, ProfileSystem } from '@hive/core';
+import { presenceService, type PresenceData } from '@hive/core';
+import { useAuth } from '@hive/auth-logic';
+import type { PresenceStatus } from '@hive/ui';
 
 interface ProfileContextValue {
   // Raw HiveProfile data (for API compatibility)
   hiveProfile: HiveProfile | null;
+
+  // Unified profile data (modern format)
+  unifiedProfile: UnifiedHiveProfile | null;
 
   // Transformed ProfileSystem data (for @hive/ui components)
   profileSystem: ProfileSystem | null;
 
   // Dashboard data
   dashboard: UseHiveProfileReturn['dashboard'];
+
+  // Presence data
+  presenceStatus: PresenceStatus;
+  lastSeen: Date | null;
+  isGhostMode: boolean;
 
   // State management
   isLoading: boolean;
@@ -72,38 +82,101 @@ export function ProfileContextProvider({
 }: ProfileContextProviderProps) {
   // Use the existing useHiveProfile hook for data management
   const profileHook = useHiveProfile();
+  const { user } = useAuth();
 
-  // Transform HiveProfile to ProfileSystem format for @hive/ui components
+  // Presence state
+  const [presenceStatus, setPresenceStatus] = useState<PresenceStatus>('offline');
+  const [lastSeen, setLastSeen] = useState<Date | null>(null);
+  const [isGhostMode, setIsGhostMode] = useState(false);
+
+  // Initialize presence tracking
+  useEffect(() => {
+    if (user && !isPublicView) {
+      // Initialize presence for current user
+      presenceService.initializePresence(user, 'ub-buffalo').then(() => {
+        setPresenceStatus('online');
+      });
+
+      // Set up activity monitoring
+      const handleActivity = () => {
+        if (presenceStatus === 'away' && !isGhostMode) {
+          presenceService.updateStatus('online');
+          setPresenceStatus('online');
+        }
+      };
+
+      // Monitor user activity
+      window.addEventListener('mousemove', handleActivity);
+      window.addEventListener('keypress', handleActivity);
+
+      return () => {
+        window.removeEventListener('mousemove', handleActivity);
+        window.removeEventListener('keypress', handleActivity);
+        presenceService.cleanup();
+      };
+    }
+  }, [user, isPublicView, presenceStatus, isGhostMode]);
+
+  // Create unified profile with advanced features
+  const unifiedProfile = useMemo(() => {
+    // If no profile data yet, return null
+    if (!profileHook.profile) {
+      return null;
+    }
+
+    // Convert to unified profile system
+    try {
+      return toUnifiedProfile(profileHook.profile);
+    } catch (error) {
+      console.error('Failed to create unified profile:', error);
+      return null;
+    }
+  }, [profileHook.profile]);
+
+  // Transform to ProfileSystem format for @hive/ui components
   const profileSystem = useMemo(() => {
     // Use mock data if provided (for development/testing)
     if (mockData) {
       return mockData;
     }
 
-    // If no profile data yet, return null
-    if (!profileHook.profile) {
+    // If no unified profile, return null
+    if (!unifiedProfile) {
       return null;
     }
 
-    // Transform HiveProfile to ProfileSystem
+    // Transform UnifiedProfile to ProfileSystem
     try {
-      return transformHiveProfileToProfileSystem(
-        profileHook.profile,
-        profileHook.dashboard || undefined
-      );
+      return toProfileSystem(unifiedProfile);
     } catch (error) {
-      console.error('Failed to transform profile data:', error);
+      console.error('Failed to transform to ProfileSystem:', error);
       // Fallback to mock data structure to prevent UI crashes
-      return createMockProfileSystem(profileHook.profile.identity.id);
+      return createMockProfileSystem(unifiedProfile.identity.id);
     }
-  }, [profileHook.profile, profileHook.dashboard, mockData]);
+  }, [unifiedProfile, mockData]);
+
+  // Handle ghost mode toggle with presence service
+  const handleToggleGhostMode = async () => {
+    const newGhostMode = !isGhostMode;
+    setIsGhostMode(newGhostMode);
+    await presenceService.toggleGhostMode(newGhostMode);
+    setPresenceStatus(newGhostMode ? 'ghost' : 'online');
+    // Also call the original toggleGhostMode for profile update
+    await profileHook.toggleGhostMode();
+  };
 
   // Create context value with all necessary data and actions
   const contextValue: ProfileContextValue = useMemo(() => ({
     // Data
     hiveProfile: profileHook.profile,
+    unifiedProfile,
     profileSystem,
     dashboard: profileHook.dashboard,
+
+    // Presence data
+    presenceStatus,
+    lastSeen,
+    isGhostMode,
 
     // State
     isLoading: profileHook.isLoading,
@@ -111,11 +184,11 @@ export function ProfileContextProvider({
     error: profileHook.error,
     completeness: profileHook.completeness,
 
-    // Actions (pass-through from hook)
+    // Actions (pass-through from hook, with presence-aware ghost mode)
     loadProfile: profileHook.loadProfile,
     updateProfile: profileHook.updateProfile,
     uploadAvatar: profileHook.uploadAvatar,
-    toggleGhostMode: profileHook.toggleGhostMode,
+    toggleGhostMode: handleToggleGhostMode,
     refreshDashboard: profileHook.refreshDashboard,
     clearError: profileHook.clearError,
 
@@ -126,7 +199,7 @@ export function ProfileContextProvider({
     getCalendarEvents: profileHook.getCalendarEvents,
     detectConflicts: profileHook.detectConflicts,
     resolveConflict: profileHook.resolveConflict
-  }), [profileHook, profileSystem]);
+  }), [profileHook, unifiedProfile, profileSystem, presenceStatus, lastSeen, isGhostMode]);
 
   return (
     <ProfileContext.Provider value={contextValue}>
@@ -165,6 +238,15 @@ export function useProfileSystem(): ProfileSystem | null {
 export function useHiveProfileData(): HiveProfile | null {
   const { hiveProfile } = useProfileContext();
   return hiveProfile;
+}
+
+/**
+ * Hook to access UnifiedHiveProfile data specifically
+ * Modern hook for new development
+ */
+export function useUnifiedProfile(): UnifiedHiveProfile | null {
+  const { unifiedProfile } = useProfileContext();
+  return unifiedProfile;
 }
 
 /**

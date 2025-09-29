@@ -97,14 +97,12 @@ export function SpaceToolRenderer({
       setToolState(initialState);
     } catch (err) {
       setError('Failed to initialize tool');
-      console.error('Tool initialization error:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const handleToolAction = (action: string, data?: any) => {
-    console.log('Tool action:', action, data);
 
     // Handle common tool actions
     switch (action) {

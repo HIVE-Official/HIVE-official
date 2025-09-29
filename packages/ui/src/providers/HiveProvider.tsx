@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * HIVE Provider
  * Main application provider that wraps all other providers

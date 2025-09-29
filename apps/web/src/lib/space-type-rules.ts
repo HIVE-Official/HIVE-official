@@ -231,13 +231,18 @@ export function isToolAllowedInSpaceType(toolType: string, spaceType: SpaceType)
 export function getContentVisibility(spaceType: SpaceType, contentType: 'posts' | 'events' | 'members') {
   const rules = getSpaceTypeRules(spaceType);
 
+  // Fallback to safe defaults if rules are not found
+  if (!rules || !rules.visibility) {
+    return 'members_only'; // Safe default for all content types
+  }
+
   switch (contentType) {
     case 'posts':
-      return rules.visibility.posts;
+      return rules.visibility.posts || 'members_only';
     case 'events':
-      return rules.visibility.events;
+      return rules.visibility.events || 'members_only';
     case 'members':
-      return rules.visibility.memberProfiles;
+      return rules.visibility.memberProfiles || 'members_only';
     default:
       return 'members_only';
   }

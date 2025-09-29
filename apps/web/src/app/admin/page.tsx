@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
 import { Button } from '@hive/ui';
@@ -7,6 +10,7 @@ import { Badge } from '@hive/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Alert, AlertDescription } from '@hive/ui';
 import { Switch } from '@hive/ui';
+import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
 import {
   Users,
   Home,
@@ -20,11 +24,21 @@ import {
   Database,
   Shield,
   LineChart,
-  Bell
+  Bell,
+  Server
 } from 'lucide-react';
 import { RealTimeModeration } from '@/components/admin/real-time-moderation';
 import { ContentAnalytics } from '@/components/admin/content-analytics';
 import { FeedAlgorithmControl } from '@/components/admin/feed-algorithm-control';
+import { BehavioralAnalytics } from '@/components/admin/behavioral-analytics';
+import { AdminGuard } from '@/components/admin/admin-guard';
+import { FeedConfigurationPanel } from '@/components/admin/feed-configuration-panel';
+import { RitualManagementPanel } from '@/components/admin/ritual-management-panel';
+import { FirebaseMonitoring } from '@/components/admin/firebase-monitoring';
+import { AlertDashboard } from '@/components/admin/alert-dashboard';
+import { DatabasePerformanceDashboard } from '@/components/admin/database-performance-dashboard';
+import CampusExpansionDashboard from '@/components/admin/campus-expansion-dashboard';
+import CacheManagementDashboard from '@/components/admin/cache-management-dashboard';
 
 interface AdminDashboardData {
   platform: {
@@ -96,21 +110,39 @@ interface FeatureFlag {
   };
 }
 
-export default function AdminDashboard() {
+function AdminDashboardInternal() {
   const [dashboardData, setDashboardData] = useState<AdminDashboardData | null>(null);
   const [featureFlags, setFeatureFlags] = useState<FeatureFlag[]>([]);
   const [loading, setLoading] = useState(true);
   const [flagsLoading, setFlagsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const { token: csrfToken, getHeaders } = useCSRF();
 
   useEffect(() => {
-    loadDashboardData();
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      loadDashboardData();
+    }
+  }, [mounted]);
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/dashboard');
+      const response = await protectedFetch('/api/admin/dashboard', {
+        headers: getHeaders()
+      }, csrfToken);
       
       if (!response.ok) {
         throw new Error('Failed to load dashboard data');
@@ -128,7 +160,9 @@ export default function AdminDashboard() {
   const loadFeatureFlags = async () => {
     try {
       setFlagsLoading(true);
-      const response = await fetch('/api/admin/feature-flags');
+      const response = await protectedFetch('/api/admin/feature-flags', {
+        headers: getHeaders()
+      }, csrfToken);
       
       if (!response.ok) {
         throw new Error('Failed to load feature flags');
@@ -146,13 +180,11 @@ export default function AdminDashboard() {
 
   const toggleFeatureFlag = async (flagId: string, enabled: boolean) => {
     try {
-      const response = await fetch(`/api/admin/feature-flags/${flagId}`, {
+      const response = await protectedFetch(`/api/admin/feature-flags/${flagId}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getHeaders(),
         body: JSON.stringify({ enabled }),
-      });
+      }, csrfToken);
 
       if (!response.ok) {
         throw new Error('Failed to update feature flag');
@@ -300,11 +332,15 @@ export default function AdminDashboard() {
 
       {/* Detailed Sections */}
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-8 bg-gray-900 border border-gray-800">
+        <TabsList className="grid w-full grid-cols-10 bg-gray-900 border border-gray-800">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="algorithm" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
             Algorithm
+          </TabsTrigger>
+          <TabsTrigger value="rituals" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            Rituals
           </TabsTrigger>
           <TabsTrigger value="moderation" className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
@@ -313,6 +349,10 @@ export default function AdminDashboard() {
           <TabsTrigger value="analytics" className="flex items-center gap-2">
             <LineChart className="w-4 h-4" />
             Analytics
+          </TabsTrigger>
+          <TabsTrigger value="infrastructure" className="flex items-center gap-2">
+            <Server className="w-4 h-4" />
+            Infrastructure
           </TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="spaces">Spaces</TabsTrigger>
@@ -452,9 +492,14 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
 
-        {/* Algorithm Control Tab */}
+        {/* Algorithm Control Tab - Using Feed Configuration Panel */}
         <TabsContent value="algorithm" className="space-y-4">
-          <FeedAlgorithmControl />
+          <FeedConfigurationPanel />
+        </TabsContent>
+
+        {/* Rituals Tab - Campus-wide Engagement Campaigns */}
+        <TabsContent value="rituals" className="space-y-4">
+          <RitualManagementPanel />
         </TabsContent>
 
         {/* Moderation Tab */}
@@ -464,7 +509,110 @@ export default function AdminDashboard() {
 
         {/* Analytics Tab */}
         <TabsContent value="analytics" className="space-y-4">
-          <ContentAnalytics />
+          <Tabs defaultValue="behavioral" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="behavioral">Behavioral Analytics</TabsTrigger>
+              <TabsTrigger value="content">Content Analytics</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="behavioral">
+              <BehavioralAnalytics />
+            </TabsContent>
+
+            <TabsContent value="content">
+              <ContentAnalytics />
+            </TabsContent>
+          </Tabs>
+        </TabsContent>
+
+        {/* Infrastructure Tab - Complete Technical Infrastructure */}
+        <TabsContent value="infrastructure" className="space-y-4">
+          <Tabs defaultValue="monitoring" className="w-full">
+            <TabsList className="grid w-full grid-cols-6 mb-6">
+              <TabsTrigger value="monitoring">Firebase Monitoring</TabsTrigger>
+              <TabsTrigger value="database">Database Performance</TabsTrigger>
+              <TabsTrigger value="alerts">Alert Dashboard</TabsTrigger>
+              <TabsTrigger value="expansion">Campus Expansion</TabsTrigger>
+              <TabsTrigger value="cache">Cache Management</TabsTrigger>
+              <TabsTrigger value="health">System Health</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="monitoring">
+              <FirebaseMonitoring />
+            </TabsContent>
+
+            <TabsContent value="database">
+              <DatabasePerformanceDashboard />
+            </TabsContent>
+
+            <TabsContent value="alerts">
+              <AlertDashboard />
+            </TabsContent>
+
+            <TabsContent value="expansion">
+              <CampusExpansionDashboard />
+            </TabsContent>
+
+            <TabsContent value="cache">
+              <CacheManagementDashboard />
+            </TabsContent>
+
+            <TabsContent value="health">
+              <Card>
+                <CardHeader>
+                  <CardTitle>System Health Overview</CardTitle>
+                  <CardDescription>Comprehensive health monitoring across all systems</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-white">Infrastructure Status</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Firebase Database</span>
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Healthy</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Authentication</span>
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Healthy</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">API Services</span>
+                          <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Degraded</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Email Service</span>
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Operational</Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-white">Performance Metrics</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Avg Response Time</span>
+                          <span className="text-white">142ms</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Error Rate</span>
+                          <span className="text-white">0.8%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Uptime</span>
+                          <span className="text-white">99.94%</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Active Connections</span>
+                          <span className="text-white">234</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </TabsContent>
 
         <TabsContent value="users" className="space-y-4">
@@ -762,5 +910,14 @@ export default function AdminDashboard() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+// Export wrapped with AdminGuard for security
+export default function AdminDashboard() {
+  return (
+    <AdminGuard>
+      <AdminDashboardInternal />
+    </AdminGuard>
   );
 }

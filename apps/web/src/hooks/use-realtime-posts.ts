@@ -66,8 +66,12 @@ export function useRealtimePosts({ spaceId, enabled = true, limitCount = 50 }: U
 
     // Then set up real-time listener for new posts
     const postsRef = collection(db, 'spaces', spaceId, 'posts');
+
+    // SECURITY: Posts should inherit campus from space, but we add extra validation
+    const campusId = 'ub-buffalo'; // Hardcoded for UB launch
     const q = query(
       postsRef,
+      where('isDeleted', '==', false), // Never show deleted posts
       orderBy('createdAt', 'desc'),
       limit(limitCount)
     );

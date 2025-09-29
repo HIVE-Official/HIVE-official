@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 // 🚀 **PROFILE SETTINGS STORYBOOK MIGRATION**
 // Replacing complex temp-stubs implementation with sophisticated @hive/ui components
 // Following the successful profile edit page pattern

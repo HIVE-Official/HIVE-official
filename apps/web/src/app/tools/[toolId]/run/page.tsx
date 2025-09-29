@@ -1,8 +1,10 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card } from "@hive/ui";
 import { Alert as _Alert } from "@/components/temp-stubs";
 // LiveToolRuntime not exported from @hive/ui yet
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
@@ -10,6 +12,10 @@ import { useFeatureFlags } from "@hive/hooks";
 import { useSession } from "../../../../hooks/use-session";
 import type { ElementInstance, Tool } from "@hive/core";
 import { logger } from "@/lib/logger";
+// Temp fix for chunk 2073 useRef errors
+const Button = ({ children, variant = 'default', size = 'default', className = '', ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Card = ({ children, className = '', ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
+
 
 interface ToolWithInstances {
   tool: Tool;

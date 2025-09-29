@@ -72,15 +72,16 @@ export const prdSemantic = {
 
   // Brand System (Focused)
   brand: {
-    primary: prdColors.blue[600],       // #0070F3 - Primary brand color
-    secondary: prdColors.gold[500],     // #FFD700 - Secondary accent
-    hover: prdColors.blue[500],         // #0761D1 - Hover states
+    primary: prdColors.gold[500],       // #FFD700 - HIVE Gold Primary
+    secondary: prdColors.gold[400],     // #FFD700 - Gold hover state
+    hover: prdColors.gold[400],         // #FFD700 - Hover states
+    onGold: prdColors.black,            // #000000 - Text on gold backgrounds
   },
 
   // Interactive States
   interactive: {
     hover: 'rgba(255, 255, 255, 0.04)', // Subtle hover
-    focus: prdColors.blue[400],          // #2D7FF9 - Focus rings
+    focus: prdColors.gold[500],          // #FFD700 - Gold focus rings
     active: 'rgba(255, 255, 255, 0.08)', // Active state
     disabled: prdColors.gray[700],       // #404040 - Disabled
   },
@@ -90,14 +91,14 @@ export const prdSemantic = {
     success: prdColors.green[500],      // #00D46A
     warning: prdColors.yellow[500],     // #FFB800
     error: prdColors.red[500],          // #FF3737
-    info: prdColors.blue[600],          // #0070F3
+    info: prdColors.gold[500],          // #FFD700 - Use gold for info
   },
 
   // Border System (Subtle)
   border: {
     default: 'rgba(255, 255, 255, 0.08)',  // Subtle dividers
     hover: 'rgba(255, 255, 255, 0.16)',    // Hover borders
-    focus: prdColors.blue[400],              // Focus borders
+    focus: prdColors.gold[500],              // Gold focus borders
     strong: prdColors.gray[700],             // Strong borders
   },
 } as const;
@@ -152,6 +153,7 @@ export const prdCSSVariables = `
   --hive-brand-primary: ${prdSemantic.brand.primary};
   --hive-brand-secondary: ${prdSemantic.brand.secondary};
   --hive-brand-hover: ${prdSemantic.brand.hover};
+  --hive-brand-on-gold: ${prdSemantic.brand.onGold};
   
   /* Interactive */
   --hive-interactive-hover: ${prdSemantic.interactive.hover};
@@ -190,6 +192,7 @@ export const prdTailwindColors = {
     primary: prdSemantic.brand.primary,
     secondary: prdSemantic.brand.secondary,
     hover: prdSemantic.brand.hover,
+    'on-gold': prdSemantic.brand.onGold,
   },
   'hive-status': {
     success: prdSemantic.status.success,

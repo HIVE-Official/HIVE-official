@@ -109,7 +109,6 @@ export class FeatureRevealSystem {
     
     const docRef = await dbAdmin.collection('features').add(featureDoc);
     
-    console.log(`✨ Registered feature: ${feature.name} (${docRef.id})`);
     return docRef.id;
   }
   
@@ -165,7 +164,6 @@ export class FeatureRevealSystem {
       }
       
     } catch (error) {
-      console.error('Error checking ritual feature unlocks:', error);
     }
     
     return unlockedFeatures;
@@ -194,7 +192,6 @@ export class FeatureRevealSystem {
       // Get feature details
       const feature = await this.getFeature(featureId);
       if (!feature) {
-        console.error(`Feature not found: ${featureId}`);
         return false;
       }
       
@@ -206,7 +203,6 @@ export class FeatureRevealSystem {
       );
       
       if (!dependenciesMet) {
-        console.error(`Dependencies not met for feature: ${featureId}`);
         return false;
       }
       
@@ -236,11 +232,9 @@ export class FeatureRevealSystem {
       // Trigger dependent features
       await this.checkDependentFeatures(featureId, scope, targetId);
       
-      console.log(`🔓 Unlocked feature: ${feature.name} for ${scope}:${targetId}`);
       return true;
       
     } catch (error) {
-      console.error('Error unlocking feature:', error);
       return false;
     }
   }
@@ -280,7 +274,6 @@ export class FeatureRevealSystem {
       return false;
       
     } catch (error) {
-      console.error('Error checking feature access:', error);
       return false;
     }
   }
@@ -318,7 +311,6 @@ export class FeatureRevealSystem {
       });
       
     } catch (error) {
-      console.error('Error recording feature usage:', error);
     }
   }
   
@@ -346,7 +338,6 @@ export class FeatureRevealSystem {
       })) as CampusFeatureState[];
       
     } catch (error) {
-      console.error('Error getting campus feature progress:', error);
       return [];
     }
   }
@@ -383,7 +374,6 @@ export class FeatureRevealSystem {
       return features;
       
     } catch (error) {
-      console.error('Error getting user unlocked features:', error);
       return [];
     }
   }
@@ -403,7 +393,6 @@ export class FeatureRevealSystem {
         createdAt: doc.data()!.createdAt?.toDate() || new Date()
       } as Feature;
     } catch (error) {
-      console.error('Error getting feature:', error);
       return null;
     }
   }
@@ -435,7 +424,6 @@ export class FeatureRevealSystem {
         lastUsedAt: doc.data().lastUsedAt?.toDate()
       } as FeatureUnlockRecord;
     } catch (error) {
-      console.error('Error getting feature unlock:', error);
       return null;
     }
   }
@@ -499,7 +487,6 @@ export class FeatureRevealSystem {
     delayMinutes: number
   ): Promise<void> {
     // TODO: Schedule campus-wide announcement
-    console.log(`📅 Scheduled feature reveal: ${featureId} for ${university} in ${delayMinutes} minutes`);
   }
 }
 

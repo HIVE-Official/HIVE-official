@@ -1,9 +1,9 @@
+'use client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 /**
  * Modal and Toast System
  * Global notification and dialog infrastructure for HIVE
  */
-"use client";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/utils.js';
@@ -13,16 +13,16 @@ const ModalContext = createContext({
     closeModal: () => { },
     closeAllModals: () => { },
 });
-export const useModal = () => useContext(ModalContext);
+const useModal = () => useContext(ModalContext);
 const ToastContext = createContext({
     toasts: [],
     showToast: () => '',
     removeToast: () => { },
     clearToasts: () => { },
 });
-export const useToast = () => useContext(ToastContext);
+const useToast = () => useContext(ToastContext);
 // Modal Provider
-export const ModalProvider = ({ children }) => {
+const ModalProvider = ({ children }) => {
     const [modals, setModals] = useState([]);
     const openModal = useCallback((modal) => {
         const id = `modal-${Date.now()}-${Math.random()}`;
@@ -39,7 +39,7 @@ export const ModalProvider = ({ children }) => {
     return (_jsxs(ModalContext.Provider, { value: { modals, openModal, closeModal, closeAllModals }, children: [children, modals.map(modal => (_jsx(ModalRenderer, { modal: modal, onClose: () => closeModal(modal.id) }, modal.id)))] }));
 };
 // Toast Provider
-export const ToastProvider = ({ children }) => {
+const ToastProvider = ({ children }) => {
     const [toasts, setToasts] = useState([]);
     const showToast = useCallback((toast) => {
         const id = `toast-${Date.now()}-${Math.random()}`;
@@ -126,11 +126,11 @@ const ToastItem = ({ toast, onRemove }) => {
     return (_jsx("div", { className: cn('pointer-events-auto min-w- max-w- p-4 rounded-lg', 'bg-black border shadow-xl', 'animate-in slide-in-from-right fade-in duration-200', isLeaving && 'animate-out slide-out-to-right fade-out duration-200', typeStyles[toast.type || 'info']), children: _jsxs("div", { className: "flex items-start gap-3", children: [_jsx("span", { className: cn('flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold', toast.type === 'success' && 'bg-green-500 text-white', toast.type === 'error' && 'bg-red-500 text-white', toast.type === 'warning' && 'bg-orange-500 text-white', (!toast.type || toast.type === 'info') && 'bg-[var(--hive-brand-secondary)] text-black'), children: typeIcons[toast.type || 'info'] }), _jsxs("div", { className: "flex-1", children: [toast.title && (_jsx("h4", { className: "font-semibold text-white mb-1", children: toast.title })), _jsx("p", { className: "text-sm text-white/80", children: toast.message }), toast.action && (_jsx("button", { onClick: toast.action.onClick, className: "mt-2 text-sm font-medium text-[var(--hive-brand-secondary)] hover:text-[var(--hive-brand-secondary-hover)] transition-colors", children: toast.action.label }))] }), _jsx("button", { onClick: handleRemove, className: "flex-shrink-0 p-1 text-white/40 hover:text-white transition-colors", children: _jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) }) })] }) }));
 };
 // Combined Provider
-export const NotificationProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
     return (_jsx(ModalProvider, { children: _jsx(ToastProvider, { children: children }) }));
 };
 // Utility Hooks
-export const useConfirm = () => {
+const useConfirm = () => {
     const { openModal, closeModal } = useModal();
     const confirm = useCallback((options) => {
         return new Promise((resolve) => {
@@ -161,12 +161,6 @@ export const useConfirm = () => {
     }, [openModal, closeModal]);
     return confirm;
 };
-export default {
-    ModalProvider,
-    ToastProvider,
-    NotificationProvider,
-    useModal,
-    useToast,
-    useConfirm,
-};
+// Named exports are preferred over default exports
+export { ModalProvider, ToastProvider, NotificationProvider, useModal, useToast, useConfirm, };
 //# sourceMappingURL=modal-toast-system.js.map

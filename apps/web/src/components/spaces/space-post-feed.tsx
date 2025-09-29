@@ -190,7 +190,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)]">
+    <div className="flex flex-col min-h-[400px] max-h-[calc(100vh-300px)] md:max-h-[calc(100vh-200px)]">
       {/* Pinned Posts */}
       {pinnedPosts.length > 0 && (
         <div className="border-b border-gray-800 bg-yellow-500/5">

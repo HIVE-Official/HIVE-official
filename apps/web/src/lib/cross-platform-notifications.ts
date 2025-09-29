@@ -337,7 +337,6 @@ export class CrossPlatformNotificationManager {
     // Apply user preferences
     const filteredConfig = await this.applyUserPreferences(config);
     if (!filteredConfig) {
-      console.log(`Notification filtered out by user preferences: ${notificationId}`);
       return notificationId;
     }
 
@@ -393,7 +392,6 @@ export class CrossPlatformNotificationManager {
 
       return success;
     } catch (error) {
-      console.error('Error sending notification:', error);
       return false;
     }
   }
@@ -414,7 +412,6 @@ export class CrossPlatformNotificationManager {
         return preferences;
       }
     } catch (error) {
-      console.error('Error fetching user preferences:', error);
     }
 
     // Return default preferences
@@ -454,7 +451,6 @@ export class CrossPlatformNotificationManager {
         this.userPreferences.set(userId, updated);
       }
     } catch (error) {
-      console.error('Error updating user preferences:', error);
     }
   }
 
@@ -596,7 +592,6 @@ export class CrossPlatformNotificationManager {
       case 'desktop':
         return await this.deliverDesktop(config);
       default:
-        console.warn(`Unknown delivery channel: ${channel}`);
         return false;
     }
   }
@@ -604,10 +599,8 @@ export class CrossPlatformNotificationManager {
   private async deliverInApp(config: NotificationConfig): Promise<boolean> {
     try {
       // In-app notifications are handled by the unified state management
-      console.log(`In-app notification delivered: ${config.id}`);
       return true;
     } catch (error) {
-      console.error('Error delivering in-app notification:', error);
       return false;
     }
   }
@@ -619,13 +612,11 @@ export class CrossPlatformNotificationManager {
         
         if (registration.pushManager) {
           // This would typically use the Push API with your server
-          console.log(`Push notification would be delivered: ${config.id}`);
           return true;
         }
       }
       return false;
     } catch (error) {
-      console.error('Error delivering push notification:', error);
       return false;
     }
   }
@@ -640,7 +631,6 @@ export class CrossPlatformNotificationManager {
       
       return response.ok;
     } catch (error) {
-      console.error('Error delivering email notification:', error);
       return false;
     }
   }
@@ -665,7 +655,6 @@ export class CrossPlatformNotificationManager {
       }
       return false;
     } catch (error) {
-      console.error('Error delivering desktop notification:', error);
       return false;
     }
   }
@@ -681,7 +670,6 @@ export class CrossPlatformNotificationManager {
   private async processRetryQueue(): Promise<void> {
     for (const [id, { config, attempt }] of this.retryQueue.entries()) {
       if (attempt >= config.delivery.timing.maxRetries) {
-        console.error(`Max retries exceeded for notification: ${id}`);
         this.retryQueue.delete(id);
         continue;
       }
@@ -715,7 +703,6 @@ export class CrossPlatformNotificationManager {
         })
       });
     } catch (error) {
-      console.error('Error logging notification delivery:', error);
     }
   }
 
@@ -723,10 +710,8 @@ export class CrossPlatformNotificationManager {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw-notifications.js')
         .then(registration => {
-          console.log('Notification service worker registered:', registration);
         })
         .catch(error => {
-          console.error('Notification service worker registration failed:', error);
         });
     }
   }

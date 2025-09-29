@@ -1,0 +1,293 @@
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  getDoc,
+  onSnapshot,
+  Timestamp
+} from 'firebase/firestore';
+import { db } from '../firebase';
+import type { User } from 'firebase/auth';
+
+/**
+ * SPEC-COMPLIANT PRESENCE SERVICE
+ *
+ * Per SPEC.md:
+ * - Real-time online presence tracking
+ * - Ghost mode support (appear offline while online)
+ * - Campus-isolated presence data
+ * - Automatic cleanup on disconnect
+ *
+ * Behavioral Design: Creates FOMO when you see someone online you want to connect with
+ */
+
+export type PresenceStatus = 'online' | 'away' | 'ghost' | 'offline';
+
+export interface PresenceData {
+  uid: string;
+  campusId: string;
+  status: PresenceStatus;
+  lastSeen: Timestamp;
+  isGhostMode: boolean;
+  deviceInfo?: {
+    platform: 'web' | 'mobile';
+    browser?: string;
+  };
+}
+
+class PresenceService {
+  private presenceRef: any = null;
+  private currentUser: User | null = null;
+  private isGhostMode: boolean = false;
+  private activityTimer: NodeJS.Timeout | null = null;
+  private unsubscribe: (() => void) | null = null;
+
+  /**
+   * Initialize presence for a user
+   */
+  async initializePresence(user: User, campusId: string = 'ub-buffalo') {
+    if (!user) return;
+
+    this.currentUser = user;
+    const presenceDocRef = doc(db, 'presence', user.uid);
+
+    // Set initial online status
+    const presenceData: PresenceData = {
+      uid: user.uid,
+      campusId,
+      status: this.isGhostMode ? 'ghost' : 'online',
+      lastSeen: serverTimestamp() as Timestamp,
+      isGhostMode: this.isGhostMode,
+      deviceInfo: {
+        platform: 'web',
+        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' :
+                navigator.userAgent.includes('Safari') ? 'Safari' :
+                navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Other'
+      }
+    };
+
+    try {
+      // Set online status
+      await setDoc(presenceDocRef, presenceData, { merge: true });
+
+      // Note: onDisconnect is only available with Realtime Database, not Firestore
+      // User cleanup will need to be handled differently (e.g., periodic cleanup or on logout)
+
+      // Start activity monitoring
+      this.startActivityMonitoring();
+
+      // Store reference for cleanup
+      this.presenceRef = presenceDocRef;
+
+      console.log('✅ Presence initialized for user:', user.uid);
+    } catch (error) {
+      console.error('❌ Error initializing presence:', error);
+    }
+  }
+
+  /**
+   * Toggle ghost mode
+   */
+  async toggleGhostMode(enabled: boolean) {
+    this.isGhostMode = enabled;
+
+    if (!this.currentUser || !this.presenceRef) return;
+
+    const newStatus: PresenceStatus = enabled ? 'ghost' : 'online';
+
+    try {
+      await setDoc(this.presenceRef, {
+        status: newStatus,
+        isGhostMode: enabled,
+        lastSeen: serverTimestamp()
+      }, { merge: true });
+
+      console.log(`👻 Ghost mode ${enabled ? 'enabled' : 'disabled'}`);
+    } catch (error) {
+      console.error('❌ Error toggling ghost mode:', error);
+    }
+  }
+
+  /**
+   * Update user status (online, away, ghost)
+   */
+  async updateStatus(status: PresenceStatus) {
+    if (!this.currentUser || !this.presenceRef) return;
+
+    // If ghost mode is on, always show as ghost/offline
+    const effectiveStatus = this.isGhostMode ? 'ghost' : status;
+
+    try {
+      await setDoc(this.presenceRef, {
+        status: effectiveStatus,
+        lastSeen: serverTimestamp()
+      }, { merge: true });
+
+      console.log(`📊 Status updated to: ${effectiveStatus}`);
+    } catch (error) {
+      console.error('❌ Error updating status:', error);
+    }
+  }
+
+  /**
+   * Monitor user activity and set to away after inactivity
+   */
+  private startActivityMonitoring() {
+    const INACTIVE_THRESHOLD = 5 * 60 * 1000; // 5 minutes
+
+    const resetActivityTimer = () => {
+      // Clear existing timer
+      if (this.activityTimer) {
+        clearTimeout(this.activityTimer);
+      }
+
+      // Set status to online if not in ghost mode
+      if (!this.isGhostMode) {
+        this.updateStatus('online');
+      }
+
+      // Set new timer for away status
+      this.activityTimer = setTimeout(() => {
+        if (!this.isGhostMode) {
+          this.updateStatus('away');
+        }
+      }, INACTIVE_THRESHOLD);
+    };
+
+    // Listen for user activity
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+      document.addEventListener(event, resetActivityTimer, true);
+    });
+
+    // Start the timer
+    resetActivityTimer();
+  }
+
+  /**
+   * Subscribe to another user's presence
+   */
+  subscribeToUserPresence(
+    uid: string,
+    callback: (presence: PresenceData | null) => void
+  ): () => void {
+    const presenceDocRef = doc(db, 'presence', uid);
+
+    const unsubscribe = onSnapshot(presenceDocRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data() as PresenceData;
+
+        // If user is in ghost mode, show as offline to others
+        if (data.isGhostMode && uid !== this.currentUser?.uid) {
+          callback({
+            ...data,
+            status: 'offline'
+          });
+        } else {
+          callback(data);
+        }
+      } else {
+        callback(null);
+      }
+    }, (error) => {
+      console.error('❌ Error subscribing to presence:', error);
+      callback(null);
+    });
+
+    return unsubscribe;
+  }
+
+  /**
+   * Get current presence for a user
+   */
+  async getUserPresence(uid: string): Promise<PresenceData | null> {
+    try {
+      const presenceDoc = await getDoc(doc(db, 'presence', uid));
+
+      if (presenceDoc.exists()) {
+        const data = presenceDoc.data() as PresenceData;
+
+        // If user is in ghost mode, show as offline to others
+        if (data.isGhostMode && uid !== this.currentUser?.uid) {
+          return {
+            ...data,
+            status: 'offline'
+          };
+        }
+
+        return data;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('❌ Error getting user presence:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Clean up presence on logout
+   */
+  async cleanup() {
+    if (this.activityTimer) {
+      clearTimeout(this.activityTimer);
+    }
+
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    if (this.presenceRef && this.currentUser) {
+      try {
+        await setDoc(this.presenceRef, {
+          status: 'offline',
+          lastSeen: serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        console.error('❌ Error cleaning up presence:', error);
+      }
+    }
+
+    this.presenceRef = null;
+    this.currentUser = null;
+    this.isGhostMode = false;
+  }
+
+  /**
+   * Check if a user appears online (accounting for ghost mode)
+   */
+  isUserOnline(presence: PresenceData | null): boolean {
+    if (!presence) return false;
+
+    // For the current user, show true status even in ghost mode
+    if (presence.uid === this.currentUser?.uid) {
+      return presence.status === 'online' || presence.status === 'away';
+    }
+
+    // For others, ghost mode appears as offline
+    if (presence.isGhostMode) return false;
+
+    return presence.status === 'online' || presence.status === 'away';
+  }
+
+  /**
+   * Get display status for UI (handles ghost mode visibility)
+   */
+  getDisplayStatus(presence: PresenceData | null, viewerUid?: string): PresenceStatus {
+    if (!presence) return 'offline';
+
+    // Show true status to self
+    if (presence.uid === viewerUid) {
+      return presence.status;
+    }
+
+    // Ghost mode appears as offline to others
+    if (presence.isGhostMode) {
+      return 'offline';
+    }
+
+    return presence.status;
+  }
+}
+
+// Export singleton instance
+export const presenceService = new PresenceService();

@@ -1,7 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from '@/lib/logger';
 // Temporary ritual types for development
 interface Ritual {
   id: string;
@@ -17,13 +19,101 @@ interface Ritual {
 type RitualType = 'onboarding' | 'seasonal' | 'achievement' | 'community' | 'creative' | 'emergency' | 'legacy';
 type ParticipationType = 'individual' | 'collective' | 'progressive' | 'competitive' | 'collaborative' | 'creative' | 'social';
 
-// Mock ritual framework for development
+// Real ritual framework with Firestore operations
 const ritualFramework = {
   createRitual: async (ritual: any): Promise<string> => {
-    return `ritual_${Date.now()}`;
+    try {
+      // Add timestamp fields
+      const ritualData = {
+        ...ritual,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        version: 1,
+        // Initialize runtime metrics
+        stats: {
+          totalParticipants: 0,
+          activeParticipants: 0,
+          completedParticipants: 0,
+          averageProgress: 0,
+          lastActivityAt: new Date()
+        }
+      };
+
+      // Create ritual document
+      const ritualRef = await dbAdmin.collection('rituals').add(ritualData);
+
+      // Initialize milestone tracking
+      if (ritual.milestones && ritual.milestones.length > 0) {
+        const batch = dbAdmin.batch();
+
+        ritual.milestones.forEach((milestone: any, index: number) => {
+          const milestoneRef = dbAdmin.collection('rituals').doc(ritualRef.id).collection('milestones').doc(`milestone_${index}`);
+          batch.set(milestoneRef, {
+            ...milestone,
+            ritualId: ritualRef.id,
+            isReached: false,
+            reachedAt: null,
+            participantsCompleted: 0,
+            createdAt: new Date()
+          });
+        });
+
+        await batch.commit();
+      }
+
+      logger.info('✅ Created ritual with real Firestore operations', {
+        ritualId: ritualRef.id,
+        name: ritual.name,
+        type: ritual.type
+      });
+
+      return ritualRef.id;
+    } catch (error) {
+      logger.error('Failed to create ritual', { error, ritualName: ritual.name });
+      throw new Error('Failed to create ritual in Firestore');
+    }
+  },
+
+  // Add ritual participation logic
+  joinRitual: async (ritualId: string, userId: string): Promise<string> => {
+    try {
+      const participationData = {
+        ritualId,
+        userId,
+        status: 'joined',
+        joinedAt: new Date(),
+        progressPercentage: 0,
+        actionsCompleted: [],
+        milestonesReached: [],
+        currentStreak: 0,
+        longestStreak: 0,
+        lastActivityAt: new Date(),
+        metadata: {
+          entryPoint: 'ritual_browser',
+          deviceType: 'web'
+        }
+      };
+
+      const participationRef = await dbAdmin.collection('ritual_participation').add(participationData);
+
+      // Update ritual stats
+      await dbAdmin.collection('rituals').doc(ritualId).update({
+        'stats.totalParticipants': admin.firestore.FieldValue.increment(1),
+        'stats.activeParticipants': admin.firestore.FieldValue.increment(1),
+        'stats.lastActivityAt': new Date(),
+        updatedAt: new Date()
+      });
+
+      logger.info('✅ User joined ritual', { ritualId, userId, participationId: participationRef.id });
+
+      return participationRef.id;
+    } catch (error) {
+      logger.error('Failed to join ritual', { error, ritualId, userId });
+      throw new Error('Failed to join ritual');
+    }
   }
 };
-import { logger } from "@/lib/structured-logger";
+
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
 

@@ -104,7 +104,6 @@ function loadCredentials(): admin.credential.Credential | null {
     return null;
   } catch (error) {
     // Log credential loading error (without sensitive data)
-    console.error('Credential loading failed:', error instanceof Error ? error.message : 'Unknown error');
     return null;
   }
 }
@@ -144,15 +143,12 @@ function initializeFirebaseSecure(): void {
     firebaseInitialized = true;
     
     // Log success without credential details
-    console.log(`Firebase Admin initialized for ${currentEnvironment}`);
     
   } catch (error) {
     initializationError = error instanceof Error ? error : new Error(String(error));
     firebaseInitialized = false;
     
     // Log initialization failure (without sensitive data)
-    console.error(`Firebase Admin initialization failed for ${currentEnvironment}:`, 
-      error instanceof Error ? error.message : 'Unknown error');
     
     // Capture error for monitoring
     captureError(initializationError, {

@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { validateSpaceJoinability, addSecureCampusMetadata, CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 const joinSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required")
@@ -19,54 +20,23 @@ export const POST = withAuthValidationAndErrors(
     const { spaceId } = body;
     const userId = getUserId(request);
 
-    // Get space details from flat collection
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    // SECURITY: Use secure validation with campus isolation
+    const joinValidation = await validateSpaceJoinability(userId, spaceId);
 
-    if (!spaceDoc.exists) {
-      return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    if (!joinValidation.canJoin) {
+      const status = joinValidation.error === 'Space not found' ? 404 : 403;
+      return respond.error(joinValidation.error!, "FORBIDDEN", { status });
     }
 
-    const space = spaceDoc.data()!;
+    const space = joinValidation.space!;
 
-    // Check if space is private and requires invitation
-    if (space.isPrivate) {
-      return respond.error("This space is private and requires an invitation", "FORBIDDEN", { status: 403 });
-    }
-
-    // Check if user is already a member using flat spaceMembers collection
+    // Check for existing inactive membership to reactivate
     const existingMembershipQuery = dbAdmin.collection('spaceMembers')
       .where('spaceId', '==', spaceId)
       .where('userId', '==', userId)
       .limit(1);
-    
+
     const existingMembershipSnapshot = await existingMembershipQuery.get();
-
-    if (!existingMembershipSnapshot.empty) {
-      const existingMember = existingMembershipSnapshot.docs[0].data();
-      if (existingMember.isActive) {
-        return respond.error("You are already a member of this space", "CONFLICT", { status: 409 });
-      }
-      // If inactive membership exists, we'll reactivate it below
-    }
-
-    // Greek life restriction: Check if user is trying to join a Greek life space
-    if (space.type === 'greek_life') {
-      // Check if user is already in any Greek life space
-      const existingGreekQuery = dbAdmin.collection('spaceMembers')
-        .where('userId', '==', userId)
-        .where('isActive', '==', true);
-      
-      const existingGreekSnapshot = await existingGreekQuery.get();
-      
-      for (const memberDoc of existingGreekSnapshot.docs) {
-        const memberData = memberDoc.data();
-        // Check if this membership is for a Greek life space
-        const memberSpaceDoc = await dbAdmin.collection('spaces').doc(memberData.spaceId).get();
-        if (memberSpaceDoc.exists && memberSpaceDoc.data()?.type === 'greek_life') {
-          return respond.error("You can only be a member of one Greek life organization at a time", "FORBIDDEN", { status: 403 });
-        }
-      }
-    }
 
     // Perform the join operation atomically using batch write
     const batch = dbAdmin.batch();
@@ -75,15 +45,22 @@ export const POST = withAuthValidationAndErrors(
     // If user had inactive membership, reactivate it
     if (!existingMembershipSnapshot.empty) {
       const existingMemberDoc = existingMembershipSnapshot.docs[0];
-      batch.update(existingMemberDoc.ref, {
-        isActive: true,
-        joinedAt: now,
-        permissions: ['post']
-      });
+      const memberData = existingMemberDoc.data();
+
+      // Only reactivate if it's inactive
+      if (!memberData.isActive) {
+        batch.update(existingMemberDoc.ref, {
+          isActive: true,
+          joinedAt: now,
+          permissions: ['post']
+        });
+      } else {
+        return respond.error("You are already a member of this space", "CONFLICT", { status: 409 });
+      }
     } else {
-      // Create new membership in flat spaceMembers collection
+      // Create new membership with secure campus metadata
       const memberRef = dbAdmin.collection('spaceMembers').doc();
-      batch.set(memberRef, {
+      batch.set(memberRef, addSecureCampusMetadata({
         spaceId,
         userId,
         role: 'member',
@@ -91,19 +68,20 @@ export const POST = withAuthValidationAndErrors(
         isActive: true,
         permissions: ['post'],
         joinMethod: 'manual'
-      });
+      }));
     }
 
     // Update space member count
-    batch.update(spaceDoc.ref, {
+    const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
+    batch.update(spaceRef, {
       'metrics.memberCount': admin.firestore.FieldValue.increment(1),
       'metrics.activeMembers': admin.firestore.FieldValue.increment(1),
       updatedAt: now
     });
 
-    // Record join activity
+    // Record join activity with campus metadata
     const activityRef = dbAdmin.collection('activityEvents').doc();
-    batch.set(activityRef, {
+    batch.set(activityRef, addSecureCampusMetadata({
       userId,
       type: 'space_join',
       spaceId,
@@ -114,7 +92,7 @@ export const POST = withAuthValidationAndErrors(
         spaceType: space.type,
         joinMethod: 'manual'
       }
-    });
+    }));
 
     // Execute all operations atomically
     await batch.commit();

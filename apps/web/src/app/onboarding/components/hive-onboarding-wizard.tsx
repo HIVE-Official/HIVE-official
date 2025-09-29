@@ -8,11 +8,12 @@ import { useAuth } from "@hive/auth-logic";
 // TEMPORARY: Using local implementation due to export resolution issue
 import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  HiveButton, 
-  HiveCard, 
-  HiveProgress, 
-  HiveLogo 
+import {
+  HiveButton,
+  HiveCard,
+  HiveProgress,
+  HiveLogo,
+  CompletionPsychologyEnhancer
 } from "@hive/ui";
 import {
   ArrowLeft,
@@ -23,6 +24,7 @@ import {
   GraduationCap,
   AtSign,
   Camera,
+  Heart,
   Wrench,
   Shield,
   CheckCircle,
@@ -37,8 +39,9 @@ import { HiveFacultyInfoStep } from "./steps/hive-faculty-info-step";
 import { HiveAcademicsStep } from "./steps/hive-academics-step";
 import { HiveHandleStep } from "./steps/hive-handle-step";
 import { HivePhotoStep } from "./steps/hive-photo-step";
+import { HiveInterestsStep } from "./steps/hive-interests-step";
 import { HiveBuilderStep } from "./steps/hive-builder-step";
-import { HiveLegalStep } from "./steps/hive-legal-step";
+import { HiveCompletionStep } from "./steps/hive-completion-step";
 
 // HIVE Progress Component using design system
 function OnboardingProgress({ value, isComplete, className }: { 
@@ -132,70 +135,65 @@ export interface HiveOnboardingData {
   graduationYear: number;
   handle: string;
   profilePhoto?: string;
+  interests?: string[];
   builderRequestSpaces?: string[];
   hasConsented: boolean;
   acceptedTerms: boolean;
   acceptedPrivacy: boolean;
 }
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 7;
 
+// SPEC.md Compliant 7-Step Onboarding Flow
 const steps = [
-  { 
-    id: "welcome", 
-    title: "Welcome to HIVE", 
+  {
+    id: "welcome",
+    title: "Welcome to HIVE",
     component: HiveWelcomeStep,
     icon: Sparkles,
     description: "Your journey begins"
   },
-  { 
-    id: "userType", 
-    title: "Your Role", 
+  {
+    id: "userType",
+    title: "What's Your Role?",
     component: HiveUserTypeStep,
     icon: Users,
     description: "Student, alumni, or faculty"
   },
-  { 
-    id: "name", 
-    title: "Your Identity", 
-    component: HiveNameStep,
+  {
+    id: "personalInfo",
+    title: "Personal Info",
+    component: HiveNameStep, // Will be updated to include basic info
     icon: User,
-    description: "How you'll be known"
+    description: "Tell us about yourself"
   },
-  { 
-    id: "academics", 
-    title: "Academic Profile", 
-    component: HiveAcademicsStep,
-    icon: GraduationCap,
-    description: "Your field of study"
-  },
-  { 
-    id: "handle", 
-    title: "Unique Handle", 
-    component: HiveHandleStep,
-    icon: AtSign,
-    description: "Your @username"
-  },
-  { 
-    id: "photo", 
-    title: "Profile Picture", 
+  {
+    id: "photo",
+    title: "Profile Photo",
     component: HivePhotoStep,
     icon: Camera,
-    description: "Show your personality"
+    description: "Show your face (optional)"
   },
-  { 
-    id: "builder", 
-    title: "Builder Requests", 
-    component: HiveBuilderStep,
-    icon: Wrench,
-    description: "Request builder access"
+  {
+    id: "academicInfo",
+    title: "Academic & Bio",
+    component: HiveAcademicsStep, // Will be updated to include bio
+    icon: GraduationCap,
+    description: "Your studies and story"
   },
-  { 
-    id: "legal", 
-    title: "Terms & Privacy", 
-    component: HiveLegalStep,
-    icon: Shield,
-    description: "Secure your account"
+  {
+    id: "interests",
+    title: "Your Interests",
+    component: HiveInterestsStep,
+    icon: Heart,
+    description: "What are you into? (3-6 selections)"
+  },
+  {
+    id: "complete",
+    title: "You're All Set!",
+    component: HiveCompletionStep,
+    icon: CheckCircle,
+    description: "Welcome to the HIVE community"
   },
 ];
 
@@ -217,6 +215,7 @@ export function HiveOnboardingWizard() {
     graduationYear: new Date().getFullYear() + 4, // Default to 4 years from now
     handle: "",
     profilePhoto: "",
+    interests: [],
     builderRequestSpaces: [],
     hasConsented: false,
     acceptedTerms: false,
@@ -256,15 +255,10 @@ export function HiveOnboardingWizard() {
         return true;
       case "userType":
         return data.userType !== undefined;
-      case "name":
-        return data.firstName && data.firstName.trim().length >= 2 && 
-               data.lastName && data.lastName.trim().length >= 2;
-      case "academics":
-        return data.major.length > 0 && 
-               data.graduationYear >= currentYear && 
-               data.graduationYear <= currentYear + 10;
-      case "handle":
-        return data.handle.length >= 3 && 
+      case "personalInfo":
+        return data.firstName && data.firstName.trim().length >= 2 &&
+               data.lastName && data.lastName.trim().length >= 2 &&
+               data.handle.length >= 3 &&
                data.handle.length <= 20 &&
                /^[a-zA-Z0-9]/.test(data.handle) &&
                /[a-zA-Z0-9]$/.test(data.handle) &&
@@ -272,9 +266,13 @@ export function HiveOnboardingWizard() {
                !/[._-]{2,}/.test(data.handle);
       case "photo":
         return true; // Optional step
-      case "builder":
-        return true;
-      case "legal":
+      case "academicInfo":
+        return data.major.length > 0 &&
+               data.graduationYear >= currentYear &&
+               data.graduationYear <= currentYear + 10;
+      case "interests":
+        return data.interests && data.interests.length >= 3 && data.interests.length <= 6;
+      case "complete":
         return data.acceptedTerms && data.acceptedPrivacy;
       default:
         return false;
@@ -292,8 +290,8 @@ export function HiveOnboardingWizard() {
         if (currentStep === 1) { // From user type, go to faculty info (create custom step)
           setCurrentStep(2); // We'll replace step 2 with faculty info for faculty users
         } else if (currentStep === 2) { // From faculty info, go to builder step
-          setCurrentStep(6); // Go to builder step (index 6)
-        } else if (currentStep === 6) { // From builder, go to legal
+          setCurrentStep(7); // Go to builder step (index 7, was 6 before interests)
+        } else if (currentStep === 7) { // From builder, go to legal
           setCurrentStep(TOTAL_STEPS - 1); // Skip to legal step
         } else {
           setCurrentStep((prev) => prev + 1);
@@ -309,8 +307,8 @@ export function HiveOnboardingWizard() {
       // Faculty get simplified flow: Welcome -> User Type -> Faculty Info -> Builder -> Legal
       if (data.userType === 'faculty') {
         if (currentStep === TOTAL_STEPS - 1) { // From legal, go back to builder
-          setCurrentStep(6); // Go to builder step (index 6)
-        } else if (currentStep === 6) { // From builder, go back to faculty info
+          setCurrentStep(7); // Go to builder step (index 7, was 6 before interests)
+        } else if (currentStep === 7) { // From builder, go back to faculty info
           setCurrentStep(2); // Go to faculty info step (index 2)
         } else if (currentStep === 2) { // From faculty info, go back to user type
           setCurrentStep(1); // Go to user type step
@@ -344,6 +342,7 @@ export function HiveOnboardingWizard() {
         graduationYear: data.userType === 'faculty' ? new Date().getFullYear() : data.graduationYear,
         handle: data.userType === 'faculty' ? `${data.firstName?.toLowerCase()}.${data.lastName?.toLowerCase()}` : data.handle,
         avatarUrl: data.profilePhoto || "",
+        interests: data.interests || [],
         builderRequestSpaces: data.builderRequestSpaces || [],
         consentGiven: data.acceptedTerms && data.acceptedPrivacy,
       };
@@ -355,25 +354,17 @@ export function HiveOnboardingWizard() {
         throw new Error(result.error || 'Onboarding completion failed');
       }
 
-      console.log('🎉 Onboarding completed successfully:', {
-        user: result.user,
-        builderRequestsCreated: result.builderRequestsCreated
-      });
-
       // Auto-create spaces after onboarding
       const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
-      console.log('🏗️ Post-onboarding spaces:', spaceResults);
 
       // Show success animation
       setCurrentStep(TOTAL_STEPS);
 
       // Redirect after delay - give time for session to update
       setTimeout(() => {
-        console.log('🚀 Redirecting to feed after onboarding completion');
         router.push("/feed");
       }, 1500);
     } catch (error) {
-      console.error("Onboarding error:", error);
       
       // Enhanced error handling with user-friendly messages
       let userFriendlyError = "Something went wrong during setup.";
@@ -419,7 +410,7 @@ export function HiveOnboardingWizard() {
 
   // Calculate progress based on user type - faculty has simplified flow
   const getFacultyProgress = () => {
-    const facultySteps = [0, 1, 2, 6, 7]; // Welcome, User Type, Faculty Info, Builder, Legal
+    const facultySteps = [0, 1, 2, 7, 8]; // Welcome, User Type, Faculty Info, Builder, Legal
     const currentStepIndex = facultySteps.indexOf(currentStep);
     return currentStepIndex >= 0 ? ((currentStepIndex + 1) / facultySteps.length) * 100 : 0;
   };
@@ -533,13 +524,13 @@ export function HiveOnboardingWizard() {
                 <div>
                   <div className="text-sm text-[var(--hive-text-muted)]">
                     {data.userType === 'faculty' ? (
-                      `Step ${[0, 1, 2, 6, 7].indexOf(currentStep) + 1} of 5`
+                      `Step ${[0, 1, 2, 7, 8].indexOf(currentStep) + 1} of 5`
                     ) : (
                       `Step ${currentStep + 1} of ${TOTAL_STEPS}`
                     )}
                   </div>
                   <div className="text-lg font-semibold text-[var(--hive-text-primary)]">
-                    {data.userType === 'faculty' && currentStep === 6 ? 'Request Management Access' : currentStepData?.title}
+                    {data.userType === 'faculty' && currentStep === 7 ? 'Request Management Access' : currentStepData?.title}
                   </div>
                 </div>
               </div>
@@ -547,10 +538,14 @@ export function HiveOnboardingWizard() {
                 {Math.round(progress)}% complete
               </div>
             </div>
-            <OnboardingProgress 
-              value={progress} 
-              isComplete={currentStep >= TOTAL_STEPS - 1}
-              className="h-3" 
+            <CompletionPsychologyEnhancer
+              currentStep={currentStep + 1}
+              totalSteps={TOTAL_STEPS}
+              userType={data.userType}
+              onCompletionBoost={(boostType) => {
+                // Track behavioral completion boosts for analytics
+              }}
+              className="mb-4"
             />
           </div>
 
@@ -648,10 +643,10 @@ export function HiveOnboardingWizard() {
       {/* Enhanced Sidebar */}
       <div className="hidden lg:block w-80 p-[var(--hive-spacing-6)] pt-24 relative z-10">
         <div className="sticky top-6 space-y-[var(--hive-spacing-6)]">
-          <StepIndicator 
-            currentStep={data.userType === 'faculty' ? [0, 1, 2, 6, 7].indexOf(currentStep) : currentStep}
+          <StepIndicator
+            currentStep={data.userType === 'faculty' ? [0, 1, 2, 7, 8].indexOf(currentStep) : currentStep}
             totalSteps={data.userType === 'faculty' ? 5 : TOTAL_STEPS}
-            stepTitles={data.userType === 'faculty' ? 
+            stepTitles={data.userType === 'faculty' ?
               ["Welcome to HIVE", "Your Role", "Faculty Information", "Request Management Access", "Terms & Privacy"] :
               steps.map(s => s.title)
             }

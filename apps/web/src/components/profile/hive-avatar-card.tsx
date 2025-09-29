@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { HiveCard } from "@hive/ui";
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CampusProfile {
   fullName: string;
@@ -34,12 +35,24 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
   
   return (
     <div className={`h-full ${className}`}>
-      <HiveCard 
-        className="h-full p-0 bg-hive-background-tertiary border border-hive-brand-primary/20 overflow-hidden cursor-pointer hover:border-hive-brand-primary/40 hover:shadow-lg hover:shadow-hive-brand-primary/10 transition-all duration-300 ease-out group relative transform hover:scale-[1.02]"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={onEditProfile}
+      <motion.div
+        className="h-full"
+        whileHover={{
+          scale: 1.02,
+          y: -2,
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
+        }}
+        whileTap={{
+          scale: 0.98,
+          transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+        }}
       >
+        <HiveCard
+          className="h-full p-0 bg-hive-background-tertiary border border-hive-border-default hover:border-hive-border-hover focus:border-hive-brand-primary overflow-hidden cursor-pointer group relative font-sans hover:shadow-hive-level3 hover:shadow-hive-gold-glow"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={onEditProfile}
+        >
         {/* Main Photo/Avatar Area */}
         <div className="relative h-full">
           {displayPhoto ? (
@@ -53,100 +66,195 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
               />
               
               {/* Tinder-style gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-hive-overlay-shadow-void via-hive-overlay-shadow-soft to-transparent" />
             </div>
           ) : (
             // No Photo State
-            <div className="w-full h-full bg-gradient-to-br from-hive-brand-primary/20 to-hive-brand-primary/10 flex items-center justify-center relative">
+            <div className="w-full h-full bg-gradient-to-br from-hive-overlay-gold-medium to-hive-overlay-gold-subtle flex items-center justify-center relative">
               <div className="text-center px-4">
                 {/* Large Initials Circle */}
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-hive-brand-primary/30 to-hive-brand-primary/20 border-2 border-hive-brand-primary/40 flex items-center justify-center text-3xl font-bold text-hive-text-primary mx-auto mb-6 transition-all duration-300 ease-out group-hover:scale-110 group-hover:border-hive-brand-primary/60 group-hover:shadow-lg group-hover:shadow-hive-brand-primary/20">
+                <motion.div
+                  className="w-24 h-24 rounded-full bg-gradient-to-br from-hive-brand-primary to-hive-background-interactive border-2 border-hive-brand-primary flex items-center justify-center text-3xl font-bold font-sans text-hive-text-primary mx-auto mb-6 shadow-hive-gold-glow"
+                  whileHover={{
+                    scale: 1.1,
+                    boxShadow: "0 0 30px rgba(255, 215, 0, 0.4)",
+                    transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] }
+                  }}
+                >
                   {initials}
-                </div>
-                
+                </motion.div>
+
                 {/* Photo Upload Prompt */}
-                <div className="text-base text-hive-brand-primary font-semibold mb-2 transition-all duration-300 group-hover:text-hive-brand-primary group-hover:scale-105">📷 Add Photo</div>
-                <div className="text-sm text-hive-text-secondary transition-colors duration-300 group-hover:text-hive-text-primary">Upload or take photo</div>
+                <motion.div
+                  className="text-base text-hive-brand-primary font-semibold font-sans mb-2"
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                  }}
+                >📷 Add Photo</motion.div>
+                <div className="text-sm text-hive-text-secondary font-sans group-hover:text-hive-text-primary transition-colors duration-300 ease-out">Upload or take photo</div>
               </div>
               
               {/* Subtle background pattern */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-hive-overlay-white via-transparent to-transparent" />
             </div>
           )}
           
           {/* Bottom Info Overlay - Tinder Style */}
-          <div className="absolute inset-x-0 bottom-0 p-4 transition-all duration-300 group-hover:translate-y-0">
+          <motion.div
+            className="absolute inset-x-0 bottom-0 p-4"
+            initial={{ y: 0 }}
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          >
             <div className="flex items-end justify-between">
               <div className="flex-1 min-w-0">
                 {/* Name + Age + Builder Badge */}
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-lg font-bold text-white truncate transition-all duration-300 group-hover:text-white group-hover:scale-105">
+                  <motion.h3
+                    className="text-lg font-bold font-sans text-hive-text-primary truncate"
+                    whileHover={{
+                      scale: 1.05,
+                      transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                    }}
+                  >
                     {displayName}
                     {profile.age && <span className="font-normal">, {profile.age}</span>}
-                  </h3>
-                  
+                  </motion.h3>
+
                   {profile.isBuilder && (
-                    <div className="flex-shrink-0 px-2 py-1 bg-hive-brand-primary text-hive-background-primary rounded-md text-xs font-bold transition-all duration-300 group-hover:bg-hive-brand-primary group-hover:shadow-lg group-hover:scale-110">
+                    <motion.div
+                      className="flex-shrink-0 px-2 py-1 bg-hive-brand-primary text-hive-brand-onGold rounded-md text-xs font-bold font-sans shadow-hive-gold-glow"
+                      whileHover={{
+                        scale: 1.1,
+                        boxShadow: "0 0 20px rgba(255, 215, 0, 0.4)",
+                        transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                      }}
+                    >
                       🔨
-                    </div>
+                    </motion.div>
                   )}
                 </div>
-                
+
                 {/* Academic Info */}
-                <p className="text-sm text-white/90 capitalize mb-1 truncate">
+                <p className="text-sm text-hive-text-secondary font-sans capitalize mb-1 truncate">
                   {profile.academicYear} • {profile.major}
                 </p>
-                
+
                 {/* Housing Info (smaller) */}
                 {profile.housing && (
-                  <p className="text-xs text-white/70 truncate">
+                  <p className="text-xs text-hive-text-tertiary font-sans truncate">
                     {profile.housing}
                   </p>
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
           
           {/* Settings Gear - Top Right (Hover State) */}
-          <div className={`absolute top-4 right-4 transition-all duration-300 ease-out ${isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 -translate-y-2'}`}>
-            <div className="w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/60 hover:scale-110 transition-all duration-200">
-              <span className="text-white text-lg">⚙️</span>
-            </div>
-          </div>
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                className="absolute top-4 right-4"
+                initial={{ opacity: 0, scale: 0.9, y: -8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: -8 }}
+                transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <motion.div
+                  className="w-10 h-10 bg-hive-overlay-shadow-medium hive-glass rounded-full flex items-center justify-center"
+                  whileHover={{
+                    scale: 1.1,
+                    backgroundColor: "var(--hive-overlay-shadow-deep)",
+                    transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                  }}
+                >
+                  <span className="text-hive-text-primary text-lg">⚙️</span>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Center Photo Action (Hover State) */}
-          <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-            <div className="bg-black/40 backdrop-blur-md rounded-2xl px-6 py-3 transition-all duration-300 hover:bg-black/50 hover:scale-105">
-              <div className="text-center text-white">
-                {displayPhoto ? (
-                  <>
-                    <div className="text-2xl mb-2 transition-transform duration-200 hover:scale-110">📷</div>
-                    <div className="text-sm font-medium">Change Photo</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-2xl mb-2 transition-transform duration-200 hover:scale-110">📷</div>
-                    <div className="text-sm font-medium">Add Photo</div>
-                    <div className="text-xs opacity-80 mt-1">Upload or take photo</div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <motion.div
+                  className="bg-hive-overlay-shadow-medium hive-glass rounded-2xl px-6 py-3"
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "var(--hive-overlay-shadow-deep)",
+                    transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                  }}
+                >
+                  <div className="text-center text-hive-text-primary">
+                    {displayPhoto ? (
+                      <>
+                        <motion.div
+                          className="text-2xl mb-2"
+                          whileHover={{
+                            scale: 1.1,
+                            transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                          }}
+                        >📷</motion.div>
+                        <div className="text-sm font-medium font-sans">Change Photo</div>
+                      </>
+                    ) : (
+                      <>
+                        <motion.div
+                          className="text-2xl mb-2"
+                          whileHover={{
+                            scale: 1.1,
+                            transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                          }}
+                        >📷</motion.div>
+                        <div className="text-sm font-medium font-sans">Add Photo</div>
+                        <div className="text-xs text-hive-text-secondary font-sans mt-1">Upload or take photo</div>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Click to Edit Hint - Bottom Right */}
-          <div className={`absolute bottom-20 right-4 transition-all duration-300 ease-out ${isHovered ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-4 scale-95'}`}>
-            <div className="bg-black/70 backdrop-blur-md text-white text-xs px-3 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-black/80 hover:scale-105">
-              {displayPhoto ? 'Edit Profile ↗' : 'Complete Profile ↗'}
-            </div>
-          </div>
+          <AnimatePresence>
+            {isHovered && (
+              <motion.div
+                className="absolute bottom-20 right-4"
+                initial={{ opacity: 0, x: 16, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 16, scale: 0.95 }}
+                transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <motion.div
+                  className="bg-hive-overlay-shadow-void hive-glass text-hive-text-primary text-xs px-3 py-2 rounded-lg font-medium font-sans"
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "var(--hive-overlay-shadow-deep)",
+                    transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                  }}
+                >
+                  {displayPhoto ? 'Edit Profile ↗' : 'Complete Profile ↗'}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Mobile Touch Indicator */}
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 md:hidden">
-            <div className="w-12 h-1 bg-white/30 rounded-full" />
+            <div className="w-12 h-1 bg-hive-overlay-white rounded-full" />
           </div>
         </div>
-      </HiveCard>
+        </HiveCard>
+      </motion.div>
     </div>
   );
 }

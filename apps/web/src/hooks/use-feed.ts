@@ -56,6 +56,7 @@ export interface FeedOptions {
   limit?: number;
   sortBy?: 'recent' | 'popular' | 'trending';
   types?: string[];
+  enableRealtime?: boolean; // Use Firebase real-time listeners instead of polling
 }
 
 export interface PostInteraction {
@@ -66,6 +67,7 @@ export interface PostInteraction {
 }
 
 export function useFeed(options: FeedOptions = {}) {
+  // Always call hooks at the top level
   const { user } = useAuth();
   const getAuthToken = user?.getIdToken;
   const [feedState, setFeedState] = useState<FeedState>({
@@ -96,7 +98,7 @@ export function useFeed(options: FeedOptions = {}) {
         ...(options.userId && { userId: options.userId }),
         ...(options.sortBy && { sortBy: options.sortBy }),
         ...(options.types && { types: options.types.join(',') }),
-        ...(feedState.posts.length > 0 && !reset && { offset: String(feedState.posts.length) }),
+        ...(!reset && { offset: String(feedState.posts.length) }),
       });
 
       const authToken = getAuthToken ? await getAuthToken() : '';
@@ -150,7 +152,7 @@ export function useFeed(options: FeedOptions = {}) {
         error: error instanceof Error ? error.message : 'Failed to load feed',
       }));
     }
-  }, [user, options, feedState.posts.length]);
+  }, [user, getAuthToken, options.limit, options.spaceId, options.userId, options.sortBy, options.types]);
 
   // Create a new post
   const createPost = useCallback(async (postData: {
@@ -347,12 +349,38 @@ export function useFeed(options: FeedOptions = {}) {
     loadPosts(true);
   }, [loadPosts]);
 
+  // Stabilize options object to prevent unnecessary re-renders
+  const stableOptions = useCallback(() => options, [
+    options.limit,
+    options.spaceId,
+    options.userId,
+    options.sortBy,
+    options.types?.join(',')
+  ]);
+
   // Initial load
   useEffect(() => {
     if (user) {
       loadPosts(true);
     }
-  }, [user, JSON.stringify(options)]);
+  }, [user, loadPosts, stableOptions]);
+
+  // Try to use real-time feed if enabled
+  let realtimeFeedResult: any = null;
+  try {
+    if (options.enableRealtime) {
+      const { useRealtimeFeed } = require('./use-realtime-feed');
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      realtimeFeedResult = useRealtimeFeed(options);
+    }
+  } catch (e) {
+    // Real-time feed not available
+  }
+
+  // If real-time is enabled and available, return the real-time feed
+  if (options.enableRealtime && realtimeFeedResult) {
+    return realtimeFeedResult;
+  }
 
   return {
     // State
@@ -362,7 +390,7 @@ export function useFeed(options: FeedOptions = {}) {
     hasMore: feedState.hasMore,
     error: feedState.error,
     lastUpdated: feedState.lastUpdated,
-    
+
     // Actions
     createPost,
     likePost,
@@ -371,7 +399,7 @@ export function useFeed(options: FeedOptions = {}) {
     commentOnPost,
     loadMore,
     refresh,
-    
+
     // Raw interaction method
     interactWithPost,
   };

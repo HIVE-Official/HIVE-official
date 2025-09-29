@@ -175,7 +175,6 @@ export default function FeedPageStoryBookMigration() {
         const transformedPosts = transformApiDataToStorybook(mockApiResponse);
         setFeedPosts(transformedPosts);
       } catch (error) {
-        console.error("Error loading feed:", error);
         setFeedPosts([]);
       } finally {
         setIsLoading(false);
@@ -364,7 +363,7 @@ export default function FeedPageStoryBookMigration() {
               <Button
                 variant="secondary"
                 className="w-full max-w-md"
-                onClick={() => console.log("Load more posts")}
+                onClick={() => {}}
               >
                 Load More Posts
               </Button>

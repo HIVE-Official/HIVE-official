@@ -439,26 +439,26 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
         lastInteraction: z.ZodDate;
     }, "strip", z.ZodTypeAny, {
         sessionId: string;
+        lastInteraction: Date;
         activeTime: number;
         tabVisible: boolean;
         scrollPosition: number;
-        lastInteraction: Date;
     }, {
         sessionId: string;
+        lastInteraction: Date;
         activeTime: number;
         tabVisible: boolean;
         scrollPosition: number;
-        lastInteraction: Date;
     }>;
 }, "strip", z.ZodTypeAny, {
     timestamp: Date;
     userId: string;
     metadata: {
         sessionId: string;
+        lastInteraction: Date;
         activeTime: number;
         tabVisible: boolean;
         scrollPosition: number;
-        lastInteraction: Date;
     };
     event: "space_heartbeat";
     spaceId: string;
@@ -467,10 +467,10 @@ export declare const FeedAnalyticsEventSchema: z.ZodDiscriminatedUnion<"event", 
     userId: string;
     metadata: {
         sessionId: string;
+        lastInteraction: Date;
         activeTime: number;
         tabVisible: boolean;
         scrollPosition: number;
-        lastInteraction: Date;
     };
     event: "space_heartbeat";
     spaceId: string;

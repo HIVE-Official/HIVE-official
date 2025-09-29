@@ -58,10 +58,6 @@ export async function sendFirebaseMagicLinkEmail({
       });
 
       // Also log to console for easy access
-      console.log('\n=== FIREBASE MAGIC LINK (Development) ===');
-      console.log(`To: ${email}`);
-      console.log(`Link: ${link}`);
-      console.log('==========================================\n');
     }
 
     // Firebase automatically sends the email using its built-in templates

@@ -465,7 +465,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setCacheItem(cacheKey, feedData);
             state.updateLastSyncTime();
           } catch (error) {
-            console.error('Error refreshing feed:', error);
             state.setError('feed', error instanceof Error ? error.message : 'Failed to refresh feed');
           } finally {
             state.setFeedLoading(false);
@@ -508,7 +507,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setCacheItem(cacheKey, spaces);
             state.updateLastSyncTime();
           } catch (error) {
-            console.error('Error refreshing spaces:', error);
             state.setError('spaces', error instanceof Error ? error.message : 'Failed to refresh spaces');
           } finally {
             state.setSpacesLoading(false);
@@ -551,7 +549,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setCacheItem(cacheKey, tools);
             state.updateLastSyncTime();
           } catch (error) {
-            console.error('Error refreshing tools:', error);
             state.setError('tools', error instanceof Error ? error.message : 'Failed to refresh tools');
           } finally {
             state.setToolsLoading(false);
@@ -587,7 +584,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
 
             state.updateLastSyncTime();
           } catch (error) {
-            console.error('Error refreshing profile:', error);
             state.setError('profile', error instanceof Error ? error.message : 'Failed to refresh profile');
           } finally {
             state.setProfileLoading(false);
@@ -606,7 +602,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
               state.refreshProfile(options)
             ]);
           } catch (error) {
-            console.error('Error refreshing all data:', error);
           } finally {
             state.setSyncInProgress(false);
           }
@@ -660,7 +655,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.resolveOptimisticUpdate(action.id, true, result);
             
           } catch (error) {
-            console.error('Optimistic action failed:', error);
             
             // Resolve optimistic update with failure
             state.resolveOptimisticUpdate(action.id, false);
@@ -674,7 +668,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           const state = get();
           
           if (!state.isOnline) {
-            console.log('Skipping sync - offline');
             return;
           }
 
@@ -692,9 +685,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             });
 
             await Promise.all(syncPromises);
-            console.log('Sync completed successfully');
           } catch (error) {
-            console.error('Sync failed:', error);
             state.setError('network', 'Sync failed');
           } finally {
             state.setSyncInProgress(false);
@@ -704,7 +695,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         handleRealtimeUpdate: (update) => {
           const state = get();
           
-          console.log('Handling realtime update:', update);
           
           switch (update.type) {
             case 'feed_update':
@@ -742,7 +732,6 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
               break;
 
             default:
-              console.log('Unknown realtime update type:', update.type);
           }
           
           // Invalidate relevant cache entries
@@ -768,7 +757,6 @@ async function getAuthToken(): Promise<string> {
         : session.token;
     }
   } catch (error) {
-    console.error('Error getting auth token:', error);
   }
   
   return '';
@@ -880,7 +868,6 @@ export function initializeUnifiedState(user: User | null) {
       store.refreshTools(),
       store.refreshProfile()
     ]).catch(error => {
-      console.error('Error initializing unified state:', error);
     });
 
     // Set up real-time integration

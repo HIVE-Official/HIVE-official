@@ -13,11 +13,11 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-// Dynamically import the UniversalShell to avoid SSR issues
+// Import UniversalShell with SSR support for better performance
 const UniversalShell = dynamic(
   () => import('@hive/ui').then(mod => mod.UniversalShell || mod.default),
   {
-    ssr: false,
+    ssr: true, // Enable SSR for better initial load performance
     loading: () => <ShellLoader />
   }
 );
@@ -26,6 +26,7 @@ const UniversalShell = dynamic(
 const NO_SHELL_ROUTES = [
   '/auth/login',
   '/auth/verify',
+  '/signin',
   '/onboarding',
   '/landing',
   '/waitlist',
@@ -95,16 +96,13 @@ export function UniversalShellProvider({ children }: { children: React.ReactNode
   const [messageCount, setMessageCount] = React.useState(3);
 
   const handleSearch = (query: string) => {
-    console.log('Search query:', query);
   };
 
   const handleNotificationsClick = () => {
-    console.log('Notifications clicked');
     setNotificationCount(0);
   };
 
   const handleMessagesClick = () => {
-    console.log('Messages clicked');
     setMessageCount(0);
   };
 

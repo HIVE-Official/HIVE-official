@@ -1,64 +1,37 @@
-// Domain types - Creation
-export * from "./domain/creation/element";
-export * from "./domain/creation/tool";
+/**
+ * @hive/core - Main export file
+ * Domain-Driven Design architecture with proper bounded contexts
+ */
 
-// Domain types - Firestore
-export * from "./domain/firestore/handle";
-export * from "./domain/firestore/member";
-export * from "./domain/firestore/post";
-export * from "./domain/firestore/space";
-export * from "./domain/firestore/user";
+// Domain Models - Specific exports to avoid conflicts
+export { EnhancedProfile } from "./domain/profile/aggregates/enhanced-profile";
+export { Connection, ConnectionType, ConnectionSource } from "./domain/profile/aggregates/connection";
+export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
+export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
+export { SpaceDescription } from "./domain/spaces/value-objects/space-description.value";
+export { SpaceCategory } from "./domain/spaces/value-objects/space-category.value";
+export { EnhancedSpace } from "./domain/spaces/aggregates/enhanced-space";
+export { Tab } from "./domain/spaces/entities/tab";
+export { Widget } from "./domain/spaces/entities/widget";
+export { RitualId } from "./domain/rituals/value-objects/ritual-id.value";
+export { EnhancedRitual } from "./domain/rituals/aggregates/enhanced-ritual";
+export { FeedItem } from "./domain/feed/feed-item";
+export { EnhancedFeed } from "./domain/feed/enhanced-feed";
 
-// Domain types - Profile
-export type {
-  HiveProfile,
-  HiveProfileIdentity,
-  HiveAcademicInfo,
-  HivePersonalInfo,
-  HivePrivacySettings,
-  HiveBuilderInfo,
-  HiveActivityStats,
-  HiveTimestamps,
-  HiveVerificationStatus,
-  HiveProfileUpdateData,
-  HiveProfileDashboard,
-  HiveProfileCreateData,
-  HiveProfileResponse,
-  HiveProfileAnalytics,
-  HiveProfileVisibility,
-  HiveOnlineStatus,
-  HiveActivityType
-} from "./domain/profile/profile";
+// Application Services - Use Case Orchestration
+export * from "./application";
 
-export {
-  getProfileCompleteness,
-  DEFAULT_PRIVACY_SETTINGS,
-  DEFAULT_BUILDER_INFO,
-  isValidHandle as isValidProfileHandle,
-  isValidEmail,
-  getDisplayName,
-  getProfileUrl,
-  isProfilePublic,
-  canViewProfile
-} from "./domain/profile/profile";
+// Repository Pattern - Data Access Layer
+export * from "./infrastructure/repositories/interfaces";
+export * from "./infrastructure/repositories/factory";
 
-// Domain types - Auth
-export * from "./domain/auth/emailLink";
+// DTOs and Mappers
+export * from "./application/identity/dtos/profile.dto";
+export * from "./infrastructure/mappers/profile.firebase-mapper";
 
-// Domain types - Analytics
-// Note: Both creation and feed modules export hashUserId - use specific imports if needed
-export * from "./domain/analytics/creation";
-export * from "./domain/analytics/onboarding";
-export * from "./domain/analytics/feed";
-export * from "./domain/analytics/events";
-
-// Domain types - Other
-export type { SpaceMember } from "./domain/member";
-export type { WaitlistEntry } from "./domain/waitlistEntry";
-export type { School } from "./domain/school";
-
-// Cohort utilities
-export * from "./domain/cohort/cohort-spaces";
+// Services
+export { presenceService } from "./services/presence-service";
+export type { PresenceData } from "./services/presence-service";
 
 // Constants
 export * from "./constants/majors";
@@ -66,14 +39,26 @@ export * from "./constants/majors";
 // Stores
 export * from "./stores/useAppStore";
 
-// Firebase client config
-export * from "./firebase";
-
-// Feature flags
+// Feature Flags
 export * from "./feature-flags";
 
-// Privacy utilities
-export * from "./utils/privacy-utils";
+// Firebase Configuration (temporary until @hive/firebase is fixed)
+export { db } from "./firebase";
+export { auth } from "./firebase";
 
-// Profile system types
-export * from "./types/profile-system";
+// Server-side utilities
+export * from "./server";
+
+// Types and Interfaces - Specific exports to avoid conflicts
+export type { ProfileSystem, HiveProfile, UnifiedHiveProfile } from "./types/profile-system";
+
+// Utilities
+export * from "./utils/activity-tracker";
+export * from "./utils/privacy-utils";
+export * from "./utils/profile-aggregator";
+
+// Analytics convenience functions (for backwards compatibility)
+export * from "./analytics-temp-exports";
+
+// Temporary backward compatibility (will be removed)
+export * from "./application/shared/temporary-types";

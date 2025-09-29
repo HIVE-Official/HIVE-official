@@ -4,96 +4,298 @@
  */
 
 import { config } from './config';
+import type { HiveUser, Space, Post, HiveEvent, Notification, AppError } from '@/types/global';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 interface LogContext {
+  // Core identifiers
   userId?: string;
   spaceId?: string;
   toolId?: string;
+
+  // Component and action tracking
   component?: string;
   action?: string;
   endpoint?: string;
-  error?: Error | string | any;
-  data?: any;
-  metadata?: Record<string, any>;
-  // Additional properties found in codebase
+
+  // Error handling
+  error?: Error | AppError | string;
   stack?: string;
+
+  // Request tracking
   requestId?: string;
-  requestData?: any;
+  requestData?: Record<string, unknown>;
+
+  // User-related data
   adminUserId?: string;
-  analyticsData?: any;
-  builderRequestId?: string;
-  cohortData?: any;
   memberUserId?: string;
   moderatorId?: string;
-  membershipData?: any;
-  auditData?: any;
-  permissionData?: any;
-  spacesData?: any;
-  bulkData?: any;
-  usersData?: any;
-  userData?: any;
-  oldData?: any;
-  newData?: any;
+  userData?: Partial<HiveUser>;
+  usersData?: Array<Partial<HiveUser>>;
+
+  // Space-related data
+  spacesData?: Array<Partial<Space>>;
+  membershipData?: {
+    userId: string;
+    spaceId: string;
+    role?: string;
+    joinedAt?: Date;
+  };
+
+  // Content-related data
+  feedData?: Array<Partial<Post>>;
+  eventData?: Partial<HiveEvent>;
+  notificationData?: Partial<Notification>;
+
+  // Analytics and monitoring
+  analyticsData?: {
+    eventName: string;
+    properties?: Record<string, unknown>;
+  };
+  builderRequestId?: string;
+
+  // Audit and security
+  auditData?: {
+    action: string;
+    timestamp: Date;
+    changes?: Record<string, unknown>;
+  };
+  permissionData?: {
+    resource: string;
+    action: string;
+    granted: boolean;
+  };
   authToken?: string;
-  sessionData?: any;
-  calendarData?: any;
-  eventData?: any;
-  conflictData?: any;
-  feedData?: any;
-  debugData?: any;
-  authData?: any;
-  fileData?: any;
-  notificationData?: any;
-  privacyData?: any;
+  authData?: {
+    method: string;
+    success: boolean;
+    userId?: string;
+  };
+
+  // Session management
+  sessionData?: {
+    sessionId: string;
+    startTime: Date;
+    duration?: number;
+  };
+
+  // Data changes
+  oldData?: Record<string, unknown>;
+  newData?: Record<string, unknown>;
+
+  // Calendar and scheduling
+  calendarData?: {
+    date: Date;
+    events?: Array<Partial<HiveEvent>>;
+  };
+  conflictData?: {
+    type: string;
+    resources: string[];
+    resolution?: string;
+  };
+
+  // File operations
+  fileData?: {
+    filename: string;
+    size?: number;
+    mimeType?: string;
+    operation: 'upload' | 'download' | 'delete';
+  };
+
+  // Bulk operations
+  bulkData?: {
+    operation: string;
+    count: number;
+    items?: unknown[];
+  };
+
+  // Cohort management
+  cohortData?: {
+    cohortId: string;
+    size?: number;
+    criteria?: Record<string, unknown>;
+  };
+
+  // Debug information
+  debugData?: Record<string, unknown>;
+
+  // Generic metadata
+  metadata?: Record<string, unknown>;
+
+  // Generic data field for backward compatibility
+  data?: Record<string, unknown>;
+
+  // Privacy and security
+  privacyData?: {
+    level: 'public' | 'private' | 'members';
+    settings?: Record<string, boolean>;
+  };
+
+  // Content identifiers
   postId?: string;
-  profileData?: any;
+  spaceCampusId?: string;
+  currentCampusId?: string;
+  cursor?: string;
+  filterType?: string;
+  operation?: string;
+
+  // Statistics
+  entriesRemoved?: number;
+  totalEntries?: number;
+  totalSpaces?: number;
+  membershipCount?: number;
+
+  // Domain and network
+  blocked_domain?: string;
+
+  // Names and identifiers
+  name?: string;
+  ritualName?: string;
+  participationId?: string;
+  timestamp?: string;
+  searchTerm?: string;
+  errorId?: string;
   normalizedHandle?: string;
-  ghostMode?: boolean;
-  activityData?: any;
-  completionData?: any;
-  avatarData?: any;
-  spaceData?: any;
-  memberData?: any;
-  postData?: any;
-  widgetData?: any;
-  coordinationType?: string;
-  activationData?: any;
-  joinData?: any;
-  leaveData?: any;
-  migrationData?: any;
-  seedData?: any;
-  socialProofData?: any;
   reportId?: string;
   ruleId?: string;
   workflowId?: string;
-  reason?: string;
   workflowName?: string;
-  updatedFields?: any;
-  deletedAt?: string;
   reporterId?: string;
-  totalSpaces?: number;
   search?: string;
-  membershipCount?: number;
   previousRole?: string;
-  testData?: any;
-  updateData?: any;
-  deploymentData?: any;
-  reviewData?: any;
-  stateData?: any;
-  executeData?: any;
-  integrationData?: any;
-  installData?: any;
-  personalData?: any;
-  publishData?: any;
-  recommendationData?: any;
-  usageData?: any;
-  waitlistData?: any;
+
+  // Feature flags
+  ghostMode?: boolean;
+
+  // Specific data types
+  profileData?: Partial<HiveUser>;
+  activityData?: {
+    type: string;
+    timestamp: Date;
+    details?: Record<string, unknown>;
+  };
+  completionData?: {
+    percentage: number;
+    completedSteps: string[];
+    remainingSteps: string[];
+  };
+  avatarData?: {
+    url: string;
+    size?: number;
+    format?: string;
+  };
+  spaceData?: Partial<Space>;
+  memberData?: {
+    userId: string;
+    role: string;
+    joinedAt: Date;
+  };
+  postData?: Partial<Post>;
+  widgetData?: {
+    type: string;
+    config?: Record<string, unknown>;
+    position?: { x: number; y: number };
+  };
+  coordinationType?: string;
+  activationData?: {
+    activatedAt: Date;
+    method: string;
+  };
+  joinData?: {
+    spaceId: string;
+    userId: string;
+    timestamp: Date;
+  };
+  leaveData?: {
+    spaceId: string;
+    userId: string;
+    timestamp: Date;
+    reason?: string;
+  };
+  migrationData?: {
+    fromVersion: string;
+    toVersion: string;
+    status: 'pending' | 'in_progress' | 'completed' | 'failed';
+    migratedCount?: number;
+  };
+  range?: string;
+  severity?: 'low' | 'medium' | 'high' | 'critical';
+  seedData?: {
+    source: string;
+    count: number;
+    timestamp: Date;
+  };
+  socialProofData?: {
+    type: 'likes' | 'views' | 'shares' | 'comments';
+    count: number;
+    users?: string[];
+  };
+  reason?: string;
+  updatedFields?: string[];
+  deletedAt?: string;
+  testData?: {
+    testName: string;
+    status: 'pass' | 'fail' | 'skip';
+    duration?: number;
+  };
+  updateData?: Record<string, unknown>;
+  deploymentData?: {
+    version: string;
+    environment: string;
+    timestamp: Date;
+  };
+  reviewData?: {
+    reviewerId: string;
+    status: 'approved' | 'rejected' | 'pending';
+    comments?: string;
+  };
+  stateData?: Record<string, unknown>;
+  executeData?: {
+    command: string;
+    result?: unknown;
+    duration?: number;
+  };
+  integrationData?: {
+    service: string;
+    status: 'connected' | 'disconnected' | 'error';
+    config?: Record<string, unknown>;
+  };
+  installData?: {
+    package: string;
+    version: string;
+    timestamp: Date;
+  };
+  personalData?: {
+    type: string;
+    encrypted: boolean;
+    purpose?: string;
+  };
+  publishData?: {
+    contentId: string;
+    platform?: string;
+    timestamp: Date;
+  };
+  recommendationData?: {
+    type: string;
+    items: unknown[];
+    algorithm?: string;
+  };
+  usageData?: {
+    feature: string;
+    count: number;
+    duration?: number;
+  };
+  waitlistData?: {
+    position: number;
+    totalWaiting: number;
+    estimatedWait?: string;
+  };
   // Additional properties found in recent codebase usage
   attempt?: number;
   attempts?: number;
-  autoGeneratedSpaces?: any;
+  attemptNumber?: number;
+  autoGeneratedSpaces?: Array<Partial<Space>>;
   cohortSpacesLength?: number;
   componentStack?: string;
   connectionCount?: number;
@@ -185,6 +387,32 @@ interface LogContext {
   limit?: number;
   detected?: string;
   userAgent?: string;
+  // Properties from admin routes and error handling
+  analysis?: any;
+  collection?: string;
+  engagementVelocity?: number;
+  duration?: number;
+  recentCount?: number;
+  variable?: string;
+  userCampusId?: string;
+  origin?: string;
+  identifier?: string;
+  limitType?: string;
+  campusId?: string;
+  level?: string;
+  resolved?: boolean;
+  message?: string;
+  commentId?: string;
+  variant?: string;
+  indexName?: string;
+  totalEngagement?: number;
+  spacesChecked?: number;
+  url?: string;
+  params?: any;
+  itemCount?: number;
+  itemId?: string;
+  interaction?: string;
+  preferences?: any;
 }
 
 interface LogEntry {
@@ -236,16 +464,13 @@ class Logger {
       
       switch (entry.level) {
         case 'debug':
-          console.debug(formattedMessage, entry.error);
           break;
         case 'info':
           console.info(formattedMessage);
           break;
         case 'warn':
-          console.warn(formattedMessage, entry.error);
           break;
         case 'error':
-          console.error(formattedMessage, entry.error);
           break;
       }
     }

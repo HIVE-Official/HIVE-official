@@ -52,7 +52,6 @@ export async function initializeErrorMonitoring(): Promise<void> {
     
     if (!sentryDsn) {
       if (currentEnvironment === 'production') {
-        console.warn('⚠️ Sentry DSN not configured in production');
       }
       // Silent in development - no need to log missing Sentry config
       isInitialized = true;
@@ -61,7 +60,6 @@ export async function initializeErrorMonitoring(): Promise<void> {
 
     // Dynamic import to avoid SSR issues
     // TEMPORARY FIX: Disable Sentry to avoid OpenTelemetry issues
-    console.warn('⚠️ Sentry temporarily disabled - error monitoring using console only');
     isInitialized = true;
     return;
 
@@ -72,7 +70,6 @@ export async function initializeErrorMonitoring(): Promise<void> {
     try {
       Sentry = await import('@sentry/nextjs');
     } catch (_importError) {
-      console.warn('⚠️ Sentry not installed - error monitoring disabled');
       isInitialized = true;
       return;
     }
@@ -128,10 +125,8 @@ export async function initializeErrorMonitoring(): Promise<void> {
 
     sentryHub = Sentry.getCurrentHub();
     isInitialized = true;
-    console.log(`✅ Error monitoring initialized for ${currentEnvironment}`);
     */
   } catch (error) {
-    console.error('❌ Failed to initialize error monitoring:', error);
     isInitialized = true; // Prevent retry loops
   }
 }
@@ -346,17 +341,14 @@ export class ErrorMonitor {
 
     switch (entry.level) {
       case LogLevel.DEBUG:
-        console.debug(prefix, entry.message, entry.context);
         break;
       case LogLevel.INFO:
         console.info(prefix, entry.message, entry.context);
         break;
       case LogLevel.WARN:
-        console.warn(prefix, entry.message, entry.context);
         break;
       case LogLevel.ERROR:
       case LogLevel.FATAL:
-        console.error(prefix, entry.message, entry.error, entry.context);
         break;
     }
   }

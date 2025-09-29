@@ -262,5 +262,7 @@ export interface UseProfileReturn {
     subscribeToPresence: (userIds: string[]) => () => void;
     subscribeToBeacons: () => () => void;
 }
+export type HiveProfile = ProfileSystem;
+export type UnifiedHiveProfile = ProfileSystem;
 export * from './profile-system';
 //# sourceMappingURL=profile-system.d.ts.map

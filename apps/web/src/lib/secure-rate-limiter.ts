@@ -98,9 +98,7 @@ export class SecureRateLimiter {
       // this.redisLimiter = createRateLimit(
       //   this.config.identifier.toUpperCase() as keyof typeof RateLimitConfigs
       // );
-      console.log('Redis rate limiter not available, using memory fallback only');
     } catch (error) {
-      console.error('Failed to initialize Redis rate limiter:', error);
       this.handleFailure('redis_init_failed');
     }
 
@@ -111,7 +109,6 @@ export class SecureRateLimiter {
         windowMs: this.config.windowMs
       });
     } catch (error) {
-      console.error('Failed to initialize memory rate limiter:', error);
       this.handleFailure('memory_init_failed');
     }
   }
@@ -126,7 +123,6 @@ export class SecureRateLimiter {
     // Enter strict mode after multiple failures
     if (this.consecutiveFailures >= 3) {
       this.isInStrictMode = true;
-      console.error(`Rate limiter entering strict mode due to: ${reason}`);
     }
 
     // Log security event
@@ -215,7 +211,6 @@ export class SecureRateLimiter {
         }
       }
     } catch (redisError) {
-      console.error('Redis rate limiter failed:', redisError);
       this.handleFailure('redis_check_failed');
     }
 
@@ -235,7 +230,6 @@ export class SecureRateLimiter {
         };
       }
     } catch (memoryError) {
-      console.error('Memory rate limiter failed:', memoryError);
       this.handleFailure('memory_check_failed');
     }
 
@@ -263,7 +257,6 @@ export class SecureRateLimiter {
     }
 
     // DANGEROUS: Only reach here if blockOnError is false (not recommended)
-    console.warn('Rate limiter failed but allowing request due to blockOnError=false');
     
     return {
       success: true,

@@ -1,7 +1,14 @@
 /**
- * Universal Shell Component
- * The foundational wrapper for the entire HIVE platform
- * Provides consistent layout, navigation, and context across all pages
+ * 🎯 HIVE Universal Shell Component
+ * The Premium App Shell with Buttery Smooth Interactions
+ *
+ * DESIGN SYSTEM COMPLIANCE:
+ * ✅ Gold (#FFD700) signature brand color
+ * ✅ Framer Motion with HIVE easing curves
+ * ✅ Glass morphism effects
+ * ✅ Geist Sans typography (font-sans)
+ * ✅ Mobile-first with 44px touch targets
+ * ✅ Dark luxury aesthetic
  */
 import React from 'react';
 interface ShellContextType {
@@ -10,6 +17,10 @@ interface ShellContextType {
     isMobile: boolean;
     currentSlice: string;
     shellReady: boolean;
+    isDarkMode: boolean;
+    toggleDarkMode: () => void;
+    notificationCount: number;
+    messageCount: number;
 }
 export declare const useShell: () => ShellContextType;
 export declare const UniversalShell: React.FC<{

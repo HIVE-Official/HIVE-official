@@ -1,0 +1,139 @@
+/* HIVE UI - Tailwind CSS 4.0 Enhanced Configuration */
+@import "tailwindcss";
+
+/* Import HIVE Design System Tokens - Single Source of Truth */
+@import "../../tokens/hive-tokens-generated.css";
+
+/* Tailwind 4.0 CSS-First Configuration */
+@theme {
+  /* === COLORS ===  */
+  --color-border: var(--hive-border-primary);
+  --color-input: var(--hive-border-primary);
+  --color-ring: var(--hive-interactive-focus);
+  --color-background: var(--hive-background-primary);
+  --color-foreground: var(--hive-text-primary);
+
+  --color-primary: var(--hive-brand-primary);
+  --color-primary-foreground: var(--hive-text-inverse);
+  --color-secondary: var(--hive-background-interactive);
+  --color-secondary-foreground: var(--hive-text-primary);
+  --color-destructive: var(--hive-status-error);
+  --color-destructive-foreground: var(--hive-text-primary);
+  --color-muted: var(--hive-background-tertiary);
+  --color-muted-foreground: var(--hive-text-muted);
+  --color-accent: var(--hive-brand-accent);
+  --color-accent-foreground: var(--hive-text-inverse);
+  --color-popover: var(--hive-background-secondary);
+  --color-popover-foreground: var(--hive-text-primary);
+  --color-card: var(--hive-background-secondary);
+  --color-card-foreground: var(--hive-text-primary);
+
+  /* HIVE Branded Colors */
+  --color-hive-brand-primary: #FFD700;
+  --color-hive-brand-secondary: #1a1a1a;
+  --color-hive-background: #000000;
+  --color-hive-background-overlay: #111111;
+  --color-hive-surface: #1a1a1a;
+  --color-hive-text-primary: #ffffff;
+  --color-hive-text-secondary: #cccccc;
+  --color-hive-text-muted-light: #888888;
+  --color-hive-border-default: #333333;
+  --color-hive-gold: #FFD700;
+  --color-hive-obsidian: #0c0c0c;
+
+  /* === RADIUS SYSTEM === */
+  --radius: 0.5rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* === FONT FAMILIES === */
+  --font-family-sans: 'Geist Sans', system-ui, sans-serif;
+  --font-family-display: 'Geist Sans', system-ui, sans-serif;
+  --font-family-mono: 'Geist Mono', monospace;
+
+  /* === SPACING SYSTEM === */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+
+  /* === ANIMATIONS === */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-hive-glow: hive-glow 2s ease-in-out infinite;
+  --animate-hive-pulse: hive-pulse 2s ease-in-out infinite;
+
+  /* === BOX SHADOWS === */
+  --shadow-hive-level1: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-hive-level2: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-hive-level3: 0 8px 15px rgba(0, 0, 0, 0.3);
+  --shadow-hive-gold-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+  --shadow-hive-gold-glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
+}
+
+/* === KEYFRAMES === */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@keyframes hive-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+}
+
+@keyframes hive-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.9; }
+}
+
+/* === LAYER UTILITIES === */
+@layer utilities {
+  .hive-glass {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .hive-glass-strong {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .hive-interactive {
+    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .hive-interactive:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+
+  .hive-interactive:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 0.15s;
+  }
+}
+
+/* === GLOBAL STYLES === */
+@layer base {
+  * {
+    border-color: var(--color-hive-border-default);
+  }
+
+  body {
+    background-color: var(--color-hive-background);
+    color: var(--color-hive-text-primary);
+    font-family: var(--font-family-sans);
+  }
+}

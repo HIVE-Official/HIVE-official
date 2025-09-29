@@ -27,10 +27,6 @@ export async function sendMagicLinkEmail({
 }: MagicLinkEmailOptions): Promise<void> {
   // In development, log the magic link instead of sending email
   if (process.env.NODE_ENV === 'development') {
-    console.log('\n=== MAGIC LINK (Development) ===');
-    console.log(`To: ${to.replace(/(.{3}).*@/, '$1***@')}`);
-    console.log(`Link: ${magicLink}`);
-    console.log('================================\n');
     return;
   }
 
@@ -54,9 +50,7 @@ export async function sendMagicLinkEmail({
 
   try {
     await sgMail.send(msg);
-    console.log(`Magic link email sent to ${to.replace(/(.{3}).*@/, '$1***@')}`);
   } catch (error) {
-    console.error('Error sending magic link email:', error);
     throw new Error('Failed to send magic link email');
   }
 }

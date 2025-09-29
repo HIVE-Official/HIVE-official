@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalContent, HiveModalFooter } from './hive-modal';
 import { HiveButton } from './hive-button';

@@ -1,204 +1,257 @@
-import { dbAdmin } from '@/lib/firebase-admin';
-import * as admin from 'firebase-admin';
-import { z } from 'zod';
-import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
-import { HiveProfile, DEFAULT_PRIVACY_SETTINGS, DEFAULT_BUILDER_INFO } from '@hive/core';
+/**
+ * Profile API Route - Firebase Direct Implementation
+ * Provides user profile data and updates
+ */
 
-// Validation schema for profile updates
-const updateProfileSchema = z.object({
+import { z } from 'zod';
+import { logger } from "@/lib/logger";
+import { NextRequest, NextResponse } from 'next/server';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  query,
+  collection,
+  where,
+  getDocs,
+  limit
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { withSecureAuth } from '@/lib/api-auth-secure';
+
+// Profile update schema
+const ProfileUpdateSchema = z.object({
+  handle: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/).optional(),
+  firstName: z.string().min(1).max(50).optional(),
+  lastName: z.string().min(1).max(50).optional(),
   fullName: z.string().min(1).max(100).optional(),
-  major: z.string().min(1).max(100).optional(),
-  academicYear: z.enum(['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'alumni', 'faculty']).optional(),
-  graduationYear: z.number().int().min(1900).max(2040).optional(),
-  housing: z.string().max(200).optional(),
-  pronouns: z.string().max(50).optional(),
   bio: z.string().max(500).optional(),
+  major: z.string().min(1).max(100).optional(),
+  graduationYear: z.number().int().min(2020).max(2030).optional(),
+  dorm: z.string().max(100).optional(),
+  interests: z.array(z.string()).max(10).optional(),
+  profileImageUrl: z.string().url().optional(),
+  photos: z.array(z.string().url()).max(5).optional(),
   statusMessage: z.string().max(200).optional(),
-  avatarUrl: z.string().url().optional().or(z.literal("")),
-  profilePhoto: z.string().url().optional().or(z.literal("")),
+  currentVibe: z.string().max(100).optional(),
+  availabilityStatus: z.enum(['online', 'studying', 'busy', 'away', 'invisible']).optional(),
+  lookingFor: z.array(z.string()).optional(),
   isPublic: z.boolean().optional(),
-  builderOptIn: z.boolean().optional(),
-  userType: z.enum(['student', 'alumni', 'faculty']).optional(),
-  interests: z.array(z.string()).optional(),
   showActivity: z.boolean().optional(),
   showSpaces: z.boolean().optional(),
   showConnections: z.boolean().optional(),
   allowDirectMessages: z.boolean().optional(),
-  showOnlineStatus: z.boolean().optional(),
-  ghostMode: z.object({
-    enabled: z.boolean().optional(),
-    level: z.enum(['minimal', 'moderate', 'maximum']).optional()
-  }).optional()
+  showOnlineStatus: z.boolean().optional()
 });
 
-// Helper to transform Firestore data to HiveProfile
-function transformToHiveProfile(userId: string, userData: any, userEmail?: string): HiveProfile {
-  const now = new Date().toISOString();
-
-  return {
-    identity: {
-      id: userId,
-      fullName: userData?.fullName || '',
-      handle: userData?.handle || '',
-      email: userData?.email || userEmail || '',
-      avatarUrl: userData?.avatarUrl || userData?.profilePhoto
-    },
-    academic: {
-      major: userData?.major,
-      academicYear: userData?.academicYear as any,
-      graduationYear: userData?.graduationYear,
-      schoolId: userData?.schoolId,
-      housing: userData?.housing,
-      pronouns: userData?.pronouns
-    },
-    personal: {
-      bio: userData?.bio,
-      statusMessage: userData?.statusMessage,
-      location: userData?.housing,
-      interests: userData?.interests || []
-    },
-    privacy: {
-      ...DEFAULT_PRIVACY_SETTINGS,
-      isPublic: userData?.isPublic ?? true,
-      showActivity: userData?.showActivity ?? true,
-      showSpaces: userData?.showSpaces ?? true,
-      showConnections: userData?.showConnections ?? true,
-      allowDirectMessages: userData?.allowDirectMessages ?? true,
-      showOnlineStatus: userData?.showOnlineStatus ?? true,
-      ghostMode: {
-        enabled: userData?.ghostMode?.enabled ?? false,
-        level: (userData?.ghostMode?.level ?? 'minimal') as 'minimal' | 'moderate' | 'maximum'
-      }
-    },
-    builder: {
-      ...DEFAULT_BUILDER_INFO,
-      isBuilder: userData?.isBuilder ?? false,
-      builderOptIn: userData?.builderOptIn ?? false,
-      builderLevel: (userData?.builderLevel ?? 'beginner') as any,
-      specializations: userData?.specializations || [],
-      toolsCreated: userData?.toolsCreated ?? 0
-    },
-    stats: {
-      spacesJoined: userData?.spacesJoined ?? 0,
-      spacesActive: userData?.spacesActive ?? 0,
-      spacesLed: userData?.spacesLed ?? 0,
-      toolsUsed: userData?.toolsUsed ?? 0,
-      connectionsCount: userData?.connectionsCount ?? 0,
-      totalActivity: userData?.totalActivity ?? 0,
-      currentStreak: userData?.currentStreak ?? 0,
-      longestStreak: userData?.longestStreak ?? 0,
-      reputation: userData?.reputation ?? 0,
-      achievements: userData?.achievements ?? 0
-    },
-    timestamps: {
-      createdAt: userData?.createdAt || userData?.joinedAt || now,
-      updatedAt: userData?.updatedAt || now,
-      lastActiveAt: userData?.lastActive || userData?.lastActiveAt || now,
-      lastSeenAt: userData?.lastSeenAt || now
-    },
-    verification: {
-      emailVerified: userData?.emailVerified ?? false,
-      profileVerified: userData?.profileVerified ?? false,
-      accountStatus: (userData?.accountStatus ?? 'active') as any,
-      userType: (userData?.userType ?? 'student') as any,
-      onboardingCompleted: userData?.onboardingCompleted ?? false
-    }
-  };
-}
-
 /**
- * Get user profile
  * GET /api/profile
+ * Get current user's profile
  */
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = getUserId(request);
+export const GET = withSecureAuth(
+  async (request: NextRequest, token) => {
+    try {
+      const campusId = 'ub-buffalo';
+      const userDoc = doc(db, 'users', token.uid);
+      const userSnapshot = await getDoc(userDoc);
 
-  // Development mode - clean mock data
-  if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
-    const mockData = {
-      fullName: 'Dev User',
-      handle: 'devuser',
-      email: 'dev@hive.com',
-      major: 'Computer Science',
-      academicYear: 'senior',
-      graduationYear: 2025,
-      housing: 'Smith Hall, Room 305',
-      pronouns: 'they/them',
-      bio: 'Building the future of campus collaboration with HIVE 🚀',
-      statusMessage: 'Building epic study tools',
-      avatarUrl: '',
-      schoolId: 'dev_school',
-      userType: 'student',
-      emailVerified: true,
-      builderOptIn: true,
-      isBuilder: true,
-      isPublic: true,
-      onboardingCompleted: true,
-      createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-      spacesJoined: 8,
-      spacesActive: 5,
-      spacesLed: 3,
-      toolsUsed: 12,
-      toolsCreated: 4,
-      connectionsCount: 156,
-      totalActivity: 342,
-      currentStreak: 7,
-      longestStreak: 21,
-      reputation: 89,
-      achievements: 12,
-      interests: ['coding', 'design', 'collaboration', 'student-life'],
-      specializations: ['web-development', 'ui-ux', 'productivity-tools']
-    };
+      if (!userSnapshot.exists()) {
+        logger.warn('Profile not found', {
+          userId: token.uid,
+          endpoint: '/api/profile'
+        });
 
-    const profile = transformToHiveProfile(userId, mockData, 'dev@hive.com');
-    return respond.success({ profile });
-  }
+        return NextResponse.json({
+          success: false,
+          error: 'Profile not found',
+          needsOnboarding: true
+        }, { status: 404 });
+      }
 
-  // Production: Fetch from Firestore
-  const userDoc = await dbAdmin.collection('users').doc(userId).get();
+      const userData = userSnapshot.data();
 
-  if (!userDoc.exists) {
-    return respond.error("User profile not found", "RESOURCE_NOT_FOUND", { status: 404 });
-  }
+      // Transform to API response format
+      const response = {
+        success: true,
+        data: {
+          id: token.uid,
+          email: userData.email,
+          handle: userData.handle,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          fullName: userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
+          bio: userData.bio,
+          major: userData.major,
+          graduationYear: userData.graduationYear,
+          dorm: userData.dorm,
+          interests: userData.interests || [],
+          profileImageUrl: userData.profileImageUrl,
+          photos: userData.photos || [],
+          statusMessage: userData.statusMessage,
+          currentVibe: userData.currentVibe,
+          availabilityStatus: userData.availabilityStatus || 'online',
+          lookingFor: userData.lookingFor || [],
+          onboardingStatus: {
+            isComplete: userData.onboardingComplete || false,
+            currentStep: userData.onboardingStep || 1
+          },
+          privacy: {
+            isPublic: userData.privacySettings?.isPublic ?? true,
+            showActivity: userData.privacySettings?.showActivity ?? true,
+            showSpaces: userData.privacySettings?.showSpaces ?? true,
+            showConnections: userData.privacySettings?.showConnections ?? true,
+            allowDirectMessages: userData.privacySettings?.allowDirectMessages ?? true,
+            showOnlineStatus: userData.privacySettings?.showOnlineStatus ?? true
+          },
+          stats: {
+            connectionCount: userData.connections?.length || 0,
+            spacesJoined: userData.spaceIds?.length || 0
+          },
+          metadata: {
+            campusId: userData.campusId || campusId,
+            createdAt: userData.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+            updatedAt: userData.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString()
+          }
+        }
+      };
 
-  const userData = userDoc.data();
-  const profile = transformToHiveProfile(userId, userData, userData?.email);
+      logger.info('Profile fetched successfully', {
+        userId: token.uid,
+        handle: userData.handle,
+        endpoint: '/api/profile'
+      });
 
-  return respond.success({ profile });
-});
+      return NextResponse.json(response);
 
-/**
- * Update user profile
- * PATCH /api/profile
- */
-export const PATCH = withAuthValidationAndErrors(
-  updateProfileSchema,
-  async (request: AuthenticatedRequest, context, updateData: z.infer<typeof updateProfileSchema>, respond) => {
-  const userId = getUserId(request);
-
-  // Development mode - skip Firestore
-  if (userId === 'dev-user-1' || userId === 'test-user' || userId === 'dev_user_123' || userId === 'debug-user') {
-    logger.info('Development mode profile update', { data: updateData, endpoint: '/api/profile' });
-
-    return respond.success({
-      message: 'Profile updated successfully (development mode)',
-      updated: Object.keys(updateData)
-    });
-  }
-
-  // Update the user document in Firestore
-  const userRef = dbAdmin.collection('users').doc(userId);
-  const updatePayload = {
-    ...updateData,
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-  };
-
-  await userRef.update(updatePayload);
-
-  return respond.success({
-    message: 'Profile updated successfully',
-    updated: Object.keys(updateData)
-  });
+    } catch (error) {
+      logger.error('Error fetching profile', {
+        error,
+        userId: token.uid,
+        endpoint: '/api/profile'
+      });
+      return NextResponse.json(
+        { success: false, error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
+  },
+  {
+    allowAnonymous: false,
+    rateLimit: { type: 'api' }
   }
 );
+
+/**
+ * PUT /api/profile
+ * Update current user's profile
+ */
+export const PUT = withSecureAuth(
+  async (request: NextRequest, token) => {
+    try {
+      const campusId = 'ub-buffalo';
+      const body = await request.json();
+
+      // Validate update data
+      const updateData = ProfileUpdateSchema.parse(body);
+
+      logger.info('Profile update request', {
+        userId: token.uid,
+        fields: Object.keys(updateData),
+        endpoint: '/api/profile'
+      });
+
+      // Check if handle is being updated and if it's unique
+      if (updateData.handle) {
+        const handleQuery = query(
+          collection(db, 'users'),
+          where('handle', '==', updateData.handle),
+          where('campusId', '==', campusId),
+          limit(1)
+        );
+        const existingHandleSnapshot = await getDocs(handleQuery);
+
+        if (!existingHandleSnapshot.empty && existingHandleSnapshot.docs[0].id !== token.uid) {
+          return NextResponse.json(
+            { success: false, error: 'Handle already taken' },
+            { status: 400 }
+          );
+        }
+      }
+
+      // Update user document
+      const userDoc = doc(db, 'users', token.uid);
+      const updateFields: any = {
+        ...updateData,
+        updatedAt: serverTimestamp(),
+        campusId
+      };
+
+      // Merge privacy settings properly
+      if (updateData.isPublic !== undefined ||
+          updateData.showActivity !== undefined ||
+          updateData.showSpaces !== undefined ||
+          updateData.showConnections !== undefined ||
+          updateData.allowDirectMessages !== undefined ||
+          updateData.showOnlineStatus !== undefined) {
+
+        const currentDoc = await getDoc(userDoc);
+        const currentPrivacy = currentDoc.data()?.privacySettings || {};
+
+        updateFields.privacySettings = {
+          ...currentPrivacy,
+          ...(updateData.isPublic !== undefined && { isPublic: updateData.isPublic }),
+          ...(updateData.showActivity !== undefined && { showActivity: updateData.showActivity }),
+          ...(updateData.showSpaces !== undefined && { showSpaces: updateData.showSpaces }),
+          ...(updateData.showConnections !== undefined && { showConnections: updateData.showConnections }),
+          ...(updateData.allowDirectMessages !== undefined && { allowDirectMessages: updateData.allowDirectMessages }),
+          ...(updateData.showOnlineStatus !== undefined && { showOnlineStatus: updateData.showOnlineStatus })
+        };
+
+        // Remove the individual privacy fields from top level
+        delete updateFields.isPublic;
+        delete updateFields.showActivity;
+        delete updateFields.showSpaces;
+        delete updateFields.showConnections;
+        delete updateFields.allowDirectMessages;
+        delete updateFields.showOnlineStatus;
+      }
+
+      await updateDoc(userDoc, updateFields);
+
+      logger.info('Profile updated successfully', {
+        userId: token.uid,
+        handle: updateData.handle,
+        fieldsUpdated: Object.keys(updateData),
+        endpoint: '/api/profile'
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Profile updated successfully',
+        data: {
+          id: token.uid,
+          handle: updateData.handle,
+          updatedFields: Object.keys(updateData)
+        }
+      });
+
+    } catch (error) {
+      logger.error('Error updating profile', {
+        error,
+        userId: token.uid,
+        endpoint: '/api/profile'
+      });
+      return NextResponse.json(
+        { success: false, error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
+  },
+  {
+    allowAnonymous: false,
+    rateLimit: { type: 'api' }
+  }
+);
+

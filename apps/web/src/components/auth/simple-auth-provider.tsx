@@ -56,7 +56,6 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
             window.localStorage.removeItem('hive_session');
           }
         } catch (error) {
-          console.error('Error parsing session:', error);
           window.localStorage.removeItem('hive_session');
         }
       }
@@ -77,7 +76,6 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
           setIsLoading(false);
           return;
         } catch (error) {
-          console.error('Error parsing dev user data:', error);
         }
       }
 
@@ -96,16 +94,14 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
   // Handle route protection
   useEffect(() => {
     if (!isLoading) {
-      const publicPaths = ['/landing', '/schools', '/auth/login', '/auth/verify', '/debug-auth', '/waitlist'];
+      const publicPaths = ['/landing', '/schools', '/auth/login', '/auth/verify', '/debug-auth', '/waitlist', '/signin'];
       const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
       if (!user && !isPublicPath) {
         // Not authenticated and trying to access protected route
-        console.log('🔒 Redirecting to landing - no session');
         router.push('/landing');
-      } else if (user && !user.onboardingCompleted && pathname !== '/onboarding') {
-        // Authenticated but needs onboarding
-        console.log('🔒 Redirecting to onboarding - incomplete profile');
+      } else if (user && !user.onboardingCompleted && pathname !== '/onboarding' && !isPublicPath) {
+        // Authenticated but needs onboarding (except on public/auth pages)
         router.push('/onboarding');
       }
     }

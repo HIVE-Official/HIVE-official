@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, useMemo } from "react";
 import { Button, Card, Badge } from "@hive/ui";
 import { PageContainer } from "@/components/temp-stubs";
@@ -128,7 +131,7 @@ interface EventData {
 }
 
 export default function EventsPage() {
-  const { user } = useSession();
+  const [mounted, setMounted] = useState(false);
   const [events, setEvents] = useState<EventData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'today' | 'week' | 'month' | 'my_events'>('all');
@@ -137,18 +140,28 @@ export default function EventsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEventDetails, setShowEventDetails] = useState<string | null>(null);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Always call the hook, but use mounted to determine behavior
+  const sessionResult = useSession();
+  const { user } = mounted ? sessionResult : { user: null };
+
   // Fetch real event data
   useEffect(() => {
+    if (!mounted) return; // Don't fetch during SSR
+
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
         // Fetch events from multiple space endpoints
         const spacesResponse = await fetch('/api/spaces/my');
         if (!spacesResponse.ok) throw new Error('Failed to fetch user spaces');
-        
+
         const spacesData = await spacesResponse.json() as { spaces?: unknown[] };
         const userSpaces = spacesData.spaces || [];
-        
+
         // Fetch events from all user spaces
         const eventPromises = userSpaces.map(async (space: unknown) => {
           const spaceData = space as Record<string, unknown>;
@@ -229,7 +242,7 @@ export default function EventsPage() {
     };
 
     fetchEvents();
-  }, []);
+  }, [mounted]);
 
   // No mock events needed - using real API data
 
@@ -372,6 +385,15 @@ export default function EventsPage() {
       )
     );
   };
+
+  // Prevent SSR hydration issues
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

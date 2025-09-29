@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from 'react';
 import type { Preview } from '@storybook/react';
 import { MotionConfig } from 'framer-motion';
-import './mocks'; // Import browser mocks first
-import '../src/globals.css';
+// import './mocks'; // Temporarily disabled to fix loading issue
+import '../src/styles.css';
 
 // Mock context for components that expect data with status properties
 const MockDataContext = createContext({

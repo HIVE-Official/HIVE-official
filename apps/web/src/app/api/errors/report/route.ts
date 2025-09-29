@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { logger } from "@/lib/structured-logger";
+import { logger } from "@/lib/logger";
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 const ErrorReportSchema = z.object({
@@ -9,9 +9,20 @@ const ErrorReportSchema = z.object({
   stack: z.string().optional(),
   componentStack: z.string().optional(),
   userAgent: z.string().optional(),
-  url: z.string().url().optional(),
+  url: z.string().optional(),
   timestamp: z.string(),
-  type: z.enum(['feed_error_boundary', 'ritual_error_boundary', 'general_error']),
+  context: z.string(),
+  retryCount: z.number().default(0),
+  buildVersion: z.string().optional(),
+  environment: z.string().optional(),
+  // HIVE-specific context
+  spaceId: z.string().optional(),
+  toolId: z.string().optional(),
+  ritualId: z.string().optional(),
+  campusId: z.string().optional(),
+  sessionId: z.string().optional(),
+  // Legacy support
+  type: z.enum(['feed_error_boundary', 'ritual_error_boundary', 'general_error']).optional(),
   ritualName: z.string().optional(),
   metadata: z.record(z.any()).optional()
 });
@@ -51,14 +62,24 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       componentStack: errorReport.componentStack?.slice(0, 5000),
       userAgent: errorReport.userAgent?.slice(0, 500),
       url: errorReport.url?.slice(0, 500),
+      context: errorReport.context,
+      retryCount: errorReport.retryCount,
+      buildVersion: errorReport.buildVersion,
+      environment: errorReport.environment || process.env.NODE_ENV || 'unknown',
+      // HIVE-specific context
+      spaceId: errorReport.spaceId,
+      toolId: errorReport.toolId,
+      ritualId: errorReport.ritualId,
+      campusId: errorReport.campusId,
+      sessionId: errorReport.sessionId,
+      // Legacy fields
       type: errorReport.type,
       ritualName: errorReport.ritualName?.slice(0, 100),
       timestamp: new Date(errorReport.timestamp),
       reportedAt: new Date(),
       userId,
       severity: determineSeverity(errorReport),
-      resolved: false,
-      environment: process.env.NODE_ENV || 'unknown'
+      resolved: false
     };
 
     // Store error report in Firestore
@@ -101,38 +122,47 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
 });
 
 /**
- * Determine error severity based on type and message
+ * Determine error severity based on context and message
  */
 function determineSeverity(errorReport: z.infer<typeof ErrorReportSchema>): 'low' | 'medium' | 'high' | 'critical' {
   const message = errorReport.message.toLowerCase();
+  const context = errorReport.context?.toLowerCase() || '';
 
   // Critical errors that break core functionality
   if (
-    message.includes('feed') && message.includes('failed') ||
-    message.includes('authentication') ||
+    context.includes('globalerror') ||
+    context.includes('authentication') ||
     message.includes('firebase') ||
     message.includes('network error') ||
-    errorReport.type === 'feed_error_boundary'
+    message.includes('chunk') ||
+    message.includes('failed to fetch') ||
+    errorReport.retryCount >= 3
   ) {
     return 'critical';
   }
 
-  // High priority errors that affect user experience
+  // High priority errors that affect core HIVE features
   if (
+    context.includes('feederror') ||
+    context.includes('spaceserror') ||
+    context.includes('profileerror') ||
     message.includes('render') ||
     message.includes('component') ||
     message.includes('undefined') ||
     message.includes('null') ||
+    errorReport.type === 'feed_error_boundary' ||
     errorReport.type === 'ritual_error_boundary'
   ) {
     return 'high';
   }
 
-  // Medium priority for other React errors
+  // Medium priority for tools and other features
   if (
+    context.includes('toolserror') ||
     message.includes('react') ||
     message.includes('hook') ||
-    message.includes('state')
+    message.includes('state') ||
+    errorReport.retryCount >= 1
   ) {
     return 'medium';
   }

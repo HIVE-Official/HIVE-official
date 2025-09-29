@@ -1,8 +1,3 @@
-/**
- * HIVE Provider
- * Main application provider that wraps all other providers
- * This is the root provider for the entire HIVE platform
- */
 import React from 'react';
 export interface HiveConfig {
     environment: 'development' | 'staging' | 'production';

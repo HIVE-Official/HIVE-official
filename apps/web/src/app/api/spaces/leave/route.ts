@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin';
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { validateSecureSpaceMembership, addSecureCampusMetadata } from "@/lib/secure-firebase-queries";
 
 const leaveSpaceSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required")
@@ -19,30 +20,26 @@ export const POST = withAuthValidationAndErrors(
     const { spaceId } = body;
     const userId = getUserId(request);
 
-    // Get space from flat collection
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    // SECURITY: Use secure membership validation with campus isolation
+    const membershipValidation = await validateSecureSpaceMembership(userId, spaceId);
 
-    if (!spaceDoc.exists) {
-      return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    if (!membershipValidation.isValid) {
+      const status = membershipValidation.error === 'Space not found' ? 404 : 403;
+      return respond.error(membershipValidation.error!, "RESOURCE_NOT_FOUND", { status });
     }
 
-    const space = spaceDoc.data()!;
+    const space = membershipValidation.space!;
+    const memberData = membershipValidation.membership!;
 
-    // Check if user is actually a member using flat spaceMembers collection
+    // Get the membership document for updating
     const membershipQuery = dbAdmin.collection('spaceMembers')
       .where('spaceId', '==', spaceId)
       .where('userId', '==', userId)
       .where('isActive', '==', true)
       .limit(1);
-    
+
     const membershipSnapshot = await membershipQuery.get();
-
-    if (membershipSnapshot.empty) {
-      return respond.error("You are not a member of this space", "RESOURCE_NOT_FOUND", { status: 404 });
-    }
-
     const memberDoc = membershipSnapshot.docs[0];
-    const memberData = memberDoc.data();
 
     // Prevent owners from leaving if they're the only owner
     if (memberData.role === "owner") {
@@ -71,15 +68,16 @@ export const POST = withAuthValidationAndErrors(
     });
 
     // Decrement the space's member count
-    batch.update(spaceDoc.ref, {
+    const spaceRef = dbAdmin.collection('spaces').doc(spaceId);
+    batch.update(spaceRef, {
       'metrics.memberCount': admin.firestore.FieldValue.increment(-1),
       'metrics.activeMembers': admin.firestore.FieldValue.increment(-1),
       updatedAt: now
     });
 
-    // Record leave activity
+    // Record leave activity with secure campus metadata
     const activityRef = dbAdmin.collection('activityEvents').doc();
-    batch.set(activityRef, {
+    batch.set(activityRef, addSecureCampusMetadata({
       userId,
       type: 'space_leave',
       spaceId,
@@ -90,7 +88,7 @@ export const POST = withAuthValidationAndErrors(
         spaceType: space.type,
         previousRole: memberData.role
       }
-    });
+    }));
 
     // Execute all operations atomically
     await batch.commit();

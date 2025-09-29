@@ -10,8 +10,19 @@ import { auditAuthEvent } from "@/lib/production-auth";
 import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
-import { isDevUser, validateDevSchool, createDevSession } from "@/lib/dev-auth-helper";
 import { logger } from "@/lib/logger";
+
+// Conditionally import dev-auth-helper only in development
+let isDevUser: (email: string) => boolean = () => false;
+let validateDevSchool: (email: string) => string | null = () => null;
+let createDevSession: any = null;
+
+if (process.env.NODE_ENV !== 'production') {
+  const devAuthHelper = require("@/lib/dev-auth-helper");
+  isDevUser = devAuthHelper.isDevUser;
+  validateDevSchool = devAuthHelper.validateDevSchool;
+  createDevSession = devAuthHelper.createDevSession;
+}
 import { withValidation } from "@/lib/middleware";
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 
@@ -111,13 +122,13 @@ export const POST = withValidation(
     if (isLocalEnvironment) {
       logger.info('🔧 Development mode: Generating simple magic link', { endpoint: '/api/auth/send-magic-link' });
 
-      // Generate a simple development token
+      // Generate a simple development token with URL-safe base64
       const devToken = Buffer.from(JSON.stringify({
         email,
         schoolId,
         timestamp: Date.now(),
         dev: true
-      })).toString('base64');
+      })).toString('base64url'); // Use URL-safe base64 encoding (no padding =)
 
       const magicLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/auth/verify?token=${devToken}&mode=dev&email=${encodeURIComponent(email)}&schoolId=${schoolId}`;
 
@@ -178,20 +189,39 @@ export const POST = withValidation(
       // This would integrate with Redis rate limiting
       
       // Validate the email is from a legitimate educational domain
-      const eduDomains = ['.edu', '.ac.', '.university', '.college'];
       const emailDomain = email.split('@')[1]?.toLowerCase() || '';
-      const isEduDomain = eduDomains.some(suffix => 
-        emailDomain.endsWith(suffix) || emailDomain.includes(suffix)
+
+      // For UB launch - ONLY allow buffalo.edu emails
+      const allowedDomains = ['buffalo.edu'];
+      const isAllowedDomain = allowedDomains.includes(emailDomain);
+
+      // Fallback to general .edu validation if not UB-specific
+      const eduDomains = ['.edu', '.ac.', '.university', '.college'];
+      const isEduDomain = isAllowedDomain || (
+        process.env.NEXT_PUBLIC_CAMPUS_ID !== 'ub-buffalo' &&
+        eduDomains.some(suffix => emailDomain.endsWith(suffix))
       );
       
       if (!isEduDomain) {
-        await auditAuthEvent('suspicious', request, {
+        await auditAuthEvent('forbidden', request, {
           operation: 'send_magic_link',
-          error: 'non_edu_domain'
+          error: `non_edu_domain: ${emailDomain}`
         });
-        
-        // Don't block but log for monitoring
-        logger.warn('Non-educational domain attempted', { emailDomain, endpoint: '/api/auth/send-magic-link' });
+
+        // SECURITY: Block non-educational domains in production
+        logger.error('BLOCKED: Non-educational domain attempted', {
+          emailDomain,
+          email: email.replace(/(.{3}).*@/, '$1***@'),
+          endpoint: '/api/auth/send-magic-link'
+        });
+
+        return NextResponse.json(
+          ApiResponseHelper.error(
+            "Only educational email addresses (.edu) are allowed",
+            "INVALID_EMAIL_DOMAIN"
+          ),
+          { status: HttpStatus.FORBIDDEN }
+        );
       }
     }
     

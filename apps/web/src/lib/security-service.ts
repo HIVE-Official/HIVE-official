@@ -111,7 +111,6 @@ function extractUserIdFromDebugToken(token: string): string | null {
     
     return userId || 'debug-user';
   } catch (error) {
-    console.error('Failed to extract user ID from debug token:', error);
     return 'debug-user';
   }
 }
@@ -169,7 +168,6 @@ export async function validateDevBypass(
       timestamp: new Date().toISOString()
     };
 
-    console.error('🚨 SECURITY ALERT: Development bypass attempt in production', securityContext);
 
     // Structured security logging
     await logSecurityEvent('bypass_attempt', {
@@ -198,7 +196,6 @@ export async function validateDevBypass(
         extra: securityContext
       });
     } catch (error) {
-      console.error('Failed to log security incident:', error);
     }
 
     return {
@@ -228,12 +225,10 @@ export async function validateMagicLinkBypass(
   // Check if this is a dev magic link
   if (token === 'DEV_MODE') {
     if (config.allowDevMagicLinks && isDevelopment) {
-      console.log(`🔓 Dev magic link allowed for ${email.replace(/(.{3}).*@/, '$1***@')} in ${currentEnvironment}`);
       return { allowed: true, reason: 'Development environment' };
     }
 
     if (!config.allowDevMagicLinks) {
-      console.error('🚨 SECURITY ALERT: DEV_MODE magic link attempted in production');
       
       // Structured security logging
       await logSecurityEvent('bypass_attempt', {
@@ -267,7 +262,6 @@ export async function validateMagicLinkBypass(
           }
         });
       } catch (error) {
-        console.error('Failed to log magic link security incident:', error);
       }
 
       return {
@@ -389,11 +383,8 @@ export function secureLog(level: 'info' | 'warn' | 'error', message: string, dat
   const config = getSecurityConfig();
 
   if (level === 'error') {
-    console.error(message, config.logSensitiveData ? data : '[REDACTED]');
   } else if (level === 'warn') {
-    console.warn(message, config.logSensitiveData ? data : '[REDACTED]');
   } else {
-    console.log(message, config.logSensitiveData ? data : '[REDACTED]');
   }
 }
 

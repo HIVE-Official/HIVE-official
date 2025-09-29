@@ -37,9 +37,7 @@ import {
   X,
   Plus
 } from 'lucide-react';
-import { Button, Badge } from "@hive/ui";
-
-import { Alert } from "@/components/temp-stubs";
+import { Button, Badge, Alert } from "@hive/ui";
 // Space Member Management Interface for Claimed Leaders
 export interface MemberManagementProps {
   spaceId: string;

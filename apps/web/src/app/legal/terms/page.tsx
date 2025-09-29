@@ -263,6 +263,9 @@ export const metadata: Metadata = {
     "Terms of Service for HIVE - the social platform for college students.",
 };
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 export default function TermsOfServicePage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>

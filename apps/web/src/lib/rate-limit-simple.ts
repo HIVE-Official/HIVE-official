@@ -117,7 +117,6 @@ export function rateLimit(config: RateLimitConfig = { maxRequests: 100, windowMs
         healthStatus.lastFailure = Date.now();
         rateLimiterHealth.set(identifier, healthStatus);
 
-        console.error(`Memory rate limiter failure for ${identifier}:`, error);
 
         // Log security event
         logSecurityEvent('rate_limit', {
@@ -238,10 +237,8 @@ function secureCleanup() {
     
     const cleaned = beforeSize - clients.size;
     if (cleaned > 0) {
-      console.log(`Rate limiter cleanup: removed ${cleaned} expired client records`);
     }
   } catch (error) {
-    console.error('Rate limiter cleanup failed:', error);
   }
 }
 

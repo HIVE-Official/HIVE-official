@@ -1,3 +1,5 @@
+'use client';
+
 import type { Meta, StoryObj } from '@storybook/react'
 import { TopBarNav } from './top-bar-nav'
 import { Home, Users, User, Bell, MessageCircle, Search } from 'lucide-react'

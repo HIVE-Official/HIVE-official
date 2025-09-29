@@ -1,4 +1,7 @@
+'use client';
+
 import type { Meta, StoryObj } from '@storybook/react'
+import { useState } from 'react'
 import { NavigationShell, type NavigationItem } from './navigation-shell'
 import { Home, Users, User, Wrench, Calendar, Sparkles, MessageCircle, Bell } from 'lucide-react'
 
@@ -201,9 +204,9 @@ export const HighNotificationCount: Story = {
 
 export const InteractiveDemo: Story = {
   render: () => {
-    const [currentPath, setCurrentPath] = React.useState('/feed')
-    const [notificationCount, setNotificationCount] = React.useState(5)
-    const [messageCount, setMessageCount] = React.useState(3)
+    const [currentPath, setCurrentPath] = useState('/feed')
+    const [notificationCount, setNotificationCount] = useState(5)
+    const [messageCount, setMessageCount] = useState(3)
 
     const handleItemClick = (item: NavigationItem) => {
       setCurrentPath(item.href)

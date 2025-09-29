@@ -108,7 +108,6 @@ export class ElementEngine {
         const elementDef = ElementRegistry.getInstance().getElement(elementConfig.elementId);
         if (elementDef) {
           // Execute element logic here
-          console.log(`Processing element: ${elementDef.name}`);
         }
       }
 

@@ -4,8 +4,15 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createDevSession } from '@/lib/dev-auth-helper';
 import { currentEnvironment } from '@/lib/env';
+
+// Conditionally import dev-auth-helper only in development
+let createDevSession: any = null;
+
+if (process.env.NODE_ENV !== 'production') {
+  const devAuthHelper = require('@/lib/dev-auth-helper');
+  createDevSession = devAuthHelper.createDevSession;
+}
 
 export async function POST(request: NextRequest) {
   // Only allow in development

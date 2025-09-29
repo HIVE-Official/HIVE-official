@@ -6,6 +6,7 @@ export { Button, buttonVariants } from "./button.js";
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card.js";
 export { Checkbox, checkboxVariants } from "./checkbox.js";
 export { CheckIcon } from "./check-icon.js";
+export { Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandShortcut, CommandSeparator, } from "./command.js";
 export { HiveButton, hiveButtonVariants } from "./hive-button.js";
 export { HiveCard, HiveCardHeader, HiveCardFooter, HiveCardTitle, HiveCardDescription, HiveCardContent, hiveCardVariants, } from "./hive-card.js";
 export { HiveInput, hiveInputVariants } from "./hive-input.js";
@@ -27,4 +28,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants, tabsTrigger
 export { Textarea, textareaVariants } from "./textarea.js";
 export { TextareaEnhanced, textareaEnhancedVariants } from "./textarea-enhanced.js";
 export { TopBarNav, topBarNavVariants, topBarNavIconVariants, topBarNavLabelVariants } from "./top-bar-nav.js";
+export { PresenceIndicator } from "./presence-indicator.js";
+export { NotificationBell } from "./notification-bell.js";
+export { NotificationItem } from "./notification-item.js";
 //# sourceMappingURL=index.js.map

@@ -4,25 +4,28 @@ import path from 'path';
 
 const config: StorybookConfig = {
   stories: [
+    // 🧱 ATOMIC DESIGN COMPONENTS - Direct component stories
+    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
+
     // 🎯 SYSTEM OVERVIEW - Platform overview and navigation
     '../src/stories/00-System-Overview/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🏗️ FOUNDATION - Core design system and tokens
     '../src/stories/01-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🧱 ATOMS - Core UI building blocks
     '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🔗 MOLECULES - Combined atomic elements
     '../src/stories/03-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🏛️ ORGANISMS - Complex component systems
     '../src/stories/04-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🔄 COMPLETE SYSTEMS - Cross-system integrations
     '../src/stories/07-Complete-Feed-Rituals-System/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/08-Complete-HiveLAB-System/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 📱 FEATURE SLICES - Core platform features
     '../src/stories/10-Auth-Onboarding/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/10-Campus-Systems/**/*.stories.@(js|jsx|ts|tsx)',
@@ -30,18 +33,18 @@ const config: StorybookConfig = {
     '../src/stories/12-Profile-System/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/13-Spaces-Communities/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/15-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🌐 PLATFORM EXPERIENCES
     '../src/stories/20-Platform-Integration/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/stories/20-Platform-Experiences/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🔬 DEVELOPMENT & DOCUMENTATION
     '../src/stories/30-Development/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // 🧪 INDIVIDUAL COMPONENT STORIES
     '../src/components/tools/**/*.stories.@(js|jsx|ts|tsx)',
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
-    
+
     // Include all MDX documentation
     '../src/**/*.mdx'
   ],

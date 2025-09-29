@@ -3,7 +3,7 @@
  * Core UI building blocks for the HIVE platform
  * Uses the gold (var(--hive-brand-secondary)), black, and white color scheme
  */
-import React, { ButtonHTMLAttributes, InputHTMLAttributes } from 'react';
+import React, { type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react';
 export interface UniversalButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
     size?: 'sm' | 'md' | 'lg' | 'xl';

@@ -24,21 +24,36 @@ const nextConfig = {
   // Tell Next.js where to find the app directory
   distDir: ".next",
   
-  // External packages for server components
-  serverExternalPackages: ['framer-motion'],
-  
+  // Transpile workspace packages
   transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks'],
   
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: [
+      'lucide-react',
+      '@hive/ui',
+      'firebase',
+      'firebase-admin',
+      '@tanstack/react-query',
+      'react-hook-form',
+      'date-fns'
+    ],
+    // Reduce cache size
+    webpackMemoryOptimizations: true,
   },
-  
+
   // Bundle optimization
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn']
     } : false,
+  },
+
+  // Production-only optimizations
+  productionBrowserSourceMaps: false,
+  generateBuildId: async () => {
+    // Use timestamp for build ID to avoid cache buildup
+    return Date.now().toString();
   },
   
   eslint: {
@@ -50,11 +65,56 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
 
+  // Cache configuration
+  onDemandEntries: {
+    // Period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 25 * 1000,
+    // Number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 2,
+  },
+
   // Security headers
   async headers() {
     const isProduction = process.env.NODE_ENV === 'production';
 
     return [
+      // Static assets caching
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
@@ -118,7 +178,32 @@ const nextConfig = {
     ];
   },
 
-  // Redirect HTTP to HTTPS in production
+  // Subdomain and redirect handling
+  async rewrites() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'admin.hive.college',
+          },
+        ],
+        destination: '/admin/:path*',
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'admin.localhost',
+          },
+        ],
+        destination: '/admin/:path*',
+      },
+    ];
+  },
+
   async redirects() {
     if (process.env.NODE_ENV === 'production') {
       return [
@@ -131,7 +216,7 @@ const nextConfig = {
               value: 'http',
             },
           ],
-          destination: 'https://hive.io/:path*',
+          destination: 'https://www.hive.college/:path*',
           permanent: true,
         },
       ];
@@ -229,30 +314,99 @@ const nextConfig = {
       // Bundle splitting optimizations
       config.optimization = {
         ...config.optimization,
+        minimize: true,
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
         splitChunks: {
-          ...config.optimization.splitChunks,
+          chunks: 'all',
+          maxInitialRequests: 25,
+          minSize: 20000,
+          maxSize: 244000,
           cacheGroups: {
-            ...config.optimization.splitChunks.cacheGroups,
             // Separate vendor chunk for UI library
             hiveUI: {
-              test: /[\\/]node_modules[\\/]@hive[\\/]ui[\\/]/,
+              test: /[\\/]packages[\\/]ui[\\/]/,
               name: 'hive-ui',
               chunks: 'all',
-              priority: 20,
+              priority: 30,
+              reuseExistingChunk: true,
+            },
+            // Firebase SDK splitting
+            firebaseCore: {
+              test: /[\\/]node_modules[\\/]firebase[\\/]/,
+              name: 'firebase-core',
+              chunks: 'all',
+              priority: 25,
+              reuseExistingChunk: true,
+            },
+            firebaseAdmin: {
+              test: /[\\/]node_modules[\\/]firebase-admin[\\/]/,
+              name: 'firebase-admin',
+              chunks: 'async',
+              priority: 24,
+              reuseExistingChunk: true,
+            },
+            // React Query separate chunk
+            reactQuery: {
+              test: /[\\/]node_modules[\\/]@tanstack[\\/]react-query[\\/]/,
+              name: 'react-query',
+              chunks: 'all',
+              priority: 22,
+              reuseExistingChunk: true,
+            },
+            // Form libraries
+            forms: {
+              test: /[\\/]node_modules[\\/](react-hook-form|@hookform|zod)[\\/]/,
+              name: 'forms',
+              chunks: 'all',
+              priority: 21,
+              reuseExistingChunk: true,
             },
             // Framer Motion separate chunk
             framerMotion: {
               test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
               name: 'framer-motion',
-              chunks: 'all',
-              priority: 15,
+              chunks: 'async',
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            // Icons library
+            icons: {
+              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+              name: 'icons',
+              chunks: 'async',
+              priority: 19,
+              reuseExistingChunk: true,
+            },
+            // Date utilities
+            dateUtils: {
+              test: /[\\/]node_modules[\\/]date-fns[\\/]/,
+              name: 'date-utils',
+              chunks: 'async',
+              priority: 18,
+              reuseExistingChunk: true,
             },
             // Common vendor libraries
             vendor: {
               test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
+              name(module) {
+                const packageName = module.context.match(
+                  /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+                )?.[1];
+                if (packageName) {
+                  return `vendor-${packageName.replace('@', '').replace('/', '-')}`;
+                }
+                return 'vendor';
+              },
               chunks: 'all',
               priority: 10,
+              reuseExistingChunk: true,
+            },
+            // Default chunk
+            default: {
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true,
             },
           },
         },
@@ -261,6 +415,9 @@ const nextConfig = {
       // Tree shaking optimization
       config.optimization.usedExports = true;
       config.optimization.sideEffects = false;
+      config.optimization.providedExports = true;
+      config.optimization.concatenateModules = true;
+      config.optimization.innerGraph = true;
     }
 
     // Resolve workspace packages to source files and handle node: imports

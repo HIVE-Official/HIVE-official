@@ -1,370 +1,273 @@
-# HIVE Development Guide
+# CLAUDE.md
 
-## 🏗️ Monorepo Architecture
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-### Structure
-HIVE is a **Turborepo monorepo** using pnpm workspaces:
+## 🚀 Core Development Commands
 
-```
-hive-ui/
-├── apps/
-│   ├── web/          # Main HIVE platform (Next.js 15.3.3)
-│   └── admin/        # Admin dashboard (port 3001)
-├── packages/
-│   ├── ui/           # @hive/ui - Complete design system (70+ components)
-│   ├── core/         # @hive/core - Firebase, models, utilities
-│   ├── auth-logic/   # @hive/auth-logic - Authentication
-│   ├── hooks/        # @hive/hooks - Shared React hooks
-│   ├── firebase/     # @hive/firebase - Firebase integration
-│   ├── validation/   # @hive/validation - Zod schemas
-│   ├── analytics/    # @hive/analytics - Analytics tracking
-│   ├── api-client/   # @hive/api-client - API utilities
-│   ├── i18n/         # @hive/i18n - Internationalization
-│   ├── tokens/       # @hive/tokens - Design tokens
-│   ├── utilities/    # @hive/utilities - Helper functions
-│   └── config/       # ESLint & TypeScript configs
-└── turbo.json        # Build orchestration
-```
-
-### Key Commands
+### Development & Build
 ```bash
-# Development
-pnpm dev                    # Run all apps (fully operational)
-pnpm dev --filter=web       # Run web app only
+# Start development server (all apps)
+pnpm dev
 
-# Building
-pnpm build                  # Full build (working)
-pnpm build --filter=@hive/ui # Build UI package only
+# Build for production (with memory optimization)
+NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
-# Testing
-pnpm test                   # Run test suites
-pnpm typecheck             # TypeScript validation (passing)
+# Run only web app
+pnpm dev --filter=web
 
-# Linting
-pnpm lint                  # Run linting across monorepo
-pnpm lint:web              # Web app specific linting
-
-# Package Management
-pnpm install               # Install dependencies
-pnpm clean                 # Clean build artifacts
+# Build specific package
+pnpm build --filter=@hive/ui
 ```
 
-### Import Patterns
+### Code Quality
+```bash
+# TypeScript validation
+NODE_OPTIONS="--max-old-space-size=4096" pnpm typecheck
+
+# Linting (with memory optimization for large codebase)
+NODE_OPTIONS="--max-old-space-size=4096" pnpm lint
+
+# Quick lint (packages only)
+pnpm lint:quick
+
+# Clean builds and dependencies
+pnpm clean:build
+pnpm clean:node
+```
+
+### Testing
+```bash
+# Unit tests
+pnpm test
+
+# E2E tests
+pnpm test:e2e
+
+# Storybook for UI components
+pnpm storybook
+```
+
+### Firebase Operations
+```bash
+# Deploy Firestore indexes
+pnpm indexes:deploy
+
+# Validate Firestore indexes
+pnpm indexes:validate
+```
+
+## 🏗️ Architecture Overview
+
+### Monorepo Structure (Turborepo + pnpm)
+- **apps/web**: Main Next.js 15.3.3 application (port 3000)
+- **apps/admin**: Admin dashboard (port 3001)
+- **packages/ui**: @hive/ui - Atomic design system (70+ components)
+- **packages/core**: @hive/core - Business logic, Firebase models
+- **packages/firebase**: @hive/firebase - Firebase integration layer
+- **packages/auth-logic**: @hive/auth-logic - Authentication logic
+- **packages/hooks**: @hive/hooks - Shared React hooks
+- **packages/tokens**: @hive/tokens - Design tokens and CSS variables
+
+### Critical Import Patterns
 ```typescript
-// Standard package imports
-import { Button, Card, FormField } from '@hive/ui';
+// Always use package imports for shared code
+import { Button, FormField } from '@hive/ui';
 import { useAuth } from '@hive/auth-logic';
 import { db, auth } from '@hive/firebase';
 import type { User, Space } from '@hive/core';
-import { useProfile } from '@hive/hooks';
-import { validateEmail } from '@hive/validation';
 ```
 
-## 📦 Package Architecture
+### API Route Architecture
+All API routes follow a consistent pattern with:
+- **withAuthAndErrors**: Middleware wrapper for auth + error handling
+- **Campus isolation**: All queries filter by `campusId: 'ub-buffalo'`
+- **Rate limiting**: Applied to public endpoints
+- **TypeScript validation**: Zod schemas for request/response
 
-### @hive/ui - Design System
-**Atomic Design Structure:**
-- **Atoms**: Foundational UI elements (Avatar, Badge, Button, Input, etc.)
-- **Molecules**: Composed components (FormField, ProfileHeader, etc.)
-- **Organisms**: Complex UI sections (ProfileDashboard, SpaceCard, etc.)
-- **Templates**: Page-level layouts (PageLayout, DashboardPage)
-
-**Import Examples:**
+Example pattern:
 ```typescript
-import {
-  Button,           // Atoms
-  FormField,        // Molecules
-  ProfileDashboard, // Organisms
-  PageLayout        // Templates
-} from '@hive/ui';
+export const POST = withAuthAndErrors(async (req, user) => {
+  // user is already authenticated
+  // campus isolation is enforced
+  // errors are handled automatically
+});
 ```
 
-### @hive/core - Business Logic
-**Exports:**
-- Firebase configuration
-- Domain models (User, Space, Post, Tool)
-- Utility functions
-- Server-side helpers
+## 🔐 Critical Security Patterns
 
-### @hive/firebase - Firebase Integration
-**Configured Services:**
-- Firestore Database
-- Authentication
-- Storage
-- Analytics
+### Firebase Query Pattern (MANDATORY)
+```typescript
+// ALWAYS include campus isolation
+const query = query(
+  collection(db, 'spaces'),
+  where('campusId', '==', 'ub-buffalo'), // REQUIRED
+  where('isActive', '==', true),
+  orderBy('memberCount', 'desc')
+);
+```
 
-## 🗺️ Application Routes
+### Authentication Flow
+1. Email verification required (@buffalo.edu only for vBETA)
+2. Firebase Auth sessions managed via cookies
+3. Protected routes use middleware authentication
+4. API routes wrapped with `withAuthAndErrors`
 
-### Public Routes
-- `/` - Landing page
-- `/auth/login` - Login (UB emails only)
-- `/auth/verify` - Email verification
-- `/profile/[handle]` - Public profiles
-- `/schools` - School directory
-- `/waitlist/[schoolId]` - Waitlist signup
+## 🎯 Core Product Context
 
-### Protected Dashboard Routes
-- `/(dashboard)/feed` - Social feed
-- `/(dashboard)/spaces` - Space discovery
-- `/(dashboard)/spaces/[spaceId]` - Individual space
-- `/(dashboard)/profile/*` - Profile management
-- `/(dashboard)/tools/*` - Tool builder
-- `/(dashboard)/events` - Event system
-- `/(dashboard)/rituals` - Active rituals and progress
-- `/(dashboard)/rituals/[ritualId]` - Individual ritual details
-- `/(dashboard)/admin` - Admin panel
+### The Core Loop (Critical Path)
+**Open app → See feed → Maybe engage → Come back**
+
+This loop must be < 3 seconds end-to-end. Every feature either:
+1. Makes this loop faster → Ship it
+2. Serves something else → Delete it
+
+### Student Behavior Reality
+- **80% Social Mode**: Browse, scroll, check profiles
+- **20% Coordination Mode**: "Who's going to Walmart?", "Selling textbook"
+- **NOT LinkedIn**: Keep it informal, no professional networking
+
+### Launch Focus (October 1st)
+**Must Work Perfectly:**
+1. Sign up with @buffalo.edu
+2. See feed immediately
+3. Post text/photos
+4. Browse/join spaces
+5. Basic profiles
+
+Everything else is secondary.
+
+## 🚦 Development Principles
+
+### 2025 Excellence Standard
+- **Ship remarkable, not viable**: First version must create sharing urge
+- **Production only**: No mocks, stubs, or "we'll fix later"
+- **Behavior change focus**: Build new habits, not features
+- **Distribution is design**: Sharing IS the product
+
+### Code Quality Requirements
+- **TypeScript strict mode**: Zero `any` types
+- **Zero build errors**: Must compile cleanly
+- **Mobile-first**: Every feature works on phones
+- **Campus-isolated**: All data tagged with campusId
+- **Real-time capable**: SSE/Firebase listeners where needed
+
+### Performance Targets
+- **Page load**: < 3s on campus WiFi
+- **Transitions**: < 1s between pages
+- **Bundle size**: Optimized for mobile
+- **Core Web Vitals**: LCP < 2.5s, FID < 100ms, CLS < 0.1
+
+## 💡 Common Development Tasks
+
+### Adding New Features
+1. Check existing patterns in codebase first
+2. Use @hive/ui components (don't create new ones)
+3. Follow atomic design: atoms → molecules → organisms
+4. Ensure campus isolation in all queries
+5. Add loading/error states
+6. Test on mobile viewport
+
+### Working with Spaces
+- Spaces are pre-seeded RSS-fed communities
+- All space queries must filter by campusId
+- Space membership tracked in subcollections
+- Posts are subcollections of spaces
+
+### Feed Implementation
+- Feed is read-only aggregation from spaces
+- Real-time updates via SSE endpoints
+- Cache strategy: Redis for performance
+- Algorithm: Chronological with boost for engagement
+
+## 🐛 Known Issues & Solutions
+
+### Memory Issues During Build
+```bash
+# Always use increased memory for builds
+export NODE_OPTIONS="--max-old-space-size=4096"
+pnpm build
+```
+
+### TypeScript Performance
+```bash
+# Skip lib checking for faster compilation
+NODE_OPTIONS="--max-old-space-size=4096" npx tsc --noEmit --skipLibCheck
+```
+
+### Package Resolution
+- Use pnpm overrides in root package.json for version conflicts
+- React/React-DOM locked to ^18.0.0 across monorepo
+
+## 🔍 Debugging & Analysis
+
+### Find Specific Route Patterns
+```bash
+# Find all API routes with auth
+grep -r "withAuthAndErrors" apps/web/src/app/api
+
+# Find campus isolation patterns
+grep -r "campusId.*ub-buffalo" apps/web/src
+```
+
+### Component Location
+- UI components: `packages/ui/src/atomic/`
+- Page components: `apps/web/src/app/`
+- Shared hooks: `packages/hooks/src/`
+- Business logic: `packages/core/src/`
+
+## 📝 Git Workflow
+
+### Commit Standards
+- Use conventional commits: `feat:`, `fix:`, `chore:`
+- Reference issue numbers when applicable
+- Keep commits atomic and focused
+
+### Current Branch Strategy
+- `main`: Production-ready code
+- Feature branches: Short-lived, merge quickly
+- No long-running branches
+
+## 🎨 UI/UX Consistency
+
+### Design System Usage
+- Always use @hive/ui components
+- Follow atomic design patterns
+- Dark theme with gold accents (#FFD700)
+- Mobile-first responsive design
+
+### Component Hierarchy
+1. Check if component exists in @hive/ui
+2. Compose from existing atoms/molecules
+3. Only create new if absolutely necessary
+4. Add to Storybook if reusable
 
 ## 🔥 Firebase Architecture
 
-### Collections Structure
-```typescript
-// Primary Collections
-users/              // User profiles
-spaces/             // Community spaces
-  └── posts/        // Space posts
-      └── comments/ // Post comments
-  └── members/      // Space membership
-tools/              // User-created tools
-rituals/            // Platform-wide rituals and campaigns
-  └── participation/ // User participation tracking
-  └── milestones/  // Campus achievement tracking
-schools/            // University data
-presence/           // Real-time status
+### Collection Structure
+```
+users/                    // User profiles
+spaces/                   // Community spaces
+  └── posts/             // Space posts
+      └── comments/      // Post comments
+  └── members/           // Space membership
+tools/                   // User-created tools
+rituals/                 // Campus campaigns
+schools/                 // University data
 ```
 
-### Security Pattern
-```typescript
-// ALL documents must have campus isolation for vBETA
-interface BaseDocument {
-  campusId: 'ub-buffalo'; // Hard-coded for UB launch
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  createdBy: string;      // User UID
-}
-```
-
-### Query Patterns
-```typescript
-// GOOD: Campus-isolated query
-const spacesQuery = query(
-  collection(db, 'spaces'),
-  where('campusId', '==', 'ub-buffalo'),
-  where('isActive', '==', true),
-  orderBy('memberCount', 'desc'),
-  limit(20)
-);
-
-// BAD: Missing campus isolation
-// Never write queries without campus filtering!
-```
-
-## 🎨 Design System Usage
-
-### Component Hierarchy
-1. **@hive/ui Components** - Follow atomic design patterns
-2. **Atomic Design Pattern** - Use atoms → molecules → organisms → templates
-3. **Mobile-first approach** - All components designed for mobile compatibility
-4. **TypeScript Support** - Full type safety across all components
-
-### Common Patterns
-```typescript
-// Page Structure
-import { PageLayout } from '@hive/ui';
-
-export default function SomePage() {
-  return (
-    <PageLayout>
-      {/* Your content */}
-    </PageLayout>
-  );
-}
-
-// Form Pattern
-import { FormField, Button } from '@hive/ui';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-```
-
-
-## ⚡ Performance Requirements
-
-### Targets
-- **Page Load**: < 3s on campus WiFi
-- **Transitions**: < 1s between pages
-- **Bundle Size**: Optimize for mobile
-- **Core Web Vitals**:
-  - LCP: < 2.5s
-  - FID: < 100ms
-  - CLS: < 0.1
-
-### Optimization Strategies
-- Use React Server Components by default
-- Minimize 'use client' directives
-- Implement lazy loading
-- Use Suspense boundaries
-- Optimize images (WebP, proper sizing)
-
-## 🔐 Security & Privacy
-
-### Authentication Rules
-- **UB-only for vBETA**: Only @buffalo.edu emails
-- **Session management**: Firebase Auth sessions
-- **Protected routes**: Use middleware for auth checks
-
-### Data Protection
-- Campus isolation (all data tagged with campusId)
+### Security Rules Pattern
+- Campus isolation on all documents
 - User permission validation
-- Input sanitization
-- Rate limiting on API routes
+- Rate limiting on writes
+- Optimistic UI with rollback
 
-## 🛠️ Development Workflow
+## ⚠️ Critical Warnings
 
-### Before Writing Code
-1. Verify TypeScript compilation passes
-2. Check that required packages build successfully
-3. Ensure Firebase configuration is set up for your environment
-4. Run linting to check for code quality issues
+1. **NEVER** skip campus isolation in queries
+2. **NEVER** use hardcoded values for campusId (except 'ub-buffalo' for vBETA)
+3. **NEVER** create mocks or stubs - production only
+4. **ALWAYS** handle loading/error states
+5. **ALWAYS** test on mobile viewport
+6. **ALWAYS** use package imports for shared code
 
-### Code Standards
-- **TypeScript**: Strict mode, minimal `any` types
-- **ESLint**: Clean compilation achieved (0 errors)
-- **Build**: Production build compiles successfully
-- **Testing**: Unit tests for utilities, E2E for features
-- **Commits**: Clear messages with scope
-
-
-## 📋 Technical Stack
-
-### Frontend
-- **Framework**: Next.js 15.3.3 (App Router)
-- **UI Library**: React 18
-- **Styling**: Tailwind CSS
-- **Component Library**: @hive/ui (Radix UI based)
-- **State Management**: React Context + Hooks
-- **Forms**: React Hook Form + Zod
-- **Animations**: Framer Motion
-
-### Backend
-- **Database**: Firebase Firestore
-- **Auth**: Firebase Authentication
-- **Storage**: Firebase Storage
-- **Functions**: Vercel Serverless
-- **Real-time**: Firestore listeners
-
-### Testing
-- **Unit/Integration**: Vitest
-- **E2E**: Playwright
-- **Component**: Testing Library
-
-### Build Tools
-- **Monorepo**: Turborepo
-- **Package Manager**: pnpm
-- **Bundler**: Next.js (Webpack/Turbopack)
-- **Linting**: ESLint
-- **Type Checking**: TypeScript
-
-
-## 🎓 UB-Specific Configuration
-
-### Campus Data
-```typescript
-interface UBCampusConfig {
-  campusId: 'ub-buffalo';
-  emailDomain: '@buffalo.edu';
-  dorms: ['Ellicott', 'Governors', 'South Campus'];
-  departments: ['Engineering', 'Management', 'Arts & Sciences'];
-}
-```
-
-### Validation Rules
-- Email must end with @buffalo.edu
-- All content tagged with campusId
-- Campus-specific terminology in UI
-
-## 🚦 Development Priorities
-
-### October 1st Launch - PRODUCTION READY
-**Status**: 95% Production Ready - Clean build achieved
-
-#### Day 1 Features (All Complete)
-1. ✅ Full authentication with magic links
-2. ✅ Spaces with RSS feed integration (3000+ events)
-3. ✅ Real-time Feed with SSE updates
-4. ✅ Complete Profile system
-5. ✅ HiveLab tools (gated to leaders)
-6. ✅ Events calendar integration
-7. ✅ Direct messaging and following
-8. ✅ Rituals system for engagement
-
-#### Pre-Launch Requirements (Before Oct 1)
-1. Firebase production configuration
-2. Email service setup (SendGrid)
-3. Domain and SSL configuration
-4. Load testing to 10k concurrent users
-5. Security audit completion
-
-### Post-Launch Optimization
-1. Performance tuning based on real usage
-2. Additional ritual campaigns
-3. Enhanced analytics dashboard
-4. Push notifications
-5. Cross-campus expansion prep
-
-## 💡 Key Development Rules
-
-### Always Remember
-- **No hardcoding** - Use system components
-- **Mobile-first** - Test on phones first
-- **Production only** - No mocks or stubs
-- **Campus context** - UB-specific features
-- **Vertical slices** - Complete features end-to-end
-
-### Never Do
-- Create components outside @hive/ui
-- Skip campus isolation in queries
-- Use `any` TypeScript types
-- Ignore mobile experience
-- Add features without business logic discussion
-
-## 🤝 Collaboration Guidelines
-
-### Working with AI Assistants
-- Ask business logic questions before implementation
-- Use existing @hive/ui components
-- Follow established patterns in codebase
-- Ensure mobile compatibility
-- Test with UB context in mind
-
-### Code Review Checklist
-- [ ] Uses @hive/ui components
-- [ ] Includes campus isolation
-- [ ] Works on mobile devices
-- [ ] TypeScript strict mode passes
-- [ ] ESLint warnings under limit
-- [ ] Firebase queries optimized
-- [ ] Loading states implemented
-- [ ] Error boundaries in place
-
----
-
-# HIVE Vision Statement
-
-## We're building the first social platform where connections form around solving real problems together.
-
-**HIVE is social utility** — where every connection has purpose, every community solves problems, and every interaction moves your life forward.
-
-### Core Principles
-- **Social Utility**: Every feature serves both social connection and practical utility
-- **Campus-First**: Built specifically for university life
-- **Mobile-Native**: Designed for students on the go
-- **Community-Driven**: Tools and spaces created by students, for students
-
-### Product Philosophy
-- **Production Mindset**: Ship real features, not prototypes
-- **Vertical Integration**: Complete features end-to-end
-- **User-Centric**: UB student needs drive every decision
-- **Rapid Iteration**: Launch fast, improve constantly
-
----
-
-**Remember**: We're not just building software - we're creating the future of campus community. Every decision should serve UB students and help HIVE become essential to their college experience.
+Remember: HIVE succeeds when students choose it over Instagram for campus content. Every line of code should make campus life easier, more fun, or more connected.

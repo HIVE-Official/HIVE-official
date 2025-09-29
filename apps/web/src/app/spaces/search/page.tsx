@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 

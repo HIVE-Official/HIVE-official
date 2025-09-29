@@ -1,5 +1,8 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 // import { useState, useEffect } from 'react'; // TODO: For future interactive features
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';

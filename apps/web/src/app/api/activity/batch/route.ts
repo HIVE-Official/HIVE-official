@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     // Update daily summaries asynchronously (fire and forget)
     validEvents.forEach(event => {
       updateDailySummary(user.uid, event).catch(error => {
-        logger.error('Error updating daily summary', { error, endpoint: '/api/activity/batch' });
+        logger.error('Error updating daily summary', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity/batch' });
       });
     });
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       count: validEvents.length
     });
   } catch (error) {
-    logger.error('Error logging batch activities', { error: error, endpoint: '/api/activity/batch' });
+    logger.error('Error logging batch activities', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity/batch' });
     return NextResponse.json(ApiResponseHelper.error("Failed to log batch activities", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -135,6 +135,6 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
       await summaryRef.set(newSummary);
     }
   } catch (error) {
-    logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity/batch' });
+    logger.error('Error updating daily summary', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity/batch' });
   }
 }

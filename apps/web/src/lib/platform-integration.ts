@@ -157,7 +157,6 @@ export class PlatformIntegration {
 
       return finalFeed;
     } catch (error) {
-      console.error('Error getting unified feed data:', error);
       return [];
     }
   }
@@ -199,7 +198,6 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching feed slice data:', error);
       return [];
     }
   }
@@ -253,13 +251,11 @@ export class PlatformIntegration {
             }
           }
         } catch (error) {
-          console.error(`Error fetching posts for space ${space.id}:`, error);
         }
       }
 
       return feedItems.slice(0, options.limit);
     } catch (error) {
-      console.error('Error fetching space slice data:', error);
       return [];
     }
   }
@@ -296,7 +292,6 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching tool slice data:', error);
       return [];
     }
   }
@@ -332,7 +327,6 @@ export class PlatformIntegration {
         }
       }));
     } catch (error) {
-      console.error('Error fetching profile slice data:', error);
       return [];
     }
   }
@@ -353,7 +347,6 @@ export class PlatformIntegration {
       this.websocket = new WebSocket(wsUrl);
 
       this.websocket.onopen = () => {
-        console.log('🔌 WebSocket connected for platform integration');
         this.reconnectAttempts = 0;
         
         // Subscribe to user-specific updates
@@ -368,20 +361,16 @@ export class PlatformIntegration {
           const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
         }
       };
 
       this.websocket.onclose = () => {
-        console.log('🔌 WebSocket disconnected');
         this.handleWebSocketReconnect();
       };
 
       this.websocket.onerror = (error) => {
-        console.error('🔌 WebSocket error:', error);
       };
     } catch (error) {
-      console.error('Failed to initialize WebSocket:', error);
     }
   }
 
@@ -406,7 +395,6 @@ export class PlatformIntegration {
         this.handleToolInteraction(message.data);
         break;
       default:
-        console.log('Unknown WebSocket message type:', message.type);
     }
   }
 
@@ -499,7 +487,6 @@ export class PlatformIntegration {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in subscriber callback for ${eventType}:`, error);
         }
       });
     }
@@ -549,7 +536,6 @@ export class PlatformIntegration {
           expires: Date.now() + ttl
         }));
       } catch (error) {
-        console.warn('Failed to cache to localStorage:', error);
       }
     }
   }
@@ -575,7 +561,6 @@ export class PlatformIntegration {
           }
         }
       } catch (error) {
-        console.warn('Failed to invalidate localStorage cache:', error);
       }
     }
   }
@@ -595,7 +580,6 @@ export class PlatformIntegration {
           : session.token;
       }
     } catch (error) {
-      console.error('Error getting auth token:', error);
     }
     
     return '';
@@ -618,13 +602,11 @@ export class PlatformIntegration {
       this.reconnectAttempts++;
       const delay = Math.pow(2, this.reconnectAttempts) * 1000; // Exponential backoff
       
-      console.log(`🔌 Attempting WebSocket reconnection in ${delay}ms (attempt ${this.reconnectAttempts})`);
       
       setTimeout(() => {
         this.initializeWebSocket();
       }, delay);
     } else {
-      console.error('🔌 Max WebSocket reconnection attempts reached');
     }
   }
 

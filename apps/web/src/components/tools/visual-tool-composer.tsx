@@ -1,19 +1,17 @@
 "use client";
 
 import { useState, useRef, useCallback } from 'react';
-import {
-  Card,
-  Button,
-  Input,
-  Label,
-  Badge,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Alert,
-  AlertDescription
-} from '@hive/ui';
+// Temp fix for chunk 2073 useRef errors
+const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
+const Button = ({ children, variant = "default", size = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Input = ({ className = "", ...props }: any) => <input className={`px-3 py-2 border rounded ${className}`} {...props} />;
+const Label = ({ children, className = "", ...props }: any) => <label className={`text-sm font-medium ${className}`} {...props}>{children}</label>;
+const Badge = ({ children, variant = "default", className = "", ...props }: any) => <span className={`px-2 py-1 text-xs rounded ${className}`} {...props}>{children}</span>;
+const Tabs = ({ children, defaultValue, className = "", ...props }: any) => <div className={className} {...props}>{children}</div>;
+const TabsContent = ({ children, value, className = "", ...props }: any) => <div className={className} {...props}>{children}</div>;
+const TabsList = ({ children, className = "", ...props }: any) => <div className={`flex space-x-2 ${className}`} {...props}>{children}</div>;
+const TabsTrigger = ({ children, value, className = "", ...props }: any) => <button className={`px-3 py-1 ${className}`} {...props}>{children}</button>;
+import { Alert, AlertDescription } from '@/components/temp-stubs';
 import {
   Plus,
   Search,

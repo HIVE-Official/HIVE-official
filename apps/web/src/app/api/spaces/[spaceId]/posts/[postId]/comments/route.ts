@@ -213,7 +213,7 @@ export async function POST(
       .collection("comments")
       .add(commentData);
 
-    // Update post reply count
+    // Update post reply count and activity for hot threads
     await db
       .collection("spaces")
       .doc(spaceId)
@@ -221,6 +221,8 @@ export async function POST(
       .doc(postId)
       .update({
         replyCount: admin.firestore.FieldValue.increment(1),
+        commentCount: admin.firestore.FieldValue.increment(1), // For hot threads filtering
+        lastActivity: new Date(), // For hot threads sorting
         updatedAt: new Date()
       });
 

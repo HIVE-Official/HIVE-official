@@ -125,7 +125,6 @@ export function PersonalToolsCard({
 
   // Handle tool launch
   const handleToolClick = (toolId: string) => {
-    console.log(`Launching tool: ${toolId}`);
     // Track tool usage analytics
     if (onToolClick) {
       onToolClick(toolId);
@@ -137,7 +136,6 @@ export function PersonalToolsCard({
 
   // Handle manage tools click
   const handleManageTools = () => {
-    console.log('Opening tool management interface');
     if (onManageTools) {
       onManageTools();
     } else {
@@ -148,7 +146,6 @@ export function PersonalToolsCard({
 
   // Handle add tools click
   const handleAddTools = () => {
-    console.log('Opening tool marketplace');
     if (onAddTools) {
       onAddTools();
     } else {

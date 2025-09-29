@@ -105,6 +105,30 @@ export default [
     },
   },
 
+  // CommonJS build scripts configuration
+  {
+    files: ["*.cjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        require: "readonly",
+        module: "readonly",
+        exports: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        console: "readonly",
+        process: "readonly",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "no-undef": "off",
+      "no-console": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
+  },
+
   // Global ignore patterns - optimized for memory usage
   {
     ignores: [

@@ -24,10 +24,8 @@ export function initializeRedis(): Redis | null {
     
     if (!redisUrl) {
       if (process.env.NODE_ENV === 'production') {
-        console.error('⚠️ Redis URL not configured in production environment');
         throw new Error('Redis URL is required in production');
       }
-      console.log('🔄 Redis not configured - using in-memory fallback for development');
       return null;
     }
 
@@ -59,33 +57,27 @@ export function initializeRedis(): Redis | null {
 
     // Event handlers
     redis.on('connect', () => {
-      console.log('✅ Redis connected successfully');
       isConnected = true;
     });
 
     redis.on('error', (error) => {
-      console.error('❌ Redis connection error:', error);
       isConnected = false;
     });
 
     redis.on('close', () => {
-      console.log('🔌 Redis connection closed');
       isConnected = false;
     });
 
     redis.on('reconnecting', () => {
-      console.log('🔄 Redis reconnecting...');
     });
 
     // Test the connection
     redis.ping().catch((error) => {
-      console.error('❌ Redis ping failed:', error);
       isConnected = false;
     });
 
     return redis;
   } catch (error) {
-    console.error('❌ Failed to initialize Redis:', error);
     
     if (process.env.NODE_ENV === 'production') {
       throw error;
@@ -134,7 +126,6 @@ export class RedisService {
         return true;
       }
     } catch (error) {
-      console.error('Redis SET error:', error);
       // Fallback to memory store
       const expiry = ttlSeconds ? Date.now() + (ttlSeconds * 1000) : null;
       memoryStore.set(key, { value, expiry });
@@ -162,7 +153,6 @@ export class RedisService {
         return item.value;
       }
     } catch (error) {
-      console.error('Redis GET error:', error);
       return null;
     }
   }
@@ -192,7 +182,6 @@ export class RedisService {
         return count;
       }
     } catch (error) {
-      console.error('Redis INCR error:', error);
       return 1;
     }
   }
@@ -210,7 +199,6 @@ export class RedisService {
         return memoryStore.delete(key);
       }
     } catch (error) {
-      console.error('Redis DEL error:', error);
       return false;
     }
   }
@@ -231,7 +219,6 @@ export class RedisService {
         return remaining > 0 ? remaining : -2;
       }
     } catch (error) {
-      console.error('Redis TTL error:', error);
       return -1;
     }
   }
@@ -249,7 +236,6 @@ export class RedisService {
         throw new Error('Lua scripts not supported in memory fallback mode');
       }
     } catch (error) {
-      console.error('Redis EVAL error:', error);
       throw error;
     }
   }

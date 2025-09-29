@@ -18,7 +18,6 @@ test.describe('HIVE Platform MCP Tests', () => {
 
     // Capture accessibility snapshot
     const accessibilitySnapshot = await page.accessibility.snapshot();
-    console.log('Accessibility tree depth:', countTreeDepth(accessibilitySnapshot));
 
     // Test navigation interactions
     await testNavigationFlow(page);
@@ -229,7 +228,6 @@ test.describe('Advanced MCP Interactions', () => {
     // Analyze API performance
     const slowAPIs = responses.filter(r => r.timing?.responseEnd > 1000);
     if (slowAPIs.length > 0) {
-      console.warn('Slow API calls detected:', slowAPIs);
     }
   });
 
@@ -242,7 +240,6 @@ test.describe('Advanced MCP Interactions', () => {
 
     // Report violations
     if (violations.length > 0) {
-      console.log('Accessibility violations found:', violations);
     }
 
     expect(violations.length).toBe(0);

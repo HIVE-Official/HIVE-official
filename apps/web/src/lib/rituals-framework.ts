@@ -314,7 +314,6 @@ export class RitualFramework {
     // Initialize campus states for participating universities
     await this.initializeCampusStates(docRef.id, ritual.universities);
     
-    console.log(`🎭 Created ritual: ${ritual.name} (${docRef.id})`);
     return docRef.id;
   }
   
@@ -338,7 +337,6 @@ export class RitualFramework {
     // Send campus-wide notifications
     await this.broadcastRitualStart(ritualId, ritual);
     
-    console.log(`🚀 Started ritual: ${ritual.name}`);
   }
   
   /**
@@ -381,7 +379,6 @@ export class RitualFramework {
     // Update campus state
     await this.updateCampusParticipation(ritualId, ritual.universities, 'joined');
     
-    console.log(`👤 User ${userId} joined ritual: ${ritual.name}`);
     return true;
   }
   
@@ -428,7 +425,6 @@ export class RitualFramework {
     // Check for milestone achievements
     await this.checkMilestones(ritualId);
     
-    console.log(`✅ Action completed: ${actionId} by user ${userId}`);
   }
   
   /**
@@ -527,7 +523,6 @@ export class RitualFramework {
    */
   private async broadcastRitualStart(ritualId: string, ritual: Ritual): Promise<void> {
     // TODO: Integrate with notification system
-    console.log(`📢 Broadcasting ritual start: ${ritual.name} to ${ritual.universities.length} campuses`);
   }
   
   /**
@@ -557,7 +552,6 @@ export class RitualFramework {
     // Award rewards
     await this.awardRitualRewards(ritualId, userId);
     
-    console.log(`🏆 User ${userId} completed ritual: ${ritualId}`);
   }
   
   /**

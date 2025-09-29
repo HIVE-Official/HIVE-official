@@ -7,7 +7,6 @@ test.describe('Spaces Section Verification', () => {
   });
 
   test('should verify spaces discovery page functionality', async ({ page }) => {
-    console.log('Navigating to spaces page...');
 
     // Navigate to spaces discovery page
     await page.goto('/spaces');
@@ -20,7 +19,6 @@ test.describe('Spaces Section Verification', () => {
       path: './test-results/spaces-discovery-page.png',
       fullPage: true
     });
-    console.log('Screenshot saved: spaces-discovery-page.png');
 
     // Verify the page loaded correctly by checking for key elements
     await expect(page).toHaveTitle(/.*Spaces.*|.*HIVE.*/);
@@ -39,7 +37,6 @@ test.describe('Spaces Section Verification', () => {
       const element = page.getByText(heading, { exact: false }).first();
       if (await element.isVisible().catch(() => false)) {
         foundHeading = true;
-        console.log(`Found heading: ${heading}`);
         break;
       }
     }
@@ -49,7 +46,6 @@ test.describe('Spaces Section Verification', () => {
       const mainHeading = page.locator('h1, h2, [data-testid*="spaces"], [class*="spaces"]').first();
       if (await mainHeading.isVisible().catch(() => false)) {
         foundHeading = true;
-        console.log('Found spaces-related content element');
       }
     }
 
@@ -64,7 +60,6 @@ test.describe('Spaces Section Verification', () => {
     ].join(', '));
 
     const spaceCount = await spaceElements.count();
-    console.log(`Found ${spaceCount} potential space elements`);
 
     if (spaceCount > 0) {
       // Take a closer screenshot of the first space element
@@ -72,11 +67,9 @@ test.describe('Spaces Section Verification', () => {
       await firstSpace.screenshot({
         path: './test-results/first-space-element.png'
       });
-      console.log('Screenshot saved: first-space-element.png');
 
       // Try to click on the first clickable space element
       try {
-        console.log('Attempting to click on first space element...');
 
         // Wait for the element to be ready for interaction
         await firstSpace.waitFor({ state: 'visible', timeout: 10000 });
@@ -102,14 +95,12 @@ test.describe('Spaces Section Verification', () => {
           await page.waitForTimeout(2000); // Give page time to settle
 
           const currentUrl = page.url();
-          console.log(`Navigated to: ${currentUrl}`);
 
           // Take screenshot of the space detail page
           await page.screenshot({
             path: './test-results/space-detail-page.png',
             fullPage: true
           });
-          console.log('Screenshot saved: space-detail-page.png');
 
           // Verify this looks like a space detail page
           const hasSpaceDetail = await page.locator([
@@ -120,10 +111,8 @@ test.describe('Spaces Section Verification', () => {
           ].join(', ')).first().isVisible().catch(() => false);
 
           expect(hasSpaceDetail).toBeTruthy();
-          console.log('Successfully verified space detail page loaded');
 
         } else {
-          console.log('First element is not clickable, checking for links within it...');
 
           // Look for clickable elements within the space card
           const clickableChild = firstSpace.locator('a, button, [role="button"]').first();
@@ -137,19 +126,15 @@ test.describe('Spaces Section Verification', () => {
               path: './test-results/space-detail-page.png',
               fullPage: true
             });
-            console.log('Screenshot saved: space-detail-page.png');
           } else {
-            console.log('No clickable elements found in space card');
           }
         }
 
       } catch (error) {
-        console.log(`Click attempt failed: ${error}`);
         // This is not necessarily a failure - the page might work differently
         // Just log the error and continue
       }
     } else {
-      console.log('No space elements found on page - this might indicate an issue or different layout');
 
       // Take a screenshot anyway to see what's actually displayed
       await page.screenshot({
@@ -168,7 +153,6 @@ test.describe('Spaces Section Verification', () => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    console.log('Testing mobile responsiveness...');
     await page.goto('/spaces');
     await page.waitForLoadState('networkidle', { timeout: 30000 });
 
@@ -177,7 +161,6 @@ test.describe('Spaces Section Verification', () => {
       path: './test-results/spaces-mobile-view.png',
       fullPage: true
     });
-    console.log('Screenshot saved: spaces-mobile-view.png');
 
     // Verify mobile layout works
     const body = page.locator('body');
@@ -189,7 +172,6 @@ test.describe('Spaces Section Verification', () => {
   });
 
   test('should handle spaces page errors gracefully', async ({ page }) => {
-    console.log('Testing error handling...');
 
     // Listen for console errors
     const consoleErrors: string[] = [];
@@ -216,10 +198,8 @@ test.describe('Spaces Section Verification', () => {
 
     // Log any errors found (but don't fail the test unless they're critical)
     if (consoleErrors.length > 0) {
-      console.log('Console errors found:', consoleErrors);
     }
     if (pageErrors.length > 0) {
-      console.log('Page errors found:', pageErrors);
     }
 
     // The page should still render something even with errors

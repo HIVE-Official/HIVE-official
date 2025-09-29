@@ -452,7 +452,6 @@ export class SecureSessionManager {
       };
 
     } catch (error) {
-      console.error('Session rotation failed:', error);
       return null;
     }
   }
@@ -596,7 +595,6 @@ export class SecureSessionManager {
     }
 
     if (cleanedCount > 0) {
-      console.log(`Cleaned up ${cleanedCount} expired sessions`);
     }
   }
 

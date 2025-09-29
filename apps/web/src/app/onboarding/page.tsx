@@ -1,15 +1,18 @@
 "use client";
 
+// Force dynamic rendering to avoid SSG issues
+export const dynamic = 'force-dynamic';
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { useAuth } from "@hive/auth-logic";
 // TEMPORARY: Using local implementation due to export resolution issue
 import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
 
 // Dynamic import for heavy onboarding wizard
-const HiveOnboardingWizard = dynamic(
+const HiveOnboardingWizard = nextDynamic(
   () => import("./components/hive-onboarding-wizard").then(mod => ({ default: mod.HiveOnboardingWizard })),
   {
     loading: () => (
@@ -31,7 +34,6 @@ function OnboardingWizardWrapper() {
   // Handle onboarding completion with auto-space creation
   const handleOnboardingComplete = async (onboardingData: OnboardingData, retryCount = 0) => {
     if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
-      console.error('No authenticated user for onboarding completion');
       return;
     }
 
@@ -45,29 +47,20 @@ function OnboardingWizardWrapper() {
         throw new Error(result.error || 'Onboarding completion failed');
       }
       
-      console.log('🏗️ Onboarding completed:', {
-        user: result.user,
-        builderRequestsCreated: result.builderRequestsCreated
-      });
-      
       // Auto-create spaces after onboarding (non-blocking)
       try {
         const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
-        console.log('🏗️ Post-onboarding spaces:', spaceResults);
       } catch (spaceError) {
-        console.warn('Space creation failed but continuing:', spaceError);
       }
       
       // Redirect to dashboard
       router.push('/');
       
     } catch (error) {
-      console.error('Error completing onboarding:', error);
       
       // Retry mechanism for network errors
       if (retryCount < 2 && error instanceof Error && 
           (error.message.includes('network') || error.message.includes('timeout'))) {
-        console.log(`Retrying onboarding completion (attempt ${retryCount + 1})`);
         setTimeout(() => {
           handleOnboardingComplete(onboardingData, retryCount + 1);
         }, 2000);
@@ -77,13 +70,11 @@ function OnboardingWizardWrapper() {
       // For auth errors, redirect to login
       if (error instanceof Error && 
           (error.message.includes('authentication') || error.message.includes('token'))) {
-        console.error('Authentication error during onboarding, redirecting to login');
         router.push('/schools');
         return;
       }
       
       // For other errors, still try to redirect to dashboard
-      console.log('Onboarding had errors but attempting to continue to dashboard');
       router.push('/');
     } finally {
       setIsCreatingSpaces(false);

@@ -17,6 +17,17 @@ interface ToastContextType {
   removeToast: (id: string) => void;
 }
 
+// Hook return type for better type safety
+interface UseToastReturn {
+  toast: (toast: Omit<Toast, 'id'>) => void;
+  toasts: Toast[];
+  dismiss: (id: string) => void;
+  success: (title: string, description?: string) => void;
+  error: (title: string, description?: string) => void;
+  warning: (title: string, description?: string) => void;
+  info: (title: string, description?: string) => void;
+}
+
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -88,7 +99,7 @@ function ToastContainer({ toasts, removeToast }: { toasts: Toast[]; removeToast:
   );
 }
 
-export function useToast() {
+export function useToast(): UseToastReturn {
   const context = useContext(ToastContext);
   if (!context) {
     throw new Error('useToast must be used within ToastProvider');

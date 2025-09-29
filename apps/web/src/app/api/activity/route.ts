@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       timestamp: activityEvent.timestamp 
     });
   } catch (error) {
-    logger.error('Error logging activity', { error: error, endpoint: '/api/activity' });
+    logger.error('Error logging activity', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity' });
     return NextResponse.json(ApiResponseHelper.error("Failed to log activity", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error fetching activity analytics', { error: error, endpoint: '/api/activity' });
+    logger.error('Error fetching activity analytics', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity' });
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch activity analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -212,7 +212,7 @@ async function updateDailySummary(userId: string, event: ActivityEvent) {
       await summaryRef.set(newSummary);
     }
   } catch (error) {
-    logger.error('Error updating daily summary', { error: error, endpoint: '/api/activity' });
+    logger.error('Error updating daily summary', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity' });
   }
 }
 

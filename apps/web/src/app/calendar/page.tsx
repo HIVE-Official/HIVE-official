@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import { Button, Card, Badge } from "@hive/ui";
-import { HiveModal } from "@/components/temp-stubs";
+import { HiveModal, HiveModalContent } from "@/components/temp-stubs";
 import { PageContainer } from "@/components/temp-stubs";
 import { logger } from "@/lib/logger";
 import { 
@@ -604,10 +604,11 @@ export default function CalendarPage() {
         <HiveModal
           open={showIntegrations}
           onOpenChange={() => setShowIntegrations(false)}
-          title="Calendar Sync & Integrations"
           size="lg"
         >
-          <div className="space-y-6">
+          <HiveModalContent>
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold text-hive-text-primary mb-4">Calendar Sync & Integrations</h2>
             <div className="space-y-4">
               {integrations.map((integration) => (
                 <div key={integration.id} className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg">
@@ -639,17 +640,19 @@ export default function CalendarPage() {
                 Export Calendar
               </Button>
             </div>
-          </div>
+            </div>
+          </HiveModalContent>
         </HiveModal>
 
         {/* Conflicts Modal */}
         <HiveModal
           open={showConflicts}
           onOpenChange={() => setShowConflicts(false)}
-          title="Schedule Conflicts"
           size="lg"
         >
-          <div className="space-y-4">
+          <HiveModalContent>
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold text-hive-text-primary mb-4">Schedule Conflicts</h2>
             {conflictEvents.map((event) => (
               <div key={event.id} className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
                 <div className="flex items-start justify-between mb-2">
@@ -673,7 +676,8 @@ export default function CalendarPage() {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          </HiveModalContent>
         </HiveModal>
 
         {/* Event Details Modal */}

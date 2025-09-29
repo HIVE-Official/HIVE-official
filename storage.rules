@@ -1,23 +1,79 @@
 rules_version = '2';
-
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    // Match file paths for user avatars: /users/{userId}/avatar.jpg
-    match /users/{userId}/avatar {
-      // Allow read access to anyone (for public profiles).
-      allow read: if true;
-      
-      // Allow write (create, update, delete) access only to the authenticated user who owns the profile.
-      allow write: if request.auth != null && request.auth.uid == userId;
-      
-      // Validate uploaded file: must be an image, max 5MB.
-      // This is a more robust check on the incoming resource.
-      allow create: if request.auth != null && request.auth.uid == userId
-                    && request.resource.size < 5 * 1024 * 1024
-                    && request.resource.contentType.matches('image/.*');
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isUBUser() {
+      return isAuthenticated() &&
+        request.auth.token.email.matches('.*@buffalo[.]edu$');
+    }
+
+    function isValidImageFile() {
+      return request.resource.contentType.matches('image/.*') &&
+        request.resource.size < 10 * 1024 * 1024; // 10MB max
+    }
+
+    function isValidVideoFile() {
+      return request.resource.contentType.matches('video/.*') &&
+        request.resource.size < 100 * 1024 * 1024; // 100MB max
+    }
+
+    function isValidDocument() {
+      return request.resource.contentType.matches('application/pdf') ||
+        request.resource.contentType.matches('application/msword') ||
+        request.resource.contentType.matches('application/vnd.*') ||
+        request.resource.size < 25 * 1024 * 1024; // 25MB max
+    }
+
+    // User profile photos
+    match /users/{userId}/profile/{fileName} {
+      allow read: if isAuthenticated() && isUBUser();
+      allow write: if isOwner(userId) && isUBUser() && isValidImageFile();
+      allow delete: if isOwner(userId) && isUBUser();
+    }
+
+    // User uploaded content (posts, etc)
+    match /users/{userId}/uploads/{allPaths=**} {
+      allow read: if isAuthenticated() && isUBUser();
+      allow write: if isOwner(userId) && isUBUser() &&
+        (isValidImageFile() || isValidVideoFile() || isValidDocument());
+      allow delete: if isOwner(userId) && isUBUser();
+    }
+
+    // Space assets
+    match /spaces/{spaceId}/{allPaths=**} {
+      allow read: if isAuthenticated() && isUBUser();
+      // Only space members can upload
+      allow write: if isAuthenticated() && isUBUser() &&
+        exists(/databases/(default)/documents/spaces/$(spaceId)/members/$(request.auth.uid)) &&
+        (isValidImageFile() || isValidDocument());
+      allow delete: if false; // No deletes, only soft delete in Firestore
+    }
+
+    // Temporary uploads (for processing)
+    match /temp/{userId}/{fileName} {
+      allow read: if isOwner(userId) && isUBUser();
+      allow write: if isOwner(userId) && isUBUser();
+      // Auto-cleanup after 24 hours via lifecycle rules
+    }
+
+    // System assets (read-only)
+    match /system/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Admin upload via Firebase Console only
+    }
+
+    // Default deny all
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }
