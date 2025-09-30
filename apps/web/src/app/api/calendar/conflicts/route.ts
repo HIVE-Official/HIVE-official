@@ -136,7 +136,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error checking conflicts', { error: error, endpoint: '/api/calendar/conflicts' });
+    logger.error(
+      `Error checking conflicts at /api/calendar/conflicts`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to check conflicts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

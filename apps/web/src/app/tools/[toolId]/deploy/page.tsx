@@ -265,7 +265,7 @@ export default function ToolDeployPage() {
                   value={surface.id}
                   checked={deploymentConfig.surface === surface.id}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({ surface: e.target.value })}
-                  className="text-[#FFD700]"
+                  className="text-[var(--hive-brand-primary)]"
                 />
                 <div>
                   <div className="font-medium text-[var(--hive-text-primary)]">
@@ -295,7 +295,7 @@ export default function ToolDeployPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canView: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-primary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Can View</div>
@@ -312,7 +312,7 @@ export default function ToolDeployPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({
                 permissions: { ...deploymentConfig.permissions, canInteract: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-primary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Can Interact</div>
@@ -338,7 +338,7 @@ export default function ToolDeployPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, showInDirectory: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-primary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Show in Directory</div>
@@ -355,7 +355,7 @@ export default function ToolDeployPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, allowSharing: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-primary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Allow Sharing</div>
@@ -372,7 +372,7 @@ export default function ToolDeployPage() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({
                 settings: { ...deploymentConfig.settings, collectAnalytics: e.target.checked }
               })}
-              className="text-[#FFD700]"
+              className="text-[var(--hive-brand-primary)]"
             />
             <div>
               <div className="font-medium text-[var(--hive-text-primary)]">Collect Analytics</div>
@@ -394,7 +394,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => setStep('confirm')}
-          className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
         >
           Review Deployment
         </Button>
@@ -469,7 +469,7 @@ export default function ToolDeployPage() {
           <Button
             onClick={handleDeploy}
             disabled={isLoading}
-            className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] flex items-center gap-2"
+            className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255] flex items-center gap-2"
           >
             {isLoading ? (
               <>
@@ -513,7 +513,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => ToolNavigation.toAnalytics(toolId)}
-          className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
         >
           View Analytics
         </Button>
@@ -525,7 +525,7 @@ export default function ToolDeployPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4"></div>
           <p className="text-[var(--hive-text-secondary)]">Loading tool...</p>
         </div>
       </div>

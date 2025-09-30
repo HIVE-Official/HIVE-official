@@ -295,7 +295,7 @@ export function SpaceToolsPanel({ space, userMembership }: SpaceToolsPanelProps)
         {canAddTools && (
           <HiveButton
             onClick={() => setShowAddModal(true)}
-            className="bg-hive-gold text-black hover:bg-yellow-400"
+            className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Tool
@@ -311,7 +311,7 @@ export function SpaceToolsPanel({ space, userMembership }: SpaceToolsPanelProps)
             onClick={() => setSelectedCategory(category)}
             className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
               selectedCategory === category
-                ? 'bg-hive-gold text-black'
+                ? 'bg-[var(--hive-brand-primary)] text-black'
                 : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
             }`}
           >
@@ -336,7 +336,7 @@ export function SpaceToolsPanel({ space, userMembership }: SpaceToolsPanelProps)
           {canAddTools && (
             <HiveButton
               onClick={() => setShowAddModal(true)}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Tool
@@ -390,7 +390,7 @@ function ToolCard({
 
   return (
     <HiveCard
-      className={`transition-all duration-300 cursor-pointer hover:border-hive-gold/50 ${
+      className={`transition-all duration-300 cursor-pointer hover:border-[var(--hive-brand-primary)]/50 ${
         isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
       }`}
       onClick={onExpand}
@@ -447,7 +447,7 @@ function ToolCard({
               <div className="grid grid-cols-2 gap-2">
                 {toolConfig?.features.map((feature) => (
                   <div key={feature} className="flex items-center space-x-2 text-sm text-gray-300">
-                    <Star className="w-3 h-3 text-hive-gold" />
+                    <Star className="w-3 h-3 text-[var(--hive-brand-primary)]" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -457,7 +457,7 @@ function ToolCard({
             <div className="flex space-x-2">
               <HiveButton
                 size="sm"
-                className="flex-1 bg-hive-gold text-black hover:bg-yellow-400"
+                className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -528,7 +528,7 @@ function AddToolModal({
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
                   selectedCategory === category
-                    ? 'bg-hive-gold text-black'
+                    ? 'bg-[var(--hive-brand-primary)] text-black'
                     : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -545,7 +545,7 @@ function AddToolModal({
             return (
               <HiveCard
                 key={type}
-                className="p-4 cursor-pointer hover:border-hive-gold/50 transition-all"
+                className="p-4 cursor-pointer hover:border-[var(--hive-brand-primary)]/50 transition-all"
                 onClick={() => onAddTool(type as ToolType)}
               >
                 <div className="flex items-start space-x-3 mb-3">

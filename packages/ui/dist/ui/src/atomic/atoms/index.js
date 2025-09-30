@@ -31,4 +31,5 @@ export { TopBarNav, topBarNavVariants, topBarNavIconVariants, topBarNavLabelVari
 export { PresenceIndicator } from "./presence-indicator.js";
 export { NotificationBell } from "./notification-bell.js";
 export { NotificationItem } from "./notification-item.js";
+export { Skeleton } from "./skeleton.js";
 //# sourceMappingURL=index.js.map

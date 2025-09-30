@@ -125,7 +125,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
         <div className="p-6 border-b border-gray-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Settings className="w-6 h-6 text-hive-gold" />
+              <Settings className="w-6 h-6 text-[var(--hive-brand-primary)]" />
               <div>
                 <h2 className="text-2xl font-bold text-white">Space Settings</h2>
                 <p className="text-gray-400">Manage {space.name}</p>
@@ -148,35 +148,35 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
               <TabsList className="flex flex-col w-full h-full bg-transparent p-4 space-y-2">
                 <TabsTrigger
                   value="general"
-                  className="w-full justify-start data-[state=active]:bg-hive-gold/10 data-[state=active]:text-hive-gold"
+                  className="w-full justify-start data-[state=active]:bg-[var(--hive-brand-primary)]/10 data-[state=active]:text-[var(--hive-brand-primary)]"
                 >
                   <Edit className="w-4 h-4 mr-3" />
                   General
                 </TabsTrigger>
                 <TabsTrigger
                   value="privacy"
-                  className="w-full justify-start data-[state=active]:bg-hive-gold/10 data-[state=active]:text-hive-gold"
+                  className="w-full justify-start data-[state=active]:bg-[var(--hive-brand-primary)]/10 data-[state=active]:text-[var(--hive-brand-primary)]"
                 >
                   <Lock className="w-4 h-4 mr-3" />
                   Privacy & Access
                 </TabsTrigger>
                 <TabsTrigger
                   value="moderation"
-                  className="w-full justify-start data-[state=active]:bg-hive-gold/10 data-[state=active]:text-hive-gold"
+                  className="w-full justify-start data-[state=active]:bg-[var(--hive-brand-primary)]/10 data-[state=active]:text-[var(--hive-brand-primary)]"
                 >
                   <Shield className="w-4 h-4 mr-3" />
                   Moderation
                 </TabsTrigger>
                 <TabsTrigger
                   value="appearance"
-                  className="w-full justify-start data-[state=active]:bg-hive-gold/10 data-[state=active]:text-hive-gold"
+                  className="w-full justify-start data-[state=active]:bg-[var(--hive-brand-primary)]/10 data-[state=active]:text-[var(--hive-brand-primary)]"
                 >
                   <Palette className="w-4 h-4 mr-3" />
                   Appearance
                 </TabsTrigger>
                 <TabsTrigger
                   value="notifications"
-                  className="w-full justify-start data-[state=active]:bg-hive-gold/10 data-[state=active]:text-hive-gold"
+                  className="w-full justify-start data-[state=active]:bg-[var(--hive-brand-primary)]/10 data-[state=active]:text-[var(--hive-brand-primary)]"
                 >
                   <Bell className="w-4 h-4 mr-3" />
                   Notifications
@@ -217,7 +217,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         placeholder="Describe your space"
                         maxLength={500}
                         rows={4}
-                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none resize-none"
+                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
                       />
                       <p className="text-xs text-gray-400 mt-1">{settings.description.length}/500 characters</p>
                     </div>
@@ -230,7 +230,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         placeholder="Message shown to new members (optional)"
                         maxLength={200}
                         rows={3}
-                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none resize-none"
+                        className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
                       />
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.isPrivate}
                         onChange={(e) => updateSettings({ isPrivate: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
 
@@ -292,7 +292,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.requireApproval}
                         onChange={(e) => updateSettings({ requireApproval: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
 
@@ -305,7 +305,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.allowInvites}
                         onChange={(e) => updateSettings({ allowInvites: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.allowGuestPosts}
                         onChange={(e) => updateSettings({ allowGuestPosts: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
                   </div>
@@ -393,7 +393,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.customEmojis}
                         onChange={(e) => updateSettings({ customEmojis: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
                   </div>
@@ -414,7 +414,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         type="checkbox"
                         checked={settings.defaultNotifications}
                         onChange={(e) => updateSettings({ defaultNotifications: e.target.checked })}
-                        className="w-4 h-4 text-hive-gold bg-gray-700 border-gray-600 rounded focus:ring-hive-gold"
+                        className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
                   </div>
@@ -516,7 +516,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
             <HiveButton
               onClick={handleSave}
               disabled={saving}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               {saving ? (
                 <>

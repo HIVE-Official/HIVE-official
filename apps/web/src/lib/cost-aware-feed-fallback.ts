@@ -159,7 +159,7 @@ class CostAwareFeedManager {
           detail: { timestamp: new Date() }
         }));
       } catch (error) {
-        logger.error('Fallback polling error', { error });
+        logger.error('Fallback polling error', { error: error instanceof Error ? error : new Error(String(error)) });
       }
     };
 

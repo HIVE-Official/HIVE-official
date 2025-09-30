@@ -55,7 +55,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
   const limit = parseInt(url.searchParams.get('limit') || '50');
   const offset = parseInt(url.searchParams.get('offset') || '0');
 
-  logger.info('👑 Admin accessing space management', { adminUserId, endpoint: '/api/admin/spaces' });
+  logger.info('👑 Admin accessing space management', { adminUserId });
 
     // Get spaces across all types or specific type
     const spaceTypes = spaceType === 'all' ? 
@@ -84,7 +84,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
 
         allSpaces.push(...spaces);
       } catch (error) {
-        logger.error('Error fetching spaces for type', { type, error: error, endpoint: '/api/admin/spaces' });
+        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error : new Error(String(error))});
       }
     }
 
@@ -156,7 +156,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
             healthScore: calculateSpaceHealthScore(space, members)
           };
         } catch (error) {
-          logger.error('Error getting detailsfor space', { spaceId: space.id, error: error, endpoint: '/api/admin/spaces' });
+          logger.error('Error getting detailsfor space', { spaceId: space.id, error: error instanceof Error ? error : new Error(String(error))});
           return {
             ...space,
             actualMemberCount: space.memberCount || 0,
@@ -246,7 +246,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
 
       await spaceRef.set(spaceData);
 
-      logger.info('👑 Admin created space', { adminUserId, spaceId: spaceRef.id, endpoint: '/api/admin/spaces' });
+      logger.info('👑 Admin created space', { adminUserId, spaceId: spaceRef.id });
 
     return respond.success({
       message: 'Space created successfully',
@@ -285,7 +285,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
 
       await spaceRef.update(updateData);
 
-      logger.info('👑 Adminupdated space', { adminUserId, spaceId, endpoint: '/api/admin/spaces' });
+      logger.info('👑 Adminupdated space', { adminUserId, spaceId });
 
     return respond.success({
       message: 'Space updated successfully',
@@ -380,7 +380,7 @@ export const DELETE = withAdminAuthAndErrors(
     // Log admin action
     await logAdminAction(adminUserId, `space_${action}`, spaceId, reason);
 
-    logger.info('👑 Admin performedon space', {  action, spaceId, endpoint: '/api/admin/spaces'  });
+    logger.info('👑 Admin performedon space', {  action, spaceId  });
 
   return respond.success({
     message: actionMessage,
@@ -437,6 +437,6 @@ async function logAdminAction(adminUserId: string, action: string, targetId: str
       type: 'space_action'
     });
   } catch (error) {
-    logger.error('Error logging admin action', { error: error, endpoint: '/api/admin/spaces' });
+    logger.error('Error logging admin action', { error: error instanceof Error ? error : new Error(String(error))});
   }
 }

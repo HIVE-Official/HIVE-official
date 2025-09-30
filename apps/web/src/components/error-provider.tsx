@@ -219,7 +219,7 @@ export function withErrorHandling<P extends Record<string, unknown>>(
               </div>
               <button
                 onClick={handleRetry}
-                className="px-3 py-1 text-xs bg-hive-gold text-hive-text-primary rounded hover:bg-hive-gold/90"
+                className="px-3 py-1 text-xs bg-[var(--hive-brand-primary)] text-hive-text-primary rounded hover:bg-[var(--hive-brand-primary)]/90"
               >
                 Try Again
               </button>

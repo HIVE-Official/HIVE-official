@@ -42,7 +42,7 @@ export default function HomePage() {
         <div className="text-center mb-16">
           <HiveLogo size="xl" variant="gradient" showText={true} className="mx-auto mb-8" />
           <h1 className="text-5xl font-bold mb-6">
-            Welcome to <span className="text-hive-gold">HIVE</span>
+            Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             The social utility platform where connections have purpose and every interaction moves your life forward.
@@ -51,7 +51,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-hive-gold text-black hover:bg-yellow-400 font-semibold"
+              variant="primary"
               onClick={() => router.push('/auth/login')}
             >
               Join HIVE
@@ -59,7 +59,6 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-hive-gold text-hive-gold hover:bg-hive-gold hover:text-black"
               onClick={() => router.push('/spaces')}
             >
               Explore Spaces
@@ -83,7 +82,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-hive-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🏫</span>
             </div>
             <h3 className="text-xl font-semibold mb-3">Campus-First</h3>
@@ -91,7 +90,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-hive-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🤝</span>
             </div>
             <h3 className="text-xl font-semibold mb-3">Purposeful Connections</h3>
@@ -99,7 +98,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center p-6">
-            <div className="w-16 h-16 bg-hive-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🛠️</span>
             </div>
             <h3 className="text-xl font-semibold mb-3">Social Utility</h3>

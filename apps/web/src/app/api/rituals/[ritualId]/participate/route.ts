@@ -71,7 +71,7 @@ const ritualFramework = {
 
       return { success: true, participationId: participationRef.id };
     } catch (error) {
-      logger.error('Error joining ritual', { error, ritualId, userId });
+      logger.error('Error joining ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
       return { success: false, error: 'Failed to join ritual' };
     }
   },
@@ -176,7 +176,7 @@ const ritualFramework = {
       };
 
     } catch (error) {
-      logger.error('Error recording ritual action', { error, ritualId, userId, actionId });
+      logger.error('Error recording ritual action', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId, actionId });
       throw error;
     }
   },
@@ -214,7 +214,7 @@ const ritualFramework = {
 
       return true;
     } catch (error) {
-      logger.error('Error leaving ritual', { error, ritualId, userId });
+      logger.error('Error leaving ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
       return false;
     }
   }
@@ -331,7 +331,10 @@ export const POST = withAuth(async (
     }
 
   } catch (error: any) {
-    logger.error('Ritual participation error', { error: error, endpoint: '/api/rituals/[ritualId]/participate' });
+    logger.error(
+      `Ritual participation error at /api/rituals/[ritualId]/participate`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

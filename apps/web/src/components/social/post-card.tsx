@@ -207,7 +207,7 @@ export function PostCard({
 
   const getPostTypeIcon = () => {
     switch (post.type) {
-      case 'announcement': return <Pin className="h-4 w-4 text-hive-gold" />;
+      case 'announcement': return <Pin className="h-4 w-4 text-[var(--hive-brand-primary)]" />;
       case 'poll': return <Badge className="text-xs bg-blue-500/20 text-blue-400">Poll</Badge>;
       case 'event': return <Badge className="text-xs bg-purple-500/20 text-purple-400">Event</Badge>;
       case 'tool': return <Badge className="text-xs bg-green-500/20 text-green-400">Tool</Badge>;
@@ -304,7 +304,7 @@ export function PostCard({
                     : 'hover:bg-hive-background-overlay cursor-pointer'
                 } ${
                   post.poll!.userVotes?.includes(option.id)
-                    ? 'bg-hive-gold/20 border border-hive-gold'
+                    ? 'bg-[var(--hive-brand-primary)]/20 border border-[var(--hive-brand-primary)]'
                     : 'bg-hive-background-overlay'
                 }`}
               >
@@ -376,7 +376,7 @@ export function PostCard({
             size="sm"
             className={post.event.isAttending 
               ? 'bg-green-500 hover:bg-green-600' 
-              : 'bg-hive-gold text-hive-obsidian hover:bg-hive-champagne'
+              : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
             }
           >
             {post.event.isAttending ? 'Attending' : 'Attend'}
@@ -466,7 +466,7 @@ export function PostCard({
         {(post.comments?.length || 0) > 3 && !showAllComments && (
           <button
             onClick={() => setShowAllComments(true)}
-            className="text-sm text-hive-gold hover:text-hive-champagne"
+            className="text-sm text-[var(--hive-brand-primary)] hover:text-hive-champagne"
           >
             Show {(post.comments?.length || 0) - 3} more comments
           </button>
@@ -483,7 +483,7 @@ export function PostCard({
           <div className="flex items-center space-x-3">
             <Avatar className="w-10 h-10">
               <AvatarImage src={post.author.avatarUrl} alt={post.author.name} />
-              <AvatarFallback className="bg-hive-gold text-hive-obsidian font-semibold">
+              <AvatarFallback className="bg-[var(--hive-brand-primary)] text-hive-obsidian font-semibold">
                 {post.author.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -524,7 +524,7 @@ export function PostCard({
           </div>
           
           <div className="flex items-center space-x-2">
-            {post.isPinned && <Pin className="h-4 w-4 text-hive-gold" />}
+            {post.isPinned && <Pin className="h-4 w-4 text-[var(--hive-brand-primary)]" />}
             <Button variant="secondary" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -538,7 +538,7 @@ export function PostCard({
             {shouldTruncateContent && (
               <button
                 onClick={() => setShowFullContent(true)}
-                className="text-hive-gold hover:text-hive-champagne ml-2"
+                className="text-[var(--hive-brand-primary)] hover:text-hive-champagne ml-2"
               >
                 Show more
               </button>
@@ -551,7 +551,7 @@ export function PostCard({
               {post.tags?.map(tag => (
                 <button
                   key={tag}
-                  className="text-hive-gold hover:text-hive-champagne text-sm"
+                  className="text-[var(--hive-brand-primary)] hover:text-hive-champagne text-sm"
                 >
                   #{tag}
                 </button>
@@ -600,7 +600,7 @@ export function PostCard({
           </div>
           
           <div className="flex items-center space-x-2">
-            <button className={`p-2 rounded ${post.engagement.hasBookmarked ? 'text-hive-gold' : 'text-hive-text-mutedLight hover:text-hive-gold'}`}>
+            <button className={`p-2 rounded ${post.engagement.hasBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-hive-text-mutedLight hover:text-[var(--hive-brand-primary)]'}`}>
               <Bookmark className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} />
             </button>
             
@@ -651,7 +651,7 @@ export function PostCard({
                     onClick={handleComment}
                     disabled={!commentText.trim() || isActing === 'comment'}
                     size="sm"
-                    className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                    className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                   >
                     <Send className="h-4 w-4 mr-2" />
                     {isActing === 'comment' ? 'Posting...' : 'Comment'}

@@ -328,7 +328,7 @@ export function SocialFeed({
           <p className="text-red-400 text-sm">{feedState.error}</p>
           <Button 
             onClick={refreshFeed} 
-            className="mt-4 bg-hive-gold text-hive-obsidian"
+            className="mt-4 bg-[var(--hive-brand-primary)] text-hive-obsidian"
           >
             Try Again
           </Button>
@@ -443,7 +443,7 @@ export function SocialFeed({
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-hive-gold/20 text-hive-gold"
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)]"
                     >
                       <Hash className="h-3 w-3 mr-1" />
                       {tag}
@@ -481,7 +481,7 @@ export function SocialFeed({
                   variant="secondary"
                   size="sm"
                   onClick={() => handleBookmark(post.id)}
-                  className={post.engagement.hasBookmarked ? '!text-hive-gold !border-hive-gold' : ''}
+                  className={post.engagement.hasBookmarked ? '!text-[var(--hive-brand-primary)] !border-[var(--hive-brand-primary)]' : ''}
                 >
                   <Bookmark className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} />
                 </Button>

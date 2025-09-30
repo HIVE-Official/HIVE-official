@@ -116,7 +116,7 @@ export class FeatureFlagService {
 
       return rolloutResult;
     } catch (error) {
-      logger.error('Error evaluating feature flag', { error, flagId, userId: userContext.userId });
+      logger.error('Error evaluating feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId, userId: userContext.userId });
       return { enabled: false, reason: 'evaluation_error' };
     }
   }
@@ -189,7 +189,7 @@ export class FeatureFlagService {
         category: flag.category 
       });
     } catch (error) {
-      logger.error('Error setting feature flag', { error, flagId: flag.id, adminUserId });
+      logger.error('Error setting feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId: flag.id, adminUserId });
       throw error;
     }
   }
@@ -204,7 +204,7 @@ export class FeatureFlagService {
       
       logger.info('Feature flag deleted', { flagId, adminUserId });
     } catch (error) {
-      logger.error('Error deleting feature flag', { error, flagId, adminUserId });
+      logger.error('Error deleting feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId, adminUserId });
       throw error;
     }
   }
@@ -220,7 +220,7 @@ export class FeatureFlagService {
       }
       return { id: flagDoc.id, ...flagDoc.data() } as FeatureFlag;
     } catch (error) {
-      logger.error('Error getting feature flag', { error, flagId });
+      logger.error('Error getting feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId });
       return null;
     }
   }
@@ -236,7 +236,7 @@ export class FeatureFlagService {
         ...doc.data()
       })) as FeatureFlag[];
     } catch (error) {
-      logger.error('Error getting all feature flags', { error });
+      logger.error('Error getting all feature flags', { error: error instanceof Error ? error : new Error(String(error)) });
       return [];
     }
   }
@@ -278,7 +278,7 @@ export class FeatureFlagService {
         timeRange
       };
     } catch (error) {
-      logger.error('Error getting feature flag analytics', { error, flagId });
+      logger.error('Error getting feature flag analytics', { error: error instanceof Error ? error : new Error(String(error)), flagId });
       return null;
     }
   }
@@ -377,7 +377,7 @@ export class FeatureFlagService {
       this.lastCacheUpdate = Date.now();
       logger.info('Feature flags cache refreshed', { flagCount: flags.length });
     } catch (error) {
-      logger.error('Error refreshing feature flags cache', { error });
+      logger.error('Error refreshing feature flags cache', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 
@@ -401,7 +401,7 @@ export class FeatureFlagService {
 
       await dbAdmin.collection('featureFlagAnalytics').add(analyticsData);
     } catch (error) {
-      logger.error('Error tracking feature flag evaluation', { error, flagId });
+      logger.error('Error tracking feature flag evaluation', { error: error instanceof Error ? error : new Error(String(error)), flagId });
       // Don't throw - analytics failures shouldn't break the feature flag evaluation
     }
   }

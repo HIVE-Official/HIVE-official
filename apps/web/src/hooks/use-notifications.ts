@@ -114,7 +114,7 @@ export function useNotifications() {
         }
       },
       (error) => {
-        logger.error('Notification subscription error', { error });
+        logger.error('Notification subscription error', { error: error instanceof Error ? error : new Error(String(error)) });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -137,7 +137,7 @@ export function useNotifications() {
         readAt: serverTimestamp()
       });
     } catch (error) {
-      logger.error('Failed to mark notification as read', { error, notificationId });
+      logger.error('Failed to mark notification as read', { error: error instanceof Error ? error : new Error(String(error)), notificationId });
     }
   }, [user?.uid]);
 
@@ -159,7 +159,7 @@ export function useNotifications() {
 
       await batch.commit();
     } catch (error) {
-      logger.error('Failed to mark all notifications as read', { error });
+      logger.error('Failed to mark all notifications as read', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }, [user?.uid, state.notifications, state.unreadCount]);
 
@@ -176,7 +176,7 @@ export function useNotifications() {
 
       await batch.commit();
     } catch (error) {
-      logger.error('Failed to clear notifications', { error });
+      logger.error('Failed to clear notifications', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }, [user?.uid, state.notifications]);
 
@@ -224,7 +224,7 @@ export async function sendNotification({
 
     logger.info('Notification sent', { toUserId, type, title });
   } catch (error) {
-    logger.error('Failed to send notification', { error, toUserId, type });
+    logger.error('Failed to send notification', { error: error instanceof Error ? error : new Error(String(error)), toUserId, type });
     throw error;
   }
 }
@@ -292,6 +292,6 @@ export function showBrowserNotification(title: string, options?: NotificationOpt
       notification.close();
     };
   } catch (error) {
-    logger.error('Failed to show browser notification', { error });
+    logger.error('Failed to show browser notification', { error: error instanceof Error ? error : new Error(String(error)) });
   }
 }

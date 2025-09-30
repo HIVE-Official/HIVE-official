@@ -50,7 +50,7 @@ export async function validateSecureSpaceAccess(
 
     return { isValid: true, space: spaceData };
   } catch (error) {
-    logger.error('Error validating secure space access', { spaceId, userId, error });
+    logger.error('Error validating secure space access', { spaceId, userId, error: error instanceof Error ? error : new Error(String(error)) });
     return { isValid: false, error: 'Validation failed' };
   }
 }
@@ -181,7 +181,7 @@ export async function validateSecureSpaceMembership(
       space: spaceValidation.space
     };
   } catch (error) {
-    logger.error('Error validating secure space membership', { userId, spaceId, error });
+    logger.error('Error validating secure space membership', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
     return { isValid: false, error: 'Validation failed' };
   }
 }
@@ -246,7 +246,7 @@ export async function validateSpaceJoinability(
 
     return { canJoin: true, space };
   } catch (error) {
-    logger.error('Error validating space joinability', { userId, spaceId, error });
+    logger.error('Error validating space joinability', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
     return { canJoin: false, error: 'Validation failed' };
   }
 }
@@ -312,7 +312,7 @@ export async function getSecureUserData(userId: string): Promise<{
 
     return { isValid: true, user: userData };
   } catch (error) {
-    logger.error('Error getting secure user data', { userId, error });
+    logger.error('Error getting secure user data', { userId, error: error instanceof Error ? error : new Error(String(error)) });
     return { isValid: false, error: 'User validation failed' };
   }
 }

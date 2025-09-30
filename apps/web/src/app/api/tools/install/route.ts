@@ -254,7 +254,10 @@ export async function POST(request: NextRequest) {
     }, { status: HttpStatus.CREATED });
 
   } catch (error) {
-    logger.error('Error installing tool', { error: error, endpoint: '/api/tools/install' });
+    logger.error(
+      `Error installing tool at /api/tools/install`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
@@ -335,7 +338,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error fetching installations', { error: error, endpoint: '/api/tools/install' });
+    logger.error(
+      `Error fetching installations at /api/tools/install`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch installations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

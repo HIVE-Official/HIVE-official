@@ -40,7 +40,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({ event });
   } catch (error) {
-    logger.error('Error fetching personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    logger.error(
+      `Error fetching personal event at /api/calendar/[eventId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -108,7 +111,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({ event: updatedEvent });
   } catch (error) {
-    logger.error('Error updating personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    logger.error(
+      `Error updating personal event at /api/calendar/[eventId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -174,7 +180,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     return NextResponse.json({ event: updatedEvent });
   } catch (error) {
-    logger.error('Error partially updating personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    logger.error(
+      `Error partially updating personal event at /api/calendar/[eventId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -209,7 +218,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     return NextResponse.json({ message: 'Event deleted successfully' });
   } catch (error) {
-    logger.error('Error deleting personal event', { error: error, endpoint: '/api/calendar/[eventId]' });
+    logger.error(
+      `Error deleting personal event at /api/calendar/[eventId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to delete personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

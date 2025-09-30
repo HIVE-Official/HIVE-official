@@ -245,8 +245,8 @@ function LoginPageContent() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.015)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.025)_0%,transparent_50%)]" />
 
       {/* Floating glass orbs for ambiance */}
-      <div className="absolute top-20 left-[10%] w-32 h-32 bg-gradient-to-r from-white/[0.02] to-[#FFD700]/[0.03] rounded-full blur-3xl" />
-      <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[#FFD700]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
+      <div className="absolute top-20 left-[10%] w-32 h-32 bg-gradient-to-r from-white/[0.02] to-[var(--hive-brand-primary)]/[0.03] rounded-full blur-3xl" />
+      <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[var(--hive-brand-primary)]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
 
       {/* Header */}
       <motion.div
@@ -298,8 +298,8 @@ function LoginPageContent() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="mb-8"
             >
-              <HiveCard className="text-center p-4 bg-[#FFD700]/[0.08] border-[#FFD700]/30 backdrop-blur-xl">
-                <p className="text-sm text-[#FFD700] font-medium">
+              <HiveCard className="text-center p-4 bg-[var(--hive-brand-primary)]/[0.08] border-[var(--hive-brand-primary)]/30 backdrop-blur-xl">
+                <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
                   🛠️ Development Mode Active
                 </p>
               </HiveCard>
@@ -329,7 +329,7 @@ function LoginPageContent() {
                   {schoolsLoading ? (
                     <div className="space-y-4">
                       <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 text-[#FFD700] animate-spin" />
+                        <Loader2 className="w-6 h-6 text-[var(--hive-brand-primary)] animate-spin" />
                       </div>
                       <p className="text-sm text-white/50 text-center">Loading universities...</p>
                     </div>
@@ -341,17 +341,17 @@ function LoginPageContent() {
                           onClick={() => handleSchoolSelect(school)}
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.99 }}
-                          className="w-full p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] hover:border-[#FFD700]/30 hover:bg-[#FFD700]/[0.02] transition-all duration-300 group"
+                          className="w-full p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] hover:border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/[0.02] transition-all duration-300 group"
                         >
                           <div className="flex items-center justify-between">
                             <div className="text-left">
-                              <h3 className="font-semibold text-white group-hover:text-[#FFD700] transition-colors duration-200">
+                              <h3 className="font-semibold text-white group-hover:text-[var(--hive-brand-primary)] transition-colors duration-200">
                                 {school.name}
                               </h3>
                               <p className="text-sm text-white/60 mt-1">{school.location}</p>
                               <p className="text-xs text-white/40 mt-1 font-mono">@{school.domain}</p>
                             </div>
-                            <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-[#FFD700] transition-colors duration-200" />
+                            <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-[var(--hive-brand-primary)] transition-colors duration-200" />
                           </div>
                         </motion.button>
                       ))}
@@ -375,7 +375,7 @@ function LoginPageContent() {
                     Sign in to HIVE
                   </h1>
                   <p className="text-lg text-white/70 leading-relaxed">
-                    Join <span className="text-[#FFD700] font-semibold">{selectedSchool.name}</span> on HIVE
+                    Join <span className="text-[var(--hive-brand-primary)] font-semibold">{selectedSchool.name}</span> on HIVE
                   </p>
                 </div>
 
@@ -398,7 +398,7 @@ function LoginPageContent() {
                           autoFocus
                           variant={error ? 'destructive' : 'default'}
                           size="lg"
-                          className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[#FFD700]/50 focus:ring-[#FFD700]/20 text-white placeholder-white/40"
+                          className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50 focus:ring-[var(--hive-brand-primary)]/20 text-white placeholder-white/40"
                           data-testid="email-input"
                         />
                       </div>
@@ -429,9 +429,9 @@ function LoginPageContent() {
                     <HiveButton
                       type="submit"
                       disabled={isLoading || !formData.email || !!error}
-                      variant="default"
+                      variant="primary"
                       size="lg"
-                      className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+                      className="w-full"
                       data-testid="send-magic-link-button"
                     >
                       {isLoading ? (
@@ -464,8 +464,8 @@ function LoginPageContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[#FFD700]/20 border border-[#FFD700]/30">
-              <Mail className="w-8 h-8 text-[#FFD700]" />
+            <div className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center bg-[var(--hive-brand-primary)]/20 border border-[var(--hive-brand-primary)]/30">
+              <Mail className="w-8 h-8 text-[var(--hive-brand-primary)]" />
             </div>
 
             <div className="space-y-3">
@@ -475,7 +475,7 @@ function LoginPageContent() {
               <p className="text-white/70">
                 We've sent a magic link to:
               </p>
-              <p className="text-[#FFD700] font-semibold break-all">
+              <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
                 {formData.email}
               </p>
               <p className="text-xs text-white/50">
@@ -484,13 +484,13 @@ function LoginPageContent() {
 
               {/* Development mode - show the magic link */}
               {devMagicLink && selectedSchool?.domain === 'test.edu' && (
-                <HiveCard className="p-4 bg-[#FFD700]/10 border-[#FFD700]/30 text-left">
-                  <p className="text-xs text-[#FFD700] font-medium mb-2">
+                <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
+                  <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                     🛠️ Development Mode - Magic Link:
                   </p>
                   <a
                     href={devMagicLink}
-                    className="text-xs text-[#FFD700] hover:underline break-all"
+                    className="text-xs text-[var(--hive-brand-primary)] hover:underline break-all"
                   >
                     {devMagicLink}
                   </a>
@@ -501,9 +501,9 @@ function LoginPageContent() {
             <div className="space-y-3 pt-2">
               {devMagicLink && selectedSchool?.domain === 'test.edu' && (
                 <HiveButton
-                  variant="default"
+                  variant="primary"
                   size="lg"
-                  className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black"
+                  className="w-full"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
@@ -511,9 +511,9 @@ function LoginPageContent() {
               )}
 
               <HiveButton
-                variant="default"
+                variant="primary"
                 size="lg"
-                className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+                className="w-full"
                 onClick={() => {
                   setSuccess(false);
                   setDevMagicLink(null);
@@ -528,7 +528,7 @@ function LoginPageContent() {
                 </p>
                 <Link
                   href={`/auth/expired?email=${encodeURIComponent(formData.email)}&schoolId=${selectedSchool?.id}`}
-                  className="text-sm text-[#FFD700] hover:text-[#FFD700]/80 transition-colors"
+                  className="text-sm text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80 transition-colors"
                   onClick={() => setSuccess(false)}
                 >
                   Request a new magic link →
@@ -547,7 +547,7 @@ function LoginPageWrapper() {
     <Suspense fallback={
       <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
         <div className="flex items-center gap-3">
-          <Loader2 className="h-6 w-6 text-[#FFD700] animate-spin" />
+          <Loader2 className="h-6 w-6 text-[var(--hive-brand-primary)] animate-spin" />
           <span className="text-white/70">Loading...</span>
         </div>
       </div>

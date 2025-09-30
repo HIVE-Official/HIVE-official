@@ -212,7 +212,10 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
         });
         
       } catch (error) {
-        logger.error('❌ Error getting memberships', { error: error, endpoint: '/api/spaces/browse' });
+        logger.error(
+      `❌ Error getting memberships at /api/spaces/browse`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         // Continue without membership data rather than failing
       }
     } else {

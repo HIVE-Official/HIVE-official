@@ -82,7 +82,10 @@ export async function GET(
 
     return NextResponse.json({ post });
   } catch (error) {
-    logger.error('Error fetching post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    logger.error(
+      `Error fetching post at /api/spaces/[spaceId]/posts/[postId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -201,7 +204,10 @@ export async function PATCH(
       );
     }
 
-    logger.error('Error editing post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    logger.error(
+      `Error editing post at /api/spaces/[spaceId]/posts/[postId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to edit post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -283,7 +289,10 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Post deleted successfully" });
   } catch (error) {
-    logger.error('Error deleting post', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    logger.error(
+      `Error deleting post at /api/spaces/[spaceId]/posts/[postId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to delete post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -385,7 +394,10 @@ export async function POST(
       );
     }
 
-    logger.error('Error updating reaction', { error: error, endpoint: '/api/spaces/[spaceId]/posts/[postId]' });
+    logger.error(
+      `Error updating reaction at /api/spaces/[spaceId]/posts/[postId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update reaction", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

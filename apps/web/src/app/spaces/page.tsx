@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge, Grid } from '@hive/ui';
+import { HiveButton, HiveCard, HiveInput, Badge, Grid, useToast } from '@hive/ui';
 import { Search, Plus, Users, TrendingUp, Shield, Sparkles, UserCheck, Lock } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
 import { api } from '@/lib/api-client';
 import { SpacesErrorBoundary } from '@/components/error-boundaries';
+import { SpacesLoadingSkeleton } from '@/components/spaces/spaces-loading-skeleton';
 
 // SPEC.md compliant space discovery sections
 const DISCOVERY_SECTIONS = {
@@ -64,6 +65,7 @@ interface SpaceRecommendation {
 export default function SpacesDirectoryPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -104,6 +106,11 @@ export default function SpacesDirectoryPage() {
       }
     } catch (error) {
       console.error('Failed to load space recommendations:', error);
+      showToast({
+        message: 'Failed to load space recommendations. Please try again.',
+        type: 'error',
+        duration: 5000
+      });
     } finally {
       setLoading(false);
     }
@@ -132,6 +139,11 @@ export default function SpacesDirectoryPage() {
       setCategorySpaces(spaces.slice(15));
     } catch (error) {
       console.error('Search failed:', error);
+      showToast({
+        message: 'Search failed. Please try again.',
+        type: 'error',
+        duration: 5000
+      });
     } finally {
       setLoading(false);
     }
@@ -140,21 +152,24 @@ export default function SpacesDirectoryPage() {
   const handleJoinSpace = async (spaceId: string) => {
     try {
       await api.post(`/api/spaces/${spaceId}/join`);
+      showToast({
+        message: 'Successfully joined space!',
+        type: 'success',
+        duration: 3000
+      });
       router.push(`/spaces/${spaceId}`);
     } catch (error) {
       console.error('Failed to join space:', error);
+      showToast({
+        message: 'Failed to join space. Please try again.',
+        type: 'error',
+        duration: 5000
+      });
     }
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <Sparkles className="w-12 h-12 text-hive-gold animate-pulse mx-auto mb-4" />
-          <p className="text-hive-gold text-lg">Finding your communities...</p>
-        </div>
-      </div>
-    );
+    return <SpacesLoadingSkeleton />;
   }
 
   return (
@@ -190,7 +205,7 @@ export default function SpacesDirectoryPage() {
 
               <HiveButton
                 onClick={() => router.push('/spaces/create')}
-                className="bg-hive-gold text-black hover:bg-yellow-400"
+                className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 lg:mr-2" />
                 <span className="hidden lg:inline">Create Space</span>
@@ -204,7 +219,7 @@ export default function SpacesDirectoryPage() {
               onClick={() => setSelectedCategory('all')}
               className={`px-4 py-2 rounded-lg whitespace-nowrap ${
                 selectedCategory === 'all'
-                  ? 'bg-hive-gold text-black'
+                  ? 'bg-[var(--hive-brand-primary)] text-black'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
@@ -216,7 +231,7 @@ export default function SpacesDirectoryPage() {
                 onClick={() => setSelectedCategory(key)}
                 className={`px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 ${
                   selectedCategory === key
-                    ? 'bg-hive-gold text-black'
+                    ? 'bg-[var(--hive-brand-primary)] text-black'
                     : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -344,7 +359,7 @@ export default function SpacesDirectoryPage() {
             </p>
             <HiveButton
               onClick={() => router.push('/spaces/create')}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               Create the First Space
             </HiveButton>
@@ -379,7 +394,7 @@ function SpaceCard({
 
   return (
     <HiveCard
-      className="bg-gray-900/50 border-gray-800 hover:border-hive-gold transition-all cursor-pointer group"
+      className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)] transition-all cursor-pointer group"
       onClick={onClick}
     >
       {/* Banner */}
@@ -409,7 +424,7 @@ function SpaceCard({
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1">
-            <h3 className="font-bold text-white group-hover:text-hive-gold transition-colors">
+            <h3 className="font-bold text-white group-hover:text-[var(--hive-brand-primary)] transition-colors">
               {space.name}
             </h3>
             <p className="text-sm text-gray-400 line-clamp-2 mt-1">
@@ -472,7 +487,7 @@ function SpaceCard({
               e.stopPropagation();
               onJoin();
             }}
-            className="bg-hive-gold/20 text-hive-gold hover:bg-hive-gold hover:text-black"
+            className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
           >
             Join
           </HiveButton>

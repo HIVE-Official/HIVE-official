@@ -138,7 +138,7 @@ export async function GET(
             : null,
         };
       } catch (error) {
-        logger.error('Error fetching user', { userId, error: error, endpoint: '/api/spaces/[spaceId]/membership' });
+        logger.error('Error fetching user', { userId, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/[spaceId]/membership' });
         return {
           userId,
           membership: {
@@ -208,7 +208,10 @@ export async function GET(
         role: role || null,
       } });
   } catch (error: any) {
-    logger.error('Get space membership error', { error: error, endpoint: '/api/spaces/[spaceId]/membership' });
+    logger.error(
+      `Get space membership error at /api/spaces/[spaceId]/membership`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

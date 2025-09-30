@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
       userAgent: realUserAgent,
       submitted: timestamp || new Date().toISOString()
     };
-    
+
     // For now, just log to console. In production, save to database or send to service
-    logger.info('📝 HIVE Feedback Received', { data: JSON.stringify(feedbackData, null, 2), endpoint: '/api/feedback' });
+    logger.info('📝 HIVE Feedback Received at /api/feedback');
     
     // TODO: In production, integrate with:
     // - Database storage
@@ -44,7 +44,10 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    logger.error('Feedback submission error', { error: error, endpoint: '/api/feedback' });
+    logger.error(
+      `Feedback submission error at /api/feedback`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     
     return NextResponse.json(ApiResponseHelper.error("Failed to submit feedback", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }

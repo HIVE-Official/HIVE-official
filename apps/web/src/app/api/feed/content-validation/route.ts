@@ -91,7 +91,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error validating content', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error validating content at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to validate content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -127,7 +130,10 @@ export async function GET(request: NextRequest) {
       generatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error fetching validation analytics', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error fetching validation analytics at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -173,7 +179,10 @@ async function getContentEnforcementPolicy(spaceId?: string, enforcementLevel: s
 
     return DEFAULT_POLICIES[enforcementLevel] || DEFAULT_POLICIES.moderate;
   } catch (error) {
-    logger.error('Error getting enforcement policy', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error getting enforcement policy at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     // Return safe default
     return DEFAULT_POLICIES.moderate;
   }
@@ -315,7 +324,10 @@ async function validateContentItem(
       enforcementAction
     };
   } catch (error) {
-    logger.error('Error validating content item', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error validating content item at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       isValid: false,
       contentType: 'invalid',
@@ -429,7 +441,10 @@ async function logValidationMetrics(userId: string, spaceId: string | undefined,
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    logger.error('Error logging validation metrics', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error logging validation metrics at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -501,7 +516,10 @@ async function getContentValidationAnalytics(
       validationFailures: [] // Simplified for aggregated view
     };
   } catch (error) {
-    logger.error('Error getting validation analytics', { error: error, endpoint: '/api/feed/content-validation' });
+    logger.error(
+      `Error getting validation analytics at /api/feed/content-validation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       totalPosts: 0,
       toolGeneratedCount: 0,

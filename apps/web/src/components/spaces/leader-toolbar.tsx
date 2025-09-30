@@ -184,12 +184,12 @@ export function LeaderToolbar({
                 <span className="text-white font-medium text-sm">
                   {LEADER_MODES[currentMode].label} Mode
                 </span>
-                <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30">
+                <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
                   Active
                 </Badge>
               </div>
               <motion.div
-                className="w-2 h-2 rounded-full bg-[#FFD700]"
+                className="w-2 h-2 rounded-full bg-[var(--hive-brand-primary)]"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
@@ -197,7 +197,7 @@ export function LeaderToolbar({
           ) : (
             // Default Leadership Button
             <>
-              <Crown className="w-5 h-5 text-[#FFD700]" />
+              <Crown className="w-5 h-5 text-[var(--hive-brand-primary)]" />
               <span className="text-white font-medium text-sm">Leadership</span>
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}

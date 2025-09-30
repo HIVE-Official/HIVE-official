@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npx turbo@^2.5.4 run build --filter=web",
+  "buildCommand": "cd apps/web && pnpm build",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install -g pnpm@9.1.1 && pnpm install",
+  "installCommand": "corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm install",
   "framework": null,
   "regions": ["iad1"],
   "functions": {
@@ -19,12 +19,7 @@
       "memory": 512
     }
   },
-  "crons": [
-    {
-      "path": "/api/cron/cleanup",
-      "schedule": "0 3 * * *"
-    }
-  ],
+  "crons": [],
   "headers": [
     {
       "source": "/admin/(.*)",

@@ -13,7 +13,10 @@ export const GET = withAuthAndErrors(async (context) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '24h';
-  const severity = searchParams.get('severity') || undefined; // 'critical', 'high', 'medium', 'low'
+  const severityParam = searchParams.get('severity');
+  const severity: 'critical' | 'high' | 'medium' | 'low' | undefined =
+    (severityParam === 'critical' || severityParam === 'high' || severityParam === 'medium' || severityParam === 'low')
+      ? severityParam : undefined;
   const component = searchParams.get('component') || undefined; // 'database', 'auth', 'api', 'cache'
 
   try {
@@ -85,7 +88,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching alerts', { error, userId: auth.userId });
+    logger.error('Error fetching alerts', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -149,7 +152,7 @@ export const POST = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing alert action', { error, userId: auth.userId });
+    logger.error('Error performing alert action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
@@ -194,7 +197,7 @@ async function getSystemAlerts(since: Date, severity?: string, component?: strin
     return severity ? alerts.filter(alert => alert.severity === severity) : alerts;
 
   } catch (error) {
-    logger.error('Error getting system alerts', { error });
+    logger.error('Error getting system alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     return [];
   }
 }
@@ -255,7 +258,7 @@ async function getPerformanceAlerts(since: Date, severity?: string) {
     return severity ? performanceIssues.filter(alert => alert.severity === severity) : performanceIssues;
 
   } catch (error) {
-    logger.error('Error getting performance alerts', { error });
+    logger.error('Error getting performance alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     return [];
   }
 }
@@ -299,7 +302,7 @@ async function getSecurityAlerts(since: Date, severity?: string) {
     return severity ? alerts.filter(alert => alert.severity === severity) : alerts;
 
   } catch (error) {
-    logger.error('Error getting security alerts', { error });
+    logger.error('Error getting security alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     // Return mock security alert for development
     return [{
       id: 'sec-001',
@@ -361,7 +364,7 @@ async function getUserImpactAlerts(since: Date, severity?: string) {
     return severity ? userImpactIssues.filter(alert => alert.severity === severity) : userImpactIssues;
 
   } catch (error) {
-    logger.error('Error getting user impact alerts', { error });
+    logger.error('Error getting user impact alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     return [];
   }
 }
@@ -385,7 +388,7 @@ async function getActiveIncidents() {
     }));
 
   } catch (error) {
-    logger.error('Error getting active incidents', { error });
+    logger.error('Error getting active incidents', { error: error instanceof Error ? error : new Error(String(error)) });
     return [{
       id: 'incident-001',
       title: 'Intermittent Feed Loading Issues',
@@ -422,7 +425,7 @@ async function acknowledgeAlert(alertId: string, userId: string, notes?: string)
 
     return { success: true, action: 'acknowledged' };
   } catch (error) {
-    logger.error('Error acknowledging alert', { error, userId, metadata: { alertId } });
+    logger.error('Error acknowledging alert', { error: error instanceof Error ? error : new Error(String(error)), userId, metadata: { alertId } });
     return { success: false, error: 'Failed to acknowledge alert' };
   }
 }
@@ -439,7 +442,7 @@ async function resolveAlert(alertId: string, userId: string, notes?: string) {
 
     return { success: true, action: 'resolved' };
   } catch (error) {
-    logger.error('Error resolving alert', { error, userId, metadata: { alertId } });
+    logger.error('Error resolving alert', { error: error instanceof Error ? error : new Error(String(error)), userId, metadata: { alertId } });
     return { success: false, error: 'Failed to resolve alert' };
   }
 }
@@ -458,7 +461,7 @@ async function escalateAlert(alertId: string, userId: string, notes?: string) {
     // TODO: Send notification to senior engineering team
     return { success: true, action: 'escalated' };
   } catch (error) {
-    logger.error('Error escalating alert', { error, userId, metadata: { alertId } });
+    logger.error('Error escalating alert', { error: error instanceof Error ? error : new Error(String(error)), userId, metadata: { alertId } });
     return { success: false, error: 'Failed to escalate alert' };
   }
 }
@@ -475,7 +478,7 @@ async function suppressAlert(alertId: string, userId: string, notes?: string) {
 
     return { success: true, action: 'suppressed' };
   } catch (error) {
-    logger.error('Error suppressing alert', { error, userId, metadata: { alertId } });
+    logger.error('Error suppressing alert', { error: error instanceof Error ? error : new Error(String(error)), userId, metadata: { alertId } });
     return { success: false, error: 'Failed to suppress alert' };
   }
 }

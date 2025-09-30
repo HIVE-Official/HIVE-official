@@ -257,7 +257,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     key={type}
                     className={`p-4 cursor-pointer transition-all duration-200 ${
                       isSelected 
-                        ? 'bg-hive-gold/10 border-hive-gold' 
+                        ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]' 
                         : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                     }`}
                     onClick={() => updateSpaceData({ type: type as SpaceType })}
@@ -269,7 +269,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold text-white">{config.name}</h4>
-                          {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
+                          {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                         </div>
                         <p className="text-sm text-zinc-400 mb-3 leading-tight">{config.description}</p>
                         <div className="space-y-2">
@@ -330,8 +330,8 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
-                  className={`w-full p-3 bg-zinc-800 border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-hive-gold/50 resize-none ${
-                    errors.description ? 'border-red-500' : 'border-zinc-700 focus:border-hive-gold'
+                  className={`w-full p-3 bg-zinc-800 border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 resize-none ${
+                    errors.description ? 'border-red-500' : 'border-zinc-700 focus:border-[var(--hive-brand-primary)]'
                   }`}
                 />
                 <div className="flex items-center justify-between mt-1">
@@ -351,7 +351,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       key={tag}
                       variant="skill-tag"
                       className={`cursor-pointer transition-colors ${
-                        spaceData.customizations.tags?.includes(tag) ? 'bg-hive-gold text-hive-obsidian' : ''
+                        spaceData.customizations.tags?.includes(tag) ? 'bg-[var(--hive-brand-primary)] text-hive-obsidian' : ''
                       }`}
                       onClick={() => {
                         const currentTags = spaceData.customizations.tags || [];
@@ -412,18 +412,18 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
+                          ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]' 
                           : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                       }`}
                       onClick={() => updateSpaceData({ visibility: option.value as any })}
                     >
                       <div className="flex items-center space-x-3">
-                        <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
+                        <Icon className={`h-5 w-5 ${isSelected ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}`} />
                         <div className="flex-1">
                           <div className="font-medium text-white">{option.title}</div>
                           <div className="text-sm text-zinc-400">{option.description}</div>
                         </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
+                        {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
                     </HiveCard>
                   );
@@ -463,18 +463,18 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
+                          ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]' 
                           : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                       }`}
                       onClick={() => updateSpaceData({ joinProcess: option.value as any })}
                     >
                       <div className="flex items-center space-x-3">
-                        <Icon className={`h-5 w-5 ${isSelected ? 'text-hive-gold' : 'text-zinc-400'}`} />
+                        <Icon className={`h-5 w-5 ${isSelected ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}`} />
                         <div className="flex-1">
                           <div className="font-medium text-white">{option.title}</div>
                           <div className="text-sm text-zinc-400">{option.description}</div>
                         </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
+                        {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
                     </HiveCard>
                   );
@@ -508,7 +508,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   value={newRule}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule(e.target.value)}
                   placeholder="Enter a community guideline..."
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       addRule(newRule);
@@ -522,7 +522,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     setNewRule('');
                   }}
                   disabled={!newRule.trim()}
-                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                  className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -538,7 +538,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     key={index}
                     className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                       spaceData.rules.includes(rule)
-                        ? 'bg-hive-gold/10 border-hive-gold text-white'
+                        ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)] text-white'
                         : 'bg-zinc-800/50 border-zinc-700 text-zinc-300 hover:bg-zinc-800'
                     }`}
                     onClick={() => {
@@ -552,7 +552,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     <div className="flex items-center justify-between">
                       <span className="text-sm">{rule}</span>
                       {spaceData.rules.includes(rule) ? (
-                        <Check className="h-4 w-4 text-hive-gold" />
+                        <Check className="h-4 w-4 text-[var(--hive-brand-primary)]" />
                       ) : (
                         <Plus className="h-4 w-4 text-zinc-400" />
                       )}
@@ -568,7 +568,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <h4 className="font-medium text-white mb-3">Your Community Guidelines ({spaceData.rules.length})</h4>
                 <div className="space-y-2">
                   {spaceData.rules.map((rule, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-hive-gold/10 border border-hive-gold rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)] rounded-lg">
                       <span className="text-sm text-white">{rule}</span>
                       <Button
                         variant="ghost"
@@ -617,7 +617,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       key={toolId}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
-                          ? 'bg-hive-gold/10 border-hive-gold' 
+                          ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]' 
                           : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                       }`}
                       onClick={() => toggleTool(toolId)}
@@ -628,7 +628,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                           <div className="font-medium text-white">{tool.name}</div>
                           <div className="text-sm text-zinc-400">{tool.description}</div>
                         </div>
-                        {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
+                        {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
                     </HiveCard>
                   );
@@ -650,7 +650,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         key={toolId}
                         className={`p-4 cursor-pointer transition-all duration-200 ${
                           isSelected 
-                            ? 'bg-hive-gold/10 border-hive-gold' 
+                            ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]' 
                             : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
                         }`}
                         onClick={() => toggleTool(toolId)}
@@ -661,7 +661,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                             <div className="font-medium text-white">{tool.name}</div>
                             <div className="text-sm text-zinc-400">{tool.description}</div>
                           </div>
-                          {isSelected && <Check className="h-5 w-5 text-hive-gold" />}
+                          {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                         </div>
                       </HiveCard>
                     );
@@ -700,9 +700,9 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <input
                   type="text"
                   placeholder="@handle or email@university.edu"
-                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none"
+                  className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none"
                 />
-                <Button className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
+                <Button className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne">
                   <Plus className="h-4 w-4 mr-2" />
                   Invite
                 </Button>
@@ -821,7 +821,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
             {steps.map((step, index) => (
               <div key={step} className="flex-1">
                 <div className={`h-2 rounded-full transition-colors ${
-                  index <= currentStepIndex ? 'bg-hive-gold' : 'bg-zinc-700'
+                  index <= currentStepIndex ? 'bg-[var(--hive-brand-primary)]' : 'bg-zinc-700'
                 }`} />
               </div>
             ))}
@@ -859,7 +859,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             <Button
               onClick={currentStep === 'review' ? handleCreateSpace : nextStep}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne flex items-center space-x-2"
+              className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne flex items-center space-x-2"
               disabled={isLoading}
             >
               {isLoading ? (

@@ -46,7 +46,10 @@ export async function GET(
       executionContext
     });
   } catch (error) {
-    logger.error('Error fetching deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    logger.error(
+      `Error fetching deployment at /api/tools/deploy/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -140,7 +143,10 @@ export async function PUT(
       message: 'Deployment updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    logger.error(
+      `Error updating deployment at /api/tools/deploy/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -221,7 +227,10 @@ export async function DELETE(
       message: 'Deployment removed successfully'
     });
   } catch (error) {
-    logger.error('Error removing deployment', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    logger.error(
+      `Error removing deployment at /api/tools/deploy/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to remove deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -272,7 +281,10 @@ async function canUserManageDeployment(userId: string, deployment: any): Promise
 
     return false;
   } catch (error) {
-    logger.error('Error checking deployment management permissions', { error: error, endpoint: '/api/tools/deploy/[deploymentId]' });
+    logger.error(
+      `Error checking deployment management permissions at /api/tools/deploy/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }

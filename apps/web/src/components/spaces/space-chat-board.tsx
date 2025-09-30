@@ -251,7 +251,7 @@ export function SpaceChatBoard({
       {posts.filter(p => p.pinned).slice(0, 3).map(post => (
         <div key={post.id} className="border-b border-gray-800 bg-yellow-900/10 p-3">
           <div className="flex items-start gap-2">
-            <Pin className="w-4 h-4 text-hive-gold mt-1" />
+            <Pin className="w-4 h-4 text-[var(--hive-brand-primary)] mt-1" />
             <div className="flex-1">
               <p className="text-sm text-white">{post.content}</p>
               <p className="text-xs text-gray-500 mt-1">
@@ -311,14 +311,14 @@ export function SpaceChatBoard({
 
         {/* Enhancement Suggestion */}
         {showEnhancements && (
-          <div className="mb-2 p-2 bg-hive-gold/10 border border-hive-gold/30 rounded">
+          <div className="mb-2 p-2 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)]/30 rounded">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-hive-gold" />
-              <span className="text-sm text-hive-gold">{enhancementSuggestion}</span>
+              <Sparkles className="w-4 h-4 text-[var(--hive-brand-primary)]" />
+              <span className="text-sm text-[var(--hive-brand-primary)]">{enhancementSuggestion}</span>
               <HiveButton
                 size="sm"
                 variant="ghost"
-                className="ml-auto text-hive-gold"
+                className="ml-auto text-[var(--hive-brand-primary)]"
                 onClick={() => {
                   if (enhancementSuggestion.includes('poll')) setPostType('poll');
                   if (enhancementSuggestion.includes('event')) setPostType('event');
@@ -339,7 +339,7 @@ export function SpaceChatBoard({
               onClick={() => setPostType(type as Post['type'])}
               className={`px-3 py-1 rounded text-xs ${
                 postType === type
-                  ? 'bg-hive-gold text-black'
+                  ? 'bg-[var(--hive-brand-primary)] text-black'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -370,7 +370,7 @@ export function SpaceChatBoard({
           <HiveButton
             onClick={handleSendPost}
             disabled={!membership || !newPostContent.trim()}
-            className="bg-hive-gold text-black hover:bg-yellow-400"
+            className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             <Send className="w-4 h-4" />
           </HiveButton>
@@ -415,7 +415,7 @@ function PostMessage({
   return (
     <div
       className={`group flex gap-3 p-3 rounded hover:bg-gray-900/50 ${
-        post.promoted ? 'border-l-2 border-hive-gold' : ''
+        post.promoted ? 'border-l-2 border-[var(--hive-brand-primary)]' : ''
       }`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -431,7 +431,7 @@ function PostMessage({
             {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
           </span>
           {getTypeIcon()}
-          {post.pinned && <Pin className="w-3 h-3 text-hive-gold" />}
+          {post.pinned && <Pin className="w-3 h-3 text-[var(--hive-brand-primary)]" />}
           {post.promoted && <TrendingUp className="w-3 h-3 text-green-400" />}
         </div>
 
@@ -469,7 +469,7 @@ function PostMessage({
             {!post.pinned && (
               <button
                 onClick={onPin}
-                className="text-xs text-gray-500 hover:text-hive-gold"
+                className="text-xs text-gray-500 hover:text-[var(--hive-brand-primary)]"
               >
                 [Pin]
               </button>

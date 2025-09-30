@@ -78,7 +78,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(recommendations);
 
   } catch (error) {
-    logger.error('Error generating recommendations', { error: error, endpoint: '/api/tools/recommendations' });
+    logger.error(
+      `Error generating recommendations at /api/tools/recommendations`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to generate recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

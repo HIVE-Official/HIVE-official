@@ -191,7 +191,7 @@ export function RitualHorizontalCards({
         {/* Section Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-hive-gold" />
+            <Sparkles className="h-5 w-5 text-[var(--hive-brand-primary)]" />
             <h3 className="font-semibold text-hive-text-primary">Active Rituals</h3>
           </div>
 
@@ -300,7 +300,7 @@ export function RitualHorizontalCards({
                         <div
                           key={entry.position}
                           className={`flex items-center justify-between py-1 text-sm ${
-                            entry.isCurrentUser ? 'text-hive-gold font-semibold' : ''
+                            entry.isCurrentUser ? 'text-[var(--hive-brand-primary)] font-semibold' : ''
                           }`}
                         >
                           <div className="flex items-center gap-2">
@@ -396,7 +396,7 @@ export function RitualHorizontalCards({
                         disabled={card.primaryAction.disabled}
                         className={`flex-1 ${
                           card.primaryAction.variant === 'gold'
-                            ? 'bg-hive-gold text-black hover:bg-hive-champagne'
+                            ? 'bg-[var(--hive-brand-primary)] text-black hover:bg-hive-champagne'
                             : 'bg-white/20 hover:bg-white/30 text-white border-white/40'
                         }`}
                         size="sm"
@@ -425,11 +425,11 @@ export function RitualHorizontalCards({
           })}
 
           {/* Marketing Card Example */}
-          <Card className="flex-shrink-0 w-80 bg-gradient-to-br from-hive-gold/20 to-hive-champagne/20 border-hive-gold/30">
+          <Card className="flex-shrink-0 w-80 bg-gradient-to-br from-hive-gold/20 to-hive-champagne/20 border-[var(--hive-brand-primary)]/30">
             <div className="p-6">
               <div className="flex items-center gap-2 mb-3">
-                <Zap className="h-5 w-5 text-hive-gold" />
-                <Badge className="bg-hive-gold/20 text-hive-gold border-0">NEW</Badge>
+                <Zap className="h-5 w-5 text-[var(--hive-brand-primary)]" />
+                <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-0">NEW</Badge>
               </div>
               <h3 className="text-lg font-bold text-hive-text-primary mb-2">
                 Build Campus Tools
@@ -439,7 +439,7 @@ export function RitualHorizontalCards({
               </p>
               <Button
                 onClick={() => window.location.href = '/hivelab'}
-                className="w-full bg-hive-gold text-black hover:bg-hive-champagne"
+                className="w-full bg-[var(--hive-brand-primary)] text-black hover:bg-hive-champagne"
                 size="sm"
               >
                 Explore HiveLab

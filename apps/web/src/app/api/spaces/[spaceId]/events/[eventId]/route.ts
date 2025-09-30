@@ -120,7 +120,10 @@ export async function GET(
 
     return NextResponse.json({ event });
   } catch (error) {
-    logger.error('Error fetching event', { error: error, endpoint: '/api/spaces/[spaceId]/events/[eventId]' });
+    logger.error(
+      `Error fetching event at /api/spaces/[spaceId]/events/[eventId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

@@ -459,7 +459,7 @@ export function EventToolIntegration({
               </Button>
               <Button 
                 onClick={handleSetupComplete}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 Start Tool
               </Button>

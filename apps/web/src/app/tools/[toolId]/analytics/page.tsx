@@ -97,7 +97,7 @@ const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }: {
     <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)] transition-all">
       <div className="flex items-center justify-between mb-4">
         <div className="w-12 h-12 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-xl flex items-center justify-center">
-          <Icon className="h-6 w-6 text-[#FFD700]" />
+          <Icon className="h-6 w-6 text-[var(--hive-brand-primary)]" />
         </div>
         {change !== undefined && (
           <div className={`text-sm font-medium ${change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -135,7 +135,7 @@ const SimpleChart = ({ data, title, type: _type = 'bar' }: { // TODO: type param
             </div>
             <div className="w-full bg-[rgba(255,255,255,0.05)] rounded-full h-2">
               <div 
-                className="bg-gradient-to-r from-[#FFD700] to-[#FFE255] h-2 rounded-full transition-all duration-1000"
+                className="bg-gradient-to-r from-[var(--hive-brand-primary)] to-[#FFE255] h-2 rounded-full transition-all duration-1000"
                 style={{ width: `${(item.value / maxValue) * 100}%` }}
               />
             </div>
@@ -150,13 +150,13 @@ const FeedbackCard = ({ comment }: { comment: typeof MOCK_ANALYTICS.feedback.com
   <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-[#FFD700] to-[#FFE255] rounded-lg flex items-center justify-center text-[#0A0A0A] font-semibold text-xs">
+        <div className="w-8 h-8 bg-gradient-to-br from-[var(--hive-brand-primary)] to-[#FFE255] rounded-lg flex items-center justify-center text-[#0A0A0A] font-semibold text-xs">
           {comment.user.charAt(0)}
         </div>
         <span className="text-white font-medium text-sm">{comment.user}</span>
       </div>
       <div className="flex items-center gap-1">
-        <Star className="h-3 w-3 fill-[#FFD700] text-[#FFD700]" />
+        <Star className="h-3 w-3 fill-[#FFD700] text-[var(--hive-brand-primary)]" />
         <span className="text-xs text-[#A1A1AA]">{comment.rating}</span>
       </div>
     </div>
@@ -221,7 +221,7 @@ export default function ToolAnalyticsPage() {
               <select
                 value={timeRange}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange(e.target.value)}
-                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -312,11 +312,11 @@ export default function ToolAnalyticsPage() {
                   <div key={index} className="flex items-center gap-3">
                     <div className="flex items-center gap-1 w-16">
                       <span className="text-sm text-[#A1A1AA]">{rating.rating}</span>
-                      <Star className="h-3 w-3 fill-[#FFD700] text-[#FFD700]" />
+                      <Star className="h-3 w-3 fill-[#FFD700] text-[var(--hive-brand-primary)]" />
                     </div>
                     <div className="flex-1 bg-[rgba(255,255,255,0.05)] rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-[#FFD700] to-[#FFE255] h-2 rounded-full"
+                        className="bg-gradient-to-r from-[var(--hive-brand-primary)] to-[#FFE255] h-2 rounded-full"
                         style={{ width: `${(rating.count / 234) * 100}%` }}
                       />
                     </div>
@@ -348,8 +348,8 @@ export default function ToolAnalyticsPage() {
         {/* Performance Insights */}
         <Card className="p-8 bg-gradient-to-r from-[rgba(255,215,0,0.05)] to-[rgba(255,215,0,0.02)] border-[rgba(255,215,0,0.1)]">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-[#FFD700]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="h-6 w-6 text-[#FFD700]" />
+            <div className="w-12 h-12 bg-[var(--hive-brand-primary)]/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="h-6 w-6 text-[var(--hive-brand-primary)]" />
             </div>
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Performance Insights</h3>
@@ -362,7 +362,7 @@ export default function ToolAnalyticsPage() {
                   <div className="text-[#A1A1AA]">+12% usage increase this week</div>
                 </div>
                 <div className="bg-[rgba(255,255,255,0.05)] p-4 rounded-lg">
-                  <div className="text-[#FFD700] font-medium">⭐ High Rated</div>
+                  <div className="text-[var(--hive-brand-primary)] font-medium">⭐ High Rated</div>
                   <div className="text-[#A1A1AA]">4.8/5 average rating</div>
                 </div>
                 <div className="bg-[rgba(255,255,255,0.05)] p-4 rounded-lg">

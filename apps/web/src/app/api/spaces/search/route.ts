@@ -100,7 +100,10 @@ export async function POST(request: NextRequest) {
             };
           }
         } catch (error) {
-          logger.warn('Failed to fetch creator info', { data: error, endpoint: '/api/spaces/search' });
+          logger.warn(
+      `Failed to fetch creator info at /api/spaces/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         }
       }
 
@@ -115,7 +118,10 @@ export async function POST(request: NextRequest) {
           .get();
         isMember = memberDoc.exists;
       } catch (error) {
-        logger.warn('Failed to check membership', { data: error, endpoint: '/api/spaces/search' });
+        logger.warn(
+      `Failed to check membership at /api/spaces/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
 
       spaces.push({
@@ -191,7 +197,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error('Error searching spaces', { error: error, endpoint: '/api/spaces/search' });
+    logger.error(
+      `Error searching spaces at /api/spaces/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to search spaces", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

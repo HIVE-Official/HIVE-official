@@ -170,7 +170,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    logger.info('👑 Admin requesting space analytics', { adminUserId, endpoint: '/api/admin/spaces/analytics' });
+    logger.info('👑 Admin requesting space analytics', { adminUserId });
 
     // Get all spaces across all types
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
@@ -220,7 +220,7 @@ export async function GET(request: NextRequest) {
               (spaceData as any).members = members;
 
             } catch (memberError) {
-              logger.error('Error fetching membersfor space', { spaceId: doc.id, error: memberError, endpoint: '/api/admin/spaces/analytics' });
+              logger.error('Error fetching membersfor space', { spaceId: doc.id, error: memberError instanceof Error ? memberError : new Error(String(memberError))});
               (spaceData as any).actualMemberCount = (spaceData as any).memberCount || 0;
               (spaceData as any).builderCount = 0;
               (spaceData as any).adminCount = 0;
@@ -235,7 +235,7 @@ export async function GET(request: NextRequest) {
         spacesByType[type] = spaces;
         allSpaces.push(...spaces);
       } catch (error) {
-        logger.error('Error fetching spaces for type', { type, error: error, endpoint: '/api/admin/spaces/analytics' });
+        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error : new Error(String(error))});
         spacesByType[type] = [];
       }
     }
@@ -372,7 +372,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Admin spaces analytics error', { error: error, endpoint: '/api/admin/spaces/analytics' });
+    logger.error('Admin spaces analytics error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get space analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

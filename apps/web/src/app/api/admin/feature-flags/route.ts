@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       retrievedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error getting admin feature flags', { error, endpoint: '/api/admin/feature-flags' });
+    logger.error('Error getting admin feature flags', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get feature flags', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error creating feature flag', { error, endpoint: '/api/admin/feature-flags' });
+    logger.error('Error creating feature flag', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(
       ApiResponseHelper.error('Failed to create feature flag', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

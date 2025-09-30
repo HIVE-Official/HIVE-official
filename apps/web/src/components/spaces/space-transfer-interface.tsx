@@ -178,7 +178,7 @@ export function SpaceTransferInterface({
       <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Current Space</h3>
-          <Badge variant="freshman" className="border-[#FFD700]/30 text-[#FFD700]">
+          <Badge variant="freshman" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
             {getSpaceTypeName(spaceType)}
           </Badge>
         </div>
@@ -197,7 +197,7 @@ export function SpaceTransferInterface({
       {/* Movement Restrictions */}
       <div className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-6">
         <div className="flex items-center gap-3 mb-4">
-          <Shield className="h-5 w-5 text-[#FFD700]" />
+          <Shield className="h-5 w-5 text-[var(--hive-brand-primary)]" />
           <h3 className="text-lg font-semibold text-white">Movement Restrictions</h3>
         </div>
         
@@ -247,7 +247,7 @@ export function SpaceTransferInterface({
                 key={space.id}
                 className={`p-4 rounded-lg border transition-all cursor-pointer ${
                   selectedTargetSpace?.id === space.id
-                    ? 'bg-[#FFD700]/10 border-[#FFD700]/30'
+                    ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30'
                     : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.1]'
                 }`}
                 onClick={() => setSelectedTargetSpace(space)}
@@ -266,7 +266,7 @@ export function SpaceTransferInterface({
                   </div>
                   
                   {selectedTargetSpace?.id === space.id && (
-                    <CheckCircle className="h-5 w-5 text-[#FFD700]" />
+                    <CheckCircle className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                   )}
                 </div>
               </motion.div>
@@ -287,7 +287,7 @@ export function SpaceTransferInterface({
             value={transferReason}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTransferReason(e.target.value)}
             placeholder="Why are you transferring? (optional)"
-            className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[#FFD700]/30"
+            className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-primary)]/30"
             maxLength={200}
           />
           <p className="text-xs text-neutral-400 mt-2">
@@ -312,7 +312,7 @@ export function SpaceTransferInterface({
                 <div className="text-xs text-neutral-400">Current</div>
               </div>
               
-              <ArrowRight className="h-5 w-5 text-[#FFD700]" />
+              <ArrowRight className="h-5 w-5 text-[var(--hive-brand-primary)]" />
               
               <div className="text-center">
                 <div className="font-medium text-white">{selectedTargetSpace.name}</div>
@@ -357,7 +357,7 @@ export function SpaceTransferInterface({
               variant="default"
               onClick={() => setShowConfirmation(true)}
               disabled={!transferValidation.canMove || validationLoading}
-              className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+              className="flex-1 bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
             >
               {validationLoading ? 'Validating...' : 'Transfer Space'}
             </Button>
@@ -422,7 +422,7 @@ export function SpaceTransferInterface({
                 <Button
                   variant="default"
                   onClick={handleTransfer}
-                  className="flex-1 bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                  className="flex-1 bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                   disabled={transferMutation.isPending}
                 >
                   {transferMutation.isPending ? (

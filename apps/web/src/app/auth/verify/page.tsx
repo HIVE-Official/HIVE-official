@@ -168,7 +168,7 @@ function VerifyPageContent() {
                   <HiveButton
                     variant="default"
                     size="lg"
-                    className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black"
+                    className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
                     onClick={() => {
                       const email = localStorage.getItem('emailForSignIn');
                       const schoolId = new URLSearchParams(window.location.search).get('schoolId');

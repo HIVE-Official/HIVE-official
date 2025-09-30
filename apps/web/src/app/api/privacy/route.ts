@@ -112,7 +112,10 @@ export async function GET(request: NextRequest) {
     const settings = privacyDoc.data() as PrivacySettings;
     return NextResponse.json({ settings });
   } catch (error) {
-    logger.error('Error fetching privacy settings', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error fetching privacy settings at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -163,7 +166,10 @@ export async function PUT(request: NextRequest) {
       message: 'Privacy settings updated successfully'
     });
   } catch (error) {
-    logger.error('Error updating privacy settings', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error updating privacy settings at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update privacy settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -185,7 +191,10 @@ async function applyPrivacyChanges(userId: string, settings: PrivacySettings) {
     await updateProfileVisibility(userId, settings.profileVisibility);
 
   } catch (error) {
-    logger.error('Error applying privacy changes', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error applying privacy changes at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -221,7 +230,10 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
 
     await Promise.all(updates);
   } catch (error) {
-    logger.error('Error updating space visibility', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error updating space visibility at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -250,7 +262,10 @@ async function updateProfileVisibility(userId: string, profileVisibility: Privac
       await userDocRef.update(updatedUserData);
     }
   } catch (error) {
-    logger.error('Error updating profile visibility', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error updating profile visibility at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -295,6 +310,9 @@ async function cleanupOldActivityData(userId: string, retentionPeriod: number) {
       logger.info('Deletedold activity summaries for user', { oldSummariesSnapshot, userId, endpoint: '/api/privacy' });
     }
   } catch (error) {
-    logger.error('Error cleaning up old activity data', { error: error, endpoint: '/api/privacy' });
+    logger.error(
+      `Error cleaning up old activity data at /api/privacy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

@@ -205,7 +205,7 @@ export function ToolsLoading() {
 export function InlineActionLoading({ message = 'Loading...' }: { message?: string }) {
   return (
     <div className="flex items-center gap-2 text-sm text-gray-400">
-      <div className="w-4 h-4 border-2 border-hive-gold border-t-transparent rounded-full animate-spin" />
+      <div className="w-4 h-4 border-2 border-[var(--hive-brand-primary)] border-t-transparent rounded-full animate-spin" />
       <span>{message}</span>
     </div>
   );

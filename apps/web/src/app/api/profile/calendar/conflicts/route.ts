@@ -237,10 +237,11 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     return respond.success({ conflicts });
   } catch (error) {
-    logger.error('Failed to detect calendar conflicts', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      userId,
-    });
+    logger.error(
+      'Failed to detect calendar conflicts',
+      error instanceof Error ? error : new Error(String(error)),
+      { userId }
+    );
     return respond.error(
       'Failed to detect calendar conflicts',
       'INTERNAL_ERROR',
@@ -311,11 +312,11 @@ export const POST = withAuthValidationAndErrors(
 
       return respond.success({ message: 'Conflict resolved successfully' });
     } catch (error) {
-      logger.error('Failed to resolve calendar conflict', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        userId,
-        conflictId,
-      });
+      logger.error(
+        'Failed to resolve calendar conflict',
+        error instanceof Error ? error : new Error(String(error)),
+        { userId, conflictId }
+      );
       return respond.error(
         'Failed to resolve calendar conflict',
         'INTERNAL_ERROR',

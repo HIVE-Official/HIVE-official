@@ -108,15 +108,16 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
 
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      logger.warn('Invalid error report format', {
-        error: error.errors,
-        userId,
-        endpoint: '/api/errors/report'
-      });
+      logger.warn(
+        `Invalid error report format from user ${userId}: ${error.errors.length} validation errors at /api/errors/report`
+      );
       return respond.error('Invalid error report format', 'VALIDATION_ERROR', { status: 400 });
     }
 
-    logger.error('Failed to process error report', { error, userId, endpoint: '/api/errors/report' });
+    logger.error(
+      `Failed to process error report from user ${userId} at /api/errors/report`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return respond.error('Failed to process error report', 'PROCESSING_ERROR', { status: 500 });
   }
 });
@@ -212,6 +213,9 @@ async function sendCriticalErrorAlert(errorReport: any) {
     */
 
   } catch (alertError) {
-    logger.error('Failed to send critical error alert', { error: alertError });
+    logger.error(
+      'Failed to send critical error alert',
+      alertError instanceof Error ? alertError : new Error(String(alertError))
+    );
   }
 }

@@ -463,7 +463,7 @@ export function RitualManagementPanel() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Trophy className="h-6 w-6 text-hive-gold" />
+            <Trophy className="h-6 w-6 text-[var(--hive-brand-primary)]" />
             <div>
               <h2 className="text-xl font-bold text-hive-text-primary">Ritual Management</h2>
               <p className="text-sm text-hive-text-secondary">
@@ -477,7 +477,7 @@ export function RitualManagementPanel() {
               setActiveTab('create');
               setShowCreateForm(true);
             }}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Ritual
@@ -525,7 +525,7 @@ export function RitualManagementPanel() {
                   setActiveTab('create');
                   setShowCreateForm(true);
                 }}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 Create Your First Ritual
               </Button>
@@ -613,7 +613,7 @@ export function RitualManagementPanel() {
               {RITUAL_TEMPLATES.map((template) => (
                 <Card
                   key={template.id}
-                  className="p-4 cursor-pointer hover:border-hive-gold transition-colors"
+                  className="p-4 cursor-pointer hover:border-[var(--hive-brand-primary)] transition-colors"
                   onClick={() => applyTemplate(template)}
                 >
                   <div className="flex items-start gap-3">
@@ -762,7 +762,7 @@ export function RitualManagementPanel() {
                           onClick={() => setNewRitual({ ...newRitual, icon })}
                           className={`p-2 rounded-lg border ${
                             newRitual.icon === icon
-                              ? 'border-hive-gold bg-hive-gold/20'
+                              ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/20'
                               : 'border-hive-border'
                           }`}
                         >
@@ -853,7 +853,7 @@ export function RitualManagementPanel() {
                   <Button
                     onClick={createRitual}
                     disabled={!newRitual.title || !newRitual.description}
-                    className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                    className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                   >
                     Create Ritual
                   </Button>
@@ -934,7 +934,7 @@ function RitualCard({
                   <span className="text-sm text-hive-text-secondary">
                     Progress: {ritual.mechanics.currentValue} / {ritual.mechanics.targetValue}
                   </span>
-                  <span className="text-sm font-medium text-hive-gold">
+                  <span className="text-sm font-medium text-[var(--hive-brand-primary)]">
                     {progress}%
                   </span>
                 </div>
@@ -1139,7 +1139,7 @@ function RitualDetailModal({
                         {participant.name}
                       </span>
                     </div>
-                    <span className="font-bold text-hive-gold">
+                    <span className="font-bold text-[var(--hive-brand-primary)]">
                       {participant.score} pts
                     </span>
                   </div>

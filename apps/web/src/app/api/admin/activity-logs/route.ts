@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         stats,
         filters });
     } catch (error) {
-      logger.error('Error fetching activity logs', { error: error, endpoint: '/api/admin/activity-logs' });
+      logger.error('Error fetching activity logs', { error: error instanceof Error ? error : new Error(String(error))});
       return NextResponse.json(
         { success: false, error: 'Failed to fetch activity logs' },
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -57,7 +57,7 @@ export async function DELETE(request: NextRequest) {
         success: true,
         deletedCount });
     } catch (error) {
-      logger.error('Error cleaning up activity logs', { error: error, endpoint: '/api/admin/activity-logs' });
+      logger.error('Error cleaning up activity logs', { error: error instanceof Error ? error : new Error(String(error))});
       return NextResponse.json(
         { success: false, error: 'Failed to cleanup activity logs' },
         { status: HttpStatus.INTERNAL_SERVER_ERROR }

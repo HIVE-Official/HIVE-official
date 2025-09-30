@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('SSE connection error', { error });
+    logger.error('SSE connection error', { error: error instanceof Error ? error : new Error(String(error)) });
     return new Response('Internal Server Error', { status: 500 });
   }
 }

@@ -286,7 +286,7 @@ export default function ProfileSettingsStorybook() {
       <PageContainer title="Loading..." maxWidth="2xl">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
+            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg animate-pulse mx-auto mb-4" />
             <p className="text-white">Loading your settings...</p>
           </div>
         </div>
@@ -314,7 +314,7 @@ export default function ProfileSettingsStorybook() {
               <Button
                 onClick={handleSaveSettings}
                 disabled={isUpdating}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {isUpdating ? "Saving..." : "Save Changes"}
@@ -363,7 +363,7 @@ export default function ProfileSettingsStorybook() {
             {/* Email Notifications */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Mail className="h-5 w-5 text-hive-gold" />
+                <Mail className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Email Notifications
               </h3>
 
@@ -438,7 +438,7 @@ export default function ProfileSettingsStorybook() {
             {/* Push Notifications */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Smartphone className="h-5 w-5 text-hive-gold" />
+                <Smartphone className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Push Notifications
               </h3>
 
@@ -490,7 +490,7 @@ export default function ProfileSettingsStorybook() {
             {/* Profile Visibility */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Eye className="h-5 w-5 text-hive-gold" />
+                <Eye className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Profile Visibility
               </h3>
 
@@ -606,7 +606,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="account" className="space-y-6">
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <SettingsIcon className="h-5 w-5 text-hive-gold" />
+                <SettingsIcon className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Account Preferences
               </h3>
 
@@ -662,7 +662,7 @@ export default function ProfileSettingsStorybook() {
             {/* 🏫 **UB STUDENT ACCOUNT INFO** */}
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Users className="h-5 w-5 text-hive-gold" />
+                <Users className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 UB Student Account
               </h3>
 
@@ -702,7 +702,7 @@ export default function ProfileSettingsStorybook() {
           <TabsContent value="security" className="space-y-6">
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Shield className="h-5 w-5 text-hive-gold" />
+                <Shield className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Account Security
               </h3>
 

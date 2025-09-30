@@ -1,8 +1,23 @@
 import { z } from "zod";
-import { CreateToolSchema, ToolSchema, createToolDefaults } from "@hive/core";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { logger } from "@/lib/structured-logger";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+
+// Define tool schemas locally (not in core package)
+const CreateToolSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  category: z.string().optional(),
+  type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
+  status: z.enum(['draft', 'preview', 'published']).default('draft'),
+  config: z.any().optional(),
+});
+
+const createToolDefaults = {
+  status: 'draft' as const,
+  type: 'visual' as const,
+  config: {},
+};
 
 // Rate limiting: 10 tool creations per hour per user
 // // const createToolLimiter = rateLimit({
@@ -119,7 +134,10 @@ export const POST = withAuthValidationAndErrors(
           templateConfig = templateData?.config || {};
         }
       } catch (error) {
-        logger.warn('Failed to load template', { data: error, endpoint: '/api/tools' });
+        logger.warn(
+      `Failed to load template at /api/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         // Continue without template
       }
     }
@@ -177,7 +195,10 @@ export const POST = withAuthValidationAndErrors(
           status: 'draft'
         });
       } catch (error) {
-        logger.warn('Failed to add tool to space collection', { data: error, endpoint: '/api/tools' });
+        logger.warn(
+      `Failed to add tool to space collection at /api/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         // Don't fail the whole operation
       }
     }
@@ -193,7 +214,10 @@ export const POST = withAuthValidationAndErrors(
         updatedAt: now
       });
     } catch (error) {
-      logger.warn('Failed to update user stats', { data: error, endpoint: '/api/tools' });
+      logger.warn(
+      `Failed to update user stats at /api/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     }
 
     // Track analytics event

@@ -128,7 +128,7 @@ export default function SpaceDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-hive-gold">Loading space...</p>
+        <p className="text-[var(--hive-brand-primary)]">Loading space...</p>
       </div>
     );
   }
@@ -160,7 +160,7 @@ export default function SpaceDetailPage() {
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <div className="max-w-7xl mx-auto flex items-end justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-hive-gold rounded-lg flex items-center justify-center">
+                <div className="w-16 h-16 bg-[var(--hive-brand-primary)] rounded-lg flex items-center justify-center">
                   <Hash className="w-8 h-8 text-black" />
                 </div>
                 <div>
@@ -221,7 +221,7 @@ export default function SpaceDetailPage() {
                   </>
                 ) : (
                   <HiveButton
-                    className="bg-hive-gold text-black hover:bg-yellow-400"
+                    className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                     onClick={handleJoinSpace}
                   >
                     Join Space
@@ -241,7 +241,7 @@ export default function SpaceDetailPage() {
               <TabsList className="bg-transparent border-0 h-auto p-0">
                 <TabsTrigger
                   value="main"
-                  className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-hive-gold rounded-none px-4 py-3"
+                  className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-[var(--hive-brand-primary)] rounded-none px-4 py-3"
                 >
                   <Hash className="w-4 h-4 mr-2" />
                   Main Board
@@ -250,7 +250,7 @@ export default function SpaceDetailPage() {
                   <TabsTrigger
                     key={thread.id}
                     value={thread.id}
-                    className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-hive-gold rounded-none px-4 py-3"
+                    className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-[var(--hive-brand-primary)] rounded-none px-4 py-3"
                   >
                     <MessageSquare className="w-4 h-4 mr-2" />
                     {thread.content ?

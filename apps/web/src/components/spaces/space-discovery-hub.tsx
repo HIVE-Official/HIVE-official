@@ -245,7 +245,7 @@ export function SpaceDiscoveryHub() {
                   variant={activityView === 'trending' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('trending')}
-                  className={activityView === 'trending' ? 'bg-hive-gold text-black' : ''}
+                  className={activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <TrendingUp className="w-4 h-4 mr-1" />
                   Trending
@@ -254,7 +254,7 @@ export function SpaceDiscoveryHub() {
                   variant={activityView === 'active' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('active')}
-                  className={activityView === 'active' ? 'bg-hive-gold text-black' : ''}
+                  className={activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Activity className="w-4 h-4 mr-1" />
                   Active Now
@@ -263,7 +263,7 @@ export function SpaceDiscoveryHub() {
                   variant={activityView === 'new' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('new')}
-                  className={activityView === 'new' ? 'bg-hive-gold text-black' : ''}
+                  className={activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Sparkles className="w-4 h-4 mr-1" />
                   New
@@ -317,7 +317,7 @@ export function SpaceDiscoveryHub() {
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
               <div className="text-6xl animate-pulse mb-4">🍯</div>
-              <span className="text-xl text-hive-gold">Loading spaces...</span>
+              <span className="text-xl text-[var(--hive-brand-primary)]">Loading spaces...</span>
             </div>
           </div>
         ) : (
@@ -329,7 +329,7 @@ export function SpaceDiscoveryHub() {
               return (
                 <HiveCard
                   key={space.id}
-                  className="bg-gray-900/50 border-gray-800 hover:border-hive-gold/50 transition-all cursor-pointer group"
+                  className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)]/50 transition-all cursor-pointer group"
                   onClick={() => handleSpaceClick(space.id)}
                 >
                   <div className="p-6">
@@ -340,7 +340,7 @@ export function SpaceDiscoveryHub() {
                           <span className="text-2xl">{(space as any).avatar || '🏛️'}</span>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-white group-hover:text-hive-gold transition-colors">
+                          <h3 className="font-semibold text-white group-hover:text-[var(--hive-brand-primary)] transition-colors">
                             {space.name}
                           </h3>
                           <div className={`text-xs ${activity.color} font-medium`}>
@@ -348,7 +348,7 @@ export function SpaceDiscoveryHub() {
                           </div>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-hive-gold transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-[var(--hive-brand-primary)] transition-colors" />
                     </div>
 
                     {/* Description */}

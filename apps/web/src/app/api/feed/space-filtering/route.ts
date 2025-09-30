@@ -124,7 +124,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error applying space-aware filtering', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error applying space-aware filtering at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to apply space filtering", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -158,7 +161,10 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Error getting space access info', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error getting space access info at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get space access info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -196,7 +202,10 @@ async function getUserSpaceContexts(userId: string): Promise<UserSpaceContext[]>
 
     return contexts;
   } catch (error) {
-    logger.error('Error getting user space contexts', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error getting user space contexts at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -231,7 +240,10 @@ async function getSpaceVisibilityRules(spaceIds: string[]): Promise<Map<string, 
 
     return rulesMap;
   } catch (error) {
-    logger.error('Error getting space visibility rules', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error getting space visibility rules at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return rulesMap;
   }
 }
@@ -382,7 +394,10 @@ async function getSpaceContent(
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error getting space content', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error getting space content at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -523,7 +538,10 @@ async function calculateUserEngagementInSpace(userId: string, spaceId: string): 
 
     return Math.min(100, engagement);
   } catch (error) {
-    logger.error('Error calculating engagement', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error calculating engagement at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 20;
   }
 }
@@ -596,7 +614,10 @@ async function getSpaceAccessInfo(userId: string, spaceId: string, includePrevie
       lastActivity: memberData.lastActivity
     };
   } catch (error) {
-    logger.error('Error getting space access info', { error: error, endpoint: '/api/feed/space-filtering' });
+    logger.error(
+      `Error getting space access info at /api/feed/space-filtering`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return { spaceId, accessible: false, reason: 'Error checking access' };
   }
 }

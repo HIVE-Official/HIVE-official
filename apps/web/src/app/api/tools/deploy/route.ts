@@ -61,7 +61,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { toolId, deployTo, targetId, surface, config, permissions, settings } = body;
 
-    logger.info('🚀 Deploying tool to :by user', { toolId, targetId, spaceName: user.uid, endpoint: '/api/tools/deploy'   });
+    logger.info(
+      `🚀 Deploying tool to :by user: toolId=${toolId}, targetId=${targetId} at /api/tools/deploy`
+    );
 
     // Validate required fields
     if (!toolId || !deployTo || !targetId) {
@@ -207,7 +209,10 @@ export async function POST(request: NextRequest) {
       message: 'Tool deployed successfully'
     }, { status: HttpStatus.CREATED });
   } catch (error) {
-    logger.error('Error deploying tool', { error: error, endpoint: '/api/tools/deploy' });
+    logger.error(
+      `Error deploying tool at /api/tools/deploy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to deploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -267,7 +272,10 @@ export async function GET(request: NextRequest) {
       count: accessibleDeployments.length
     });
   } catch (error) {
-    logger.error('Error fetching deployed tools', { error: error, endpoint: '/api/tools/deploy' });
+    logger.error(
+      `Error fetching deployed tools at /api/tools/deploy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployed tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -287,7 +295,10 @@ async function getNextPosition(deployedTo: string, targetId: string, surface?: s
     const positionSnapshot = await positionQuery.get();
     return positionSnapshot.size;
   } catch (error) {
-    logger.error('Error getting next position', { error: error, endpoint: '/api/tools/deploy' });
+    logger.error(
+      `Error getting next position at /api/tools/deploy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -317,7 +328,10 @@ async function canUserAccessDeployment(userId: string, deployment: any): Promise
 
     return false;
   } catch (error) {
-    logger.error('Error checking deployment access', { error: error, endpoint: '/api/tools/deploy' });
+    logger.error(
+      `Error checking deployment access at /api/tools/deploy`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }

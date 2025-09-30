@@ -21,13 +21,13 @@ const buttonVariants = cva(
         gradient: "bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-accent)] text-[var(--hive-background-primary)] hover:opacity-90 shadow-hive-level2",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        xl: "h-12 rounded-lg px-10 text-base", // New larger size
-        icon: "h-10 w-10",
-        "icon-sm": "h-8 w-8", // New smaller icon size
-        "icon-lg": "h-12 w-12", // New larger icon size
+        default: "h-11 px-4 py-2 min-h-[44px]", // Mobile-friendly: 44px minimum
+        sm: "h-11 rounded-md px-3 min-h-[44px]", // Mobile-friendly: 44px minimum
+        lg: "h-12 rounded-md px-8 min-h-[48px]",
+        xl: "h-14 rounded-lg px-10 text-base min-h-[56px]", // Larger size for emphasis
+        icon: "h-11 w-11 min-h-[44px] min-w-[44px]", // Mobile-friendly: 44px minimum
+        "icon-sm": "h-11 w-11 min-h-[44px] min-w-[44px]", // Mobile-friendly: 44px minimum
+        "icon-lg": "h-14 w-14 min-h-[56px] min-w-[56px]", // Larger icons
       },
     },
     defaultVariants: {

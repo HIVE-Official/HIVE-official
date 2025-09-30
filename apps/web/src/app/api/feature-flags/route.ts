@@ -67,7 +67,10 @@ export async function GET(request: NextRequest) {
       evaluatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error getting user feature flags', { error, endpoint: '/api/feature-flags' });
+    logger.error(
+      `Error getting user feature flags at /api/feature-flags`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get feature flags', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -118,7 +121,10 @@ export async function POST(request: NextRequest) {
       evaluatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error checking feature flags', { error, endpoint: '/api/feature-flags' });
+    logger.error(
+      `Error checking feature flags at /api/feature-flags`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       ApiResponseHelper.error('Failed to check feature flags', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -164,7 +170,7 @@ async function buildUserContext(userId: string): Promise<UserFeatureContext> {
       }
     };
   } catch (error) {
-    logger.error('Error building user context', { error, userId });
+    logger.error('Error building user context', { error: error instanceof Error ? error : new Error(String(error)), userId });
     
     // Return minimal context on error
     return {
@@ -250,7 +256,10 @@ export async function OPTIONS(request: NextRequest) {
       ]
     });
   } catch (error) {
-    logger.error('Error getting feature flag metadata', { error, endpoint: '/api/feature-flags' });
+    logger.error(
+      `Error getting feature flag metadata at /api/feature-flags`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get metadata', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

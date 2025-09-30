@@ -111,10 +111,10 @@ export async function GET(request: NextRequest) {
           }
         }
       } catch (spaceError) {
-        logger.error('Error processing space for auto-promotion', {
-          spaceId,
-          error: spaceError
-        });
+        logger.error(
+          `Error processing space for auto-promotion: ${spaceId}`,
+          spaceError instanceof Error ? spaceError : new Error(String(spaceError))
+        );
         errors.push({
           spaceId,
           error: String(spaceError)
@@ -125,13 +125,9 @@ export async function GET(request: NextRequest) {
     const duration = Date.now() - startTime;
 
     // Log summary
-    logger.info('Auto-promotion cron job completed', {
-      duration,
-      spacesChecked: spacesSnapshot.size,
-      postsChecked: checkedCount,
-      postsPromoted: promotedCount,
-      errorCount: errors.length
-    });
+    logger.info(
+      `Auto-promotion cron job completed: ${promotedCount}/${checkedCount} posts promoted from ${spacesSnapshot.size} spaces, ${errors.length} errors, ${duration}ms`
+    );
 
     return NextResponse.json({
       success: true,
@@ -146,7 +142,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Critical error in auto-promotion cron job', { error });
+    logger.error('Critical error in auto-promotion cron job', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       {
         success: false,
@@ -297,11 +293,10 @@ async function promotePostToFeed(
     return { success: true, feedPostId: feedRef.id };
 
   } catch (error) {
-    logger.error('Failed to promote post to feed', {
-      spaceId,
-      postId,
-      error
-    });
+    logger.error(
+      `Failed to promote post to feed: ${spaceId}/${postId}`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return { success: false, error: String(error) };
   }
 }

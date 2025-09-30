@@ -74,7 +74,7 @@ export default function UserProfilePage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold mx-auto mb-4" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4" />
           <p className="text-white/70">Loading @{handle}...</p>
         </div>
       </div>
@@ -112,7 +112,7 @@ export default function UserProfilePage() {
             <h1 className="text-4xl font-bold text-white mb-2">
               @{handle}
             </h1>
-            <p className="text-hive-gold text-lg">
+            <p className="text-[var(--hive-brand-primary)] text-lg">
               {unifiedProfile?.identity?.fullName || handle}
             </p>
           </div>
@@ -128,7 +128,7 @@ export default function UserProfilePage() {
           <div className="mt-8 flex justify-center gap-4">
             <Button
               variant="default"
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               Follow
             </Button>

@@ -75,7 +75,10 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error: any) {
-    logger.error('Feed updates API error', { error: error, endpoint: '/api/feed/updates' });
+    logger.error(
+      `Feed updates API error at /api/feed/updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -153,7 +156,10 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error: any) {
-    logger.error('Feed updates POST API error', { error: error, endpoint: '/api/feed/updates' });
+    logger.error(
+      `Feed updates POST API error at /api/feed/updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -198,7 +198,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error sending chat message', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error sending chat message at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to send message", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -278,7 +281,10 @@ export async function GET(request: NextRequest) {
       lastMessageId: messages.length > 0 ? messages[messages.length - 1].id : null
     });
   } catch (error) {
-    logger.error('Error getting chat messages', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error getting chat messages at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get messages", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -403,7 +409,10 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating chat message', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error updating chat message at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update message", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -454,7 +463,10 @@ export async function DELETE(request: NextRequest) {
       deletedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error deleting chat message', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error deleting chat message at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to delete message", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -486,7 +498,10 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
 
     return true;
   } catch (error) {
-    logger.error('Error verifying channel access', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error verifying channel access at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -500,7 +515,10 @@ async function getChannel(channelId: string): Promise<ChatChannel | null> {
     }
     return { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
   } catch (error) {
-    logger.error('Error getting channel', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error getting channel at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -520,7 +538,10 @@ async function getUserSpaceContext(userId: string, spaceId: string): Promise<any
 
     return memberSnapshot.docs[0].data();
   } catch (error) {
-    logger.error('Error getting user space context', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error getting user space context at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -553,7 +574,10 @@ async function updateChannelLastMessage(channelId: string, message: ChatMessage)
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating channel last message', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error updating channel last message at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -587,7 +611,10 @@ async function broadcastMessageToChannel(message: ChatMessage, channel: ChatChan
 
     await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
-    logger.error('Error broadcasting message', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error broadcasting message at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -626,7 +653,10 @@ async function handleMessageMentions(message: ChatMessage, mentions: string[]): 
       await dbAdmin.collection('realtimeMessages').add(notification);
     }
   } catch (error) {
-    logger.error('Error handling mentions', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error handling mentions at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -656,7 +686,10 @@ async function hasModeratorPermissions(userId: string, spaceId: string): Promise
     const userContext = await getUserSpaceContext(userId, spaceId);
     return userContext && ['admin', 'moderator'].includes(userContext.role);
   } catch (error) {
-    logger.error('Error checking moderator permissions', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error checking moderator permissions at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -673,7 +706,10 @@ async function markMessagesAsRead(userId: string, channelId: string, messageIds:
 
     await Promise.all(updatePromises);
   } catch (error) {
-    logger.error('Error marking messages as read', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error marking messages as read at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -692,7 +728,10 @@ async function getThreadMessages(parentMessageId: string): Promise<ChatMessage[]
       ...doc.data()
     })) as ChatMessage[];
   } catch (error) {
-    logger.error('Error getting thread messages', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error getting thread messages at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -727,7 +766,10 @@ async function broadcastMessageUpdate(messageId: string, action: string, updates
 
     await dbAdmin.collection('realtimeMessages').add(updateMessage);
   } catch (error) {
-    logger.error('Error broadcasting message update', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error broadcasting message update at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -759,7 +801,10 @@ async function broadcastMessageDeletion(messageId: string, channelId: string): P
 
     await dbAdmin.collection('realtimeMessages').add(deletionMessage);
   } catch (error) {
-    logger.error('Error broadcasting message deletion', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error broadcasting message deletion at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -791,6 +836,9 @@ async function updateChatAnalytics(spaceId: string, messageType: string): Promis
       });
     }
   } catch (error) {
-    logger.error('Error updating chat analytics', { error: error, endpoint: '/api/realtime/chat' });
+    logger.error(
+      `Error updating chat analytics at /api/realtime/chat`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

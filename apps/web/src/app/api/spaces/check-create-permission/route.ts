@@ -7,8 +7,8 @@ import { logger } from "@/lib/logger";
  * Implements multiple locks and restrictions
  */
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = request.auth!.uid;
-  const userEmail = request.auth!.email || '';
+  const userId = request.user.uid;
+  const userEmail = request.user.email || '';
 
   try {
     // Get user document
@@ -24,7 +24,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     const accountAge = Math.floor((Date.now() - accountCreated.getTime()) / (1000 * 60 * 60 * 24));
 
     // Check email verification
-    const emailVerified = request.auth!.email_verified || false;
+    const emailVerified = request.user.decodedToken.email_verified || false;
 
     // Count spaces created today
     const todayStart = new Date();
@@ -102,7 +102,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     });
 
   } catch (error) {
-    logger.error('Error checking space creation permission', { error, userId });
+    logger.error('Error checking space creation permission', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return respond.error("Failed to check permissions", "INTERNAL_ERROR", { status: 500 });
   }
 });

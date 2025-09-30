@@ -179,7 +179,10 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error reviewing tool', { error: error, endpoint: '/api/tools/review' });
+    logger.error(
+      `Error reviewing tool at /api/tools/review`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
@@ -259,7 +262,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error fetching review requests', { error: error, endpoint: '/api/tools/review' });
+    logger.error(
+      `Error fetching review requests at /api/tools/review`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch review requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

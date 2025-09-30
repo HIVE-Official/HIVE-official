@@ -92,7 +92,7 @@ export function SpaceContextPanel({
           {/* Space Stats */}
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-gray-800/50 rounded-lg">
-              <div className="text-2xl font-bold text-hive-gold">{space.memberCount || 0}</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">{space.memberCount || 0}</div>
               <div className="text-xs text-gray-400">Members</div>
             </div>
             <div className="text-center p-3 bg-gray-800/50 rounded-lg">
@@ -103,7 +103,7 @@ export function SpaceContextPanel({
 
           {/* Space Type Info */}
           <div className="flex items-center gap-2 text-sm">
-            <Badge variant="outline" className="border-hive-gold/30 text-hive-gold">
+            <Badge variant="outline" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
               {space.type?.replace('_', ' ') || 'Community'}
             </Badge>
             {space.status === 'activated' && (
@@ -117,7 +117,7 @@ export function SpaceContextPanel({
           {/* Join/Leave Button */}
           {!userPermissions.isMember ? (
             <HiveButton
-              className="w-full bg-hive-gold text-black hover:bg-yellow-400"
+              className="w-full bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               onClick={() => onToolInteraction('space-membership', 'join')}
             >
               Join Space
@@ -125,7 +125,7 @@ export function SpaceContextPanel({
           ) : userPermissions.isAdmin ? (
             <HiveButton
               variant="outline"
-              className="w-full border-hive-gold/30 text-hive-gold"
+              className="w-full border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
               onClick={() => onToolInteraction('space-management', 'open')}
             >
               <Settings className="w-4 h-4 mr-2" />
@@ -150,7 +150,7 @@ export function SpaceContextPanel({
               <div key={index} className="flex items-center gap-3">
                 <Avatar className="w-8 h-8">
                   <AvatarImage src={(member as any).avatarUrl} />
-                  <AvatarFallback className="bg-hive-gold text-black text-xs">
+                  <AvatarFallback className="bg-[var(--hive-brand-primary)] text-black text-xs">
                     {(member as any).name?.[0] || '?'}
                   </AvatarFallback>
                 </Avatar>
@@ -258,7 +258,7 @@ export function SpaceContextPanel({
               size="sm"
               onClick={() => onToolInteraction('view-calendar', 'open')}
             >
-              <span className="text-xs text-hive-gold">View All</span>
+              <span className="text-xs text-[var(--hive-brand-primary)]">View All</span>
             </HiveButton>
           </div>
           <div className="space-y-3">
@@ -298,7 +298,7 @@ export function SpaceContextPanel({
         <div className="space-y-2">
           {recentActivity.map((activity, index) => (
             <div key={index} className="flex items-center gap-3 text-sm">
-              <div className="w-2 h-2 bg-hive-gold rounded-full flex-shrink-0" />
+              <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <span className="text-white font-medium">{activity.user}</span>
                 <span className="text-gray-400 ml-1">
@@ -319,12 +319,12 @@ export function SpaceContextPanel({
       {((space.type as string) === 'greek_life_spaces' || (space.type as string) === 'residential_spaces') && (
         <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
           <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-            <Star className="w-4 h-4 text-hive-gold" />
+            <Star className="w-4 h-4 text-[var(--hive-brand-primary)]" />
             {(space.type as string) === 'greek_life_spaces' ? 'Chapter Guidelines' : 'Community Guidelines'}
           </h4>
           <div className="space-y-2 text-sm text-gray-300">
             <div className="p-2 bg-gray-800/30 rounded">
-              <div className="text-hive-gold font-medium mb-1">
+              <div className="text-[var(--hive-brand-primary)] font-medium mb-1">
                 {(space.type as string) === 'greek_life_spaces' ? 'Brotherhood/Sisterhood Values' : 'Respectful Living'}
               </div>
               <div className="text-xs text-gray-400">

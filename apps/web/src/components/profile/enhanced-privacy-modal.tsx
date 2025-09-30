@@ -339,7 +339,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           className={cn(
                             'w-full p-4 rounded-lg border text-left transition-colors',
                             isSelected
-                              ? 'bg-[var(--hive-brand-secondary)]/20 border-hive-gold/30'
+                              ? 'bg-[var(--hive-brand-secondary)]/20 border-[var(--hive-brand-primary)]/30'
                               : 'bg-gray-800/30 border-gray-700 hover:border-gray-600'
                           )}
                         >
@@ -456,7 +456,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               className={cn(
                                 'flex items-center gap-2 p-3 rounded-lg border text-left transition-colors',
                                 isSelected
-                                  ? 'bg-[var(--hive-brand-secondary)]/20 border-hive-gold/30 text-[var(--hive-brand-secondary)]'
+                                  ? 'bg-[var(--hive-brand-secondary)]/20 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-secondary)]'
                                   : 'bg-gray-800/30 border-gray-700 hover:border-gray-600 text-gray-300'
                               )}
                             >

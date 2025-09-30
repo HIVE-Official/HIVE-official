@@ -237,21 +237,21 @@ export default function ConnectionsPage() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gray-900 border border-white/8 rounded-lg p-4">
-            <div className="text-2xl font-bold text-[#FFD700]">{connections.length}</div>
+            <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">{connections.length}</div>
             <div className="text-sm text-gray-400">Total Connections</div>
           </div>
           <div className="bg-gray-900 border border-white/8 rounded-lg p-4">
-            <div className="text-2xl font-bold text-[#FFD700]">
+            <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">
               {connections.filter(c => c.isFriend).length}
             </div>
             <div className="text-sm text-gray-400">Friends</div>
           </div>
           <div className="bg-gray-900 border border-white/8 rounded-lg p-4">
-            <div className="text-2xl font-bold text-[#FFD700]">{friendRequests.length}</div>
+            <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">{friendRequests.length}</div>
             <div className="text-sm text-gray-400">Pending Requests</div>
           </div>
           <div className="bg-gray-900 border border-white/8 rounded-lg p-4">
-            <div className="text-2xl font-bold text-[#FFD700]">
+            <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">
               {Math.round(connections.reduce((acc, c) => acc + c.connectionStrength, 0) / connections.length) || 0}%
             </div>
             <div className="text-sm text-gray-400">Avg Connection Strength</div>
@@ -273,7 +273,7 @@ export default function ConnectionsPage() {
               <TabsTrigger value="friends">Friends</TabsTrigger>
               <TabsTrigger value="requests">
                 Friend Requests {friendRequests.length > 0 && (
-                  <Badge className="ml-2 bg-[#FFD700] text-black">{friendRequests.length}</Badge>
+                  <Badge className="ml-2 bg-[var(--hive-brand-primary)] text-black">{friendRequests.length}</Badge>
                 )}
               </TabsTrigger>
             </TabsList>
@@ -311,7 +311,7 @@ export default function ConnectionsPage() {
                         <Button
                           size="sm"
                           onClick={() => acceptFriendRequest(request.id, request.fromUserId)}
-                          className="bg-[#FFD700] text-black hover:bg-[#FFD700]/90"
+                          className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
                         >
                           Accept
                         </Button>
@@ -403,7 +403,7 @@ function ConnectionCard({
           </div>
         </div>
         {connection.isFriend && (
-          <Badge className="bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/50">
+          <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/50">
             Friend
           </Badge>
         )}
@@ -443,7 +443,7 @@ function ConnectionCard({
           <Button
             size="sm"
             onClick={() => onSendFriendRequest(connection.uid)}
-            className="flex-1 bg-[#FFD700] text-black hover:bg-[#FFD700]/90"
+            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
           >
             Add Friend
           </Button>

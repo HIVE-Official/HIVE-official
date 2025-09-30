@@ -109,10 +109,10 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     return respond.success({ events });
   } catch (error) {
-    logger.error('Failed to fetch calendar events', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      userId,
-    });
+    logger.error(
+      `Failed to fetch calendar events for user ${userId}`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return respond.error(
       'Failed to fetch calendar events',
       'INTERNAL_ERROR',
@@ -141,7 +141,7 @@ export const POST = withAuthValidationAndErrors(
           createdBy: userId,
         };
 
-        logger.info('Development mode event created', { event: mockEvent });
+        logger.info(`Development mode event created: ${mockEvent.id}`);
         return respond.success({ event: mockEvent });
       }
 
@@ -179,10 +179,10 @@ export const POST = withAuthValidationAndErrors(
         },
       });
     } catch (error) {
-      logger.error('Failed to create calendar event', {
-        error: error instanceof Error ? error.message : 'Unknown error',
-        userId,
-      });
+      logger.error(
+        `Failed to create calendar event for user ${userId}`,
+        error instanceof Error ? error : new Error(String(error))
+      );
       return respond.error(
         'Failed to create calendar event',
         'INTERNAL_ERROR',

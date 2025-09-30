@@ -77,7 +77,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error checking visibility', { error: error, endpoint: '/api/privacy/visibility' });
+    logger.error(
+      `Error checking visibility at /api/privacy/visibility`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to check visibility", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -153,7 +156,7 @@ export async function GET(request: NextRequest) {
             }
           };
         } catch (error) {
-          logger.error('Error checking visibility for user', { targetUserId, error: error, endpoint: '/api/privacy/visibility' });
+          logger.error('Error checking visibility for user', { targetUserId, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/privacy/visibility' });
           return {
             userId: targetUserId,
             visibility: {
@@ -173,7 +176,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ visibilityChecks });
   } catch (error) {
-    logger.error('Error performing batch visibility check', { error: error, endpoint: '/api/privacy/visibility' });
+    logger.error(
+      `Error performing batch visibility check at /api/privacy/visibility`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to perform batch visibility check", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -215,7 +221,10 @@ async function getSharedSpaces(viewerId: string, targetId: string): Promise<stri
 
     return [...viewerSpaces].filter(spaceId => targetSpaces.has(spaceId));
   } catch (error) {
-    logger.error('Error getting shared spaces', { error: error, endpoint: '/api/privacy/visibility' });
+    logger.error(
+      `Error getting shared spaces at /api/privacy/visibility`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }

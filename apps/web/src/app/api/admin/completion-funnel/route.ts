@@ -35,7 +35,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching completion funnel', { error, userId: auth.userId });
+    logger.error('Error fetching completion funnel', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -146,7 +146,7 @@ async function getCompletionFunnelData(since: Date) {
     return funnel;
 
   } catch (error) {
-    logger.error('Error calculating completion funnel', { error });
+    logger.error('Error calculating completion funnel', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockCompletionFunnel();
   }
 }
@@ -162,7 +162,7 @@ function getTopDropOffReasons(dropOffEvents: any[]): string[] {
   }, {} as Record<string, number>);
 
   return Object.entries(reasonCounts)
-    .sort(([, a], [, b]) => b - a)
+    .sort(([, a], [, b]) => (b as number) - (a as number))
     .map(([reason]) => reason);
 }
 

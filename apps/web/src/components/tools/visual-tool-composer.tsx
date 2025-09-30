@@ -248,7 +248,7 @@ export function VisualToolComposer({
       <div className="flex items-center justify-between p-4 border-b border-hive-border-default bg-hive-background-overlay">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Box className="h-6 w-6 text-hive-gold" />
+            <Box className="h-6 w-6 text-[var(--hive-brand-primary)]" />
             <h1 className="text-xl font-bold text-white">Tool Composer</h1>
           </div>
           <div className="flex items-center space-x-2">
@@ -268,7 +268,7 @@ export function VisualToolComposer({
           <Button
             variant="secondary"
             onClick={() => setShowGrid(!showGrid)}
-            className={showGrid ? 'bg-hive-gold/20 border-hive-gold' : ''}
+            className={showGrid ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
           >
             <Grid className="h-4 w-4" />
           </Button>
@@ -303,7 +303,7 @@ export function VisualToolComposer({
           <Button
             onClick={handleSave}
             disabled={!toolName.trim() || canvasElements.length === 0}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <Save className="h-4 w-4 mr-2" />
             Save Tool
@@ -516,7 +516,7 @@ export function VisualToolComposer({
                   key={element.id}
                   className={`absolute bg-hive-background-overlay border-2 rounded-lg p-3 cursor-move ${
                     element.isSelected 
-                      ? 'border-hive-gold shadow-lg shadow-hive-gold/20' 
+                      ? 'border-[var(--hive-brand-primary)] shadow-lg shadow-hive-gold/20' 
                       : 'border-hive-border-default hover:border-hive-border-hover'
                   }`}
                   style={{
@@ -531,7 +531,7 @@ export function VisualToolComposer({
                   }}
                 >
                   <div className="flex items-center space-x-2 mb-2">
-                    <div className="w-4 h-4 bg-hive-gold rounded flex items-center justify-center">
+                    <div className="w-4 h-4 bg-[var(--hive-brand-primary)] rounded flex items-center justify-center">
                       <span className="text-xs">📦</span>
                     </div>
                     <span className="text-sm font-medium text-white truncate">
@@ -624,7 +624,7 @@ export function VisualToolComposer({
         </div>
         <div className="flex items-center space-x-4">
           {isConnecting && (
-            <div className="flex items-center space-x-2 text-hive-gold">
+            <div className="flex items-center space-x-2 text-[var(--hive-brand-primary)]">
               <Link className="h-3 w-3" />
               <span>Click target element to connect</span>
             </div>

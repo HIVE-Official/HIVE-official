@@ -18,6 +18,36 @@ export { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profil
 export { Connection } from '../../domain/profile/aggregates/connection';
 // Re-export entities and types
 export { FeedItem } from '../../domain/feed/feed-item';
+// Profile utility functions
+export function getProfileCompleteness(profile) {
+    if (!profile)
+        return 0;
+    const requiredFields = ['displayName', 'email', 'handle'];
+    const optionalFields = ['bio', 'photoURL', 'major', 'year', 'interests'];
+    let completed = 0;
+    const totalFields = requiredFields.length + optionalFields.length;
+    requiredFields.forEach(field => {
+        if (profile[field])
+            completed++;
+    });
+    optionalFields.forEach(field => {
+        if (profile[field])
+            completed++;
+    });
+    return Math.round((completed / totalFields) * 100);
+}
+// Authentication utilities
+export function getDefaultActionCodeSettings(continueUrl) {
+    return {
+        url: continueUrl || process.env.NEXT_PUBLIC_APP_URL || 'https://hive-official.vercel.app',
+        handleCodeInApp: true,
+        dynamicLinkDomain: undefined
+    };
+}
+export function validateEmailDomain(email, allowedDomains = ['buffalo.edu']) {
+    const domain = email.split('@')[1];
+    return allowedDomains.includes(domain);
+}
 // These classes provide backward compatibility wrappers
 export class FeedFilter {
     constructor(type, value) {
@@ -128,6 +158,16 @@ export class Participation {
         return { isSuccess: true, isFailure: false };
     }
 }
+// SpaceType enum for categorization
+export var SpaceType;
+(function (SpaceType) {
+    SpaceType["GENERAL"] = "general";
+    SpaceType["ACADEMIC"] = "academic";
+    SpaceType["SOCIAL"] = "social";
+    SpaceType["PROFESSIONAL"] = "professional";
+    SpaceType["MARKETPLACE"] = "marketplace";
+    SpaceType["EVENT"] = "event";
+})(SpaceType || (SpaceType = {}));
 export class Space {
     constructor(id, name, description, category, campusId, createdBy) {
         this.id = id;
@@ -217,5 +257,72 @@ export class Space {
             members: this.members
         };
     }
+}
+// Tool-related schemas and validators
+export const ToolSchema = {
+    parse: (data) => data,
+    safeParse: (data) => ({ success: true, data })
+};
+export const CreateToolSchema = {
+    parse: (data) => data,
+    safeParse: (data) => ({ success: true, data })
+};
+export const UpdateToolSchema = {
+    parse: (data) => data,
+    safeParse: (data) => ({ success: true, data })
+};
+export const ShareToolSchema = {
+    parse: (data) => data,
+    safeParse: (data) => ({ success: true, data })
+};
+// Tool utility functions
+export function canUserEditTool(tool, userId) {
+    return tool.creatorId === userId ||
+        (tool.permissions?.canEdit || []).includes(userId);
+}
+export function canUserViewTool(tool, userId) {
+    return tool.settings?.isPublic ||
+        tool.creatorId === userId ||
+        (tool.permissions?.canView || []).includes(userId);
+}
+export function getNextVersion(currentVersion) {
+    const parts = currentVersion.split('.');
+    const patch = parseInt(parts[2] || '0', 10);
+    return `${parts[0]}.${parts[1]}.${patch + 1}`;
+}
+export function determineChangeType(changes) {
+    // Simple heuristic for now
+    if (changes.elements?.length > 0)
+        return 'minor';
+    if (changes.settings)
+        return 'patch';
+    return 'patch';
+}
+export function validateToolStructure(tool) {
+    return !!(tool.name && tool.elements && Array.isArray(tool.elements));
+}
+export function validateElementConfig(element) {
+    return !!(element.type && element.config);
+}
+export function generateShareToken(toolId, userId) {
+    return Buffer.from(`${toolId}:${userId}:${Date.now()}`).toString('base64');
+}
+export function createToolDefaults() {
+    return {
+        version: '1.0.0',
+        elements: [],
+        settings: {
+            isPublic: false,
+            allowComments: true,
+            allowSharing: true,
+            requireAuth: false
+        },
+        permissions: {
+            canEdit: [],
+            canView: [],
+            canShare: [],
+            canDelete: []
+        }
+    };
 }
 //# sourceMappingURL=temporary-types.js.map

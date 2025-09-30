@@ -181,27 +181,27 @@ export function CardCustomizationModal({
                       className={`
                         p-3 rounded-lg text-left transition-all duration-200
                         ${config.size === size 
-                          ? 'bg-hive-gold/10 border-2 border-hive-gold' 
+                          ? 'bg-[var(--hive-brand-primary)]/10 border-2 border-[var(--hive-brand-primary)]' 
                           : 'bg-hive-background-tertiary border-2 border-transparent hover:border-hive-border-hover'
                         }
                       `}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium text-white">{getSizeLabel(size)}</span>
-                        {config.size === size && <Check className="h-4 w-4 text-hive-gold" />}
+                        {config.size === size && <Check className="h-4 w-4 text-[var(--hive-brand-primary)]" />}
                       </div>
                       <div className="grid grid-cols-2 gap-1 w-8 h-8">
-                        <div className={`bg-hive-gold/50 rounded-sm ${size.startsWith('2') ? 'col-span-2' : ''}`} />
+                        <div className={`bg-[var(--hive-brand-primary)]/50 rounded-sm ${size.startsWith('2') ? 'col-span-2' : ''}`} />
                         {size === '1x1' && <div className="bg-gray-600 rounded-sm" />}
                         {size === '1x2' && (
                           <>
                             <div className="bg-gray-600 rounded-sm" />
-                            <div className="bg-hive-gold/50 rounded-sm" />
+                            <div className="bg-[var(--hive-brand-primary)]/50 rounded-sm" />
                             <div className="bg-gray-600 rounded-sm" />
                           </>
                         )}
                         {size === '2x2' && (
-                          <div className="bg-hive-gold/50 rounded-sm col-span-2" />
+                          <div className="bg-[var(--hive-brand-primary)]/50 rounded-sm col-span-2" />
                         )}
                       </div>
                     </button>
@@ -362,7 +362,7 @@ export function CardCustomizationModal({
           </Tabs>
 
           {/* Preview */}
-          <Card className="p-4 bg-gradient-to-br from-hive-gold/5 to-hive-champagne/5 border-hive-gold/20">
+          <Card className="p-4 bg-gradient-to-br from-hive-gold/5 to-hive-champagne/5 border-[var(--hive-brand-primary)]/20">
             <h3 className="font-medium text-white mb-3 flex items-center space-x-2">
               <Eye className="h-4 w-4" />
               <span>Preview</span>
@@ -425,7 +425,7 @@ export function CardCustomizationModal({
               </Button>
               <Button
                 onClick={handleSave}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 <Check className="h-4 w-4 mr-2" />
                 Apply Changes

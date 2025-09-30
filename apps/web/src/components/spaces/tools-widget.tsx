@@ -116,7 +116,7 @@ export function ToolsWidget({
       <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-semibold text-white flex items-center gap-2">
-            <Zap className="w-4 h-4 text-hive-gold" />
+            <Zap className="w-4 h-4 text-[var(--hive-brand-primary)]" />
             Quick Tools
           </h4>
         </div>
@@ -443,7 +443,7 @@ function EventCreationModal({
           <HiveButton
             type="submit"
             disabled={loading || !formData.title || !formData.startDate || !formData.startTime}
-            className="flex-1 bg-hive-gold text-black hover:bg-yellow-400"
+            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Event'}
           </HiveButton>
@@ -647,7 +647,7 @@ function PollCreationModal({
           <HiveButton
             type="submit"
             disabled={loading || !isValid}
-            className="flex-1 bg-hive-gold text-black hover:bg-yellow-400"
+            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Poll'}
           </HiveButton>
@@ -827,7 +827,7 @@ function TaskCreationModal({
           <HiveButton
             type="submit"
             disabled={loading || !formData.title}
-            className="flex-1 bg-hive-gold text-black hover:bg-yellow-400"
+            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Task'}
           </HiveButton>
@@ -935,7 +935,7 @@ function ResourceCreationModal({
               <input
                 type="file"
                 onChange={handleFileSelect}
-                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-hive-gold file:text-black hover:file:bg-yellow-400"
+                className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[var(--hive-brand-primary)] file:text-black hover:file:bg-yellow-400"
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png,.gif,.mp4,.mp3"
                 required
               />
@@ -1011,7 +1011,7 @@ function ResourceCreationModal({
             <HiveButton
               type="submit"
               disabled={loading || !isValid}
-              className="flex-1 bg-hive-gold text-black hover:bg-yellow-400"
+              className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               {loading ? 'Adding...' : `Add ${mode === 'upload' ? 'File' : 'Link'}`}
             </HiveButton>

@@ -224,7 +224,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
             <button
               onClick={() => setViewMode('calendar')}
               className={`p-2 rounded-md transition-colors ${
-                viewMode === 'calendar' ? 'bg-hive-gold text-black' : 'text-gray-400 hover:text-white'
+                viewMode === 'calendar' ? 'bg-[var(--hive-brand-primary)] text-black' : 'text-gray-400 hover:text-white'
               }`}
             >
               <Grid3X3 className="w-4 h-4" />
@@ -232,7 +232,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
             <button
               onClick={() => setViewMode('list')}
               className={`p-2 rounded-md transition-colors ${
-                viewMode === 'list' ? 'bg-hive-gold text-black' : 'text-gray-400 hover:text-white'
+                viewMode === 'list' ? 'bg-[var(--hive-brand-primary)] text-black' : 'text-gray-400 hover:text-white'
               }`}
             >
               <List className="w-4 h-4" />
@@ -254,7 +254,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
           {canCreateEvents && (
             <HiveButton
               onClick={() => setShowCreateModal(true)}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Event
@@ -314,11 +314,11 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
                 <div
                   key={day.toISOString()}
                   className={`min-h-24 p-2 border border-gray-800 rounded-lg ${
-                    isCurrentDay ? 'bg-hive-gold/10 border-hive-gold/30' : 'bg-gray-900/50'
+                    isCurrentDay ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30' : 'bg-gray-900/50'
                   }`}
                 >
                   <div className={`text-sm font-medium mb-1 ${
-                    isCurrentDay ? 'text-hive-gold' : 'text-white'
+                    isCurrentDay ? 'text-[var(--hive-brand-primary)]' : 'text-white'
                   }`}>
                     {format(day, 'd')}
                   </div>
@@ -363,7 +363,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
               {canCreateEvents && filter === 'all' && (
                 <HiveButton
                   onClick={() => setShowCreateModal(true)}
-                  className="bg-hive-gold text-black hover:bg-yellow-400"
+                  className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create First Event
@@ -427,11 +427,11 @@ function EventCard({
   const isUpcoming = new Date(event.startTime) > new Date();
 
   return (
-    <HiveCard className="p-4 hover:border-hive-gold/50 transition-colors">
+    <HiveCard className="p-4 hover:border-[var(--hive-brand-primary)]/50 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-1">
-            <h4 className="font-semibold text-white cursor-pointer hover:text-hive-gold" onClick={onView}>
+            <h4 className="font-semibold text-white cursor-pointer hover:text-[var(--hive-brand-primary)]" onClick={onView}>
               {event.title}
             </h4>
             {isPast && <Badge variant="secondary" className="text-xs">Past</Badge>}
@@ -713,7 +713,7 @@ function CreateEventModal({
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Describe your event"
             rows={3}
-            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-hive-gold focus:outline-none resize-none"
+            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
           />
         </div>
 
@@ -724,7 +724,7 @@ function CreateEventModal({
               type="datetime-local"
               value={formData.startTime}
               onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
           </div>
@@ -735,7 +735,7 @@ function CreateEventModal({
               type="datetime-local"
               value={formData.endTime}
               onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
           </div>
@@ -754,7 +754,7 @@ function CreateEventModal({
           <HiveButton type="button" variant="secondary" onClick={onClose}>
             Cancel
           </HiveButton>
-          <HiveButton type="submit" className="bg-hive-gold text-black hover:bg-yellow-400">
+          <HiveButton type="submit" className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400">
             Create Event
           </HiveButton>
         </div>

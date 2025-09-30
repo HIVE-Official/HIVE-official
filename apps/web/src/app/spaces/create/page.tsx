@@ -300,7 +300,7 @@ export default function CreateSpacePage() {
                   key={step}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                     currentStep >= step
-                      ? 'bg-hive-gold text-black'
+                      ? 'bg-[var(--hive-brand-primary)] text-black'
                       : 'bg-gray-800 text-gray-500'
                   }`}
                 >
@@ -326,7 +326,7 @@ export default function CreateSpacePage() {
                   className={`p-4 cursor-pointer transition-all ${
                     cat.locked
                       ? 'border-red-500/30 bg-red-500/5 opacity-75'
-                      : 'border-gray-800 hover:border-hive-gold bg-gray-900/50'
+                      : 'border-gray-800 hover:border-[var(--hive-brand-primary)] bg-gray-900/50'
                   }`}
                   onClick={() => handleCategorySelect(key)}
                 >
@@ -449,7 +449,7 @@ export default function CreateSpacePage() {
                       type="radio"
                       {...register('joinPolicy')}
                       value={policy.value}
-                      className="text-hive-gold"
+                      className="text-[var(--hive-brand-primary)]"
                     />
                     <div>
                       <div className="font-semibold text-white">{policy.label}</div>
@@ -476,7 +476,7 @@ export default function CreateSpacePage() {
                     <input
                       type="checkbox"
                       {...register('agreedToGuidelines')}
-                      className="text-hive-gold"
+                      className="text-[var(--hive-brand-primary)]"
                     />
                     <span className="text-sm text-white">
                       I agree to enforce these guidelines
@@ -504,7 +504,7 @@ export default function CreateSpacePage() {
               <HiveButton
                 type="submit"
                 disabled={loading}
-                className="bg-hive-gold text-black hover:bg-yellow-400 flex-1"
+                className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 flex-1"
               >
                 {loading ? 'Creating...' : 'Create Space'}
               </HiveButton>

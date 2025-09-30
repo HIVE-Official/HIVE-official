@@ -47,10 +47,10 @@ export const GET = withAuthAndErrors(async (request: NextRequest, context) => {
     }
 
     if (spacesResult.isFailure) {
-      logger.error('Failed to browse spaces', {
-        error: spacesResult.error,
-        endpoint: '/api/spaces/browse-v2'
-      });
+      logger.error(
+      `Failed to browse spaces at /api/spaces/browse-v2`,
+      spacesResult.error
+    );
 
       return NextResponse.json(
         { error: 'Failed to load spaces' },

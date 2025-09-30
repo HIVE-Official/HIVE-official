@@ -56,7 +56,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching Firebase metrics', { error, userId: auth.userId });
+    logger.error('Error fetching Firebase metrics', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -97,7 +97,7 @@ async function getFirestoreMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting Firestore metrics', { error });
+    logger.error('Error getting Firestore metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockFirebaseMetrics().firestore;
   }
 }
@@ -126,7 +126,7 @@ async function getCollectionStats() {
     };
 
   } catch (error) {
-    logger.error('Error getting collection stats', { error });
+    logger.error('Error getting collection stats', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       documentsCount: 15678,
       totalSizeMB: 234.5,
@@ -164,7 +164,7 @@ async function getRecentOperations(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting recent operations', { error });
+    logger.error('Error getting recent operations', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       reads: 45234,
       writes: 12456,
@@ -220,7 +220,7 @@ async function getAuthenticationMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting authentication metrics', { error });
+    logger.error('Error getting authentication metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockFirebaseMetrics().authentication;
   }
 }
@@ -286,7 +286,7 @@ async function getHostingMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting hosting metrics', { error });
+    logger.error('Error getting hosting metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockFirebaseMetrics().hosting;
   }
 }
@@ -307,7 +307,7 @@ async function getFunctionsMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting functions metrics', { error });
+    logger.error('Error getting functions metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockFirebaseMetrics().functions;
   }
 }
@@ -334,7 +334,7 @@ async function getPerformanceMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting performance metrics', { error });
+    logger.error('Error getting performance metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockFirebaseMetrics().performance;
   }
 }

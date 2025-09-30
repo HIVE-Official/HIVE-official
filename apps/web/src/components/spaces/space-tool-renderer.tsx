@@ -150,7 +150,7 @@ export function SpaceToolRenderer({
   if (loading) {
     return (
       <div className="p-4 text-center">
-        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-hive-gold" />
+        <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[var(--hive-brand-primary)]" />
         <div className="text-sm text-gray-400">Loading {tool.name}...</div>
       </div>
     );
@@ -252,7 +252,7 @@ export function SpaceToolRenderer({
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge className="bg-hive-gold/20 text-hive-gold border-hive-gold/30">
+          <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
             {tool.category}
           </Badge>
 
@@ -292,7 +292,7 @@ export function SpaceToolRenderer({
             {/* Tool Metrics */}
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-hive-gold">{tool.usageCount || 0}</div>
+                <div className="text-xl font-bold text-[var(--hive-brand-primary)]">{tool.usageCount || 0}</div>
                 <div className="text-xs text-gray-500">Uses</div>
               </div>
               <div className="text-center">
@@ -325,7 +325,7 @@ export function SpaceToolRenderer({
                 variant="outline"
                 size="sm"
                 onClick={() => handleToolAction('configure')}
-                className="mt-4 border-hive-gold/30 text-hive-gold"
+                className="mt-4 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
               >
                 Configure Tool
               </HiveButton>

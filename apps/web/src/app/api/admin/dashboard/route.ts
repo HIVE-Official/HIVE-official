@@ -38,7 +38,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     const adminUserId = authContext.userId;
     
-    logger.info('👑 Admin dashboard accessed by', { adminUserId, endpoint: '/api/admin/dashboard' });
+    logger.info('👑 Admin dashboard accessed by', { adminUserId });
 
     // Collect platform statistics in parallel
     const [
@@ -72,7 +72,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    logger.error('Admin dashboard error', { error: error, endpoint: '/api/admin/dashboard' });
+    logger.error('Admin dashboard error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to load admin dashboard", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 });
@@ -118,7 +118,7 @@ async function getUsersStatistics() {
       }
     };
   } catch (error) {
-    logger.error('Error getting user statistics', { error: error, endpoint: '/api/admin/dashboard' });
+    logger.error('Error getting user statistics', { error: error instanceof Error ? error : new Error(String(error))});
     return {
       total: 0,
       active: 0,
@@ -178,7 +178,7 @@ async function getSpacesStatistics() {
 
     return spaceStats;
   } catch (error) {
-    logger.error('Error getting spaces statistics', { error: error, endpoint: '/api/admin/dashboard' });
+    logger.error('Error getting spaces statistics', { error: error instanceof Error ? error : new Error(String(error))});
     return {
       total: 0,
       active: 0,
@@ -217,7 +217,7 @@ async function getBuilderRequestsStatistics() {
 
     return stats;
   } catch (error) {
-    logger.error('Error getting builder requests statistics', { error: error, endpoint: '/api/admin/dashboard' });
+    logger.error('Error getting builder requests statistics', { error: error instanceof Error ? error : new Error(String(error))});
     return {
       total: 0,
       pending: 0,
@@ -269,7 +269,7 @@ async function getSystemHealth() {
       lastUpdated: new Date().toISOString()
     };
   } catch (error) {
-    logger.error('Error getting system health', { error: error, endpoint: '/api/admin/dashboard' });
+    logger.error('Error getting system health', { error: error instanceof Error ? error : new Error(String(error))});
     return {
       status: 'error',
       uptime: 0,
@@ -296,7 +296,7 @@ async function getAllSpacesCount() {
         .get();
       totalCount += snapshot.size;
     } catch (error) {
-      logger.error('Error counting spaces for', { spaceType, error: error, endpoint: '/api/admin/dashboard' });
+      logger.error('Error counting spaces for', { spaceType, error: error instanceof Error ? error : new Error(String(error))});
     }
   }
 

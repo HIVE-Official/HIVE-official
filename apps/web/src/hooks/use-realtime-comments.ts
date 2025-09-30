@@ -137,7 +137,7 @@ export function useRealtimeComments(postId: string | null) {
         });
       },
       (error) => {
-        logger.error('Comments subscription error', { error, postId });
+        logger.error('Comments subscription error', { error: error instanceof Error ? error : new Error(String(error)), postId });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -186,7 +186,7 @@ export function useRealtimeComments(postId: string | null) {
 
       return true;
     } catch (error) {
-      logger.error('Failed to add comment', { error, postId });
+      logger.error('Failed to add comment', { error: error instanceof Error ? error : new Error(String(error)), postId });
       return false;
     }
   }, [user, postId]);
@@ -213,7 +213,7 @@ export function useRealtimeComments(postId: string | null) {
       logger.info('Comment like toggled', { commentId, liked: !hasLiked });
       return true;
     } catch (error) {
-      logger.error('Failed to like comment', { error, commentId });
+      logger.error('Failed to like comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
       return false;
     }
   }, [user?.uid, postId, state.comments]);
@@ -247,7 +247,7 @@ export function useRealtimeComments(postId: string | null) {
       logger.info('Comment deleted', { commentId });
       return true;
     } catch (error) {
-      logger.error('Failed to delete comment', { error, commentId });
+      logger.error('Failed to delete comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
       return false;
     }
   }, [user?.uid, postId, state.comments]);
@@ -278,7 +278,7 @@ export function useRealtimeComments(postId: string | null) {
       logger.info('Comment edited', { commentId });
       return true;
     } catch (error) {
-      logger.error('Failed to edit comment', { error, commentId });
+      logger.error('Failed to edit comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
       return false;
     }
   }, [user?.uid, postId, state.comments]);

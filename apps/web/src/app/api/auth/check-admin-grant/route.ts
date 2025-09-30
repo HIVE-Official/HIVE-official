@@ -131,10 +131,10 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     });
 
   } catch (error) {
-    logger.error('Error granting admin permissions', {
-      error,
-      endpoint: '/api/auth/check-admin-grant'
-    });
+    logger.error(
+      `Error granting admin permissions at /api/auth/check-admin-grant`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     return respond.error(
       'Failed to check/grant admin permissions',

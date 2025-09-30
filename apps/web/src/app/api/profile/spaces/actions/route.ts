@@ -65,7 +65,10 @@ export async function POST(request: NextRequest) {
       result
     });
   } catch (error) {
-    logger.error('Error performing space action', { error: error, endpoint: '/api/profile/spaces/actions' });
+    logger.error(
+      `Error performing space action at /api/profile/spaces/actions`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to perform space action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -206,7 +209,10 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating user space preferences', { error: error, endpoint: '/api/profile/spaces/actions' });
+    logger.error(
+      `Error updating user space preferences at /api/profile/spaces/actions`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -227,7 +233,10 @@ async function updateSpaceMemberCount(spaceId: string, change: number) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating space member count', { error: error, endpoint: '/api/profile/spaces/actions' });
+    logger.error(
+      `Error updating space member count at /api/profile/spaces/actions`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -290,7 +299,10 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error getting space action status', { error: error, endpoint: '/api/profile/spaces/actions' });
+    logger.error(
+      `Error getting space action status at /api/profile/spaces/actions`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get space action status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

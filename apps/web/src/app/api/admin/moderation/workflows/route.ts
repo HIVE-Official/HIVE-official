@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting moderation workflows', { error });
+    logger.error('Error getting moderation workflows', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get workflows', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error creating moderation workflow', { error });
+    logger.error('Error creating moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to create workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -223,7 +223,7 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error updating moderation workflow', { error });
+    logger.error('Error updating moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -278,7 +278,7 @@ export async function DELETE(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error deleting moderation workflow', { error });
+    logger.error('Error deleting moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to delete workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -296,7 +296,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
-    logger.error('Error checking admin permissions', { error, userId });
+    logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return false;
   }
 }
@@ -319,7 +319,7 @@ async function getWorkflows(activeOnly: boolean = false) {
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error getting workflows', { error });
+    logger.error('Error getting workflows', { error: error instanceof Error ? error : new Error(String(error)) });
     return [];
   }
 }

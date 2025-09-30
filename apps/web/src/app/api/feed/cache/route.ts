@@ -146,7 +146,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error handling feed cache request', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error handling feed cache request at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to process feed request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -186,7 +189,10 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    logger.error('Error handling cache GET request', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error handling cache GET request at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get cache info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -221,7 +227,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Cache key or clearAll parameter required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    logger.error('Error clearing cache', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error clearing cache at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to clear cache", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -284,7 +293,10 @@ async function getCachedFeed(cacheKey: string, userId: string): Promise<FeedCach
 
     return cache;
   } catch (error) {
-    logger.error('Error getting cached feed', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error getting cached feed at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -321,7 +333,10 @@ async function cacheFeedContent(params: {
 
     await dbAdmin.collection('feedCaches').doc(cacheKey).set(cache);
   } catch (error) {
-    logger.error('Error caching feed content', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error caching feed content at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -333,7 +348,10 @@ async function updateCacheAccess(cacheId: string): Promise<void> {
       accessCount: (await dbAdmin.collection('feedCaches').doc(cacheId).get()).data()?.accessCount || 0 + 1
     });
   } catch (error) {
-    logger.error('Error updating cache access', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error updating cache access at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -418,7 +436,10 @@ async function getCacheStats(userId: string): Promise<CacheStats> {
       userCacheCount: userCaches.length
     };
   } catch (error) {
-    logger.error('Error getting cache stats', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error getting cache stats at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       hitRate: 0,
       averageGenerationTime: 0,
@@ -443,7 +464,10 @@ async function getUserCaches(userId: string): Promise<FeedCache[]> {
       ...doc.data()
     })) as FeedCache[];
   } catch (error) {
-    logger.error('Error getting user caches', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error getting user caches at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -463,7 +487,10 @@ async function clearUserCaches(userId: string): Promise<number> {
 
     return cleared;
   } catch (error) {
-    logger.error('Error clearing user caches', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error clearing user caches at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -487,7 +514,10 @@ async function clearSpecificCache(cacheKey: string, userId: string): Promise<boo
     await dbAdmin.collection('feedCaches').doc(cacheKey).delete();
     return true;
   } catch (error) {
-    logger.error('Error clearing specific cache', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error clearing specific cache at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -508,7 +538,10 @@ async function cleanupExpiredCaches(): Promise<number> {
 
     return cleaned;
   } catch (error) {
-    logger.error('Error cleaning up expired caches', { error: error, endpoint: '/api/feed/cache' });
+    logger.error(
+      `Error cleaning up expired caches at /api/feed/cache`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }

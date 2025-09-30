@@ -54,7 +54,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       }
     });
   } catch (error) {
-    logger.error('Error fetching spaces', { error, filterType: filterType || undefined, searchTerm: searchTerm || undefined, limit, cursor });
+    logger.error('Error fetching spaces', { error: error instanceof Error ? error : new Error(String(error)), filterType: filterType || undefined, searchTerm: searchTerm || undefined, limit, cursor });
     return respond.error("Failed to fetch spaces", "INTERNAL_ERROR", { status: 500 });
   }
 });
@@ -66,7 +66,7 @@ export const POST = withAuthValidationAndErrors(
   async (request: AuthenticatedRequest, context, body: CreateSpaceData, respond) => {
   const { name, description, category, joinPolicy, tags, agreedToGuidelines, visibility, settings } = body;
   const userId = getUserId(request);
-  const userEmail = request.auth!.email || '';
+  const userEmail = request.user.email || '';
 
   // CHECK 1: Agreement to guidelines
   if (!agreedToGuidelines) {
@@ -91,7 +91,7 @@ export const POST = withAuthValidationAndErrors(
   }
 
   // CHECK 4: Email verification
-  const emailVerified = request.auth!.email_verified || false;
+  const emailVerified = request.user.decodedToken.email_verified || false;
   if (!emailVerified && !isAdmin) {
     return respond.error("Email verification required", "PERMISSION_DENIED", { status: 403 });
   }

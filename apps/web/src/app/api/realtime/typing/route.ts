@@ -80,7 +80,10 @@ export async function POST(request: NextRequest) {
       expiresAt: typingIndicator.expiresAt
     });
   } catch (error) {
-    logger.error('Error starting typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error starting typing indicator at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to start typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -122,7 +125,10 @@ export async function PUT(request: NextRequest) {
       expiresAt: expiresAt.toISOString()
     });
   } catch (error) {
-    logger.error('Error updating typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error updating typing indicator at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -166,7 +172,10 @@ export async function DELETE(request: NextRequest) {
       message: 'Typing indicator stopped'
     });
   } catch (error) {
-    logger.error('Error stopping typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error stopping typing indicator at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to stop typing indicator", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -218,7 +227,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(typingStatus);
   } catch (error) {
-    logger.error('Error getting typing status', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error getting typing status at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get typing status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -255,7 +267,10 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
 
     return true;
   } catch (error) {
-    logger.error('Error verifying channel access', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error verifying channel access at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -291,7 +306,10 @@ async function broadcastTypingIndicator(indicator: TypingIndicator, action: 'sta
 
     await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
-    logger.error('Error broadcasting typing indicator', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error broadcasting typing indicator at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -312,7 +330,10 @@ async function cleanupExpiredTypingIndicators(): Promise<number> {
 
     return cleaned;
   } catch (error) {
-    logger.error('Error cleaning up expired typing indicators', { error: error, endpoint: '/api/realtime/typing' });
+    logger.error(
+      `Error cleaning up expired typing indicators at /api/realtime/typing`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }

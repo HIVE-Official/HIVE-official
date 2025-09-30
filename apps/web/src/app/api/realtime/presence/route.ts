@@ -214,7 +214,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error updating user presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error updating user presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update presence", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -283,7 +286,10 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Error getting presence information', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting presence information at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get presence information", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -323,7 +329,10 @@ export async function PUT(request: NextRequest) {
       settings: updatedSettings
     });
   } catch (error) {
-    logger.error('Error updating presence settings', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error updating presence settings at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update presence settings", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -410,7 +419,10 @@ export async function DELETE(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Error updating presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error updating presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update presence", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -426,7 +438,10 @@ async function getUserPresence(userId: string): Promise<UserPresence | null> {
     
     return null;
   } catch (error) {
-    logger.error('Error getting user presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting user presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -497,7 +512,10 @@ async function getSpacePresence(spaceId: string, requestingUserId: string, inclu
 
     return spacePresence;
   } catch (error) {
-    logger.error('Error getting space presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting space presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -512,7 +530,10 @@ async function getUserSpaces(userId: string): Promise<string[]> {
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting user spaces at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -527,7 +548,10 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
-    logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting space members at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -543,7 +567,10 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;
   } catch (error) {
-    logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error verifying space access at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -636,7 +663,10 @@ async function broadcastPresenceUpdate(presenceEvent: PresenceEvent): Promise<vo
       await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
     }
   } catch (error) {
-    logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error broadcasting presence update at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -677,7 +707,10 @@ async function updateSpacePresence(spaceId: string, presenceEvent: PresenceEvent
       lastUpdate: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating space presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error updating space presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -699,7 +732,10 @@ async function getRecentSpaceActivity(spaceId: string, limit = 10): Promise<any[
     
     return [];
   } catch (error) {
-    logger.error('Error getting recent space activity', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error getting recent space activity at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -726,7 +762,10 @@ async function cleanupStalePresence(): Promise<number> {
 
     return cleaned;
   } catch (error) {
-    logger.error('Error cleaning up stale presence', { error: error, endpoint: '/api/realtime/presence' });
+    logger.error(
+      `Error cleaning up stale presence at /api/realtime/presence`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }

@@ -95,10 +95,12 @@ export const POST = withAuthValidationAndErrors(
     const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
     const requestLogger = createRequestLogger(requestId, userId);
 
-    await requestLogger.info('Starting onboarding completion', {
-      operation: 'complete_onboarding',
-      handle: normalizedHandle,
-      userType: onboardingData.userType
+    await requestLogger.log('Starting onboarding completion', {
+      action: 'complete_onboarding',
+      metadata: {
+        handle: normalizedHandle,
+        userType: onboardingData.userType
+      }
     });
 
     // DEVELOPMENT: Handle development users in local environment
@@ -106,10 +108,12 @@ export const POST = withAuthValidationAndErrors(
     const isLocalEnvironment = currentEnvironment === 'development' || !process.env.VERCEL;
 
     if (isDevelopmentUser && isLocalEnvironment) {
-      await requestLogger.info('Development onboarding completion bypassing Firebase transaction', {
-        operation: 'dev_complete_onboarding',
-        handle: normalizedHandle,
-        userType: onboardingData.userType
+      await requestLogger.log('Development onboarding completion bypassing Firebase transaction', {
+        action: 'dev_complete_onboarding',
+        metadata: {
+          handle: normalizedHandle,
+          userType: onboardingData.userType
+        }
       });
 
       // Create mock successful onboarding result for development
@@ -162,10 +166,12 @@ export const POST = withAuthValidationAndErrors(
         updatedAt: new Date(),
       };
 
-      await requestLogger.info('Development onboarding completed successfully', {
-        operation: 'dev_complete_onboarding',
-        handle: normalizedHandle,
-        userType: onboardingData.userType
+      await requestLogger.log('Development onboarding completed successfully', {
+        action: 'dev_complete_onboarding',
+        metadata: {
+          handle: normalizedHandle,
+          userType: onboardingData.userType
+        }
       });
 
       return respond.success({
@@ -222,13 +228,14 @@ export const POST = withAuthValidationAndErrors(
     );
 
     if (!transactionResult.success) {
-      await requestLogger.error('Onboarding transaction failed', {
-        operation: 'complete_onboarding',
-        error: transactionResult.error?.message,
-        operationsCompleted: transactionResult.operationsCompleted,
-        operationsFailed: transactionResult.operationsFailed,
-        duration: transactionResult.duration
-      }, transactionResult.error);
+      await requestLogger.error('Onboarding transaction failed', transactionResult.error, {
+        action: 'complete_onboarding',
+        metadata: {
+          operationsCompleted: transactionResult.operationsCompleted,
+          operationsFailed: transactionResult.operationsFailed,
+          duration: transactionResult.duration
+        }
+      });
 
       // Handle specific error types
       if (transactionResult.error instanceof TransactionError) {
@@ -249,19 +256,23 @@ export const POST = withAuthValidationAndErrors(
 
     const result = transactionResult.data!;
 
-    await requestLogger.info('Onboarding transaction completed successfully', {
-      operation: 'complete_onboarding',
-      handle: normalizedHandle,
-      duration: transactionResult.duration,
-      operationsCompleted: transactionResult.operationsCompleted
+    await requestLogger.log('Onboarding transaction completed successfully', {
+      action: 'complete_onboarding',
+      metadata: {
+        handle: normalizedHandle,
+        duration: transactionResult.duration,
+        operationsCompleted: transactionResult.operationsCompleted
+      }
     });
 
     // Create builder requests if user selected spaces (using transaction manager)
     if (onboardingData.builderRequestSpaces && onboardingData.builderRequestSpaces.length > 0) {
-      await requestLogger.info('Creating builder requests', {
-        operation: 'create_builder_requests',
-        spaceCount: onboardingData.builderRequestSpaces.length,
-        spaceIds: onboardingData.builderRequestSpaces
+      await requestLogger.log('Creating builder requests', {
+        action: 'create_builder_requests',
+        metadata: {
+          spaceCount: onboardingData.builderRequestSpaces.length,
+          spaceIds: onboardingData.builderRequestSpaces
+        }
       });
 
       const builderRequestResult = await executeBuilderRequestCreation(
@@ -275,26 +286,32 @@ export const POST = withAuthValidationAndErrors(
 
       if (!builderRequestResult.success) {
         await requestLogger.warn('Builder request creation failed, but onboarding succeeded', {
-          operation: 'create_builder_requests',
-          error: builderRequestResult.error,
-          operationsCompleted: builderRequestResult.operationsCompleted,
-          operationsFailed: builderRequestResult.operationsFailed
+          action: 'create_builder_requests',
+          metadata: {
+            operationsCompleted: builderRequestResult.operationsCompleted,
+            operationsFailed: builderRequestResult.operationsFailed
+          },
+          error: builderRequestResult.error
         });
       } else {
-        await requestLogger.info('Builder requests created successfully', {
-          operation: 'create_builder_requests',
-          duration: builderRequestResult.duration,
-          operationsCompleted: builderRequestResult.operationsCompleted
+        await requestLogger.log('Builder requests created successfully', {
+          action: 'create_builder_requests',
+          metadata: {
+            duration: builderRequestResult.duration,
+            operationsCompleted: builderRequestResult.operationsCompleted
+          }
         });
       }
     }
 
     // After successful onboarding, create and auto-join cohort spaces
     try {
-      await requestLogger.info('Creating cohort spaces', {
-        operation: 'create_cohort_spaces',
-        major: onboardingData.major,
-        graduationYear: onboardingData.graduationYear
+      await requestLogger.log('Creating cohort spaces', {
+        action: 'create_cohort_spaces',
+        metadata: {
+          major: onboardingData.major,
+          graduationYear: onboardingData.graduationYear
+        }
       });
 
       const cohortResponse = await fetch(
@@ -315,28 +332,32 @@ export const POST = withAuthValidationAndErrors(
       if (!cohortResponse.ok) {
         const errorText = await cohortResponse.text();
         await requestLogger.warn('Cohort space creation failed, but onboarding succeeded', {
-          operation: 'create_cohort_spaces',
-          status: cohortResponse.status,
-          error: errorText
+          action: 'create_cohort_spaces',
+          metadata: {
+            status: cohortResponse.status,
+            error: errorText
+          }
         });
       } else {
         const cohortResult = await cohortResponse.json();
-        await requestLogger.info('Cohort spaces created successfully', {
-          operation: 'create_cohort_spaces',
-          result: cohortResult
+        await requestLogger.log('Cohort spaces created successfully', {
+          action: 'create_cohort_spaces',
+          metadata: {
+            result: cohortResult
+          }
         });
       }
     } catch (cohortError) {
       await requestLogger.warn('Cohort space creation error, but onboarding succeeded', {
-        operation: 'create_cohort_spaces',
+        action: 'create_cohort_spaces',
         error: cohortError instanceof Error ? cohortError : new Error(String(cohortError))
       });
     }
 
     // After cohort space creation, auto-join the user to other relevant spaces
     try {
-      await requestLogger.info('Attempting auto-join to spaces', {
-        operation: 'auto_join_spaces'
+      await requestLogger.log('Attempting auto-join to spaces', {
+        action: 'auto_join_spaces'
       });
 
       const autoJoinResponse = await fetch(
@@ -353,20 +374,24 @@ export const POST = withAuthValidationAndErrors(
       if (!autoJoinResponse.ok) {
         const errorText = await autoJoinResponse.text();
         await requestLogger.warn('Auto-join failed, but onboarding succeeded', {
-          operation: 'auto_join_spaces',
-          status: autoJoinResponse.status,
-          error: errorText
+          action: 'auto_join_spaces',
+          metadata: {
+            status: autoJoinResponse.status,
+            error: errorText
+          }
         });
       } else {
         const autoJoinResult = (await autoJoinResponse.json()) as unknown;
-        await requestLogger.info('Auto-join successful', {
-          operation: 'auto_join_spaces',
-          result: autoJoinResult
+        await requestLogger.log('Auto-join successful', {
+          action: 'auto_join_spaces',
+          metadata: {
+            result: autoJoinResult
+          }
         });
       }
     } catch (autoJoinError) {
       await requestLogger.warn('Auto-join error, but onboarding succeeded', {
-        operation: 'auto_join_spaces',
+        action: 'auto_join_spaces',
         error: autoJoinError instanceof Error ? autoJoinError : new Error(String(autoJoinError))
       });
     }

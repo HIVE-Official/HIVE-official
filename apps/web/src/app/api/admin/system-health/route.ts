@@ -75,7 +75,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching system health', { error, userId: auth.userId });
+    logger.error('Error fetching system health', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -127,7 +127,7 @@ async function getDatabaseHealth(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting database health', { error });
+    logger.error('Error getting database health', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       status: 'critical' as const,
       responseTime: 5000,
@@ -186,7 +186,7 @@ async function getAuthenticationHealth(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting auth health', { error });
+    logger.error('Error getting auth health', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockSystemHealth().authentication;
   }
 }
@@ -257,7 +257,7 @@ async function getApiHealth(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting API health', { error });
+    logger.error('Error getting API health', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockSystemHealth().api;
   }
 }
@@ -292,7 +292,7 @@ async function getCacheHealth(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting cache health', { error });
+    logger.error('Error getting cache health', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockSystemHealth().cache;
   }
 }
@@ -336,7 +336,7 @@ async function getSystemAlerts(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error getting system alerts', { error });
+    logger.error('Error getting system alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       critical: [],
       warnings: [],

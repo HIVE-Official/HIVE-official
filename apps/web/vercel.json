@@ -5,13 +5,7 @@
       "NODE_OPTIONS": "--max-old-space-size=4096"
     }
   },
-  "crons": [
-    {
-      "path": "/api/cron/promote-posts",
-      "schedule": "*/15 * * * *"
-    }
-  ],
-  "functions": {
+  "crons": [],  "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 60
     },

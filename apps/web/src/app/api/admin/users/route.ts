@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
 
-    logger.info('👑 Admin accessing user management', { adminUserId, endpoint: '/api/admin/users' });
+    logger.info('👑 Admin accessing user management', { adminUserId });
 
     // Get users with filtering
     let usersQuery = dbAdmin.collection('users');
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
             isBuilder: memberships.some(m => m.role === 'builder')
           };
         } catch (error) {
-          logger.error('Error getting memberships for user', { userId: user.id, error: error, endpoint: '/api/admin/users' });
+          logger.error('Error getting memberships for user', { userId: user.id, error: error instanceof Error ? error : new Error(String(error))});
           return {
             ...user,
             memberships: [],
@@ -195,7 +195,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Admin users GET error', { error: error, endpoint: '/api/admin/users' });
+    logger.error('Admin users GET error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get users", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -262,7 +262,7 @@ export async function POST(request: NextRequest) {
     // Update user document
     await userRef.update(updateData);
 
-    logger.info('👑 Adminupdated user', { adminUserId, userId, endpoint: '/api/admin/users' });
+    logger.info('👑 Adminupdated user', { adminUserId, userId });
 
     return NextResponse.json({
       success: true,
@@ -273,7 +273,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Admin users POST error', { error: error, endpoint: '/api/admin/users' });
+    logger.error('Admin users POST error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -402,7 +402,7 @@ export async function DELETE(request: NextRequest) {
     // Log admin action
     await logAdminAction(adminUserId, action, userId, reason);
 
-    logger.info('👑 Admin performedon user', {  action, userId, endpoint: '/api/admin/users'  });
+    logger.info('👑 Admin performedon user', {  action, userId  });
 
     return NextResponse.json({
       success: true,
@@ -416,7 +416,7 @@ export async function DELETE(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Admin users DELETE error', { error: error, endpoint: '/api/admin/users' });
+    logger.error('Admin users DELETE error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -446,6 +446,6 @@ async function logAdminAction(adminUserId: string, action: string, targetUserId:
       type: 'user_action'
     });
   } catch (error) {
-    logger.error('Error logging admin action', { error: error, endpoint: '/api/admin/users' });
+    logger.error('Error logging admin action', { error: error instanceof Error ? error : new Error(String(error))});
   }
 }

@@ -43,7 +43,11 @@
     "@hive/firebase": "workspace:^",
     "@hive/hooks": "workspace:*",
     "@hive/ui": "workspace:*",
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.2",
+    "@react-spring/three": "^10.0.3",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
+    "@react-three/postprocessing": "^3.0.4",
     "@sendgrid/mail": "^8.1.5",
     "@tanstack/react-query": "^5.0.0",
     "@tanstack/react-query-devtools": "^5.80.7",
@@ -63,6 +67,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.57.0",
     "tailwind-merge": "^2.6.0",
+    "three": "^0.180.0",
     "zod": "^3.25.64"
   },
   "devDependencies": {
@@ -81,6 +86,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.1.1",

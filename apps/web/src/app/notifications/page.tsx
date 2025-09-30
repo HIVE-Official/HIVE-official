@@ -51,9 +51,9 @@ export default function NotificationsPage() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Bell className="w-6 h-6 text-hive-gold" />
+              <Bell className="w-6 h-6 text-[var(--hive-brand-primary)]" />
               <h1 className="text-2xl font-bold text-white">Notifications</h1>
-              <Badge variant="secondary" className="bg-hive-gold text-black">
+              <Badge variant="secondary" className="bg-[var(--hive-brand-primary)] text-black">
                 3
               </Badge>
             </div>
@@ -74,7 +74,7 @@ export default function NotificationsPage() {
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="w-full">
           <div className="grid w-full grid-cols-5 bg-gray-900 border-gray-700 mb-6">
-            <button className="px-3 py-1 rounded bg-hive-gold text-black">
+            <button className="px-3 py-1 rounded bg-[var(--hive-brand-primary)] text-black">
               All
             </button>
             <button className="px-3 py-1 rounded">
@@ -100,7 +100,7 @@ export default function NotificationsPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-white font-medium">
-                    <span className="text-hive-gold">@sarah</span> liked your post
+                    <span className="text-[var(--hive-brand-primary)]">@sarah</span> liked your post
                   </p>
                   <p className="text-gray-400 text-sm mt-1">
                     "Just finished my first week at UB! The campus is amazing..."
@@ -120,7 +120,7 @@ export default function NotificationsPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-white font-medium">
-                    <span className="text-hive-gold">@mike</span> commented on your post
+                    <span className="text-[var(--hive-brand-primary)]">@mike</span> commented on your post
                   </p>
                   <p className="text-gray-400 text-sm mt-1">
                     "Welcome to UB! Let me know if you need help finding anything"
@@ -140,7 +140,7 @@ export default function NotificationsPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-white font-medium">
-                    <span className="text-hive-gold">@alex</span> started following you
+                    <span className="text-[var(--hive-brand-primary)]">@alex</span> started following you
                   </p>
                   <p className="text-gray-500 text-xs mt-2">1 hour ago</p>
                 </div>

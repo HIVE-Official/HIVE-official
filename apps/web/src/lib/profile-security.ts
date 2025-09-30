@@ -69,7 +69,7 @@ export async function enforceCompusIsolation(userId: string): Promise<string> {
     // For vBETA, hardcoded to UB Buffalo
     return userData?.campusId || 'ub-buffalo';
   } catch (error) {
-    logger.error('Campus isolation check failed', { userId, error });
+    logger.error('Campus isolation check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
     // Default to UB for vBETA
     return 'ub-buffalo';
   }
@@ -127,7 +127,7 @@ export async function getConnectionType(
 
     return ConnectionType.NONE;
   } catch (error) {
-    logger.error('Connection type check failed', { userId: viewerId, targetId, error });
+    logger.error('Connection type check failed', { userId: viewerId, targetId, error: error instanceof Error ? error : new Error(String(error)) });
     return ConnectionType.NONE;
   }
 }
@@ -145,7 +145,7 @@ export async function isGhostModeActive(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.privacy?.ghostMode === true;
   } catch (error) {
-    logger.error('Ghost mode check failed', { userId, error });
+    logger.error('Ghost mode check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
     return false;
   }
 }
@@ -262,7 +262,7 @@ export async function auditLog(
       userAgent: details.userAgent || 'unknown'
     });
   } catch (error) {
-    logger.error('Audit logging failed', { userId, error });
+    logger.error('Audit logging failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
   }
 }
 
@@ -325,7 +325,7 @@ export function withProfileSecurity(
       // Execute the handler
       return await handler(req, context);
     } catch (error) {
-      logger.error('Profile security middleware error', { error });
+      logger.error('Profile security middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
       return NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 }
@@ -379,7 +379,7 @@ export async function getPrivacySettings(userId: string): Promise<PrivacySetting
       spaceActivityVisibility: new Map(Object.entries(privacy.spaceActivityVisibility || {}))
     };
   } catch (error) {
-    logger.error('Privacy settings fetch failed', { userId, error });
+    logger.error('Privacy settings fetch failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
     // Return default privacy settings
     return {
       ghostMode: false,

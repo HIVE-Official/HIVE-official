@@ -254,7 +254,7 @@ export async function withSecureAuth(
 
         return response;
       } catch (error) {
-        logger.error('Request body sanitization failed', { error });
+        logger.error('Request body sanitization failed', { error: error instanceof Error ? error : new Error(String(error)) });
         return NextResponse.json(
           { error: 'Invalid request body' },
           { status: 400, headers: getSecurityHeaders() }
@@ -274,7 +274,7 @@ export async function withSecureAuth(
     return response;
 
   } catch (error) {
-    logger.error('Auth middleware error', { error });
+    logger.error('Auth middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
 
     return NextResponse.json(
       { error: 'Authentication service error' },

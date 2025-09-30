@@ -169,7 +169,7 @@ export default function EditProfilePage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4"></div>
           <p className="text-white mb-2">Loading your profile...</p>
         </div>
       </div>
@@ -185,7 +185,7 @@ export default function EditProfilePage() {
           <p className="text-gray-400 mb-6">Please sign in to edit your profile</p>
           <button
             onClick={() => router.push('/auth/login')}
-            className="px-6 py-2 bg-[#FFD700] text-black rounded-lg font-medium hover:bg-[#FFD700]/90 transition-colors"
+            className="px-6 py-2 bg-[var(--hive-brand-primary)] text-black rounded-lg font-medium hover:bg-[var(--hive-brand-primary)]/90 transition-colors"
           >
             Sign In
           </button>
@@ -203,7 +203,7 @@ export default function EditProfilePage() {
           <p className="text-gray-400 mb-6">Let's set up your profile first</p>
           <button
             onClick={() => router.push('/onboarding')}
-            className="px-6 py-2 bg-[#FFD700] text-black rounded-lg font-medium hover:bg-[#FFD700]/90 transition-colors"
+            className="px-6 py-2 bg-[var(--hive-brand-primary)] text-black rounded-lg font-medium hover:bg-[var(--hive-brand-primary)]/90 transition-colors"
           >
             Complete Setup
           </button>

@@ -24,6 +24,12 @@ export interface LogContext {
   space?: Partial<Space>;
   post?: Partial<Post>;
   event?: Partial<HiveEvent>;
+  // Statistics
+  connectionCount?: number;
+  friendCount?: number;
+  detectCount?: number;
+  // Allow additional properties for flexibility
+  [key: string]: any;
 }
 
 class StructuredLogger {
@@ -264,3 +270,126 @@ export const logApiRequest = (
   duration: number,
   userId?: string
 ) => logger.logApiRequest(method, path, statusCode, duration, userId);
+
+// Security event logging
+export const logSecurityEvent = (
+  eventType: string,
+  message: string,
+  context?: LogContext & {
+    severity?: 'low' | 'medium' | 'high' | 'critical';
+    ipAddress?: string;
+    userAgent?: string;
+    endpoint?: string;
+  }
+) => {
+  const securityContext = {
+    ...context,
+    action: `security_${eventType}`,
+    metadata: {
+      ...context?.metadata,
+      securityEvent: true,
+      eventType,
+      severity: context?.severity || 'medium',
+    },
+  };
+
+  const level = context?.severity === 'critical' ? LogLevel.CRITICAL :
+               context?.severity === 'high' ? LogLevel.ERROR :
+               context?.severity === 'medium' ? LogLevel.WARN :
+               LogLevel.INFO;
+
+  if (level === LogLevel.CRITICAL) {
+    logger.critical(`Security Event: ${message}`, undefined, securityContext);
+  } else if (level === LogLevel.ERROR) {
+    logger.error(`Security Event: ${message}`, undefined, securityContext);
+  } else if (level === LogLevel.WARN) {
+    logger.warn(`Security Event: ${message}`, securityContext);
+  } else {
+    logger.info(`Security Event: ${message}`, securityContext);
+  }
+};
+
+// Create a request-specific logger
+export const createRequestLogger = (requestId: string, userId?: string) => {
+  return {
+    log: (message: string, context?: LogContext) =>
+      logger.info(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
+    error: (message: string, error?: Error, context?: LogContext) =>
+      logger.error(message, error, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
+    warn: (message: string, context?: LogContext) =>
+      logger.warn(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
+    debug: (message: string, context?: LogContext) =>
+      logger.debug(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
+  };
+};
+
+// Log API calls with detailed metrics
+export const logApiCall = async (
+  method: string,
+  endpoint: string,
+  params: {
+    requestId?: string;
+    userId?: string;
+    statusCode?: number;
+    duration?: number;
+    error?: Error;
+    metadata?: Record<string, any>;
+  }
+) => {
+  const { requestId, userId, statusCode = 200, duration = 0, error, metadata } = params;
+
+  const context: LogContext = {
+    userId,
+    action: `api_${method.toLowerCase()}`,
+    metadata: {
+      endpoint,
+      method,
+      statusCode,
+      duration: `${duration}ms`,
+      requestId,
+      ...metadata,
+    },
+  };
+
+  if (error) {
+    logger.error(`API Error: ${method} ${endpoint} - ${statusCode}`, error, context);
+  } else if (statusCode >= 400) {
+    logger.warn(`API Warning: ${method} ${endpoint} - ${statusCode}`, context);
+  } else {
+    logger.info(`API Call: ${method} ${endpoint} - ${statusCode}`, context);
+  }
+};
+
+// Log performance metrics
+export const logPerformance = async (
+  operation: string,
+  metrics: {
+    duration: number;
+    success: boolean;
+    userId?: string;
+    metadata?: Record<string, any>;
+  }
+) => {
+  const { duration, success, userId, metadata } = metrics;
+
+  const context: LogContext = {
+    userId,
+    action: `performance_${operation}`,
+    metadata: {
+      operation,
+      duration: `${duration}ms`,
+      success,
+      ...metadata,
+    },
+  };
+
+  const message = `Performance: ${operation} completed in ${duration}ms`;
+
+  if (!success) {
+    logger.warn(`${message} (failed)`, context);
+  } else if (duration > 5000) {
+    logger.warn(`${message} (slow)`, context);
+  } else {
+    logger.debug(message, context);
+  }
+};

@@ -10,7 +10,7 @@ import { isAdmin } from '@/lib/admin-auth';
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = getUserId(request);
 
-  logger.info('📊 Loading feed metrics', { userId, endpoint: '/api/admin/feed-metrics' });
+  logger.info('📊 Loading feed metrics', { userId });
 
   // Check admin permissions
   const isAdminUser = await isAdmin(userId);
@@ -41,7 +41,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     return respond.success({ metrics });
 
   } catch (error: any) {
-    logger.error('Error loading feed metrics', { error, userId, endpoint: '/api/admin/feed-metrics' });
+    logger.error('Error loading feed metrics', error instanceof Error ? error : new Error(String(error)), { userId});
 
     // Return mock metrics if there's an error
     return respond.success({
@@ -109,7 +109,7 @@ async function getPerformanceMetrics() {
     };
 
   } catch (error) {
-    logger.error('Error calculating performance metrics', { error });
+    logger.error('Error calculating performance metrics', error instanceof Error ? error : new Error(String(error)));
     return {
       avgResponseTime: 245,
       cacheHitRate: 87,
@@ -181,7 +181,7 @@ async function getEngagementMetrics() {
     };
 
   } catch (error) {
-    logger.error('Error calculating engagement metrics', { error });
+    logger.error('Error calculating engagement metrics', error instanceof Error ? error : new Error(String(error)));
     return {
       avgSessionTime: 4.2,
       clickThroughRate: 12.5,
@@ -234,7 +234,7 @@ async function getContentDistributionMetrics() {
     };
 
   } catch (error) {
-    logger.error('Error calculating content distribution metrics', { error });
+    logger.error('Error calculating content distribution metrics', error instanceof Error ? error : new Error(String(error)));
     return {
       events: 24,
       posts: 156,

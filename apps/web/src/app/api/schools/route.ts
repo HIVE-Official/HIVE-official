@@ -30,7 +30,10 @@ export async function GET() {
     
     return NextResponse.json(schools);
   } catch (error) {
-    logger.error('Firebase connection failed', { error: error, endpoint: '/api/schools' });
+    logger.error(
+      `Firebase connection failed at /api/schools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     
     // SECURITY: Never return mock data in production
     if (currentEnvironment === 'production') {

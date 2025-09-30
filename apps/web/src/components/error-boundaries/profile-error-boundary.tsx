@@ -15,8 +15,8 @@ function ProfileErrorFallback({ error, retry, errorId }: ProfileErrorFallbackPro
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
       <Card className="p-8 bg-hive-surface border-hive-border text-center">
-        <div className="w-16 h-16 bg-hive-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <AlertTriangle className="w-8 h-8 text-hive-gold" />
+        <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <AlertTriangle className="w-8 h-8 text-[var(--hive-brand-primary)]" />
         </div>
 
         <h2 className="text-xl font-bold text-hive-text-primary mb-3">
@@ -39,7 +39,7 @@ function ProfileErrorFallback({ error, retry, errorId }: ProfileErrorFallbackPro
         <div className="flex gap-3 justify-center flex-wrap">
           <Button
             onClick={retry}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Retry Profile

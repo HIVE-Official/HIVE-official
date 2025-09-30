@@ -91,9 +91,9 @@ export function ProfileAvatar({
           <button
             className={`
               absolute -bottom-1 -right-1 
-              w-8 h-8 sm:w-6 sm:h-6 bg-hive-gold text-hive-background-primary 
+              w-8 h-8 sm:w-6 sm:h-6 bg-[var(--hive-brand-primary)] text-hive-background-primary 
               rounded-full flex items-center justify-center
-              hover:bg-hive-gold/90 transition-colors touch-manipulation
+              hover:bg-[var(--hive-brand-primary)]/90 transition-colors touch-manipulation
               ${isLoading ? 'animate-spin' : ''}
             `}
             onClick={() => document.getElementById('avatar-upload')?.click()}

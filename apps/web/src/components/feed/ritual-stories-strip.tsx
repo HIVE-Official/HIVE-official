@@ -184,10 +184,10 @@ export function RitualStoriesStrip({ rituals, onRitualClick, className = '' }: R
               onClick={() => window.location.href = '/rituals'}
               className="flex flex-col items-center space-y-2 group"
             >
-              <div className="w-16 h-16 border-2 border-dashed border-hive-border rounded-full flex items-center justify-center group-hover:border-hive-gold transition-colors">
-                <ChevronRight className="h-6 w-6 text-hive-text-secondary group-hover:text-hive-gold transition-colors" />
+              <div className="w-16 h-16 border-2 border-dashed border-hive-border rounded-full flex items-center justify-center group-hover:border-[var(--hive-brand-primary)] transition-colors">
+                <ChevronRight className="h-6 w-6 text-hive-text-secondary group-hover:text-[var(--hive-brand-primary)] transition-colors" />
               </div>
-              <p className="text-xs text-hive-text-secondary group-hover:text-hive-gold transition-colors">
+              <p className="text-xs text-hive-text-secondary group-hover:text-[var(--hive-brand-primary)] transition-colors">
                 View All
               </p>
             </button>
@@ -204,13 +204,13 @@ export function RitualStoriesStrip({ rituals, onRitualClick, className = '' }: R
                 <div key={ritual.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-2">
-                      <Play className="h-4 w-4 text-hive-gold" />
+                      <Play className="h-4 w-4 text-[var(--hive-brand-primary)]" />
                       <span className="text-sm font-medium text-hive-text-primary">
                         {ritual.title}
                       </span>
                     </div>
                     {ritual.metrics?.participationRate !== undefined && (
-                      <Badge className="text-xs bg-hive-gold/20 text-hive-gold">
+                      <Badge className="text-xs bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)]">
                         {Math.round(ritual.metrics.participationRate)}% participating
                       </Badge>
                     )}
@@ -218,7 +218,7 @@ export function RitualStoriesStrip({ rituals, onRitualClick, className = '' }: R
 
                   <button
                     onClick={() => handleRitualClick(ritual)}
-                    className="text-sm text-hive-gold hover:text-hive-champagne transition-colors"
+                    className="text-sm text-[var(--hive-brand-primary)] hover:text-hive-champagne transition-colors"
                   >
                     {ritual.participation?.status === 'active' ? 'Continue' : 'Join'}
                   </button>

@@ -226,7 +226,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               key={stepNumber}
               className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
                 stepNumber === step
-                  ? 'bg-hive-gold text-hive-obsidian'
+                  ? 'bg-[var(--hive-brand-primary)] text-hive-obsidian'
                   : stepNumber < step
                   ? 'bg-green-500 text-white'
                   : 'bg-zinc-700 text-zinc-400'
@@ -263,7 +263,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 value={formData.description}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('description', e.target.value)}
                 placeholder="Describe your event, what to expect, and any important details..."
-                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
+                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
                 rows={4}
                 maxLength={500}
               />
@@ -281,7 +281,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                     onClick={() => handleInputChange('type', type.id)}
                     className={`p-3 rounded-lg border-2 transition-all ${
                       formData.type === type.id
-                        ? 'border-hive-gold bg-hive-gold/10'
+                        ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/10'
                         : 'border-zinc-700 bg-zinc-800/50 hover:border-zinc-600'
                     }`}
                   >
@@ -309,7 +309,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   type="datetime-local"
                   value={formData.datetime.start}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'start', e.target.value)}
-                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   min={new Date().toISOString().slice(0, 16)}
                 />
               </div>
@@ -323,7 +323,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                   type="datetime-local"
                   value={formData.datetime.end}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'end', e.target.value)}
-                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                  className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   min={formData.datetime.start || new Date().toISOString().slice(0, 16)}
                 />
               </div>
@@ -334,7 +334,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <select
                 value={formData.datetime.timezone}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
-                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-hive-gold focus:outline-none"
+                className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               >
                 <option value="America/New_York">Eastern Time (ET)</option>
                 <option value="America/Chicago">Central Time (CT)</option>
@@ -361,7 +361,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                     onClick={() => handleNestedInputChange('location', 'type', locType.id)}
                     className={`p-3 rounded-lg border-2 transition-all ${
                       formData.location.type === locType.id
-                        ? 'border-hive-gold bg-hive-gold/10'
+                        ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/10'
                         : 'border-zinc-700 bg-zinc-800/50 hover:border-zinc-600'
                     }`}
                   >
@@ -454,7 +454,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                     key={vis.id}
                     className={`flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
                       formData.visibility === vis.id
-                        ? 'border-hive-gold bg-hive-gold/5'
+                        ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/5'
                         : 'border-zinc-700 hover:border-zinc-600'
                     }`}
                   >
@@ -497,7 +497,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                     key={tool.id}
                     className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
                       formData.tools.includes(tool.id)
-                        ? 'border-hive-gold bg-hive-gold/5'
+                        ? 'border-[var(--hive-brand-primary)] bg-[var(--hive-brand-primary)]/5'
                         : 'border-zinc-700 hover:border-zinc-600'
                     }`}
                   >
@@ -627,14 +627,14 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <Button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed(step)}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne disabled:opacity-50"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne disabled:opacity-50"
               >
                 Next
               </Button>
             ) : (
               <Button
                 onClick={handleSubmit}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 Create Event
               </Button>

@@ -285,7 +285,7 @@ export default function ToolRunPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FFD700] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4"></div>
           <p className="text-white">Loading tool...</p>
         </div>
       </div>
@@ -370,7 +370,7 @@ export default function ToolRunPage() {
             <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.1)] rounded-lg overflow-hidden">
               <div className="min-h-[600px] flex items-center justify-center">
                 <div className="text-center max-w-md">
-                  <div className="w-16 h-16 bg-hive-gold rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-[var(--hive-brand-primary)] rounded-lg flex items-center justify-center mx-auto mb-4">
                     <Zap className="h-8 w-8 text-hive-obsidian" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">Tool Runtime</h3>
@@ -451,7 +451,7 @@ export default function ToolRunPage() {
                   </p>
                 ) : (
                   actionLog.map((log, index) => (
-                    <div key={index} className="text-xs border-l-2 border-[#FFD700]/30 pl-2">
+                    <div key={index} className="text-xs border-l-2 border-[var(--hive-brand-primary)]/30 pl-2">
                       <div className="text-[#A1A1AA]">{log.time}</div>
                       <div className="text-white font-mono">{log.action}</div>
                       {log.data && (
@@ -504,26 +504,26 @@ export default function ToolRunPage() {
               </h3>
               <div className="space-y-2 mb-3">
                 <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
-                  <div className="w-1 h-1 bg-[#FFD700] rounded-full"></div>
+                  <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   State automatically saves
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
-                  <div className="w-1 h-1 bg-[#FFD700] rounded-full"></div>
+                  <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Real-time element interactions
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
-                  <div className="w-1 h-1 bg-[#FFD700] rounded-full"></div>
+                  <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Conditional logic execution
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
-                  <div className="w-1 h-1 bg-[#FFD700] rounded-full"></div>
+                  <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Works offline with sync
                 </div>
               </div>
               <Button
                 size="sm"
                 variant="secondary"
-                className="w-full border-[#FFD700]/30 text-[#FFD700] hover:bg-[#FFD700]/10"
+                className="w-full border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10"
                 onClick={() => router.push(`/tools/${tool.id}/preview`)}
               >
                 <Clock className="h-4 w-4 mr-1" />

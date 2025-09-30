@@ -13,7 +13,7 @@ export const GET = withAuthAndErrors(async (context) => {
 
   const { searchParams } = new URL(request.url);
   const analysis = searchParams.get('analysis') || 'full'; // 'full', 'indexes', 'queries', 'performance'
-  const collection = searchParams.get('collection'); // Specific collection analysis
+  const collection = searchParams.get('collection') || undefined; // Specific collection analysis
 
   try {
     logger.info('Performing database optimization analysis', { userId: auth.userId, analysis, collection });
@@ -68,7 +68,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing database optimization analysis', { error, userId: auth.userId });
+    logger.error('Error performing database optimization analysis', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -129,7 +129,7 @@ export const POST = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing database optimization action', { error, userId: auth.userId });
+    logger.error('Error performing database optimization action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
@@ -172,7 +172,7 @@ async function getIndexAnalysis(collection?: string) {
     return analysis;
 
   } catch (error) {
-    logger.error('Error analyzing indexes', { error });
+    logger.error('Error analyzing indexes', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockOptimizationData().indexes;
   }
 }
@@ -215,7 +215,7 @@ async function getQueryPerformance(collection?: string) {
     return performance;
 
   } catch (error) {
-    logger.error('Error analyzing query performance', { error });
+    logger.error('Error analyzing query performance', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockOptimizationData().queries;
   }
 }
@@ -265,7 +265,7 @@ async function getCollectionStatistics(collection?: string) {
     return stats;
 
   } catch (error) {
-    logger.error('Error getting collection statistics', { error });
+    logger.error('Error getting collection statistics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockOptimizationData().collections;
   }
 }
@@ -299,7 +299,7 @@ async function generateOptimizationSuggestions(collection?: string) {
     });
 
   } catch (error) {
-    logger.error('Error generating optimization suggestions', { error });
+    logger.error('Error generating optimization suggestions', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockOptimizationData().suggestions;
   }
 }
@@ -351,7 +351,7 @@ async function getPerformanceTrends() {
     return trends;
 
   } catch (error) {
-    logger.error('Error getting performance trends', { error });
+    logger.error('Error getting performance trends', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockOptimizationData().trends;
   }
 }
@@ -373,7 +373,7 @@ async function createOptimizedIndex(collection: string, indexName: string, field
     });
 
     // In production, this would create the actual index via Firebase Admin SDK
-    logger.info('Index creation logged', { collection, indexName, fields });
+    logger.info('Index creation logged', { collection, indexName });
 
     return {
       success: true,
@@ -382,7 +382,7 @@ async function createOptimizedIndex(collection: string, indexName: string, field
     };
 
   } catch (error) {
-    logger.error('Error creating index', { error, collection, indexName });
+    logger.error('Error creating index', { error: error instanceof Error ? error : new Error(String(error)), collection, indexName });
     return { success: false, error: 'Failed to create index' };
   }
 }
@@ -406,7 +406,7 @@ async function dropUnusedIndex(collection: string, indexName: string, userId: st
     };
 
   } catch (error) {
-    logger.error('Error dropping index', { error, collection, indexName });
+    logger.error('Error dropping index', { error: error instanceof Error ? error : new Error(String(error)), collection, indexName });
     return { success: false, error: 'Failed to drop index' };
   }
 }
@@ -432,7 +432,7 @@ async function performCollectionAnalysis(collection: string, userId: string) {
     };
 
   } catch (error) {
-    logger.error('Error analyzing collection', { error, collection });
+    logger.error('Error analyzing collection', { error: error instanceof Error ? error : new Error(String(error)), collection });
     return { success: false, error: 'Failed to analyze collection' };
   }
 }
@@ -470,7 +470,7 @@ async function optimizeSlowQueries(collection: string, userId: string) {
     };
 
   } catch (error) {
-    logger.error('Error optimizing queries', { error, collection });
+    logger.error('Error optimizing queries', { error: error instanceof Error ? error : new Error(String(error)), collection });
     return { success: false, error: 'Failed to optimize queries' };
   }
 }

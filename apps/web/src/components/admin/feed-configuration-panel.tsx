@@ -200,7 +200,7 @@ export function FeedConfigurationPanel() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Settings className="h-6 w-6 text-hive-gold" />
+            <Settings className="h-6 w-6 text-[var(--hive-brand-primary)]" />
             <div>
               <h2 className="text-xl font-bold text-hive-text-primary">Feed Configuration</h2>
               <p className="text-sm text-hive-text-secondary">
@@ -227,7 +227,7 @@ export function FeedConfigurationPanel() {
             <Button
               onClick={saveConfiguration}
               disabled={!hasChanges || saving}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+              className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
             >
               {saving ? (
                 <>
@@ -310,7 +310,7 @@ export function FeedConfigurationPanel() {
                 <label className="text-sm font-medium text-hive-text-primary">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </label>
-                <span className="text-sm text-hive-gold font-bold">{value}</span>
+                <span className="text-sm text-[var(--hive-brand-primary)] font-bold">{value}</span>
               </div>
               <input
                 type="range"
@@ -435,7 +435,7 @@ export function FeedConfigurationPanel() {
         </div>
 
         {config.activeRitual.id && (
-          <div className="mt-4 p-3 bg-hive-gold/10 border border-hive-gold/30 rounded-lg">
+          <div className="mt-4 p-3 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)]/30 rounded-lg">
             <p className="text-sm text-hive-text-primary">
               <span className="font-semibold">Active Ritual:</span> {config.activeRitual.id}
             </p>

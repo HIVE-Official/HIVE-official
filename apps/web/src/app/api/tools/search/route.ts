@@ -108,7 +108,10 @@ export async function POST(request: NextRequest) {
             };
           }
         } catch (error) {
-          logger.warn('Failed to fetch creator info', { data: error, endpoint: '/api/tools/search' });
+          logger.warn(
+      `Failed to fetch creator info at /api/tools/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         }
       }
 
@@ -132,7 +135,10 @@ export async function POST(request: NextRequest) {
           };
         }
       } catch (error) {
-        logger.warn('Failed to check user deployment', { data: error, endpoint: '/api/tools/search' });
+        logger.warn(
+      `Failed to check user deployment at /api/tools/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
 
       tools.push({
@@ -211,7 +217,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error('Error searching tools', { error: error, endpoint: '/api/tools/search' });
+    logger.error(
+      `Error searching tools at /api/tools/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to search tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

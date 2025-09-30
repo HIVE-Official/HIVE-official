@@ -23,6 +23,41 @@ export { Connection } from '../../domain/profile/aggregates/connection';
 export { FeedItem } from '../../domain/feed/feed-item';
 export type { Milestone, Reward } from '../../domain/rituals/aggregates/enhanced-ritual';
 
+// Profile utility functions
+export function getProfileCompleteness(profile: any): number {
+  if (!profile) return 0;
+
+  const requiredFields = ['displayName', 'email', 'handle'];
+  const optionalFields = ['bio', 'photoURL', 'major', 'year', 'interests'];
+
+  let completed = 0;
+  const totalFields = requiredFields.length + optionalFields.length;
+
+  requiredFields.forEach(field => {
+    if (profile[field]) completed++;
+  });
+
+  optionalFields.forEach(field => {
+    if (profile[field]) completed++;
+  });
+
+  return Math.round((completed / totalFields) * 100);
+}
+
+// Authentication utilities
+export function getDefaultActionCodeSettings(continueUrl?: string) {
+  return {
+    url: continueUrl || process.env.NEXT_PUBLIC_APP_URL || 'https://hive-official.vercel.app',
+    handleCodeInApp: true,
+    dynamicLinkDomain: undefined
+  };
+}
+
+export function validateEmailDomain(email: string, allowedDomains: string[] = ['buffalo.edu']): boolean {
+  const domain = email.split('@')[1];
+  return allowedDomains.includes(domain);
+}
+
 // Legacy types that need migration (kept temporarily)
 export interface Feed {
   userId: string;
@@ -164,6 +199,16 @@ export class Participation {
   }
 }
 
+// SpaceType enum for categorization
+export enum SpaceType {
+  GENERAL = 'general',
+  ACADEMIC = 'academic',
+  SOCIAL = 'social',
+  PROFESSIONAL = 'professional',
+  MARKETPLACE = 'marketplace',
+  EVENT = 'event'
+}
+
 export class Space {
   public visibility: string = 'public';
   public memberCount: number = 0;
@@ -268,4 +313,207 @@ export class Space {
       members: this.members
     };
   }
+}
+
+// Post type definition
+export interface Post {
+  id: string;
+  spaceId: string;
+  authorId: string;
+  content: {
+    text: string;
+    mediaUrls?: string[];
+    mentions?: string[];
+  };
+  metadata: {
+    likes: number;
+    comments: number;
+    shares: number;
+    views: number;
+  };
+  createdAt: Date | any;
+  updatedAt?: Date | any;
+  isPromoted?: boolean;
+  isPinned?: boolean;
+  visibility?: 'public' | 'members' | 'private';
+  campusId: string;
+}
+
+// School type definition
+export interface School {
+  id: string;
+  name: string;
+  domain: string;
+  logo?: string;
+  location: {
+    city: string;
+    state: string;
+    country: string;
+  };
+  stats: {
+    studentCount: number;
+    facultyCount: number;
+  };
+  campusId: string;
+  isActive: boolean;
+  createdAt: Date | any;
+  updatedAt?: Date | any;
+}
+
+// User type definition
+export interface User {
+  id: string;
+  email: string;
+  displayName?: string;
+  handle?: string;
+  profileId?: string;
+  photoURL?: string;
+  emailVerified: boolean;
+  campusId: string;
+  role?: 'student' | 'faculty' | 'alumni' | 'staff' | 'admin';
+  createdAt: Date | any;
+  lastActive?: Date | any;
+  metadata?: {
+    school?: string;
+    major?: string;
+    graduationYear?: number;
+    interests?: string[];
+  };
+}
+
+// Tool type definitions
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  creatorId: string;
+  version: string;
+  elements: ElementInstance[];
+  settings: ToolSettings;
+  analytics?: ToolAnalytics;
+  permissions: ToolPermissions;
+  createdAt: Date | any;
+  updatedAt?: Date | any;
+  publishedAt?: Date | any;
+  campusId: string;
+}
+
+export interface ElementInstance {
+  id: string;
+  type: string;
+  config: any;
+  position: { x: number; y: number };
+  size?: { width: number; height: number };
+  style?: any;
+  data?: any;
+}
+
+export interface Element {
+  id: string;
+  type: string;
+  category: string;
+  name: string;
+  description: string;
+  defaultConfig: any;
+  schema?: any;
+}
+
+export interface ToolSettings {
+  isPublic: boolean;
+  allowComments: boolean;
+  allowSharing: boolean;
+  requireAuth: boolean;
+  maxUsers?: number;
+}
+
+export interface ToolAnalytics {
+  views: number;
+  uses: number;
+  shares: number;
+  rating?: number;
+  reviews?: number;
+}
+
+export interface ToolPermissions {
+  canEdit: string[];
+  canView: string[];
+  canShare: string[];
+  canDelete: string[];
+}
+
+// Tool-related schemas and validators
+export const ToolSchema = {
+  parse: (data: any) => data,
+  safeParse: (data: any) => ({ success: true, data })
+};
+
+export const CreateToolSchema = {
+  parse: (data: any) => data,
+  safeParse: (data: any) => ({ success: true, data })
+};
+
+export const UpdateToolSchema = {
+  parse: (data: any) => data,
+  safeParse: (data: any) => ({ success: true, data })
+};
+
+export const ShareToolSchema = {
+  parse: (data: any) => data,
+  safeParse: (data: any) => ({ success: true, data })
+};
+
+// Tool utility functions
+export function canUserEditTool(tool: Tool, userId: string): boolean {
+  return tool.creatorId === userId ||
+         (tool.permissions?.canEdit || []).includes(userId);
+}
+
+export function canUserViewTool(tool: Tool, userId: string): boolean {
+  return tool.settings?.isPublic ||
+         tool.creatorId === userId ||
+         (tool.permissions?.canView || []).includes(userId);
+}
+
+export function getNextVersion(currentVersion: string): string {
+  const parts = currentVersion.split('.');
+  const patch = parseInt(parts[2] || '0', 10);
+  return `${parts[0]}.${parts[1]}.${patch + 1}`;
+}
+
+export function determineChangeType(changes: any): 'major' | 'minor' | 'patch' {
+  // Simple heuristic for now
+  if (changes.elements?.length > 0) return 'minor';
+  if (changes.settings) return 'patch';
+  return 'patch';
+}
+
+export function validateToolStructure(tool: any): boolean {
+  return !!(tool.name && tool.elements && Array.isArray(tool.elements));
+}
+
+export function validateElementConfig(element: any): boolean {
+  return !!(element.type && element.config);
+}
+
+export function generateShareToken(toolId: string, userId: string): string {
+  return Buffer.from(`${toolId}:${userId}:${Date.now()}`).toString('base64');
+}
+
+export function createToolDefaults(): Partial<Tool> {
+  return {
+    version: '1.0.0',
+    elements: [],
+    settings: {
+      isPublic: false,
+      allowComments: true,
+      allowSharing: true,
+      requireAuth: false
+    },
+    permissions: {
+      canEdit: [],
+      canView: [],
+      canShare: [],
+      canDelete: []
+    }
+  };
 }

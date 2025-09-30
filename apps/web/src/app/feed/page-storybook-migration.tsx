@@ -197,7 +197,7 @@ export default function FeedPageStoryBookMigration() {
       <PageContainer title="Loading Feed..." maxWidth="2xl">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
+            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg animate-pulse mx-auto mb-4" />
             <p className="text-white">Loading your campus feed...</p>
           </div>
         </div>
@@ -257,14 +257,14 @@ export default function FeedPageStoryBookMigration() {
             {/* 🔔 **CAMPUS NOTIFICATIONS** */}
             <Button variant="secondary" size="sm" className="relative">
               <Bell className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 bg-hive-gold text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
+              <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                 3
               </Badge>
             </Button>
 
             {/* ✨ **SOPHISTICATED POST CREATION** */}
             <Button
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+              className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               onClick={() => setShowComposer(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -334,7 +334,7 @@ export default function FeedPageStoryBookMigration() {
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Button
                       onClick={() => (window.location.href = "/spaces/browse")}
-                      className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                      className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                     >
                       Browse Spaces
                     </Button>

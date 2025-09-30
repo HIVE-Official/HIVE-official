@@ -69,7 +69,7 @@ const ritualFramework = {
 
       return ritualRef.id;
     } catch (error) {
-      logger.error('Failed to create ritual', { error, ritualName: ritual.name });
+      logger.error('Failed to create ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualName: ritual.name });
       throw new Error('Failed to create ritual in Firestore');
     }
   },
@@ -108,7 +108,7 @@ const ritualFramework = {
 
       return participationRef.id;
     } catch (error) {
-      logger.error('Failed to join ritual', { error, ritualId, userId });
+      logger.error('Failed to join ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
       throw new Error('Failed to join ritual');
     }
   }
@@ -462,7 +462,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error: any) {
-    logger.error('Rituals API error', { error: error, endpoint: '/api/rituals' });
+    logger.error(
+      `Rituals API error at /api/rituals`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -543,7 +546,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error: any) {
-    logger.error('Create ritual error', { error: error, endpoint: '/api/rituals' });
+    logger.error(
+      `Create ritual error at /api/rituals`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

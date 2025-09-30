@@ -78,7 +78,7 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
         };
       }
     } catch (error) {
-      logger.error('Error checking space in type', { spaceId, type, error: error, endpoint: '/api/admin/spaces/bulk' });
+      logger.error('Error checking space in type', { spaceId, type, error: error instanceof Error ? error : new Error(String(error))});
     }
   }
   
@@ -98,7 +98,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
     const body = await request.json();
     const { action, spaceIds, params } = bulkOperationSchema.parse(body);
 
-    logger.info('👑 Admin executing bulk operation on spaces', { adminUserId, action, spaceCount: spaceIds.length, endpoint: '/api/admin/spaces/bulk' });
+    logger.info('👑 Admin executing bulk operation on spaces', { adminUserId, action, spaceCount: spaceIds.length });
 
   // Initialize result tracking
   const result: BulkOperationResult = {
@@ -256,7 +256,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
         await logBulkAction(adminUserId, action, spaceId, spaceType, params?.reason || 'Bulk operation');
 
       } catch (error) {
-        logger.error('Error processing space', { spaceId, error: error, endpoint: '/api/admin/spaces/bulk' });
+        logger.error('Error processing space', { spaceId, error: error instanceof Error ? error : new Error(String(error))});
         result.errors.push({
           spaceId,
           spaceType: 'unknown',
@@ -290,7 +290,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
     // Log bulk operation summary
     await logBulkOperationSummary(adminUserId, action, result);
 
-    logger.info('👑 Bulk completed: /successful in ms', { action,  result: result.executionTime, endpoint: '/api/admin/spaces/bulk'  });
+    logger.info('👑 Bulk completed: /successful in ms', { action,  result: result.executionTime  });
 
     return respond.success({
       message: `Bulk ${action} completed`,
@@ -305,7 +305,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
     });
 
   } catch (error: any) {
-    logger.error('Bulk operation error', { error: error, endpoint: '/api/admin/spaces/bulk' });
+    logger.error('Bulk operation error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
       return respond.error(
@@ -352,7 +352,7 @@ async function logBulkAction(
       isBulkOperation: true
     });
   } catch (error) {
-    logger.error('Error logging bulk action', { error: error, endpoint: '/api/admin/spaces/bulk' });
+    logger.error('Error logging bulk action', { error: error instanceof Error ? error : new Error(String(error))});
   }
 }
 
@@ -388,6 +388,6 @@ async function logBulkOperationSummary(
       }))
     });
   } catch (error) {
-    logger.error('Error logging bulk operation summary', { error: error, endpoint: '/api/admin/spaces/bulk' });
+    logger.error('Error logging bulk operation summary', { error: error instanceof Error ? error : new Error(String(error))});
   }
 }

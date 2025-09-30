@@ -29,7 +29,10 @@ export async function GET(request: NextRequest) {
     try {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
-      logger.error('Invalid ID token', { error: error, endpoint: '/api/auth/session' });
+      logger.error(
+      `Invalid ID token at /api/auth/session`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       return NextResponse.json(
         { 
           valid: false,
@@ -65,7 +68,10 @@ export async function GET(request: NextRequest) {
         };
       }
     } catch (firestoreError) {
-      logger.error('Error fetching user profile', { error: firestoreError, endpoint: '/api/auth/session' });
+      logger.error(
+      `Error fetching user profile at /api/auth/session`,
+      firestoreError instanceof Error ? firestoreError : new Error(String(firestoreError))
+    );
       // Continue without profile data
     }
 
@@ -92,7 +98,10 @@ export async function GET(request: NextRequest) {
       } });
 
   } catch (error) {
-    logger.error('Error validating session', { error: error, endpoint: '/api/auth/session' });
+    logger.error(
+      `Error validating session at /api/auth/session`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { 
         valid: false,
@@ -114,7 +123,10 @@ export async function POST(request: NextRequest) {
     // This endpoint just validates the current token
     return GET(request);
   } catch (error) {
-    logger.error('Error refreshing session', { error: error, endpoint: '/api/auth/session' });
+    logger.error(
+      `Error refreshing session at /api/auth/session`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { 
         valid: false,

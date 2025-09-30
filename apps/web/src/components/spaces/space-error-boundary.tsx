@@ -93,7 +93,7 @@ export class SpaceErrorBoundary extends Component<Props, State> {
               <div className="flex flex-col sm:flex-row gap-3 w-full">
                 <HiveButton
                   onClick={this.handleRetry}
-                  className="bg-hive-gold text-black hover:bg-yellow-400 flex-1"
+                  className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 flex-1"
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Try Again

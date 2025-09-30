@@ -216,7 +216,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   size="sm"
                   variant={previewMode === 'preview' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('preview')}
-                  className={previewMode === 'preview' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  className={previewMode === 'preview' ? 'bg-[var(--hive-brand-primary)] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   Preview
@@ -225,7 +225,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   size="sm"
                   variant={previewMode === 'live' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('live')}
-                  className={previewMode === 'live' ? 'bg-[#FFD700] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
+                  className={previewMode === 'live' ? 'bg-[var(--hive-brand-primary)] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
                 >
                   <Play className="h-4 w-4 mr-2" />
                   Live
@@ -254,7 +254,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               <Button
                 size="sm"
                 onClick={handleRun}
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Run Tool
@@ -381,7 +381,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               <div className="space-y-3">
                 <Button
                   onClick={handleRun}
-                  className="w-full bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255] justify-start"
+                  className="w-full bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255] justify-start"
                 >
                   <Play className="h-4 w-4 mr-3" />
                   Run Tool

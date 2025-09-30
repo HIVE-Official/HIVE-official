@@ -180,7 +180,10 @@ export async function GET(
           ? postsSnapshot.docs[postsSnapshot.docs.length - 1].id
           : null });
   } catch (error) {
-    logger.error('Error fetching posts', { error: error, endpoint: '/api/spaces/[spaceId]/posts' });
+    logger.error(
+      `Error fetching posts at /api/spaces/[spaceId]/posts`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch posts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -356,10 +359,10 @@ export async function POST(
       endpoint: '/api/spaces/[spaceId]/posts'
     });
 
-    logger.error('Error creating post', {
-      error: error instanceof Error ? error.message : String(error),
-      endpoint: '/api/spaces/[spaceId]/posts'
-    });
+    logger.error(
+      `Error creating post at /api/spaces/[spaceId]/posts`,
+      error instanceof Error ? error.message : String(error)
+    );
 
     return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }

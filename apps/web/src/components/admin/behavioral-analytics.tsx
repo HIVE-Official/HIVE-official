@@ -134,7 +134,7 @@ export function BehavioralAnalytics() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]"></div>
       </div>
     );
   }
@@ -479,13 +479,13 @@ export function BehavioralAnalytics() {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-hive-gold/10 border border-hive-gold/30 rounded-lg">
+              <div className="mt-6 p-4 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)]/30 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-hive-gold/20 rounded-full flex items-center justify-center">
-                    <Brain className="w-6 h-6 text-hive-gold" />
+                  <div className="w-12 h-12 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center">
+                    <Brain className="w-6 h-6 text-[var(--hive-brand-primary)]" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-hive-gold">Overall Hook Cycle Success</h4>
+                    <h4 className="font-medium text-[var(--hive-brand-primary)]">Overall Hook Cycle Success</h4>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="text-2xl font-bold text-white">{metrics.hookCycleMetrics.cycleCompletion}%</div>
                       {getTrendIcon(metrics.hookCycleMetrics.cycleCompletion, 70)}

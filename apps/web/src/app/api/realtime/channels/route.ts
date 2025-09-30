@@ -147,7 +147,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error creating chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error creating chat channel at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to create channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -225,7 +228,10 @@ export async function GET(request: NextRequest) {
       totalCount: channels.length
     });
   } catch (error) {
-    logger.error('Error getting chat channels', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error getting chat channels at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get channels", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -332,7 +338,10 @@ export async function PUT(request: NextRequest) {
       updatedAt: updates.updatedAt
     });
   } catch (error) {
-    logger.error('Error updating chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error updating chat channel at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -393,7 +402,10 @@ export async function DELETE(request: NextRequest) {
       message: 'Channel deleted successfully'
     });
   } catch (error) {
-    logger.error('Error deleting chat channel', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error deleting chat channel at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to delete channel", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -426,7 +438,10 @@ async function verifyChannelCreatePermission(userId: string, spaceId: string): P
     const memberData = memberSnapshot.docs[0].data();
     return ['builder', 'moderator', 'admin'].includes(memberData.role || 'member');
   } catch (error) {
-    logger.error('Error verifying channel create permission', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error verifying channel create permission at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -442,7 +457,10 @@ async function checkChannelNameExists(spaceId: string, name: string): Promise<bo
     const channelSnapshot = await channelQuery.get();
     return !channelSnapshot.empty;
   } catch (error) {
-    logger.error('Error checking channel name exists', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error checking channel name exists at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -457,7 +475,10 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
-    logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error getting space members at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -489,7 +510,10 @@ async function createChannelMemberships(
 
     await Promise.all(membershipPromises);
   } catch (error) {
-    logger.error('Error creating channel memberships', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error creating channel memberships at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -504,7 +528,10 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;
   } catch (error) {
-    logger.error('Error verifying space access', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error verifying space access at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -530,7 +557,10 @@ async function getUnreadCount(userId: string, channelId: string): Promise<number
     const unreadSnapshot = await unreadQuery.get();
     return unreadSnapshot.size;
   } catch (error) {
-    logger.error('Error getting unread count', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error getting unread count at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -557,7 +587,10 @@ async function verifyChannelModifyPermission(userId: string, channel: ChatChanne
     const memberData = memberSnapshot.docs[0].data();
     return ['moderator', 'admin'].includes(memberData.role || 'member');
   } catch (error) {
-    logger.error('Error verifying channel modify permission', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error verifying channel modify permission at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -583,7 +616,10 @@ async function verifyChannelDeletePermission(userId: string, channel: ChatChanne
     const memberData = memberSnapshot.docs[0].data();
     return memberData.role === 'admin';
   } catch (error) {
-    logger.error('Error verifying channel delete permission', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error verifying channel delete permission at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -600,7 +636,10 @@ async function deactivateChannelMemberships(channelId: string, userIds: string[]
 
     await Promise.all(deactivatePromises);
   } catch (error) {
-    logger.error('Error deactivating channel memberships', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error deactivating channel memberships at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -621,7 +660,10 @@ async function deactivateAllChannelMemberships(channelId: string): Promise<void>
 
     await Promise.all(deactivatePromises);
   } catch (error) {
-    logger.error('Error deactivating all channel memberships', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error deactivating all channel memberships at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -662,7 +704,10 @@ async function sendChannelSystemMessage(
 
     await dbAdmin.collection('chatMessages').doc(systemMessage.id).set(systemMessage);
   } catch (error) {
-    logger.error('Error sending system message', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error sending system message at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -721,6 +766,9 @@ async function broadcastChannelUpdate(
 
     await dbAdmin.collection('realtimeMessages').add(updateMessage);
   } catch (error) {
-    logger.error('Error broadcasting channel update', { error: error, endpoint: '/api/realtime/channels' });
+    logger.error(
+      `Error broadcasting channel update at /api/realtime/channels`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

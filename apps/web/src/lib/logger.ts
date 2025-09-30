@@ -18,6 +18,11 @@ interface LogContext {
   component?: string;
   action?: string;
   endpoint?: string;
+  type?: string;
+  sort?: string;
+  fields?: string[];
+  updates?: Record<string, unknown>;
+  id?: string;
 
   // Error handling
   error?: Error | AppError | string;
@@ -145,6 +150,12 @@ interface LogContext {
   totalEntries?: number;
   totalSpaces?: number;
   membershipCount?: number;
+  connectionCount?: number;
+  friendCount?: number;
+  detectCount?: number;
+  postsChecked?: number;
+  postsPromoted?: number;
+  fieldsUpdated?: number;
 
   // Domain and network
   blocked_domain?: string;
@@ -152,6 +163,7 @@ interface LogContext {
   // Names and identifiers
   name?: string;
   ritualName?: string;
+  ritualId?: string;
   participationId?: string;
   timestamp?: string;
   searchTerm?: string;
@@ -164,6 +176,12 @@ interface LogContext {
   reporterId?: string;
   search?: string;
   previousRole?: string;
+  eventId?: string;
+  conflictId?: string;
+  deploymentId?: string;
+  feedPostId?: string;
+  memberId?: string;
+  sseError?: string;
 
   // Feature flags
   ghostMode?: boolean;

@@ -239,7 +239,7 @@ export default function ProfileEditPageStorybook() {
       <PageContainer title="Loading..." maxWidth="lg">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="w-8 h-8 bg-hive-gold rounded-lg animate-pulse mx-auto mb-4" />
+            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg animate-pulse mx-auto mb-4" />
             <p className="text-white">Loading your profile...</p>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function ProfileEditPageStorybook() {
             <Button
               onClick={handleSave}
               disabled={!isFormDirty || isUpdating}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+              className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
             >
               <Save className="h-4 w-4 mr-2" />
               {isUpdating ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Changes'}
@@ -283,7 +283,7 @@ export default function ProfileEditPageStorybook() {
           <div className="lg:col-span-1">
             <Card className="p-6">
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <Camera className="h-5 w-5 text-hive-gold" />
+                <Camera className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Profile Photo
               </h2>
               
@@ -298,7 +298,7 @@ export default function ProfileEditPageStorybook() {
                   </Avatar>
                   <Button
                     size="sm"
-                    className="absolute bottom-0 right-0 rounded-full w-8 h-8 p-0 bg-hive-gold text-hive-obsidian"
+                    className="absolute bottom-0 right-0 rounded-full w-8 h-8 p-0 bg-[var(--hive-brand-primary)] text-hive-obsidian"
                     onClick={() => setShowAvatarModal(true)}
                   >
                     <Camera className="h-4 w-4" />
@@ -331,7 +331,7 @@ export default function ProfileEditPageStorybook() {
             {/* Basic Information */}
             <Card className="p-6">
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <User className="h-5 w-5 text-hive-gold" />
+                <User className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Basic Information
               </h2>
               
@@ -411,7 +411,7 @@ export default function ProfileEditPageStorybook() {
             {/* 🎓 **UB ACADEMIC INFORMATION** */}
             <Card className="p-6">
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <GraduationCap className="h-5 w-5 text-hive-gold" />
+                <GraduationCap className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Academic Information
               </h2>
               
@@ -462,7 +462,7 @@ export default function ProfileEditPageStorybook() {
             {/* 🏠 **UB HOUSING INFORMATION** */}
             <Card className="p-6">
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-hive-gold" />
+                <MapPin className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Housing & Location
               </h2>
               

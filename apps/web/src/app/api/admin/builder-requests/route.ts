@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { requestId, action, notes } = reviewRequestSchema.parse(body);
 
-    logger.info('👨‍💼 Admin reviewing builder request', {  requestId, action, endpoint: '/api/admin/builder-requests'  });
+    logger.info('👨‍💼 Admin reviewing builder request', {  requestId, action  });
 
     // Get the builder request
     const requestRef = dbAdmin.collection('builderRequests').doc(requestId);
@@ -141,10 +141,10 @@ export async function POST(request: NextRequest) {
           updatedAt: admin.firestore.FieldValue.serverTimestamp()
         });
 
-        logger.info('✅ Granted builder rights for space', {  requestData: requestData.spaceId, endpoint: '/api/admin/builder-requests'  });
+        logger.info('✅ Granted builder rights for space', {  requestData: requestData.spaceId  });
 
       } catch (error) {
-        logger.error('Error granting builder rights', { error: error, endpoint: '/api/admin/builder-requests' });
+        logger.error('Error granting builder rights', { error: error instanceof Error ? error : new Error(String(error))});
         // Revert request status if granting rights failed
         await requestRef.update({
           status: 'pending',
@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Send notification to the user about approval/rejection
-    logger.info('📧 User notification needed for: request d', { requestData, action, endpoint: '/api/admin/builder-requests' });
+    logger.info('📧 User notification needed for: request d', { requestData, action });
 
     return NextResponse.json({
       success: true,
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Review builder request error', { error: error, endpoint: '/api/admin/builder-requests' });
+    logger.error('Review builder request error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -289,7 +289,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Get builder requests error', { error: error, endpoint: '/api/admin/builder-requests' });
+    logger.error('Get builder requests error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

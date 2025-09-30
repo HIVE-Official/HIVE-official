@@ -176,7 +176,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error processing tool update', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error processing tool update at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to process tool update", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -251,7 +254,10 @@ export async function GET(request: NextRequest) {
       lastSequenceNumber: updates.length > 0 ? Math.max(...updates.map(u => u.sequenceNumber)) : 0
     });
   } catch (error) {
-    logger.error('Error getting tool updates', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting tool updates at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get tool updates", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -356,7 +362,10 @@ export async function PUT(request: NextRequest) {
       resolutionStrategy: conflictResolution
     });
   } catch (error) {
-    logger.error('Error syncing tool state', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error syncing tool state at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to sync tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -419,7 +428,10 @@ export async function DELETE(request: NextRequest) {
       message: `Cleaned up ${deletedCount} tool update events`
     });
   } catch (error) {
-    logger.error('Error cleaning up tool updates', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error cleaning up tool updates at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to clean up tool updates", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -470,7 +482,10 @@ async function verifyToolUpdatePermission(
 
     return false;
   } catch (error) {
-    logger.error('Error verifying tool update permission', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error verifying tool update permission at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -525,7 +540,10 @@ async function verifyToolAccess(
 
     return false;
   } catch (error) {
-    logger.error('Error verifying tool access', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error verifying tool access at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -569,7 +587,10 @@ async function getToolUsers(toolId: string, deploymentId?: string, spaceId?: str
 
     return Array.from(users);
   } catch (error) {
-    logger.error('Error getting tool users', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting tool users at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -584,7 +605,10 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
   } catch (error) {
-    logger.error('Error getting space members', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting space members at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -602,7 +626,10 @@ async function getNextSequenceNumber(toolId: string, deploymentId?: string): Pro
     
     return 1;
   } catch (error) {
-    logger.error('Error getting next sequence number', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting next sequence number at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return Date.now(); // Fallback to timestamp
   }
 }
@@ -644,7 +671,10 @@ async function getToolStateSnapshot(toolId: string, deploymentId?: string): Prom
     
     return null;
   } catch (error) {
-    logger.error('Error getting tool state snapshot', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting tool state snapshot at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -688,7 +718,10 @@ async function updateToolStateSnapshot(updateEvent: ToolUpdateEvent, currentSnap
     
     await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).set(newSnapshot);
   } catch (error) {
-    logger.error('Error updating tool state snapshot', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error updating tool state snapshot at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -719,7 +752,10 @@ async function createToolStateSnapshot(
     
     await dbAdmin.collection('toolStateSnapshots').doc(snapshotId).set(snapshot);
   } catch (error) {
-    logger.error('Error creating tool state snapshot', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error creating tool state snapshot at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -762,7 +798,10 @@ async function broadcastToolUpdate(updateEvent: ToolUpdateEvent): Promise<void> 
       await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
     }
   } catch (error) {
-    logger.error('Error broadcasting tool update', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error broadcasting tool update at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -791,7 +830,10 @@ async function notifyAffectedUsers(updateEvent: ToolUpdateEvent, userIds: string
       // await createNotification(notification);
     }
   } catch (error) {
-    logger.error('Error notifying affected users', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error notifying affected users at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -810,7 +852,10 @@ async function initializeAckTracking(updateEvent: ToolUpdateEvent): Promise<void
 
     await dbAdmin.collection('toolUpdateAcks').doc(updateEvent.id).set(ackTracking);
   } catch (error) {
-    logger.error('Error initializing ack tracking', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error initializing ack tracking at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -836,7 +881,10 @@ async function getToolSyncStatus(toolId: string, deploymentId?: string, userId?:
       activeConnections: snapshot.activeConnections.length
     };
   } catch (error) {
-    logger.error('Error getting tool sync status', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error getting tool sync status at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       status: 'error',
       lastSync: null,
@@ -928,7 +976,10 @@ async function resolveToolStateConflict(
       strategy
     };
   } catch (error) {
-    logger.error('Error resolving tool state conflict', { error: error, endpoint: '/api/realtime/tool-updates' });
+    logger.error(
+      `Error resolving tool state conflict at /api/realtime/tool-updates`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     throw error;
   }
 }

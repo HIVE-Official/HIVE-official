@@ -243,8 +243,8 @@ export function SpaceCreationPanel() {
       <HiveCard className="bg-gray-900/50 border-gray-800">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-hive-gold/20 rounded-lg flex items-center justify-center">
-              <Plus className="w-6 h-6 text-hive-gold" />
+            <div className="w-10 h-10 bg-[var(--hive-brand-primary)]/20 rounded-lg flex items-center justify-center">
+              <Plus className="w-6 h-6 text-[var(--hive-brand-primary)]" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-white">Create New Space</h2>
@@ -282,12 +282,12 @@ export function SpaceCreationPanel() {
                       className={`
                         p-4 rounded-lg border-2 transition-all
                         ${formData.category === key
-                          ? 'bg-hive-gold/20 border-hive-gold'
+                          ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]'
                           : 'bg-gray-800/50 border-gray-700 hover:bg-gray-800'
                         }
                       `}
                     >
-                      <Icon className="w-6 h-6 text-hive-gold mb-2" />
+                      <Icon className="w-6 h-6 text-[var(--hive-brand-primary)] mb-2" />
                       <div className="text-sm font-medium text-white">
                         {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </div>
@@ -562,7 +562,7 @@ export function SpaceCreationPanel() {
               <HiveButton
                 onClick={handleCreateSpace}
                 disabled={creating || !formData.name || !formData.handle || !formData.description}
-                className="bg-hive-gold text-black hover:bg-hive-gold/90"
+                className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
               >
                 {creating ? (
                   <span className="flex items-center gap-2">

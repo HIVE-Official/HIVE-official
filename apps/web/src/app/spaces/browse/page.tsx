@@ -166,7 +166,7 @@ export default function SpacesBrowsePage() {
 
               <HiveButton
                 onClick={handleSearch}
-                className="bg-hive-gold text-black hover:bg-yellow-400"
+                className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 Search
               </HiveButton>
@@ -178,7 +178,7 @@ export default function SpacesBrowsePage() {
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 {activeFilterCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-hive-gold text-black text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-[var(--hive-brand-primary)] text-black text-xs rounded-full flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -289,7 +289,7 @@ export default function SpacesBrowsePage() {
         {/* Results Grid */}
         {loading ? (
           <div className="text-center py-20">
-            <p className="text-hive-gold">Searching spaces...</p>
+            <p className="text-[var(--hive-brand-primary)]">Searching spaces...</p>
           </div>
         ) : results.length === 0 ? (
           <div className="text-center py-20">
@@ -327,7 +327,7 @@ function SpaceSearchCard({
 
   return (
     <HiveCard
-      className="bg-gray-900/50 border-gray-800 hover:border-hive-gold transition-all cursor-pointer"
+      className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)] transition-all cursor-pointer"
       onClick={onClick}
     >
       <div className="flex gap-4">
@@ -344,7 +344,7 @@ function SpaceSearchCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between mb-2">
             <div>
-              <h3 className="font-bold text-white hover:text-hive-gold transition-colors">
+              <h3 className="font-bold text-white hover:text-[var(--hive-brand-primary)] transition-colors">
                 {space.name}
               </h3>
               <p className="text-sm text-gray-400 line-clamp-2">
@@ -422,7 +422,7 @@ function SpaceSearchCard({
         <div className="flex-shrink-0">
           <HiveButton
             size="sm"
-            className="bg-hive-gold/20 text-hive-gold hover:bg-hive-gold hover:text-black"
+            className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
             onClick={(e) => {
               e.stopPropagation();
               // Handle join

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       decodedToken = await auth.verifyIdToken(idToken);
     } catch (error) {
       // If token is already invalid, consider logout successful
-      logger.info('Token already invalid during logout', { data: error, endpoint: '/api/auth/logout' });
+      logger.info('Token already invalid during logout', { data: { error: error instanceof Error ? error.message : String(error) }, endpoint: '/api/auth/logout' });
       return NextResponse.json({
         success: true,
         message: "Logged out successfully" });
@@ -43,7 +43,10 @@ export async function POST(request: NextRequest) {
       await auth.revokeRefreshTokens(userId);
       logger.info('Successfully revoked refresh tokens for user', { userId, endpoint: '/api/auth/logout' });
     } catch (revokeError) {
-      logger.error('Error revoking refresh tokens', { error: revokeError, endpoint: '/api/auth/logout' });
+      logger.error(
+      `Error revoking refresh tokens at /api/auth/logout`,
+      revokeError instanceof Error ? revokeError : new Error(String(revokeError))
+    );
       // Don't fail the logout if revocation fails
     }
 
@@ -53,7 +56,10 @@ export async function POST(request: NextRequest) {
       revokedAt: new Date().toISOString() });
 
   } catch (error) {
-    logger.error('Error during logout', { error: error, endpoint: '/api/auth/logout' });
+    logger.error(
+      `Error during logout at /api/auth/logout`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     // Even if logout fails server-side, we should return success
     // since the client can clear their local token

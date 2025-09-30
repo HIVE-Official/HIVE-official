@@ -6,7 +6,19 @@
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import type { Connection, ConnectionSource } from '@hive/core';
+import type { ConnectionSource } from '@hive/core';
+
+// Extended connection type with additional properties from Firestore
+type FirestoreConnection = {
+  userId: string;
+  strength?: number;
+  sources?: string[];  // Array of sources
+  connectedAt?: any;
+  type?: string;
+  source?: ConnectionSource | string;
+  createdAt?: any;
+  [key: string]: any;
+};
 
 /**
  * Get user's connections
@@ -30,7 +42,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     const connections = connectionsSnapshot.docs.map(doc => ({
       ...doc.data(),
       userId: doc.id
-    })) as Connection[];
+    })) as unknown as FirestoreConnection[];
 
     // Get friends list
     const friendsRef = dbAdmin
@@ -93,11 +105,13 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
         : 0,
       strongConnections: connections.filter(c => (c.strength || 0) >= 70).length,
       connectionSources: connections.reduce((acc, c) => {
-        c.sources?.forEach(source => {
+        // Handle both sources array and single source
+        const sources = c.sources || (c.source ? [c.source as string] : []);
+        sources.forEach((source: string) => {
           acc[source] = (acc[source] || 0) + 1;
         });
         return acc;
-      }, {} as Record<ConnectionSource, number>)
+      }, {} as Record<string, number>)
     };
 
     logger.info('Connections retrieved', {
@@ -111,7 +125,11 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       stats
     });
   } catch (error) {
-    logger.error('Error fetching connections', { error, userId });
+    logger.error(
+      'Error fetching connections',
+      error instanceof Error ? error : new Error(String(error)),
+      { userId }
+    );
     return respond.error('Failed to fetch connections', 'INTERNAL_ERROR');
   }
 });
@@ -131,7 +149,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     }
 
     const userData = userDoc.data()!;
-    const detectedConnections: Connection[] = [];
+    const detectedConnections: FirestoreConnection[] = [];
     const batch = dbAdmin.batch();
 
     // 1. Find users with same major
@@ -145,7 +163,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       const majorUsers = await majorQuery.get();
       majorUsers.forEach(doc => {
         if (doc.id !== userId) {
-          const connection: Connection = {
+          const connection: FirestoreConnection = {
             userId: doc.id,
             connectedAt: new Date().toISOString(),
             sources: ['same_major'],
@@ -168,11 +186,11 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       dormUsers.forEach(doc => {
         if (doc.id !== userId) {
           const existing = detectedConnections.find(c => c.userId === doc.id);
-          if (existing) {
+          if (existing && existing.sources) {
             existing.sources.push('same_dorm');
             existing.strength = Math.min((existing.strength || 0) + 40, 100);
           } else {
-            const connection: Connection = {
+            const connection: FirestoreConnection = {
               userId: doc.id,
               connectedAt: new Date().toISOString(),
               sources: ['same_dorm'],
@@ -196,7 +214,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       yearUsers.forEach(doc => {
         if (doc.id !== userId) {
           const existing = detectedConnections.find(c => c.userId === doc.id);
-          if (existing) {
+          if (existing && existing.sources) {
             if (!existing.sources.includes('same_year')) {
               existing.sources.push('same_year');
               existing.strength = Math.min((existing.strength || 0) + 10, 100);
@@ -221,13 +239,13 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       for (const memberId of members) {
         if (memberId !== userId) {
           const existing = detectedConnections.find(c => c.userId === memberId);
-          if (existing) {
+          if (existing && existing.sources) {
             if (!existing.sources.includes('same_space')) {
               existing.sources.push('same_space');
               existing.strength = Math.min((existing.strength || 0) + 20, 100);
             }
           } else {
-            const connection: Connection = {
+            const connection: FirestoreConnection = {
               userId: memberId,
               connectedAt: new Date().toISOString(),
               sources: ['same_space'],
@@ -278,7 +296,11 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       connections: detectedConnections.slice(0, 20) // Return first 20 for preview
     });
   } catch (error) {
-    logger.error('Error detecting connections', { error, userId });
+    logger.error(
+      'Error detecting connections',
+      error instanceof Error ? error : new Error(String(error)),
+      { userId }
+    );
     return respond.error('Failed to detect connections', 'INTERNAL_ERROR');
   }
 });

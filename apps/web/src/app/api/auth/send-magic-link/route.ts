@@ -74,7 +74,10 @@ async function validateSchool(schoolId: string): Promise<SchoolData | null> {
       active: data.active !== false
     };
   } catch (error) {
-    logger.error('School validation failed', { error: error, endpoint: '/api/auth/send-magic-link' });
+    logger.error(
+      `School validation failed at /api/auth/send-magic-link`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }
@@ -170,7 +173,7 @@ export const POST = withValidation(
     }
     
     // SECURITY: Validate email domain matches school domain
-    if (!validateEmailDomain(email, schoolData.domain)) {
+    if (!validateEmailDomain(email, [schoolData.domain])) {
       await auditAuthEvent('failure', request, {
         operation: 'send_magic_link',
         error: 'domain_mismatch'
@@ -234,7 +237,10 @@ export const POST = withValidation(
     try {
       magicLink = await auth.generateSignInWithEmailLink(email, actionCodeSettings);
     } catch (firebaseError: any) {
-      logger.error('Firebase magic link generation failed', { error: firebaseError, endpoint: '/api/auth/send-magic-link' });
+      logger.error(
+      `Firebase magic link generation failed at /api/auth/send-magic-link`,
+      firebaseError instanceof Error ? firebaseError : new Error(String(firebaseError))
+    );
       
       // For development: if Dynamic Links is not configured, create a simple fallback
       if (currentEnvironment === 'development' && 
@@ -249,7 +255,10 @@ export const POST = withValidation(
           
           logger.info('✅ Development magic link created successfully', { endpoint: '/api/auth/send-magic-link' });
         } catch (tokenError) {
-          logger.error('Failed to create development token', { error: tokenError, endpoint: '/api/auth/send-magic-link' });
+          logger.error(
+      `Failed to create development token at /api/auth/send-magic-link`,
+      tokenError instanceof Error ? tokenError : new Error(String(tokenError))
+    );
           
           await auditAuthEvent('failure', request, {
             operation: 'send_magic_link',
@@ -301,10 +310,10 @@ export const POST = withValidation(
         error: 'firebase_email_failed'
       });
 
-      logger.error('Firebase Auth email sending failed', {
-        error: emailError.message,
-        endpoint: '/api/auth/send-magic-link'
-      });
+      logger.error(
+      `Firebase Auth email sending failed at /api/auth/send-magic-link`,
+      emailError.message
+    );
 
       return NextResponse.json(ApiResponseHelper.error("Unable to send email", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }

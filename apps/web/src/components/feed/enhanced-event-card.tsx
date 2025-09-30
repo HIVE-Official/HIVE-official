@@ -238,7 +238,7 @@ export function EnhancedEventCard({
               className={`${
                 event.isAttending
                   ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-hive-gold text-hive-obsidian hover:bg-hive-champagne'
+                  : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
               }`}
               size="sm"
             >
@@ -251,7 +251,7 @@ export function EnhancedEventCard({
               size="sm"
               disabled={actionLoading === 'bookmark'}
             >
-              <Bookmark className={`h-4 w-4 ${event.isBookmarked ? 'fill-current text-hive-gold' : ''}`} />
+              <Bookmark className={`h-4 w-4 ${event.isBookmarked ? 'fill-current text-[var(--hive-brand-primary)]' : ''}`} />
             </Button>
 
             <Button
@@ -280,7 +280,7 @@ export function EnhancedEventCard({
   return (
     <div className="relative">
       <Card
-        className={`group cursor-pointer transition-all duration-200 hover:border-hive-gold/50 ${
+        className={`group cursor-pointer transition-all duration-200 hover:border-[var(--hive-brand-primary)]/50 ${
           isHappeningNow ? 'ring-2 ring-green-500/50' : ''
         } ${className}`}
         onMouseEnter={() => !isMobile && setIsHovered(true)}
@@ -303,7 +303,7 @@ export function EnhancedEventCard({
                 )}
               </div>
 
-              <h3 className="text-lg font-semibold text-hive-text-primary group-hover:text-hive-gold transition-colors">
+              <h3 className="text-lg font-semibold text-hive-text-primary group-hover:text-[var(--hive-brand-primary)] transition-colors">
                 {sanitizeText(event.title)}
               </h3>
 
@@ -327,7 +327,7 @@ export function EnhancedEventCard({
                   className={`${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
-                      : 'bg-hive-gold text-hive-obsidian hover:bg-hive-champagne'
+                      : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
                 >
                   {event.isAttending ? 'Going' : 'RSVP'}
@@ -396,8 +396,8 @@ export function EnhancedEventCard({
                   }}
                   className={`p-2 rounded transition-colors ${
                     event.isBookmarked
-                      ? 'text-hive-gold'
-                      : 'text-hive-text-secondary hover:text-hive-gold'
+                      ? 'text-[var(--hive-brand-primary)]'
+                      : 'text-hive-text-secondary hover:text-[var(--hive-brand-primary)]'
                   }`}
                   disabled={actionLoading === 'bookmark'}
                 >
@@ -427,7 +427,7 @@ export function EnhancedEventCard({
                   className={`${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
-                      : 'bg-hive-gold text-hive-obsidian hover:bg-hive-champagne'
+                      : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
                 >
                   {event.isAttending ? (

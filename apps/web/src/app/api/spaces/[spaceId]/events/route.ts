@@ -154,7 +154,10 @@ export async function GET(
         nextOffset: eventsSnapshot.size === limit ? offset + limit : null,
       } });
   } catch (error) {
-    logger.error('Error fetching events', { error: error, endpoint: '/api/spaces/[spaceId]/events' });
+    logger.error(
+      `Error fetching events at /api/spaces/[spaceId]/events`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -247,7 +250,10 @@ export async function POST(
       );
     }
 
-    logger.error('Error creating event', { error: error, endpoint: '/api/spaces/[spaceId]/events' });
+    logger.error(
+      `Error creating event at /api/spaces/[spaceId]/events`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to create event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

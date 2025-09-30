@@ -83,7 +83,10 @@ export async function GET(
       updatedAt: stateData.updatedAt
     });
   } catch (error) {
-    logger.error('Error fetching tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    logger.error(
+      `Error fetching tool state at /api/tools/state/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -178,7 +181,10 @@ export async function PUT(
       updatedAt: now
     });
   } catch (error) {
-    logger.error('Error updating tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    logger.error(
+      `Error updating tool state at /api/tools/state/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -283,7 +289,10 @@ export async function PATCH(
       updatedAt: now
     });
   } catch (error) {
-    logger.error('Error patching tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    logger.error(
+      `Error patching tool state at /api/tools/state/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to patch tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -327,7 +336,10 @@ export async function DELETE(
       message: 'Tool state cleared successfully'
     });
   } catch (error) {
-    logger.error('Error clearing tool state', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    logger.error(
+      `Error clearing tool state at /api/tools/state/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to clear tool state", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -353,7 +365,10 @@ async function canUserAccessState(userId: string, deployment: any): Promise<bool
 
     return false;
   } catch (error) {
-    logger.error('Error checking state access', { error: error, endpoint: '/api/tools/state/[deploymentId]' });
+    logger.error(
+      `Error checking state access at /api/tools/state/[deploymentId]`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }

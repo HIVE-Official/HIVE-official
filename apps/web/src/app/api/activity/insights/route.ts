@@ -24,6 +24,8 @@ interface ActivityEvent {
   type: string;
   details: Record<string, unknown>;
   timestamp: string;
+  spaceId?: string;
+  toolId?: string;
 }
 
 // Advanced insights interface
@@ -53,6 +55,14 @@ interface ToolUsagePattern {
   totalTime: number;
   efficiency: number;
   lastUsed: string;
+}
+
+interface BehaviorPattern {
+  type: 'routine' | 'peak_hour' | 'space_preference' | 'tool_usage' | 'social';
+  description: string;
+  frequency?: number;
+  confidence: number;
+  details: Record<string, any>;
 }
 
 // GET - Generate advanced activity insights
@@ -97,8 +107,18 @@ export async function GET(request: NextRequest) {
       .orderBy('date', 'desc');
 
     const summariesSnapshot = await summariesQuery.get();
-    const summaries = summariesSnapshot.docs.map(doc => ({
+    const summaries = summariesSnapshot.docs.map((doc: any): ActivitySummary => ({
       id: doc.id,
+      userId: doc.data().userId || '',
+      date: doc.data().date || new Date().toISOString().split('T')[0],
+      totalTimeSpent: doc.data().totalTimeSpent || 0,
+      spacesVisited: doc.data().spacesVisited || [],
+      toolsUsed: doc.data().toolsUsed || [],
+      contentCreated: doc.data().contentCreated || 0,
+      socialInteractions: doc.data().socialInteractions || 0,
+      peakActivityHour: doc.data().peakActivityHour || 12,
+      sessionCount: doc.data().sessionCount || 0,
+      createdAt: doc.data().createdAt || new Date().toISOString(),
       ...doc.data()
     }));
 
@@ -110,10 +130,15 @@ export async function GET(request: NextRequest) {
       .orderBy('timestamp', 'desc');
 
     const eventsSnapshot = await eventsQuery.get();
-    const events = eventsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const events: ActivityEvent[] = eventsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        userId: data.userId || user.uid,
+        type: data.type || 'unknown',
+        details: data.details || {},
+        timestamp: data.timestamp || data.createdAt || new Date().toISOString()
+      };
+    });
 
     // Generate comprehensive insights
     const insights = await generateAdvancedInsights(summaries, events, timeRange, analysisType);
@@ -135,7 +160,10 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error generating activity insights', { error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/activity/insights' });
+    logger.error(
+      `Error generating activity insights at /api/activity/insights`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to generate activity insights", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -267,21 +295,20 @@ async function generateAdvancedInsights(summaries: ActivitySummary[], events: Ac
 
 // Helper function to analyze space engagement
 function analyzeSpaceEngagement(summaries: ActivitySummary[], events: ActivityEvent[]): SpaceEngagement[] {
-  const spaceData: Record<string, { visits: number; timeSpent: number; lastVisit: string }> = {};
+  const spaceData: Record<string, any> = {};
 
   // Aggregate space activity
   summaries.forEach(summary => {
     summary.spacesVisited.forEach((spaceId: string) => {
       if (!spaceData[spaceId]) {
         spaceData[spaceId] = {
-          spaceId,
-          totalTime: 0,
           visits: 0,
-          hourCounts: {}
-        };
+          timeSpent: 0,
+          lastVisit: new Date().toISOString()
+        } as any;
       }
       spaceData[spaceId].visits += 1;
-      spaceData[spaceId].totalTime += summary.totalTimeSpent / summary.spacesVisited.length;
+      spaceData[spaceId].timeSpent += summary.totalTimeSpent / summary.spacesVisited.length;
     });
   });
 
@@ -289,13 +316,16 @@ function analyzeSpaceEngagement(summaries: ActivitySummary[], events: ActivityEv
   events.forEach(event => {
     if (event.spaceId && spaceData[event.spaceId]) {
       const hour = new Date(event.timestamp).getHours();
+      if (!spaceData[event.spaceId].hourCounts) {
+        spaceData[event.spaceId].hourCounts = {};
+      }
       spaceData[event.spaceId].hourCounts[hour] = (spaceData[event.spaceId].hourCounts[hour] || 0) + 1;
     }
   });
 
   // Convert to SpaceEngagement array
-  return Object.values(spaceData).map((data: any) => {
-    const avgTime = data.totalTime / Math.max(data.visits, 1);
+  return Object.entries(spaceData).map(([spaceId, data]: [string, any]) => {
+    const avgTime = data.timeSpent / Math.max(data.visits, 1);
     const engagement = avgTime > 30 ? 'high' : avgTime > 10 ? 'medium' : 'low';
     
     const peakHour = Object.entries(data.hourCounts).reduce((max, [hour, count]) => 
@@ -320,7 +350,7 @@ function analyzeSpaceEngagement(summaries: ActivitySummary[], events: ActivityEv
 
 // Helper function to analyze tool usage
 function analyzeToolUsage(summaries: ActivitySummary[], events: ActivityEvent[]): ToolUsagePattern[] {
-  const toolData: Record<string, { uses: number; lastUsed: string; spaces: string[] }> = {};
+  const toolData: Record<string, any> = {};
 
   // Aggregate tool usage
   summaries.forEach(summary => {
@@ -330,7 +360,7 @@ function analyzeToolUsage(summaries: ActivitySummary[], events: ActivityEvent[])
           toolId,
           usageCount: 0,
           totalTime: 0,
-          lastUsed: null
+          lastUsed: ''
         };
       }
       toolData[toolId].usageCount += 1;
@@ -395,5 +425,44 @@ function detectBehaviorPatterns(summaries: ActivitySummary[], events: ActivityEv
 
   patterns.activityDistribution = activityTypes;
 
-  return patterns;
+  // Convert patterns object to BehaviorPattern array
+  const behaviorPatterns: BehaviorPattern[] = [];
+
+  // Add weekly pattern
+  if (patterns.weeklyPattern && patterns.weeklyPattern.length > 0) {
+    const topDay = patterns.weeklyPattern[0];
+    behaviorPatterns.push({
+      type: 'routine',
+      description: `Most active on ${topDay.day}s`,
+      frequency: patterns.weeklyPattern.length,
+      confidence: 80,
+      details: patterns.weeklyPattern
+    });
+  }
+
+  // Add session pattern
+  if (patterns.averageSessionLength) {
+    behaviorPatterns.push({
+      type: 'routine',
+      description: `Average session length: ${patterns.averageSessionLength} minutes`,
+      frequency: sessionLengths.length,
+      confidence: 75,
+      details: { averageSessionLength: patterns.averageSessionLength, consistency: patterns.sessionConsistency }
+    });
+  }
+
+  // Add activity type pattern
+  const dominantActivity = Object.entries(activityTypes)
+    .sort(([,a], [,b]) => b - a)[0];
+  if (dominantActivity) {
+    behaviorPatterns.push({
+      type: 'routine',
+      description: `Primary activity type: ${dominantActivity[0]}`,
+      frequency: dominantActivity[1],
+      confidence: 70,
+      details: activityTypes
+    });
+  }
+
+  return behaviorPatterns;
 }

@@ -48,7 +48,7 @@ async function validateSchoolDomain(email: string, schoolId: string): Promise<bo
     
     return emailDomain === schoolDomain;
   } catch (error) {
-    logger.error('School domain validation failed', { error: error, endpoint: '/api/auth/verify-magic-link' });
+    logger.error('School domain validation failed', error instanceof Error ? error : new Error(String(error)), { metadata: { endpoint: '/api/auth/verify-magic-link' } });
     return false;
   }
 }
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
         // Try to decode the development token (URL-safe base64)
         const decodedToken = JSON.parse(Buffer.from(token, 'base64url').toString());
         if (decodedToken.dev && decodedToken.email === email) {
-          logger.info('🔧 Development token verified', { email, endpoint: '/api/auth/verify-magic-link' });
+          logger.info('🔧 Development token verified', { metadata: { email, endpoint: '/api/auth/verify-magic-link' } });
 
           // Create a simple session for development
           const userId = `dev-user-${email.replace(/[@.]/g, '_')}`;
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
           return response;
         }
       } catch (e) {
-        logger.info('Not a development token, continuing with Firebase verification', { endpoint: '/api/auth/verify-magic-link' });
+        logger.info('Not a development token, continuing with Firebase verification', { metadata: { endpoint: '/api/auth/verify-magic-link' } });
       }
     }
 
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
     } catch (firebaseError: any) {
       // If it's development, allow a simple bypass for testing
       if (currentEnvironment === 'development') {
-        logger.info('🔧 Development mode: Bypassing Firebase action code verification', { endpoint: '/api/auth/verify-magic-link' });
+        logger.info('🔧 Development mode: Bypassing Firebase action code verification', { metadata: { endpoint: '/api/auth/verify-magic-link' } });
         
         isCustomToken = true;
         
@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
           }
         };
         
-        logger.info('✅ Development token accepted', { endpoint: '/api/auth/verify-magic-link' });
+        logger.info('✅ Development token accepted', { metadata: { endpoint: '/api/auth/verify-magic-link' } });
       } else {
         await auditAuthEvent('failure', request, {
           operation: 'verify_magic_link',
@@ -306,8 +306,7 @@ export async function POST(request: NextRequest) {
           if (!currentClaims.isAdmin) {
             logger.info('🔐 Auto-granting admin permissions', {
               userId: userRecord.uid,
-              email: email,
-              endpoint: '/api/auth/verify-magic-link'
+              metadata: { email: email, endpoint: '/api/auth/verify-magic-link' }
             });
 
             // Determine role
@@ -337,16 +336,16 @@ export async function POST(request: NextRequest) {
 
             logger.info('✅ Admin permissions granted on login', {
               userId: userRecord.uid,
-              email: email,
-              role: role
+              metadata: { email: email, role: role }
             });
           }
         } catch (adminError) {
-          logger.error('Failed to grant admin permissions', {
-            error: adminError,
-            userId: userRecord.uid,
-            email: email
-          });
+          logger.error('Failed to grant admin permissions',
+            adminError instanceof Error ? adminError : new Error(String(adminError)),
+            {
+              userId: userRecord.uid,
+              metadata: { email: email }
+            });
           // Don't fail the login if admin grant fails
         }
       }

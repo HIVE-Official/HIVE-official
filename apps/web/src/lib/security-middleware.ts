@@ -232,7 +232,7 @@ export function verifySecureToken(token: string, secret: string): { valid: boole
 
     return { valid: true, data: payload };
   } catch (error) {
-    logger.error('Token verification failed', { error });
+    logger.error('Token verification failed', { error: error instanceof Error ? error : new Error(String(error)) });
     return { valid: false };
   }
 }
@@ -300,7 +300,7 @@ export async function withSecurity(
 
     return response;
   } catch (error) {
-    logger.error('Security middleware error', { error });
+    logger.error('Security middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
 
     return NextResponse.json(
       { error: 'Security check failed' },

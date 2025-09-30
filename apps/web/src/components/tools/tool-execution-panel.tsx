@@ -281,7 +281,7 @@ export function ToolExecutionPanel({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-hive-gold rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg flex items-center justify-center">
               <Code className="h-5 w-5 text-hive-obsidian" />
             </div>
             <div>
@@ -326,7 +326,7 @@ export function ToolExecutionPanel({
                 disabled={Object.keys(tool.schema.inputs).some(key => 
                   tool.schema.inputs[key].required && !inputs[key]
                 )}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Execute

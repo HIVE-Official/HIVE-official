@@ -708,7 +708,7 @@ export function ToolBuilder({
               <Button
                 onClick={handleSave}
                 disabled={!formIsValid || isSaving}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {isSaving ? 'Saving...' : 'Save Tool'}

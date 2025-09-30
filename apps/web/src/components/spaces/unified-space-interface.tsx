@@ -301,7 +301,7 @@ export function UnifiedSpaceInterface({
       <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="text-6xl animate-pulse">🍯</div>
-          <span className="text-xl text-hive-gold animate-pulse">Loading space...</span>
+          <span className="text-xl text-[var(--hive-brand-primary)] animate-pulse">Loading space...</span>
         </div>
       </div>
     );
@@ -337,7 +337,7 @@ export function UnifiedSpaceInterface({
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h1 className="text-2xl font-bold text-white">{space.name}</h1>
-                      <Badge className="bg-hive-gold/20 text-hive-gold border-hive-gold/30">
+                      <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
                         {space.type?.replace('_', ' ')}
                       </Badge>
                     </div>
@@ -421,21 +421,21 @@ export function UnifiedSpaceInterface({
               <TabsList className="bg-gray-900 border border-gray-800 w-full">
                 <TabsTrigger
                   value="posts"
-                  className="flex items-center space-x-2 data-[state=active]:bg-hive-gold data-[state=active]:text-black"
+                  className="flex items-center space-x-2 data-[state=active]:bg-[var(--hive-brand-primary)] data-[state=active]:text-black"
                 >
                   <Hash className="w-4 h-4" />
                   <span>Posts</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="members"
-                  className="flex items-center space-x-2 data-[state=active]:bg-hive-gold data-[state=active]:text-black"
+                  className="flex items-center space-x-2 data-[state=active]:bg-[var(--hive-brand-primary)] data-[state=active]:text-black"
                 >
                   <Users className="w-4 h-4" />
                   <span>Members</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="events"
-                  className="flex items-center space-x-2 data-[state=active]:bg-hive-gold data-[state=active]:text-black"
+                  className="flex items-center space-x-2 data-[state=active]:bg-[var(--hive-brand-primary)] data-[state=active]:text-black"
                 >
                   <Calendar className="w-4 h-4" />
                   <span>Events</span>
@@ -446,7 +446,7 @@ export function UnifiedSpaceInterface({
                   <TabsTrigger
                     key={tool.id}
                     value={`tool-${tool.id}`}
-                    className="flex items-center space-x-2 data-[state=active]:bg-hive-gold data-[state=active]:text-black"
+                    className="flex items-center space-x-2 data-[state=active]:bg-[var(--hive-brand-primary)] data-[state=active]:text-black"
                   >
                     <span className="text-xs">{tool.icon || '🔧'}</span>
                     <span>{tool.name}</span>

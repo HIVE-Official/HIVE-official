@@ -1,17 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Card, CardContent, CardHeader } from "@hive/ui";
-
-// Simple skeleton component
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={`animate-pulse rounded-md bg-hive-background-tertiary ${className || ''}`}
-      {...props}
-    />
-  );
-}
+import { Card, CardContent, CardHeader, Skeleton } from "@hive/ui";
 
 export function ProfileLoadingSkeleton() {
   return (

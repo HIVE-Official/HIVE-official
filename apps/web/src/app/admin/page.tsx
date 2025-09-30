@@ -422,7 +422,7 @@ function AdminDashboardInternal() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-3">
-                  <Button className="w-full justify-start bg-hive-gold/10 hover:bg-hive-gold/20 text-hive-gold border border-hive-gold/30">
+                  <Button className="w-full justify-start bg-[var(--hive-brand-primary)]/10 hover:bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/30">
                     <Users className="w-4 h-4 mr-2" />
                     Review Builder Requests ({statistics.builderRequests.pending})
                   </Button>

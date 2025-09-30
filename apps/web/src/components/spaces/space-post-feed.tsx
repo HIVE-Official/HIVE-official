@@ -284,22 +284,22 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                     }
                   }}
                   placeholder={replyingTo ? "Reply to this message..." : "Share with the space..."}
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-400 resize-none focus:border-hive-gold focus:outline-none min-h-[40px] max-h-[120px]"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white placeholder-gray-400 resize-none focus:border-[var(--hive-brand-primary)] focus:outline-none min-h-[40px] max-h-[120px]"
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <button className="p-2 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded-lg transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded-lg transition-colors">
                     <Image className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded-lg transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded-lg transition-colors">
                     <Paperclip className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded-lg transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded-lg transition-colors">
                     <Smile className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded-lg transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded-lg transition-colors">
                     <AtSign className="w-4 h-4" />
                   </button>
                 </div>
@@ -307,7 +307,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                 <HiveButton
                   onClick={handleCreatePost}
                   disabled={!newPostContent.trim() || posting}
-                  className="bg-hive-gold text-black hover:bg-yellow-400 disabled:opacity-50"
+                  className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 disabled:opacity-50"
                   size="sm"
                 >
                   {posting ? (
@@ -409,7 +409,7 @@ function PostMessage({
 
               <button
                 onClick={() => setShowReactions(!showReactions)}
-                className="w-7 h-7 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-hive-gold transition-colors"
+                className="w-7 h-7 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-[var(--hive-brand-primary)] transition-colors"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -440,25 +440,25 @@ function PostMessage({
           <div className="flex items-center space-x-1 absolute right-4 top-2">
             <button
               onClick={() => onReaction(post.id, '👍')}
-              className="p-1 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded transition-colors"
+              className="p-1 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded transition-colors"
             >
               <Heart className="w-4 h-4" />
             </button>
             <button
               onClick={onReply}
-              className="p-1 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded transition-colors"
+              className="p-1 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded transition-colors"
             >
               <Reply className="w-4 h-4" />
             </button>
             {post.canEdit && (
               <button
                 onClick={onEdit}
-                className="p-1 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded transition-colors"
+                className="p-1 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded transition-colors"
               >
                 <Edit className="w-4 h-4" />
               </button>
             )}
-            <button className="p-1 text-gray-400 hover:text-hive-gold hover:bg-gray-800 rounded transition-colors">
+            <button className="p-1 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-800 rounded transition-colors">
               <MoreHorizontal className="w-4 h-4" />
             </button>
           </div>

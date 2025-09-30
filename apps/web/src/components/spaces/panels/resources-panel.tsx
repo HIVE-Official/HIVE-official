@@ -247,7 +247,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
               size="sm"
               onClick={() => document.getElementById('file-upload')?.click()}
               disabled={uploading}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add
@@ -260,7 +260,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <div className="mb-4">
             <div className="flex items-center justify-between text-sm mb-1">
               <span className="text-gray-400">Uploading...</span>
-              <span className="text-hive-gold">{uploadProgress}%</span>
+              <span className="text-[var(--hive-brand-primary)]">{uploadProgress}%</span>
             </div>
             <Progress value={uploadProgress} className="h-2" />
           </div>
@@ -327,7 +327,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
         {/* Pinned Resources */}
         {pinnedResources.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-hive-gold mb-3 flex items-center gap-2">
+            <h4 className="text-sm font-medium text-[var(--hive-brand-primary)] mb-3 flex items-center gap-2">
               <Star className="w-4 h-4" />
               Pinned
             </h4>
@@ -421,7 +421,7 @@ function ResourceCard({
 
   return (
     <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
-      resource.isPinned ? 'border-hive-gold/30 bg-hive-gold/5' : 'bg-gray-900/50'
+      resource.isPinned ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     } ${resource.isArchived ? 'opacity-60' : ''}`}>
       <div className="flex items-start gap-3">
         {/* File Icon/Thumbnail */}
@@ -445,7 +445,7 @@ function ResourceCard({
             <div>
               <h5 className="font-medium text-white text-sm mb-1 flex items-center gap-2">
                 {resource.title}
-                {resource.isPinned && <Star className="w-3 h-3 text-hive-gold" />}
+                {resource.isPinned && <Star className="w-3 h-3 text-[var(--hive-brand-primary)]" />}
                 {resource.isArchived && <Archive className="w-3 h-3 text-gray-500" />}
               </h5>
               <div className="flex items-center gap-3 text-xs text-gray-400">

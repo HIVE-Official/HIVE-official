@@ -56,7 +56,7 @@ export function ConfirmationModal({
         return {
           headerBg: 'bg-gradient-to-r from-blue-500/10 to-blue-600/10',
           border: 'border-blue-500/20',
-          buttonClass: 'bg-hive-gold hover:bg-hive-champagne text-hive-obsidian'
+          buttonClass: 'bg-[var(--hive-brand-primary)] hover:bg-hive-champagne text-hive-obsidian'
         };
     }
   };

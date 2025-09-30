@@ -225,7 +225,7 @@ export default function CalendarPage() {
           </div>
           <Button
             onClick={() => setShowAddEvent(!showAddEvent)}
-            className="bg-[#FFD700] text-black hover:bg-[#FFD700]/90"
+            className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
           >
             + Add Event
           </Button>
@@ -293,7 +293,7 @@ export default function CalendarPage() {
             <div className="flex gap-2 mt-4">
               <Button
                 onClick={createEvent}
-                className="bg-[#FFD700] text-black hover:bg-[#FFD700]/90"
+                className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
               >
                 Create Event
               </Button>
@@ -346,7 +346,7 @@ export default function CalendarPage() {
             <Button
               variant={viewMode === 'day' ? 'default' : 'outline'}
               onClick={() => setViewMode('day')}
-              className={viewMode === 'day' ? 'bg-[#FFD700] text-black' : 'border-white/20'}
+              className={viewMode === 'day' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
               size="sm"
             >
               Day
@@ -354,7 +354,7 @@ export default function CalendarPage() {
             <Button
               variant={viewMode === 'week' ? 'default' : 'outline'}
               onClick={() => setViewMode('week')}
-              className={viewMode === 'week' ? 'bg-[#FFD700] text-black' : 'border-white/20'}
+              className={viewMode === 'week' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
               size="sm"
             >
               Week
@@ -362,7 +362,7 @@ export default function CalendarPage() {
             <Button
               variant={viewMode === 'month' ? 'default' : 'outline'}
               onClick={() => setViewMode('month')}
-              className={viewMode === 'month' ? 'bg-[#FFD700] text-black' : 'border-white/20'}
+              className={viewMode === 'month' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
               size="sm"
             >
               Month
@@ -396,7 +396,7 @@ export default function CalendarPage() {
                       {date.toLocaleDateString('en-US', { weekday: 'short' })}
                     </div>
                     <div className={`text-lg font-semibold ${
-                      date.toDateString() === new Date().toDateString() ? 'text-[#FFD700]' : ''
+                      date.toDateString() === new Date().toDateString() ? 'text-[var(--hive-brand-primary)]' : ''
                     }`}>
                       {date.getDate()}
                     </div>

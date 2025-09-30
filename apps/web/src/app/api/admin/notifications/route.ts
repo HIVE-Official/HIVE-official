@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         totalCount: stats.total,
         statistics: stats });
     } catch (error) {
-      logger.error('Error fetching admin notifications', { error: error, endpoint: '/api/admin/notifications' });
+      logger.error('Error fetching admin notifications', { error: error instanceof Error ? error : new Error(String(error))});
       return NextResponse.json(
         { success: false, error: 'Failed to fetch notifications' },
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         success: true,
         result });
     } catch (error) {
-      logger.error('Error processing notification action', { error: error, endpoint: '/api/admin/notifications' });
+      logger.error('Error processing notification action', { error: error instanceof Error ? error : new Error(String(error))});
       return NextResponse.json(
         { success: false, error: 'Failed to process notification action' },
         { status: HttpStatus.INTERNAL_SERVER_ERROR }

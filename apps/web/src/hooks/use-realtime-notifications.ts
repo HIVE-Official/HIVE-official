@@ -130,7 +130,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
           });
 
         } catch (error) {
-          logger.error('Error processing notifications', { error, userId: user.uid });
+          logger.error('Error processing notifications', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
           setState(prev => ({
             ...prev,
             loading: false,
@@ -139,7 +139,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         }
       },
       (error) => {
-        logger.error('Notifications listener error', { error, userId: user.uid });
+        logger.error('Notifications listener error', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -166,7 +166,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
 
       logger.info('Notification marked as read', { notificationId, userId: user.uid });
     } catch (error) {
-      logger.error('Error marking notification as read', { error, notificationId, userId: user.uid });
+      logger.error('Error marking notification as read', { error: error instanceof Error ? error : new Error(String(error)), notificationId, userId: user.uid });
       throw error;
     }
   }, [user?.uid]);
@@ -194,7 +194,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         userId: user.uid
       });
     } catch (error) {
-      logger.error('Error marking all notifications as read', { error, userId: user.uid });
+      logger.error('Error marking all notifications as read', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
       throw error;
     }
   }, [user?.uid, state.notifications, state.unreadCount]);
@@ -212,7 +212,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
 
       logger.info('Notification deleted', { notificationId, userId: user.uid });
     } catch (error) {
-      logger.error('Error deleting notification', { error, notificationId, userId: user.uid });
+      logger.error('Error deleting notification', { error: error instanceof Error ? error : new Error(String(error)), notificationId, userId: user.uid });
       throw error;
     }
   }, [user?.uid]);
@@ -239,7 +239,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         userId: user.uid
       });
     } catch (error) {
-      logger.error('Error clearing all notifications', { error, userId: user.uid });
+      logger.error('Error clearing all notifications', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
       throw error;
     }
   }, [user?.uid, state.notifications]);

@@ -357,7 +357,7 @@ function MemberCard({
         <div className="relative">
           <Avatar className="w-10 h-10">
             <AvatarImage src={member.avatar} />
-            <AvatarFallback className="bg-hive-gold text-black text-sm">
+            <AvatarFallback className="bg-[var(--hive-brand-primary)] text-black text-sm">
               {member.name[0]}
             </AvatarFallback>
           </Avatar>

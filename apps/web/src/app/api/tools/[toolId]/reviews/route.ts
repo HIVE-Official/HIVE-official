@@ -292,7 +292,10 @@ async function updateToolRatingStats(toolId: string) {
 
   } catch (error) {
     // Error updating marketplace stats - this is non-critical, so we silently continue
-    logger.error('Failed to update marketplace stats', { error: error, endpoint: '/api/tools/[toolId]/reviews' });
+    logger.error(
+      `Failed to update marketplace stats at /api/tools/[toolId]/reviews`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 

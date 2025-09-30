@@ -67,7 +67,10 @@ export async function GET(request: NextRequest) {
       canView: targetUserId === user.uid ? true : isVisible
     });
   } catch (error) {
-    logger.error('Error fetching ghost mode status', { error: error, endpoint: '/api/privacy/ghost-mode' });
+    logger.error(
+      `Error fetching ghost mode status at /api/privacy/ghost-mode`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch ghost mode status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -170,7 +173,10 @@ export async function POST(request: NextRequest) {
       expiresAt: ghostModeExpiry
     });
   } catch (error) {
-    logger.error('Error updating ghost mode', { error: error, endpoint: '/api/privacy/ghost-mode' });
+    logger.error(
+      `Error updating ghost mode at /api/privacy/ghost-mode`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update ghost mode", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -272,7 +278,10 @@ async function applyGhostModeChanges(userId: string, ghostMode: any) {
       });
     }
   } catch (error) {
-    logger.error('Error applying ghost mode changes', { error: error, endpoint: '/api/privacy/ghost-mode' });
+    logger.error(
+      `Error applying ghost mode changes at /api/privacy/ghost-mode`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 

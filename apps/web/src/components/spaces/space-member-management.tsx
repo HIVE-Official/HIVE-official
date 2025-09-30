@@ -355,7 +355,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
-            <Users className="h-6 w-6 text-[#FFD700]" />
+            <Users className="h-6 w-6 text-[var(--hive-brand-primary)]" />
             <div>
               <h2 className="text-xl font-semibold text-white">Member Management</h2>
               <p className="text-sm text-gray-400">{spaceName} • {members.length} members</p>
@@ -366,7 +366,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {canInviteMembers && (
               <Button
                 size="sm"
-                className="bg-[#FFD700]/20 text-[#FFD700] border-[#FFD700]/30 hover:bg-[#FFD700]/30"
+                className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/30"
                 onClick={() => setShowInviteModal(true)}
               >
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -396,7 +396,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 placeholder="Search members..."
                 value={searchQuery}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50 focus:border-[#FFD700]/30"
+                className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 focus:border-[var(--hive-brand-primary)]/30"
               />
             </div>
 
@@ -404,7 +404,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             <select
               value={selectedRole}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
-              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
+              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Roles</option>
               <option value="owner">Owners</option>
@@ -417,7 +417,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             <select
               value={selectedStatus}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
+              className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>

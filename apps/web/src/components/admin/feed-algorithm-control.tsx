@@ -222,7 +222,7 @@ export function FeedAlgorithmControl() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]"></div>
       </div>
     );
   }
@@ -269,7 +269,7 @@ export function FeedAlgorithmControl() {
           <Button
             onClick={saveConfig}
             disabled={saving || !unsavedChanges}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             {saving ? (
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -339,7 +339,7 @@ export function FeedAlgorithmControl() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Clock className="h-5 w-5 text-hive-gold" />
+              <Clock className="h-5 w-5 text-[var(--hive-brand-primary)]" />
               <span>Temporal Event Weights</span>
             </CardTitle>
             <CardDescription>
@@ -353,7 +353,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary capitalize">
                     {key.replace(/([A-Z])/g, ' $1')}
                   </label>
-                  <Badge variant="outline" className="text-hive-gold">
+                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                     {value} pts
                   </Badge>
                 </div>
@@ -374,7 +374,7 @@ export function FeedAlgorithmControl() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Target className="h-5 w-5 text-hive-gold" />
+              <Target className="h-5 w-5 text-[var(--hive-brand-primary)]" />
               <span>Content Type Priorities</span>
             </CardTitle>
             <CardDescription>
@@ -412,7 +412,7 @@ export function FeedAlgorithmControl() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <TrendingUp className="h-5 w-5 text-hive-gold" />
+              <TrendingUp className="h-5 w-5 text-[var(--hive-brand-primary)]" />
               <span>Engagement Factors</span>
             </CardTitle>
             <CardDescription>
@@ -432,7 +432,7 @@ export function FeedAlgorithmControl() {
                     <label className="text-sm font-medium text-hive-text-primary capitalize">
                       {key.replace(/([A-Z])/g, ' $1')}
                     </label>
-                    <Badge variant="outline" className="text-hive-gold">
+                    <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                       {displayValue}{isBonus ? ' pts' : ''}
                     </Badge>
                   </div>
@@ -454,7 +454,7 @@ export function FeedAlgorithmControl() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <BarChart3 className="h-5 w-5 text-hive-gold" />
+              <BarChart3 className="h-5 w-5 text-[var(--hive-brand-primary)]" />
               <span>Feed Mix Rules</span>
             </CardTitle>
             <CardDescription>
@@ -474,7 +474,7 @@ export function FeedAlgorithmControl() {
                     <label className="text-sm font-medium text-hive-text-primary capitalize">
                       {key.replace(/([A-Z])/g, ' $1')}
                     </label>
-                    <Badge variant="outline" className="text-hive-gold">
+                    <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                       {displayValue}
                     </Badge>
                   </div>
@@ -497,7 +497,7 @@ export function FeedAlgorithmControl() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Activity className="h-5 w-5 text-hive-gold" />
+            <Activity className="h-5 w-5 text-[var(--hive-brand-primary)]" />
             <span>Real-time Settings</span>
           </CardTitle>
           <CardDescription>
@@ -527,7 +527,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Update Interval
                   </label>
-                  <Badge variant="outline" className="text-hive-gold">
+                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.updateInterval / 1000}s
                   </Badge>
                 </div>
@@ -548,7 +548,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Max Concurrent Users
                   </label>
-                  <Badge variant="outline" className="text-hive-gold">
+                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.maxConcurrentUsers}
                   </Badge>
                 </div>
@@ -567,7 +567,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Cache Timeout
                   </label>
-                  <Badge variant="outline" className="text-hive-gold">
+                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.cacheTimeout}s
                   </Badge>
                 </div>
@@ -587,9 +587,9 @@ export function FeedAlgorithmControl() {
 
       {/* Save Reminder */}
       {unsavedChanges && (
-        <Alert className="border-hive-gold/30 bg-hive-gold/10">
-          <CheckCircle className="h-4 w-4 text-hive-gold" />
-          <AlertDescription className="text-hive-gold">
+        <Alert className="border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/10">
+          <CheckCircle className="h-4 w-4 text-[var(--hive-brand-primary)]" />
+          <AlertDescription className="text-[var(--hive-brand-primary)]">
             You have unsaved changes to the feed algorithm configuration.
             Remember to save your changes to apply them to the live system.
           </AlertDescription>

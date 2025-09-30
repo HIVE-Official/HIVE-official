@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { DecodedIdToken } from 'firebase-admin/auth';
-import admin from './firebase-admin';
+import { authAdmin } from './firebase-admin';
 import { logger } from './logger';
 import {
   checkRedisRateLimit,
@@ -114,7 +114,7 @@ export function withSecureAuth(
       // 5. Verify Firebase token
       let decodedToken: DecodedIdToken;
       try {
-        decodedToken = await admin.auth().verifyIdToken(token);
+        decodedToken = await authAdmin.verifyIdToken(token);
       } catch (error) {
         logger.error('Token verification failed', {
           error,

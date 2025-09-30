@@ -52,7 +52,7 @@ export const HiveNotificationBell: React.FC<HiveNotificationBellProps> = ({
       // Navigate using Next.js router
       router.push(url);
     } catch (error) {
-      logger.error('Navigation error from notification', { error, url });
+      logger.error('Navigation error from notification', { error: error instanceof Error ? error : new Error(String(error)), url });
     }
   };
 

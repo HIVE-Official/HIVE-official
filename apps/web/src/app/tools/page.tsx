@@ -5,9 +5,10 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CompleteHIVEToolsSystem } from "@hive/ui";
+import { CompleteHIVEToolsSystem, useToast } from "@hive/ui";
 import { useSession } from "../../hooks/use-session";
 import { ErrorBoundary } from "../../components/error-boundary";
+import { ToolsLoadingSkeleton } from "../../components/tools/tools-loading-skeleton";
 import { logger } from "@/lib/logger";
 import {
   MessageSquare,
@@ -235,6 +236,7 @@ export default function ToolsPage() {
   >("marketplace");
 
   const { user: _user } = useSession();
+  const { showToast } = useToast();
 
   // Temporarily using default flags while fixing React context issue
   const flags = useMemo(
@@ -319,8 +321,12 @@ export default function ToolsPage() {
         });
 
         // Show success with link to use the tool
-        const message = `${tool.name} created and ready to use! 🎉\n\nShare with friends to get the most value.`;
-        alert(message);
+        showToast({
+          title: `${tool.name} created! 🎉`,
+          message: 'Share with friends to get the most value',
+          type: 'success',
+          duration: 4000
+        });
 
         // Navigate to the deployed tool
         window.location.href = `/tools/${deployedTool.id}/run`;
@@ -346,7 +352,12 @@ export default function ToolsPage() {
         }
 
         flags.trackEvent("tools", "install", { toolId });
-        alert(`${tool.name} installed successfully!`);
+        showToast({
+          title: 'Tool installed!',
+          message: `${tool.name} is now ready to use`,
+          type: 'success',
+          duration: 3000
+        });
       }
     } catch (error) {
       logger.error("Failed to install tool", {
@@ -356,7 +367,12 @@ export default function ToolsPage() {
       });
       const errorMessage =
         error instanceof Error ? error.message : "Failed to install tool";
-      alert(`Installation failed: ${errorMessage}`);
+      showToast({
+        title: 'Installation failed',
+        message: errorMessage,
+        type: 'error',
+        duration: 5000
+      });
     }
   };
 
@@ -383,7 +399,12 @@ export default function ToolsPage() {
         navigator.clipboard.writeText(
           `${window.location.origin}/tools/${toolId}`
         );
-        alert("Tool link copied to clipboard!");
+        showToast({
+          title: 'Link copied!',
+          message: 'Tool link copied to clipboard',
+          type: 'success',
+          duration: 2000
+        });
         break;
       }
       default:
@@ -398,6 +419,11 @@ export default function ToolsPage() {
     // Navigate to HiveLab with mode parameter
     window.location.href = `/hivelab?mode=${mode}`;
   };
+
+  // Show loading skeleton while data is being fetched
+  if (isLoading || !isClient) {
+    return <ToolsLoadingSkeleton />;
+  }
 
   return (
     <ErrorBoundary>

@@ -12,8 +12,60 @@
 /* Mobile performance optimizations */
 @import '../styles/mobile-optimizations.css';
 
+/* Safe Area Insets for iPhone Notch and Android Status Bar */
+@supports (padding: env(safe-area-inset-top)) {
+  :root {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+  }
+}
+
+@supports not (padding: env(safe-area-inset-top)) {
+  :root {
+    --safe-area-inset-top: 0px;
+    --safe-area-inset-right: 0px;
+    --safe-area-inset-bottom: 0px;
+    --safe-area-inset-left: 0px;
+  }
+}
+
 /* GEN Z ENERGY - Not your LinkedIn */
 @layer utilities {
+  /* Safe area utilities */
+  .pt-safe {
+    padding-top: var(--safe-area-inset-top);
+  }
+
+  .pr-safe {
+    padding-right: var(--safe-area-inset-right);
+  }
+
+  .pb-safe {
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+
+  .pl-safe {
+    padding-left: var(--safe-area-inset-left);
+  }
+
+  .px-safe {
+    padding-left: var(--safe-area-inset-left);
+    padding-right: var(--safe-area-inset-right);
+  }
+
+  .py-safe {
+    padding-top: var(--safe-area-inset-top);
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+
+  .p-safe {
+    padding-top: var(--safe-area-inset-top);
+    padding-right: var(--safe-area-inset-right);
+    padding-bottom: var(--safe-area-inset-bottom);
+    padding-left: var(--safe-area-inset-left);
+  }
   /* Emoji reactions that bounce */
   .emoji-bounce {
     animation: bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);

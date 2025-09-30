@@ -103,7 +103,7 @@ const ToggleSwitch = ({ enabled, onToggle, label, description }: {
     <button
       onClick={() => onToggle(!enabled)}
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-        enabled ? 'bg-[#FFD700]' : 'bg-[rgba(255,255,255,0.2)]'
+        enabled ? 'bg-[var(--hive-brand-primary)]' : 'bg-[rgba(255,255,255,0.2)]'
       }`}
     >
       <span
@@ -184,7 +184,7 @@ export default function ToolSettingsPage() {
               <Button
                 size="sm"
                 onClick={handleSave}
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 disabled={!hasChanges}
               >
                 <Save className="h-4 w-4 mr-2" />
@@ -208,7 +208,7 @@ export default function ToolSettingsPage() {
                 type="text"
                 value={settings.name}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({ name: e.target.value })}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
             
@@ -218,7 +218,7 @@ export default function ToolSettingsPage() {
                 value={settings.description}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ description: e.target.value })}
                 rows={3}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none resize-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none resize-none"
               />
             </div>
             
@@ -230,7 +230,7 @@ export default function ToolSettingsPage() {
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSettings({
                     metadata: { ...settings.metadata, category: e.target.value }
                   })}
-                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                 >
                   <option value="communication">Communication</option>
                   <option value="productivity">Productivity</option>
@@ -249,7 +249,7 @@ export default function ToolSettingsPage() {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({
                     metadata: { ...settings.metadata, version: e.target.value }
                   })}
-                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                 />
               </div>
             </div>
@@ -263,7 +263,7 @@ export default function ToolSettingsPage() {
                   metadata: { ...settings.metadata, tags: e.target.value.split(', ').filter(tag => tag.trim()) }
                 })}
                 placeholder="polling, engagement, voting"
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
               <p className="text-xs text-[#A1A1AA] mt-1">Separate tags with commas</p>
             </div>
@@ -291,7 +291,7 @@ export default function ToolSettingsPage() {
                       onClick={() => updateSettings({ privacy: option.value as any })}
                       className={`p-4 rounded-lg border text-left transition-all ${
                         settings.privacy === option.value
-                          ? 'bg-[#FFD700]/10 border-[#FFD700]/30 text-[#FFD700]'
+                          ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]'
                           : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] text-white hover:bg-[rgba(255,255,255,0.04)]'
                       }`}
                     >
@@ -403,15 +403,15 @@ export default function ToolSettingsPage() {
         >
           <Grid columns={3} gap={4}>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <div className="text-2xl font-bold text-[#FFD700] mb-1">{settings.usage.installCount}</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.installCount}</div>
               <div className="text-sm text-[#A1A1AA]">Total Installs</div>
             </div>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <div className="text-2xl font-bold text-[#FFD700] mb-1">{settings.usage.activeSpaces}</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.activeSpaces}</div>
               <div className="text-sm text-[#A1A1AA]">Active Spaces</div>
             </div>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
-              <div className="text-2xl font-bold text-[#FFD700] mb-1">{settings.usage.totalUsage}</div>
+              <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.totalUsage}</div>
               <div className="text-sm text-[#A1A1AA]">Total Usage</div>
             </div>
           </Grid>

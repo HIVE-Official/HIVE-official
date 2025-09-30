@@ -63,7 +63,7 @@ export default function SpacePage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold mx-auto mb-4" />
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4" />
           <p className="text-white/70">Loading /s/{slug}...</p>
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function SpacePage() {
           </p>
           <button
             onClick={() => router.push('/spaces')}
-            className="px-6 py-2 bg-hive-gold text-black rounded-lg hover:bg-yellow-400 transition-colors"
+            className="px-6 py-2 bg-[var(--hive-brand-primary)] text-black rounded-lg hover:bg-yellow-400 transition-colors"
           >
             Browse Spaces
           </button>

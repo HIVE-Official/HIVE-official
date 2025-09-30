@@ -105,7 +105,10 @@ export async function POST(request: NextRequest) {
       spaceId: deployment.targetId
     });
   } catch (error) {
-    logger.error('Error generating feed content', { error: error, endpoint: '/api/tools/feed-integration' });
+    logger.error(
+      `Error generating feed content at /api/tools/feed-integration`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to generate feed content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -161,7 +164,10 @@ export async function GET(request: NextRequest) {
       count: templates.length
     });
   } catch (error) {
-    logger.error('Error fetching feed templates', { error: error, endpoint: '/api/tools/feed-integration' });
+    logger.error(
+      `Error fetching feed templates at /api/tools/feed-integration`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch feed templates", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -201,7 +207,10 @@ async function generateFeedContentFromAction(params: {
 
     return generateContentFromTemplate(template, tool, data, user);
   } catch (error) {
-    logger.error('Error generating content from action', { error: error, endpoint: '/api/tools/feed-integration' });
+    logger.error(
+      `Error generating content from action at /api/tools/feed-integration`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return generateDefaultContent(tool, action, data, elementId);
   }
 }

@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting moderation queue', { error });
+    logger.error('Error getting moderation queue', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get moderation queue', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error processing moderation action', { error });
+    logger.error('Error processing moderation action', { error: error instanceof Error ? error : new Error(String(error)) });
     
     if (error instanceof Error && error.message.includes('Report not found')) {
       return NextResponse.json(
@@ -256,7 +256,7 @@ export async function PUT(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error updating moderation rules', { error });
+    logger.error('Error updating moderation rules', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update moderation rules', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -276,7 +276,7 @@ async function checkModeratorPermissions(userId: string): Promise<boolean> {
            userData?.role === 'moderator' || 
            userData?.permissions?.includes('moderate_content');
   } catch (error) {
-    logger.error('Error checking moderator permissions', { error, userId });
+    logger.error('Error checking moderator permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return false;
   }
 }
@@ -291,7 +291,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
-    logger.error('Error checking admin permissions', { error, userId });
+    logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return false;
   }
 }
@@ -323,7 +323,7 @@ async function getQueueStatistics() {
       lastUpdated: new Date().toISOString()
     };
   } catch (error) {
-    logger.error('Error getting queue statistics', { error });
+    logger.error('Error getting queue statistics', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       pendingReports: 0,
       todayReports: 0,

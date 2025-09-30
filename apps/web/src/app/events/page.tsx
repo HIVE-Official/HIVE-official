@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useSession } from "../../hooks/use-session";
 import { ErrorBoundary } from "../../components/error-boundary";
+import { EventsLoadingSkeleton } from "../../components/events/events-loading-skeleton";
 import { CreateEventModal } from "../../components/events/create-event-modal";
 import { EventDetailsModal } from "../../components/events/event-details-modal";
 
@@ -386,26 +387,9 @@ export default function EventsPage() {
     );
   };
 
-  // Prevent SSR hydration issues
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <PageContainer title="Loading Events..." maxWidth="2xl">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading campus events...</p>
-          </div>
-        </div>
-      </PageContainer>
-    );
+  // Prevent SSR hydration issues or show loading state
+  if (!mounted || isLoading) {
+    return <EventsLoadingSkeleton />;
   }
 
   return (

@@ -332,7 +332,7 @@ export const GET = withAuthAndErrors(async (request, context) => {
     return NextResponse.json(cacheManagementData);
 
   } catch (error) {
-    logger.error('Cache management API error:', { error });
+    logger.error('Cache management API error:', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       { error: 'Failed to fetch cache management data' },
       { status: 500 }
@@ -467,7 +467,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
     return NextResponse.json({ success: true, result });
 
   } catch (error) {
-    logger.error('Cache management action error:', { error });
+    logger.error('Cache management action error:', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       { error: 'Failed to execute cache management action' },
       { status: 500 }

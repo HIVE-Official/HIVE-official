@@ -18,7 +18,7 @@ interface BehavioralSpace extends Space {
 }
 
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = request.auth!.uid;
+  const userId = request.user.uid;
 
   try {
     // Get user profile for personalization
@@ -138,7 +138,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     });
 
   } catch (error) {
-    logger.error('Error generating space recommendations', { error, userId });
+    logger.error('Error generating space recommendations', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return respond.error("Failed to generate recommendations", "INTERNAL_ERROR", { status: 500 });
   }
 });

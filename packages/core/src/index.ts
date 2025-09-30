@@ -5,6 +5,8 @@
 
 // Domain Models - Specific exports to avoid conflicts
 export { EnhancedProfile } from "./domain/profile/aggregates/enhanced-profile";
+export type { SpecCompliantProfile } from "./domain/profile/spec-compliant-profile";
+export { isProfileComplete, getProfileCompletionPercentage, createDefaultProfile } from "./domain/profile/spec-compliant-profile";
 export { Connection, ConnectionType, ConnectionSource } from "./domain/profile/aggregates/connection";
 export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
 export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
@@ -24,6 +26,7 @@ export * from "./application";
 // Repository Pattern - Data Access Layer
 export * from "./infrastructure/repositories/interfaces";
 export * from "./infrastructure/repositories/factory";
+export { FirebaseUnitOfWork } from "./infrastructure/repositories/firebase/unit-of-work";
 
 // DTOs and Mappers
 export * from "./application/identity/dtos/profile.dto";
@@ -43,8 +46,7 @@ export * from "./stores/useAppStore";
 export * from "./feature-flags";
 
 // Firebase Configuration (temporary until @hive/firebase is fixed)
-export { db } from "./firebase";
-export { auth } from "./firebase";
+export { app, db, auth, storage } from "./firebase";
 
 // Server-side utilities
 export * from "./server";
@@ -59,6 +61,14 @@ export * from "./utils/profile-aggregator";
 
 // Analytics convenience functions (for backwards compatibility)
 export * from "./analytics-temp-exports";
+
+// Realtime and Query exports
+export { feedListener } from "./infrastructure/realtime/feed-listener";
+export type { FeedUpdate, FeedListenerOptions } from "./infrastructure/realtime/feed-listener";
+export { GetFeedQueryHandler } from "./application/feed/queries/get-feed.query";
+export type { GetFeedQuery, GetFeedQueryResult } from "./application/feed/queries/get-feed.query";
+export { SearchType, SearchQueryHandler } from "./application/search/queries/search.query";
+export type { SearchResultItem, SearchQuery, SearchQueryResult } from "./application/search/queries/search.query";
 
 // Temporary backward compatibility (will be removed)
 export * from "./application/shared/temporary-types";

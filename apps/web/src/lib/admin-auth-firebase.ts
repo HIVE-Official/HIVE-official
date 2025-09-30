@@ -47,7 +47,7 @@ export async function isUserAdmin(userId: string): Promise<boolean> {
 
     return false;
   } catch (error) {
-    logger.error('Error checking admin status', { userId, error });
+    logger.error('Error checking admin status', { userId, error: error instanceof Error ? error : new Error(String(error)) });
     return false;
   }
 }

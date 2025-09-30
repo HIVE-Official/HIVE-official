@@ -42,7 +42,7 @@ async function getUserNotifications(
 
     return { notifications, unreadCount };
   } catch (error) {
-    logger.error('Error fetching user notifications', { error, userId });
+    logger.error('Error fetching user notifications', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return { notifications: [], unreadCount: 0 };
   }
 }
@@ -73,7 +73,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error fetching notifications', { error: error, endpoint: '/api/notifications' });
+    logger.error(
+      `Error fetching notifications at /api/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -160,7 +163,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
 
   } catch (error) {
-    logger.error('Error handling notification action', { error: error, endpoint: '/api/notifications' });
+    logger.error(
+      `Error handling notification action at /api/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to process notification action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -208,7 +214,10 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error updating notification', { error: error, endpoint: '/api/notifications' });
+    logger.error(
+      `Error updating notification at /api/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

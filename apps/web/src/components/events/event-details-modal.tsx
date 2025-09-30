@@ -193,7 +193,7 @@ export function EventDetailsModal({
                     variant="ghost"
                     size="sm"
                     onClick={() => onBookmark(event.id)}
-                    className={event.isBookmarked ? 'text-hive-gold' : 'text-zinc-400'}
+                    className={event.isBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}
                   >
                     <Heart className={`h-5 w-5 ${event.isBookmarked ? 'fill-current' : ''}`} />
                   </Button>
@@ -216,13 +216,13 @@ export function EventDetailsModal({
                 <div className="flex items-center space-x-1">
                   <span>{event.organizer.name}</span>
                   {event.organizer.verified && (
-                    <Star className="h-4 w-4 text-hive-gold fill-current" />
+                    <Star className="h-4 w-4 text-[var(--hive-brand-primary)] fill-current" />
                   )}
                 </div>
                 {event.space && (
                   <>
                     <span>•</span>
-                    <span className="text-hive-gold">{event.space.name}</span>
+                    <span className="text-[var(--hive-brand-primary)]">{event.space.name}</span>
                   </>
                 )}
                 <span>•</span>
@@ -331,7 +331,7 @@ export function EventDetailsModal({
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-hive-gold text-hive-obsidian font-medium'
+                    ? 'bg-[var(--hive-brand-primary)] text-hive-obsidian font-medium'
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                 }`}
               >
@@ -340,7 +340,7 @@ export function EventDetailsModal({
                 {tab.count !== undefined && (
                   <Badge 
                     variant="skill-tag" 
-                    className={`text-xs ${activeTab === tab.id ? 'bg-hive-obsidian text-hive-gold' : ''}`}
+                    className={`text-xs ${activeTab === tab.id ? 'bg-hive-obsidian text-[var(--hive-brand-primary)]' : ''}`}
                   >
                     {tab.count}
                   </Badge>
@@ -462,7 +462,7 @@ export function EventDetailsModal({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {/* Organizer */}
                     <div className="flex items-center space-x-3 p-3 bg-zinc-800/50 rounded-lg">
-                      <div className="w-10 h-10 bg-hive-gold rounded-full flex items-center justify-center">
+                      <div className="w-10 h-10 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center">
                         <span className="text-hive-obsidian font-semibold text-sm">
                           {event.organizer.name.split(' ').map(n => n[0]).join('')}
                         </span>
@@ -471,7 +471,7 @@ export function EventDetailsModal({
                         <div className="flex items-center space-x-2">
                           <span className="font-medium text-white">{event.organizer.name}</span>
                           {event.organizer.verified && (
-                            <Star className="h-3 w-3 text-hive-gold fill-current" />
+                            <Star className="h-3 w-3 text-[var(--hive-brand-primary)] fill-current" />
                           )}
                           <Badge variant="building-tools" className="text-xs">
                             Organizer
@@ -590,14 +590,14 @@ export function EventDetailsModal({
                 <div className="flex-1">
                   <textarea
                     placeholder="Ask a question or share a comment..."
-                    className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-hive-gold focus:outline-none resize-none"
+                    className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
                     rows={3}
                   />
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center space-x-2 text-xs text-zinc-400">
                       <span>💡 Ask about logistics, requirements, or coordination</span>
                     </div>
-                    <Button size="sm" className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne">
+                    <Button size="sm" className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne">
                       Comment
                     </Button>
                   </div>
@@ -635,8 +635,8 @@ export function EventDetailsModal({
                       </div>
                       
                       {/* Organizer Reply */}
-                      <div className="flex items-start space-x-3 p-4 bg-hive-gold/5 border-l-2 border-hive-gold rounded-lg ml-6">
-                        <div className="w-10 h-10 bg-hive-gold rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="flex items-start space-x-3 p-4 bg-[var(--hive-brand-primary)]/5 border-l-2 border-[var(--hive-brand-primary)] rounded-lg ml-6">
+                        <div className="w-10 h-10 bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center flex-shrink-0">
                           <span className="text-hive-obsidian font-semibold text-sm">SC</span>
                         </div>
                         <div className="flex-1">

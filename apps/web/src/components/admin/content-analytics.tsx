@@ -151,7 +151,7 @@ export function ContentAnalytics() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]"></div>
       </div>
     );
   }
@@ -267,7 +267,7 @@ export function ContentAnalytics() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Trending Posts</CardTitle>
-              <TrendingUp className="h-4 w-4 text-hive-gold" />
+              <TrendingUp className="h-4 w-4 text-[var(--hive-brand-primary)]" />
             </div>
             <CardDescription>Most engaging content right now</CardDescription>
           </CardHeader>
@@ -275,8 +275,8 @@ export function ContentAnalytics() {
             <div className="space-y-3">
               {metrics.trending.posts.slice(0, 5).map((post, index) => (
                 <div key={post.id} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-hive-gold/20 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-bold text-hive-gold">#{index + 1}</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-[var(--hive-brand-primary)]">#{index + 1}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-300 line-clamp-2">{post.content}</p>
@@ -302,7 +302,7 @@ export function ContentAnalytics() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Trending Topics</CardTitle>
-              <Target className="h-4 w-4 text-hive-gold" />
+              <Target className="h-4 w-4 text-[var(--hive-brand-primary)]" />
             </div>
             <CardDescription>What people are talking about</CardDescription>
           </CardHeader>
@@ -311,7 +311,7 @@ export function ContentAnalytics() {
               {metrics.trending.topics.map((topic, index) => (
                 <div key={topic.tag} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-hive-gold/20 text-hive-gold">#{topic.tag}</Badge>
+                    <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)]">#{topic.tag}</Badge>
                     <span className="text-sm text-gray-400">{topic.mentions} mentions</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -428,7 +428,7 @@ export function ContentAnalytics() {
                   {space.recentActivity.map((day, i) => (
                     <div
                       key={i}
-                      className="flex-1 bg-hive-gold/30 rounded-t"
+                      className="flex-1 bg-[var(--hive-brand-primary)]/30 rounded-t"
                       style={{
                         height: `${(day.engagement / Math.max(...space.recentActivity.map(d => d.engagement))) * 100}%`,
                         minHeight: '2px'

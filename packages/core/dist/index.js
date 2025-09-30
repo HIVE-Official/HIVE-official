@@ -18,10 +18,14 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = exports.db = exports.presenceService = exports.EnhancedFeed = exports.FeedItem = exports.EnhancedRitual = exports.RitualId = exports.Widget = exports.Tab = exports.EnhancedSpace = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.EnhancedProfile = void 0;
+exports.SearchQueryHandler = exports.SearchType = exports.GetFeedQueryHandler = exports.feedListener = exports.storage = exports.auth = exports.db = exports.app = exports.presenceService = exports.FirebaseUnitOfWork = exports.EnhancedFeed = exports.FeedItem = exports.EnhancedRitual = exports.RitualId = exports.Widget = exports.Tab = exports.EnhancedSpace = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.createDefaultProfile = exports.getProfileCompletionPercentage = exports.isProfileComplete = exports.EnhancedProfile = void 0;
 // Domain Models - Specific exports to avoid conflicts
 var enhanced_profile_1 = require("./domain/profile/aggregates/enhanced-profile");
 Object.defineProperty(exports, "EnhancedProfile", { enumerable: true, get: function () { return enhanced_profile_1.EnhancedProfile; } });
+var spec_compliant_profile_1 = require("./domain/profile/spec-compliant-profile");
+Object.defineProperty(exports, "isProfileComplete", { enumerable: true, get: function () { return spec_compliant_profile_1.isProfileComplete; } });
+Object.defineProperty(exports, "getProfileCompletionPercentage", { enumerable: true, get: function () { return spec_compliant_profile_1.getProfileCompletionPercentage; } });
+Object.defineProperty(exports, "createDefaultProfile", { enumerable: true, get: function () { return spec_compliant_profile_1.createDefaultProfile; } });
 var connection_1 = require("./domain/profile/aggregates/connection");
 Object.defineProperty(exports, "Connection", { enumerable: true, get: function () { return connection_1.Connection; } });
 Object.defineProperty(exports, "ConnectionType", { enumerable: true, get: function () { return connection_1.ConnectionType; } });
@@ -53,6 +57,8 @@ __exportStar(require("./application"), exports);
 // Repository Pattern - Data Access Layer
 __exportStar(require("./infrastructure/repositories/interfaces"), exports);
 __exportStar(require("./infrastructure/repositories/factory"), exports);
+var unit_of_work_1 = require("./infrastructure/repositories/firebase/unit-of-work");
+Object.defineProperty(exports, "FirebaseUnitOfWork", { enumerable: true, get: function () { return unit_of_work_1.FirebaseUnitOfWork; } });
 // DTOs and Mappers
 __exportStar(require("./application/identity/dtos/profile.dto"), exports);
 __exportStar(require("./infrastructure/mappers/profile.firebase-mapper"), exports);
@@ -67,9 +73,10 @@ __exportStar(require("./stores/useAppStore"), exports);
 __exportStar(require("./feature-flags"), exports);
 // Firebase Configuration (temporary until @hive/firebase is fixed)
 var firebase_1 = require("./firebase");
+Object.defineProperty(exports, "app", { enumerable: true, get: function () { return firebase_1.app; } });
 Object.defineProperty(exports, "db", { enumerable: true, get: function () { return firebase_1.db; } });
-var firebase_2 = require("./firebase");
-Object.defineProperty(exports, "auth", { enumerable: true, get: function () { return firebase_2.auth; } });
+Object.defineProperty(exports, "auth", { enumerable: true, get: function () { return firebase_1.auth; } });
+Object.defineProperty(exports, "storage", { enumerable: true, get: function () { return firebase_1.storage; } });
 // Server-side utilities
 __exportStar(require("./server"), exports);
 // Utilities
@@ -78,6 +85,14 @@ __exportStar(require("./utils/privacy-utils"), exports);
 __exportStar(require("./utils/profile-aggregator"), exports);
 // Analytics convenience functions (for backwards compatibility)
 __exportStar(require("./analytics-temp-exports"), exports);
+// Realtime and Query exports
+var feed_listener_1 = require("./infrastructure/realtime/feed-listener");
+Object.defineProperty(exports, "feedListener", { enumerable: true, get: function () { return feed_listener_1.feedListener; } });
+var get_feed_query_1 = require("./application/feed/queries/get-feed.query");
+Object.defineProperty(exports, "GetFeedQueryHandler", { enumerable: true, get: function () { return get_feed_query_1.GetFeedQueryHandler; } });
+var search_query_1 = require("./application/search/queries/search.query");
+Object.defineProperty(exports, "SearchType", { enumerable: true, get: function () { return search_query_1.SearchType; } });
+Object.defineProperty(exports, "SearchQueryHandler", { enumerable: true, get: function () { return search_query_1.SearchQueryHandler; } });
 // Temporary backward compatibility (will be removed)
 __exportStar(require("./application/shared/temporary-types"), exports);
 //# sourceMappingURL=index.js.map

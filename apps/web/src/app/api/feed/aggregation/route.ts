@@ -120,7 +120,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error aggregating content', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error aggregating content at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to aggregate content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -172,7 +175,10 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Error getting aggregation info', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error getting aggregation info at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get aggregation info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -199,7 +205,10 @@ async function getUserAccessibleSpaces(userId: string): Promise<string[]> {
       .get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    logger.error('Error getting accessible spaces', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error getting accessible spaces at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -283,7 +292,10 @@ async function getActiveContentSources(spaceIds: string[]): Promise<ContentSourc
 
     return sources.filter(source => source.isActive);
   } catch (error) {
-    logger.error('Error getting content sources', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error getting content sources at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -320,7 +332,7 @@ async function aggregateFromAllSources(params: {
 
       aggregatedItems.push(...enhancedContent);
     } catch (error) {
-      logger.error('Error aggregating from source', { sourceId: source.id, error: error, endpoint: '/api/feed/aggregation' });
+      logger.error('Error aggregating from source', { sourceId: source.id, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/feed/aggregation' });
     }
   }
 
@@ -357,7 +369,7 @@ async function aggregateFromSource(
         return [];
     }
   } catch (error) {
-    logger.error('Error in source aggregation for', { sourceType: source.type, error: error, endpoint: '/api/feed/aggregation'  });
+    logger.error('Error in source aggregation for', { sourceType: source.type, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/feed/aggregation'  });
     return [];
   }
 }
@@ -410,7 +422,10 @@ async function aggregateToolInteractions(
 
     return items;
   } catch (error) {
-    logger.error('Error aggregating tool interactions', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error aggregating tool interactions at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -462,7 +477,10 @@ async function aggregateSpaceEvents(
 
     return items;
   } catch (error) {
-    logger.error('Error aggregating space events', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error aggregating space events at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -515,7 +533,10 @@ async function aggregateUserPosts(
 
     return items;
   } catch (error) {
-    logger.error('Error aggregating user posts', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error aggregating user posts at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -565,7 +586,10 @@ async function aggregateBuilderAnnouncements(
 
     return items;
   } catch (error) {
-    logger.error('Error aggregating builder announcements', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error aggregating builder announcements at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -778,7 +802,10 @@ async function logAggregationMetrics(userId: string, metrics: any): Promise<void
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    logger.error('Error logging aggregation metrics', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error logging aggregation metrics at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -818,7 +845,10 @@ async function getAggregationMetrics(userId: string): Promise<any> {
       lastAggregation: metrics[0].timestamp
     };
   } catch (error) {
-    logger.error('Error getting aggregation metrics', { error: error, endpoint: '/api/feed/aggregation' });
+    logger.error(
+      `Error getting aggregation metrics at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }

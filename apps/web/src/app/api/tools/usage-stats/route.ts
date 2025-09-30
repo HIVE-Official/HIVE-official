@@ -60,7 +60,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    logger.error('Usage stats fetch error', { error: error, endpoint: '/api/tools/usage-stats' });
+    logger.error(
+      `Usage stats fetch error at /api/tools/usage-stats`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { 
         error: 'Failed to fetch usage statistics',
@@ -92,7 +95,9 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     // Production usage tracking ready for analytics system integration
 
-    logger.info('Tool usage tracked', { toolId, action, metadata, endpoint: '/api/tools/usage-stats' });
+    logger.info(
+      `Tool usage tracked: toolId=${toolId}, action=${action} at /api/tools/usage-stats`
+    );
 
     return NextResponse.json({
       success: true,
@@ -104,7 +109,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    logger.error('Usage tracking error', { error: error, endpoint: '/api/tools/usage-stats' });
+    logger.error(
+      `Usage tracking error at /api/tools/usage-stats`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { 
         error: 'Failed to record usage event',

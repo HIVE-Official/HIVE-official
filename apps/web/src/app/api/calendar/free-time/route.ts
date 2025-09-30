@@ -76,7 +76,10 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error finding free time', { error: error, endpoint: '/api/calendar/free-time' });
+    logger.error(
+      `Error finding free time at /api/calendar/free-time`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to find free time", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

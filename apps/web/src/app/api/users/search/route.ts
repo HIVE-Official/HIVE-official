@@ -75,7 +75,10 @@ export async function POST(request: NextRequest) {
           }
         }
       } catch (error) {
-        logger.warn('Failed to fetch space members', { data: error, endpoint: '/api/users/search' });
+        logger.warn(
+      `Failed to fetch space members at /api/users/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
     } else {
       // Search all users with basic filters
@@ -155,7 +158,10 @@ export async function POST(request: NextRequest) {
           connectionStatus = connectionDoc.data()?.status || 'connected';
         }
       } catch (error) {
-        logger.warn('Failed to check connection status', { data: error, endpoint: '/api/users/search' });
+        logger.warn(
+      `Failed to check connection status at /api/users/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
 
       // Get mutual spaces count
@@ -186,7 +192,10 @@ export async function POST(request: NextRequest) {
           mutualSpacesCount = currentUserSpaceIds.filter(id => otherUserSpaceIds.includes(id)).length;
         }
       } catch (error) {
-        logger.warn('Failed to calculate mutual spaces', { data: error, endpoint: '/api/users/search' });
+        logger.warn(
+      `Failed to calculate mutual spaces at /api/users/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
 
       users.push({
@@ -269,7 +278,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error('Error searching users', { error: error, endpoint: '/api/users/search' });
+    logger.error(
+      `Error searching users at /api/users/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to search users", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

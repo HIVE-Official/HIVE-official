@@ -120,7 +120,7 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
             <HiveButton
               size="sm"
               onClick={() => setShowCreateModal(true)}
-              className="bg-hive-gold text-black hover:bg-yellow-400"
+              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-1" />
               Create
@@ -164,7 +164,7 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
             {/* Happening Today */}
             {todayEvents.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-hive-gold mb-3 flex items-center gap-2">
+                <h4 className="text-sm font-medium text-[var(--hive-brand-primary)] mb-3 flex items-center gap-2">
                   <Star className="w-4 h-4" />
                   Happening Today
                 </h4>
@@ -280,7 +280,7 @@ function EventCard({
 
   return (
     <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
-      isToday ? 'border-hive-gold/30 bg-hive-gold/5' : 'bg-gray-900/50'
+      isToday ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     }`}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">

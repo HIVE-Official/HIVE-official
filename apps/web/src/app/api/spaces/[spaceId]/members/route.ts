@@ -196,7 +196,10 @@ export async function GET(
         nextOffset: membersSnapshot.size === limit ? offset + limit : null,
       } });
   } catch (error) {
-    logger.error('Error fetching members', { error: error, endpoint: '/api/spaces/[spaceId]/members' });
+    logger.error(
+      `Error fetching members at /api/spaces/[spaceId]/members`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch members", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -286,7 +289,10 @@ export async function POST(
         ...memberData,
       } });
   } catch (error) {
-    logger.error('Error inviting member', { error: error, endpoint: '/api/spaces/[spaceId]/members' });
+    logger.error(
+      `Error inviting member at /api/spaces/[spaceId]/members`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to invite member", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

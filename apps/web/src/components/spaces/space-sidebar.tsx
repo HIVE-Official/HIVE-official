@@ -13,7 +13,7 @@ import {
   Link,
   File,
   Video,
-  Form,
+  ClipboardList,
   Archive,
   Eye
 } from 'lucide-react';
@@ -253,8 +253,8 @@ export function SpaceSidebar({
                 {/* Countdown for today's events */}
                 {isToday(event.startTime) && (
                   <div className="mt-1 flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-hive-gold" />
-                    <span className="text-xs text-hive-gold">
+                    <Clock className="w-3 h-3 text-[var(--hive-brand-primary)]" />
+                    <span className="text-xs text-[var(--hive-brand-primary)]">
                       {getCountdown(event.startTime)}
                     </span>
                   </div>
@@ -382,7 +382,7 @@ function getResourceIcon(type: string) {
     case 'media':
       return <Video className="w-4 h-4 text-purple-400" />;
     case 'form':
-      return <Form className="w-4 h-4 text-yellow-400" />;
+      return <ClipboardList className="w-4 h-4 text-yellow-400" />;
     default:
       return <Archive className="w-4 h-4 text-gray-400" />;
   }

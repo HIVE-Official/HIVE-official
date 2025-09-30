@@ -1,53 +1,64 @@
 /**
  * Search Query
- * Unified search across profiles, spaces, and posts
+ * Unified search across the platform
  */
-import { Query, IQueryHandler } from '../../shared/base';
-import { Result } from '../../../domain/profile/value-objects';
-import { IProfileRepository, ISpaceRepository } from '../../../infrastructure/repositories/interfaces';
-export type SearchType = 'all' | 'profiles' | 'spaces' | 'posts';
-export declare class SearchQuery extends Query {
-    readonly searchTerm: string;
-    readonly searchType: SearchType;
-    readonly limit: number;
-    constructor(searchTerm: string, searchType: SearchType | undefined, limit: number | undefined, userId: string, campusId: string);
+export declare enum SearchType {
+    ALL = "all",
+    USERS = "users",
+    SPACES = "spaces",
+    POSTS = "posts",
+    TOOLS = "tools",
+    EVENTS = "events"
 }
 export interface SearchResultItem {
     id: string;
-    type: 'profile' | 'space' | 'post';
+    type: SearchType;
     title: string;
-    subtitle: string;
     description?: string;
     imageUrl?: string;
     url: string;
-    metadata: {
-        memberCount?: number;
-        followerCount?: number;
-        isVerified?: boolean;
-        isActive?: boolean;
-        lastActive?: Date;
-        category?: string;
-        handle?: string;
+    metadata?: {
+        [key: string]: any;
     };
-    relevanceScore: number;
+    relevanceScore?: number;
+    createdAt?: Date;
 }
-export interface SearchResult {
+export interface SearchQuery {
     query: string;
-    results: SearchResultItem[];
-    totalCount: number;
-    searchType: SearchType;
-    suggestions: string[];
+    type?: SearchType;
+    campusId: string;
+    filters?: {
+        userId?: string;
+        spaceIds?: string[];
+        tags?: string[];
+        dateRange?: {
+            start: Date;
+            end: Date;
+        };
+    };
+    limit?: number;
+    offset?: number;
 }
-export declare class SearchQueryHandler implements IQueryHandler<SearchQuery, SearchResult> {
-    private readonly profileRepository;
-    private readonly spaceRepository;
-    constructor(profileRepository: IProfileRepository, spaceRepository: ISpaceRepository);
-    execute(query: SearchQuery): Promise<Result<SearchResult>>;
-    private searchProfiles;
-    private searchSpaces;
-    private searchPosts;
-    private calculateProfileRelevance;
-    private calculateSpaceRelevance;
+export interface SearchQueryResult {
+    items: SearchResultItem[];
+    totalCount: number;
+    facets?: {
+        types: {
+            [key: string]: number;
+        };
+        tags?: {
+            [key: string]: number;
+        };
+    };
+    suggestions?: string[];
+    hasMore: boolean;
+}
+export declare class SearchQueryHandler {
+    private readonly searchService?;
+    constructor(searchService?: any | undefined);
+    execute(query: SearchQuery): Promise<SearchQueryResult>;
+    private parseSearchQuery;
+    private rankResults;
     private generateSuggestions;
 }
 //# sourceMappingURL=search.query.d.ts.map

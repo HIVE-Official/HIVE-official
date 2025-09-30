@@ -124,10 +124,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error: unknown) {
-    logger.error('Create post error', { 
-      error: error instanceof Error ? error.message : String(error),
-      endpoint: '/api/social/posts'
-    });
+    logger.error(
+      `Create post error at /api/social/posts`,
+      error instanceof Error ? error.message : String(error)
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -133,10 +133,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error: any) {
-    logger.error('Join ritual error', { 
-      error: error.message, 
-      endpoint: '/api/rituals/join' 
-    });
+    logger.error(
+      `Join ritual error at /api/rituals/join`,
+      error.message
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

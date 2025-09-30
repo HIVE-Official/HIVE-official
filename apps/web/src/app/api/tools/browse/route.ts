@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
             createdByName = userData?.displayName || userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Anonymous";
           }
         } catch (error) {
-          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error, endpoint: '/api/tools/browse'  });
+          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/tools/browse'  });
         }
 
         // Apply search filter (done post-query for flexibility)
@@ -177,7 +177,10 @@ export async function GET(request: NextRequest) {
         const countSnapshot = await countQuery.count().get();
         total = countSnapshot.data().count;
       } catch (error) {
-        logger.warn('Failed to get total count', { data: error, endpoint: '/api/tools/browse' });
+        logger.warn(
+      `Failed to get total count at /api/tools/browse`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         // Fallback to current batch size
         total = filteredTools.length;
       }
@@ -193,7 +196,10 @@ export async function GET(request: NextRequest) {
         returned: filteredTools.length
       } });
   } catch (error) {
-    logger.error('Error browsing tools', { error: error, endpoint: '/api/tools/browse' });
+    logger.error(
+      `Error browsing tools at /api/tools/browse`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to browse tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

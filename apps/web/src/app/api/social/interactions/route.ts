@@ -228,10 +228,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error: unknown) {
-    logger.error('Social interaction error', { 
-      error: error instanceof Error ? error.message : String(error),
-      endpoint: '/api/social/interactions'
-    });
+    logger.error(
+      `Social interaction error at /api/social/interactions`,
+      error instanceof Error ? error.message : String(error)
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

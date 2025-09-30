@@ -123,7 +123,10 @@ export async function POST(
       );
     }
 
-    logger.error('Error creating RSVP', { error: error, endpoint: '/api/spaces/[spaceId]/events/[eventId]/rsvp' });
+    logger.error(
+      `Error creating RSVP at /api/spaces/[spaceId]/events/[eventId]/rsvp`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to RSVP to event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -161,7 +164,10 @@ export async function GET(
     return NextResponse.json({
       userRSVP: rsvpStatus });
   } catch (error) {
-    logger.error('Error fetching RSVP status', { error: error, endpoint: '/api/spaces/[spaceId]/events/[eventId]/rsvp' });
+    logger.error(
+      `Error fetching RSVP status at /api/spaces/[spaceId]/events/[eventId]/rsvp`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch RSVP status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

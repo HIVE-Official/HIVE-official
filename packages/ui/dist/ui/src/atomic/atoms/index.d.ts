@@ -32,4 +32,5 @@ export { PresenceIndicator } from "./presence-indicator";
 export type { PresenceIndicatorProps, PresenceStatus } from "./presence-indicator";
 export { NotificationBell } from "./notification-bell";
 export { NotificationItem } from "./notification-item";
+export { Skeleton } from "./skeleton";
 //# sourceMappingURL=index.d.ts.map

@@ -26,6 +26,7 @@ import {
 import { useSession } from "../../hooks/use-session";
 // import { useCalendarData } from "../../hooks/use-calendar-data";
 import { ErrorBoundary } from "../../components/error-boundary";
+import { CalendarLoadingSkeleton } from "../../components/calendar/calendar-loading-skeleton";
 import { EventDetailsModal } from "../../components/events/event-details-modal";
 import { CreateEventModal } from "../../components/events/create-event-modal";
 
@@ -327,16 +328,7 @@ export default function CalendarPage() {
   };
 
   if (isLoading) {
-    return (
-      <PageContainer title="Loading Calendar..." maxWidth="7xl">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-[var(--hive-brand-primary)] rounded-lg animate-pulse mx-auto mb-4" />
-            <p className="text-white">Loading your calendar...</p>
-          </div>
-        </div>
-      </PageContainer>
-    );
+    return <CalendarLoadingSkeleton />;
   }
 
   return (

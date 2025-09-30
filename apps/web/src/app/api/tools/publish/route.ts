@@ -168,7 +168,10 @@ export async function POST(request: NextRequest) {
     }, { status: HttpStatus.CREATED });
 
   } catch (error) {
-    logger.error('Error submitting publish request', { error: error, endpoint: '/api/tools/publish' });
+    logger.error(
+      `Error submitting publish request at /api/tools/publish`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({
@@ -227,7 +230,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ publishRequest });
 
   } catch (error) {
-    logger.error('Error fetching publish request', { error: error, endpoint: '/api/tools/publish' });
+    logger.error(
+      `Error fetching publish request at /api/tools/publish`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch publish request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

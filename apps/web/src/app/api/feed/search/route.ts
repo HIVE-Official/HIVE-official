@@ -105,7 +105,9 @@ export async function POST(request: NextRequest) {
               };
             }
           } catch (error) {
-            logger.warn('Failed to fetch author info', { data: error, endpoint: '/api/feed/search' });
+            logger.warn(
+      `Failed to fetch author info at /api/feed/search`
+    );
           }
         }
 
@@ -122,7 +124,9 @@ export async function POST(request: NextRequest) {
               };
             }
           } catch (error) {
-            logger.warn('Failed to fetch space info', { data: error, endpoint: '/api/feed/search' });
+            logger.warn(
+      `Failed to fetch space info at /api/feed/search`
+    );
           }
         }
 
@@ -202,7 +206,9 @@ export async function POST(request: NextRequest) {
                 };
               }
             } catch (error) {
-              logger.warn('Failed to fetch organizer info', { data: error, endpoint: '/api/feed/search' });
+              logger.warn(
+      `Failed to fetch organizer info at /api/feed/search`
+    );
             }
           }
 
@@ -218,7 +224,9 @@ export async function POST(request: NextRequest) {
               };
             }
           } catch (error) {
-            logger.warn('Failed to fetch space info', { data: error, endpoint: '/api/feed/search' });
+            logger.warn(
+      `Failed to fetch space info at /api/feed/search`
+    );
           }
 
           // Calculate relevance score
@@ -296,7 +304,9 @@ export async function POST(request: NextRequest) {
               };
             }
           } catch (error) {
-            logger.warn('Failed to fetch creator info', { data: error, endpoint: '/api/feed/search' });
+            logger.warn(
+      `Failed to fetch creator info at /api/feed/search`
+    );
           }
         }
 
@@ -379,7 +389,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error('Error searching feed', { error: error, endpoint: '/api/feed/search' });
+    logger.error(
+      `Error searching feed at /api/feed/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to search feed", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

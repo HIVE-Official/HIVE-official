@@ -312,7 +312,10 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Search error', { error: error, endpoint: '/api/search' });
+    logger.error(
+      `Search error at /api/search`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { error: 'Search failed', results: [], totalCount: 0 },
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

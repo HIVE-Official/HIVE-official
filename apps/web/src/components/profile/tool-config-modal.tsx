@@ -319,7 +319,7 @@ export function ToolConfigModal({
                   </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-hive-gold">{tool.usageStats.timesUsed}</div>
+                      <div className="text-2xl font-bold text-[var(--hive-brand-primary)]">{tool.usageStats.timesUsed}</div>
                       <div className="text-sm text-hive-text-mutedLight">Times Used</div>
                     </div>
                     <div className="text-center">
@@ -370,7 +370,7 @@ export function ToolConfigModal({
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+              className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
             >
               {isSaving ? (
                 <>

@@ -443,7 +443,7 @@ export default function SchoolsPage() {
               {isBlurred && (
                 <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="text-center">
-                    <span className="text-hive-gold font-semibold text-lg">Coming Soon</span>
+                    <span className="text-[var(--hive-brand-primary)] font-semibold text-lg">Coming Soon</span>
                     <p className="text-white/70 text-sm mt-1">Join the waitlist!</p>
                   </div>
                 </div>

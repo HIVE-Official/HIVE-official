@@ -158,7 +158,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error establishing WebSocket connection', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error establishing WebSocket connection at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to establish connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -216,7 +219,10 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Error getting connection info', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error getting connection info at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get connection info", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -274,7 +280,10 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating connection', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error updating connection at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -340,7 +349,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Connection ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
   } catch (error) {
-    logger.error('Error closing connection', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error closing connection at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to close connection", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -416,7 +428,10 @@ async function getUserSpaces(userId: string): Promise<string[]> {
     const membershipsSnapshot = await membershipsQuery.get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
-    logger.error('Error getting user spaces', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error getting user spaces at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -456,7 +471,10 @@ async function subscribeToChannels(connectionId: string, userId: string, channel
       });
     }
   } catch (error) {
-    logger.error('Error subscribing to channels', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error subscribing to channels at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -526,7 +544,10 @@ async function unsubscribeFromChannels(connectionId: string, userId: string, cha
       });
     }
   } catch (error) {
-    logger.error('Error unsubscribing from channels', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error unsubscribing from channels at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -547,7 +568,10 @@ async function replaceChannelSubscriptions(connectionId: string, userId: string,
     // Add new subscriptions
     await subscribeToChannels(connectionId, userId, channels);
   } catch (error) {
-    logger.error('Error replacing channel subscriptions', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error replacing channel subscriptions at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -563,7 +587,10 @@ async function getUserChannelSubscriptions(userId: string): Promise<any[]> {
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error getting channel subscriptions', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error getting channel subscriptions at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -587,7 +614,10 @@ async function updateUserPresence(userId: string, status: 'online' | 'offline' |
       await broadcastPresenceUpdate(spaceId, userId, status);
     }
   } catch (error) {
-    logger.error('Error updating user presence', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error updating user presence at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -620,7 +650,10 @@ async function broadcastPresenceUpdate(spaceId: string, userId: string, status: 
 
     await dbAdmin.collection('realtimeMessages').add(presenceMessage);
   } catch (error) {
-    logger.error('Error broadcasting presence update', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error broadcasting presence update at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -650,7 +683,10 @@ async function closeConnection(connectionId: string, userId: string): Promise<bo
 
     return true;
   } catch (error) {
-    logger.error('Error closing connection', { error: error, endpoint: '/api/realtime/websocket' });
+    logger.error(
+      `Error closing connection at /api/realtime/websocket`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }

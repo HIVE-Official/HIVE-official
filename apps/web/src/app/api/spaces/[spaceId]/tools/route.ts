@@ -100,7 +100,10 @@ export async function GET(
             };
           }
         } catch (error) {
-          logger.warn('Failed to fetch deployer info', { data: error, endpoint: '/api/spaces/[spaceId]/tools' });
+          logger.warn(
+      `Failed to fetch deployer info at /api/spaces/[spaceId]/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
         }
       }
 
@@ -119,7 +122,10 @@ export async function GET(
           usageStats = usageSnapshot.docs[0].data();
         }
       } catch (error) {
-        logger.warn('Failed to fetch usage stats', { data: error, endpoint: '/api/spaces/[spaceId]/tools' });
+        logger.warn(
+      `Failed to fetch usage stats at /api/spaces/[spaceId]/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
       }
 
       tools.push({
@@ -181,7 +187,10 @@ export async function GET(
       } });
 
   } catch (error) {
-    logger.error('Error fetching space tools', { error: error, endpoint: '/api/spaces/[spaceId]/tools' });
+    logger.error(
+      `Error fetching space tools at /api/spaces/[spaceId]/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch space tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -265,7 +274,10 @@ export async function POST(
         deploymentCount: (toolData?.deploymentCount || 0) + 1,
         lastDeployedAt: new Date() });
     } catch (error) {
-      logger.warn('Failed to update tool deployment count', { data: error, endpoint: '/api/spaces/[spaceId]/tools' });
+      logger.warn(
+      `Failed to update tool deployment count at /api/spaces/[spaceId]/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     }
 
     // Get deployer info
@@ -313,7 +325,10 @@ export async function POST(
       );
     }
 
-    logger.error('Error deploying tool to space', { error: error, endpoint: '/api/spaces/[spaceId]/tools' });
+    logger.error(
+      `Error deploying tool to space at /api/spaces/[spaceId]/tools`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to deploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

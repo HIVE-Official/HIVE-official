@@ -6,14 +6,16 @@ export const dynamic = 'force-dynamic';
 import React, { useState } from 'react';
 import { useAuth } from "@hive/auth-logic";
 import { useQuery } from '@tanstack/react-query';
+import { useToast } from '@hive/ui';
 // Temp fix for chunk 2073 useRef errors
 const Badge = ({ children, variant = "default", className = "", ...props }: any) => <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${className}`} {...props}>{children}</span>;
 import { ErrorBoundary } from '../../components/error-boundary';
-import { 
-  Sparkles, 
-  Calendar, 
-  Users, 
-  Trophy, 
+import { RitualsLoadingSkeleton } from '../../components/rituals/rituals-loading-skeleton';
+import {
+  Sparkles,
+  Calendar,
+  Users,
+  Trophy,
   Clock,
   Heart,
   Zap,
@@ -146,6 +148,7 @@ const PARTICIPATION_TYPES = {
 export default function RitualsPage() {
   const [activeTab, setActiveTab] = useState<'active' | 'upcoming' | 'completed'>('active');
   const { user, getAuthToken } = useAuth();
+  const { showToast } = useToast();
   const isAuthenticated = !!user;
 
   const { data, isLoading, error } = useQuery({
@@ -187,11 +190,22 @@ export default function RitualsPage() {
         throw new Error('Failed to join ritual');
       }
 
-      // Refresh data
+      // Refresh data and show success
+      showToast({
+        title: 'Success!',
+        message: 'You\'ve joined the ritual',
+        type: 'success',
+        duration: 3000
+      });
       window.location.reload();
     } catch (error) {
       console.error('Failed to join ritual:', error);
-      alert('Failed to join ritual. Please try again.');
+      showToast({
+        title: 'Failed to join ritual',
+        message: 'Please try again or contact support if the problem persists.',
+        type: 'error',
+        duration: 5000
+      });
     }
   };
 
@@ -233,14 +247,7 @@ export default function RitualsPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-hive-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 bg-hive-brand-secondary rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-hive-text-secondary">Loading rituals...</p>
-        </div>
-      </div>
-    );
+    return <RitualsLoadingSkeleton />;
   }
 
   if (error) {

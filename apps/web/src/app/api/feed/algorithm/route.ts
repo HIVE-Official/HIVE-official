@@ -138,7 +138,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error in enhanced feed algorithm', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error in enhanced feed algorithm at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to generate feed", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -168,7 +171,10 @@ export async function GET(request: NextRequest) {
       algorithmVersion: '2.0'
     });
   } catch (error) {
-    logger.error('Error fetching algorithm config', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error fetching algorithm config at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch algorithm config", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -206,7 +212,10 @@ async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConf
 
     return defaultConfig;
   } catch (error) {
-    logger.error('Error getting algorithm config', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error getting algorithm config at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     throw error;
   }
 }
@@ -241,7 +250,10 @@ async function getUserSpaceMemberships(userId: string): Promise<any[]> {
 
     return memberships.sort((a, b) => b.engagementScore - a.engagementScore);
   } catch (error) {
-    logger.error('Error getting user memberships', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error getting user memberships at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -284,7 +296,10 @@ async function calculateSpaceEngagementScore(userId: string, spaceId: string): P
 
     return Math.min(100, score);
   } catch (error) {
-    logger.error('Error calculating engagement score', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error calculating engagement score at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 20; // Default base score
   }
 }
@@ -361,7 +376,10 @@ async function getEnhancedFeedContent(params: {
 
     return feedItems;
   } catch (error) {
-    logger.error('Error getting enhanced feed content', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error getting enhanced feed content at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -381,7 +399,10 @@ async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTi
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error getting space posts', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error getting space posts at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }
@@ -640,7 +661,10 @@ async function logAlgorithmMetrics(userId: string, metrics: any): Promise<void> 
       date: new Date().toISOString().split('T')[0]
     });
   } catch (error) {
-    logger.error('Error logging algorithm metrics', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error logging algorithm metrics at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -675,7 +699,10 @@ async function getAlgorithmMetrics(userId: string): Promise<any> {
       lastUpdated: metrics[0].timestamp
     };
   } catch (error) {
-    logger.error('Error getting algorithm metrics', { error: error, endpoint: '/api/feed/algorithm' });
+    logger.error(
+      `Error getting algorithm metrics at /api/feed/algorithm`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return null;
   }
 }

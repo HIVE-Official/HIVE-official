@@ -64,7 +64,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching campus expansion data', { error, userId: auth.userId });
+    logger.error('Error fetching campus expansion data', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -129,7 +129,7 @@ export const POST = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing campus expansion action', { error, userId: auth.userId });
+    logger.error('Error performing campus expansion action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
@@ -167,7 +167,7 @@ async function getCampusMetrics() {
     };
 
   } catch (error) {
-    logger.error('Error getting campus metrics', { error });
+    logger.error('Error getting campus metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockExpansionData().currentStatus;
   }
 }
@@ -199,7 +199,7 @@ async function getExpansionPipeline() {
     return categorized;
 
   } catch (error) {
-    logger.error('Error getting expansion pipeline', { error });
+    logger.error('Error getting expansion pipeline', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockExpansionData().pipeline;
   }
 }
@@ -239,7 +239,7 @@ async function getCampusReadinessAssessment() {
     return readiness;
 
   } catch (error) {
-    logger.error('Error assessing campus readiness', { error });
+    logger.error('Error assessing campus readiness', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockExpansionData().readiness;
   }
 }
@@ -288,7 +288,7 @@ async function getScalingPlan() {
     return scaling;
 
   } catch (error) {
-    logger.error('Error getting scaling plan', { error });
+    logger.error('Error getting scaling plan', { error: error instanceof Error ? error : new Error(String(error)) });
     return getMockExpansionData().scaling;
   }
 }
@@ -329,7 +329,7 @@ async function addCampusToPipeline(campusData: any, userId: string) {
     };
 
   } catch (error) {
-    logger.error('Error adding campus to pipeline', { error });
+    logger.error('Error adding campus to pipeline', { error: error instanceof Error ? error : new Error(String(error)) });
     return { success: false, error: 'Failed to add campus to pipeline' };
   }
 }
@@ -361,7 +361,7 @@ async function updateCampusStatus(campusId: string, updateData: any, userId: str
     };
 
   } catch (error) {
-    logger.error('Error updating campus status', { error });
+    logger.error('Error updating campus status', { error: error instanceof Error ? error : new Error(String(error)) });
     return { success: false, error: 'Failed to update campus status' };
   }
 }
@@ -391,7 +391,7 @@ async function assessCampusReadiness(campusId: string, userId: string) {
     };
 
   } catch (error) {
-    logger.error('Error assessing campus readiness', { error });
+    logger.error('Error assessing campus readiness', { error: error instanceof Error ? error : new Error(String(error)) });
     return { success: false, error: 'Failed to assess campus readiness' };
   }
 }
@@ -425,7 +425,7 @@ async function deployCampusInfrastructure(campusId: string, deploymentData: any,
     };
 
   } catch (error) {
-    logger.error('Error deploying campus infrastructure', { error });
+    logger.error('Error deploying campus infrastructure', { error: error instanceof Error ? error : new Error(String(error)) });
     return { success: false, error: 'Failed to deploy campus infrastructure' };
   }
 }
@@ -472,7 +472,7 @@ async function generateExpansionReport(userId: string) {
     };
 
   } catch (error) {
-    logger.error('Error generating expansion report', { error });
+    logger.error('Error generating expansion report', { error: error instanceof Error ? error : new Error(String(error)) });
     return { success: false, error: 'Failed to generate expansion report' };
   }
 }

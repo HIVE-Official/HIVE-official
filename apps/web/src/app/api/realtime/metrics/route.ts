@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting real-time metrics', { error });
+    logger.error('Error getting real-time metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get metrics', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error updating real-time configuration', { error });
+    logger.error('Error updating real-time configuration', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update configuration', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -182,7 +182,7 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error recording connection metrics', { error });
+    logger.error('Error recording connection metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to record metrics', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -199,7 +199,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
-    logger.error('Error checking admin permissions', { error, userId });
+    logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
     return false;
   }
 }
@@ -247,7 +247,7 @@ async function getHistoricalMetrics(timeRange: string): Promise<any> {
     };
 
   } catch (error) {
-    logger.error('Error getting historical metrics', { error });
+    logger.error('Error getting historical metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return null;
   }
 }
@@ -302,7 +302,7 @@ async function getConnectionMetrics(): Promise<any> {
     };
 
   } catch (error) {
-    logger.error('Error getting connection metrics', { error });
+    logger.error('Error getting connection metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     return null;
   }
 }
@@ -322,7 +322,7 @@ async function getPerformanceAlerts(): Promise<any[]> {
     }));
 
   } catch (error) {
-    logger.error('Error getting performance alerts', { error });
+    logger.error('Error getting performance alerts', { error: error instanceof Error ? error : new Error(String(error)) });
     return [];
   }
 }
@@ -358,7 +358,7 @@ async function storeConnectionMetrics(
     await dbAdmin.collection('realtimeMetrics').add(aggregatedData);
 
   } catch (error) {
-    logger.error('Error storing connection metrics', { error });
+    logger.error('Error storing connection metrics', { error: error instanceof Error ? error : new Error(String(error)) });
     throw error;
   }
 }
@@ -381,6 +381,6 @@ async function logAdminAction(
     await dbAdmin.collection('adminActionLogs').add(logEntry);
 
   } catch (error) {
-    logger.error('Error logging admin action', { error });
+    logger.error('Error logging admin action', { error: error instanceof Error ? error : new Error(String(error)) });
   }
 }

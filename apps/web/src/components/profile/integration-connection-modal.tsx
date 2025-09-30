@@ -126,8 +126,8 @@ export function IntegrationConnectionModal({
       <HiveModal open={isOpen} onOpenChange={onClose}>
         <HiveModalContent className="max-w-md">
           <div className="p-8 text-center">
-            <div className="w-16 h-16 bg-hive-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Loader2 className="h-8 w-8 text-hive-gold animate-spin" />
+            <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">
               Connecting to {integration.name}
@@ -315,7 +315,7 @@ export function IntegrationConnectionModal({
                 <Button
                   onClick={handleConnect}
                   disabled={isConnecting || selectedPermissions.length === 0}
-                  className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                  className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                 >
                   <Link className="h-4 w-4 mr-2" />
                   Connect {integration.name}

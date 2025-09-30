@@ -280,7 +280,10 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     return NextResponse.json({ events: allEvents });
   } catch (error) {
-    logger.error('Error fetching calendar events', { error: error, endpoint: '/api/calendar' });
+    logger.error(
+      `Error fetching calendar events at /api/calendar`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch calendar events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 
@@ -331,7 +334,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
 
     return NextResponse.json({ event: createdEvent }, { status: HttpStatus.CREATED });
   } catch (error) {
-    logger.error('Error creating personal event', { error: error, endpoint: '/api/calendar' });
+    logger.error(
+      `Error creating personal event at /api/calendar`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to create personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { 

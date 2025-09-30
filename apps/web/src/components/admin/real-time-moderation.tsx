@@ -182,7 +182,7 @@ export function RealTimeModeration() {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hive-gold"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)]"></div>
       </div>
     );
   }
@@ -437,7 +437,7 @@ export function RealTimeModeration() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-400">{item.count} reports</span>
-                    <TrendingUp className="w-4 h-4 text-hive-gold" />
+                    <TrendingUp className="w-4 h-4 text-[var(--hive-brand-primary)]" />
                   </div>
                 </div>
               ))}

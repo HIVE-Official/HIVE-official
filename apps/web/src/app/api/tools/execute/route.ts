@@ -182,7 +182,10 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error executing tool', { error: error, endpoint: '/api/tools/execute' });
+    logger.error(
+      `Error executing tool at /api/tools/execute`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to execute tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -218,7 +221,10 @@ async function canUserExecuteTool(userId: string, deployment: DeploymentData): P
 
     return false;
   } catch (error) {
-    logger.error('Error checking tool execution permissions', { error: error, endpoint: '/api/tools/execute' });
+    logger.error(
+      `Error checking tool execution permissions at /api/tools/execute`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return false;
   }
 }
@@ -305,7 +311,10 @@ async function executeToolAction(params: {
 
     return result;
   } catch (error) {
-    logger.error('Error in tool execution', { error: error, endpoint: '/api/tools/execute' });
+    logger.error(
+      `Error in tool execution at /api/tools/execute`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return {
       success: false,
       error: 'Tool execution failed'
@@ -552,7 +561,10 @@ async function generateFeedContent(deployment: DeploymentData, tool: ToolData, u
       });
     }
   } catch (error) {
-    logger.error('Error generating feed content', { error: error, endpoint: '/api/tools/execute' });
+    logger.error(
+      `Error generating feed content at /api/tools/execute`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -573,6 +585,9 @@ async function processNotifications(deployment: DeploymentData, notifications: T
       });
     }
   } catch (error) {
-    logger.error('Error processing notifications', { error: error, endpoint: '/api/tools/execute' });
+    logger.error(
+      `Error processing notifications at /api/tools/execute`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

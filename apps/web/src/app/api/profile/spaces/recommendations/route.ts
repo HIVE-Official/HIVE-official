@@ -150,7 +150,10 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
       recommendationType: type
     });
   } catch (error) {
-    logger.error('Error generating space recommendations', { error: error, endpoint: '/api/profile/spaces/recommendations' });
+    logger.error(
+      `Error generating space recommendations at /api/profile/spaces/recommendations`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to generate space recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, {
@@ -341,7 +344,10 @@ async function generateFriendActivityRecommendations(
       .sort((a, b) => b.commonMembers - a.commonMembers)
       .slice(0, 5);
   } catch (error) {
-    logger.error('Error generating friend activity recommendations', { error: error, endpoint: '/api/profile/spaces/recommendations' });
+    logger.error(
+      `Error generating friend activity recommendations at /api/profile/spaces/recommendations`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return [];
   }
 }

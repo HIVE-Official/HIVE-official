@@ -39,7 +39,10 @@ export async function POST(request: NextRequest) {
         userId = decodedToken.uid;
       } catch (error) {
         // Continue without user ID if token is invalid
-        logger.warn('Invalid token in metrics request', { data: error, endpoint: '/api/analytics/metrics' });
+        logger.warn(
+      `Invalid token in metrics request at /api/analytics/metrics`,
+      { error: error instanceof Error ? error.message : String(error) }
+    );
       }
     }
 
@@ -86,7 +89,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error('Error storing metrics', { error: error, endpoint: '/api/analytics/metrics' });
+    logger.error(
+      `Error storing metrics at /api/analytics/metrics`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to store metrics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -163,7 +169,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response);
 
   } catch (error) {
-    logger.error('Error retrieving metrics', { error: error, endpoint: '/api/analytics/metrics' });
+    logger.error(
+      `Error retrieving metrics at /api/analytics/metrics`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to retrieve metrics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -258,7 +267,10 @@ async function aggregateMetrics(metrics: any[]): Promise<void> {
     await batch.commit();
 
   } catch (error) {
-    logger.error('Error aggregating metrics', { error: error, endpoint: '/api/analytics/metrics' });
+    logger.error(
+      `Error aggregating metrics at /api/analytics/metrics`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 

@@ -14,9 +14,13 @@ import { FieldValue } from 'firebase-admin/firestore';
  */
 
 // POST /api/spaces/[spaceId]/promote-post - Promote a space post to campus feed
-export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
+) => {
   const userId = getUserId(request);
-  const { spaceId } = await context.params;
+  const { spaceId } = await params;
 
   try {
     const body = await request.json();
@@ -32,7 +36,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       return respond.error("Space not found", "NOT_FOUND", { status: 404 });
     }
 
-    const spaceData = spaceDoc.data();
+    const spaceData = spaceDoc.data()!;
 
     // Check if user is space leader (required for manual promotion)
     if (promotionType === 'manual') {
@@ -60,7 +64,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       return respond.error("Post not found", "NOT_FOUND", { status: 404 });
     }
 
-    const postData = postDoc.data();
+    const postData = postDoc.data()!;
 
     // Check if post is already promoted
     const existingPromotion = await dbAdmin
@@ -146,7 +150,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     // Broadcast promotion to feed subscribers via SSE
     try {
       await sseRealtimeService.sendMessage({
-        type: 'feed',
+        type: 'system',
         channel: 'campus:feed:promoted',
         senderId: userId,
         content: {
@@ -181,7 +185,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     });
 
   } catch (error) {
-    logger.error('Error promoting post to feed', { error, spaceId, userId });
+    logger.error('Error promoting post to feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
     return respond.error("Failed to promote post", "INTERNAL_ERROR", { status: 500 });
   }
 });
@@ -310,7 +314,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       return respond.error("Post not found", "NOT_FOUND", { status: 404 });
     }
 
-    const postData = postDoc.data();
+    const postData = postDoc.data()!;
 
     // Check automatic promotion eligibility (velocity-based)
     const eligibility = {
@@ -362,7 +366,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     return respond.success(eligibility);
 
   } catch (error) {
-    logger.error('Error checking promotion eligibility', { error, spaceId, userId });
+    logger.error('Error checking promotion eligibility', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
     return respond.error("Failed to check eligibility", "INTERNAL_ERROR", { status: 500 });
   }
 });

@@ -34,9 +34,13 @@ const RSS_FEEDS = {
   ]
 };
 
-export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+export const POST = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond
+) => {
   const userId = getUserId(request);
-  const { spaceId } = await context.params;
+  const { spaceId } = await params;
 
   try {
     // Get space data to determine category
@@ -45,7 +49,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       return respond.error("Space not found", "NOT_FOUND", { status: 404 });
     }
 
-    const spaceData = spaceDoc.data();
+    const spaceData = spaceDoc.data()!;
 
     // Check if user is space leader
     const memberDoc = await dbAdmin
@@ -150,7 +154,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     });
 
   } catch (error) {
-    logger.error('Error seeding RSS content', { error, spaceId, userId });
+    logger.error('Error seeding RSS content', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
     return respond.error("Failed to seed RSS content", "INTERNAL_ERROR", { status: 500 });
   }
 });

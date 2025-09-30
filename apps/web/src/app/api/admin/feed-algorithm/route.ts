@@ -85,7 +85,7 @@ const DEFAULT_CONFIG = {
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = getUserId(request);
 
-  logger.info('🔧 Loading feed algorithm config', { userId, endpoint: '/api/admin/feed-algorithm' });
+  logger.info('🔧 Loading feed algorithm config', { userId });
 
   // Check admin permissions
   const isAdminUser = await isAdmin(userId);
@@ -119,7 +119,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     });
 
   } catch (error: any) {
-    logger.error('Error loading algorithm config', { error, userId, endpoint: '/api/admin/feed-algorithm' });
+    logger.error('Error loading algorithm config', error instanceof Error ? error : new Error(String(error)), { userId });
 
     // Return default config if there's an error
     return respond.success({
@@ -138,7 +138,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = getUserId(request);
 
-  logger.info('🔧 Updating feed algorithm config', { userId, endpoint: '/api/admin/feed-algorithm' });
+  logger.info('🔧 Updating feed algorithm config', { userId });
 
   // Check admin permissions
   const isAdminUser = await isAdmin(userId);
@@ -178,10 +178,7 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
     });
 
     logger.info('✅ Feed algorithm config updated', {
-      userId,
-      adminName,
-      configVersion: configData.version,
-      endpoint: '/api/admin/feed-algorithm'
+      userId
     });
 
     return respond.success({
@@ -195,14 +192,12 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       logger.warn('Invalid algorithm config provided', {
-        error: error.errors,
-        userId,
-        endpoint: '/api/admin/feed-algorithm'
+        userId
       });
       return respond.error('Invalid configuration format', 'VALIDATION_ERROR', { status: 400, details: error.errors });
     }
 
-    logger.error('Error updating algorithm config', { error, userId, endpoint: '/api/admin/feed-algorithm' });
+    logger.error('Error updating algorithm config', error instanceof Error ? error : new Error(String(error)), { userId });
     return respond.error('Failed to update algorithm configuration', 'UPDATE_ERROR', { status: 500 });
   }
 });
@@ -222,7 +217,7 @@ async function logAdminAction(userId: string, action: string, metadata: any) {
       userAgent: 'unknown' // TODO: Extract from request
     });
   } catch (error) {
-    logger.error('Error logging admin action', { error, userId, action });
+    logger.error('Error logging admin action', error instanceof Error ? error : new Error(String(error)), { userId, action });
   }
 }
 

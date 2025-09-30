@@ -239,10 +239,10 @@ export const POST = withValidation(
         });
 
       } catch (firebaseError: any) {
-        logger.error('Failed to resend magic link', {
-          error: firebaseError,
-          endpoint: '/api/auth/resend-magic-link'
-        });
+        logger.error(
+      `Failed to resend magic link at /api/auth/resend-magic-link`,
+      firebaseError
+    );
 
         await auditAuthEvent('failure', request, {
           operation: 'resend_magic_link',

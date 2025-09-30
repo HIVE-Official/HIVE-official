@@ -224,8 +224,8 @@ export default function ExpiredPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.015)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.025)_0%,transparent_50%)]" />
 
       {/* Floating glass orbs */}
-      <div className="absolute top-20 left-[10%] w-32 h-32 bg-gradient-to-r from-white/[0.02] to-[#FFD700]/[0.03] rounded-full blur-3xl" />
-      <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[#FFD700]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
+      <div className="absolute top-20 left-[10%] w-32 h-32 bg-gradient-to-r from-white/[0.02] to-[var(--hive-brand-primary)]/[0.03] rounded-full blur-3xl" />
+      <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[var(--hive-brand-primary)]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
 
       {/* Header */}
       <div
@@ -258,8 +258,8 @@ export default function ExpiredPage() {
           <div
           >
             <div className="text-center mb-10">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-[#FFD700]/10 rounded-full">
-                <Clock className="w-8 h-8 text-[#FFD700]" />
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-[var(--hive-brand-primary)]/10 rounded-full">
+                <Clock className="w-8 h-8 text-[var(--hive-brand-primary)]" />
               </div>
               <h1 className="text-4xl font-bold text-white mb-3">Magic Link Expired</h1>
               <p className="text-lg text-white/70">
@@ -269,11 +269,11 @@ export default function ExpiredPage() {
 
             <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
               {/* Security Info Box */}
-              <div className="p-4 mb-6 bg-[#FFD700]/[0.08] border border-[#FFD700]/20 rounded-xl">
+              <div className="p-4 mb-6 bg-[var(--hive-brand-primary)]/[0.08] border border-[var(--hive-brand-primary)]/20 rounded-xl">
                 <div className="flex gap-3">
-                  <ShieldAlert className="w-5 h-5 text-[#FFD700] mt-0.5 flex-shrink-0" />
+                  <ShieldAlert className="w-5 h-5 text-[var(--hive-brand-primary)] mt-0.5 flex-shrink-0" />
                   <div className="space-y-1">
-                    <p className="text-sm text-[#FFD700] font-medium">For your security</p>
+                    <p className="text-sm text-[var(--hive-brand-primary)] font-medium">For your security</p>
                     <p className="text-xs text-white/60">
                       Magic links expire after 1 hour. This keeps your account safe.
                     </p>
@@ -294,7 +294,7 @@ export default function ExpiredPage() {
                     placeholder="Enter your school email"
                     disabled={isResending}
                     autoFocus
-                    className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[#FFD700]/50"
+                    className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50"
                   />
                 </div>
               ) : (
@@ -303,7 +303,7 @@ export default function ExpiredPage() {
                   <p className="text-white font-medium break-all">{email}</p>
                   <button
                     onClick={() => setEmail('')}
-                    className="text-xs text-[#FFD700] hover:underline mt-2"
+                    className="text-xs text-[var(--hive-brand-primary)] hover:underline mt-2"
                   >
                     Use a different email
                   </button>
@@ -317,7 +317,7 @@ export default function ExpiredPage() {
                     Attempt {attemptNumber} of 5
                   </p>
                   {attemptNumber >= 4 && (
-                    <p className="text-xs text-[#FFD700] mt-1">
+                    <p className="text-xs text-[var(--hive-brand-primary)] mt-1">
                       {5 - attemptNumber} attempt{5 - attemptNumber === 1 ? '' : 's'} remaining
                     </p>
                   )}
@@ -340,7 +340,7 @@ export default function ExpiredPage() {
                   disabled={isResending || countdown > 0 || (!email && !schoolId)}
                   variant="default"
                   size="lg"
-                  className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold disabled:opacity-50"
+                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
                 >
                   {isResending ? (
                     <>
@@ -376,7 +376,7 @@ export default function ExpiredPage() {
                 <div className="mt-4">
                   <div className="w-full bg-white/[0.05] rounded-full h-1 overflow-hidden">
                     <div
-                      className="h-full bg-[#FFD700]/50"
+                      className="h-full bg-[var(--hive-brand-primary)]/50"
                     />
                   </div>
                 </div>
@@ -388,7 +388,7 @@ export default function ExpiredPage() {
               Still having trouble?{' '}
               <a
                 href="mailto:support@hive.college"
-                className="text-[#FFD700] hover:text-[#FFD700]/80 transition-colors"
+                className="text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/80 transition-colors"
               >
                 Contact support
               </a>
@@ -418,7 +418,7 @@ export default function ExpiredPage() {
               <p className="text-white/70">
                 Check your inbox at:
               </p>
-              <p className="text-[#FFD700] font-semibold break-all">
+              <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
                 {email}
               </p>
               <p className="text-xs text-white/50">
@@ -428,14 +428,14 @@ export default function ExpiredPage() {
 
             {/* Development mode - show the magic link */}
             {devMagicLink && (
-              <HiveCard className="p-4 bg-[#FFD700]/10 border-[#FFD700]/30 text-left">
-                <p className="text-xs text-[#FFD700] font-medium mb-2">
+              <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
+                <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                   🛠️ Development Mode - Magic Link:
                 </p>
                 <HiveButton
                   variant="default"
                   size="sm"
-                  className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black text-xs"
+                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
@@ -446,7 +446,7 @@ export default function ExpiredPage() {
             <HiveButton
               variant="default"
               size="lg"
-              className="w-full bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+              className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
               onClick={() => {
                 setResendSuccess(false);
                 // Clear the form for next attempt

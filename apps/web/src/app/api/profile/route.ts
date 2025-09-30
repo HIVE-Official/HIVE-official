@@ -126,11 +126,14 @@ export const GET = withSecureAuth(
       return NextResponse.json(response);
 
     } catch (error) {
-      logger.error('Error fetching profile', {
-        error,
-        userId: token.uid,
-        endpoint: '/api/profile'
-      });
+      logger.error(
+        'Error fetching profile',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          userId: token.uid,
+          endpoint: '/api/profile'
+        }
+      );
       return NextResponse.json(
         { success: false, error: 'Internal server error' },
         { status: 500 }
@@ -238,11 +241,14 @@ export const PUT = withSecureAuth(
       });
 
     } catch (error) {
-      logger.error('Error updating profile', {
-        error,
-        userId: token.uid,
-        endpoint: '/api/profile'
-      });
+      logger.error(
+        'Error updating profile',
+        error instanceof Error ? error : new Error(String(error)),
+        {
+          userId: token.uid,
+          endpoint: '/api/profile'
+        }
+      );
       return NextResponse.json(
         { success: false, error: 'Internal server error' },
         { status: 500 }

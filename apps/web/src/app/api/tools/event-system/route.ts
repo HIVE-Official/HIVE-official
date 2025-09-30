@@ -123,7 +123,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    logger.error('Error fetching Event System data', { error: error, endpoint: '/api/tools/event-system' });
+    logger.error(
+      `Error fetching Event System data at /api/tools/event-system`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch Event System data", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -333,7 +336,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(ApiResponseHelper.error("Invalid action", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
 
   } catch (error) {
-    logger.error('Error in Event System API', { error: error, endpoint: '/api/tools/event-system' });
+    logger.error(
+      `Error in Event System API at /api/tools/event-system`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -404,7 +410,10 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error updating Event System configuration', { error: error, endpoint: '/api/tools/event-system' });
+    logger.error(
+      `Error updating Event System configuration at /api/tools/event-system`,
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -488,7 +497,10 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    logger.error('Error uninstalling Event System', { error: error, endpoint: '/api/tools/event-system' });
+    logger.error(
+      `Error uninstalling Event System at /api/tools/event-system`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to uninstall Event System", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

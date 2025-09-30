@@ -107,7 +107,7 @@ export const GET = withSecureAuth(
         }
       });
     } catch (error) {
-      logger.error('Feed fetch error', { error });
+      logger.error('Feed fetch error', { error: error instanceof Error ? error : new Error(String(error)) });
       return NextResponse.json(
         { success: false, error: 'Failed to fetch feed' },
         { status: 500 }

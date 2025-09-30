@@ -206,7 +206,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <Users className="w-5 h-5 text-hive-gold" />
+            <Users className="w-5 h-5 text-[var(--hive-brand-primary)]" />
             <h3 className="text-lg font-semibold text-white">Members</h3>
             <Badge variant="secondary" className="text-xs">
               {totalCount}
@@ -270,7 +270,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
             onClick={() => setActiveTab('all')}
             className={`flex-1 text-xs font-medium py-2 px-3 rounded-md transition-colors ${
               activeTab === 'all'
-                ? 'bg-hive-gold/20 text-hive-gold'
+                ? 'bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)]'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -402,7 +402,7 @@ function MemberItem({
       {/* Actions */}
       <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
         {/* Direct message */}
-        <button className="p-1 text-gray-400 hover:text-hive-gold hover:bg-gray-700 rounded transition-colors">
+        <button className="p-1 text-gray-400 hover:text-[var(--hive-brand-primary)] hover:bg-gray-700 rounded transition-colors">
           <MessageCircle className="w-4 h-4" />
         </button>
 

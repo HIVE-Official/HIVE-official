@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Role ${role} granted to user ${userId}` });
   } catch (error) {
-    logger.error('Error granting role', { error: error, endpoint: '/api/admin/grant-role' });
+    logger.error('Error granting role', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

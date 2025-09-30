@@ -47,9 +47,9 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         className="relative mx-auto w-24 h-24 mb-8"
       >
-        {/* Gold burst background */}
+        {/* Brand color burst background */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-[#FFD700]/20 to-[#FFD700]/10 rounded-full"
+          className="absolute inset-0 bg-gradient-to-r from-[var(--hive-brand-primary)]/20 to-[var(--hive-brand-primary)]/10 rounded-full"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.6, 0.3]
@@ -58,7 +58,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         />
 
         {/* Main icon */}
-        <div className="relative z-10 w-full h-full bg-[#FFD700] rounded-full flex items-center justify-center">
+        <div className="relative z-10 w-full h-full bg-[var(--hive-brand-primary)] rounded-full flex items-center justify-center">
           <CheckCircle className="w-12 h-12 text-black" />
         </div>
 
@@ -68,7 +68,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
           animate={{ rotate: [0, 360] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         >
-          <Sparkles className="w-6 h-6 text-[#FFD700]" />
+          <Sparkles className="w-6 h-6 text-[var(--hive-brand-primary)]" />
         </motion.div>
       </motion.div>
 
@@ -210,9 +210,9 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         <HiveButton
           onClick={handleComplete}
           disabled={isCompleting}
-          variant="default"
+          variant="primary"
           size="lg"
-          className="w-full max-w-md mx-auto bg-[#FFD700] hover:bg-[#FFD700]/90 text-black font-semibold"
+          className="w-full max-w-md mx-auto"
         >
           {isCompleting ? (
             <div className="flex items-center justify-center gap-3">

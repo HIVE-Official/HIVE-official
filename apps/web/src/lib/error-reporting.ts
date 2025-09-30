@@ -188,7 +188,7 @@ class ErrorReportingService {
         });
       }
     } catch (error) {
-      logger.error('Failed to report recovery', { errorId, error });
+      logger.error('Failed to report recovery', { errorId, error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 
@@ -201,7 +201,7 @@ class ErrorReportingService {
       if (!response.ok) return null;
       return await response.json();
     } catch (error) {
-      logger.error('Failed to fetch error metrics', { error });
+      logger.error('Failed to fetch error metrics', { error: error instanceof Error ? error : new Error(String(error)) });
       return null;
     }
   }

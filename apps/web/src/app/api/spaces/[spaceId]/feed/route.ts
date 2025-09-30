@@ -120,7 +120,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch posts for activity feed', { error, spaceId });
+        logger.warn('Failed to fetch posts for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
       }
     }
 
@@ -179,7 +179,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch events for activity feed', { error, spaceId });
+        logger.warn('Failed to fetch events for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
       }
     }
 
@@ -228,7 +228,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch member joins for activity feed', { error, spaceId });
+        logger.warn('Failed to fetch member joins for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
       }
     }
 
@@ -290,7 +290,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch tool deployments for activity feed', { error, spaceId });
+        logger.warn('Failed to fetch tool deployments for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
       }
     }
 

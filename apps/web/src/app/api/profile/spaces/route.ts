@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
             quickStats
           };
         } catch (error) {
-          logger.error('Error fetching space data for', { spaceId: membership.id, error: error, endpoint: '/api/profile/spaces' });
+          logger.error('Error fetching space data for', { spaceId: membership.id, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/profile/spaces' });
           return null;
         }
       })
@@ -174,7 +174,10 @@ export async function GET(request: NextRequest) {
       timeRange
     });
   } catch (error) {
-    logger.error('Error fetching space memberships', { error: error, endpoint: '/api/profile/spaces' });
+    logger.error(
+      `Error fetching space memberships at /api/profile/spaces`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch space memberships", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -219,7 +222,10 @@ async function getSpaceActivityForUser(userId: string, spaceId: string, timeRang
 
     return recentActivity;
   } catch (error) {
-    logger.error('Error getting space activity', { error: error, endpoint: '/api/profile/spaces' });
+    logger.error(
+      `Error getting space activity at /api/profile/spaces`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return { posts: 0, interactions: 0, toolUsage: 0, timeSpent: 0 };
   }
 }
@@ -248,7 +254,10 @@ async function getSpaceNotifications(userId: string, spaceId: string) {
       hasImportantUpdates: Math.random() > 0.7
     };
   } catch (error) {
-    logger.error('Error getting space notifications', { error: error, endpoint: '/api/profile/spaces' });
+    logger.error(
+      `Error getting space notifications at /api/profile/spaces`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return { unreadCount: 0, hasImportantUpdates: false };
   }
 }
@@ -285,7 +294,10 @@ async function getSpaceQuickStats(userId: string, spaceId: string) {
       myInteractions
     };
   } catch (error) {
-    logger.error('Error getting quick stats', { error: error, endpoint: '/api/profile/spaces' });
+    logger.error(
+      `Error getting quick stats at /api/profile/spaces`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return { myPosts: 0, myTools: 0, myInteractions: 0 };
   }
 }

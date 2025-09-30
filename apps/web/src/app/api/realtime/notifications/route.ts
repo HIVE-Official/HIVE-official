@@ -204,7 +204,10 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    logger.error('Error creating live notification', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error creating live notification at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to create notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -287,7 +290,10 @@ export async function GET(request: NextRequest) {
       lastNotificationId: notifications.length > 0 ? notifications[notifications.length - 1].id : null
     });
   } catch (error) {
-    logger.error('Error getting live notifications', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error getting live notifications at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to get notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -387,7 +393,10 @@ export async function PUT(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating notification status', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error updating notification status at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to update notification status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -444,7 +453,10 @@ export async function DELETE(request: NextRequest) {
       message: `Deleted ${deletedCount} notifications`
     });
   } catch (error) {
-    logger.error('Error deleting notifications', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error deleting notifications at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(ApiResponseHelper.error("Failed to delete notifications", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -461,7 +473,10 @@ async function getUserNotificationPreferences(userId: string): Promise<Notificat
     // Return default preferences
     return getDefaultNotificationPreferences(userId);
   } catch (error) {
-    logger.error('Error getting notification preferences', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error getting notification preferences at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return getDefaultNotificationPreferences(userId);
   }
 }
@@ -663,7 +678,10 @@ async function addToBatch(notification: LiveNotification): Promise<void> {
       await dbAdmin.collection('notificationBatches').doc(batchId).set(batch);
     }
   } catch (error) {
-    logger.error('Error adding notification to batch', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error adding notification to batch at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -680,7 +698,10 @@ async function sendNotificationImmediately(notification: LiveNotification): Prom
     // For example: push notification service, email service, etc.
     logger.info('Sending notification via channels', { notificationId: notification.id, data: notification.delivery.channels, endpoint: '/api/realtime/notifications'  });
   } catch (error) {
-    logger.error('Error sending notification immediately', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error sending notification immediately at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -722,7 +743,10 @@ async function broadcastNotificationToUser(notification: LiveNotification): Prom
 
     await dbAdmin.collection('realtimeMessages').add(realtimeMessage);
   } catch (error) {
-    logger.error('Error broadcasting notification to user', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error broadcasting notification to user at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -737,7 +761,10 @@ async function getUnreadNotificationCount(userId: string): Promise<number> {
     const unreadSnapshot = await unreadQuery.get();
     return unreadSnapshot.size;
   } catch (error) {
-    logger.error('Error getting unread notification count', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error getting unread notification count at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -752,7 +779,10 @@ async function getTotalNotificationCount(userId: string): Promise<number> {
     const totalSnapshot = await totalQuery.get();
     return totalSnapshot.size;
   } catch (error) {
-    logger.error('Error getting total notification count', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error getting total notification count at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -769,7 +799,10 @@ async function getRecentNotificationCount(userId: string, minutes: number): Prom
     const recentSnapshot = await recentQuery.get();
     return recentSnapshot.size;
   } catch (error) {
-    logger.error('Error getting recent notification count', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error getting recent notification count at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
     return 0;
   }
 }
@@ -808,7 +841,10 @@ async function broadcastNotificationStatusUpdate(
 
     await dbAdmin.collection('realtimeMessages').add(statusMessage);
   } catch (error) {
-    logger.error('Error broadcasting notification status update', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error broadcasting notification status update at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }
 
@@ -841,6 +877,9 @@ async function updateNotificationStats(userId: string, type: string, spaceId?: s
       });
     }
   } catch (error) {
-    logger.error('Error updating notification stats', { error: error, endpoint: '/api/realtime/notifications' });
+    logger.error(
+      `Error updating notification stats at /api/realtime/notifications`,
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 }

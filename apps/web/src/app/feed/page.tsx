@@ -380,7 +380,7 @@ export default function FeedPage() {
           </p>
           <Button 
             onClick={refresh}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -532,7 +532,7 @@ export default function FeedPage() {
               {/* Notifications */}
               <Button variant="secondary" size="sm" className="relative">
                 <Bell className="h-4 w-4" />
-                <Badge className="absolute -top-1 -right-1 bg-hive-gold text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
+                <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                   3
                 </Badge>
               </Button>
@@ -540,7 +540,7 @@ export default function FeedPage() {
               {/* Feed is READ-ONLY - Create posts within spaces instead */}
               <Button
                 onClick={() => window.location.href = '/spaces'}
-                className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne min-h-[44px] px-6"
+                className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne min-h-[44px] px-6"
                 title="Posts can only be created within spaces"
               >
                 <Users className="h-4 w-4 mr-2" />
@@ -566,8 +566,8 @@ export default function FeedPage() {
         {/* Feed is READ-ONLY - Posts are promoted from spaces automatically or manually */}
         <Card className="p-4 mb-6 bg-hive-surface-elevated border-hive-border">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-hive-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-              <Zap className="h-4 w-4 text-hive-gold" />
+            <div className="w-8 h-8 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center flex-shrink-0">
+              <Zap className="h-4 w-4 text-[var(--hive-brand-primary)]" />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-hive-text-primary text-sm mb-1">
@@ -599,7 +599,7 @@ export default function FeedPage() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button
                     onClick={() => window.location.href = '/spaces/browse'}
-                    className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+                    className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
                   >
                     Browse Spaces
                   </Button>

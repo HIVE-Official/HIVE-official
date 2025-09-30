@@ -126,7 +126,7 @@ export class AutomatedModerationWorkflows {
         try {
           await this.processWorkflow(workflow);
         } catch (error) {
-          logger.error('Error processing workflow', { error, workflowId: workflow.id });
+          logger.error('Error processing workflow', { error: error instanceof Error ? error : new Error(String(error)), workflowId: workflow.id });
           await this.updateWorkflowStats(workflow.id, 'error');
         }
       }
@@ -138,7 +138,7 @@ export class AutomatedModerationWorkflows {
       await this.processEscalations();
       
     } catch (error) {
-      logger.error('Error in automated moderation workflows', { error });
+      logger.error('Error in automated moderation workflows', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 
@@ -215,7 +215,7 @@ export class AutomatedModerationWorkflows {
       });
 
     } catch (error) {
-      logger.error('Error finding matching reports', { error, workflowId: workflow.id });
+      logger.error('Error finding matching reports', { error: error instanceof Error ? error : new Error(String(error)), workflowId: workflow.id });
       return [];
     }
   }
@@ -292,7 +292,7 @@ export class AutomatedModerationWorkflows {
           batch.results.failed++;
           const errorMessage = error instanceof Error ? error.message : String(error);
           batch.results.errors.push(`Action ${action.type} failed: ${errorMessage}`);
-          logger.error('Automated action failed', { error, action: action.type, metadata: { batchId } });
+          logger.error('Automated action failed', { error: error instanceof Error ? error : new Error(String(error)), action: action.type, metadata: { batchId } });
         }
         batch.results.processed++;
       }
@@ -477,7 +477,7 @@ export class AutomatedModerationWorkflows {
             });
           }
         } catch (error) {
-          logger.error('Error executing delayed action', { error, action: action.id });
+          logger.error('Error executing delayed action', { error: error instanceof Error ? error : new Error(String(error)), action: action.id });
           await dbAdmin.collection('delayedModerationActions').doc(action.id).update({
             status: 'failed',
             failedAt: new Date().toISOString(),
@@ -486,7 +486,7 @@ export class AutomatedModerationWorkflows {
         }
       }
     } catch (error) {
-      logger.error('Error processing delayed actions', { error });
+      logger.error('Error processing delayed actions', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 
@@ -519,11 +519,11 @@ export class AutomatedModerationWorkflows {
             });
           }
         } catch (error) {
-          logger.error('Error processing escalation', { error, metadata: { escalationId: escalation.id } });
+          logger.error('Error processing escalation', { error: error instanceof Error ? error : new Error(String(error)), metadata: { escalationId: escalation.id } });
         }
       }
     } catch (error) {
-      logger.error('Error processing escalations', { error });
+      logger.error('Error processing escalations', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 

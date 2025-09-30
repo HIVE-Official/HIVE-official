@@ -91,7 +91,7 @@ if (redisUrl && redisToken) {
 
     logger.info('Redis rate limiter initialized successfully');
   } catch (error) {
-    logger.error('Failed to initialize Redis rate limiter', { error });
+    logger.error('Failed to initialize Redis rate limiter', { error: error instanceof Error ? error : new Error(String(error)) });
     // Fall back to in-memory rate limiting
   }
 } else {
@@ -155,7 +155,7 @@ export async function checkRedisRateLimit(
       retryAfter: success ? undefined : Math.ceil((reset - Date.now()) / 1000),
     };
   } catch (error) {
-    logger.error('Redis rate limit check failed', { error, limitType, identifier });
+    logger.error('Redis rate limit check failed', { error: error instanceof Error ? error : new Error(String(error)), limitType, identifier });
 
     // On error, allow the request but log it
     return {
@@ -200,7 +200,7 @@ export async function trackFailedLoginRedis(
 
     return count;
   } catch (error) {
-    logger.error('Failed to track login attempt', { error, identifier });
+    logger.error('Failed to track login attempt', { error: error instanceof Error ? error : new Error(String(error)), identifier });
     return 0;
   }
 }
@@ -217,7 +217,7 @@ export async function resetFailedLoginsRedis(identifier: string): Promise<void> 
     await redis.del(`hive:failed:login:${identifier}`);
     await redis.del(`hive:locked:account:${identifier}`);
   } catch (error) {
-    logger.error('Failed to reset login attempts', { error, identifier });
+    logger.error('Failed to reset login attempts', { error: error instanceof Error ? error : new Error(String(error)), identifier });
   }
 }
 
@@ -233,7 +233,7 @@ export async function isAccountLockedRedis(identifier: string): Promise<boolean>
     const locked = await redis.get(`hive:locked:account:${identifier}`);
     return locked === 'locked';
   } catch (error) {
-    logger.error('Failed to check account lock status', { error, identifier });
+    logger.error('Failed to check account lock status', { error: error instanceof Error ? error : new Error(String(error)), identifier });
     return false;
   }
 }
@@ -312,7 +312,7 @@ export async function checkCampusRateLimit(
 
     return success;
   } catch (error) {
-    logger.error('Campus rate limit check failed', { error, campusId, action });
+    logger.error('Campus rate limit check failed', { error: error instanceof Error ? error : new Error(String(error)), campusId, action });
     return true; // Allow on error
   }
 }

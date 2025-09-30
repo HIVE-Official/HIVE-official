@@ -129,7 +129,7 @@ export default function FeedPageV2() {
           </p>
           <Button
             onClick={() => window.location.href = '/auth/login'}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             Sign In
           </Button>
@@ -154,7 +154,7 @@ export default function FeedPageV2() {
           </p>
           <Button
             onClick={refresh}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
@@ -280,8 +280,8 @@ export default function FeedPageV2() {
             {/* Info Card */}
             <Card className="p-4 bg-hive-surface-elevated border-hive-border">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-hive-gold/20 rounded-full flex items-center justify-center">
-                  <Activity className="h-4 w-4 text-hive-gold" />
+                <div className="w-8 h-8 bg-[var(--hive-brand-primary)]/20 rounded-full flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-[var(--hive-brand-primary)]" />
                 </div>
                 <div>
                   <p className="text-sm text-hive-text-secondary">
@@ -301,7 +301,7 @@ export default function FeedPageV2() {
                 </p>
                 <Button
                   onClick={() => window.location.href = '/spaces/browse'}
-                  className="bg-hive-gold text-hive-obsidian"
+                  className="bg-[var(--hive-brand-primary)] text-hive-obsidian"
                 >
                   Browse Spaces
                 </Button>

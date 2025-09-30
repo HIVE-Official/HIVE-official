@@ -292,7 +292,7 @@ export function PostComposer({
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-hive-gold text-hive-obsidian font-semibold rounded-full flex items-center justify-center">
+          <div className="w-10 h-10 bg-[var(--hive-brand-primary)] text-hive-obsidian font-semibold rounded-full flex items-center justify-center">
             {user.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.name} className="w-full h-full rounded-full object-cover" />
             ) : (
@@ -493,7 +493,7 @@ export function PostComposer({
                   variant="secondary"
                   size="sm"
                   onClick={() => setPostType(type)}
-                  className={postType === type ? 'bg-hive-gold/20 border-hive-gold' : ''}
+                  className={postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                   title={`Create ${type} post`}
                 >
                   {type === 'text' && <span className="h-4 w-4 flex items-center justify-center text-xs">📄</span>}
@@ -532,7 +532,7 @@ export function PostComposer({
               variant="secondary"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={showAdvanced ? 'bg-hive-gold/20 border-hive-gold' : ''}
+              className={showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -542,7 +542,7 @@ export function PostComposer({
           <Button
             onClick={handlePost}
             disabled={isPosting || isOverLimit || (!content.trim() && attachments.length === 0)}
-            className="bg-hive-gold text-hive-obsidian hover:bg-hive-champagne"
+            className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
           >
             <Send className="h-4 w-4 mr-2" />
             {isPosting ? 'Posting...' : 'Post'}
@@ -561,7 +561,7 @@ export function PostComposer({
                     variant="secondary"
                     size="sm"
                     onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
-                    className={visibility === vis ? 'bg-hive-gold/20 border-hive-gold' : ''}
+                    className={visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                     disabled={vis === 'space' && !spaceId}
                   >
                     {vis === 'public' && <Globe className="h-4 w-4" />}

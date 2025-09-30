@@ -438,7 +438,7 @@ export function SearchInterface({
                   </div>
 
                   {/* Result Title */}
-                  <h4 className="font-medium text-white hover:text-hive-gold transition-colors">
+                  <h4 className="font-medium text-white hover:text-[var(--hive-brand-primary)] transition-colors">
                     {item.title}
                   </h4>
 

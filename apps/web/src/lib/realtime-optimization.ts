@@ -418,7 +418,7 @@ export class RealtimeOptimizationManager {
       
       logger.info('Health check completed', { metadata: { sseHealthy, firebaseHealthy } });
     } catch (error) {
-      logger.error('Health check failed', { error });
+      logger.error('Health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 
@@ -441,7 +441,7 @@ export class RealtimeOptimizationManager {
       await sseRealtimeService.sendMessage(testMessage);
       return true;
     } catch (error) {
-      logger.error('SSE health check failed', { error });
+      logger.error('SSE health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
       return false;
     }
   }
@@ -468,7 +468,7 @@ export class RealtimeOptimizationManager {
       
       return true;
     } catch (error) {
-      logger.error('Firebase health check failed', { error });
+      logger.error('Firebase health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
       return false;
     }
   }
@@ -543,7 +543,7 @@ export class RealtimeOptimizationManager {
         logger.error('Message delivery completely failed', { messageId: message.id });
       }
     } catch (error) {
-      logger.error('Fallback delivery also failed', { messageId: message.id, error });
+      logger.error('Fallback delivery also failed', { messageId: message.id, error: error instanceof Error ? error : new Error(String(error)) });
     }
   }
 

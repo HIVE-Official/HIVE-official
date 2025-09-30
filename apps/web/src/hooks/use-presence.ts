@@ -67,7 +67,7 @@ export function usePresence() {
           }
         }, { merge: true });
       } catch (error) {
-        logger.error('Failed to update presence', { error });
+        logger.error('Failed to update presence', { error: error instanceof Error ? error : new Error(String(error)) });
       }
     };
 
@@ -106,7 +106,7 @@ export function usePresence() {
           campusId
         });
       } catch (error) {
-        logger.error('Failed to setup disconnect handler', { error });
+        logger.error('Failed to setup disconnect handler', { error: error instanceof Error ? error : new Error(String(error)) });
       }
     };
 
@@ -192,7 +192,7 @@ export function useOnlineUsers(spaceId?: string) {
               });
             }
           } catch (error) {
-            logger.error('Failed to fetch user data', { error, userId: presence.userId });
+            logger.error('Failed to fetch user data', { error: error instanceof Error ? error : new Error(String(error)), userId: presence.userId });
           }
         });
 
@@ -202,7 +202,7 @@ export function useOnlineUsers(spaceId?: string) {
         setLoading(false);
       },
       (error) => {
-        logger.error('Failed to subscribe to online users', { error });
+        logger.error('Failed to subscribe to online users', { error: error instanceof Error ? error : new Error(String(error)) });
         setLoading(false);
       }
     );
@@ -310,7 +310,7 @@ export function useUserStatus(userId: string) {
         }
       },
       (error) => {
-        logger.error('Failed to get user status', { error, userId });
+        logger.error('Failed to get user status', { error: error instanceof Error ? error : new Error(String(error)), userId });
         setStatus('offline');
       }
     );

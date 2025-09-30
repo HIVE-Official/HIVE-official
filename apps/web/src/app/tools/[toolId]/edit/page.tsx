@@ -106,19 +106,19 @@ const ElementCard = ({ element, onSelect, isSelected }: {
     <div
       className={`p-3 rounded-lg border cursor-pointer transition-all group ${
         isSelected 
-          ? 'bg-[#FFD700]/10 border-[#FFD700]/30' 
+          ? 'bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30' 
           : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] hover:bg-[rgba(255,255,255,0.04)]'
       }`}
       onClick={() => onSelect(element.id)}
     >
       <div className="flex items-center gap-3">
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-          isSelected ? 'bg-[#FFD700]/20' : 'bg-[rgba(255,255,255,0.05)] group-hover:bg-[#FFD700]/20'
+          isSelected ? 'bg-[var(--hive-brand-primary)]/20' : 'bg-[rgba(255,255,255,0.05)] group-hover:bg-[var(--hive-brand-primary)]/20'
         }`}>
-          <IconComponent className={`h-4 w-4 ${isSelected ? 'text-[#FFD700]' : 'text-[#A1A1AA] group-hover:text-[#FFD700]'}`} />
+          <IconComponent className={`h-4 w-4 ${isSelected ? 'text-[var(--hive-brand-primary)]' : 'text-[#A1A1AA] group-hover:text-[var(--hive-brand-primary)]'}`} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className={`font-medium text-sm truncate ${isSelected ? 'text-[#FFD700]' : 'text-white'}`}>
+          <div className={`font-medium text-sm truncate ${isSelected ? 'text-[var(--hive-brand-primary)]' : 'text-white'}`}>
             {element.label}
           </div>
           <div className="text-xs text-[#A1A1AA] capitalize">
@@ -153,7 +153,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
           <input
             type="text"
             value={element.label}
-            className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+            className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
           />
         </div>
         
@@ -164,7 +164,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="text"
                 value={element.properties.placeholder || ''}
-                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -177,7 +177,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
         {element.type === 'button' && (
           <div>
             <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Button Style</label>
-            <select className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[#FFD700]/50 focus:outline-none">
+            <select className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none">
               <option value="primary">Primary</option>
               <option value="secondary">Secondary</option>
               <option value="outline">Outline</option>
@@ -193,7 +193,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.position.x}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -201,7 +201,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.position.y}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -209,7 +209,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.size.width}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
             <div>
@@ -217,7 +217,7 @@ const PropertyPanel = ({ element }: { element: ToolElement | null }) => {
               <input
                 type="number"
                 value={element.size.height}
-                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function ToolEditPage() {
               <Button
                 size="sm"
                 onClick={handleSave}
-                className="bg-[#FFD700] text-[#0A0A0A] hover:bg-[#FFE255]"
+                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 disabled={!hasChanges}
               >
                 <Save className="h-4 w-4 mr-2" />
@@ -333,7 +333,7 @@ export default function ToolEditPage() {
                       setTool({ ...tool, name: e.target.value });
                       setHasChanges(true);
                     }}
-                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -344,7 +344,7 @@ export default function ToolEditPage() {
                       setTool({ ...tool, privacy: e.target.value as any });
                       setHasChanges(true);
                     }}
-                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[#FFD700]/50 focus:outline-none"
+                    className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                   >
                     <option value="personal">Personal</option>
                     <option value="space">Space</option>
@@ -383,7 +383,7 @@ export default function ToolEditPage() {
                         key={elementType.type}
                         size="sm"
                         variant="secondary"
-                        className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[#FFD700]/30 p-2 h-auto"
+                        className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[var(--hive-brand-primary)]/30 p-2 h-auto"
                         onClick={() => {
                           const newElement: ToolElement = {
                             id: `element-${Date.now()}`,
@@ -424,7 +424,7 @@ export default function ToolEditPage() {
                       key={element.id}
                       className={`absolute cursor-pointer transition-all ${
                         selectedElementId === element.id 
-                          ? 'ring-2 ring-[#FFD700]/50' 
+                          ? 'ring-2 ring-[var(--hive-brand-primary)]/50' 
                           : 'hover:ring-2 hover:ring-[#A1A1AA]/30'
                       }`}
                       style={{
@@ -444,7 +444,7 @@ export default function ToolEditPage() {
                         />
                       )}
                       {element.type === 'button' && (
-                        <button className="w-full h-full bg-[#FFD700] text-[#0A0A0A] rounded font-medium text-sm pointer-events-none">
+                        <button className="w-full h-full bg-[var(--hive-brand-primary)] text-[#0A0A0A] rounded font-medium text-sm pointer-events-none">
                           {element.label}
                         </button>
                       )}

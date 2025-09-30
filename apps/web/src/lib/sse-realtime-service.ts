@@ -136,7 +136,7 @@ export class SSERealtimeService {
 
       return messageId;
     } catch (error) {
-      logger.error('Error sending SSE message', { error, messageId });
+      logger.error('Error sending SSE message', { error: error instanceof Error ? error : new Error(String(error)), messageId });
       throw error;
     }
   }
@@ -279,7 +279,7 @@ export class SSERealtimeService {
 
       return messagesSnapshot.docs.map(doc => doc.data() as RealtimeMessage);
     } catch (error) {
-      logger.error('Error getting message history', { error, channel });
+      logger.error('Error getting message history', { error: error instanceof Error ? error : new Error(String(error)), channel });
       return [];
     }
   }
