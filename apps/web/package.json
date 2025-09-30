@@ -68,7 +68,8 @@
     "react-hook-form": "^7.57.0",
     "tailwind-merge": "^2.6.0",
     "three": "^0.180.0",
-    "zod": "^3.25.64"
+    "zod": "^3.25.64",
+    "cssnano": "^7.1.1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.4",
@@ -89,7 +90,6 @@
     "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.21",
-    "cssnano": "^7.1.1",
     "dotenv": "^17.2.2",
     "eslint": "^9.28.0",
     "eslint-config-next": "^14.2.15",
