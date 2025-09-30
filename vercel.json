@@ -6,17 +6,9 @@
   "framework": null,
   "regions": ["iad1"],
   "functions": {
-    "apps/web/src/app/api/**/*.ts": {
+    "api/**/*.ts": {
       "maxDuration": 30,
       "memory": 1024
-    },
-    "apps/web/src/app/api/realtime/sse/route.ts": {
-      "maxDuration": 60,
-      "memory": 512
-    },
-    "apps/web/src/app/api/feed/route.ts": {
-      "maxDuration": 10,
-      "memory": 512
     }
   },
   "crons": [],
