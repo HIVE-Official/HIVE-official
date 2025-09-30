@@ -1,5 +1,5 @@
 {
-  "name": "@hive/i18n",
+  "name": "@hive/utilities",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,19 +14,16 @@
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
-    "i18next": "^25.2.1",
-    "react-i18next": "^15.5.2"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@hive/typescript-config": "workspace:*",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20.19.0",
-    "@types/react": "^18.3.23",
     "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   },
   "overrides": {
     "eslint": "$eslint"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0"
   }
 }

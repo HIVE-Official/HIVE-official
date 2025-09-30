@@ -1,24 +1,21 @@
 {
-  "name": "@hive/i18n",
+  "name": "@hive/hooks",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts"
-  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "npx tsc",
     "lint": "npx eslint . --max-warnings 10",
     "typecheck": "npx tsc --noEmit"
   },
   "dependencies": {
-    "i18next": "^25.2.1",
-    "react-i18next": "^15.5.2"
+    "@hive/auth-logic": "workspace:*",
+    "@hive/core": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^20.19.0",
+    "@hive/typescript-config": "workspace:*",
+    "@types/node": "^24.0.1",
     "@types/react": "^18.3.23",
     "eslint": "^9.28.0",
     "typescript": "^5.8.3"
