@@ -8,19 +8,25 @@
     ".": {
       "types": "./dist/ui/index.d.ts",
       "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js"
+      "require": "./dist/ui/index.js",
+      "default": "./dist/ui/index.js"
     },
     "./lib/utils": {
       "types": "./dist/src/lib/utils.d.ts",
       "import": "./dist/src/lib/utils.js",
-      "require": "./dist/src/lib/utils.js"
+      "require": "./dist/src/lib/utils.js",
+      "default": "./dist/src/lib/utils.js"
     },
     "./src/components/framer-motion-proxy": {
       "types": "./dist/src/components/framer-motion-proxy.d.ts",
       "import": "./dist/src/components/framer-motion-proxy.js",
-      "require": "./dist/src/components/framer-motion-proxy.js"
+      "require": "./dist/src/components/framer-motion-proxy.js",
+      "default": "./dist/src/components/framer-motion-proxy.js"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": {
+      "style": "./dist/styles.css",
+      "default": "./dist/styles.css"
+    }
   },
   "files": [
     "dist"

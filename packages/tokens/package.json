@@ -9,10 +9,17 @@
     ".": {
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
-    "./hive-tokens-generated.css": "./hive-tokens-generated.css",
-    "./tailwind.config.master": "./tailwind.config.master.ts"
+    "./hive-tokens-generated.css": {
+      "style": "./hive-tokens-generated.css",
+      "default": "./hive-tokens-generated.css"
+    },
+    "./tailwind.config.master": {
+      "types": "./tailwind.config.master.ts",
+      "default": "./tailwind.config.master.ts"
+    }
   },
   "scripts": {
     "build": "npm run build:types && npm run build:css",
