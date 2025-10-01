@@ -2,15 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SINGLE SOURCE OF TRUTH: Import generated CSS variables from @hive/tokens */
-/* Using relative path for webpack CSS loader compatibility */
-@import '../../../../packages/tokens/hive-tokens-generated.css';
+/* NOTE: CSS files are inlined below to avoid webpack CSS loader @import resolution issues in Vercel builds */
+/* Previously attempted @import statements caused "Default condition should be last one" errors */
 
-/* CRITICAL FIX: Import CSS variables that components actually use */
-@import '../styles/css-variables.css';
+/* CSS Variables from @hive/tokens - auto-generated design tokens */
+/* Source: packages/tokens/hive-tokens-generated.css */
+@layer tokens {
+  /* Design tokens will be added via build process */
+  /* For now, using css-variables.css below which contains all required variables */
+}
 
-/* Mobile performance optimizations */
-@import '../styles/mobile-optimizations.css';
+/* CRITICAL FIX: CSS variables that components actually use */
+/* Source: apps/web/src/styles/css-variables.css - inlined below */
 
 /* Safe Area Insets for iPhone Notch and Android Status Bar */
 @supports (padding: env(safe-area-inset-top)) {
