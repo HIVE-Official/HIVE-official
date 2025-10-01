@@ -5,30 +5,51 @@
 @import "tailwindcss/preflight";
 
 @layer base {
-  /* === RADIX UI CSS VARIABLES ===
-   * Required for Radix UI components compatibility
-   * Maps HIVE tokens to expected CSS variables
+  /* === RADIX UI + SHADCN CSS VARIABLES ===
+   * Vercel Geist-inspired: Monochrome base + selective gold accent
+   * True black (#000) for OLED optimization
+   * Minimal borders, high contrast, clean hierarchy
    */
   :root {
-    --background: var(--hive-background-primary);
-    --foreground: var(--hive-text-primary);
-    --card: var(--hive-background-secondary);
-    --card-foreground: var(--hive-text-primary);
-    --popover: var(--hive-background-secondary);
-    --popover-foreground: var(--hive-text-primary);
-    --primary: var(--hive-brand-primary);
-    --primary-foreground: var(--hive-text-inverse);
-    --secondary: var(--hive-background-interactive);
-    --secondary-foreground: var(--hive-text-primary);
-    --muted: var(--hive-background-tertiary);
-    --muted-foreground: var(--hive-text-muted);
-    --accent: var(--hive-brand-accent);
-    --accent-foreground: var(--hive-text-inverse);
-    --destructive: var(--hive-status-error);
-    --destructive-foreground: var(--hive-text-primary);
-    --border: var(--hive-border-primary);
-    --input: var(--hive-border-primary);
-    --ring: var(--hive-interactive-focus);
+    /* Base colors - True black foundation */
+    --background: #000000;
+    --foreground: #FFFFFF;
+
+    /* Cards & surfaces - Subtle elevation */
+    --card: #171717;
+    --card-foreground: #FFFFFF;
+    --popover: #171717;
+    --popover-foreground: #FFFFFF;
+
+    /* Primary brand - Gold accent (selective use) */
+    --primary: #FFD700;
+    --primary-foreground: #000000;
+
+    /* Secondary - Minimal gray interactive states */
+    --secondary: #262626;
+    --secondary-foreground: #FFFFFF;
+
+    /* Muted - Lower hierarchy content */
+    --muted: #262626;
+    --muted-foreground: #A3A3A3;
+
+    /* Accent - Reserved for interactive highlights */
+    --accent: #262626;
+    --accent-foreground: #FFFFFF;
+
+    /* Destructive - Error states */
+    --destructive: #FF3737;
+    --destructive-foreground: #FFFFFF;
+
+    /* Borders - Subtle, minimal chrome (Geist principle) */
+    --border: rgba(255, 255, 255, 0.08);
+    --input: rgba(255, 255, 255, 0.12);
+
+    /* Focus ring - Gold accent for accessibility */
+    --ring: #FFD700;
+
+    /* Radius - Consistent, minimal */
+    --radius: 0.5rem;
   }
 
   /* === GLOBAL STYLES === */
