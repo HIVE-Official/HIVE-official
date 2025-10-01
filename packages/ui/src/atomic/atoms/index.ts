@@ -76,4 +76,14 @@ export { TechSleekShowcase } from './tech-sleek-showcase';
 export { TextareaEnhanced } from './textarea-enhanced';
 export { Textarea } from './textarea';
 export { TopBarNav } from './top-bar-nav';
-export { UniversalAtoms } from './universal-atoms';
+export {
+  UniversalButton,
+  UniversalInput,
+  UniversalCard,
+  UniversalBadge,
+  UniversalAvatar,
+  UniversalSkeleton,
+  UniversalDivider,
+  UniversalIconButton,
+  UniversalCheckbox,
+} from './universal-atoms';
