@@ -417,7 +417,8 @@ const nextConfig = {
 
       // Tree shaking optimization
       config.optimization.usedExports = true;
-      config.optimization.sideEffects = false;
+      // Disabled sideEffects optimization - was causing CSS loader issues in Vercel builds
+      // config.optimization.sideEffects = false;
       config.optimization.providedExports = true;
       config.optimization.concatenateModules = true;
       config.optimization.innerGraph = true;
