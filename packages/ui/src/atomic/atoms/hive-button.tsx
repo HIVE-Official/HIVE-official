@@ -1,20 +1,21 @@
 import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+import { cn } from "@/lib/utils"
 
 const hiveButtonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
           "bg-transparent border border-[var(--hive-border-strong)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
         destructive:
-          "bg-[var(--hive-status-error)] text-[var(--hive-status-error-text)] hover:bg-[var(--hive-status-error)]/90",
+          "bg-[var(--hive-status-error)] text-[var(--hive-status-error-text)] shadow-sm hover:bg-[var(--hive-status-error)]/90",
         outline:
-          "border border-[var(--hive-border-strong)] bg-transparent text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
+          "border border-[var(--hive-border-strong)] bg-transparent text-[var(--hive-text-primary)] shadow-sm hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
         secondary:
-          "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-tertiary)]/80",
+          "bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] shadow-sm hover:bg-[var(--hive-background-tertiary)]/80",
         ghost:
           "text-[var(--hive-text-primary)] hover:bg-[var(--hive-background-secondary)] hover:text-[var(--hive-text-primary)]",
         link:
@@ -22,9 +23,9 @@ const hiveButtonVariants = cva(
         brand:
           "bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] text-[var(--hive-brand-primary-text)] hover:from-[var(--hive-brand-primary)]/90 hover:to-[var(--hive-brand-secondary)]/90 shadow-lg hover:shadow-xl transition-shadow",
         success:
-          "bg-[var(--hive-status-success)] text-[var(--hive-status-success-text)] hover:bg-[var(--hive-status-success)]/90",
+          "bg-[var(--hive-status-success)] text-[var(--hive-status-success-text)] shadow-sm hover:bg-[var(--hive-status-success)]/90",
         warning:
-          "bg-[var(--hive-status-warning)] text-[var(--hive-status-warning-text)] hover:bg-[var(--hive-status-warning)]/90",
+          "bg-[var(--hive-status-warning)] text-[var(--hive-status-warning-text)] shadow-sm hover:bg-[var(--hive-status-warning)]/90",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -63,10 +64,11 @@ const HiveButton = React.forwardRef<HTMLButtonElement, HiveButtonProps>(
     disabled,
     ...props
   }, ref) => {
+    const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
 
     return (
-      <button
+      <Comp
         className={cn(hiveButtonVariants({ variant, size, className }))}
         ref={ref}
         disabled={isDisabled}
@@ -78,6 +80,7 @@ const HiveButton = React.forwardRef<HTMLButtonElement, HiveButtonProps>(
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-label="Loading"
           >
             <circle
               className="opacity-25"
@@ -97,7 +100,7 @@ const HiveButton = React.forwardRef<HTMLButtonElement, HiveButtonProps>(
         {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
         {children}
         {!loading && rightIcon && <span className="ml-2">{rightIcon}</span>}
-      </button>
+      </Comp>
     )
   }
 )
