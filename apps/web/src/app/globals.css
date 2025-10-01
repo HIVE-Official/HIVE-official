@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 /* SINGLE SOURCE OF TRUTH: Import generated CSS variables from @hive/tokens */
-/* TODO: Automate this import via build process */
-@import '@hive/tokens/hive-tokens-generated.css';
+/* Using relative path for webpack CSS loader compatibility */
+@import '../../../../packages/tokens/hive-tokens-generated.css';
 
 /* CRITICAL FIX: Import CSS variables that components actually use */
 @import '../styles/css-variables.css';
