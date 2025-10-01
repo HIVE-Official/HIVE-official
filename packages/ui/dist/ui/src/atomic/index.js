@@ -1,5 +1,5 @@
-export * from "./atoms/index.js";
-export * from "./molecules/index.js";
-export * from "./organisms/index.js";
-export * from "./templates/index.js";
+export * from "./atoms";
+export * from "./molecules";
+export * from "./organisms";
+export * from "./templates";
 //# sourceMappingURL=index.js.map

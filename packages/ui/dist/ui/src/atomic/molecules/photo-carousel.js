@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const PhotoCarousel = ({ photos, photoContexts = [], primaryPhotoIndex = 0, aspectRatio = 'portrait', showIndicators = true, showContextTags = true, enableNavigation = true, className, onPhotoChange, onPhotoClick, }) => {
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(primaryPhotoIndex);
     const [imageLoadErrors, setImageLoadErrors] = useState({});

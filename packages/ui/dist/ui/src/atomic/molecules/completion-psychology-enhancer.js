@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, Sparkles, TrendingUp, Users, Eye, Gift, Zap } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../atoms/hive-card.js';
-import { HiveProgress } from '../atoms/hive-progress.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../atoms/hive-card';
+import { HiveProgress } from '../atoms/hive-progress';
 // Behavioral rewards designed for 70% completion target
 const completionRewards = [
     {

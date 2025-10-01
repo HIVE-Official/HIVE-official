@@ -3,23 +3,24 @@ const config = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
-    ...(process.env.NODE_ENV === 'production' && {
-      // Optimize CSS for production
-      cssnano: {
-        preset: [
-          'default',
-          {
-            discardComments: {
-              removeAll: true,
-            },
-            normalizeWhitespace: true,
-            colormin: true,
-            minifyFontValues: true,
-            minifySelectors: true,
-          },
-        ],
-      },
-    }),
+    // Temporarily disabled cssnano - was causing "Default condition should be last one" errors in Vercel builds
+    // ...(process.env.NODE_ENV === 'production' && {
+    //   // Optimize CSS for production
+    //   cssnano: {
+    //     preset: [
+    //       'default',
+    //       {
+    //         discardComments: {
+    //           removeAll: true,
+    //         },
+    //         normalizeWhitespace: true,
+    //         colormin: true,
+    //         minifyFontValues: true,
+    //         minifySelectors: true,
+    //       },
+    //     ],
+    //   },
+    // }),
   },
 }
 

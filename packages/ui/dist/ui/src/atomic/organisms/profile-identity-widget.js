@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../atoms/card.js';
-import { Avatar } from '../atoms/avatar.js';
+import { Card } from '../atoms/card';
+import { Avatar } from '../atoms/avatar';
 import { Camera, MapPin, GraduationCap, Sparkles, CheckCircle, Users, Activity } from 'lucide-react';
-import { PresenceIndicator } from '../atoms/presence-indicator.js';
-import { PrivacyControl } from '../molecules/privacy-control.js';
+import { PresenceIndicator } from '../atoms/presence-indicator';
+import { PrivacyControl } from '../molecules/privacy-control';
 /**
  * Profile Identity Widget - DESIGN_SPEC Compliant
  *

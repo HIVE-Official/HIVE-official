@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="08-Navigation/Overview" />
+
+# 08-Navigation
+
+**App navigation and routing**
+
+## Purpose
+
+Provide consistent, accessible navigation throughout the HIVE platform. Users should always know where they are and how to get anywhere.
+
+## Components in this Feature
+
+- **Navigation Shell** - Main app navigation wrapper
+- **Top Bar Nav** - Header navigation bar
+- **Navigation Preferences** - Navigation settings
+- **Skip Nav** - Accessibility skip links
+
+## Navigation Structure
+
+```
+Home (Feed)
+├── Profile
+├── Spaces
+│   └── [Space Detail]
+├── HiveLab
+│   └── [Tool Builder]
+├── Rituals
+└── Settings
+```
+
+## Design Principles
+
+- **Consistent** - Same navigation everywhere
+- **Fast** - < 200ms page transitions
+- **Accessible** - Full keyboard navigation
+- **Mobile-Optimized** - Bottom nav on mobile
+
+## Keyboard Shortcuts
+
+- `Cmd+K` - Command palette
+- `G then F` - Go to Feed
+- `G then P` - Go to Profile
+- `G then S` - Go to Spaces
+- `/` - Focus search
+
+## Success Metrics
+
+- Average clicks to destination: < 2
+- Navigation abandonment: < 5%
+- Keyboard shortcut usage: > 10% of power users

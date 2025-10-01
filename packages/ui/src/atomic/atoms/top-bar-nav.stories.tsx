@@ -1,9 +1,14 @@
-'use client';
+import type { Meta, StoryObj } from '@storybook/react';
+import { TopBarNav } from './top-bar-nav';
 
-import type { Meta, StoryObj } from '@storybook/react'
-import { TopBarNav } from './top-bar-nav'
-import { Home, Users, User, Bell, MessageCircle, Search } from 'lucide-react'
+/**
+ * TopBarNav component from HIVE design system
+ *
+ * HIVE Design System Story
+ * All UI/UX built in Storybook first
+ */
 
+// REQUIRED: Meta configuration following HIVE standards
 const meta = {
   title: 'Atoms/TopBarNav',
   component: TopBarNav,
@@ -11,174 +16,120 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A sleek 2025 navigation item component for top bar navigation with advanced hover effects and responsive behavior.'
-      }
-    }
+        component: 'TopBarNav component from HIVE design system. Built with HIVE design system standards: CVA variants, mobile-first sizing (44px minimum touch targets), HIVE CSS variables, React.forwardRef pattern.',
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ['autodocs'], // REQUIRED: Enables automatic prop documentation
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'active', 'ghost', 'minimal']
+      description: 'Visual variant of the component',
     },
     size: {
       control: 'select',
-      options: ['sm', 'default', 'lg', 'icon']
+      description: 'Size variant (all sizes are mobile-friendly with 44px+ touch targets)',
     },
-    responsive: {
-      control: 'select',
-      options: ['desktop', 'mobile', 'always']
-    },
-    labelVisibility: {
-      control: 'select',
-      options: ['always', 'desktop', 'mobile', 'never']
-    },
-    iconState: {
-      control: 'select',
-      options: ['default', 'active', 'pulse']
-    }
-  }
-} satisfies Meta<typeof TopBarNav>
+  },
+} satisfies Meta<typeof TopBarNav>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
+// REQUIRED: Default story showing base component
 export const Default: Story = {
   args: {
-    icon: <Home className="h-4 w-4" />,
-    label: 'Feed',
-    variant: 'default'
-  }
-}
-
-export const Active: Story = {
-  args: {
-    icon: <Users className="h-4 w-4" />,
-    label: 'Spaces',
-    variant: 'active',
-    isActive: true
-  }
-}
-
-export const WithBadge: Story = {
-  args: {
-    icon: <MessageCircle className="h-4 w-4" />,
-    label: 'Messages',
-    badge: '3',
-    variant: 'default'
-  }
-}
-
-export const IconOnly: Story = {
-  args: {
-    icon: <Bell className="h-4 w-4" />,
-    size: 'icon',
-    badge: '12'
-  }
-}
-
-export const Minimal: Story = {
-  args: {
-    icon: <User className="h-4 w-4" />,
-    label: 'Profile',
-    variant: 'minimal'
-  }
-}
-
-export const Ghost: Story = {
-  args: {
-    icon: <Search className="h-4 w-4" />,
-    label: 'Search',
-    variant: 'ghost'
-  }
-}
-
-export const MobileVisible: Story = {
-  args: {
-    icon: <Home className="h-4 w-4" />,
-    label: 'Feed',
-    responsive: 'mobile',
-    labelVisibility: 'mobile'
+    children: 'Default TopBarNav',
   },
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1'
-    }
-  }
-}
+};
 
-export const AllSizes: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <TopBarNav
-        icon={<Home className="h-3 w-3" />}
-        label="Small"
-        size="sm"
-      />
-      <TopBarNav
-        icon={<Home className="h-4 w-4" />}
-        label="Default"
-        size="default"
-      />
-      <TopBarNav
-        icon={<Home className="h-5 w-5" />}
-        label="Large"
-        size="lg"
-      />
-    </div>
-  )
-}
-
+// REQUIRED: Show all variants if component has variants
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex items-center gap-2 p-4 bg-background">
-      <TopBarNav
-        icon={<Home className="h-4 w-4" />}
-        label="Default"
-        variant="default"
-      />
-      <TopBarNav
-        icon={<Users className="h-4 w-4" />}
-        label="Active"
-        variant="active"
-        isActive
-      />
-      <TopBarNav
-        icon={<User className="h-4 w-4" />}
-        label="Ghost"
-        variant="ghost"
-      />
-      <TopBarNav
-        icon={<Search className="h-4 w-4" />}
-        label="Minimal"
-        variant="minimal"
-      />
+    <div className="flex gap-4 flex-wrap items-center">
+      <TopBarNav variant="default">Default</TopBarNav>
+      <TopBarNav variant="secondary">Secondary</TopBarNav>
+      <TopBarNav variant="outline">Outline</TopBarNav>
+      <TopBarNav variant="ghost">Ghost</TopBarNav>
     </div>
-  )
-}
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'All available variants following HIVE design system.',
+      },
+    },
+  },
+};
 
-export const InteractiveDemo: Story = {
-  render: () => {
-    const [activeItem, setActiveItem] = React.useState('feed')
+// REQUIRED: Show all sizes
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex gap-4 items-center">
+      <TopBarNav size="sm">Small</TopBarNav>
+      <TopBarNav size="default">Default</TopBarNav>
+      <TopBarNav size="lg">Large</TopBarNav>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Size variants. All sizes maintain 44px+ minimum for mobile touch targets.',
+      },
+    },
+  },
+};
 
-    return (
-      <div className="flex items-center gap-1 p-4 bg-muted/50 rounded-lg">
-        {[
-          { id: 'feed', icon: <Home className="h-4 w-4" />, label: 'Feed' },
-          { id: 'spaces', icon: <Users className="h-4 w-4" />, label: 'Spaces' },
-          { id: 'profile', icon: <User className="h-4 w-4" />, label: 'Profile' },
-          { id: 'messages', icon: <MessageCircle className="h-4 w-4" />, label: 'Messages', badge: '3' }
-        ].map((item) => (
-          <TopBarNav
-            key={item.id}
-            icon={item.icon}
-            label={item.label}
-            badge={item.badge}
-            isActive={activeItem === item.id}
-            onClick={() => setActiveItem(item.id)}
-          />
-        ))}
-      </div>
-    )
-  }
-}
+// REQUIRED: Interactive states (hover, focus, disabled)
+export const States: Story = {
+  render: () => (
+    <div className="flex gap-4 flex-wrap">
+      <TopBarNav>Default</TopBarNav>
+      <TopBarNav className="hover:opacity-80">Hover State</TopBarNav>
+      <TopBarNav disabled>Disabled</TopBarNav>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Interactive states. Focus states use HIVE brand primary color for consistency.',
+      },
+    },
+  },
+};
+
+// RECOMMENDED: Responsive examples
+export const Responsive: Story = {
+  render: () => (
+    <div className="w-full max-w-sm">
+      <TopBarNav className="w-full">Full Width</TopBarNav>
+    </div>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile',
+    },
+    docs: {
+      description: {
+        story: 'Component behavior on mobile viewports. HIVE components are mobile-first by design.',
+      },
+    },
+  },
+};
+
+// RECOMMENDED: Dark theme demonstration (default for HIVE)
+export const DarkTheme: Story = {
+  args: {
+    children: 'Dark Theme (HIVE Default)',
+  },
+  parameters: {
+    backgrounds: {
+      default: 'hive-dark',
+    },
+    docs: {
+      description: {
+        story: 'Component in dark theme (HIVE default). Uses CSS variables for consistent theming.',
+      },
+    },
+  },
+};

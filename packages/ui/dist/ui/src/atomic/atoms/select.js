@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 const selectVariants = cva("flex h-10 w-full items-center justify-between rounded-md border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] ring-offset-background placeholder:text-[var(--hive-text-placeholder)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-interactive-focus)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50", {
     variants: {
         variant: {

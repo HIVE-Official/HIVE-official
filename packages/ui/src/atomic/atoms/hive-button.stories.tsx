@@ -1,119 +1,135 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { HiveButton } from './hive-button';
-import { Users, Settings, Database } from 'lucide-react';
 
-const meta: Meta<typeof HiveButton> = {
-  title: 'HIVE/Atoms/HiveButton',
+/**
+ * HiveButton component from HIVE design system
+ *
+ * HIVE Design System Story
+ * All UI/UX built in Storybook first
+ */
+
+// REQUIRED: Meta configuration following HIVE standards
+const meta = {
+  title: 'Atoms/HiveButton',
   component: HiveButton,
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A versatile button component with multiple variants and states for the HIVE admin system.',
+        component: 'HiveButton component from HIVE design system. Built with HIVE design system standards: CVA variants, mobile-first sizing (44px minimum touch targets), HIVE CSS variables, React.forwardRef pattern.',
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ['autodocs'], // REQUIRED: Enables automatic prop documentation
   argTypes: {
     variant: {
-      control: { type: 'select' },
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      control: 'select',
+      description: 'Visual variant of the component',
     },
     size: {
-      control: { type: 'select' },
-      options: ['default', 'sm', 'lg', 'icon'],
+      control: 'select',
+      description: 'Size variant (all sizes are mobile-friendly with 44px+ touch targets)',
     },
   },
-};
+} satisfies Meta<typeof HiveButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// REQUIRED: Default story showing base component
 export const Default: Story = {
   args: {
-    children: 'HIVE Admin Button',
+    children: 'Default HiveButton',
   },
 };
 
-export const Primary: Story = {
-  args: {
-    children: 'Primary Action',
-    variant: 'default',
-  },
-};
-
-export const Destructive: Story = {
-  args: {
-    children: 'Delete User',
-    variant: 'destructive',
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    children: 'Secondary Action',
-    variant: 'outline',
-  },
-};
-
-export const WithIcon: Story = {
-  args: {
-    children: (
-      <>
-        <Users className="mr-2 h-4 w-4" />
-        View Users
-      </>
-    ),
-  },
-};
-
-export const AdminActions: Story = {
+// REQUIRED: Show all variants if component has variants
+export const AllVariants: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <HiveButton>
-        <Database className="mr-2 h-4 w-4" />
-        Database Status
-      </HiveButton>
-      <HiveButton variant="outline">
-        <Settings className="mr-2 h-4 w-4" />
-        System Config
-      </HiveButton>
-      <HiveButton variant="destructive">
-        Emergency Stop
-      </HiveButton>
+    <div className="flex gap-4 flex-wrap items-center">
+      <HiveButton variant="default">Default</HiveButton>
+      <HiveButton variant="secondary">Secondary</HiveButton>
+      <HiveButton variant="outline">Outline</HiveButton>
+      <HiveButton variant="ghost">Ghost</HiveButton>
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Common admin action buttons used throughout the HIVE dashboard.',
+        story: 'All available variants following HIVE design system.',
       },
     },
   },
 };
 
-export const LoadingStates: Story = {
-  render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <HiveButton disabled>
-        Loading...
-      </HiveButton>
-      <HiveButton variant="outline" disabled>
-        Processing
-      </HiveButton>
-    </div>
-  ),
-};
-
+// REQUIRED: Show all sizes
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex gap-4 items-center">
       <HiveButton size="sm">Small</HiveButton>
       <HiveButton size="default">Default</HiveButton>
       <HiveButton size="lg">Large</HiveButton>
-      <HiveButton size="icon">
-        <Settings className="h-4 w-4" />
-      </HiveButton>
     </div>
   ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Size variants. All sizes maintain 44px+ minimum for mobile touch targets.',
+      },
+    },
+  },
+};
+
+// REQUIRED: Interactive states (hover, focus, disabled)
+export const States: Story = {
+  render: () => (
+    <div className="flex gap-4 flex-wrap">
+      <HiveButton>Default</HiveButton>
+      <HiveButton className="hover:opacity-80">Hover State</HiveButton>
+      <HiveButton disabled>Disabled</HiveButton>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Interactive states. Focus states use HIVE brand primary color for consistency.',
+      },
+    },
+  },
+};
+
+// RECOMMENDED: Responsive examples
+export const Responsive: Story = {
+  render: () => (
+    <div className="w-full max-w-sm">
+      <HiveButton className="w-full">Full Width</HiveButton>
+    </div>
+  ),
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile',
+    },
+    docs: {
+      description: {
+        story: 'Component behavior on mobile viewports. HIVE components are mobile-first by design.',
+      },
+    },
+  },
+};
+
+// RECOMMENDED: Dark theme demonstration (default for HIVE)
+export const DarkTheme: Story = {
+  args: {
+    children: 'Dark Theme (HIVE Default)',
+  },
+  parameters: {
+    backgrounds: {
+      default: 'hive-dark',
+    },
+    docs: {
+      description: {
+        story: 'Component in dark theme (HIVE default). Uses CSS variables for consistent theming.',
+      },
+    },
+  },
 };

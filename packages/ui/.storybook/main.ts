@@ -4,54 +4,26 @@ import path from 'path';
 
 const config: StorybookConfig = {
   stories: [
-    // 🧱 ATOMIC DESIGN COMPONENTS - Direct component stories
-    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
+    // 📖 INTRODUCTION - Welcome and documentation
+    '../src/Introduction.stories.tsx',
 
-    // 🎯 SYSTEM OVERVIEW - Platform overview and navigation
-    '../src/stories/00-System-Overview/**/*.stories.@(js|jsx|ts|tsx)',
+    // 📐 DESIGN SYSTEM - Tokens, foundations, principles
+    '../src/00-Design-System/**/*.mdx',
+    '../src/00-Design-System/**/*.stories.@(js|jsx|ts|tsx)',
 
-    // 🏗️ FOUNDATION - Core design system and tokens
-    '../src/stories/01-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
+    // 🎯 FEATURES - Product-organized view (vertical slices)
+    '../src/features/**/*.mdx',
+    '../src/features/**/*.stories.@(js|jsx|ts|tsx)',
 
-    // 🧱 ATOMS - Core UI building blocks
-    '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔗 MOLECULES - Combined atomic elements
-    '../src/stories/03-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🏛️ ORGANISMS - Complex component systems
-    '../src/stories/04-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔄 COMPLETE SYSTEMS - Cross-system integrations
-    '../src/stories/07-Complete-Feed-Rituals-System/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/08-Complete-HiveLAB-System/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 📱 FEATURE SLICES - Core platform features
-    '../src/stories/10-Auth-Onboarding/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/10-Campus-Systems/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/11-Advanced-Navigation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/12-Profile-System/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/13-Spaces-Communities/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/15-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🌐 PLATFORM EXPERIENCES
-    '../src/stories/20-Platform-Integration/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/20-Platform-Experiences/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔬 DEVELOPMENT & DOCUMENTATION
-    '../src/stories/30-Development/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🧪 INDIVIDUAL COMPONENT STORIES
-    '../src/components/tools/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // Include all MDX documentation
-    '../src/**/*.mdx'
+    // 🧱 ATOMIC DESIGN - Technical view (legacy/reference)
+    // Keep for component source reference
+    // '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    // '@storybook/addon-a11y', // Temporarily disabled due to version conflict - TODO: Re-enable when Storybook 8.4.8 is released
     '@storybook/addon-viewport',
     '@storybook/addon-docs',
     '@storybook/addon-controls',

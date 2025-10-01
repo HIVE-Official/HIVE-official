@@ -6,7 +6,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * Uses the gold (var(--hive-brand-secondary)), black, and white color scheme
  */
 import { forwardRef } from 'react';
-import { cn } from '../../lib/utils.js';
+import { cn } from '../../lib/utils';
 export const UniversalButton = forwardRef(({ variant = 'primary', size = 'md', fullWidth = false, loading = false, icon, iconPosition = 'left', className, children, disabled, ...props }, ref) => {
     const baseClasses = 'relative font-semibold transition-all duration-200 rounded-lg flex items-center justify-center gap-2';
     const variants = {

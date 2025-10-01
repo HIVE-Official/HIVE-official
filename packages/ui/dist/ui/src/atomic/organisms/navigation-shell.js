@@ -2,11 +2,11 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
-import { TopBarNav } from "../atoms/top-bar-nav.js";
-import { HiveLogo } from "../atoms/hive-logo.js";
-import { Button } from "../atoms/button.js";
-import { Input } from "../atoms/input.js";
+import { cn } from "../../lib/utils";
+import { TopBarNav } from "../atoms/top-bar-nav";
+import { HiveLogo } from "../atoms/hive-logo";
+import { Button } from "../atoms/button";
+import { Input } from "../atoms/input";
 import { Search, Bell, MessageCircle, X, Plus } from "lucide-react";
 const navigationShellVariants = cva([
     "fixed top-0 left-0 right-0 z-50",

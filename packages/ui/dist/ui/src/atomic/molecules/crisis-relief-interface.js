@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Users, MessageCircle, Clock, Shield } from 'lucide-react';
-import { cn } from '../../lib/utils.js';
-import { HiveCard } from '../atoms/hive-card.js';
+import { cn } from '../../lib/utils';
+import { HiveCard } from '../atoms/hive-card';
 const getReliefOptions = (timeOfDay, stressLevel) => {
     const baseOptions = [
         {

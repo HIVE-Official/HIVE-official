@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="11-Shared/Overview" />
+
+# 11-Shared
+
+**Reusable UI components used across features**
+
+## Purpose
+
+Shared components are the building blocks used throughout the HIVE platform. These components are feature-agnostic and can be used anywhere.
+
+## Component Categories
+
+### Buttons & Actions
+- Button, Hive Button
+- Badge
+- Icon components
+
+### Containers & Layout
+- Card, Hive Card
+- Grid, Page Container
+- Modal, Dialog, Confirm Modal
+
+### Feedback & States
+- Alert
+- Progress
+- Skeleton loaders
+
+### Navigation & Organization
+- Tabs
+- Command palette
+
+### Branding
+- Hive Logo
+- Hive Logo Dynamic (animated)
+
+## Design Standards
+
+All shared components follow HIVE design principles:
+
+- ✅ **Mobile-first sizing** - 44px+ touch targets
+- ✅ **HIVE CSS variables** - No hardcoded colors
+- ✅ **CVA variants** - Consistent variant API
+- ✅ **React.forwardRef** - Proper ref forwarding
+- ✅ **TypeScript** - Full type safety
+- ✅ **Accessible** - WCAG 2.1 AA compliant
+
+## Usage
+
+```typescript
+import { Button, Card, Modal } from '@hive/ui';
+
+// Use in any feature
+<Card>
+  <h2>Title</h2>
+  <p>Content</p>
+  <Button variant="primary">Action</Button>
+</Card>
+```
+
+## Adding New Shared Components
+
+1. **Check if it exists** - Search existing components first
+2. **Confirm it's shared** - Used in 2+ features?
+3. **Follow standards** - Use CVA, HIVE vars, mobile-first
+4. **Create story** - Document all variants
+5. **Export from index** - Make it available
+
+## Success Metrics
+
+- Component reuse: > 3 features per shared component
+- Consistency score: > 95% design system compliance
+- Bundle size: Optimized with tree-shaking

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const gridVariants: (props?: {
-    columns?: 1 | "auto" | 2 | 3 | 4 | 5 | "auto-fit" | "auto-fill" | 6 | 12;
+    columns?: 1 | "auto" | 2 | 3 | "auto-fit" | "auto-fill" | 4 | 5 | 6 | 12;
     gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 12 | 8 | 10;
     responsive?: "none" | "sm" | "lg" | "xl" | "md" | "adaptive";
 } & import("class-variance-authority/types").ClassProp) => string;

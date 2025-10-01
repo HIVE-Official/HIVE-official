@@ -1,0 +1,224 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Features/02-Profile/Overview" />
+
+# 👤 Profile System
+
+**Campus identity. Show who you are, what you do, and who you know.**
+
+---
+
+## Overview
+
+The Profile System is the **campus identity layer** for HIVE. Every student has a profile that showcases their identity, activity, connections, and spaces. Designed to be **authentic, not professional** - this is NOT LinkedIn.
+
+---
+
+## Components in this Feature
+
+### 🎯 Profile Identity Widget
+Core identity display
+- Name, handle, year, major
+- Avatar and cover photo
+- Bio and interests
+- Social links
+- **Location**: `organisms/profile-identity-widget`
+
+### 📊 Profile Activity Widget
+Recent activity feed
+- Posts, comments, likes
+- Space joins
+- Event RSVPs
+- Tool creations
+- **Location**: `organisms/profile-activity-widget`
+
+### 👥 Profile Connections Widget
+Friends and connections
+- Connection count
+- Mutual friends
+- Connection requests
+- Recent connections
+- **Location**: `organisms/profile-connections-widget`
+
+### 🏠 Profile Spaces Widget
+Joined spaces display
+- Space memberships
+- Space roles (member, mod, founder)
+- Most active spaces
+- Space discovery
+- **Location**: `organisms/profile-spaces-widget`
+
+### ✅ Profile Completion Card
+Progress and prompts
+- Completion percentage
+- Next steps
+- Missing profile elements
+- Quick actions
+- **Location**: `organisms/profile-completion-card`
+
+### 📐 Profile Bento Grid
+Layout system for profile
+- Flexible grid layout
+- Responsive design
+- Widget arrangement
+- Mobile-optimized
+- **Location**: `organisms/profile-bento-grid`
+
+### 📄 Profile View Layout
+Page template
+- Header, content, sidebar
+- Responsive layout
+- Mobile navigation
+- Scroll optimization
+- **Location**: `templates/profile-view-layout`
+
+---
+
+## Profile Architecture
+
+### Own Profile (Editing)
+When viewing your own profile:
+- ✏️ Edit buttons visible
+- 📊 Completion card shown
+- 🔒 Privacy controls accessible
+- 📈 Analytics visible
+
+### Other's Profile (Viewing)
+When viewing someone else:
+- 💬 Message button
+- 👥 Connect button
+- 📤 Share profile
+- 🚩 Report (if needed)
+
+---
+
+## Design Principles
+
+### Authentic, Not Professional
+This is NOT LinkedIn:
+- ❌ No "seeking opportunities"
+- ❌ No "professional headline"
+- ❌ No endorsements
+- ✅ Real campus identity
+- ✅ Casual, friendly tone
+- ✅ Actual interests and vibes
+
+### 70% Completion Target
+Profiles are useful before 100%:
+- Basic info → 30%
+- + Avatar → 50%
+- + Interests → 70% ✓ (Good enough!)
+- + Full bio → 100%
+
+### Social Proof
+Show community connections:
+- Mutual friends
+- Shared spaces
+- Common interests
+- Activity overlap
+
+### Privacy by Default
+Students control visibility:
+- Public: Everyone on campus
+- Friends: Only connections
+- Private: Only me
+- Per-field privacy controls
+
+---
+
+## Profile Fields
+
+### Required (30%)
+- Name
+- Email (@buffalo.edu)
+- Graduation year
+
+### Basic (50%)
+- Avatar photo
+- Handle (@username)
+- Major/program
+
+### Complete (70%)
+- Interests (3+)
+- Bio (1-2 sentences)
+- Spaces joined (2+)
+
+### Full (100%)
+- Cover photo
+- Residence hall
+- Hobbies
+- Social links
+- Full bio
+
+---
+
+## Mobile-First Design
+
+Profile optimized for mobile:
+- **Vertical scroll** - no tabs
+- **Sticky header** with avatar
+- **Quick actions** at top
+- **Lazy loading** widgets
+- **Fast images** optimized
+
+---
+
+## Behavioral Psychology
+
+### Completion Motivation
+- Progress bar visible
+- Next step prompts
+- Quick wins highlighted
+- "Almost there!" messaging
+
+### Social Proof
+- "X mutual friends"
+- "Member of Y spaces"
+- "Active in [Space Name]"
+- Recent activity shown
+
+### Relief Amplifier
+- "Someone wants to connect with you"
+- "People viewed your profile"
+- "You have messages"
+
+---
+
+## Privacy & Security
+
+### Campus Isolation
+- Only UB students see profiles
+- Email verification required
+- No external access
+- Campus-only data
+
+### Privacy Controls
+- Per-field privacy settings
+- Block users
+- Hide from search
+- Activity visibility
+
+### Data Ownership
+- Students own their data
+- Export profile anytime
+- Delete account option
+- Clear data policies
+
+---
+
+## Metrics
+
+Success metrics for profiles:
+- **Completion Rate (70%)**: > 75%
+- **Connections per User**: > 10
+- **Profile Views per Week**: > 5
+- **Edit Frequency**: Once per month
+
+---
+
+## See Also
+
+- **Onboarding** → Profile creation flow
+- **Connections** → Friend system
+- **Spaces** → Community memberships
+- **Feed** → Activity stream

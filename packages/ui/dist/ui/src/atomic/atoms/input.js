@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 const inputVariants = cva("flex w-full rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--hive-text-placeholder)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200", {
     variants: {
         variant: {

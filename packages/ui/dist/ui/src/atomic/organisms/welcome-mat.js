@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { useWelcomeMat } from "../../hooks/use-welcome-mat.js";
+import { cn } from "../../lib/utils";
+import { useWelcomeMat } from "../../hooks/use-welcome-mat";
 // Modal components will be refactored to use universal modal system
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { Progress } from "../atoms/progress.js";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Progress } from "../atoms/progress";
 const WelcomeMat = React.forwardRef(({ className, ...props }, ref) => {
     const { isOpen, currentStep, totalSteps, currentFlow, completedSteps, skippedSteps, closeFlow, nextStep, previousStep, skipStep, completeStep, } = useWelcomeMat();
     const currentStepData = currentFlow?.steps[currentStep];

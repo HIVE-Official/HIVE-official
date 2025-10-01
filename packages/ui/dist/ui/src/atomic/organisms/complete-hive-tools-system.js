@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { Grid } from "../atoms/grid.js";
-import { HiveProgress } from "../atoms/hive-progress.js";
+import { cn } from "../../lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Grid } from "../atoms/grid";
+import { HiveProgress } from "../atoms/hive-progress";
 const CompleteHIVEToolsSystem = React.forwardRef(({ tools, onToolSelect, onToolCreate, onToolEdit, onToolDelete, onToolDuplicate, className, showCreateButton = true, showSearch = true, showFilters = true, ...props }, ref) => {
     const [searchQuery, setSearchQuery] = React.useState("");
     const [selectedCategory, setSelectedCategory] = React.useState("all");

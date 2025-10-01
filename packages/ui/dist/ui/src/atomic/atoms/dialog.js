@@ -1,5 +1,5 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
-import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalFooter } from './hive-modal.js';
+import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalFooter } from './hive-modal';
 // Dialog is just an alias for HiveModal
 export const Dialog = HiveModal;
 // DialogContent wraps the entire modal content

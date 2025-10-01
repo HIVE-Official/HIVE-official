@@ -1,27 +1,47 @@
-export { WelcomeMat } from "./welcome-mat"
-export { CompleteHIVEToolsSystem } from "./complete-hive-tools-system"
-// Legacy ProfileBentoGrid - kept for backward compatibility
-export { ProfileBentoGrid } from "./profile-bento-grid"
-export { NavigationShell, navigationShellVariants, navigationContentVariants, type NavigationItem } from "./navigation-shell"
-export { NotificationSystem, useNotificationSystem } from "./notification-system"
-
-// Profile Widget System - DESIGN_SPEC Compliant
-export {
-  ProfileIdentityWidget,
-  ProfileActivityWidget,
-  ProfileSpacesWidget,
-  ProfileConnectionsWidget,
-  ProfileCompletionCard,
-  HiveLabWidget
-} from './profile-widgets'
-
-// Profile Widget Types
-export type {
-  ProfileIdentityWidgetProps,
-  MyActivityWidgetProps,
-  MySpacesWidgetProps,
-  MyConnectionsWidgetProps,
-  ProfileCompletionCardProps,
-  HiveLabWidgetProps,
-  Tool
-} from './profile-widgets'
+export { CompleteHiveToolsSystem } from './complete-hive-tools-system';
+export { FeedComposer } from './feed-composer';
+export { FeedEmptyState } from './feed-empty-state';
+export { FeedFilters } from './feed-filters';
+export { FeedPostFull } from './feed-post-full';
+export { FeedSkeletonLoader } from './feed-skeleton-loader';
+export { HivelabWidget } from './hivelab-widget';
+export { NavigationShell } from './navigation-shell';
+export { NotificationSystem } from './notification-system';
+export { OnboardingConnectionSuggestions } from './onboarding-connection-suggestions';
+export { OnboardingProfileSetup } from './onboarding-profile-setup';
+export { OnboardingSpaceRecommendations } from './onboarding-space-recommendations';
+export { OnboardingWizard } from './onboarding-wizard';
+export { ProfileActivityTimeline } from './profile-activity-timeline';
+export { ProfileActivityWidget } from './profile-activity-widget';
+export { ProfileBentoGrid } from './profile-bento-grid';
+export { ProfileCalendarView } from './profile-calendar-view';
+export { ProfileCompletionCard } from './profile-completion-card';
+export { ProfileConnectionsList } from './profile-connections-list';
+export { ProfileConnectionsWidget } from './profile-connections-widget';
+export { ProfileEditForm } from './profile-edit-form';
+export { ProfileHeader } from './profile-header';
+export { ProfileIdentityWidget } from './profile-identity-widget';
+export { ProfileSpacesWidget } from './profile-spaces-widget';
+export { ProfileStatsDashboard } from './profile-stats-dashboard';
+export { ProfileToolsWidget } from './profile-tools-widget';
+export { RitualCreationModal } from './ritual-creation-modal';
+export { RitualLeaderboard } from './ritual-leaderboard';
+export { RitualParticipationUi } from './ritual-participation-ui';
+export { SpaceAboutSection } from './space-about-section';
+export { SpaceCreationModal } from './space-creation-modal';
+export { SpaceDiscoveryHub } from './space-discovery-hub';
+export { SpaceEventsPanel } from './space-events-panel';
+export { SpaceHeader } from './space-header';
+export { SpaceLeaderToolbar } from './space-leader-toolbar';
+export { SpaceMemberList } from './space-member-list';
+export { SpaceMembersPanel } from './space-members-panel';
+export { SpacePostFeed } from './space-post-feed';
+export { SpaceResourcesPanel } from './space-resources-panel';
+export { SpaceSettingsModal } from './space-settings-modal';
+export { SpaceSidebar } from './space-sidebar';
+export { ToolBrowseGrid } from './tool-browse-grid';
+export { ToolBuilderCanvas } from './tool-builder-canvas';
+export { ToolBuilderPalette } from './tool-builder-palette';
+export { ToolBuilderProperties } from './tool-builder-properties';
+export { ToolRuntimeExecutor } from './tool-runtime-executor';
+export { WelcomeMat } from './welcome-mat';

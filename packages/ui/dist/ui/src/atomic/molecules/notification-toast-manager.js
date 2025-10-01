@@ -10,7 +10,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
  * - Smooth, non-intrusive animations
  */
 import React, { useEffect, useCallback } from 'react';
-import { useToast } from '../../systems/modal-toast-system.js';
+import { useToast } from '../../systems/modal-toast-system';
 export const NotificationToastManager = ({ notifications, previousCount = 0, onNavigate, shouldShowToast, }) => {
     const { showToast } = useToast();
     // Default filter for toast-worthy notifications

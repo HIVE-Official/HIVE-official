@@ -11,9 +11,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { NotificationBell } from '../atoms/notification-bell.js';
-import { NotificationDropdown } from '../molecules/notification-dropdown.js';
-import { NotificationToastManager } from '../molecules/notification-toast-manager.js';
+import { NotificationBell } from '../atoms/notification-bell';
+import { NotificationDropdown } from '../molecules/notification-dropdown';
+import { NotificationToastManager } from '../molecules/notification-toast-manager';
 const MotionDiv = React.forwardRef(({ animate, transition, initial, exit, className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
 MotionDiv.displayName = 'MotionDiv';
 export const NotificationSystem = ({ notifications: propNotifications, unreadCount: propUnreadCount, loading = false, error = null, onNavigate, className, disabled = false, }) => {

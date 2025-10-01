@@ -3,6 +3,7 @@ import type { Preview } from '@storybook/react';
 import { MotionConfig } from 'framer-motion';
 // import './mocks'; // Temporarily disabled to fix loading issue
 import '../src/styles.css';
+import a11yConfig from './a11y-config';
 
 // Mock context for components that expect data with status properties
 const MockDataContext = createContext({
@@ -24,11 +25,43 @@ export const useMockData = () => useContext(MockDataContext);
 
 const preview: Preview = {
   parameters: {
+    // ===  ACCESSIBILITY TESTING ===
+    // Enable accessibility addon with WCAG 2.2 rules
+    a11y: a11yConfig,
+
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/,
+      },
+    },
+    options: {
+      storySort: {
+        order: [
+          'Introduction',
+          'Design System', [
+            'Overview',
+            'Colors',
+            'Typography',
+            'Spacing',
+          ],
+          'Features', [
+            '01-Onboarding',
+            '02-Profile',
+            '03-Spaces',
+            '04-Feed',
+            '05-Tools',
+            '06-Notifications',
+            '07-Navigation',
+            '08-Forms',
+            '09-Social',
+          ],
+          'Atoms',
+          'Molecules',
+          'Organisms',
+          'Templates',
+        ],
       },
     },
     backgrounds: {

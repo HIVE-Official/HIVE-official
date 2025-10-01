@@ -2,7 +2,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 const gridVariants = cva("grid", {
     variants: {
         columns: {

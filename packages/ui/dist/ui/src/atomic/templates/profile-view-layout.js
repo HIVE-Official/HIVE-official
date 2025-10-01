@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { ProfileIdentityWidget } from '../organisms/profile-identity-widget.js';
-import { MyActivityWidget } from '../organisms/profile-activity-widget.js';
-import { MySpacesWidget } from '../organisms/profile-spaces-widget.js';
-import { MyConnectionsWidget } from '../organisms/profile-connections-widget.js';
-import { ProfileCompletionCard } from '../organisms/profile-completion-card.js';
-import { HiveLabWidget } from '../organisms/hivelab-widget.js';
+import { ProfileIdentityWidget } from '../organisms/profile-identity-widget';
+import { MyActivityWidget } from '../organisms/profile-activity-widget';
+import { MySpacesWidget } from '../organisms/profile-spaces-widget';
+import { MyConnectionsWidget } from '../organisms/profile-connections-widget';
+import { ProfileCompletionCard } from '../organisms/profile-completion-card';
+import { HiveLabWidget } from '../organisms/hivelab-widget';
 /**
  * Profile View Layout - DESIGN_SPEC Compliant
  *
