@@ -227,7 +227,6 @@ export const MyConnectionsWidget: React.FC<MyConnectionsWidgetProps> = ({
               <div className="relative">
                 <div className={`p-0.5 rounded-full ${getConnectionStrengthColor(connection.connectionStrength)}`}>
                   <Avatar
-                    size="sm"
                     className="w-10 h-10"
                   >
                     {connection.avatarUrl && (

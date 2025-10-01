@@ -2,10 +2,10 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const navigationShellVariants: (props?: {
     variant?: "default" | "glass" | "solid" | "floating";
-    blur?: "none" | "sm" | "lg" | "xl" | "md";
+    blur?: "none" | "sm" | "lg" | "md" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const navigationContentVariants: (props?: {
-    maxWidth?: "sm" | "lg" | "xl" | "2xl" | "md" | "full";
+    maxWidth?: "sm" | "lg" | "md" | "xl" | "2xl" | "full";
     spacing?: "normal" | "loose" | "tight";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface NavigationItem {

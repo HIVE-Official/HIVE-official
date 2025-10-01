@@ -1,10 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const textareaEnhancedVariants: (props?: {
-    variant?: "default" | "destructive" | "success" | "warning" | "outline" | "ghost";
+    variant?: "default" | "destructive" | "outline" | "ghost" | "success" | "warning";
     size?: "default" | "sm" | "lg" | "xl";
     resize?: "none" | "both" | "horizontal" | "vertical";
-    rounded?: "none" | "sm" | "lg" | "xl" | "md" | "full";
+    rounded?: "none" | "sm" | "lg" | "md" | "xl" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface TextareaEnhancedProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaEnhancedVariants> {
     label?: string;

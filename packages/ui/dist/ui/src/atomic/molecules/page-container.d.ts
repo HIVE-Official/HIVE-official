@@ -1,12 +1,12 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const pageContainerVariants: (props?: {
-    variant?: "default" | "brand" | "secondary" | "tertiary";
+    variant?: "default" | "secondary" | "brand" | "tertiary";
     padding?: "default" | "none" | "sm" | "lg" | "xl";
-    maxWidth?: "none" | "sm" | "lg" | "xl" | "2xl" | "md" | "full";
+    maxWidth?: "none" | "sm" | "lg" | "md" | "xl" | "2xl" | "full";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const pageHeaderVariants: (props?: {
-    alignment?: "center" | "left" | "right";
+    alignment?: "center" | "right" | "left";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const pageContentVariants: (props?: {
     spacing?: "default" | "none" | "sm" | "lg" | "xl";

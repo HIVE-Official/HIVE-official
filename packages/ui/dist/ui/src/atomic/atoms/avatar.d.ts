@@ -1,20 +1,7 @@
 import * as React from "react";
-import { type VariantProps } from "class-variance-authority";
-declare const avatarVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl" | "2xl";
-    variant?: "default" | "brand" | "outline";
-} & import("class-variance-authority/types").ClassProp) => string;
-export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof avatarVariants> {
-}
-declare const Avatar: React.ForwardRefExoticComponent<AvatarProps & React.RefAttributes<HTMLDivElement>>;
-declare const AvatarImage: React.ForwardRefExoticComponent<React.ImgHTMLAttributes<HTMLImageElement> & {
-    onLoadingStatusChange?: (status: "idle" | "loading" | "loaded" | "error") => void;
-} & React.RefAttributes<HTMLImageElement>>;
-declare const AvatarFallback: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
-declare const ShadcnAvatar: React.ForwardRefExoticComponent<AvatarProps & React.RefAttributes<HTMLDivElement>>;
-declare const ShadcnAvatarImage: React.ForwardRefExoticComponent<React.ImgHTMLAttributes<HTMLImageElement> & {
-    onLoadingStatusChange?: (status: "idle" | "loading" | "loaded" | "error") => void;
-} & React.RefAttributes<HTMLImageElement>>;
-declare const ShadcnAvatarFallback: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
-export { Avatar, AvatarImage, AvatarFallback, ShadcnAvatar, ShadcnAvatarImage, ShadcnAvatarFallback, avatarVariants, };
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+declare const Avatar: React.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarProps & React.RefAttributes<HTMLSpanElement>, "ref"> & React.RefAttributes<HTMLSpanElement>>;
+declare const AvatarImage: React.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarImageProps & React.RefAttributes<HTMLImageElement>, "ref"> & React.RefAttributes<HTMLImageElement>>;
+declare const AvatarFallback: React.ForwardRefExoticComponent<Omit<AvatarPrimitive.AvatarFallbackProps & React.RefAttributes<HTMLSpanElement>, "ref"> & React.RefAttributes<HTMLSpanElement>>;
+export { Avatar, AvatarImage, AvatarFallback };
 //# sourceMappingURL=avatar.d.ts.map

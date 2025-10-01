@@ -75,7 +75,7 @@ export declare class ErrorBoundary extends React.Component<{
         error: Error;
     };
     componentDidCatch(error: Error, errorInfo: any): void;
-    render(): string | number | bigint | boolean | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | import("react/jsx-runtime").JSX.Element;
+    render(): string | number | bigint | boolean | import("react/jsx-runtime").JSX.Element | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode>;
 }
 declare const _default: {
     HiveProvider: React.FC<{

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const hiveButtonVariants: (props?: {
-    variant?: "default" | "destructive" | "success" | "warning" | "link" | "brand" | "outline" | "secondary" | "ghost";
-    size?: "default" | "icon" | "sm" | "lg" | "xl";
+    variant?: "default" | "destructive" | "link" | "secondary" | "outline" | "ghost" | "success" | "brand" | "warning";
+    size?: "default" | "sm" | "lg" | "icon" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof hiveButtonVariants> {
     asChild?: boolean;

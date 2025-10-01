@@ -88,7 +88,6 @@ export const ProfileIdentityWidget: React.FC<ProfileIdentityWidgetProps> = ({
       <div className="flex items-start gap-6">
         <div className="relative group">
           <Avatar
-            size="xl"
             className="w-24 h-24 border-2 border-white/8 group-hover:border-[#FFD700]/40 transition-all duration-300"
           >
             {profile.identity.avatarUrl && (

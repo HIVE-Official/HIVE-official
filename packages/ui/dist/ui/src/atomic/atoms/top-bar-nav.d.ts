@@ -2,15 +2,15 @@ import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const topBarNavVariants: (props?: {
     variant?: "default" | "ghost" | "minimal" | "active";
-    size?: "default" | "icon" | "sm" | "lg";
-    responsive?: "mobile" | "desktop" | "always";
+    size?: "default" | "sm" | "lg" | "icon";
+    responsive?: "mobile" | "always" | "desktop";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const topBarNavIconVariants: (props?: {
-    size?: "default" | "icon" | "sm" | "lg";
+    size?: "default" | "sm" | "lg" | "icon";
     state?: "default" | "pulse" | "active";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const topBarNavLabelVariants: (props?: {
-    visibility?: "mobile" | "desktop" | "always" | "never";
+    visibility?: "mobile" | "always" | "desktop" | "never";
     weight?: "bold" | "normal" | "semibold";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface TopBarNavProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof topBarNavVariants> {

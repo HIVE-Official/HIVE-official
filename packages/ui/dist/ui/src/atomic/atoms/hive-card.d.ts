@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const hiveCardVariants: (props?: {
-    variant?: "default" | "brand" | "glass" | "elevated" | "interactive";
+    variant?: "default" | "brand" | "elevated" | "interactive" | "glass";
     size?: "default" | "sm" | "lg";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof hiveCardVariants> {

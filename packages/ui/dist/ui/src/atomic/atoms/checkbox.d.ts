@@ -1,15 +1,5 @@
 import * as React from "react";
-import { type VariantProps } from "class-variance-authority";
-declare const checkboxVariants: (props?: {
-    variant?: "default" | "destructive" | "success" | "warning";
-    size?: "default" | "sm" | "lg";
-} & import("class-variance-authority/types").ClassProp) => string;
-export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">, VariantProps<typeof checkboxVariants> {
-    onCheckedChange?: (checked: boolean) => void;
-    label?: string;
-    description?: string;
-    error?: string;
-}
-declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
-export { Checkbox, checkboxVariants };
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+declare const Checkbox: React.ForwardRefExoticComponent<Omit<CheckboxPrimitive.CheckboxProps & React.RefAttributes<HTMLButtonElement>, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+export { Checkbox };
 //# sourceMappingURL=checkbox.d.ts.map
