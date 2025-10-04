@@ -434,7 +434,7 @@ function EventCard({
             <h4 className="font-semibold text-white cursor-pointer hover:text-[var(--hive-brand-primary)]" onClick={onView}>
               {event.title}
             </h4>
-            {isPast && <Badge variant="sophomore" className="text-xs">Past</Badge>}
+            {isPast && <Badge variant="secondary" className="text-xs">Past</Badge>}
             {event.isRecurring && <Repeat className="w-4 h-4 text-gray-400" />}
             {event.isVirtual && <Video className="w-4 h-4 text-blue-400" />}
           </div>
@@ -700,7 +700,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Event Title</label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
             placeholder="Enter event title"
             required
           />
@@ -710,7 +710,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Description</label>
           <textarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
             placeholder="Describe your event"
             rows={3}
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
@@ -723,7 +723,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.startTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as HTMLInputElement).value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -734,7 +734,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as HTMLInputElement).value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -745,7 +745,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Location</label>
           <Input
             value={formData.location}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as HTMLInputElement).value }))}
             placeholder="Event location or virtual link"
           />
         </div>

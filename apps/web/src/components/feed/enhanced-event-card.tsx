@@ -365,12 +365,12 @@ export function EnhancedEventCard({
           {event.tags && event.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
               {event.tags.slice(0, 3).map(tag => (
-                <Badge key={tag} variant="sophomore" className="text-xs">
+                <Badge key={tag} variant="secondary" className="text-xs">
                   {tag}
                 </Badge>
               ))}
               {event.tags.length > 3 && (
-                <Badge variant="sophomore" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   +{event.tags.length - 3}
                 </Badge>
               )}

@@ -213,7 +213,7 @@ export default function ExpiredPage() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+    setEmail((e.target as HTMLInputElement).value);
     setError(null);
   };
 

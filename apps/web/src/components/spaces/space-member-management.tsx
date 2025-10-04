@@ -376,7 +376,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)}
                 className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 focus:border-[var(--hive-brand-primary)]/30"
               />
             </div>
@@ -384,7 +384,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole((e.target as HTMLInputElement).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Roles</option>
@@ -397,7 +397,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus((e.target as HTMLInputElement).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Status</option>
@@ -476,13 +476,13 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                       {/* Status Indicators */}
                       {member.flags?.isSuspended && (
-                        <Badge variant="freshman" className="border-red-500/30 text-red-400">
+                        <Badge variant="secondary" className="border-red-500/30 text-red-400">
                           Suspended
                         </Badge>
                       )}
                       
                       {member.flags?.isReported && (
-                        <Badge variant="freshman" className="border-orange-500/30 text-orange-400">
+                        <Badge variant="secondary" className="border-orange-500/30 text-orange-400">
                           Reported
                         </Badge>
                       )}

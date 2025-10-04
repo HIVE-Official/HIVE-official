@@ -117,7 +117,7 @@ export function IntegrationConnectionModal({
       case 'healthy': return <Badge className="bg-green-500/10 text-green-400 border-green-500/20">Connected</Badge>;
       case 'warning': return <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20">Issues</Badge>;
       case 'error': return <Badge className="bg-red-500/10 text-red-400 border-red-500/20">Error</Badge>;
-      default: return <Badge variant="freshman">Not Connected</Badge>;
+      default: return <Badge variant="secondary">Not Connected</Badge>;
     }
   };
 
@@ -229,7 +229,7 @@ export function IntegrationConnectionModal({
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-white">{permission.name}</span>
                       {permission.required && (
-                        <Badge variant="sophomore" className="text-xs">Required</Badge>
+                        <Badge variant="secondary" className="text-xs">Required</Badge>
                       )}
                     </div>
                     <p className="text-sm text-hive-text-mutedLight">{permission.description}</p>

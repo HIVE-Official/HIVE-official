@@ -175,7 +175,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm((e.target as HTMLInputElement).value)}
           variant="default"
           size="lg"
         />

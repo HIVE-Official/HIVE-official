@@ -655,7 +655,7 @@ export function RitualManagementPanel() {
                     <input
                       type="text"
                       value={newRitual.title}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, title: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, title: (e.target as HTMLInputElement).value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                       placeholder="e.g., Spring Study Marathon"
                     />
@@ -667,7 +667,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.type}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, type: e.target.value as Ritual['type'] })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, type: (e.target as HTMLInputElement).value as Ritual['type'] })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="competition">Competition</option>
@@ -686,7 +686,7 @@ export function RitualManagementPanel() {
                   </label>
                   <textarea
                     value={newRitual.description}
-                    onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, description: e.target.value })}
+                    onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, description: (e.target as HTMLInputElement).value })}
                     className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     rows={3}
                     placeholder="Describe what students will do and why they should participate..."
@@ -701,7 +701,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.duration}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, duration: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, duration: (e.target as HTMLInputElement).value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="3_days">3 Days</option>
@@ -719,7 +719,7 @@ export function RitualManagementPanel() {
                       value={newRitual.mechanics?.targetMetric}
                       onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
-                        mechanics: { ...newRitual.mechanics!, targetMetric: e.target.value }
+                        mechanics: { ...newRitual.mechanics!, targetMetric: (e.target as HTMLInputElement).value }
                       })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
@@ -741,7 +741,7 @@ export function RitualManagementPanel() {
                       value={newRitual.mechanics?.targetValue}
                       onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
-                        mechanics: { ...newRitual.mechanics!, targetValue: parseInt(e.target.value) }
+                        mechanics: { ...newRitual.mechanics!, targetValue: parseInt((e.target as HTMLInputElement).value) }
                       })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                       placeholder="1000"
@@ -779,7 +779,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.color}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, color: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, color: (e.target as HTMLInputElement).value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -791,7 +791,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.accentColor}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, accentColor: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, accentColor: (e.target as HTMLInputElement).value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -920,7 +920,7 @@ function RitualCard({
                 {ritual.title}
               </h3>
               <StatusBadge status={ritual.status} />
-              <Badge variant="sophomore">{ritual.type}</Badge>
+              <Badge variant="secondary">{ritual.type}</Badge>
             </div>
 
             <p className="text-sm text-hive-text-secondary mb-4">

@@ -166,7 +166,7 @@ export function FeedbackToast() {
                     <textarea
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback((e.target as HTMLInputElement).value)}
                       rows={4}
                       maxLength={500}
                       className="w-full px-4 py-3 bg-[var(--hive-background-secondary)] 
@@ -196,13 +196,12 @@ export function FeedbackToast() {
                       disabled={!feedback.trim() || isSubmitting}
                       variant="default"
                       size="default"
-                      leftIcon={isSubmitting ? (
+                    >
+                      {isSubmitting ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Send className="w-4 h-4" />
-                      )}
-                    >
-                      {isSubmitting ? "Sending..." : "Send"}
+                      )} {isSubmitting ? "Sending..." : "Send"}
                     </Button>
                   </div>
                 </div>

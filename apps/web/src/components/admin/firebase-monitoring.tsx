@@ -225,7 +225,7 @@ export function FirebaseMonitoring() {
           </div>
           <select
             value={timeRange}
-            onChange={(e: React.ChangeEvent) => setTimeRange(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setTimeRange((e.target as HTMLInputElement).value as any)}
             className="px-3 py-2 bg-gray-800 border border-gray-600 rounded text-sm"
           >
             <option value="1h">Last Hour</option>
@@ -366,7 +366,7 @@ export function FirebaseMonitoring() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Documents stored</span>
-                  <Badge variant="freshman">
+                  <Badge variant="secondary">
                     {metrics.firestore.storage.documentsCount.toLocaleString()}
                   </Badge>
                 </div>
@@ -461,7 +461,7 @@ export function FirebaseMonitoring() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Magic links sent</span>
-                  <Badge variant="freshman">
+                  <Badge variant="secondary">
                     {metrics.authentication.magicLinksSent}
                   </Badge>
                 </div>
@@ -534,13 +534,13 @@ export function FirebaseMonitoring() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Total requests</span>
-                  <Badge variant="freshman">
+                  <Badge variant="secondary">
                     {metrics.hosting.requests.toLocaleString()}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Bandwidth used</span>
-                  <Badge variant="freshman">
+                  <Badge variant="secondary">
                     {metrics.hosting.bandwidth} MB
                   </Badge>
                 </div>
@@ -666,7 +666,7 @@ export function FirebaseMonitoring() {
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-700">
                   <span className="text-sm">Network latency</span>
-                  <Badge variant="freshman">
+                  <Badge variant="secondary">
                     {metrics.performance.networkLatency}ms
                   </Badge>
                 </div>

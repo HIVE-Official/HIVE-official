@@ -57,7 +57,7 @@ export function RealtimeDemo() {
                 </>
               )}
             </div>
-            <Badge variant="freshman" className="gap-1">
+            <Badge variant="secondary" className="gap-1">
               <Activity className="h-3 w-3" />
               {connectionStatus}
             </Badge>
@@ -141,7 +141,7 @@ export function RealtimeDemo() {
                         {space.memberCount} members
                       </p>
                     </div>
-                    <Badge variant="sophomore" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                       {space.type}
                     </Badge>
                   </div>
@@ -235,7 +235,7 @@ export function RealtimeDemo() {
                           <Input
                             placeholder="Add a comment..."
                             value={commentText}
-                            onChange={(e: React.ChangeEvent) => setCommentText(e.target.value)}
+                            onChange={(e: React.ChangeEvent) => setCommentText((e.target as HTMLInputElement).value)}
                             onKeyPress={(e) => {
                               if (e.key === 'Enter') {
                                 handleAddComment();

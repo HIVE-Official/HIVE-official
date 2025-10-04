@@ -375,13 +375,13 @@ export function AlertDashboard() {
                 placeholder="Search alerts..."
                 className="pl-10"
                 value={filters.search}
-                onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, search: (e.target as HTMLInputElement).value }))}
               />
             </div>
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.severity}
-              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, severity: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, severity: (e.target as HTMLInputElement).value }))}
             >
               <option value="">All Severities</option>
               <option value="critical">Critical</option>
@@ -392,7 +392,7 @@ export function AlertDashboard() {
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.component}
-              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, component: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, component: (e.target as HTMLInputElement).value }))}
             >
               <option value="">All Components</option>
               <option value="database">Database</option>
@@ -734,7 +734,7 @@ function AlertCard({
             {alert.tags.length > 0 && (
               <div className="flex gap-1">
                 {alert.tags.slice(0, 3).map(tag => (
-                  <Badge key={tag} variant="freshman" className="text-xs py-0">
+                  <Badge key={tag} variant="secondary" className="text-xs py-0">
                     {tag}
                   </Badge>
                 ))}
@@ -935,7 +935,7 @@ function AlertDetailModal({
               <h4 className="font-medium mb-2">Tags</h4>
               <div className="flex gap-2 flex-wrap">
                 {alert.tags.map(tag => (
-                  <Badge key={tag} variant="freshman">
+                  <Badge key={tag} variant="secondary">
                     {tag}
                   </Badge>
                 ))}
@@ -948,7 +948,7 @@ function AlertDetailModal({
             <Textarea
               placeholder="Add notes (optional)..."
               value={notes}
-              onChange={(e: React.ChangeEvent) => setNotes(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setNotes((e.target as HTMLInputElement).value)}
               className="mb-3"
             />
             <div className="flex gap-2">

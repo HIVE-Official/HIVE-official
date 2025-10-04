@@ -97,7 +97,7 @@ export function SchoolSearch() {
             "hover:bg-black/50 hover:border-white/25"
           )}
           value={query}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)}
           onKeyDown={handleKeyDown}
           role="combobox"
           aria-expanded={filteredSchools.length > 0 && query.length > 0}

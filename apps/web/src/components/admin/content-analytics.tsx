@@ -398,7 +398,7 @@ export function ContentAnalytics() {
                   <div>
                     <h4 className="font-medium text-white">{space.name}</h4>
                     <div className="flex items-center gap-3 mt-1">
-                      <Badge variant="freshman" className="text-xs">{space.type}</Badge>
+                      <Badge variant="secondary" className="text-xs">{space.type}</Badge>
                       <span className="text-xs text-gray-400">
                         {space.metrics.members} members
                       </span>

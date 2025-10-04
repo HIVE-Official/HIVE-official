@@ -264,7 +264,7 @@ export default function ToolDeployPage() {
                   name="surface"
                   value={surface.id}
                   checked={deploymentConfig.surface === surface.id}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({ surface: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({ surface: (e.target as HTMLInputElement).value })}
                   className="text-[var(--hive-brand-primary)]"
                 />
                 <div>

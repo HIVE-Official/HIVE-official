@@ -103,7 +103,7 @@ export function SpaceContextPanel({
 
           {/* Space Type Info */}
           <div className="flex items-center gap-2 text-sm">
-            <Badge variant="freshman" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
+            <Badge variant="secondary" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
               {space.type?.replace('_', ' ') || 'Community'}
             </Badge>
             {space.status === 'activated' && (

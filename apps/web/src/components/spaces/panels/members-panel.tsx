@@ -222,7 +222,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           <Input
             placeholder="Search members..."
             value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -249,7 +249,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           <Filter className="w-4 h-4 text-gray-400" />
           <select
             value={sortBy}
-            onChange={(e: React.ChangeEvent) => setSortBy(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy((e.target as HTMLInputElement).value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recently Joined</option>

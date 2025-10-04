@@ -227,7 +227,7 @@ export function EventDetailsModal({
                   </>
                 )}
                 <span>•</span>
-                <Badge variant="skill-tag" className="text-xs capitalize">
+                <Badge variant="secondary" className="text-xs capitalize">
                   {event.type}
                 </Badge>
               </div>
@@ -302,7 +302,7 @@ export function EventDetailsModal({
               )}
               
               {isEventPast && (
-                <Badge variant="skill-tag" className="flex items-center space-x-1">
+                <Badge variant="secondary" className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
                   <span>Event Ended</span>
                 </Badge>
@@ -310,7 +310,7 @@ export function EventDetailsModal({
             </div>
 
             {isEventSoon && event.rsvpStatus === 'going' && (
-              <Badge variant="building-tools" className="animate-pulse">
+              <Badge variant="secondary" className="animate-pulse">
                 Starting Soon!
               </Badge>
             )}
@@ -340,7 +340,7 @@ export function EventDetailsModal({
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
                   <Badge 
-                    variant="skill-tag" 
+                    variant="secondary" 
                     className={`text-xs ${activeTab === tab.id ? 'bg-hive-obsidian text-[var(--hive-brand-primary)]' : ''}`}
                   >
                     {tab.count}
@@ -412,7 +412,7 @@ export function EventDetailsModal({
                   <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {event.tags.map((tag) => (
-                      <Badge key={tag} variant="skill-tag">
+                      <Badge key={tag} variant="secondary">
                         #{tag}
                       </Badge>
                     ))}
@@ -441,7 +441,7 @@ export function EventDetailsModal({
                   Attendees ({event.capacity.current})
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="skill-tag" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {event.capacity.max - event.capacity.current} spots left
                   </Badge>
                   {event.organizer.id === currentUserId && (
@@ -474,7 +474,7 @@ export function EventDetailsModal({
                           {event.organizer.verified && (
                             <Star className="h-3 w-3 text-[var(--hive-brand-primary)] fill-current" />
                           )}
-                          <Badge variant="building-tools" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             Organizer
                           </Badge>
                         </div>
@@ -643,7 +643,7 @@ export function EventDetailsModal({
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
                             <span className="font-medium text-white">{event.organizer.name}</span>
-                            <Badge variant="building-tools" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               Organizer
                             </Badge>
                             <span className="text-xs text-zinc-400">1 hour ago</span>

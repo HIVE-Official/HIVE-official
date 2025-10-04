@@ -403,7 +403,7 @@ describe('Profile Components', () => {
             <input
               type="checkbox"
               checked={settings.isPublic}
-              onChange={(e: React.ChangeEvent) => onUpdate({ isPublic: e.target.checked })}
+              onChange={(e: React.ChangeEvent) => onUpdate({ isPublic: (e.target as HTMLInputElement).checked })}
             />
             Public Profile
           </label>
@@ -411,7 +411,7 @@ describe('Profile Components', () => {
             <input
               type="checkbox"
               checked={settings.showEmail}
-              onChange={(e: React.ChangeEvent) => onUpdate({ showEmail: e.target.checked })}
+              onChange={(e: React.ChangeEvent) => onUpdate({ showEmail: (e.target as HTMLInputElement).checked })}
             />
             Show Email
           </label>

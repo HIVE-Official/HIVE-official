@@ -274,7 +274,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                   ref={textareaRef}
                   value={newPostContent}
                   onChange={(e: React.ChangeEvent) => {
-                    setNewPostContent(e.target.value);
+                    setNewPostContent((e.target as HTMLInputElement).value);
                     adjustTextareaHeight();
                   }}
                   onKeyDown={(e) => {

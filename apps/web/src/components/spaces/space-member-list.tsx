@@ -208,7 +208,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
           <div className="flex items-center space-x-2">
             <Users className="w-5 h-5 text-[var(--hive-brand-primary)]" />
             <h3 className="text-lg font-semibold text-white">Members</h3>
-            <Badge variant="sophomore" className="text-xs">
+            <Badge variant="secondary" className="text-xs">
               {totalCount}
             </Badge>
           </div>
@@ -238,7 +238,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
             placeholder="Search members..."
             className="pl-10 bg-gray-800 border-gray-700 text-white text-sm"
           />

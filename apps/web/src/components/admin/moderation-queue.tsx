@@ -417,10 +417,10 @@ export function ModerationQueue() {
                           report.severity
                         )}`}
                       />
-                      <Badge variant="freshman" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {report.contentType}
                       </Badge>
-                      <Badge variant="freshman" className="text-xs capitalize">
+                      <Badge variant="secondary" className="text-xs capitalize">
                         {report.category.replace("_", " ")}
                       </Badge>
                       <div className="flex items-center space-x-1">
@@ -593,7 +593,7 @@ export function ModerationQueue() {
               <Textarea
                 value={actionReason}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setActionReason(e.target.value)
+                  setActionReason((e.target as HTMLInputElement).value)
                 }
                 placeholder="Provide a detailed reason for this action..."
                 className="min-h-[80px]"
@@ -607,7 +607,7 @@ export function ModerationQueue() {
               <Textarea
                 value={actionNotes}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setActionNotes(e.target.value)
+                  setActionNotes((e.target as HTMLInputElement).value)
                 }
                 placeholder="Any additional context or notes..."
                 className="min-h-[60px]"
@@ -683,7 +683,7 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
-                  <Badge variant="freshman">{report.category}</Badge>
+                  <Badge variant="secondary">{report.category}</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Severity:</span>
@@ -788,7 +788,7 @@ function ReportDetailsPanel({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Suggested Action:</span>
-                    <Badge variant="freshman">
+                    <Badge variant="secondary">
                       {report.aiAnalysis.suggestedAction}
                     </Badge>
                   </div>

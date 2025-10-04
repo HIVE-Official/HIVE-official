@@ -65,7 +65,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize(e.target.value);
+    const capitalized = autoCapitalize((e.target as HTMLInputElement).value);
     setFirstName(capitalized);
     const newFullName = `${capitalized} ${lastName}`.trim();
     const newHandle = generateHandle(capitalized, lastName);
@@ -78,7 +78,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize(e.target.value);
+    const capitalized = autoCapitalize((e.target as HTMLInputElement).value);
     setLastName(capitalized);
     const newFullName = `${firstName} ${capitalized}`.trim();
     const newHandle = generateHandle(firstName, capitalized);

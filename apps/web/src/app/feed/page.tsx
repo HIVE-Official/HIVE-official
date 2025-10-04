@@ -478,7 +478,7 @@ export default function FeedPage() {
               {/* Sort By */}
               <select
                 value={sortBy}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy((e.target as HTMLInputElement).value as any)}
                 className="text-sm bg-hive-background-tertiary border border-hive-border-default rounded px-3 py-1"
               >
                 <option value="recent">Recent</option>

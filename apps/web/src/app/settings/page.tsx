@@ -137,7 +137,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.fullName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: (e.target as HTMLInputElement).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.handle}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: (e.target as HTMLInputElement).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                 <textarea 
                   rows={3}
                   value={formData.bio}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: (e.target as HTMLInputElement).value }))}
                   className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />

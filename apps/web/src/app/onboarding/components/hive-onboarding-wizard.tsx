@@ -602,11 +602,11 @@ export function HiveOnboardingWizard() {
                   size="lg"
                   onClick={goBack}
                   disabled={!canGoBack()}
-                  leftIcon={<ArrowLeft className="w-4 h-4" />}
+                 
                   data-testid="back-button"
                   aria-label="Go to previous step"
                 >
-                  Back
+                  <ArrowLeft className="w-4 h-4" /> Back
                 </Button>
 
                 {currentStep === TOTAL_STEPS - 1 ? (
@@ -615,11 +615,11 @@ export function HiveOnboardingWizard() {
                     size="lg"
                     onClick={handleSubmit}
                     disabled={!canGoNext() || isSubmitting}
-                    rightIcon={isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                   
                     data-testid="enter-hive-button"
                     aria-label="Complete onboarding and enter HIVE"
                   >
-                    {isSubmitting ? "Creating your profile..." : "Enter HIVE"}
+                    {isSubmitting ? "Creating your profile..." : "Enter HIVE"} {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
                   </Button>
                 ) : (
                   <Button
@@ -627,11 +627,11 @@ export function HiveOnboardingWizard() {
                     size="lg"
                     onClick={goNext}
                     disabled={!canGoNext()}
-                    rightIcon={<ArrowRight className="w-4 h-4" />}
+                   
                     data-testid="continue-button"
                     aria-label="Continue to next step"
                   >
-                    Continue
+                    Continue <ArrowRight className="w-4 h-4" />
                   </Button>
                 )}
               </div>

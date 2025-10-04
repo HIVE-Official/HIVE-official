@@ -409,7 +409,7 @@ export default function EventsPage() {
                 type="text"
                 placeholder="Search events..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)}
                 className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none w-64"
               />
             </div>
@@ -565,12 +565,12 @@ export default function EventsPage() {
               {event.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {event.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="skill-tag" className="text-xs">
+                    <Badge key={tag} variant="secondary" className="text-xs">
                       #{tag}
                     </Badge>
                   ))}
                   {event.tags.length > 3 && (
-                    <Badge variant="skill-tag" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                       +{event.tags.length - 3} more
                     </Badge>
                   )}

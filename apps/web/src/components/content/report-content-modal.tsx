@@ -247,7 +247,7 @@ export function ReportContentModal({
           {contentPreview && currentStep !== 'complete' && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
-                <Badge variant="freshman" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {contentType}
                 </Badge>
                 <span className="text-sm text-gray-400">Content being reported:</span>
@@ -330,7 +330,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
                   placeholder="Describe specifically what you think violates our community guidelines..."
                   className="min-h-[100px]"
                   maxLength={1000}
@@ -370,7 +370,7 @@ export function ReportContentModal({
                 <div className="flex space-x-2 mb-2">
                   <Input
                     value={newUrl}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUrl((e.target as HTMLInputElement).value)}
                     placeholder="https://example.com/related-content"
                     className="flex-1"
                   />
@@ -410,7 +410,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.additionalContext}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, additionalContext: (e.target as HTMLInputElement).value }))}
                   placeholder="Any additional information that might help us review this report..."
                   className="min-h-[80px]"
                   maxLength={500}

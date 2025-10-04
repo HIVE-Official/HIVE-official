@@ -155,7 +155,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail((e.target as HTMLInputElement).value)}
                     variant="default"
                     size="lg"
                   />

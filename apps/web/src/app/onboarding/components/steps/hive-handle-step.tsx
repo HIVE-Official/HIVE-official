@@ -119,7 +119,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.toLowerCase();
+    let value = (e.target as HTMLInputElement).value.toLowerCase();
     
     // Remove any characters that aren't allowed
     value = value.replace(/[^a-z0-9._-]/g, "");

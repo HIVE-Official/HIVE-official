@@ -50,7 +50,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   // Handle search input
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
+    const query = (e.target as HTMLInputElement).value;
     setSearchQuery(query);
 
     if (query.trim().length >= 2) {

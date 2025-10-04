@@ -139,7 +139,7 @@ export default function ToolPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <Code className="h-8 w-8 text-blue-400" />
                   <h1 className="text-2xl font-bold text-white">{tool.name}</h1>
-                  <Badge variant="sophomore">{tool.category}</Badge>
+                  <Badge variant="secondary">{tool.category}</Badge>
                 </div>
                 <p className="text-neutral-300 mb-4">{tool.description}</p>
                 
@@ -160,7 +160,7 @@ export default function ToolPage() {
                 
                 <div className="flex flex-wrap gap-2 mt-4">
                   {tool.tags.map((tag) => (
-                    <Badge key={tag} variant="freshman" className="text-xs">
+                    <Badge key={tag} variant="secondary" className="text-xs">
                       {tag}
                     </Badge>
                   ))}

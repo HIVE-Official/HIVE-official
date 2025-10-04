@@ -254,11 +254,11 @@ export function VisualToolComposer({
           <div className="flex items-center space-x-2">
             <Input
               value={toolName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName((e.target as HTMLInputElement).value)}
               placeholder="Tool name..."
               className="w-48"
             />
-            <Badge variant="freshman">
+            <Badge variant="secondary">
               {canvasElements.length} elements
             </Badge>
           </div>
@@ -387,7 +387,7 @@ export function VisualToolComposer({
                           type="number"
                           value={selectedCanvasElement.position.x}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
-                            x: parseInt(e.target.value) || 0,
+                            x: parseInt((e.target as HTMLInputElement).value) || 0,
                             y: selectedCanvasElement.position.y
                           })}
                           className="w-20"
@@ -397,7 +397,7 @@ export function VisualToolComposer({
                           value={selectedCanvasElement.position.y}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
                             x: selectedCanvasElement.position.x,
-                            y: parseInt(e.target.value) || 0
+                            y: parseInt((e.target as HTMLInputElement).value) || 0
                           })}
                           className="w-20"
                         />
@@ -411,7 +411,7 @@ export function VisualToolComposer({
                           type="number"
                           value={selectedCanvasElement.size.width}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
-                            width: parseInt(e.target.value) || 100,
+                            width: parseInt((e.target as HTMLInputElement).value) || 100,
                             height: selectedCanvasElement.size.height
                           })}
                           className="w-20"
@@ -421,7 +421,7 @@ export function VisualToolComposer({
                           value={selectedCanvasElement.size.height}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
                             width: selectedCanvasElement.size.width,
-                            height: parseInt(e.target.value) || 50
+                            height: parseInt((e.target as HTMLInputElement).value) || 50
                           })}
                           className="w-20"
                         />
@@ -435,7 +435,7 @@ export function VisualToolComposer({
                           <Input
                             value={selectedCanvasElement.config[key] || ''}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
-                              [key]: e.target.value
+                              [key]: (e.target as HTMLInputElement).value
                             })}
                             className="mt-1"
                           />
@@ -459,7 +459,7 @@ export function VisualToolComposer({
                             type="number"
                             value={selectedCanvasElement.config[key] || 0}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
-                              [key]: parseInt(e.target.value) || 0
+                              [key]: parseInt((e.target as HTMLInputElement).value) || 0
                             })}
                             className="mt-1"
                           />

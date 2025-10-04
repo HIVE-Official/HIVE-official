@@ -276,7 +276,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                           <div className="text-xs text-zinc-500 font-medium">Examples:</div>
                           <div className="flex flex-wrap gap-1">
                             {config.examples.slice(0, 2).map((example) => (
-                              <Badge key={example} variant="skill-tag" className="text-xs">
+                              <Badge key={example} variant="secondary" className="text-xs">
                                 {example}
                               </Badge>
                             ))}
@@ -314,7 +314,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
                 <Input
                   value={spaceData.name}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: (e.target as HTMLInputElement).value })}
                   placeholder="Enter a clear, descriptive name..."
                   maxLength={50}
                   error={errors.name}
@@ -326,7 +326,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Description *</label>
                 <textarea
                   value={spaceData.description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: (e.target as HTMLInputElement).value })}
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
@@ -349,7 +349,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   {['study-group', 'social', 'academic', 'project', 'community', 'networking'].map((tag) => (
                     <Badge
                       key={tag}
-                      variant="skill-tag"
+                      variant="secondary"
                       className={`cursor-pointer transition-colors ${
                         spaceData.customizations.tags?.includes(tag) ? 'bg-[var(--hive-brand-primary)] text-hive-obsidian' : ''
                       }`}
@@ -506,7 +506,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <input
                   type="text"
                   value={newRule}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule((e.target as HTMLInputElement).value)}
                   placeholder="Enter a community guideline..."
                   className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   onKeyPress={(e) => {
@@ -674,7 +674,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <div className="text-sm text-zinc-400 mb-2">Selected Tools:</div>
                 <div className="flex flex-wrap gap-2">
                   {spaceData.tools.map((toolId) => (
-                    <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
+                    <Badge key={toolId} variant="secondary" className="flex items-center space-x-1">
                       <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
                       <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                     </Badge>
@@ -739,7 +739,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Type:</span>
-                    <Badge variant="skill-tag">{SPACE_TYPES[spaceData.type].name}</Badge>
+                    <Badge variant="secondary">{SPACE_TYPES[spaceData.type].name}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Name:</span>
@@ -781,7 +781,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   <h4 className="font-medium text-white mb-3">Enabled Tools ({spaceData.tools.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {spaceData.tools.map((toolId) => (
-                      <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
+                      <Badge key={toolId} variant="secondary" className="flex items-center space-x-1">
                         <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
                         <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                       </Badge>

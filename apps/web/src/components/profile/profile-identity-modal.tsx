@@ -491,7 +491,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Input
                     value={formData.fullName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: (e.target as HTMLInputElement).value }))}
                     placeholder="Your full name"
                     className="w-full"
                   />
@@ -504,7 +504,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Input
                     value={formData.preferredName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, preferredName: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, preferredName: (e.target as HTMLInputElement).value }))}
                     placeholder="What should we call you?"
                     className="w-full"
                   />
@@ -519,7 +519,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     <Input
                       type="number"
                       value={formData.age}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, age: e.target.value }))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, age: (e.target as HTMLInputElement).value }))}
                       placeholder="18"
                       className="w-full"
                     />
@@ -531,7 +531,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                     </label>
                     <select
                       value={formData.academicYear}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, academicYear: e.target.value as any }))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, academicYear: (e.target as HTMLInputElement).value as any }))}
                       className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                     >
                       {ACADEMIC_YEARS.map(year => (
@@ -550,7 +550,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <select
                     value={formData.major}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, major: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormData(prev => ({ ...prev, major: (e.target as HTMLInputElement).value }))}
                     className="w-full px-4 py-3 bg-hive-background-secondary border border-hive-border-primary rounded-xl text-hive-text-primary focus:border-hive-brand-primary/40 focus:outline-none transition-colors"
                   >
                     <option value="">Select your major</option>
@@ -569,7 +569,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Input
                     value={formData.housing}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, housing: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, housing: (e.target as HTMLInputElement).value }))}
                     placeholder="e.g., Smith Hall, Room 305"
                     className="w-full"
                   />
@@ -582,7 +582,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Input
                     value={formData.pronouns}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, pronouns: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, pronouns: (e.target as HTMLInputElement).value }))}
                     placeholder="e.g., they/them, she/her, he/him"
                     className="w-full"
                   />
@@ -595,7 +595,7 @@ export function ProfileIdentityModal({ profile, isOpen, onClose }: ProfileIdenti
                   </label>
                   <Textarea
                     value={formData.statusMessage}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, statusMessage: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, statusMessage: (e.target as HTMLInputElement).value }))}
                     placeholder="Tell your campus story..."
                     rows={3}
                     maxLength={200}

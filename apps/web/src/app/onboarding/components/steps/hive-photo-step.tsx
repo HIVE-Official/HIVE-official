@@ -346,18 +346,16 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                   variant="outline"
                   size="sm"
                   onClick={cancelCrop}
-                  leftIcon={<X className="w-4 h-4" />}
                 >
-                  Cancel
+                  <X className="w-4 h-4" /> Cancel
                 </Button>
                 
                 <Button
                   variant="default"
                   size="sm"
                   onClick={cropImage}
-                  leftIcon={<CheckCircle className="w-4 h-4" />}
                 >
-                  Apply Crop
+                  <CheckCircle className="w-4 h-4" /> Apply Crop
                 </Button>
               </div>
             </div>
@@ -449,9 +447,8 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               onClick={openFileDialog}
               variant="outline"
               size="sm"
-              leftIcon={<Upload className="w-4 h-4" />}
             >
-              Change Photo
+              <Upload className="w-4 h-4" /> Change Photo
             </Button>
           </motion.div>
         ) : (

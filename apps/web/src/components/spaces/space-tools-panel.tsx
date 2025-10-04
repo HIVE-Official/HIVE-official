@@ -515,7 +515,7 @@ function AddToolModal({
           <div className="flex-1">
             <Input
               value={searchQuery}
-              onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
               placeholder="Search tools..."
               className="w-full"
             />
@@ -562,12 +562,12 @@ function AddToolModal({
 
                 <div className="flex flex-wrap gap-1">
                   {config.features.slice(0, 2).map((feature) => (
-                    <Badge key={feature} variant="sophomore" className="text-xs">
+                    <Badge key={feature} variant="secondary" className="text-xs">
                       {feature}
                     </Badge>
                   ))}
                   {config.features.length > 2 && (
-                    <Badge variant="sophomore" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                       +{config.features.length - 2} more
                     </Badge>
                   )}

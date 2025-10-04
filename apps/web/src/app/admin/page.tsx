@@ -627,7 +627,7 @@ function AdminDashboardInternal() {
                   {Object.entries(statistics.users.byMajor).slice(0, 5).map(([major, count]) => (
                     <div key={major} className="flex justify-between items-center">
                       <span className="text-sm">{major}</span>
-                      <Badge variant="sophomore">{count}</Badge>
+                      <Badge variant="secondary">{count}</Badge>
                     </div>
                   ))}
                 </div>
@@ -644,7 +644,7 @@ function AdminDashboardInternal() {
                   {Object.entries(statistics.users.byYear).map(([year, count]) => (
                     <div key={year} className="flex justify-between items-center">
                       <span className="text-sm">{year}</span>
-                      <Badge variant="freshman">{count}</Badge>
+                      <Badge variant="secondary">{count}</Badge>
                     </div>
                   ))}
                 </div>
@@ -693,8 +693,8 @@ function AdminDashboardInternal() {
                     <div key={type} className="flex justify-between items-center">
                       <span className="text-sm capitalize">{type.replace(/_/g, ' ')}</span>
                       <div className="flex space-x-2">
-                        <Badge variant="sophomore">{data.total}</Badge>
-                        <Badge variant="freshman">{data.members} members</Badge>
+                        <Badge variant="secondary">{data.total}</Badge>
+                        <Badge variant="secondary">{data.members} members</Badge>
                       </div>
                     </div>
                   ))}
@@ -893,15 +893,15 @@ function AdminDashboardInternal() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Users</span>
-                    <Badge variant="freshman">{statistics.system.collections.users}</Badge>
+                    <Badge variant="secondary">{statistics.system.collections.users}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Spaces</span>
-                    <Badge variant="freshman">{statistics.system.collections.spaces}</Badge>
+                    <Badge variant="secondary">{statistics.system.collections.spaces}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Builder Requests</span>
-                    <Badge variant="freshman">{statistics.system.collections.builderRequests}</Badge>
+                    <Badge variant="secondary">{statistics.system.collections.builderRequests}</Badge>
                   </div>
                 </div>
               </CardContent>

@@ -311,11 +311,11 @@ export default function ProfileEditPageStorybook() {
                 
                 {___currentUser && (
                   <div className="mt-4 space-y-2">
-                    <Badge variant="sophomore" className="text-xs">
+                    <Badge variant="secondary" className="text-xs">
                       {___currentUser.role === 'builder' ? 'Tool Builder' : 'Student'}
                     </Badge>
                     {___currentUser.major && (
-                      <Badge variant="sophomore" className="text-xs block">
+                      <Badge variant="secondary" className="text-xs block">
                         {___currentUser.major}
                       </Badge>
                     )}
@@ -341,7 +341,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.fullName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('fullName', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('fullName', (e.target as HTMLInputElement).value)}
                       placeholder="Enter your full name"
                       error={validationErrors.fullName}
                     />
@@ -356,7 +356,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.pronouns}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('pronouns', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('pronouns', (e.target as HTMLInputElement).value)}
                       placeholder="Select or type pronouns"
                       list="pronouns-list"
                     />
@@ -372,7 +372,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.handle}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('handle', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('handle', (e.target as HTMLInputElement).value)}
                       placeholder="your-handle"
                       leftIcon={<Hash className="h-4 w-4" />}
                       error={validationErrors.handle}
@@ -392,7 +392,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Textarea
                       value={formData.bio}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('bio', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('bio', (e.target as HTMLInputElement).value)}
                       placeholder="Tell your campus community about yourself..."
                       rows={3}
                       maxLength={500}
@@ -421,7 +421,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.major}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('major', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('major', (e.target as HTMLInputElement).value)}
                       placeholder="Computer Science"
                       list="majors-list"
                     />
@@ -433,7 +433,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.academicYear}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('academicYear', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('academicYear', (e.target as HTMLInputElement).value)}
                       placeholder="Select year"
                       list="years-list"
                     />
@@ -448,7 +448,7 @@ export default function ProfileEditPageStorybook() {
                   <Input
                     type="number"
                     value={formData.graduationYear}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('graduationYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('graduationYear', (e.target as HTMLInputElement).value)}
                     min="2024"
                     max="2035"
                     placeholder="2027"
@@ -471,7 +471,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.housing}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('housing', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('housing', (e.target as HTMLInputElement).value)}
                       placeholder="Hadley Village 123A"
                       list="housing-list"
                     />

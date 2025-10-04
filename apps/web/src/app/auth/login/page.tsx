@@ -223,7 +223,7 @@ function LoginPageContent() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value;
+    const email = (e.target as HTMLInputElement).value;
     setFormData({ email });
 
     // Clear previous errors

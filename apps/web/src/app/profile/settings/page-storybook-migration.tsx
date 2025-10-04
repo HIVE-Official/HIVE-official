@@ -562,7 +562,7 @@ export default function ProfileSettingsStorybook() {
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
-                <Badge variant="sophomore" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   UB Exclusive
                 </Badge>
               </h3>
@@ -584,7 +584,7 @@ export default function ProfileSettingsStorybook() {
                       />
                       {privacySettings.ghostMode.enabled && (
                         <Badge
-                          variant="sophomore"
+                          variant="secondary"
                           className="text-xs bg-purple-500/20 text-purple-300"
                         >
                           Active - {privacySettings.ghostMode.level}
@@ -674,7 +674,7 @@ export default function ProfileSettingsStorybook() {
                       {_currentUser?.email}
                     </span>
                     {_currentUser?.isVerified && (
-                      <Badge variant="senior" className="text-xs">
+                      <Badge variant="gold" className="text-xs">
                         Verified
                       </Badge>
                     )}
@@ -690,7 +690,7 @@ export default function ProfileSettingsStorybook() {
 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Student Status</span>
-                  <Badge variant="senior" className="text-xs">
+                  <Badge variant="gold" className="text-xs">
                     Active
                   </Badge>
                 </div>

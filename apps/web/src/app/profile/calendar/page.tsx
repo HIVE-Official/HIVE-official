@@ -239,12 +239,12 @@ export default function CalendarPage() {
               <Input
                 placeholder="Event title"
                 value={newEvent.title}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, title: e.target.value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, title: (e.target as HTMLInputElement).value })}
                 className="bg-black border-white/20"
               />
               <select
                 value={newEvent.type}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, type: e.target.value as CalendarEvent['type'] })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, type: (e.target as HTMLInputElement).value as CalendarEvent['type'] })}
                 className="px-3 py-2 bg-black border border-white/20 rounded-lg"
               >
                 <option value="personal">Personal</option>
@@ -257,20 +257,20 @@ export default function CalendarPage() {
                 type="datetime-local"
                 placeholder="Start time"
                 value={newEvent.startTime}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, startTime: e.target.value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, startTime: (e.target as HTMLInputElement).value })}
                 className="bg-black border-white/20"
               />
               <Input
                 type="datetime-local"
                 placeholder="End time"
                 value={newEvent.endTime}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, endTime: e.target.value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, endTime: (e.target as HTMLInputElement).value })}
                 className="bg-black border-white/20"
               />
               <Input
                 placeholder="Location (optional)"
                 value={newEvent.location}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, location: e.target.value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, location: (e.target as HTMLInputElement).value })}
                 className="bg-black border-white/20"
               />
               <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function CalendarPage() {
             <Textarea
               placeholder="Description (optional)"
               value={newEvent.description}
-              onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, description: e.target.value })}
+              onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, description: (e.target as HTMLInputElement).value })}
               className="mt-4 bg-black border-white/20"
               rows={3}
             />

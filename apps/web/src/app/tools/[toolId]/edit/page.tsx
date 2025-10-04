@@ -330,7 +330,7 @@ export default function ToolEditPage() {
                     type="text"
                     value={tool.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setTool({ ...tool, name: e.target.value });
+                      setTool({ ...tool, name: (e.target as HTMLInputElement).value });
                       setHasChanges(true);
                     }}
                     className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
@@ -341,7 +341,7 @@ export default function ToolEditPage() {
                   <select
                     value={tool.privacy}
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                      setTool({ ...tool, privacy: e.target.value as any });
+                      setTool({ ...tool, privacy: (e.target as HTMLInputElement).value as any });
                       setHasChanges(true);
                     }}
                     className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"

@@ -213,7 +213,7 @@ export function EventToolIntegration({
                     </div>
                     
                     <div className="flex items-center space-x-2">
-                      <Badge variant="building-tools" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         <Activity className="h-3 w-3 mr-1" />
                         Live
                       </Badge>
@@ -258,7 +258,7 @@ export function EventToolIntegration({
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Available Tools</h3>
           {userRole === 'organizer' && (
-            <Badge variant="skill-tag" className="text-xs">
+            <Badge variant="secondary" className="text-xs">
               Organizer Controls
             </Badge>
           )}
@@ -281,7 +281,7 @@ export function EventToolIntegration({
                       <div className="text-sm text-zinc-400 mt-1 leading-tight">
                         {toolDef.description}
                       </div>
-                      <Badge variant="skill-tag" className="text-xs mt-2 capitalize">
+                      <Badge variant="secondary" className="text-xs mt-2 capitalize">
                         {toolDef.category}
                       </Badge>
                     </div>
@@ -379,7 +379,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.duration || '25'}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, duration: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, duration: (e.target as HTMLInputElement).value}))}
                     >
                       <option value="15">15 minutes</option>
                       <option value="25">25 minutes</option>
@@ -409,7 +409,7 @@ export function EventToolIntegration({
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, title: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, title: (e.target as HTMLInputElement).value}))}
                     />
                   </div>
                   <div>
@@ -432,7 +432,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.method || 'code'}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, method: e.target.value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, method: (e.target as HTMLInputElement).value}))}
                     >
                       <option value="code">Check-in Code</option>
                       <option value="location">Location Verification</option>

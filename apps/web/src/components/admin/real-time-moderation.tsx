@@ -348,8 +348,8 @@ export function RealTimeModeration() {
                         <Badge className={`${getStatusColor(report.status)} text-white`}>
                           {report.status}
                         </Badge>
-                        <Badge variant="freshman">{report.type}</Badge>
-                        <Badge variant="freshman">{report.reason}</Badge>
+                        <Badge variant="secondary">{report.type}</Badge>
+                        <Badge variant="secondary">{report.reason}</Badge>
                         <span className="text-xs text-gray-400">
                           {formatDistanceToNow(new Date(report.createdAt), { addSuffix: true })}
                         </span>

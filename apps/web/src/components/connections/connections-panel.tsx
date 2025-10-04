@@ -174,17 +174,17 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                           {connection.sources && (
                             <div className="flex gap-1">
                               {connection.sources.includes('same_major') && (
-                                <Badge variant="sophomore" className="text-xs">
+                                <Badge variant="secondary" className="text-xs">
                                   Major
                                 </Badge>
                               )}
                               {connection.sources.includes('same_dorm') && (
-                                <Badge variant="sophomore" className="text-xs">
+                                <Badge variant="secondary" className="text-xs">
                                   Dorm
                                 </Badge>
                               )}
                               {connection.sources.includes('same_space') && (
-                                <Badge variant="sophomore" className="text-xs">
+                                <Badge variant="secondary" className="text-xs">
                                   Spaces
                                 </Badge>
                               )}
@@ -196,7 +196,7 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
 
                     <div>
                       {alreadyFriend ? (
-                        <Badge variant="freshman">Friends</Badge>
+                        <Badge variant="secondary">Friends</Badge>
                       ) : (
                         <Button
                           size="sm"
@@ -352,7 +352,7 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                     </div>
                   </div>
 
-                  <Badge variant="sophomore">Pending</Badge>
+                  <Badge variant="secondary">Pending</Badge>
                 </div>
               </Card>
             ))

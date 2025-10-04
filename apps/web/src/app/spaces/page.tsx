@@ -189,7 +189,7 @@ export default function SpacesDirectoryPage() {
                 <Input
                   placeholder="Search spaces, clubs, communities..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10 bg-gray-900 border-gray-700"
                 />

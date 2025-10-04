@@ -432,7 +432,7 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEventTypeFilter(e.target.value as CalendarEvent['type'] | 'all')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEventTypeFilter((e.target as HTMLInputElement).value as CalendarEvent['type'] | 'all')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-[var(--hive-brand-primary)] focus:outline-none"
             >
               <option value="all">All Events</option>
@@ -541,7 +541,7 @@ export default function CalendarPage() {
                   </div>
 
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-zinc-700">
-                    <Badge variant="skill-tag" className="text-xs capitalize">
+                    <Badge variant="secondary" className="text-xs capitalize">
                       {event.source}
                     </Badge>
                     

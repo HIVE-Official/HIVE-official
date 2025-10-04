@@ -192,7 +192,7 @@ export function ToolConfigModal({
                           <div className="font-medium text-white">{permission.name}</div>
                           <div className="text-sm text-hive-text-mutedLight">{permission.description}</div>
                         </div>
-                        <Badge variant="sophomore" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           Required
                         </Badge>
                       </div>

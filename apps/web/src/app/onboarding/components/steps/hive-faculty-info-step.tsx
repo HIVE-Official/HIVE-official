@@ -84,7 +84,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFirstNameChange(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFirstNameChange((e.target as HTMLInputElement).value)}
                 variant="default"
                 size="lg"
                 required
@@ -94,7 +94,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLastNameChange(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLastNameChange((e.target as HTMLInputElement).value)}
                 variant="default"
                 size="lg"
                 required

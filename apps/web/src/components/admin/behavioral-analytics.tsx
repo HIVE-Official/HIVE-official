@@ -324,7 +324,7 @@ export function BehavioralAnalytics() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Triggered</span>
-                      <Badge variant="freshman">{data.triggered}</Badge>
+                      <Badge variant="secondary">{data.triggered}</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Relieved</span>

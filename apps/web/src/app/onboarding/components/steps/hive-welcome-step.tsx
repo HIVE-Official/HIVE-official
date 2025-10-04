@@ -73,12 +73,11 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
             variant="default"
             size="lg"
             onClick={onNext}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
             className="px-[var(--hive-spacing-8)]"
             data-testid="get-started"
             aria-label="Start the onboarding process"
           >
-            Get Started
+            Get Started <ArrowRight className="w-4 h-4" />
           </Button>
         </motion.div>
       </motion.div>

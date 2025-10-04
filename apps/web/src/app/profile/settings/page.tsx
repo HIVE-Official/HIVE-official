@@ -538,7 +538,7 @@ function ProfileSettingsContent() {
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
-                <Badge variant="sophomore" className="text-xs">UB Exclusive</Badge>
+                <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
               </h3>
               
               <div className="space-y-4">
@@ -555,7 +555,7 @@ function ProfileSettingsContent() {
                         onCheckedChange={() => setShowGhostModeModal(true)}
                       />
                       {privacySettings.ghostMode.enabled && (
-                        <Badge variant="sophomore" className="text-xs bg-purple-500/20 text-purple-300">
+                        <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
                           Active - {privacySettings.ghostMode.level}
                         </Badge>
                       )}
@@ -627,7 +627,7 @@ function ProfileSettingsContent() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-white">{_currentUser?.email}</span>
                     {_currentUser?.isVerified && (
-                      <Badge variant="senior" className="text-xs">Verified</Badge>
+                      <Badge variant="gold" className="text-xs">Verified</Badge>
                     )}
                   </div>
                 </div>
@@ -639,7 +639,7 @@ function ProfileSettingsContent() {
                 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Student Status</span>
-                  <Badge variant="senior" className="text-xs">Active</Badge>
+                  <Badge variant="gold" className="text-xs">Active</Badge>
                 </div>
               </div>
             </Card>

@@ -182,7 +182,7 @@ export function SpaceToolRenderer({
             <span className="text-lg">{tool.icon || '🔧'}</span>
             <div>
               <h4 className="font-semibold text-white text-sm">{tool.name}</h4>
-              <Badge variant="freshman" className="text-xs border-gray-600 text-gray-400">
+              <Badge variant="secondary" className="text-xs border-gray-600 text-gray-400">
                 {tool.category}
               </Badge>
             </div>

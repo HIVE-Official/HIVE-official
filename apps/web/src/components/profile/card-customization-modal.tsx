@@ -383,7 +383,7 @@ export function CardCustomizationModal({
                   )}
                 </div>
                 {config.appearance.showBadges && (
-                  <Badge variant="freshman" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {config.isVisible ? 'Visible' : 'Hidden'}
                   </Badge>
                 )}

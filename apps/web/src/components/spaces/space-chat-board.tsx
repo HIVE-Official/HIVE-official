@@ -352,7 +352,7 @@ export function SpaceChatBoard({
         <div className="flex gap-2">
           <Input
             value={newPostContent}
-            onChange={(e: React.ChangeEvent) => setNewPostContent(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setNewPostContent((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

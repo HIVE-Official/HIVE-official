@@ -393,7 +393,7 @@ export default function CreateSpacePage() {
                 <div className="flex gap-2 mb-2">
                   <Input
                     value={tagInput}
-                    onChange={(e: React.ChangeEvent) => setTagInput(e.target.value)}
+                    onChange={(e: React.ChangeEvent) => setTagInput((e.target as HTMLInputElement).value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();

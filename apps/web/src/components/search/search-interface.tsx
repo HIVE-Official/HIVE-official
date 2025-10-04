@@ -221,7 +221,7 @@ export function SearchInterface({
           <Input
             ref={searchInputRef}
             value={query}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)}
             onFocus={() => setShowSuggestions(true)}
             placeholder={placeholder}
             className="pl-12 pr-12 py-3 text-lg"
@@ -344,7 +344,7 @@ export function SearchInterface({
             <div className="flex items-center space-x-2">
               <span className="text-sm text-hive-text-mutedLight">Filters:</span>
               {selectedFilters.tags.map(tag => (
-                <Badge key={tag} variant="sophomore" className="flex items-center space-x-1">
+                <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
                   <Tag className="h-3 w-3" />
                   <span>{tag}</span>
                   <button onClick={() => removeFilter('tags', tag)}>
@@ -353,7 +353,7 @@ export function SearchInterface({
                 </Badge>
               ))}
               {selectedFilters.authors.map(author => (
-                <Badge key={author} variant="sophomore" className="flex items-center space-x-1">
+                <Badge key={author} variant="secondary" className="flex items-center space-x-1">
                   <Users className="h-3 w-3" />
                   <span>{author}</span>
                   <button onClick={() => removeFilter('authors', author)}>
@@ -362,7 +362,7 @@ export function SearchInterface({
                 </Badge>
               ))}
               {selectedFilters.spaces.map(space => (
-                <Badge key={space} variant="sophomore" className="flex items-center space-x-1">
+                <Badge key={space} variant="secondary" className="flex items-center space-x-1">
                   <Users className="h-3 w-3" />
                   <span>{space}</span>
                   <button onClick={() => removeFilter('spaces', space)}>
@@ -421,7 +421,7 @@ export function SearchInterface({
                       <div className={getResultTypeColor(item.type)}>
                         {getResultIcon(item)}
                       </div>
-                      <Badge variant="freshman" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {item.type}
                       </Badge>
                       {item.metadata.isVerified && (

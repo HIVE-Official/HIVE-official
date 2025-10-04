@@ -220,7 +220,7 @@ export default function ToolAnalyticsPage() {
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange((e.target as HTMLInputElement).value)}
                 className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>

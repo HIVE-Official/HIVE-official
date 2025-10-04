@@ -400,7 +400,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               min="1"
                               max="24"
                               value={scheduleHours}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt(e.target.value))}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt((e.target as HTMLInputElement).value))}
                               className="flex-1"
                             />
                             <span className="text-sm text-gray-300 w-16">{scheduleHours}h</span>

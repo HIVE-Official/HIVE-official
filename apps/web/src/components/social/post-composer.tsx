@@ -322,7 +322,7 @@ export function PostComposer({
           <Textarea
             ref={textareaRef}
             value={content}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange((e.target as HTMLInputElement).value)}
             placeholder={placeholder}
             className={`min-h-[80px] resize-none border-none bg-transparent text-white placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
@@ -347,7 +347,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={poll.question}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: (e.target as HTMLInputElement).value }))}
                 placeholder="Ask a question..."
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
               />
@@ -359,7 +359,7 @@ export function PostComposer({
                     <input
                       type="text"
                       value={option}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, (e.target as HTMLInputElement).value)}
                       placeholder={`Option ${index + 1}`}
                       className="flex-1 bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
@@ -406,14 +406,14 @@ export function PostComposer({
               <input
                 type="text"
                 value={event.title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
                 placeholder="Event title"
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
                 value={event.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
                 placeholder="Event description"
                 rows={2}
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
@@ -425,7 +425,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.startTime}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: (e.target as HTMLInputElement).value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -434,7 +434,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.endTime || ''}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: (e.target as HTMLInputElement).value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>

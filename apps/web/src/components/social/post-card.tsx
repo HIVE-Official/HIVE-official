@@ -495,7 +495,7 @@ export function PostCard({
                   <CheckCircle className="h-4 w-4 text-blue-400" />
                 )}
                 {post.author.badges?.map(badge => (
-                  <Badge key={badge} variant="sophomore" className="text-xs">
+                  <Badge key={badge} variant="secondary" className="text-xs">
                     {badge}
                   </Badge>
                 ))}
@@ -625,7 +625,7 @@ export function PostCard({
               <Textarea
                 ref={commentInputRef}
                 value={commentText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCommentText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCommentText((e.target as HTMLInputElement).value)}
                 placeholder="Write a comment..."
                 rows={2}
                 className="resize-none"

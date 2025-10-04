@@ -228,7 +228,7 @@ export function DatabasePerformanceDashboard() {
           <select
             className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
             value={selectedCollection}
-            onChange={(e: React.ChangeEvent) => setSelectedCollection(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSelectedCollection((e.target as HTMLInputElement).value)}
           >
             <option value="">All Collections</option>
             <option value="users">Users</option>
@@ -1025,10 +1025,10 @@ function OptimizationSuggestionCard({
               <Badge className={`text-xs ${getPriorityColor(suggestion.priority)}`}>
                 {suggestion.priority.toUpperCase()}
               </Badge>
-              <Badge variant="freshman" className="text-xs capitalize">
+              <Badge variant="secondary" className="text-xs capitalize">
                 {suggestion.type.replace('_', ' ')}
               </Badge>
-              <Badge variant="freshman" className="text-xs capitalize">
+              <Badge variant="secondary" className="text-xs capitalize">
                 {suggestion.collection || 'All'}
               </Badge>
             </div>
