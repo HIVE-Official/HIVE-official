@@ -4,32 +4,28 @@
  */
 import { Result } from '../../shared/base/Result';
 import { ValueObject } from '../../shared/base/ValueObject.base';
-export declare enum PrivacyLevel {
-    PUBLIC = "public",
-    CAMPUS_ONLY = "campus_only",
-    CONNECTIONS_ONLY = "connections_only",
-    PRIVATE = "private"
-}
+type ProfileVisibility = 'public' | 'private' | 'connections';
 interface ProfilePrivacyProps {
-    level: PrivacyLevel;
+    profileVisibility: ProfileVisibility;
     showEmail: boolean;
-    showPhone: boolean;
-    showDorm: boolean;
-    showSchedule: boolean;
-    showActivity: boolean;
+    showConnections: boolean;
+    allowConnectionRequests: boolean;
 }
 export declare class ProfilePrivacy extends ValueObject<ProfilePrivacyProps> {
-    get level(): PrivacyLevel;
+    get profileVisibility(): string;
+    get visibility(): string;
     get showEmail(): boolean;
-    get showPhone(): boolean;
-    get showDorm(): boolean;
-    get showSchedule(): boolean;
-    get showActivity(): boolean;
+    get showConnections(): boolean;
+    get allowConnectionRequests(): boolean;
     private constructor();
+    isPublic(): boolean;
+    isPrivate(): boolean;
+    isConnectionsOnly(): boolean;
     static create(props: Partial<ProfilePrivacyProps>): Result<ProfilePrivacy>;
     static createDefault(): Result<ProfilePrivacy>;
     static createPublic(): Result<ProfilePrivacy>;
     static createPrivate(): Result<ProfilePrivacy>;
+    static createConnectionsOnly(): Result<ProfilePrivacy>;
     canViewProfile(viewerType: 'public' | 'campus' | 'connection'): boolean;
 }
 export {};

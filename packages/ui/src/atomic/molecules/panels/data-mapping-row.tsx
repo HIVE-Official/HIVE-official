@@ -1,0 +1,114 @@
+/**
+ * Data Mapping Row Component
+ *
+ * Shows a single data mapping/connection between element ports.
+ * Used in properties panel to visualize how data flows through elements.
+ */
+
+'use client';
+
+import React from 'react';
+import { cn } from '@/lib/utils';
+import type { Port, DataType } from '@/types/hivelab.types';
+import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { ArrowRight, X } from 'lucide-react';
+import { Button } from '@/atomic/atoms/button';
+import { DataTypeBadge } from '@/atomic/atoms/elements/data-type-badge';
+
+export interface DataMappingRowProps {
+  /** Source port */
+  sourcePort: Port;
+  /** Target port */
+  targetPort: Port;
+  /** Source element name */
+  sourceElementName: string;
+  /** Is this mapping selected? */
+  isSelected?: boolean;
+  /** Can this mapping be removed? */
+  removable?: boolean;
+  /** Click handler */
+  onClick?: () => void;
+  /** Remove handler */
+  onRemove?: () => void;
+  /** Additional class names */
+  className?: string;
+}
+
+export function DataMappingRow({
+  sourcePort,
+  targetPort,
+  sourceElementName,
+  isSelected = false,
+  removable = true,
+  onClick,
+  onRemove,
+  className,
+}: DataMappingRowProps) {
+  // Get primary type for color
+  const sourceType = Array.isArray(sourcePort.type) ? sourcePort.type[0] : sourcePort.type;
+  const targetType = Array.isArray(targetPort.type) ? targetPort.type[0] : targetPort.type;
+  const color = DATA_TYPE_COLORS[sourceType as DataType];
+
+  return (
+    <div
+      className={cn(
+        'data-mapping-row group',
+        'flex items-center gap-2 px-3 py-2 rounded-md border transition-all',
+        'hover:bg-muted/50 cursor-pointer',
+        isSelected && 'bg-primary/5 border-primary/40',
+        !isSelected && 'border-border',
+        className
+      )}
+      onClick={onClick}
+    >
+      {/* Source */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <div
+            className="w-2 h-2 rounded-full flex-shrink-0"
+            style={{ backgroundColor: color }}
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-muted-foreground truncate">
+              {sourceElementName}
+            </p>
+            <p className="text-sm font-medium truncate">{sourcePort.name}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Arrow */}
+      <ArrowRight
+        className="h-4 w-4 flex-shrink-0 text-muted-foreground"
+        style={{ color }}
+      />
+
+      {/* Target */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium truncate">{targetPort.name}</p>
+            <DataTypeBadge type={targetType as DataType} size="sm" variant="subtle" />
+          </div>
+        </div>
+      </div>
+
+      {/* Remove button */}
+      {removable && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove?.();
+          }}
+          className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <X className="h-3.5 w-3.5" />
+        </Button>
+      )}
+    </div>
+  );
+}
+
+DataMappingRow.displayName = 'DataMappingRow';

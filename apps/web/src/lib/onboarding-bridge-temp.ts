@@ -118,22 +118,13 @@ export function useOnboardingBridge() {
   }, []);
 
   const createPostOnboardingSpaces = useCallback(async (onboardingData: OnboardingData) => {
-    try {
-      // This would normally create cohort spaces based on major/graduation year
-      
-      return {
-        cohortSpaces: [],
-        joinedSpaces: [],
-        totalSpaces: 0,
-      };
-    } catch (error) {
-      return {
-        cohortSpaces: [],
-        joinedSpaces: [],
-        totalSpaces: 0,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
-    }
+    // This would normally create cohort spaces based on major/graduation year
+
+    return {
+      cohortSpaces: [],
+      joinedSpaces: [],
+      totalSpaces: 0,
+    };
   }, []);
 
   return {

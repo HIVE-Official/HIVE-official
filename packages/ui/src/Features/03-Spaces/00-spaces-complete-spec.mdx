@@ -1,0 +1,315 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="03-Spaces/Complete Spaces Specification" />
+
+# Complete Spaces System Specification
+
+Comprehensive guide to HIVE's spaces system - from discovery to active participation.
+
+---
+
+## 📋 Table of Contents
+
+1. [User Journey](#user-journey)
+2. [Component Architecture](#component-architecture)
+3. [Visual Design System](#visual-design-system)
+4. [Stories Index](#stories-index)
+5. [SPEC.md Compliance](#specmd-compliance)
+
+---
+
+## 🗺️ User Journey
+
+### Phase 1: Discovery (Homebase)
+**Story**: `Spaces Homebase (Monochrome)`
+
+**User enters `/spaces`:**
+1. Sees "My Spaces" (joined spaces) at top
+2. Browses 4 collapsible category sections below
+3. Clicks category to expand and see spaces
+4. Clicks space card to view details or "Join" to join
+
+**Key Components**:
+- `JoinedSpaceCard` - Vertical layout, unread badges, gold hover
+- `DiscoverableSpaceCard` - Horizontal layout, join CTA
+- `SpaceCategoryAccordion` - Collapsible categories (shadcn Accordion)
+
+**Design Features**:
+- ✅ Paper texture on cards (SVG noise grain)
+- ✅ Pin icons (thumbtack feel)
+- ✅ Slight rotation on hover (0.3-0.5°)
+- ✅ Layered shadows (3-level depth)
+- ✅ Monochrome + gold aesthetic
+
+---
+
+### Phase 2: Space Page
+**Story**: `SpaceLayout`
+
+**User clicks space from homebase:**
+1. Navigates to `/spaces/[spaceId]`
+2. Sees space header (title, description, join button)
+3. Views 60/40 split layout:
+   - **Left (60%)**: Post feed + composer
+   - **Right (40%)**: About, Events, Resources, Members
+
+**Key Components**:
+- `SpaceLayout` - 60/40 template with sticky sidebar
+- `SpaceHeader` - Space metadata, join/leave actions
+- `SpacePostFeed` - Feed of space posts
+- `SpaceComposerWithTools` - Post creation with inline tools
+- `SpaceAboutSection` - Description, rules, tags
+- `SpaceEventsPanel` - Upcoming events
+- `SpaceResourcesPanel` - Shared resources
+- `SpaceMembersPanel` - Member list
+
+**Layout Structure**:
+```
+┌───────────────────────────────────────────────┐
+│  Space Header (title, description, join)     │
+├─────────────────────────┬─────────────────────┤
+│ 60% Main Content        │ 40% Sidebar         │
+│ ─────────────────────   │ ──────────────────  │
+│ Post Composer           │ About Section       │
+│ ─────────────────────   │ ──────────────────  │
+│ Post Card 1             │ Upcoming Events     │
+│ Post Card 2             │ ──────────────────  │
+│ Post Card 3             │ Resources           │
+│ ...                     │ ──────────────────  │
+│ Load More               │ Members Preview     │
+└─────────────────────────┴─────────────────────┘
+```
+
+---
+
+### Phase 3: Posting & Engagement
+**Story**: `space-composer-with-tools`
+
+**User wants to create post:**
+1. Clicks composer in space page
+2. Types content (rich text)
+3. (Optional) Attaches image, poll, event
+4. (Optional) Uses inline tool from dropdown
+5. Clicks "Post" to publish
+
+**Key Components**:
+- `SpaceComposerWithTools` - Rich composer with tool integration
+- `InlineToolMenu` - Dropdown for selecting inline tools
+
+**Tool Integration**:
+- Poll tool → Insert poll inline
+- Event tool → Insert event inline
+- Image upload → Attach image
+- Link preview → Auto-generate preview
+
+---
+
+### Phase 4: Leader Controls
+**Story**: `space-leader-toolbar`
+
+**User is space leader:**
+1. Sees leader toolbar at top of space
+2. Can pin/unpin posts
+3. Can delete inappropriate content
+4. Can manage members (kick, promote)
+5. Can edit space settings
+
+**Key Components**:
+- `SpaceLeaderToolbar` - Leader-only actions
+- Space settings modal (edit description, rules, etc.)
+
+---
+
+## 🏗️ Component Architecture
+
+### Atomic Design Hierarchy
+
+#### **Atoms** (shadcn primitives)
+- `Card`, `Button`, `Input`, `Separator`
+- `Accordion`, `Tabs`, `Badge`
+- All styling via Tailwind + HIVE design tokens
+
+#### **Molecules** (compositions)
+- `JoinedSpaceCard` - Vertical card for My Spaces
+- `DiscoverableSpaceCard` - Horizontal card for browse
+- `SpaceComposerWithTools` - Post composer + tool dropdown
+- `InlineToolMenu` - Tool selection dropdown
+
+#### **Organisms** (complex sections)
+- `SpaceCategoryAccordion` - Collapsible category section
+- `SpaceHeader` - Space metadata header
+- `SpacePostFeed` - Feed of posts
+- `SpaceAboutSection` - About panel
+- `SpaceEventsPanel` - Events panel
+- `SpaceResourcesPanel` - Resources panel
+- `SpaceMembersPanel` - Members panel
+- `SpaceLeaderToolbar` - Leader controls
+
+#### **Templates** (page layouts)
+- `SpaceLayout` - Complete 60/40 space page layout
+
+---
+
+## 🎨 Visual Design System
+
+### Design Tokens (from `hive-theme.ts`)
+
+#### Colors
+```typescript
+Background: #000000 (OLED optimized)
+Surface: #121212 (cards, panels)
+Elevated: #1A1A1C (modals, dropdowns)
+Primary (Gold): #FFD700 (strategic accent only)
+Text Primary: #FFFFFF
+Text Secondary: #A1A1AA (zinc-400)
+Border: rgba(255, 255, 255, 0.08)
+```
+
+#### Motion (Apple-inspired)
+```typescript
+Fast: 250ms (hover, focus)
+Normal: 400ms (transitions, modals)
+Slow: 600ms (celebrations)
+Easing: cubic-bezier(0.25, 0.1, 0.25, 1) // Apple standard
+```
+
+#### Shadows (3-level depth)
+```typescript
+sm: 0 2px 4px rgba(0,0,0,0.3)
+md: 0 8px 16px rgba(0,0,0,0.4)
+lg: 0 16px 32px rgba(0,0,0,0.5)
+glow: 0 0 20px rgba(255,215,0,0.3) // Gold glow
+```
+
+### Bulletin Board Aesthetic
+
+All space cards include:
+- **Paper Texture**: SVG fractal noise at 1.5% opacity
+- **Pin Icons**: Lucide Pin at 30% opacity (60% on hover), rotated
+- **Slight Rotation**: 0.3-0.5° on hover (mimics physical pin tilt)
+- **Layered Shadows**: 3-layer system for paper depth
+
+**No new colors added** - personality through texture, depth, motion.
+
+---
+
+## 📚 Stories Index
+
+### Discovery
+- ✅ **Spaces Homebase (Monochrome)** - Complete discovery experience
+  - `CompleteHomebase` - Full homebase with My Spaces + categories
+  - `CardVariants` - Card type comparison
+  - `SingleCategory` - Isolated category view
+
+### Space Page
+- ✅ **SpaceLayout** - Complete 60/40 layout
+  - `Default` - Standard space page
+  - `LeaderView` - With leader toolbar
+  - `MobileView` - Responsive mobile layout
+  - `EmptyState` - New space with no posts
+
+### Components
+- ✅ **space-composer-with-tools** - Post creation
+- ✅ **space-leader-toolbar** - Leader controls
+- ✅ **space-about-section** - About panel
+- ✅ **space-events-panel** - Events panel
+- ✅ **space-resources-panel** - Resources panel
+- ✅ **space-members-panel** - Members panel
+- ✅ **space-post-feed** - Post feed
+- ✅ **space-card** - Individual space card
+- ✅ **space-member-list** - Member list
+- ✅ **space-tools-panel** - Tools integration
+
+---
+
+## ✅ SPEC.md Compliance
+
+### Space Categories (Section 2068-2077)
+```
+✅ 4 Categories in UI: university_org | student_org | residential | greek_life
+✅ 5th Type (academics): Exists but NOT in discovery UI
+✅ Smart Recommendations: Applied to student_org ONLY
+✅ No Behavioral UI Sections: Removed "Panic Relief", "Friend Networks", etc.
+```
+
+### Discovery Algorithm
+```
+✅ Category-First Navigation: Accordion-based collapsible sections
+✅ Recommendations: "✨ For You" badge on student_org category only
+✅ No Tabs: Categories stack vertically, expand/collapse
+✅ Homebase Pattern: My Spaces at top, browse categories below
+```
+
+### Space Architecture
+```
+✅ 60/40 Layout: Main feed (60%) + sidebar (40%)
+✅ Post Feed: Main content area with composer
+✅ About Section: Description, rules, tags
+✅ Events Panel: Upcoming events
+✅ Resources Panel: Shared resources
+✅ Members Panel: Member list preview
+✅ Leader Toolbar: Pin/delete posts, manage members
+```
+
+### Visual Identity
+```
+✅ Monochrome Base: #000, #121212, #1A1A1C
+✅ Gold Accent: #FFD700 (strategic use only)
+✅ shadcn Components: All built on shadcn primitives
+✅ HIVE Differentiation: Paper texture, pin icons, rotation, layered shadows
+✅ No Custom Colors: Personality through CSS/SVG techniques
+```
+
+---
+
+## 🚀 Implementation Status
+
+### ✅ Complete
+- Discovery homebase with collapsible categories
+- Space page layout (60/40 split)
+- Post composer with tool integration
+- Leader controls and moderation
+- All panel components (About, Events, Resources, Members)
+- Bulletin board aesthetic (paper texture, pins, rotation, shadows)
+- Full shadcn/ui compliance
+
+### 🎯 Next Steps (Production Integration)
+1. Connect to Firebase data layer
+2. Implement real-time post updates (SSE)
+3. Add inline tool execution (polls, events)
+4. Campus isolation enforcement (campusId filter)
+5. Member permission checks
+6. RSS feed integration for pre-seeded content
+
+---
+
+## 📖 Usage Examples
+
+### Discovery to Space Page Flow
+```tsx
+// 1. User lands on /spaces
+<SpacesHomebase />
+  ↓ Clicks "CS Study Group" from My Spaces
+
+// 2. Navigates to /spaces/cs-study-group
+<SpaceLayout
+  space={csStudyGroupData}
+  posts={posts}
+  events={events}
+  resources={resources}
+  members={members}
+  isLeader={false}
+  isMember={true}
+  onCreatePost={handleCreatePost}
+/>
+  ↓ User types in composer and clicks "Post"
+
+// 3. Post created and appears in feed
+<SpacePostFeed posts={[newPost, ...existingPosts]} />
+```
+
+---
+
+**Last Updated**: October 2, 2025
+**Design System Version**: HIVE 2025 (Monochrome + Gold)
+**shadcn/ui Version**: Latest

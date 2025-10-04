@@ -39,7 +39,7 @@ import {
   Moon,
   Sun,
 } from 'lucide-react';
-import { NotificationSystem } from '../atomic/organisms/notification-system';
+// NotificationSystem was deleted - use shadcn/ui Sonner toast instead
 
 // HIVE Easing Curves from Design System
 const HIVE_EASING = {
@@ -380,16 +380,15 @@ const GlobalHeader: React.FC = () => {
             </MotionButton>
           )}
 
-          <NotificationSystem
+          {/* NotificationSystem was deleted - use shadcn/ui Sonner toast instead */}
+          {/* <NotificationSystem
             onNavigate={(url) => {
-              // In the shell context, we can't use useRouter directly
-              // This would need to be passed down from the app level
               console.log('Navigate to:', url);
               if (typeof window !== 'undefined') {
                 window.location.href = url;
               }
             }}
-          />
+          /> */}
           <UserMenu />
         </div>
       </div>

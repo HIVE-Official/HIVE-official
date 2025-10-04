@@ -1,135 +1,140 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Dialog } from './dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './dialog';
+import { Button } from './button';
+import { Label } from './label';
+import { Input } from './input';
 
-/**
- * Dialog component from HIVE design system
- *
- * HIVE Design System Story
- * All UI/UX built in Storybook first
- */
-
-// REQUIRED: Meta configuration following HIVE standards
 const meta = {
   title: 'Atoms/Dialog',
   component: Dialog,
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: 'Dialog component from HIVE design system. Built with HIVE design system standards: CVA variants, mobile-first sizing (44px minimum touch targets), HIVE CSS variables, React.forwardRef pattern.',
-      },
-    },
+    backgrounds: { default: 'dark', values: [{ name: 'dark', value: '#000000' }] },
   },
-  tags: ['autodocs'], // REQUIRED: Enables automatic prop documentation
-  argTypes: {
-    variant: {
-      control: 'select',
-      description: 'Visual variant of the component',
-    },
-    size: {
-      control: 'select',
-      description: 'Size variant (all sizes are mobile-friendly with 44px+ touch targets)',
-    },
-  },
+  tags: ['autodocs'],
 } satisfies Meta<typeof Dialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// REQUIRED: Default story showing base component
 export const Default: Story = {
-  args: {
-    children: 'Default Dialog',
-  },
-};
-
-// REQUIRED: Show all variants if component has variants
-export const AllVariants: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap items-center">
-      <Dialog variant="default">Default</Dialog>
-      <Dialog variant="secondary">Secondary</Dialog>
-      <Dialog variant="outline">Outline</Dialog>
-      <Dialog variant="ghost">Ghost</Dialog>
-    </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Edit Profile</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right text-white">Name</Label>
+            <Input id="name" defaultValue="Sarah Johnson" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right text-white">Username</Label>
+            <Input id="username" defaultValue="@sarahj" className="col-span-3" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button>Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'All available variants following HIVE design system.',
-      },
-    },
-  },
 };
 
-// REQUIRED: Show all sizes
-export const Sizes: Story = {
+export const ConfirmationDialog: Story = {
   render: () => (
-    <div className="flex gap-4 items-center">
-      <Dialog size="sm">Small</Dialog>
-      <Dialog size="default">Default</Dialog>
-      <Dialog size="lg">Large</Dialog>
-    </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="destructive">Delete Space</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete the space
+            "CS Study Group" and remove all posts and members.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button variant="destructive">Yes, delete space</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Size variants. All sizes maintain 44px+ minimum for mobile touch targets.',
-      },
-    },
-  },
 };
 
-// REQUIRED: Interactive states (hover, focus, disabled)
-export const States: Story = {
+export const CreateSpaceDialog: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <Dialog>Default</Dialog>
-      <Dialog className="hover:opacity-80">Hover State</Dialog>
-      <Dialog disabled>Disabled</Dialog>
-    </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="gold">Create Space</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Create a new space</DialogTitle>
+          <DialogDescription>
+            Spaces are communities where students can connect around shared interests.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="space-name" className="text-white">Space name</Label>
+            <Input id="space-name" placeholder="e.g., CS Study Group" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="description" className="text-white">Description</Label>
+            <Input id="description" placeholder="What's this space about?" />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="category" className="text-white">Category</Label>
+            <Input id="category" placeholder="e.g., Academics, Social, Sports" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button variant="gold">Create space</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Interactive states. Focus states use HIVE brand primary color for consistency.',
-      },
-    },
-  },
 };
 
-// RECOMMENDED: Responsive examples
-export const Responsive: Story = {
+export const SuccessDialog: Story = {
   render: () => (
-    <div className="w-full max-w-sm">
-      <Dialog className="w-full">Full Width</Dialog>
-    </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Show Success</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <span className="text-[#FFD700]">✓</span> Profile updated successfully
+          </DialogTitle>
+          <DialogDescription>
+            Your changes are now visible to other students on campus.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   ),
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile',
-    },
-    docs: {
-      description: {
-        story: 'Component behavior on mobile viewports. HIVE components are mobile-first by design.',
-      },
-    },
-  },
-};
-
-// RECOMMENDED: Dark theme demonstration (default for HIVE)
-export const DarkTheme: Story = {
-  args: {
-    children: 'Dark Theme (HIVE Default)',
-  },
-  parameters: {
-    backgrounds: {
-      default: 'hive-dark',
-    },
-    docs: {
-      description: {
-        story: 'Component in dark theme (HIVE default). Uses CSS variables for consistent theming.',
-      },
-    },
-  },
 };

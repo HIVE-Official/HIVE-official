@@ -1,102 +1,235 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card"
+import { Badge } from "../atoms/badge"
+import { Button } from "../atoms/button"
+import { cn } from "../../lib/utils"
+import type { SpaceActionHandler } from "../../types/space.types"
 
-/**
- * SKELETON COMPONENT - UI/UX TO BE DETERMINED
- *
- * Space Members Panel
- *
- * Members panel for space
- */
-
-const spacememberspanelVariants = cva(
-  'relative w-full border rounded-lg p-4 bg-[var(--hive-surface-primary)]',
-  {
-    variants: {
-      variant: {
-        default: 'border-[var(--hive-border-default)]',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
-
-export interface SpaceMembersPanelProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof spacememberspanelVariants> {
-  members?: any;
-  total?: any;
-  isLoading?: boolean;
-  error?: string;
+export interface SpaceMemberPreview {
+  userId: string
+  name: string
+  handle: string
+  avatar?: string
+  role?: "member" | "moderator" | "leader" | "founder"
+  isOnline?: boolean
 }
 
-export const SpaceMembersPanel = React.forwardRef<
-  HTMLDivElement,
-  SpaceMembersPanelProps
->(
+export interface SpaceMembersPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** List of members to preview */
+  members?: SpaceMemberPreview[]
+  /** Total member count (may be more than preview length) */
+  totalMemberCount?: number
+  /** Maximum members to show in preview */
+  previewLimit?: number
+  /** Whether user can invite */
+  canInvite?: boolean
+  /** Show online status indicators */
+  showOnlineStatus?: boolean
+  /** Empty state message */
+  emptyStateMessage?: string
+  /** Loading state */
+  isLoading?: boolean
+
+  /** Action handler (aggregated) */
+  onAction?: SpaceActionHandler
+
+  /** Legacy handlers (for backward compatibility) */
+  onInvite?: () => void
+  onViewAll?: () => void
+  onMemberClick?: (member: SpaceMemberPreview) => void
+}
+
+const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProps>(
   (
     {
       className,
-      variant,
+      members = [],
+      totalMemberCount,
+      previewLimit = 6,
+      canInvite = false,
+      showOnlineStatus = true,
+      emptyStateMessage = "No members yet",
       isLoading = false,
-      error,
+      onAction,
+      // Legacy handlers
+      onInvite,
+      onViewAll,
+      onMemberClick,
       ...props
     },
     ref
   ) => {
-    if (isLoading) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spacememberspanelVariants({ variant }), className)}
-          {...props}
-        >
-          <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded" />
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded w-3/4" />
-          </div>
-        </div>
-      );
-    }
+    // Aggregated event handlers
+    const handleInvite = React.useCallback(() => {
+      onInvite?.()
+      onAction?.({ type: "member.invite" })
+    }, [onInvite, onAction])
 
-    if (error) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spacememberspanelVariants({ variant }), 'border-[var(--hive-error)]', className)}
-          {...props}
-        >
-          <p className="text-[var(--hive-error)]">Error: {error}</p>
-        </div>
-      );
+    const handleViewAll = React.useCallback(() => {
+      onViewAll?.()
+      onAction?.({ type: "member.viewAll" })
+    }, [onViewAll, onAction])
+
+    const handleMemberClick = React.useCallback((member: SpaceMemberPreview) => {
+      onMemberClick?.(member)
+      onAction?.({ type: "member.click", memberId: member.userId })
+    }, [onMemberClick, onAction])
+
+    // Preview members (limited count)
+    const previewMembers = React.useMemo(() => {
+      return members.slice(0, previewLimit)
+    }, [members, previewLimit])
+
+    // Calculate total count
+    const totalCount = totalMemberCount ?? members.length
+    const hasMore = totalCount > previewMembers.length
+
+    // Get role badge color
+    const getRoleBadgeVariant = (role?: string) => {
+      switch (role) {
+        case "founder":
+          return "default"
+        case "leader":
+          return "default"
+        case "moderator":
+          return "secondary"
+        default:
+          return "outline"
+      }
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn(spacememberspanelVariants({ variant }), className)}
-        {...props}
-      >
-        <div className="text-center py-8">
-          <p className="text-2xl mb-2">🎨</p>
-          <p className="text-[var(--hive-text-primary)] font-semibold mb-1">
-            Space Members Panel
-          </p>
-          <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-            Members panel for space
-          </p>
-          <div className="p-2 bg-[var(--hive-surface-tertiary)] rounded text-xs text-[var(--hive-text-tertiary)]">
-            ⚠️ SKELETON: UI/UX to be designed in Storybook review
+      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-lg font-semibold tracking-tight leading-tight">Members</CardTitle>
+              {totalCount > 0 && (
+                <Badge variant="secondary" className="text-xs">
+                  {totalCount}
+                </Badge>
+              )}
+            </div>
+            {canInvite && (onInvite || onAction) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleInvite}
+                disabled={isLoading}
+                className="h-8 px-2 transition-all duration-[400ms]"
+              >
+                <svg className="h-3.5 w-3.5 mr-1" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                </svg>
+                <span className="text-xs">Invite</span>
+              </Button>
+            )}
           </div>
-        </div>
-      </div>
-    );
-  }
-);
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {previewMembers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <svg className="h-12 w-12 text-white/30 mb-3" fill="none" strokeWidth="1.5" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+              <p className="text-sm text-white/70">{emptyStateMessage}</p>
+              {canInvite && (onInvite || onAction) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleInvite}
+                  disabled={isLoading}
+                  className="mt-3 transition-all duration-[400ms]"
+                >
+                  <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                  </svg>
+                  Invite Members
+                </Button>
+              )}
+            </div>
+          ) : (
+            <>
+              {/* Member Grid */}
+              <div className="grid grid-cols-3 gap-2">
+                {previewMembers.map((member) => (
+                  <div
+                    key={member.userId}
+                    onClick={() => handleMemberClick(member)}
+                    className={cn(
+                      "group relative flex flex-col items-center p-2 rounded-lg border border-white/8 bg-[#0c0c0c] transition-all duration-[400ms]",
+                      (onMemberClick || onAction) && "cursor-pointer hover:border-white/20 hover:bg-white/10"
+                    )}
+                  >
+                    {/* Avatar */}
+                    <div className="relative">
+                      <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-white/8 bg-white/10">
+                        {member.avatar ? (
+                          <img
+                            src={member.avatar}
+                            alt={member.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-[#FFD700]/10 text-[#FFD700] text-xs font-semibold">
+                            {member.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      {/* Online indicator */}
+                      {showOnlineStatus && member.isOnline && (
+                        <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#0c0c0c] bg-green-500" />
+                      )}
+                    </div>
 
-SpaceMembersPanel.displayName = 'SpaceMembersPanel';
+                    {/* Name */}
+                    <p className="mt-1.5 text-xs font-medium text-white text-center line-clamp-1 w-full">
+                      {member.name.split(" ")[0]}
+                    </p>
+
+                    {/* Role badge (if not regular member) */}
+                    {member.role && member.role !== "member" && (
+                      <Badge
+                        variant={getRoleBadgeVariant(member.role)}
+                        className="mt-1 text-[10px] h-4 px-1.5 capitalize"
+                      >
+                        {member.role}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* View All Button */}
+              {(onViewAll || onAction) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleViewAll}
+                  disabled={isLoading}
+                  className="w-full mt-2 transition-all duration-[400ms]"
+                >
+                  {hasMore ? `View All ${totalCount} Members` : "View All Members"}
+                  <svg className="h-3.5 w-3.5 ml-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                </Button>
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
+)
+
+SpaceMembersPanel.displayName = "SpaceMembersPanel"
+
+export { SpaceMembersPanel }

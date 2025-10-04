@@ -93,7 +93,7 @@ function generateStory(info: ComponentInfo): string {
   );
 
   // Replace placeholders
-  let story = template
+  const story = template
     .replace(/{{ComponentName}}/g, info.exportedName)
     .replace(/{{component-name}}/g, info.fileName)
     .replace(/{{Category}}/g, info.category.charAt(0).toUpperCase() + info.category.slice(1))

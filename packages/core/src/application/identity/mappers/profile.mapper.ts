@@ -1,9 +1,9 @@
 import { Mapper } from '../../shared/Mapper.base';
-import { Profile } from '../../../domain/identity/aggregates/profile.aggregate';
+import { Profile } from '../../../domain/profile/aggregates/profile.aggregate';
 import { ProfileDTO } from '../dtos/profile.dto';
-import { UBEmail } from '../../../domain/identity/value-objects/ub-email.value';
-import { Handle } from '../../../domain/identity/value-objects/handle.value';
-import { PersonalInfo } from '../../../domain/identity/value-objects/personal-info.value';
+import { UBEmail } from '../../../domain/profile/value-objects/ub-email.value';
+import { Handle } from '../../../domain/profile/value-objects/handle.value';
+import { PersonalInfo } from '../../../domain/profile/value-objects/personal-info.value';
 import { Result } from '../../../domain/shared/base/Result';
 import { ProfileId } from '../../shared/temporary-types';
 

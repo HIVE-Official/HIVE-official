@@ -4,7 +4,7 @@
  */
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedProfile } from '../domain/profile/aggregates/enhanced-profile';
+import { Profile } from '../domain/profile/aggregates/profile.aggregate';
 export interface OnboardingData {
     email: string;
     handle: string;
@@ -18,7 +18,7 @@ export interface OnboardingData {
     profileImageUrl?: string;
 }
 export interface OnboardingResult {
-    profile: EnhancedProfile;
+    profile: Profile;
     suggestedSpaces: Array<{
         id: string;
         name: string;
@@ -44,7 +44,7 @@ export declare class ProfileOnboardingService extends BaseApplicationService {
      */
     updateOnboardingProgress(profileId: string, step: string, completed: boolean): Promise<Result<void>>;
     /**
-     * Get onboarding status
+     * Get onboarding status (delegates to domain logic)
      */
     getOnboardingStatus(profileId: string): Promise<Result<{
         isComplete: boolean;
@@ -58,8 +58,5 @@ export declare class ProfileOnboardingService extends BaseApplicationService {
     private initializeFeed;
     private getSuggestedSpaces;
     private joinDefaultSpaces;
-    private generateNextSteps;
-    private generateOnboardingWarnings;
-    private isOnboardingComplete;
 }
 //# sourceMappingURL=profile-onboarding.service.d.ts.map

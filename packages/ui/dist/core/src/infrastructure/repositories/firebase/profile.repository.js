@@ -5,7 +5,7 @@
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit as firestoreLimit, Timestamp } from 'firebase/firestore';
 import { db } from '@hive/firebase';
 import { Result } from '../../../domain/shared/base/Result';
-import { EnhancedProfile } from '../../../domain/profile/aggregates/enhanced-profile';
+import { Profile } from '../../../domain/profile/aggregates/profile.aggregate';
 import { ProfileId } from '../../../domain/profile/value-objects/profile-id.value';
 import { UBEmail } from '../../../domain/profile/value-objects';
 import { ProfileHandle } from '../../../domain/profile/value-objects/profile-handle.value';
@@ -201,7 +201,7 @@ export class FirebaseProfileRepository {
                 return Result.fail(userTypeResult.error);
             }
             // Create profile
-            const profile = EnhancedProfile.create({
+            const profile = Profile.create({
                 profileId: ProfileId.create(id).getValue(),
                 email: emailResult.getValue(),
                 handle: handleResult.getValue(),

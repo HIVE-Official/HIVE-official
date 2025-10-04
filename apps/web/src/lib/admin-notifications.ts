@@ -174,6 +174,7 @@ class AdminNotificationSystem {
       try {
         await this.sendToChannel(channel, notification);
       } catch (error) {
+        console.error(`Failed to send notification to channel ${channel.id}:`, error);
       }
     }
   }
@@ -220,6 +221,7 @@ class AdminNotificationSystem {
         }),
       });
     } catch (error) {
+      console.error('Failed to send Slack notification:', error);
     }
   }
 

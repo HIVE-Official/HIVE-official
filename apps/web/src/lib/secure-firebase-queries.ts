@@ -123,7 +123,7 @@ export async function getSecureSpacesWithCursor({
       hasMore
     };
   } catch (error) {
-    logger.error('Error in getSecureSpacesWithCursor:', error);
+    logger.error('Error in getSecureSpacesWithCursor:', { error: error instanceof Error ? error : new Error(String(error)) });
     return {
       spaces: [],
       nextCursor: undefined,

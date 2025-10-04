@@ -4,10 +4,11 @@
  */
 
 import { Result } from '../../domain/shared/base/Result';
-import { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profile';
+import { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 import { Connection } from '../../domain/profile/aggregates/connection';
-import { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual';
-import { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
+import { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
+import { Space } from '../../domain/spaces/aggregates/space.aggregate';
+import { Tool } from '../../domain/tools/aggregates/tool.aggregate';
 import { EnhancedFeed } from '../../domain/feed/enhanced-feed';
 import { Participation } from '../../domain/rituals/entities/participation';
 
@@ -19,17 +20,17 @@ export interface IRepository<T> {
 }
 
 // Profile repository
-export interface IProfileRepository extends IRepository<EnhancedProfile> {
-  findByEmail(email: string): Promise<Result<EnhancedProfile>>;
-  findByHandle(handle: string): Promise<Result<EnhancedProfile>>;
-  findByCampus(campusId: string, limit?: number): Promise<Result<EnhancedProfile[]>>;
-  findOnboardedProfiles(maxCount?: number): Promise<Result<EnhancedProfile[]>>;
-  findByInterest(interest: string, limitCount?: number): Promise<Result<EnhancedProfile[]>>;
-  findByMajor(major: string, limitCount?: number): Promise<Result<EnhancedProfile[]>>;
-  findConnectionsOf(profileId: string): Promise<Result<EnhancedProfile[]>>;
+export interface IProfileRepository extends IRepository<Profile> {
+  findByEmail(email: string): Promise<Result<Profile>>;
+  findByHandle(handle: string): Promise<Result<Profile>>;
+  findByCampus(campusId: string, limit?: number): Promise<Result<Profile[]>>;
+  findOnboardedProfiles(maxCount?: number): Promise<Result<Profile[]>>;
+  findByInterest(interest: string, limitCount?: number): Promise<Result<Profile[]>>;
+  findByMajor(major: string, limitCount?: number): Promise<Result<Profile[]>>;
+  findConnectionsOf(profileId: string): Promise<Result<Profile[]>>;
   getTotalCampusUsers(campusId: string): Promise<Result<number>>;
   exists(handle: string): Promise<boolean>;
-  searchByName(query: string, campusId: string): Promise<Result<EnhancedProfile[]>>;
+  searchByName(query: string, campusId: string): Promise<Result<Profile[]>>;
 }
 
 // Connection repository
@@ -40,19 +41,19 @@ export interface IConnectionRepository extends IRepository<Connection> {
 }
 
 // Space repository
-export interface ISpaceRepository extends IRepository<EnhancedSpace> {
-  findByName(name: string, campusId: string): Promise<Result<EnhancedSpace>>;
-  findByCampus(campusId: string, limit?: number): Promise<Result<EnhancedSpace[]>>;
-  findByCategory(category: string, campusId: string): Promise<Result<EnhancedSpace[]>>;
-  findByType(type: string, campusId: string): Promise<Result<EnhancedSpace[]>>;
-  findUserSpaces(userId: string): Promise<Result<EnhancedSpace[]>>;
-  findByMember(userId: string): Promise<Result<EnhancedSpace[]>>;
-  findPublicSpaces(campusId: string, limit?: number): Promise<Result<EnhancedSpace[]>>;
-  findPublicEnhancedSpaces(campusId: string, limit?: number): Promise<Result<EnhancedSpace[]>>;
-  findTrending(campusId: string, limit?: number): Promise<Result<EnhancedSpace[]>>;
-  findRecommended(campusId: string, interests: string[], major?: string): Promise<Result<EnhancedSpace[]>>;
-  searchSpaces(query: string, campusId: string): Promise<Result<EnhancedSpace[]>>;
-  searchEnhancedSpaces(query: string, campusId: string): Promise<Result<EnhancedSpace[]>>;
+export interface ISpaceRepository extends IRepository<Space> {
+  findByName(name: string, campusId: string): Promise<Result<Space>>;
+  findByCampus(campusId: string, limit?: number): Promise<Result<Space[]>>;
+  findByCategory(category: string, campusId: string): Promise<Result<Space[]>>;
+  findByType(type: string, campusId: string): Promise<Result<Space[]>>;
+  findUserSpaces(userId: string): Promise<Result<Space[]>>;
+  findByMember(userId: string): Promise<Result<Space[]>>;
+  findPublicSpaces(campusId: string, limit?: number): Promise<Result<Space[]>>;
+  findPublicSpaces(campusId: string, limit?: number): Promise<Result<Space[]>>;
+  findTrending(campusId: string, limit?: number): Promise<Result<Space[]>>;
+  findRecommended(campusId: string, interests: string[], major?: string): Promise<Result<Space[]>>;
+  searchSpaces(query: string, campusId: string): Promise<Result<Space[]>>;
+  searchSpaces(query: string, campusId: string): Promise<Result<Space[]>>;
 }
 
 // Feed repository
@@ -81,18 +82,32 @@ export interface IFeedRepository extends IRepository<EnhancedFeed> {
 }
 
 // Ritual repository
-export interface IRitualRepository extends IRepository<EnhancedRitual> {
-  findByCampus(campusId: string): Promise<Result<EnhancedRitual[]>>;
-  findActive(campusId: string): Promise<Result<EnhancedRitual[]>>;
-  findByType(type: string, campusId: string): Promise<Result<EnhancedRitual[]>>;
-  findActiveByType(type: string, campusId: string): Promise<Result<EnhancedRitual>>;
-  findUserRituals(userId: string): Promise<Result<EnhancedRitual[]>>;
+export interface IRitualRepository extends IRepository<Ritual> {
+  findByCampus(campusId: string): Promise<Result<Ritual[]>>;
+  findActive(campusId: string): Promise<Result<Ritual[]>>;
+  findByType(type: string, campusId: string): Promise<Result<Ritual[]>>;
+  findActiveByType(type: string, campusId: string): Promise<Result<Ritual>>;
+  findUserRituals(userId: string): Promise<Result<Ritual[]>>;
   findParticipation(ritualId: any, profileId: any): Promise<Result<Participation>>;
   saveParticipation(participation: Participation): Promise<Result<void>>;
   findLeaderboard(ritualId: any, limit: number): Promise<Result<Participation[]>>;
-  findByParticipant(profileId: any): Promise<Result<EnhancedRitual[]>>;
-  subscribeToRitual(ritualId: any, callback: (ritual: EnhancedRitual) => void): () => void;
-  subscribeToActiveRituals(campusId: string, callback: (rituals: EnhancedRitual[]) => void): () => void;
+  findByParticipant(profileId: any): Promise<Result<Ritual[]>>;
+  subscribeToRitual(ritualId: any, callback: (ritual: Ritual) => void): () => void;
+  subscribeToActiveRituals(campusId: string, callback: (rituals: Ritual[]) => void): () => void;
+}
+
+// Tool repository (HiveLab)
+export interface IToolRepository extends IRepository<Tool> {
+  findByCreator(profileId: string): Promise<Result<Tool[]>>;
+  findBySpace(spaceId: string): Promise<Result<Tool[]>>;
+  findByStatus(status: string, campusId: string): Promise<Result<Tool[]>>;
+  findByVisibility(visibility: string, campusId: string): Promise<Result<Tool[]>>;
+  findPublished(campusId: string, limit?: number): Promise<Result<Tool[]>>;
+  findDeployedToSpace(spaceId: string): Promise<Result<Tool[]>>;
+  findTrending(campusId: string, limit?: number): Promise<Result<Tool[]>>;
+  findForkableTools(campusId: string): Promise<Result<Tool[]>>;
+  searchTools(query: string, campusId: string): Promise<Result<Tool[]>>;
+  recordUse(toolId: string): Promise<Result<void>>;
 }
 
 // Unit of Work for transaction management
@@ -102,6 +117,7 @@ export interface IUnitOfWork {
   spaces: ISpaceRepository;
   feeds: IFeedRepository;
   rituals: IRitualRepository;
+  tools: IToolRepository;
 
   begin(): Promise<void>;
   commit(): Promise<void>;

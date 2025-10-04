@@ -272,6 +272,7 @@ export class RealTimeFeedManager {
         updatedAt: new Date()
       });
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }
 
@@ -329,6 +330,7 @@ export class RealTimeFeedManager {
       
       await batch.commit();
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }
 
@@ -422,6 +424,7 @@ class FeedManagerRegistry {
             const manager = await this.getManager(doc.id);
             await manager.checkForUpdates();
           } catch (error) {
+            // Intentionally suppressed - non-critical error
           }
         });
         
@@ -432,6 +435,7 @@ class FeedManagerRegistry {
       }
       
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }
 }

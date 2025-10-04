@@ -1,135 +1,203 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './input';
+import { Label } from './label';
+import { Search, Mail, Lock } from 'lucide-react';
 
-/**
- * Input component from HIVE design system
- *
- * HIVE Design System Story
- * All UI/UX built in Storybook first
- */
-
-// REQUIRED: Meta configuration following HIVE standards
 const meta = {
   title: 'Atoms/Input',
   component: Input,
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: 'Input component from HIVE design system. Built with HIVE design system standards: CVA variants, mobile-first sizing (44px minimum touch targets), HIVE CSS variables, React.forwardRef pattern.',
-      },
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'dark', value: '#000000' },
+      ],
     },
   },
-  tags: ['autodocs'], // REQUIRED: Enables automatic prop documentation
-  argTypes: {
-    variant: {
-      control: 'select',
-      description: 'Visual variant of the component',
-    },
-    size: {
-      control: 'select',
-      description: 'Size variant (all sizes are mobile-friendly with 44px+ touch targets)',
-    },
-  },
+  tags: ['autodocs'],
 } satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// REQUIRED: Default story showing base component
 export const Default: Story = {
   args: {
-    children: 'Default Input',
+    placeholder: 'Type here...',
   },
 };
 
-// REQUIRED: Show all variants if component has variants
-export const AllVariants: Story = {
-  render: () => (
-    <div className="flex gap-4 flex-wrap items-center">
-      <Input variant="default">Default</Input>
-      <Input variant="secondary">Secondary</Input>
-      <Input variant="outline">Outline</Input>
-      <Input variant="ghost">Ghost</Input>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'All available variants following HIVE design system.',
-      },
-    },
-  },
-};
-
-// REQUIRED: Show all sizes
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex gap-4 items-center">
-      <Input size="sm">Small</Input>
-      <Input size="default">Default</Input>
-      <Input size="lg">Large</Input>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Size variants. All sizes maintain 44px+ minimum for mobile touch targets.',
-      },
-    },
-  },
-};
-
-// REQUIRED: Interactive states (hover, focus, disabled)
-export const States: Story = {
-  render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <Input>Default</Input>
-      <Input className="hover:opacity-80">Hover State</Input>
-      <Input disabled>Disabled</Input>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Interactive states. Focus states use HIVE brand primary color for consistency.',
-      },
-    },
-  },
-};
-
-// RECOMMENDED: Responsive examples
-export const Responsive: Story = {
-  render: () => (
-    <div className="w-full max-w-sm">
-      <Input className="w-full">Full Width</Input>
-    </div>
-  ),
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile',
-    },
-    docs: {
-      description: {
-        story: 'Component behavior on mobile viewports. HIVE components are mobile-first by design.',
-      },
-    },
-  },
-};
-
-// RECOMMENDED: Dark theme demonstration (default for HIVE)
-export const DarkTheme: Story = {
+export const WithValue: Story = {
   args: {
-    children: 'Dark Theme (HIVE Default)',
+    defaultValue: 'Example text value',
   },
-  parameters: {
-    backgrounds: {
-      default: 'hive-dark',
-    },
-    docs: {
-      description: {
-        story: 'Component in dark theme (HIVE default). Uses CSS variables for consistent theming.',
-      },
-    },
+};
+
+export const Disabled: Story = {
+  args: {
+    placeholder: 'Disabled input',
+    disabled: true,
   },
+};
+
+export const AllInputTypes: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 p-8 w-[400px]">
+      <div className="space-y-2">
+        <Label className="text-white/70">Text Input</Label>
+        <Input type="text" placeholder="Enter your name" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">Email Input</Label>
+        <Input type="email" placeholder="you@buffalo.edu" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">Password Input</Label>
+        <Input type="password" placeholder="Enter password" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">Number Input</Label>
+        <Input type="number" placeholder="0" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">URL Input</Label>
+        <Input type="url" placeholder="https://example.com" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">Date Input</Label>
+        <Input type="date" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white/70">Time Input</Label>
+        <Input type="time" />
+      </div>
+    </div>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 p-8 w-[400px]">
+      {/* Search with icon */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+        <Input className="pl-10" placeholder="Search spaces..." />
+      </div>
+
+      {/* Email with icon */}
+      <div className="relative">
+        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+        <Input className="pl-10" type="email" placeholder="you@buffalo.edu" />
+      </div>
+
+      {/* Password with icon */}
+      <div className="relative">
+        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+        <Input className="pl-10" type="password" placeholder="Enter password" />
+      </div>
+    </div>
+  ),
+};
+
+export const RealWorldExamples: Story = {
+  name: 'Real-world Forms',
+  render: () => (
+    <div className="flex flex-col gap-8 p-8 w-[450px]">
+      {/* Profile edit form */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-white">Edit Profile</h3>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Display Name</Label>
+          <Input defaultValue="Sarah Chen" />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Handle</Label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-white/40">@</span>
+            <Input className="pl-6" defaultValue="sarahchen" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Bio</Label>
+          <Input placeholder="Tell us about yourself..." />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Major</Label>
+          <Input defaultValue="Computer Science" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm text-white/70">Year</Label>
+            <Input defaultValue="Junior" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm text-white/70">Graduation</Label>
+            <Input type="number" defaultValue="2026" />
+          </div>
+        </div>
+      </div>
+
+      {/* Space creation form */}
+      <div className="space-y-4 pt-8 border-t border-white/8">
+        <h3 className="text-lg font-semibold text-white">Create a Space</h3>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Space Name</Label>
+          <Input placeholder="e.g., UB Study Group" />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Category</Label>
+          <Input placeholder="e.g., Academic" />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Description</Label>
+          <Input placeholder="What's this space about?" />
+        </div>
+      </div>
+
+      {/* Event creation */}
+      <div className="space-y-4 pt-8 border-t border-white/8">
+        <h3 className="text-lg font-semibold text-white">Create Event</h3>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Event Title</Label>
+          <Input placeholder="e.g., Hackathon Kickoff" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm text-white/70">Date</Label>
+            <Input type="date" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm text-white/70">Time</Label>
+            <Input type="time" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Location</Label>
+          <Input placeholder="e.g., Davis Hall 3rd Floor" />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-sm text-white/70">Capacity</Label>
+          <Input type="number" placeholder="Max attendees (optional)" />
+        </div>
+      </div>
+    </div>
+  ),
 };

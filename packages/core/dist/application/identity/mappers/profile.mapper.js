@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileMapper = void 0;
 const Mapper_base_1 = require("../../shared/Mapper.base");
-const profile_aggregate_1 = require("../../../domain/identity/aggregates/profile.aggregate");
-const ub_email_value_1 = require("../../../domain/identity/value-objects/ub-email.value");
-const handle_value_1 = require("../../../domain/identity/value-objects/handle.value");
-const personal_info_value_1 = require("../../../domain/identity/value-objects/personal-info.value");
+const profile_aggregate_1 = require("../../../domain/profile/aggregates/profile.aggregate");
+const ub_email_value_1 = require("../../../domain/profile/value-objects/ub-email.value");
+const handle_value_1 = require("../../../domain/profile/value-objects/handle.value");
+const personal_info_value_1 = require("../../../domain/profile/value-objects/personal-info.value");
 const temporary_types_1 = require("../../shared/temporary-types");
 class ProfileMapper extends Mapper_base_1.Mapper {
     toDTO(profile) {

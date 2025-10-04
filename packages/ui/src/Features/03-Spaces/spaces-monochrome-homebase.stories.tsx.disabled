@@ -1,0 +1,434 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { JoinedSpaceCard } from "../../atomic/molecules/joined-space-card";
+import { DiscoverableSpaceCard } from "../../atomic/molecules/discoverable-space-card";
+import { SpaceCategoryAccordion } from "../../atomic/organisms/space-category-accordion";
+import { Accordion } from "../../atomic/atoms/accordion";
+import { Input } from "../../atomic/atoms/input";
+import { Button } from "../../atomic/atoms/button";
+import { Separator } from "../../atomic/atoms/separator";
+import { Search, Plus, Shield, Users, Home, Building2 } from "lucide-react";
+
+/**
+ * # Spaces Homebase (Monochrome)
+ *
+ * Built entirely on shadcn/ui primitives with HIVE's design system.
+ * No custom colors - uses monochrome + gold accent from hive-theme.ts.
+ *
+ * ## Design System Compliance
+ * - **Components**: shadcn Card, Accordion, Button, Separator
+ * - **Colors**: Monochrome backgrounds (#000, #121212) + gold accent (#FFD700)
+ * - **Motion**: Apple-inspired timing (250ms fast, 400ms normal)
+ * - **Shadows**: 3-level depth system from hive-theme.ts
+ * - **Typography**: Geist Sans with HIVE hierarchy
+ *
+ * ## Component Strategy
+ * - **JoinedSpaceCard**: For "My Spaces" (vertical layout, unread badges, gold hover)
+ * - **DiscoverableSpaceCard**: For discovery (horizontal layout, join CTA)
+ * - **SpaceCategoryAccordion**: Built on shadcn Accordion (collapsible categories)
+ *
+ * ## Visual Differentiation (without new colors)
+ * - **Layout patterns**: Vertical vs horizontal cards
+ * - **Strategic gold**: Hover states, primary buttons, unread counts
+ * - **Motion hierarchy**: Lift on hover, smooth transitions
+ * - **Content structure**: Different information density for joined vs discoverable
+ * - **Accordion pattern**: Native shadcn component for collapse behavior
+ *
+ * ## SPEC.md Compliance
+ * - 4 categories in UI: university_org | student_org | residential | greek_life
+ * - Smart recommendations: student_org only (✨ For You badge)
+ * - My Spaces: Always visible at top
+ * - Categories: Collapsible via Accordion
+ */
+const meta = {
+  title: "03-Spaces/Spaces Homebase (Monochrome)",
+  parameters: {
+    layout: "fullscreen",
+  },
+  tags: ["autodocs"],
+} satisfies Meta;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// My Spaces (joined spaces)
+const mySpaces = [
+  {
+    id: "1",
+    title: "CS Study Group",
+    description: "Weekly study sessions for Computer Science students. Collaborate on assignments and projects.",
+    memberCount: 143,
+    unreadCount: 5,
+  },
+  {
+    id: "2",
+    title: "Ellicott Complex",
+    description: "Connect with residents across all Ellicott halls. Events, meetups, and community building.",
+    memberCount: 892,
+    coverImage: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop",
+  },
+  {
+    id: "3",
+    title: "UB Student Association",
+    description: "Official student government for University at Buffalo. Your voice in university decisions.",
+    memberCount: 1234,
+    coverImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop",
+    unreadCount: 12,
+  },
+];
+
+// University Organizations
+const universityOrgSpaces = [
+  {
+    id: "4",
+    title: "UB Sustainability Council",
+    description: "Leading campus environmental initiatives. Join us in making UB greener.",
+    memberCount: 234,
+  },
+  {
+    id: "5",
+    title: "Campus Dining Committee",
+    description: "Help improve dining services across campus. Meet monthly to discuss menu options.",
+    memberCount: 89,
+  },
+  {
+    id: "6",
+    title: "Student Legal Services",
+    description: "Free legal advice and representation for UB students on campus-related matters.",
+    memberCount: 45,
+    coverImage: "https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=400&h=300&fit=crop",
+  },
+];
+
+// Student Organizations
+const studentOrgSpaces = [
+  {
+    id: "7",
+    title: "Pre-Med Society",
+    description: "Resources, mentorship, and networking for pre-medical students at UB.",
+    memberCount: 567,
+    coverImage: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop",
+  },
+  {
+    id: "8",
+    title: "Photography Club",
+    description: "Capture campus life through your lens. Weekly photo walks and portfolio reviews.",
+    memberCount: 92,
+  },
+  {
+    id: "9",
+    title: "Intramural Sports",
+    description: "Casual sports games and tournaments. Basketball, soccer, volleyball, and more.",
+    memberCount: 412,
+  },
+  {
+    id: "10",
+    title: "Debate Team",
+    description: "Competitive debate and public speaking. Travel to tournaments across the Northeast.",
+    memberCount: 34,
+    coverImage: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=300&fit=crop",
+  },
+];
+
+// Residential Communities
+const residentialSpaces = [
+  {
+    id: "11",
+    title: "Goodyear Hall",
+    description: "Your Goodyear community space. Share resources, organize study groups, and make friends.",
+    memberCount: 234,
+  },
+  {
+    id: "12",
+    title: "Governors Complex",
+    description: "Governors residents unite! Hall activities, events, and peer support.",
+    memberCount: 456,
+    coverImage: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400&h=300&fit=crop",
+  },
+];
+
+// Greek Life
+const greekLifeSpaces = [
+  {
+    id: "13",
+    title: "IFC - Interfraternity Council",
+    description: "Coordinating activities and governance for UB fraternities.",
+    memberCount: 234,
+  },
+  {
+    id: "14",
+    title: "Panhellenic Association",
+    description: "UB's sorority governing body. Events, recruitment, and sisterhood.",
+    memberCount: 198,
+  },
+];
+
+/**
+ * Complete Homebase with Monochrome Design System
+ */
+export const CompleteHomebase: Story = {
+  render: () => {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-xl border-b">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight">
+                  Spaces
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Your campus communities
+                </p>
+              </div>
+
+              {/* Search + Create */}
+              <div className="flex items-center gap-3">
+                <div className="relative flex-1 lg:w-96">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" aria-hidden="true" />
+                  <Input
+                    placeholder="Search spaces..."
+                    className="pl-10"
+                  />
+                </div>
+
+                <Button size="icon" variant="outline">
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
+          {/* My Spaces - Always Visible */}
+          <section className="space-y-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">My Spaces</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Quick access to your communities
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mySpaces.map((space) => (
+                <JoinedSpaceCard
+                  key={space.id}
+                  {...space}
+                  onClick={() => console.log(`Navigate to ${space.id}`)}
+                />
+              ))}
+            </div>
+          </section>
+
+          <Separator className="my-8" />
+
+          {/* Browse Categories - Accordion Pattern */}
+          <section className="space-y-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Browse Categories</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Click to expand and explore spaces
+              </p>
+            </div>
+
+            <Accordion type="multiple" className="space-y-4" defaultValue={["student_org"]}>
+              {/* University Organizations */}
+              <SpaceCategoryAccordion
+                value="university_org"
+                icon={Shield}
+                title="University Organizations"
+                subtitle="Official UB orgs and student government"
+                count={universityOrgSpaces.length}
+              >
+                <div className="grid grid-cols-1 gap-4">
+                  {universityOrgSpaces.map((space) => (
+                    <DiscoverableSpaceCard
+                      key={space.id}
+                      {...space}
+                      onClick={() => console.log(`Navigate to ${space.id}`)}
+                      onJoin={() => console.log(`Join ${space.id}`)}
+                    />
+                  ))}
+                </div>
+              </SpaceCategoryAccordion>
+
+              {/* Student Organizations - Smart Recommendations */}
+              <SpaceCategoryAccordion
+                value="student_org"
+                icon={Users}
+                title="Student Organizations"
+                subtitle="Smart recommendations based on your interests"
+                count={studentOrgSpaces.length}
+                isRecommended={true}
+              >
+                <div className="grid grid-cols-1 gap-4">
+                  {studentOrgSpaces.map((space) => (
+                    <DiscoverableSpaceCard
+                      key={space.id}
+                      {...space}
+                      onClick={() => console.log(`Navigate to ${space.id}`)}
+                      onJoin={() => console.log(`Join ${space.id}`)}
+                    />
+                  ))}
+                </div>
+              </SpaceCategoryAccordion>
+
+              {/* Residential Communities */}
+              <SpaceCategoryAccordion
+                value="residential"
+                icon={Home}
+                title="Residential Communities"
+                subtitle="Connect with your residence hall"
+                count={residentialSpaces.length}
+              >
+                <div className="grid grid-cols-1 gap-4">
+                  {residentialSpaces.map((space) => (
+                    <DiscoverableSpaceCard
+                      key={space.id}
+                      {...space}
+                      onClick={() => console.log(`Navigate to ${space.id}`)}
+                      onJoin={() => console.log(`Join ${space.id}`)}
+                    />
+                  ))}
+                </div>
+              </SpaceCategoryAccordion>
+
+              {/* Greek Life */}
+              <SpaceCategoryAccordion
+                value="greek_life"
+                icon={Building2}
+                title="Greek Life"
+                subtitle="Fraternities, sororities, and councils"
+                count={greekLifeSpaces.length}
+              >
+                <div className="grid grid-cols-1 gap-4">
+                  {greekLifeSpaces.map((space) => (
+                    <DiscoverableSpaceCard
+                      key={space.id}
+                      {...space}
+                      onClick={() => console.log(`Navigate to ${space.id}`)}
+                      onJoin={() => console.log(`Join ${space.id}`)}
+                    />
+                  ))}
+                </div>
+              </SpaceCategoryAccordion>
+            </Accordion>
+          </section>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Card Variants Comparison
+ */
+export const CardVariants: Story = {
+  render: () => {
+    return (
+      <div className="p-8 bg-background">
+        <div className="max-w-6xl mx-auto space-y-12">
+          {/* Joined Space Cards (Vertical Layout) */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">Joined Space Cards (Vertical)</h2>
+            <p className="text-sm text-muted-foreground">
+              For "My Spaces" section - spaces user has joined
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <JoinedSpaceCard
+                title="CS Study Group"
+                description="Weekly study sessions for Computer Science students."
+                memberCount={143}
+                unreadCount={5}
+              />
+
+              <JoinedSpaceCard
+                title="Ellicott Complex"
+                description="Connect with residents across all Ellicott halls."
+                memberCount={892}
+                coverImage="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop"
+              />
+
+              <JoinedSpaceCard
+                title="UB Student Association"
+                description="Official student government for University at Buffalo."
+                memberCount={1234}
+                coverImage="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop"
+                unreadCount={12}
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Discoverable Space Cards (Horizontal Layout) */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">Discoverable Space Cards (Horizontal)</h2>
+            <p className="text-sm text-muted-foreground">
+              For discovery/browse - spaces user hasn't joined
+            </p>
+
+            <div className="grid grid-cols-1 gap-4">
+              <DiscoverableSpaceCard
+                title="Pre-Med Society"
+                description="Resources, mentorship, and networking for pre-medical students at UB."
+                memberCount={567}
+                coverImage="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop"
+              />
+
+              <DiscoverableSpaceCard
+                title="Photography Club"
+                description="Capture campus life through your lens. Weekly photo walks and portfolio reviews."
+                memberCount={92}
+              />
+
+              <DiscoverableSpaceCard
+                title="Intramural Sports"
+                description="Casual sports games and tournaments. Basketball, soccer, volleyball, and more."
+                memberCount={412}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Single Category Expanded
+ */
+export const SingleCategory: Story = {
+  render: () => {
+    return (
+      <div className="p-8 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <Accordion type="single" collapsible defaultValue="student_org">
+            <SpaceCategoryAccordion
+              value="student_org"
+              icon={Users}
+              title="Student Organizations"
+              subtitle="Smart recommendations based on your interests"
+              count={studentOrgSpaces.length}
+              isRecommended={true}
+            >
+              <div className="grid grid-cols-1 gap-4">
+                {studentOrgSpaces.map((space) => (
+                  <DiscoverableSpaceCard
+                    key={space.id}
+                    {...space}
+                    onClick={() => console.log(`Navigate to ${space.id}`)}
+                    onJoin={() => console.log(`Join ${space.id}`)}
+                  />
+                ))}
+              </div>
+            </SpaceCategoryAccordion>
+          </Accordion>
+        </div>
+      </div>
+    );
+  },
+};

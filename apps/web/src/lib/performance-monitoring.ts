@@ -306,6 +306,7 @@ export class HivePerformanceCollector {
         const metrics = collector();
         collectedMetrics.push(...metrics);
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
 
@@ -361,6 +362,7 @@ export class HivePerformanceCollector {
         const truncated = queue.slice(-500);
         localStorage.setItem('hive_metrics_queue', JSON.stringify(truncated));
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }
@@ -606,6 +608,7 @@ class PerformanceMonitor {
     } catch (error) {
       // Silently fail in production
       if (process.env.NODE_ENV === 'development') {
+        console.error('Performance monitoring error:', error);
       }
     }
   }

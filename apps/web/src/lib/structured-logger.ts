@@ -77,7 +77,7 @@ class StructuredLogger {
 
     // In development, output to console with color coding
     if (this.isDevelopment) {
-      const level = logObject.level;
+      const level = String(logObject.level);
       const color = this.getConsoleColor(level);
 
       // eslint-disable-next-line no-console
@@ -272,21 +272,28 @@ export const logApiRequest = (
 ) => logger.logApiRequest(method, path, statusCode, duration, userId);
 
 // Security event logging
-export const logSecurityEvent = (
+export const logSecurityEvent = async (
   eventType: string,
-  message: string,
   context?: LogContext & {
     severity?: 'low' | 'medium' | 'high' | 'critical';
     ipAddress?: string;
     userAgent?: string;
     endpoint?: string;
+    operation?: string;
+    requestId?: string;
+    ip?: string;
+    tags?: Record<string, string>;
+    extra?: Record<string, unknown>;
   }
 ) => {
+  const message = context?.operation || eventType;
   const securityContext = {
     ...context,
     action: `security_${eventType}`,
     metadata: {
       ...context?.metadata,
+      ...context?.tags,
+      ...context?.extra,
       securityEvent: true,
       eventType,
       severity: context?.severity || 'medium',

@@ -12,12 +12,16 @@ const config: StorybookConfig = {
     '../src/00-Design-System/**/*.stories.@(js|jsx|ts|tsx)',
 
     // 🎯 FEATURES - Product-organized view (vertical slices)
-    '../src/features/**/*.mdx',
-    '../src/features/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/Features/**/*.mdx',
+    '!../src/Features/**/Overview.mdx', // Temporarily excluded due to MDX parsing issue
+    '../src/Features/**/*.stories.@(js|jsx|ts|tsx)',
 
-    // 🧱 ATOMIC DESIGN - Technical view (legacy/reference)
-    // Keep for component source reference
-    // '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
+    // 🧱 ATOMIC DESIGN - Technical view (component library)
+    // shadcn/ui primitives with comprehensive examples
+    // IMPORTANT: Explicitly exclude backup directories
+    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
+    '!../src/atomic.backup/**',
+    '!../src/**/*.backup/**',
   ],
   addons: [
     '@storybook/addon-links',
@@ -56,6 +60,14 @@ const config: StorybookConfig = {
   },
   viteFinal: (config) => {
     return mergeConfig(config, {
+      css: {
+        postcss: {
+          plugins: [
+            require('tailwindcss'),
+            require('autoprefixer'),
+          ],
+        },
+      },
       define: {
         global: 'globalThis',
         'process.env': '{}',

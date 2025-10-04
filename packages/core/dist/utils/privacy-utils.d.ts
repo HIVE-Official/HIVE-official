@@ -57,7 +57,7 @@ export declare const privacyUtils: PrivacyUtils;
 export declare function usePrivacyUtils(): PrivacyUtils;
 export declare function withPrivacyCheck<T extends {
     userId?: string;
-}>(Component: React.ComponentType<T>): (props: T) => import("react/jsx-runtime").JSX.Element;
+}>(Component: React.ComponentType<T>): (props: T) => any;
 export declare const privacyPresets: {
     open: {
         ghostMode: {

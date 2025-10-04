@@ -52,6 +52,7 @@ export async function initializeErrorMonitoring(): Promise<void> {
     
     if (!sentryDsn) {
       if (currentEnvironment === 'production') {
+        console.warn('Sentry DSN not configured in production environment');
       }
       // Silent in development - no need to log missing Sentry config
       isInitialized = true;

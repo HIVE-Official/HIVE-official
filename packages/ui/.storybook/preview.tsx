@@ -107,6 +107,22 @@ const preview: Preview = {
           styles: { width: '414px', height: '896px' },
           type: 'mobile',
         },
+        // MacBook screen sizes for adaptive testing
+        macbookAir13: {
+          name: 'MacBook Air 13"',
+          styles: { width: '1280px', height: '800px' },
+          type: 'desktop',
+        },
+        macbookPro14: {
+          name: 'MacBook Pro 14"',
+          styles: { width: '1512px', height: '982px' },
+          type: 'desktop',
+        },
+        macbookPro16: {
+          name: 'MacBook Pro 16"',
+          styles: { width: '1728px', height: '1117px' },
+          type: 'desktop',
+        },
       },
     },
     docs: {
@@ -127,8 +143,8 @@ const preview: Preview = {
         appBorderRadius: 8,
         
         // Typography
-        fontBase: '"Geist Sans", system-ui, sans-serif',
-        fontCode: '"JetBrains Mono", monospace',
+        fontBase: 'var(--font-geist-sans), system-ui, sans-serif',
+        fontCode: 'var(--font-geist-mono), monospace',
         
         // Text colors
         textColor: '#E5E5E7',
@@ -197,24 +213,47 @@ const preview: Preview = {
 
       return (
         <MockDataContext.Provider value={mockData}>
-          <MotionConfig 
-            transition={{ 
-              type: "spring", 
-              stiffness: 400, 
+          <MotionConfig
+            transition={{
+              type: "spring",
+              stiffness: 400,
               damping: 25,
               mass: 0.8
             }}
             reducedMotion="user"
           >
-            <div className="min-h-screen bg-[#0A0A0B] text-[#E5E5E7] antialiased font-sans">
+            <div className="dark min-h-screen bg-[#0A0A0B] text-[#E5E5E7] antialiased">
               <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-                .font-sans { font-family: 'Geist Sans', system-ui, sans-serif; }
-                .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+                :root {
+                  --font-geist-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+                  --font-geist-mono: ui-monospace, 'SF Mono', 'Monaco', 'Cascadia Mono', 'Segoe UI Mono', monospace;
+                }
+
+                body {
+                  font-family: var(--font-geist-sans);
+                  font-feature-settings: 'cv11', 'ss01';
+                  font-optical-sizing: auto;
+                }
+
+                .font-sans {
+                  font-family: var(--font-geist-sans);
+                }
+
+                .font-display {
+                  font-family: var(--font-geist-sans);
+                  font-weight: 600;
+                }
+
+                .font-mono {
+                  font-family: var(--font-geist-mono);
+                }
               `}</style>
-              <div 
+              <div
                 className="backdrop-blur-xl bg-gradient-to-br from-[#0A0A0B]/90 via-[#111113]/80 to-[#1A1A1C]/70"
                 style={{
+                  fontFamily: 'var(--font-geist-sans)',
                   backdropFilter: 'blur(12px) saturate(150%)',
                   WebkitBackdropFilter: 'blur(12px) saturate(150%)',
                 }}

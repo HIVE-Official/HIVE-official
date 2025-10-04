@@ -17,7 +17,6 @@ import {
   SelectContent,
   SelectItem,
 } from '../atomic/atoms';
-import { HiveButton } from '../atomic/atoms/hive-button';
 
 /**
  * # HIVE Design System 2.0
@@ -192,17 +191,7 @@ export const DesignSystemOverview: Story = {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium">HIVE Brand Extensions</p>
-                <div className="flex flex-wrap gap-2">
-                  <HiveButton variant="brand">Brand Gradient</HiveButton>
-                  <HiveButton variant="success">Success</HiveButton>
-                  <HiveButton variant="warning">Warning</HiveButton>
-                  <HiveButton loading>Loading...</HiveButton>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Sizes</p>
+                <p className="text-sm font-medium">Size Variants</p>
                 <div className="flex items-center flex-wrap gap-2">
                   <Button size="sm">Small</Button>
                   <Button size="default">Default</Button>

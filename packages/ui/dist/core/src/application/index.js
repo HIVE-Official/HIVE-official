@@ -16,6 +16,6 @@ export { SpaceDiscoveryService } from './space-discovery.service';
 // Feed domain services
 export { FeedGenerationService } from './feed-generation.service';
 // Ritual domain services
-export { EnhancedRitualParticipationService } from './ritual-participation.service';
+export { RitualParticipationService } from './ritual-participation.service';
 // Service Factory temporarily removed - will be rebuilt with proper DDD structure
 //# sourceMappingURL=index.js.map

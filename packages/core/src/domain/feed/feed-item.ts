@@ -90,6 +90,7 @@ export class FeedItem extends Entity<FeedItemProps> {
     isTrending?: boolean;
     isPinned?: boolean;
     expiresAt?: Date;
+    createdAt?: Date;
   }, id?: string): Result<FeedItem> {
     if (!props.content.text || props.content.text.trim().length === 0) {
       return Result.fail<FeedItem>('Feed item content text is required');
@@ -101,7 +102,7 @@ export class FeedItem extends Entity<FeedItemProps> {
       source: props.source,
       relevanceScore: props.relevanceScore || 1.0,
       interactions: [],
-      createdAt: new Date(),
+      createdAt: props.createdAt || new Date(),
       isVisible: props.isVisible !== false,
       isTrending: props.isTrending || false,
       isPinned: props.isPinned || false,
@@ -178,6 +179,7 @@ export class FeedItem extends Entity<FeedItemProps> {
         userId: i.userId.value,
         timestamp: i.timestamp
       })),
+      engagementCount: this.props.interactions.length, // Calculated from interactions
       createdAt: this.props.createdAt,
       isVisible: this.props.isVisible,
       isTrending: this.props.isTrending,

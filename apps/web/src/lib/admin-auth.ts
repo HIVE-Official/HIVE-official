@@ -53,6 +53,7 @@ export async function isAdmin(userId: string, userEmail?: string): Promise<boole
       return true;
     }
   } catch (error) {
+    console.error('Failed to check Firebase custom claims for admin:', error);
   }
 
   // Check Firestore admins collection
@@ -63,6 +64,7 @@ export async function isAdmin(userId: string, userEmail?: string): Promise<boole
       return true;
     }
   } catch (error) {
+    console.error('Failed to check Firestore admins collection:', error);
   }
 
   return false;
@@ -192,5 +194,6 @@ export async function logAdminActivity(
   try {
     // TODO: Implement admin activity logging to database
   } catch (error) {
+    console.error('Failed to log admin activity:', error);
   }
 }

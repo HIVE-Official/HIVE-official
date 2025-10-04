@@ -4,11 +4,10 @@
  */
 import { BaseApplicationService } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedProfile } from '../domain/profile/aggregates/enhanced-profile';
-import { UBEmail } from '../domain/identity/value-objects/ub-email.value';
+import { Profile } from '../domain/profile/aggregates/profile.aggregate';
+import { UBEmail } from '../domain/profile/value-objects/ub-email.value';
 import { ProfileHandle } from '../domain/profile/value-objects/profile-handle.value';
 import { ProfileId } from '../domain/profile/value-objects/profile-id.value';
-import { PersonalInfo } from '../domain/identity/value-objects/personal-info.value';
 import { getProfileRepository, getSpaceRepository, getFeedRepository } from '../infrastructure/repositories/factory';
 export class ProfileOnboardingService extends BaseApplicationService {
     constructor(context) {
@@ -45,8 +44,12 @@ export class ProfileOnboardingService extends BaseApplicationService {
             const suggestedSpaces = await this.getSuggestedSpaces(data.major, data.interests || []);
             // Step 6: Auto-join default spaces for new users
             await this.joinDefaultSpaces(profile);
-            // Step 7: Generate next steps for user
-            const nextSteps = this.generateNextSteps(profile, suggestedSpaces.getValue());
+            // Step 7: Generate next steps for user (using domain logic)
+            const spacesForNextSteps = suggestedSpaces.getValue().slice(0, 5).map(space => ({
+                id: space.id.id,
+                name: space.name.name
+            }));
+            const nextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
             const result = {
                 data: {
                     profile,
@@ -57,7 +60,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
                     })),
                     nextSteps
                 },
-                warnings: this.generateOnboardingWarnings(data)
+                warnings: profile.getOnboardingWarnings()
             };
             return Result.ok(result);
         }, 'ProfileOnboarding.completeOnboarding');
@@ -75,28 +78,19 @@ export class ProfileOnboardingService extends BaseApplicationService {
             const profile = profileResult.getValue();
             // Track onboarding progress (would be stored in metadata)
             console.log(`Onboarding progress for ${profileId}: ${step} = ${completed}`);
-            // Check if onboarding is complete
-            if (this.isOnboardingComplete(profile)) {
-                const personalInfoResult = PersonalInfo.create({
-                    firstName: profile.personalInfo.firstName || '',
-                    lastName: profile.personalInfo.lastName || '',
-                    bio: profile.personalInfo.bio || '',
-                    major: profile.personalInfo.major || '',
-                    graduationYear: profile.personalInfo.graduationYear || null,
-                    dorm: profile.personalInfo.dorm || ''
-                });
-                if (personalInfoResult.isSuccess) {
-                    const completeResult = profile.completeOnboarding(profile.personalInfo, profile.interests);
-                    if (completeResult.isSuccess) {
-                        await this.profileRepo.save(profile);
-                    }
+            // Check if onboarding is complete (using domain logic)
+            const onboardingStatus = profile.getOnboardingStatus();
+            if (onboardingStatus.isComplete && !profile.isOnboarded) {
+                const completeResult = profile.completeOnboarding(profile.personalInfo, profile.interests);
+                if (completeResult.isSuccess) {
+                    await this.profileRepo.save(profile);
                 }
             }
             return Result.ok();
         }, 'ProfileOnboarding.updateOnboardingProgress');
     }
     /**
-     * Get onboarding status
+     * Get onboarding status (delegates to domain logic)
      */
     async getOnboardingStatus(profileId) {
         return this.execute(async () => {
@@ -106,35 +100,16 @@ export class ProfileOnboardingService extends BaseApplicationService {
                 return Result.fail('Profile not found');
             }
             const profile = profileResult.getValue();
-            const profileData = profile.toData();
-            const requiredSteps = [
-                'email_verified',
-                'handle_set',
-                'basic_info',
-                'interests_selected',
-                'profile_photo',
-                'first_space_joined'
-            ];
-            const completedSteps = [];
-            if (profileData.email)
-                completedSteps.push('email_verified');
-            if (profileData.handle)
-                completedSteps.push('handle_set');
-            if (profileData.personalInfo.firstName)
-                completedSteps.push('basic_info');
-            if (profileData.interests.length > 0)
-                completedSteps.push('interests_selected');
-            if (profileData.photos.length > 0)
-                completedSteps.push('profile_photo');
-            // Would check space membership for 'first_space_joined'
-            const remainingSteps = requiredSteps.filter(step => !completedSteps.includes(step));
-            const percentComplete = Math.round((completedSteps.length / requiredSteps.length) * 100);
-            return Result.ok({
-                isComplete: profileData.isOnboarded,
-                completedSteps,
-                remainingSteps,
-                percentComplete
-            });
+            // Use domain logic
+            const domainStatus = profile.getOnboardingStatus();
+            // Map to service response format
+            const status = {
+                isComplete: domainStatus.isComplete,
+                completedSteps: domainStatus.completedSteps,
+                remainingSteps: domainStatus.remainingSteps,
+                percentComplete: domainStatus.completionPercentage
+            };
+            return Result.ok(status);
         }, 'ProfileOnboarding.getOnboardingStatus');
     }
     // Private helper methods
@@ -169,7 +144,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
         // Generate profile ID
         const profileId = ProfileId.create(`profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`).getValue();
         // Create profile
-        const profileResult = EnhancedProfile.create({
+        const profileResult = Profile.create({
             profileId: profileId,
             email: emailResult.getValue(),
             handle: handleResult.getValue(),
@@ -224,7 +199,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
             suggestions.push(...trendingSpaces.getValue());
         }
         // Deduplicate
-        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.spaceId.value, space])).values());
+        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values());
         return Result.ok(uniqueSpaces);
     }
     async joinDefaultSpaces(profile) {
@@ -239,62 +214,6 @@ export class ProfileOnboardingService extends BaseApplicationService {
                 console.error(`Failed to auto-join ${spaceName}:`, error);
             }
         }
-    }
-    generateNextSteps(profile, suggestedSpaces) {
-        const steps = [];
-        const profileData = profile.toDTO();
-        if (!profileData.personalInfo.profilePhoto) {
-            steps.push({
-                action: 'add_profile_photo',
-                description: 'Add a profile photo to help others recognize you',
-                priority: 1
-            });
-        }
-        if (profileData.interests.length < 3) {
-            steps.push({
-                action: 'add_interests',
-                description: 'Add more interests to get better space recommendations',
-                priority: 2
-            });
-        }
-        if (suggestedSpaces.length > 0) {
-            steps.push({
-                action: 'join_spaces',
-                description: `Join spaces like "${suggestedSpaces[0].name.name}" to connect with others`,
-                priority: 3
-            });
-        }
-        steps.push({
-            action: 'explore_feed',
-            description: 'Check out your personalized feed to see what\'s happening on campus',
-            priority: 4
-        });
-        steps.push({
-            action: 'connect_with_others',
-            description: 'Find and connect with classmates in your major',
-            priority: 5
-        });
-        return steps.sort((a, b) => a.priority - b.priority);
-    }
-    generateOnboardingWarnings(data) {
-        const warnings = [];
-        if (!data.bio) {
-            warnings.push('Adding a bio helps others learn more about you');
-        }
-        if (!data.major) {
-            warnings.push('Adding your major helps you find relevant study groups');
-        }
-        if (!data.interests || data.interests.length === 0) {
-            warnings.push('Adding interests improves your feed and space recommendations');
-        }
-        return warnings;
-    }
-    isOnboardingComplete(profile) {
-        const data = profile.toDTO();
-        return !!(data.handle &&
-            data.personalInfo.firstName &&
-            data.personalInfo.lastName &&
-            data.interests.length > 0);
     }
 }
 //# sourceMappingURL=profile-onboarding.service.js.map

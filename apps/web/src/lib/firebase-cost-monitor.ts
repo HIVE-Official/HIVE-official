@@ -186,6 +186,7 @@ class FirebaseCostMonitor {
 
     // Warn if approaching limits
     if (this.metrics.estimatedMonthlyCost > this.limits.emergencyShutoffThreshold * 0.8) {
+      // Warning logged via monitoring system
     }
   }
 

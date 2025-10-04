@@ -276,6 +276,7 @@ export default function FeedPage() {
     try {
       await likePost(postId);
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [likePost, trackReliefMoment]);
 
@@ -284,6 +285,7 @@ export default function FeedPage() {
     try {
       await commentOnPost(postId, content);
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [commentOnPost, trackReliefMoment]);
 
@@ -293,6 +295,7 @@ export default function FeedPage() {
       await sharePost(postId);
       // Show success message or handle share UI
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [sharePost, trackReliefMoment]);
 

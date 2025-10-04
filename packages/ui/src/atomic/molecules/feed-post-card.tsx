@@ -1,340 +1,439 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { useTouchGestures } from "@hive/hooks"
+import { Card } from "../atoms/card"
+import { Button } from "../atoms/button"
+import { Badge } from "../atoms/badge"
+import { Avatar } from "../atoms/avatar"
+import {
+  Heart,
+  MessageCircle,
+  Repeat2,
+  Quote,
+  Bookmark,
+  EyeOff,
+  MoreHorizontal,
+  TrendingUp,
+} from "lucide-react"
 
-/**
- * SKELETON COMPONENT - UI/UX TO BE DETERMINED
- *
- * Feed Post Card - Displays a single post in the feed
- *
- * Required sections:
- * - Author info (avatar, name, timestamp)
- * - Space badge (which space it's from)
- * - Content (text, media)
- * - Engagement stats (likes, comments, shares)
- * - Action buttons (like, comment, share, menu)
- */
-
-const feedPostCardVariants = cva(
-  // Base styles - minimal skeleton
-  'relative w-full border rounded-lg p-4 bg-[var(--hive-surface-primary)]',
-  {
-    variants: {
-      variant: {
-        default: 'border-[var(--hive-border-default)]',
-        highlighted: 'border-[var(--hive-brand-primary)] shadow-lg',
-      },
-      size: {
-        default: 'max-w-[600px]',
-        full: 'w-full',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
-    },
+export interface FeedPost {
+  id: string
+  content: string
+  author: {
+    name: string
+    handle: string
+    avatar?: string
   }
-);
-
-export interface FeedPostCardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof feedPostCardVariants> {
-  // Author
-  authorName?: string;
-  authorHandle?: string;
-  authorAvatar?: string;
-  timestamp?: string;
-
-  // Space info
-  spaceName?: string;
-  spaceIcon?: string;
-
-  // Content
-  contentType?: 'text' | 'image' | 'video' | 'link' | 'event' | 'poll';
-  textContent?: string;
-  images?: string[];
-  videoUrl?: string;
-  linkPreview?: {
-    title: string;
-    description: string;
-    image?: string;
-    url: string;
-  };
-
-  // Engagement
-  likeCount?: number;
-  commentCount?: number;
-  shareCount?: number;
-  isLiked?: boolean;
-
-  // States
-  isLoading?: boolean;
-  error?: string;
-
-  // Actions
-  onLike?: () => void;
-  onComment?: () => void;
-  onShare?: () => void;
-  onMenuClick?: () => void;
+  space: {
+    name: string
+    id: string
+    memberCount: number
+  }
+  timestamp: string // e.g., "2h ago", "Just now"
+  reactions: {
+    count: number
+    hasReacted: boolean
+    topEmoji?: string
+  }
+  comments: {
+    count: number
+    preview?: Array<{
+      author: string
+      text: string
+    }>
+  }
+  reposts: {
+    count: number
+    hasReposted: boolean
+  }
+  requotes: {
+    count: number
+  }
+  saves: {
+    count: number
+    hasSaved: boolean
+  }
+  isPromoted?: boolean
+  isTrending?: boolean
+  media?: {
+    type: "image" | "video"
+    url: string
+  }[]
+  requotedPost?: {
+    author: string
+    content: string
+    timestamp: string
+  }
+  friendActivity?: {
+    names: string[] // ["Jake", "Sarah", "Mike"]
+    action: "reacted" | "commented" | "reposted"
+  }
 }
 
-export const FeedPostCard = React.forwardRef<HTMLDivElement, FeedPostCardProps>(
+export interface FeedPostCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Post data */
+  post: FeedPost
+
+  /** React handler */
+  onReact?: (postId: string) => void
+
+  /** Comment handler */
+  onComment?: (postId: string) => void
+
+  /** Repost handler */
+  onRepost?: (postId: string) => void
+
+  /** Requote handler */
+  onRequote?: (postId: string) => void
+
+  /** Save handler */
+  onSave?: (postId: string) => void
+
+  /** Hide handler */
+  onHide?: (postId: string) => void
+
+  /** Space navigation handler */
+  onSpaceClick?: (spaceId: string) => void
+
+  /** Author profile handler */
+  onAuthorClick?: (handle: string) => void
+
+  /** Show compact version */
+  compact?: boolean
+
+  /** Enable mobile touch gestures */
+  enableMobileGestures?: boolean
+}
+
+const FeedPostCard = React.forwardRef<HTMLDivElement, FeedPostCardProps>(
   (
     {
       className,
-      variant,
-      size,
-      authorName = 'Author Name',
-      authorHandle = '@handle',
-      authorAvatar,
-      timestamp = '2h ago',
-      spaceName,
-      spaceIcon,
-      contentType = 'text',
-      textContent = 'This is placeholder post content. Actual UI/UX to be determined in Storybook.',
-      images = [],
-      videoUrl,
-      linkPreview,
-      likeCount = 0,
-      commentCount = 0,
-      shareCount = 0,
-      isLiked = false,
-      isLoading = false,
-      error,
-      onLike,
+      post,
+      onReact,
       onComment,
-      onShare,
-      onMenuClick,
+      onRepost,
+      onRequote,
+      onSave,
+      onHide,
+      onSpaceClick,
+      onAuthorClick,
+      compact = false,
+      enableMobileGestures = true,
       ...props
     },
     ref
   ) => {
-    if (isLoading) {
-      return (
-        <div
-          ref={ref}
-          className={cn(feedPostCardVariants({ variant, size }), className)}
-          {...props}
-        >
-          <div className="animate-pulse">
-            <div className="h-10 bg-[var(--hive-surface-secondary)] rounded mb-4" />
-            <div className="h-20 bg-[var(--hive-surface-secondary)] rounded mb-4" />
-            <div className="h-8 bg-[var(--hive-surface-secondary)] rounded" />
-          </div>
-        </div>
-      );
-    }
+    const [showFullContent, setShowFullContent] = React.useState(false)
+    const isLongContent = post.content.length > 280
 
-    if (error) {
-      return (
-        <div
-          ref={ref}
-          className={cn(
-            feedPostCardVariants({ variant, size }),
-            'border-[var(--hive-error)]',
-            className
-          )}
-          {...props}
-        >
-          <p className="text-[var(--hive-error)]">Error: {error}</p>
-        </div>
-      );
-    }
+    // Mobile touch gestures
+    const { touchHandlers, triggerHaptic } = useTouchGestures(
+      {
+        enableSwipe: enableMobileGestures,
+        enableLongPress: enableMobileGestures,
+        enableDoubleTap: enableMobileGestures,
+        swipeThreshold: 80,
+        longPressDuration: 600,
+      },
+      {
+        onSwipe: (data) => {
+          if (data.direction === 'right' && data.distance > 100) {
+            // Swipe right to save
+            triggerHaptic('light')
+            onSave?.(post.id)
+          } else if (data.direction === 'left' && data.distance > 100) {
+            // Swipe left to hide
+            triggerHaptic('light')
+            onHide?.(post.id)
+          }
+        },
+        onDoubleTap: () => {
+          // Double tap to react
+          triggerHaptic('medium')
+          onReact?.(post.id)
+        },
+        onLongPress: () => {
+          // Long press to show more options
+          triggerHaptic('heavy')
+          // Could trigger context menu or additional actions
+        }
+      }
+    )
 
     return (
-      <div
+      <Card
         ref={ref}
-        className={cn(feedPostCardVariants({ variant, size }), className)}
+        className={cn(
+          "p-4 border transition-all duration-fast ease-smooth bg-[#0c0c0c] hover:shadow-md",
+          // Dark monochrome borders with smooth transitions
+          post.isPromoted
+            ? "border-l-4 border-l-[#FFD700] border-white/8 hover:border-white/20 hover:shadow-[#FFD700]/10"
+            : "border-white/8 hover:border-white/20",
+          className
+        )}
+        {...(enableMobileGestures ? touchHandlers : {})}
         {...props}
       >
-        {/* SKELETON: Author Section */}
-        <div className="flex items-center gap-3 mb-4">
-          {/* Avatar placeholder */}
-          <div className="w-10 h-10 rounded-full bg-[var(--hive-surface-secondary)] flex items-center justify-center">
-            <span className="text-sm">👤</span>
+        {/* Promoted Badge - Gold accent */}
+        {post.isPromoted && (
+          <div className="flex items-center gap-1 text-xs text-white/70 mb-2">
+            <TrendingUp className="h-3 w-3 text-[#FFD700]" />
+            <span>Promoted by space leaders</span>
           </div>
+        )}
 
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-[var(--hive-text-primary)]">
-                {authorName}
-              </span>
-              <span className="text-sm text-[var(--hive-text-secondary)]">
-                {authorHandle}
-              </span>
-              {spaceName && (
-                <>
-                  <span className="text-[var(--hive-text-tertiary)]">→</span>
-                  <span className="text-sm text-[var(--hive-brand-primary)]">
-                    {spaceName}
-                  </span>
-                </>
-              )}
-            </div>
-            <span className="text-sm text-[var(--hive-text-tertiary)]">
-              {timestamp}
-            </span>
+        {/* Friend Activity - Dark monochrome with emphasis */}
+        {post.friendActivity && (
+          <div className="flex items-center gap-1 text-xs text-white/70 mb-2">
+            <span className="font-semibold text-white">{post.friendActivity.names.slice(0, 2).join(", ")}</span>
+            {post.friendActivity.names.length > 2 && (
+              <span className="font-semibold text-white">+{post.friendActivity.names.length - 2}</span>
+            )}
+            <span>{post.friendActivity.action}</span>
           </div>
+        )}
 
-          {/* Menu button */}
-          <button
-            type="button"
-            onClick={onMenuClick}
-            className="p-2 hover:bg-[var(--hive-surface-secondary)] rounded"
+        {/* Header */}
+        <div className="flex items-start gap-3 mb-3">
+          {/* Avatar */}
+          <Avatar
+            className="h-10 w-10 cursor-pointer border border-white/20"
+            onClick={() => onAuthorClick?.(post.author.handle)}
           >
-            <span>⋯</span>
-          </button>
-        </div>
-
-        {/* SKELETON: Content Section */}
-        <div className="mb-4">
-          {contentType === 'text' && (
-            <p className="text-[var(--hive-text-primary)] whitespace-pre-wrap">
-              {textContent}
-            </p>
-          )}
-
-          {contentType === 'image' && images.length > 0 && (
-            <div className="space-y-2">
-              {textContent && (
-                <p className="text-[var(--hive-text-primary)] mb-2">
-                  {textContent}
-                </p>
-              )}
-              <div className="bg-[var(--hive-surface-secondary)] rounded-lg p-8 text-center">
-                <span className="text-4xl">🖼️</span>
-                <p className="text-sm text-[var(--hive-text-secondary)] mt-2">
-                  Image placeholder ({images.length} image{images.length > 1 ? 's' : ''})
-                </p>
+            {post.author.avatar ? (
+              <img src={post.author.avatar} alt={post.author.name} />
+            ) : (
+              <div className="bg-white/10 text-white flex items-center justify-center text-sm font-bold">
+                {post.author.name.charAt(0)}
               </div>
-            </div>
-          )}
+            )}
+          </Avatar>
 
-          {contentType === 'video' && (
-            <div className="space-y-2">
-              {textContent && (
-                <p className="text-[var(--hive-text-primary)] mb-2">
-                  {textContent}
-                </p>
-              )}
-              <div className="bg-[var(--hive-surface-secondary)] rounded-lg p-8 text-center">
-                <span className="text-4xl">🎥</span>
-                <p className="text-sm text-[var(--hive-text-secondary)] mt-2">
-                  Video placeholder
-                </p>
-              </div>
+          {/* Author Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onAuthorClick?.(post.author.handle)}
+                className="text-sm font-bold text-white hover:underline truncate"
+              >
+                {post.author.name}
+              </button>
+              <span className="text-xs text-white/50">@{post.author.handle}</span>
+              <span className="text-xs text-white/50">·</span>
+              <span className="text-xs text-white/50">{post.timestamp}</span>
             </div>
-          )}
 
-          {contentType === 'link' && linkPreview && (
-            <div className="space-y-2">
-              {textContent && (
-                <p className="text-[var(--hive-text-primary)] mb-2">
-                  {textContent}
-                </p>
-              )}
-              <div className="border border-[var(--hive-border-default)] rounded-lg p-4">
-                <span className="text-2xl">🔗</span>
-                <p className="font-semibold text-[var(--hive-text-primary)] mt-2">
-                  {linkPreview.title}
-                </p>
-                <p className="text-sm text-[var(--hive-text-secondary)]">
-                  {linkPreview.description}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {contentType === 'event' && (
-            <div className="space-y-2">
-              {textContent && (
-                <p className="text-[var(--hive-text-primary)] mb-2">
-                  {textContent}
-                </p>
-              )}
-              <div className="bg-[var(--hive-surface-secondary)] rounded-lg p-4">
-                <span className="text-2xl">📅</span>
-                <p className="font-semibold text-[var(--hive-text-primary)] mt-2">
-                  Event placeholder
-                </p>
-                <p className="text-sm text-[var(--hive-text-secondary)]">
-                  Date • Time • Location
-                </p>
-              </div>
-            </div>
-          )}
-
-          {contentType === 'poll' && (
-            <div className="space-y-2">
-              {textContent && (
-                <p className="text-[var(--hive-text-primary)] mb-2">
-                  {textContent}
-                </p>
-              )}
-              <div className="bg-[var(--hive-surface-secondary)] rounded-lg p-4">
-                <span className="text-2xl">📊</span>
-                <p className="font-semibold text-[var(--hive-text-primary)] mt-2">
-                  Poll placeholder
-                </p>
-                <p className="text-sm text-[var(--hive-text-secondary)]">
-                  Option 1 | Option 2 | Option 3
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* SKELETON: Engagement & Actions Section */}
-        <div className="border-t border-[var(--hive-border-default)] pt-3">
-          {/* Engagement counts */}
-          {(likeCount > 0 || commentCount > 0 || shareCount > 0) && (
-            <div className="flex items-center gap-4 text-sm text-[var(--hive-text-secondary)] mb-3">
-              {likeCount > 0 && <span>{likeCount} likes</span>}
-              {commentCount > 0 && <span>{commentCount} comments</span>}
-              {shareCount > 0 && <span>{shareCount} shares</span>}
-            </div>
-          )}
-
-          {/* Action buttons */}
-          <div className="flex items-center gap-1">
+            {/* Space Attribution */}
             <button
-              type="button"
-              onClick={onLike}
-              className={cn(
-                'flex-1 py-2 px-4 rounded hover:bg-[var(--hive-surface-secondary)] transition-colors',
-                isLiked && 'text-[var(--hive-brand-primary)]'
-              )}
+              onClick={() => onSpaceClick?.(post.space.id)}
+              className="flex items-center gap-1 mt-0.5 text-xs text-white/70 hover:text-white transition-colors"
             >
-              {isLiked ? '❤️' : '🤍'} Like
-            </button>
-
-            <button
-              type="button"
-              onClick={onComment}
-              className="flex-1 py-2 px-4 rounded hover:bg-[var(--hive-surface-secondary)] transition-colors"
-            >
-              💬 Comment
-            </button>
-
-            <button
-              type="button"
-              onClick={onShare}
-              className="flex-1 py-2 px-4 rounded hover:bg-[var(--hive-surface-secondary)] transition-colors"
-            >
-              🔄 Share
+              <span>in</span>
+              <span className="font-semibold">{post.space.name}</span>
+              <Badge variant="outline" className="h-4 px-1 text-[9px] ml-1 border-white/20 text-white/70">
+                {post.space.memberCount} members
+              </Badge>
             </button>
           </div>
+
+          {/* Menu */}
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-white/10">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
         </div>
 
-        {/* Helper text for design */}
-        <div className="mt-4 p-2 bg-[var(--hive-surface-tertiary)] rounded text-xs text-[var(--hive-text-tertiary)]">
-          ⚠️ SKELETON: Actual UI/UX to be designed in Storybook review
+        {/* Requoted Post (if exists) */}
+        {post.requotedPost && (
+          <div className="mb-3 p-3 border border-white/8 rounded-lg bg-white/5">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-semibold text-white">
+                {post.requotedPost.author}
+              </span>
+              <span className="text-xs text-white/50">
+                {post.requotedPost.timestamp}
+              </span>
+            </div>
+            <p className="text-sm text-white/70 line-clamp-3">
+              {post.requotedPost.content}
+            </p>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="mb-3">
+          <p
+            className={cn(
+              "text-sm text-white whitespace-pre-wrap",
+              !showFullContent && isLongContent && "line-clamp-6"
+            )}
+          >
+            {post.content}
+          </p>
+          {isLongContent && (
+            <button
+              onClick={() => setShowFullContent(!showFullContent)}
+              className="text-xs text-white font-semibold hover:underline mt-1"
+            >
+              {showFullContent ? "Show less" : "Show more"}
+            </button>
+          )}
         </div>
-      </div>
-    );
+
+        {/* Media (if exists) */}
+        {post.media && post.media.length > 0 && (
+          <div
+            className={cn(
+              "mb-3 rounded-lg overflow-hidden border border-white/20",
+              post.media.length === 1 && "aspect-video",
+              post.media.length === 2 && "grid grid-cols-2 gap-0.5",
+              post.media.length > 2 && "grid grid-cols-2 gap-0.5"
+            )}
+          >
+            {post.media.slice(0, 4).map((item, idx) => (
+              <div key={idx} className="relative bg-white/5 aspect-square">
+                {item.type === "image" ? (
+                  <img
+                    src={item.url}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <video src={item.url} className="w-full h-full object-cover" controls />
+                )}
+                {post.media && post.media.length > 4 && idx === 3 && (
+                  <div className="absolute inset-0 bg-black/80 flex items-center justify-center text-white text-lg font-bold">
+                    +{post.media.length - 4}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Comment Preview */}
+        {post.comments.preview && post.comments.preview.length > 0 && (
+          <div className="mb-3 p-2 border border-white/8 rounded bg-white/5">
+            <div className="text-xs text-white/70 space-y-1">
+              {post.comments.preview.map((comment, idx) => (
+                <div key={idx}>
+                  <span className="font-semibold text-white">{comment.author}</span>{" "}
+                  <span className="line-clamp-1">{comment.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Interaction Stats - Dark monochrome */}
+        {!compact && (
+          <div className="flex items-center gap-4 mb-2 text-xs text-white/50">
+            {post.reactions.count > 0 && (
+              <span className="font-medium">
+                {post.reactions.topEmoji && <span className="mr-1">{post.reactions.topEmoji}</span>}
+                {post.reactions.count} reactions
+              </span>
+            )}
+            {post.comments.count > 0 && <span className="font-medium">{post.comments.count} comments</span>}
+            {(post.reposts.count > 0 || post.requotes.count > 0) && (
+              <span className="font-medium">{post.reposts.count + post.requotes.count} shares</span>
+            )}
+          </div>
+        )}
+
+        {/* Action Buttons - Dark monochrome with white emphasis */}
+        <div className="flex items-center justify-between pt-2 border-t border-white/8">
+          {/* React - Dark monochrome with smooth animation */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "flex-1 h-8 gap-2 transition-all duration-fast ease-smooth text-white/70 hover:text-white hover:scale-105 active:scale-95",
+              post.reactions.hasReacted && "text-white font-bold"
+            )}
+            onClick={() => onReact?.(post.id)}
+          >
+            <Heart
+              className={cn(
+                "h-4 w-4 transition-all duration-fast ease-smooth",
+                post.reactions.hasReacted && "fill-current scale-110"
+              )}
+            />
+            {!compact && <span className="text-xs font-medium">{post.reactions.count || "React"}</span>}
+          </Button>
+
+          {/* Comment */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex-1 h-8 gap-2 transition-all duration-fast ease-smooth text-white/70 hover:text-white hover:scale-105 active:scale-95"
+            onClick={() => onComment?.(post.id)}
+          >
+            <MessageCircle className="h-4 w-4 transition-all duration-fast ease-smooth" />
+            {!compact && <span className="text-xs font-medium">{post.comments.count || "Comment"}</span>}
+          </Button>
+
+          {/* Repost - Dark monochrome with smooth animation */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "flex-1 h-8 gap-2 transition-all duration-fast ease-smooth text-white/70 hover:text-white hover:scale-105 active:scale-95",
+              post.reposts.hasReposted && "text-white font-bold"
+            )}
+            onClick={() => onRepost?.(post.id)}
+          >
+            <Repeat2 className={cn(
+              "h-4 w-4 transition-all duration-fast ease-smooth",
+              post.reposts.hasReposted && "text-[#FFD700]"
+            )} />
+            {!compact && <span className="text-xs font-medium">{post.reposts.count || "Repost"}</span>}
+          </Button>
+
+          {/* Requote */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex-1 h-8 gap-2 transition-all duration-fast ease-smooth text-white/70 hover:text-white hover:scale-105 active:scale-95"
+            onClick={() => onRequote?.(post.id)}
+          >
+            <Quote className="h-4 w-4 transition-all duration-fast ease-smooth" />
+            {!compact && <span className="text-xs font-medium">Requote</span>}
+          </Button>
+
+          {/* Save - Gold when saved with smooth animation */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "h-8 w-8 p-0 transition-all duration-fast ease-smooth text-white/70 hover:text-white hover:scale-105 active:scale-95",
+              post.saves.hasSaved && "text-[#FFD700] hover:text-[#FFD700]"
+            )}
+            onClick={() => onSave?.(post.id)}
+          >
+            <Bookmark className={cn(
+              "h-4 w-4 transition-all duration-fast ease-smooth",
+              post.saves.hasSaved && "fill-current scale-110"
+            )} />
+          </Button>
+        </div>
+
+        {/* Trending Badge - Gold accent */}
+        {post.isTrending && (
+          <div className="mt-2 pt-2 border-t border-white/8">
+            <div className="flex items-center gap-1 text-xs">
+              <TrendingUp className="h-3 w-3 text-[#FFD700]" />
+              <span className="font-semibold text-white">Trending on campus</span>
+            </div>
+          </div>
+        )}
+      </Card>
+    )
   }
-);
+)
 
-FeedPostCard.displayName = 'FeedPostCard';
+FeedPostCard.displayName = "FeedPostCard"
+
+export { FeedPostCard }

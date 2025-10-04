@@ -14,14 +14,14 @@ export { ConnectionId } from '../../domain/profile/value-objects/connection-id.v
 
 // Re-export aggregates
 export { EnhancedFeed } from '../../domain/feed/enhanced-feed';
-export { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual';
-export { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
-export { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profile';
+export { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
+// export { Space } from '../../domain/spaces/aggregates/space.aggregate'; // Commented out - using local stub class below
+export { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 export { Connection } from '../../domain/profile/aggregates/connection';
 
 // Re-export entities and types
 export { FeedItem } from '../../domain/feed/feed-item';
-export type { Milestone, Reward } from '../../domain/rituals/aggregates/enhanced-ritual';
+export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
 
 // Profile utility functions
 export function getProfileCompleteness(profile: any): number {
@@ -84,60 +84,8 @@ export class FeedFilter {
   }
 }
 
-export class Ritual {
-  public participants: number = 0;
-  public isActive: boolean = true;
-  public settings: { isVisible: boolean } = { isVisible: true };
-  public startDate?: Date;
-  public endDate?: Date;
-
-  constructor(
-    public id: string,
-    public name: string,
-    public description: string,
-    public milestones: any[]
-  ) {}
-
-  static create(data: any) {
-    return {
-      isSuccess: true,
-      isFailure: false,
-      getValue: () => {
-        const ritual = new Ritual(data.id, data.name, data.description, data.milestones || []);
-        ritual.participants = data.participants || 0;
-        ritual.isActive = data.isActive !== undefined ? data.isActive : true;
-        ritual.settings = data.settings || { isVisible: true };
-        ritual.startDate = data.startDate;
-        ritual.endDate = data.endDate;
-        return ritual;
-      },
-      error: null
-    };
-  }
-
-  addParticipant(profileId: string) {
-    this.participants++;
-    return { isSuccess: true, isFailure: false };
-  }
-
-  updateMilestoneProgress(milestoneId: string, progress: number) {
-    return { isSuccess: true, isFailure: false };
-  }
-
-  toData() {
-    return {
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      milestones: this.milestones,
-      participants: this.participants,
-      isActive: this.isActive,
-      settings: this.settings,
-      startDate: this.startDate,
-      endDate: this.endDate
-    };
-  }
-}
+// NOTE: Ritual is now exported from domain/rituals/aggregates/ritual.aggregate
+// Legacy wrapper removed - use proper domain model instead
 
 export class Participation {
   public streak: number = 0;
@@ -382,6 +330,9 @@ export interface User {
 }
 
 // Tool type definitions
+// NOTE: Tool is now exported from domain/tools/aggregates/tool.aggregate
+// These are kept for backward compatibility during migration
+// TODO: Migrate all usages to domain model
 export interface Tool {
   id: string;
   name: string;

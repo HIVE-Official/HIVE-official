@@ -1,8 +1,34 @@
-// shadcn components with sub-components
-export { Alert, AlertTitle, AlertDescription } from './alert';
-export { Avatar, AvatarImage, AvatarFallback } from './avatar';
-export { Badge } from './badge';
-export { Button } from './button';
+// ═══════════════════════════════════════════════════════════════
+// HIVE UI Atoms Index
+// Complete shadcn/ui component library
+// Total: 46 shadcn primitives (ready for custom components)
+// ═══════════════════════════════════════════════════════════════
+
+// ───────────────────────────────────────────────────────────────
+// SHADCN UI PRIMITIVES (46 components)
+// Pure shadcn/ui components installed via CLI
+// ───────────────────────────────────────────────────────────────
+
+// Layout & Structure
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from './accordion';
+
+export { AspectRatio } from './aspect-ratio';
+
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from './breadcrumb';
+
 export {
   Card,
   CardHeader,
@@ -11,19 +37,170 @@ export {
   CardDescription,
   CardContent
 } from './card';
-export { CheckIcon } from './check-icon';
-export { Checkbox } from './checkbox';
+
+export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible';
+
 export {
-  Command,
-  CommandDialog,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandShortcut,
-  CommandSeparator,
-} from './command';
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from './resizable';
+
+export { ScrollArea, ScrollBar } from './scroll-area';
+
+export { Separator } from './separator';
+
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from './sidebar';
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from './table';
+
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
+
+// Navigation
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from './dropdown-menu';
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
+} from './menubar';
+
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+  NavigationMenuIndicator,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+} from './navigation-menu';
+
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from './pagination';
+
+// Feedback & Status
+export { Alert, AlertTitle, AlertDescription } from './alert';
+
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './alert-dialog';
+
+export { Badge } from './badge';
+
+export { Progress } from './progress';
+
+export { Skeleton } from './skeleton';
+
+export { Toaster } from './sonner';
+
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from './tooltip';
+
+// Overlays & Dialogs
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+} from './context-menu';
+
 export {
   Dialog,
   DialogClose,
@@ -36,23 +213,92 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
-export { Grid } from './grid';
-export { HiveButton } from './hive-button';
-export { HiveCard } from './hive-card';
-export { HiveConfirmModal } from './hive-confirm-modal';
-export { HiveInput } from './hive-input';
-export { HiveLogoDynamic } from './hive-logo-dynamic';
-export { HiveLogo } from './hive-logo';
-export { HiveModal } from './hive-modal';
-export { HiveProgress } from './hive-progress';
-export { InputEnhanced } from './input-enhanced';
+
+export {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+} from './drawer';
+
+export { HoverCard, HoverCardTrigger, HoverCardContent } from './hover-card';
+
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from './popover';
+
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from './sheet';
+
+// Form Controls
+export { Button } from './button';
+
+export { Calendar } from './calendar';
+
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from './carousel';
+
+export { Checkbox } from './checkbox';
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from './command';
+
+export {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+  useFormField,
+} from './form';
+
 export { Input } from './input';
+
+export {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from './input-otp';
+
 export { Label } from './label';
-export { NavigationPreferences } from './navigation-preferences';
-export { NotificationBell } from './notification-bell';
-export { NotificationItem } from './notification-item';
-export { PresenceIndicator } from './presence-indicator';
-export { Progress } from './progress';
+
+export { RadioGroup, RadioGroupItem } from './radio-group';
+
 export {
   Select,
   SelectGroup,
@@ -65,25 +311,38 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from './select';
-export { SimpleAvatar } from './simple-avatar';
-export { Skeleton } from './skeleton';
-export { SkipNav } from './skip-nav';
+
 export { Slider } from './slider';
-export { SpaceBadge } from './space-badge';
+
 export { Switch } from './switch';
-export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
-export { TechSleekShowcase } from './tech-sleek-showcase';
-export { TextareaEnhanced } from './textarea-enhanced';
+
 export { Textarea } from './textarea';
-export { TopBarNav } from './top-bar-nav';
+
+export { Toggle, toggleVariants } from './toggle';
+
 export {
-  UniversalButton,
-  UniversalInput,
-  UniversalCard,
-  UniversalBadge,
-  UniversalAvatar,
-  UniversalSkeleton,
-  UniversalDivider,
-  UniversalIconButton,
-  UniversalCheckbox,
-} from './universal-atoms';
+  ToggleGroup,
+  ToggleGroupItem,
+} from './toggle-group';
+
+// Media & Visuals
+export { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from './avatar';
+
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
+} from './chart';
+
+export { HiveLogo } from './hive-logo';
+
+// ───────────────────────────────────────────────────────────────
+// HIVE CUSTOM PRIMITIVES (Built from shadcn)
+// Custom components composed from shadcn primitives
+// ───────────────────────────────────────────────────────────────
+
+export { BulletinCard } from './bulletin-card';
+export { BulletinSection } from './bulletin-section';

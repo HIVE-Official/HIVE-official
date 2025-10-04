@@ -51,7 +51,8 @@ function OnboardingWizardWrapper() {
       try {
         const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
       } catch (spaceError) {
-      }
+      // Intentionally suppressed - non-critical error
+    }
       
       // Redirect to dashboard
       router.push('/');

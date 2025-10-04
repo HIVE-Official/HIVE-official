@@ -12,4 +12,7 @@ export * from './radius';
 export * from './motion';
 export * from './effects';
 export * from './css-generator';
-export * from './tailwind-config'; 
+export * from './tailwind-config';
+
+// HIVE Branded Theme (2025 Design Aesthetic)
+export * from './hive-theme'; 

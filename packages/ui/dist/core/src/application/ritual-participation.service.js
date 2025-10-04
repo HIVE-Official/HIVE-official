@@ -1,15 +1,15 @@
 /**
- * EnhancedRitual Participation Service
+ * Ritual Participation Service
  * Orchestrates ritual participation, progress tracking, and rewards
  */
 import { BaseApplicationService } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedRitual } from '../domain/rituals/aggregates/enhanced-ritual';
+import { Ritual } from '../domain/rituals/aggregates/ritual.aggregate';
 import { RitualId } from '../domain/rituals/value-objects/ritual-id.value';
 import { Participation } from '../domain/rituals/entities/participation';
 import { ProfileId } from '../domain/profile/value-objects/profile-id.value';
 import { CampusId } from '../domain/profile/value-objects/campus-id.value';
-export class EnhancedRitualParticipationService extends BaseApplicationService {
+export class RitualParticipationService extends BaseApplicationService {
     constructor(context, ritualRepo, profileRepo, feedRepo) {
         super(context);
         // Mock repositories for now - would be injected in production
@@ -20,7 +20,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
     /**
      * Create a new ritual campaign
      */
-    async createEnhancedRitual(creatorId, data) {
+    async createRitual(creatorId, data) {
         return this.execute(async () => {
             // Validate creator
             const creatorProfileId = ProfileId.create(creatorId).getValue();
@@ -30,37 +30,45 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             }
             // Generate ritual ID
             const ritualId = RitualId.create(`ritual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`).getValue();
-            // Create ritual
-            const ritualResult = EnhancedRitual.create({
+            // Validate ritual type and duration
+            if (data.ritualType === 'short' && data.duration !== '1 week') {
+                return Result.fail('Short rituals must be 1 week duration');
+            }
+            if (data.ritualType === 'yearbook' && data.duration !== '3 weeks') {
+                return Result.fail('Yearbook rituals must be 3 weeks duration');
+            }
+            // Create ritual using correct types from SPEC.md
+            const ritualResult = Ritual.create({
                 ritualId: ritualId,
                 name: data.name,
                 description: data.description,
-                type: this.mapRitualType(data.ritualType),
+                type: data.ritualType, // FIXED: No mapping needed - use correct type directly
+                category: data.category,
+                duration: data.duration,
                 campusId: CampusId.createUBBuffalo().getValue(),
                 startDate: data.startDate,
                 endDate: data.endDate,
                 createdBy: creatorProfileId,
-                milestones: data.milestones.map((m, index) => ({
-                    id: `milestone_${index}`,
-                    title: m.name,
-                    name: m.name,
-                    description: m.description,
-                    targetValue: m.targetValue,
+                targetAudience: 'all',
+                visibility: data.settings?.isVisible ? 'public' : 'hidden',
+                goals: data.goals.map((g, index) => ({
+                    id: `goal_${index}`,
+                    description: g.description,
+                    type: g.type,
+                    targetValue: g.targetValue,
                     currentValue: 0,
-                    isCompleted: false,
-                    completedAt: undefined,
-                    participantCompletions: [],
-                    rewards: m.rewards,
-                    threshold: m.targetValue,
-                    isReached: false,
-                    reachedAt: undefined
+                    isCompleted: false
                 })),
-                settings: {
-                    maxParticipants: data.settings?.maxParticipants || undefined,
-                    requiresApproval: data.settings?.requireApproval || false,
-                    allowLateJoin: data.settings?.allowLateJoin || true,
-                    isVisible: data.settings?.isVisible || true
-                }
+                requirements: data.requirements,
+                rewards: data.rewards.map((r, index) => ({
+                    id: `reward_${index}`,
+                    type: r.type,
+                    name: r.name,
+                    description: r.description,
+                    value: r.value
+                })),
+                targetParticipation: data.settings?.maxParticipants,
+                status: 'draft'
             });
             if (ritualResult.isFailure) {
                 return Result.fail(ritualResult.error);
@@ -72,21 +80,21 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
                 return Result.fail(saveResult.error);
             }
             // Creator automatically participates
-            await this.joinEnhancedRitual(creatorId, ritual.ritualId.value);
+            await this.joinRitual(creatorId, ritual.ritualId.value);
             return Result.ok(ritual);
-        }, 'EnhancedRitualParticipation.createEnhancedRitual');
+        }, 'RitualParticipation.createRitual');
     }
     /**
      * Join a ritual
      */
-    async joinEnhancedRitual(userId, ritualId) {
+    async joinRitual(userId, ritualId) {
         return this.execute(async () => {
             const userProfileId = ProfileId.create(userId).getValue();
             const ritualIdVO = RitualId.create(ritualId).getValue();
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result.fail('EnhancedRitual not found');
+                return Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
             // Check if already participating
@@ -114,10 +122,10 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             await this.ritualRepo.save(ritual);
             const result = {
                 data: participation,
-                warnings: this.generateParticipationWarnings(ritual)
+                warnings: ritual.getParticipationWarnings() // Use domain logic
             };
             return Result.ok(result);
-        }, 'EnhancedRitualParticipation.joinEnhancedRitual');
+        }, 'RitualParticipation.joinRitual');
     }
     /**
      * Record progress on a ritual milestone
@@ -135,7 +143,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result.fail('EnhancedRitual not found');
+                return Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
             // Update milestone progress
@@ -145,8 +153,8 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             if (milestone && progress >= milestone.targetValue) {
                 // Complete milestone
                 participation.completeMilestone(milestoneId);
-                // Award points
-                const points = this.calculateMilestonePoints(milestone);
+                // Award points (use domain logic)
+                const points = ritual.calculateGoalPoints(milestoneId);
                 participation.addPoints(points);
                 // Add achievement
                 participation.addAchievement(`Completed: ${milestone.name}`);
@@ -162,14 +170,14 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             // Save ritual if modified
             await this.ritualRepo.save(ritual);
             // Get current progress
-            const progressData = await this.calculateEnhancedRitualProgress(ritual, participation);
+            const progressData = await this.calculateRitualProgress(ritual, participation);
             return Result.ok(progressData);
-        }, 'EnhancedRitualParticipation.recordProgress');
+        }, 'RitualParticipation.recordProgress');
     }
     /**
      * Get user's ritual progress
      */
-    async getEnhancedRitualProgress(userId, ritualId) {
+    async getRitualProgress(userId, ritualId) {
         return this.execute(async () => {
             const userProfileId = ProfileId.create(userId).getValue();
             const ritualIdVO = RitualId.create(ritualId).getValue();
@@ -182,12 +190,12 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result.fail('EnhancedRitual not found');
+                return Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
-            const progress = await this.calculateEnhancedRitualProgress(ritual, participation);
+            const progress = await this.calculateRitualProgress(ritual, participation);
             return Result.ok(progress);
-        }, 'EnhancedRitualParticipation.getEnhancedRitualProgress');
+        }, 'RitualParticipation.getRitualProgress');
     }
     /**
      * Get ritual leaderboard
@@ -198,7 +206,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result.fail('EnhancedRitual not found');
+                return Result.fail('Ritual not found');
             }
             // Get leaderboard participations
             const leaderboardResult = await this.ritualRepo.findLeaderboard(ritualIdVO, limit);
@@ -234,12 +242,12 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
                 }
             };
             return Result.ok(result);
-        }, 'EnhancedRitualParticipation.getLeaderboard');
+        }, 'RitualParticipation.getLeaderboard');
     }
     /**
      * Get user's active rituals
      */
-    async getUserEnhancedRituals(userId) {
+    async getUserRituals(userId) {
         return this.execute(async () => {
             const userProfileId = ProfileId.create(userId).getValue();
             const ritualsResult = await this.ritualRepo.findByParticipant(userProfileId);
@@ -248,20 +256,20 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             }
             const rituals = ritualsResult.getValue();
             // Filter to active rituals
-            const activeEnhancedRituals = rituals.filter((r) => r.toData().status === 'active');
+            const activeRituals = rituals.filter((r) => r.toData().status === 'active');
             const result = {
-                data: activeEnhancedRituals,
+                data: activeRituals,
                 metadata: {
-                    totalCount: activeEnhancedRituals.length
+                    totalCount: activeRituals.length
                 }
             };
             return Result.ok(result);
-        }, 'EnhancedRitualParticipation.getUserEnhancedRituals');
+        }, 'RitualParticipation.getUserRituals');
     }
     /**
      * Get available rituals to join
      */
-    async getAvailableEnhancedRituals() {
+    async getAvailableRituals() {
         return this.execute(async () => {
             const activeResult = await this.ritualRepo.findActive(this.context.campusId);
             if (activeResult.isFailure) {
@@ -276,23 +284,23 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
                 }
             };
             return Result.ok(result);
-        }, 'EnhancedRitualParticipation.getAvailableEnhancedRituals');
+        }, 'RitualParticipation.getAvailableRituals');
     }
     /**
      * Subscribe to ritual updates
      */
-    subscribeToEnhancedRitual(ritualId, callback) {
+    subscribeToRitual(ritualId, callback) {
         const ritualIdVO = RitualId.create(ritualId).getValue();
         return this.ritualRepo.subscribeToRitual(ritualIdVO, callback);
     }
     /**
      * Subscribe to active rituals feed
      */
-    subscribeToActiveEnhancedRituals(callback) {
+    subscribeToActiveRituals(callback) {
         return this.ritualRepo.subscribeToActiveRituals(this.context.campusId, callback);
     }
     // Private helper methods
-    async calculateEnhancedRitualProgress(ritual, participation) {
+    async calculateRitualProgress(ritual, participation) {
         const ritualData = ritual.toData();
         const participationData = participation.toData();
         // Calculate completion percentage
@@ -317,52 +325,6 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
             nextMilestone,
             recentAchievements: participationData.achievements.slice(-3)
         };
-    }
-    calculateMilestonePoints(milestone) {
-        // Base points based on target value
-        let points = milestone.targetValue * 10;
-        // Bonus for rewards
-        milestone.rewards.forEach((reward) => {
-            if (reward.type === 'points') {
-                points += parseInt(reward.value) || 0;
-            }
-        });
-        return points;
-    }
-    generateParticipationWarnings(ritual) {
-        const warnings = [];
-        const ritualData = ritual.toData();
-        const now = new Date();
-        const daysUntilEnd = Math.ceil((ritualData.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilEnd <= 7) {
-            warnings.push(`This ritual ends in ${daysUntilEnd} days`);
-        }
-        if (ritualData.settings.maxParticipants) {
-            const spotsLeft = ritualData.settings.maxParticipants - ritualData.participants.length;
-            if (spotsLeft <= 10) {
-                warnings.push(`Only ${spotsLeft} spots remaining`);
-            }
-        }
-        if (!ritualData.settings.allowLateJoin && now > ritualData.startDate) {
-            warnings.push('This ritual has already started and doesn\'t allow late joins');
-        }
-        return warnings;
-    }
-    mapRitualType(ritualType) {
-        switch (ritualType) {
-            case 'daily-challenge':
-                return 'daily';
-            case 'weekly-goal':
-                return 'weekly';
-            case 'study-challenge':
-                return 'monthly';
-            case 'social-mission':
-                return 'seasonal';
-            case 'campus-event':
-                return 'one-time';
-            default:
-                return 'one-time';
-        }
     }
 }
 //# sourceMappingURL=ritual-participation.service.js.map

@@ -20,7 +20,7 @@ import {
 import { db } from '@hive/firebase';
 import { IProfileRepository } from '../interfaces';
 import { Result } from '../../../domain/shared/base/Result';
-import { EnhancedProfile } from '../../../domain/profile/aggregates/enhanced-profile';
+import { Profile } from '../../../domain/profile/aggregates/profile.aggregate';
 import { ProfileId } from '../../../domain/profile/value-objects/profile-id.value';
 import { UBEmail } from '../../../domain/profile/value-objects';
 import { ProfileHandle } from '../../../domain/profile/value-objects/profile-handle.value';
@@ -33,24 +33,24 @@ export class FirebaseProfileRepository implements IProfileRepository {
   private readonly collectionName = 'users';
   private readonly connectionsCollection = 'connections';
 
-  async findById(id: ProfileId | any): Promise<Result<EnhancedProfile>> {
+  async findById(id: ProfileId | any): Promise<Result<Profile>> {
     try {
       const profileId = typeof id === 'string' ? id : id.id;
       const docRef = doc(db, this.collectionName, profileId);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        return Result.fail<EnhancedProfile>('Profile not found');
+        return Result.fail<Profile>('Profile not found');
       }
 
       const data = docSnap.data();
       return this.toDomain(profileId, data);
     } catch (error) {
-      return Result.fail<EnhancedProfile>(`Failed to find profile: ${error}`);
+      return Result.fail<Profile>(`Failed to find profile: ${error}`);
     }
   }
 
-  async findByEmail(email: string): Promise<Result<EnhancedProfile>> {
+  async findByEmail(email: string): Promise<Result<Profile>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -60,17 +60,17 @@ export class FirebaseProfileRepository implements IProfileRepository {
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        return Result.fail<EnhancedProfile>('Profile not found');
+        return Result.fail<Profile>('Profile not found');
       }
 
       const doc = snapshot.docs[0];
       return this.toDomain(doc.id, doc.data());
     } catch (error) {
-      return Result.fail<EnhancedProfile>(`Failed to find profile: ${error}`);
+      return Result.fail<Profile>(`Failed to find profile: ${error}`);
     }
   }
 
-  async findByHandle(handle: string): Promise<Result<EnhancedProfile>> {
+  async findByHandle(handle: string): Promise<Result<Profile>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -80,17 +80,17 @@ export class FirebaseProfileRepository implements IProfileRepository {
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        return Result.fail<EnhancedProfile>('Profile not found');
+        return Result.fail<Profile>('Profile not found');
       }
 
       const doc = snapshot.docs[0];
       return this.toDomain(doc.id, doc.data());
     } catch (error) {
-      return Result.fail<EnhancedProfile>(`Failed to find profile: ${error}`);
+      return Result.fail<Profile>(`Failed to find profile: ${error}`);
     }
   }
 
-  async findByCampus(campusId: string, limitCount: number = 50): Promise<Result<EnhancedProfile[]>> {
+  async findByCampus(campusId: string, limitCount: number = 50): Promise<Result<Profile[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -101,7 +101,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       );
       const snapshot = await getDocs(q);
 
-      const profiles: EnhancedProfile[] = [];
+      const profiles: Profile[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -109,9 +109,9 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Failed to find profiles: ${error}`);
+      return Result.fail<Profile[]>(`Failed to find profiles: ${error}`);
     }
   }
 
@@ -129,7 +129,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
     }
   }
 
-  async searchByName(searchQuery: string, campusId: string): Promise<Result<EnhancedProfile[]>> {
+  async searchByName(searchQuery: string, campusId: string): Promise<Result<Profile[]>> {
     try {
       // Firebase doesn't support full-text search natively
       // For MVP, we'll do a simple prefix search on firstName and lastName
@@ -142,7 +142,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       );
 
       const snapshot = await getDocs(q);
-      const profiles: EnhancedProfile[] = [];
+      const profiles: Profile[] = [];
       const searchLower = searchQuery.toLowerCase();
 
       for (const doc of snapshot.docs) {
@@ -158,13 +158,13 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Search failed: ${error}`);
+      return Result.fail<Profile[]>(`Search failed: ${error}`);
     }
   }
 
-  async save(profile: EnhancedProfile): Promise<Result<void>> {
+  async save(profile: Profile): Promise<Result<void>> {
     try {
       const data = this.toPersistence(profile);
       const docRef = doc(db, this.collectionName, profile.id);
@@ -202,7 +202,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
   }
 
   // Helper methods for domain mapping
-  private async toDomain(id: string, data: any): Promise<Result<EnhancedProfile>> {
+  private async toDomain(id: string, data: any): Promise<Result<Profile>> {
     try {
       // Handle legacy profiles without enhanced features
       if (!isFeatureEnabled('PROFILE_CAMPUS_ISOLATION') || !data.campusId) {
@@ -240,26 +240,26 @@ export class FirebaseProfileRepository implements IProfileRepository {
       // Create value objects
       const emailResult = UBEmail.create(profileData.email);
       if (emailResult.isFailure) {
-        return Result.fail<EnhancedProfile>(emailResult.error!);
+        return Result.fail<Profile>(emailResult.error!);
       }
 
       const handleResult = ProfileHandle.create(profileData.handle);
       if (handleResult.isFailure) {
-        return Result.fail<EnhancedProfile>(handleResult.error!);
+        return Result.fail<Profile>(handleResult.error!);
       }
 
       const campusIdResult = CampusId.create(profileData.campusId);
       if (campusIdResult.isFailure) {
-        return Result.fail<EnhancedProfile>(campusIdResult.error!);
+        return Result.fail<Profile>(campusIdResult.error!);
       }
 
       const userTypeResult = UserType.create(profileData.userType);
       if (userTypeResult.isFailure) {
-        return Result.fail<EnhancedProfile>(userTypeResult.error!);
+        return Result.fail<Profile>(userTypeResult.error!);
       }
 
       // Create profile
-      const profile = EnhancedProfile.create({
+      const profile = Profile.create({
         profileId: ProfileId.create(id).getValue(),
         email: emailResult.getValue(),
         handle: handleResult.getValue(),
@@ -282,7 +282,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       });
 
       if (profile.isFailure) {
-        return Result.fail<EnhancedProfile>(profile.error!);
+        return Result.fail<Profile>(profile.error!);
       }
 
       const enhancedProfile = profile.getValue();
@@ -303,13 +303,13 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile>(enhancedProfile);
+      return Result.ok<Profile>(enhancedProfile);
     } catch (error) {
-      return Result.fail<EnhancedProfile>(`Failed to map to domain: ${error}`);
+      return Result.fail<Profile>(`Failed to map to domain: ${error}`);
     }
   }
 
-  private toPersistence(profile: EnhancedProfile): any {
+  private toPersistence(profile: Profile): any {
     return {
       email: profile.email.value,
       handle: profile.handle.value.toLowerCase(),
@@ -325,12 +325,10 @@ export class FirebaseProfileRepository implements IProfileRepository {
       userType: profile.userType.value,
       campusId: profile.campusId.id,
       privacy: profile.privacy ? {
-        level: profile.privacy.level,
+        profileVisibility: profile.privacy.profileVisibility,
         showEmail: profile.privacy.showEmail,
-        showPhone: profile.privacy.showPhone,
-        showDorm: profile.privacy.showDorm,
-        showSchedule: profile.privacy.showSchedule,
-        showActivity: profile.privacy.showActivity
+        showConnections: profile.privacy.showConnections,
+        allowConnectionRequests: profile.privacy.allowConnectionRequests
       } : {},
       badges: profile.badges,
       blockedUsers: profile.blockedUsers,
@@ -344,7 +342,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
   }
 
   // Additional methods required by interface
-  async findOnboardedProfiles(maxCount: number = 100): Promise<Result<EnhancedProfile[]>> {
+  async findOnboardedProfiles(maxCount: number = 100): Promise<Result<Profile[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -355,7 +353,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       );
       const snapshot = await getDocs(q);
 
-      const profiles: EnhancedProfile[] = [];
+      const profiles: Profile[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -363,13 +361,13 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Failed to find onboarded profiles: ${error}`);
+      return Result.fail<Profile[]>(`Failed to find onboarded profiles: ${error}`);
     }
   }
 
-  async findByInterest(interest: string, limitCount: number = 50): Promise<Result<EnhancedProfile[]>> {
+  async findByInterest(interest: string, limitCount: number = 50): Promise<Result<Profile[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -380,7 +378,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       );
       const snapshot = await getDocs(q);
 
-      const profiles: EnhancedProfile[] = [];
+      const profiles: Profile[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -388,13 +386,13 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Failed to find profiles by interest: ${error}`);
+      return Result.fail<Profile[]>(`Failed to find profiles by interest: ${error}`);
     }
   }
 
-  async findByMajor(major: string, limitCount: number = 50): Promise<Result<EnhancedProfile[]>> {
+  async findByMajor(major: string, limitCount: number = 50): Promise<Result<Profile[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -405,7 +403,7 @@ export class FirebaseProfileRepository implements IProfileRepository {
       );
       const snapshot = await getDocs(q);
 
-      const profiles: EnhancedProfile[] = [];
+      const profiles: Profile[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -413,13 +411,13 @@ export class FirebaseProfileRepository implements IProfileRepository {
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Failed to find profiles by major: ${error}`);
+      return Result.fail<Profile[]>(`Failed to find profiles by major: ${error}`);
     }
   }
 
-  async findConnectionsOf(profileId: string): Promise<Result<EnhancedProfile[]>> {
+  async findConnectionsOf(profileId: string): Promise<Result<Profile[]>> {
     try {
       // Find all connections for this profile
       const q1 = query(
@@ -448,17 +446,17 @@ export class FirebaseProfileRepository implements IProfileRepository {
       });
 
       // Fetch all connected profiles
-      const profiles: EnhancedProfile[] = [];
-      for (const connectedId of connectedProfileIds) {
+      const profiles: Profile[] = [];
+      for (const connectedId of Array.from(connectedProfileIds)) {
         const result = await this.findById(connectedId);
         if (result.isSuccess) {
           profiles.push(result.getValue());
         }
       }
 
-      return Result.ok<EnhancedProfile[]>(profiles);
+      return Result.ok<Profile[]>(profiles);
     } catch (error) {
-      return Result.fail<EnhancedProfile[]>(`Failed to find connections: ${error}`);
+      return Result.fail<Profile[]>(`Failed to find connections: ${error}`);
     }
   }
 

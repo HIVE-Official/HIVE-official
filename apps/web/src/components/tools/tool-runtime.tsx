@@ -102,6 +102,7 @@ export function ToolRuntime({
         setGlobalState(result.result.state);
       }
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 
@@ -122,6 +123,7 @@ export function ToolRuntime({
       try {
         await syncWithBackend(instanceId, data);
       } catch (err) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }, [composition.connections, deploymentId, mode]);
@@ -195,6 +197,7 @@ export function ToolRuntime({
         }
       }
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 

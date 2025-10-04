@@ -69,9 +69,5 @@ export declare class FeedGenerationService extends BaseApplicationService {
      * Subscribe to real-time feed updates
      */
     subscribeToFeedUpdates(userId: string, callback: (items: FeedItem[]) => void): () => void;
-    private applyContentFilters;
-    private generateFeedInsights;
-    private generateAdjustmentSuggestions;
-    private updateAlgorithmWeights;
 }
 //# sourceMappingURL=feed-generation.service.d.ts.map

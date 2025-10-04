@@ -96,7 +96,7 @@ function createComponent(options: CreateOptions): void {
     'utf-8'
   );
 
-  let story = storyTemplate
+  const story = storyTemplate
     .replace(/{{ComponentName}}/g, componentName)
     .replace(/{{component-name}}/g, fileName)
     .replace(/{{Category}}/g, type.charAt(0).toUpperCase() + type.slice(1) + 's')

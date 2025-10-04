@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-env node */
 /**
  * Fix import paths in feature stories to point to correct atomic component locations
  */

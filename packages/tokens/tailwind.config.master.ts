@@ -113,6 +113,31 @@ const masterConfig: Config = {
         '88': '22rem',
       },
 
+      // HIVE MOTION SYSTEM - Apple-Inspired Duration Tokens (v2.0)
+      transitionDuration: {
+        'instant': '0ms',                    // No animation
+        'fast': '250ms',                     // Micro-interactions (hover, focus) - Apple quick
+        'smooth': '400ms',                   // Standard transitions (page, modals) - Apple standard
+        'slow': '600ms',                     // Deliberate animations (onboarding) - Apple deliberate
+        'slowest': '800ms',                  // Special moments (celebrations) - Apple extended
+        // Legacy support (maps to new system)
+        'quick': '250ms',                    // Same as fast
+        'liquid': '400ms',                   // Same as smooth
+        'flowing': '600ms',                  // Same as slow
+      },
+
+      // HIVE MOTION SYSTEM - Apple-Calibrated Easing Curves (v2.0)
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.25, 0.1, 0.25, 1)',      // Apple standard ease (default)
+        'liquid': 'cubic-bezier(0.42, 0, 0.58, 1)',        // Apple ease-in-out (fluid)
+        'gentle': 'cubic-bezier(0.16, 1, 0.3, 1)',         // Apple gentle fade (subtle)
+        'sharp': 'cubic-bezier(0.4, 0, 0.6, 1)',           // Quick actions (kept)
+        'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)', // Celebrations (kept)
+        // Legacy support (maps to new system)
+        'silk': 'cubic-bezier(0.16, 1, 0.3, 1)',           // Same as gentle
+        'snap': 'cubic-bezier(0.25, 0.1, 0.25, 1)',        // Same as smooth
+      },
+
       // ANIMATION SYSTEM
       keyframes: {
         'accordion-down': {
@@ -144,10 +169,10 @@ const masterConfig: Config = {
       },
 
       animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
-        'hive-glow': 'hive-glow 2s ease-in-out infinite',
-        'hive-pulse': 'hive-pulse 2s ease-in-out infinite',
+        'accordion-down': 'accordion-down 400ms cubic-bezier(0.25, 0.1, 0.25, 1)',  // Apple smooth
+        'accordion-up': 'accordion-up 400ms cubic-bezier(0.25, 0.1, 0.25, 1)',      // Apple smooth
+        'hive-glow': 'hive-glow 2s cubic-bezier(0.42, 0, 0.58, 1) infinite',        // Apple liquid
+        'hive-pulse': 'hive-pulse 2s cubic-bezier(0.42, 0, 0.58, 1) infinite',      // Apple liquid
       },
 
       // BOX SHADOW SYSTEM
@@ -180,7 +205,7 @@ const masterConfig: Config = {
           'border': '1px solid rgba(255, 255, 255, 0.12)',
         },
         '.hive-interactive': {
-          'transition': 'all 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+          'transition': 'all 250ms cubic-bezier(0.25, 0.1, 0.25, 1)',  // Apple fast (was 0.25s)
           'transform-origin': 'center',
           'backface-visibility': 'hidden',
           'transform': 'translateZ(0)',
@@ -191,7 +216,7 @@ const masterConfig: Config = {
         },
         '.hive-interactive:active': {
           'transform': 'translateY(0) scale(0.98)',
-          'transition-duration': '0.15s',
+          'transition-duration': '150ms',  // Apple instant response
         },
       });
     },

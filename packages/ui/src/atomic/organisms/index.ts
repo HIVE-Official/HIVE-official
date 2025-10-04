@@ -1,35 +1,32 @@
-export { CompleteHiveToolsSystem } from './complete-hive-tools-system';
-export { FeedComposer } from './feed-composer';
-export { FeedEmptyState } from './feed-empty-state';
-export { FeedFilters } from './feed-filters';
-export { FeedPostFull } from './feed-post-full';
-export { FeedSkeletonLoader } from './feed-skeleton-loader';
-export { HivelabWidget } from './hivelab-widget';
-export { NavigationShell } from './navigation-shell';
-export { NotificationSystem } from './notification-system';
-export { OnboardingConnectionSuggestions } from './onboarding-connection-suggestions';
-export { OnboardingProfileSetup } from './onboarding-profile-setup';
-export { OnboardingSpaceRecommendations } from './onboarding-space-recommendations';
-export { OnboardingWizard } from './onboarding-wizard';
-export { ProfileActivityTimeline } from './profile-activity-timeline';
-export { ProfileActivityWidget } from './profile-activity-widget';
-export { ProfileBentoGrid } from './profile-bento-grid';
-export { ProfileCalendarView } from './profile-calendar-view';
-export { ProfileCompletionCard } from './profile-completion-card';
-export { ProfileConnectionsList } from './profile-connections-list';
-export { ProfileConnectionsWidget } from './profile-connections-widget';
-export { ProfileEditForm } from './profile-edit-form';
+/**
+ * Organism Components - Complex UI patterns
+ * Only exports components that actually exist
+ */
+
+// Profile
 export { ProfileHeader } from './profile-header';
-export { ProfileIdentityWidget } from './profile-identity-widget';
-export { ProfileSpacesWidget } from './profile-spaces-widget';
-export { ProfileStatsDashboard } from './profile-stats-dashboard';
-export { ProfileToolsWidget } from './profile-tools-widget';
-export { RitualCreationModal } from './ritual-creation-modal';
+export { ProfileEditSheet } from './profile-edit-sheet';
+export { ProfileScheduleWidget } from './profile-schedule-widget';
+export { ProfilePhotoLightbox } from './profile-photo-lightbox';
+export { ProfileCalendarModal } from './profile-calendar-modal';
+export type { CalendarEvent } from './profile-calendar-modal';
+export { ConnectionList } from './connection-list';
+export { ProgressChecklist } from './progress-checklist';
+
+// Feed
+export { FeedInfiniteScroll } from './feed-infinite-scroll';
+export { FeedPullToRefresh } from './feed-pull-to-refresh';
+
+// Rituals
+export { RitualMilestoneTrack } from './ritual-milestone-track';
+export type { Milestone } from './ritual-milestone-track';
+export { RitualActionModal } from './ritual-action-modal';
+export type { RitualAction } from './ritual-action-modal';
 export { RitualLeaderboard } from './ritual-leaderboard';
-export { RitualParticipationUi } from './ritual-participation-ui';
+
+// Spaces
 export { SpaceAboutSection } from './space-about-section';
-export { SpaceCreationModal } from './space-creation-modal';
-export { SpaceDiscoveryHub } from './space-discovery-hub';
+export { SpaceCategoryAccordion } from './space-category-accordion';
 export { SpaceEventsPanel } from './space-events-panel';
 export { SpaceHeader } from './space-header';
 export { SpaceLeaderToolbar } from './space-leader-toolbar';
@@ -37,11 +34,23 @@ export { SpaceMemberList } from './space-member-list';
 export { SpaceMembersPanel } from './space-members-panel';
 export { SpacePostFeed } from './space-post-feed';
 export { SpaceResourcesPanel } from './space-resources-panel';
-export { SpaceSettingsModal } from './space-settings-modal';
-export { SpaceSidebar } from './space-sidebar';
-export { ToolBrowseGrid } from './tool-browse-grid';
-export { ToolBuilderCanvas } from './tool-builder-canvas';
-export { ToolBuilderPalette } from './tool-builder-palette';
-export { ToolBuilderProperties } from './tool-builder-properties';
-export { ToolRuntimeExecutor } from './tool-runtime-executor';
-export { WelcomeMat } from './welcome-mat';
+export { SpaceSidePanel } from './space-side-panel';
+export type { SpaceSidePanelProps } from './space-side-panel';
+export { SpaceToolBuilder } from './space-tool-builder';
+export type { SpaceContext, SpaceToolBuilderProps } from './space-tool-builder';
+export { SpaceToolsPanel } from './space-tools-panel';
+
+// HiveLab
+export { HiveLabAnalyticsDashboard } from './hivelab-analytics-dashboard';
+export { HiveLabBuilderCanvas } from './hivelab-builder-canvas';
+export { HiveLabElementLibrary } from './hivelab-element-library';
+export { HiveLabPropertiesPanel } from './hivelab-properties-panel';
+export { HiveLabTemplateBrowser } from './hivelab-template-browser';
+export { ToolActionModals } from './tool-action-modals';
+
+// Navigation
+export { NavigationShell } from './navigation-shell';
+
+// Misc
+export { EventsCalendar } from './events-calendar';
+export { HiveCategorySection } from './hive-category-section';

@@ -6,59 +6,66 @@
 import { Result } from '../../shared/base/Result';
 import { ValueObject } from '../../shared/base/ValueObject.base';
 
-export enum PrivacyLevel {
-  PUBLIC = 'public',
-  CAMPUS_ONLY = 'campus_only',
-  CONNECTIONS_ONLY = 'connections_only',
-  PRIVATE = 'private'
-}
+type ProfileVisibility = 'public' | 'private' | 'connections';
 
 interface ProfilePrivacyProps {
-  level: PrivacyLevel;
+  profileVisibility: ProfileVisibility;
   showEmail: boolean;
-  showPhone: boolean;
-  showDorm: boolean;
-  showSchedule: boolean;
-  showActivity: boolean;
+  showConnections: boolean;
+  allowConnectionRequests: boolean;
 }
 
 export class ProfilePrivacy extends ValueObject<ProfilePrivacyProps> {
-  get level(): PrivacyLevel {
-    return this.props.level;
+  get profileVisibility(): string {
+    return this.props.profileVisibility;
+  }
+
+  get visibility(): string {
+    return this.props.profileVisibility;
   }
 
   get showEmail(): boolean {
     return this.props.showEmail;
   }
 
-  get showPhone(): boolean {
-    return this.props.showPhone;
+  get showConnections(): boolean {
+    return this.props.showConnections;
   }
 
-  get showDorm(): boolean {
-    return this.props.showDorm;
-  }
-
-  get showSchedule(): boolean {
-    return this.props.showSchedule;
-  }
-
-  get showActivity(): boolean {
-    return this.props.showActivity;
+  get allowConnectionRequests(): boolean {
+    return this.props.allowConnectionRequests;
   }
 
   private constructor(props: ProfilePrivacyProps) {
     super(props);
   }
 
+  public isPublic(): boolean {
+    return this.props.profileVisibility === 'public';
+  }
+
+  public isPrivate(): boolean {
+    return this.props.profileVisibility === 'private';
+  }
+
+  public isConnectionsOnly(): boolean {
+    return this.props.profileVisibility === 'connections';
+  }
+
   public static create(props: Partial<ProfilePrivacyProps>): Result<ProfilePrivacy> {
+    // Validate visibility if provided
+    if (props.profileVisibility) {
+      const validVisibilities: ProfileVisibility[] = ['public', 'private', 'connections'];
+      if (!validVisibilities.includes(props.profileVisibility as ProfileVisibility)) {
+        return Result.fail<ProfilePrivacy>('Invalid profile visibility');
+      }
+    }
+
     const defaultProps: ProfilePrivacyProps = {
-      level: PrivacyLevel.CAMPUS_ONLY,
+      profileVisibility: 'public',
       showEmail: false,
-      showPhone: false,
-      showDorm: true,
-      showSchedule: false,
-      showActivity: true,
+      showConnections: true,
+      allowConnectionRequests: true,
       ...props
     };
 
@@ -71,35 +78,38 @@ export class ProfilePrivacy extends ValueObject<ProfilePrivacyProps> {
 
   public static createPublic(): Result<ProfilePrivacy> {
     return ProfilePrivacy.create({
-      level: PrivacyLevel.PUBLIC,
-      showEmail: false,
-      showPhone: false,
-      showDorm: true,
-      showSchedule: true,
-      showActivity: true
+      profileVisibility: 'public',
+      showEmail: true,
+      showConnections: true,
+      allowConnectionRequests: true
     });
   }
 
   public static createPrivate(): Result<ProfilePrivacy> {
     return ProfilePrivacy.create({
-      level: PrivacyLevel.PRIVATE,
+      profileVisibility: 'private',
       showEmail: false,
-      showPhone: false,
-      showDorm: false,
-      showSchedule: false,
-      showActivity: false
+      showConnections: false,
+      allowConnectionRequests: false
+    });
+  }
+
+  public static createConnectionsOnly(): Result<ProfilePrivacy> {
+    return ProfilePrivacy.create({
+      profileVisibility: 'connections',
+      showEmail: false,
+      showConnections: true,
+      allowConnectionRequests: true
     });
   }
 
   public canViewProfile(viewerType: 'public' | 'campus' | 'connection'): boolean {
-    switch (this.props.level) {
-      case PrivacyLevel.PUBLIC:
+    switch (this.props.profileVisibility) {
+      case 'public':
         return true;
-      case PrivacyLevel.CAMPUS_ONLY:
-        return viewerType === 'campus' || viewerType === 'connection';
-      case PrivacyLevel.CONNECTIONS_ONLY:
+      case 'connections':
         return viewerType === 'connection';
-      case PrivacyLevel.PRIVATE:
+      case 'private':
         return false;
       default:
         return false;

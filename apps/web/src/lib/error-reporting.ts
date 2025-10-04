@@ -143,8 +143,8 @@ class ErrorReportingService {
    */
   private sanitizeStackTrace(stack: string): string {
     return stack
-      .replace(/\/Users\/[^\/]+/g, '/Users/[USER]') // Remove usernames
-      .replace(/\/home\/[^\/]+/g, '/home/[USER]')   // Remove usernames
+      .replace(/\/Users\/[^/]+/g, '/Users/[USER]') // Remove usernames
+      .replace(/\/home\/[^/]+/g, '/home/[USER]')   // Remove usernames
       .replace(/access_token=[^&\s]+/g, 'access_token=[REDACTED]') // Remove tokens
       .replace(/password=[^&\s]+/g, 'password=[REDACTED]') // Remove passwords
       .replace(/apikey=[^&\s]+/g, 'apikey=[REDACTED]'); // Remove API keys

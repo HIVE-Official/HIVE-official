@@ -1,102 +1,233 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { Button } from "../atoms/button"
+import { Badge } from "../atoms/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../atoms/dropdown-menu"
+import { cn } from "../../lib/utils"
 
-/**
- * SKELETON COMPONENT - UI/UX TO BE DETERMINED
- *
- * Space Leader Toolbar
- *
- * Quick actions toolbar for space leaders
- */
+export interface SpaceLeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Space statistics */
+  pendingPosts?: number
+  pendingMembers?: number
+  reportedContent?: number
 
-const spaceleadertoolbarVariants = cva(
-  'relative w-full border rounded-lg p-4 bg-[var(--hive-surface-primary)]',
-  {
-    variants: {
-      variant: {
-        default: 'border-[var(--hive-border-default)]',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
+  /** Action callbacks */
+  onEdit?: () => void
+  onSettings?: () => void
+  onAnalytics?: () => void
+  onInvite?: () => void
+  onManageContent?: () => void
+  onManageMembers?: () => void
+  onManageEvents?: () => void
+  onExportData?: () => void
 
-export interface SpaceLeaderToolbarProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof spaceleadertoolbarVariants> {
-  spaceId?: any;
-  actions?: any;
-  isLoading?: boolean;
-  error?: string;
+  /** Display mode */
+  variant?: "full" | "compact"
+
+  /** Show notification badges */
+  showBadges?: boolean
 }
 
-export const SpaceLeaderToolbar = React.forwardRef<
-  HTMLDivElement,
-  SpaceLeaderToolbarProps
->(
+const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarProps>(
   (
     {
       className,
-      variant,
-      isLoading = false,
-      error,
+      pendingPosts = 0,
+      pendingMembers = 0,
+      reportedContent = 0,
+      onEdit,
+      onSettings,
+      onAnalytics,
+      onInvite,
+      onManageContent,
+      onManageMembers,
+      onManageEvents,
+      onExportData,
+      variant = "full",
+      showBadges = true,
       ...props
     },
     ref
   ) => {
-    if (isLoading) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spaceleadertoolbarVariants({ variant }), className)}
-          {...props}
-        >
-          <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded" />
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded w-3/4" />
-          </div>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spaceleadertoolbarVariants({ variant }), 'border-[var(--hive-error)]', className)}
-          {...props}
-        >
-          <p className="text-[var(--hive-error)]">Error: {error}</p>
-        </div>
-      );
-    }
+    const isCompact = variant === "compact"
+    const totalPending = pendingPosts + pendingMembers + reportedContent
 
     return (
       <div
         ref={ref}
-        className={cn(spaceleadertoolbarVariants({ variant }), className)}
+        className={cn(
+          "flex items-center gap-2 rounded-lg border border-white/8 bg-[#0c0c0c]/50 backdrop-blur-sm p-3 transition-all duration-[400ms]",
+          className
+        )}
         {...props}
       >
-        <div className="text-center py-8">
-          <p className="text-2xl mb-2">🎨</p>
-          <p className="text-[var(--hive-text-primary)] font-semibold mb-1">
-            Space Leader Toolbar
-          </p>
-          <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-            Quick actions toolbar for space leaders
-          </p>
-          <div className="p-2 bg-[var(--hive-surface-tertiary)] rounded text-xs text-[var(--hive-text-tertiary)]">
-            ⚠️ SKELETON: UI/UX to be designed in Storybook review
-          </div>
+        {/* Primary Actions */}
+        <div className="flex items-center gap-1">
+          {onEdit && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="transition-all duration-[400ms]"
+            >
+              <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+              </svg>
+              {!isCompact && "Edit Space"}
+            </Button>
+          )}
+
+          {onSettings && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSettings}
+              className="transition-all duration-[400ms]"
+            >
+              <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {!isCompact && "Settings"}
+            </Button>
+          )}
+
+          {onAnalytics && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onAnalytics}
+              className="transition-all duration-[400ms]"
+            >
+              <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+              </svg>
+              {!isCompact && "Analytics"}
+            </Button>
+          )}
+        </div>
+
+        {/* Separator */}
+        {!isCompact && (
+          <div className="h-6 w-px bg-white/8" />
+        )}
+
+        {/* Invite Button */}
+        {onInvite && (
+          <Button
+            size="sm"
+            onClick={onInvite}
+            className="transition-all duration-[400ms]"
+          >
+            <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+            </svg>
+            {!isCompact && "Invite"}
+          </Button>
+        )}
+
+        {/* More Actions Dropdown */}
+        <div className="ml-auto">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="relative transition-all duration-[400ms]"
+              >
+                <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                </svg>
+                {!isCompact && "More"}
+                {showBadges && totalPending > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -right-1 -top-1 h-5 min-w-5 px-1 text-xs"
+                  >
+                    {totalPending > 99 ? "99+" : totalPending}
+                  </Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              {onManageContent && (
+                <DropdownMenuItem onClick={onManageContent} className="cursor-pointer">
+                  <svg className="h-4 w-4 mr-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                  </svg>
+                  <span>Manage Content</span>
+                  {showBadges && pendingPosts > 0 && (
+                    <Badge variant="secondary" className="ml-auto">
+                      {pendingPosts}
+                    </Badge>
+                  )}
+                </DropdownMenuItem>
+              )}
+
+              {onManageMembers && (
+                <DropdownMenuItem onClick={onManageMembers} className="cursor-pointer">
+                  <svg className="h-4 w-4 mr-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                  </svg>
+                  <span>Manage Members</span>
+                  {showBadges && pendingMembers > 0 && (
+                    <Badge variant="secondary" className="ml-auto">
+                      {pendingMembers}
+                    </Badge>
+                  )}
+                </DropdownMenuItem>
+              )}
+
+              {onManageEvents && (
+                <DropdownMenuItem onClick={onManageEvents} className="cursor-pointer">
+                  <svg className="h-4 w-4 mr-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  <span>Manage Events</span>
+                </DropdownMenuItem>
+              )}
+
+              {reportedContent > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer text-red-500 focus:text-red-500">
+                    <svg className="h-4 w-4 mr-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                    <span>Reported Content</span>
+                    <Badge variant="destructive" className="ml-auto">
+                      {reportedContent}
+                    </Badge>
+                  </DropdownMenuItem>
+                </>
+              )}
+
+              {onExportData && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={onExportData} className="cursor-pointer">
+                    <svg className="h-4 w-4 mr-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    <span>Export Data</span>
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
-    );
+    )
   }
-);
+)
 
-SpaceLeaderToolbar.displayName = 'SpaceLeaderToolbar';
+SpaceLeaderToolbar.displayName = "SpaceLeaderToolbar"
+
+export { SpaceLeaderToolbar }

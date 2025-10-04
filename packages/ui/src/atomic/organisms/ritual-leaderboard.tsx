@@ -1,104 +1,153 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { cn } from "../../lib/utils"
+import { Card } from "../atoms/card"
+import { Avatar } from "../atoms/avatar"
+import { Badge } from "../atoms/badge"
+import { Trophy, Medal, Award } from "lucide-react"
 
-/**
- * SKELETON COMPONENT - UI/UX TO BE DETERMINED
- *
- * Ritual Leaderboard
- *
- * Ritual leaderboard with rankings
- */
-
-const ritualleaderboardVariants = cva(
-  'relative w-full border rounded-lg p-4 bg-[var(--hive-surface-primary)]',
-  {
-    variants: {
-      variant: {
-        default: 'border-[var(--hive-border-default)]',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
-
-export interface RitualLeaderboardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof ritualleaderboardVariants> {
-  rankings?: any;
-  userPosition?: any;
-  filter?: any;
-  timePeriod?: any;
-  isLoading?: boolean;
-  error?: string;
+export interface LeaderboardEntry {
+  /** User rank */
+  rank: number
+  /** User name */
+  name: string
+  /** User handle */
+  handle: string
+  /** User avatar URL */
+  avatar?: string
+  /** Progress percentage */
+  progress: number
+  /** Is this the current user? */
+  isCurrentUser?: boolean
 }
 
-export const RitualLeaderboard = React.forwardRef<
-  HTMLDivElement,
-  RitualLeaderboardProps
->(
-  (
-    {
-      className,
-      variant,
-      isLoading = false,
-      error,
-      ...props
-    },
-    ref
-  ) => {
-    if (isLoading) {
-      return (
-        <div
-          ref={ref}
-          className={cn(ritualleaderboardVariants({ variant }), className)}
-          {...props}
-        >
-          <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded" />
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded w-3/4" />
-          </div>
-        </div>
-      );
+export interface RitualLeaderboardProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Leaderboard entries */
+  entries: LeaderboardEntry[]
+  /** Show only top N entries */
+  limit?: number
+  /** Highlight current user */
+  highlightCurrentUser?: boolean
+}
+
+const RitualLeaderboard = React.forwardRef<HTMLDivElement, RitualLeaderboardProps>(
+  ({ className, entries, limit, highlightCurrentUser = true, ...props }, ref) => {
+    const displayEntries = limit ? entries.slice(0, limit) : entries
+
+    const getRankIcon = (rank: number) => {
+      if (rank === 1) return <Trophy className="h-5 w-5 text-[#FFD700]" />
+      if (rank === 2) return <Medal className="h-5 w-5 text-[#C0C0C0]" />
+      if (rank === 3) return <Award className="h-5 w-5 text-[#CD7F32]" />
+      return null
     }
 
-    if (error) {
-      return (
-        <div
-          ref={ref}
-          className={cn(ritualleaderboardVariants({ variant }), 'border-[var(--hive-error)]', className)}
-          {...props}
-        >
-          <p className="text-[var(--hive-error)]">Error: {error}</p>
-        </div>
-      );
+    const getRankColor = (rank: number) => {
+      if (rank === 1) return "text-[#FFD700]"
+      if (rank === 2) return "text-[#C0C0C0]"
+      if (rank === 3) return "text-[#CD7F32]"
+      return "text-white/50"
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn(ritualleaderboardVariants({ variant }), className)}
-        {...props}
-      >
-        <div className="text-center py-8">
-          <p className="text-2xl mb-2">🎨</p>
-          <p className="text-[var(--hive-text-primary)] font-semibold mb-1">
-            Ritual Leaderboard
-          </p>
-          <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-            Ritual leaderboard with rankings
-          </p>
-          <div className="p-2 bg-[var(--hive-surface-tertiary)] rounded text-xs text-[var(--hive-text-tertiary)]">
-            ⚠️ SKELETON: UI/UX to be designed in Storybook review
-          </div>
-        </div>
-      </div>
-    );
-  }
-);
+      <div ref={ref} className={cn("space-y-2", className)} {...props}>
+        {displayEntries.map((entry) => {
+          const isTop3 = entry.rank <= 3
+          const isCurrentUser = highlightCurrentUser && entry.isCurrentUser
 
-RitualLeaderboard.displayName = 'RitualLeaderboard';
+          return (
+            <Card
+              key={entry.rank}
+              className={cn(
+                "p-4 transition-all duration-200",
+                "bg-[#0c0c0c] border border-white/8",
+                "hover:border-white/20",
+                isCurrentUser && "border-[#FFD700]/30 bg-[#FFD700]/5"
+              )}
+            >
+              <div className="flex items-center gap-4">
+                {/* Rank */}
+                <div className="flex items-center justify-center w-12 h-12 flex-shrink-0">
+                  {isTop3 ? (
+                    getRankIcon(entry.rank)
+                  ) : (
+                    <span className={cn("text-2xl font-bold", getRankColor(entry.rank))}>
+                      {entry.rank}
+                    </span>
+                  )}
+                </div>
+
+                {/* Avatar */}
+                <Avatar className="h-10 w-10 border border-white/20">
+                  {entry.avatar ? (
+                    <img src={entry.avatar} alt={entry.name} />
+                  ) : (
+                    <div className="bg-white/10 w-full h-full flex items-center justify-center text-white">
+                      {entry.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </Avatar>
+
+                {/* User info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-white truncate">
+                      {entry.name}
+                    </h4>
+                    {isCurrentUser && (
+                      <Badge
+                        variant="outline"
+                        className="border-[#FFD700]/30 text-[#FFD700] text-xs"
+                      >
+                        You
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-white/50">@{entry.handle}</p>
+                </div>
+
+                {/* Progress */}
+                <div className="text-right flex-shrink-0">
+                  <div
+                    className={cn(
+                      "text-xl font-bold",
+                      entry.progress === 100 ? "text-[#FFD700]" : "text-white"
+                    )}
+                  >
+                    {entry.progress}%
+                  </div>
+                  {entry.progress === 100 && (
+                    <div className="text-xs text-[#FFD700]">Complete</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mt-3 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                <div
+                  className={cn(
+                    "h-full rounded-full transition-all duration-500",
+                    entry.progress === 100 ? "bg-[#FFD700]" : "bg-white/30"
+                  )}
+                  style={{ width: `${entry.progress}%` }}
+                />
+              </div>
+            </Card>
+          )
+        })}
+
+        {limit && entries.length > limit && (
+          <div className="text-center py-2">
+            <p className="text-sm text-white/50">
+              +{entries.length - limit} more participants
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+
+RitualLeaderboard.displayName = "RitualLeaderboard"
+
+export { RitualLeaderboard }

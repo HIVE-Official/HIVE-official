@@ -196,6 +196,7 @@ export async function validateDevBypass(
         extra: securityContext
       });
     } catch (error) {
+      // Intentionally suppressed - security logging failure should not break auth
     }
 
     return {
@@ -262,6 +263,7 @@ export async function validateMagicLinkBypass(
           }
         });
       } catch (error) {
+        // Intentionally suppressed - security logging failure should not break auth
       }
 
       return {
@@ -383,8 +385,11 @@ export function secureLog(level: 'info' | 'warn' | 'error', message: string, dat
   const config = getSecurityConfig();
 
   if (level === 'error') {
+    console.error(`[Security] ${message}`, data);
   } else if (level === 'warn') {
+    console.warn(`[Security] ${message}`, data);
   } else {
+    console.log(`[Security] ${message}`, data);
   }
 }
 

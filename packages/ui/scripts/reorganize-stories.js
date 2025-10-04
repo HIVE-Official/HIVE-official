@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-env node */
 /**
  * Reorganize Storybook stories from atomic design to vertical slices (features)
  *

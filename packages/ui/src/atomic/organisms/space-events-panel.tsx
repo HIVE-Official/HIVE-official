@@ -1,102 +1,260 @@
-'use client';
+"use client"
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import * as React from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card"
+import { Badge } from "../atoms/badge"
+import { Button } from "../atoms/button"
+import { cn } from "../../lib/utils"
 
-/**
- * SKELETON COMPONENT - UI/UX TO BE DETERMINED
- *
- * Space Events Panel
- *
- * Events panel for space
- */
-
-const spaceeventspanelVariants = cva(
-  'relative w-full border rounded-lg p-4 bg-[var(--hive-surface-primary)]',
-  {
-    variants: {
-      variant: {
-        default: 'border-[var(--hive-border-default)]',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
+export interface SpaceEvent {
+  id: string
+  title: string
+  description?: string
+  startDate: Date
+  endDate: Date
+  location?: string
+  timeDisplay?: string
+  locationType?: "on-campus" | "off-campus" | "virtual"
+  organizer?: {
+    name: string
+    handle: string
+    avatar?: string
   }
-);
-
-export interface SpaceEventsPanelProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof spaceeventspanelVariants> {
-  events?: any;
-  canCreate?: any;
-  isLoading?: boolean;
-  error?: string;
+  rsvpCount?: number
+  attendeeCount?: number
+  isAttending?: boolean
+  userRSVP?: "attending" | "not-attending" | "maybe" | null
+  type?: "meeting" | "workshop" | "social" | "academic" | "other"
+  isAllDay?: boolean
+  status?: "upcoming" | "in-progress" | "completed" | "cancelled"
+  category?: string
+  campusContext?: any
 }
 
-export const SpaceEventsPanel = React.forwardRef<
-  HTMLDivElement,
-  SpaceEventsPanelProps
->(
+export interface SpaceEventsPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** List of events */
+  events?: SpaceEvent[]
+
+  /** Event creation handler */
+  onCreateEvent?: () => void
+
+  /** Event click handler */
+  onEventClick?: (event: SpaceEvent) => void
+
+  /** RSVP handler */
+  onRSVP?: (eventId: string, attending: boolean) => void
+
+  /** Whether user can create events */
+  canCreateEvents?: boolean
+
+  /** Show past events */
+  showPastEvents?: boolean
+
+  /** Empty state message */
+  emptyStateMessage?: string
+}
+
+const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>(
   (
     {
       className,
-      variant,
-      isLoading = false,
-      error,
+      events = [],
+      onCreateEvent,
+      onEventClick,
+      onRSVP,
+      canCreateEvents = false,
+      showPastEvents = false,
+      emptyStateMessage = "No upcoming events",
       ...props
     },
     ref
   ) => {
-    if (isLoading) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spaceeventspanelVariants({ variant }), className)}
-          {...props}
-        >
-          <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded" />
-            <div className="h-4 bg-[var(--hive-surface-secondary)] rounded w-3/4" />
-          </div>
-        </div>
-      );
-    }
+    // Filter events based on status
+    const upcomingEvents = React.useMemo(() => {
+      const now = new Date()
+      return events
+        .filter((e) => {
+          if (e.status === "cancelled") return false
+          if (!showPastEvents && e.status === "completed") return false
+          if (!showPastEvents && e.endDate < now) return false
+          return true
+        })
+        .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
+    }, [events, showPastEvents])
 
-    if (error) {
-      return (
-        <div
-          ref={ref}
-          className={cn(spaceeventspanelVariants({ variant }), 'border-[var(--hive-error)]', className)}
-          {...props}
-        >
-          <p className="text-[var(--hive-error)]">Error: {error}</p>
-        </div>
-      );
+    // Format date range
+    const formatDateRange = (start: Date, end: Date, isAllDay?: boolean) => {
+      const sameDay = start.toDateString() === end.toDateString()
+
+      if (isAllDay) {
+        if (sameDay) {
+          return new Intl.DateTimeFormat("en-US", {
+            month: "short",
+            day: "numeric",
+          }).format(start)
+        }
+        return `${new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+        }).format(start)} - ${new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+        }).format(end)}`
+      }
+
+      if (sameDay) {
+        const dateStr = new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+        }).format(start)
+        const timeStr = new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+        }).format(start)
+        return `${dateStr} at ${timeStr}`
+      }
+
+      return `${new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }).format(start)} - ${new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }).format(end)}`
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn(spaceeventspanelVariants({ variant }), className)}
-        {...props}
-      >
-        <div className="text-center py-8">
-          <p className="text-2xl mb-2">🎨</p>
-          <p className="text-[var(--hive-text-primary)] font-semibold mb-1">
-            Space Events Panel
-          </p>
-          <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-            Events panel for space
-          </p>
-          <div className="p-2 bg-[var(--hive-surface-tertiary)] rounded text-xs text-[var(--hive-text-tertiary)]">
-            ⚠️ SKELETON: UI/UX to be designed in Storybook review
+      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base">Upcoming Events</CardTitle>
+            {canCreateEvents && onCreateEvent && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onCreateEvent}
+                className="h-8 px-2 transition-all duration-[400ms]"
+              >
+                <svg className="h-3.5 w-3.5 mr-1" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span className="text-xs">New Event</span>
+              </Button>
+            )}
           </div>
-        </div>
-      </div>
-    );
-  }
-);
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {upcomingEvents.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <svg className="h-12 w-12 text-white/30 mb-3" fill="none" strokeWidth="1.5" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
+              <p className="text-sm text-white/70">{emptyStateMessage}</p>
+              {canCreateEvents && onCreateEvent && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onCreateEvent}
+                  className="mt-3 transition-all duration-[400ms]"
+                >
+                  <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Create First Event
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {upcomingEvents.map((event) => (
+                <div
+                  key={event.id}
+                  onClick={() => onEventClick?.(event)}
+                  className={cn(
+                    "group relative rounded-lg border border-white/8 bg-[#0c0c0c] p-3 transition-all duration-[400ms]",
+                    onEventClick && "cursor-pointer hover:border-white/20 hover:bg-white/10"
+                  )}
+                >
+                  {/* Event Type Badge */}
+                  {event.type && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute right-3 top-3 text-xs capitalize"
+                    >
+                      {event.type}
+                    </Badge>
+                  )}
 
-SpaceEventsPanel.displayName = 'SpaceEventsPanel';
+                  {/* Event Title */}
+                  <h4 className="text-sm font-semibold text-white pr-20">
+                    {event.title}
+                  </h4>
+
+                  {/* Date & Time */}
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-white/70">
+                    <svg className="h-3.5 w-3.5 shrink-0" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                    </svg>
+                    <span>{formatDateRange(event.startDate, event.endDate, event.isAllDay)}</span>
+                  </div>
+
+                  {/* Location */}
+                  {event.location && (
+                    <div className="mt-1.5 flex items-center gap-1.5 text-xs text-white/70">
+                      <svg className="h-3.5 w-3.5 shrink-0" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                      </svg>
+                      <span className="truncate">{event.location}</span>
+                    </div>
+                  )}
+
+                  {/* Description */}
+                  {event.description && (
+                    <p className="mt-2 text-xs text-white/70 line-clamp-2">
+                      {event.description}
+                    </p>
+                  )}
+
+                  {/* Footer: RSVP Count + Button */}
+                  <div className="mt-3 flex items-center justify-between gap-2 pt-2 border-t border-white/8">
+                    <div className="flex items-center gap-1.5 text-xs text-white/70">
+                      <svg className="h-3.5 w-3.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                      </svg>
+                      <span>
+                        {event.rsvpCount ?? 0} {event.rsvpCount === 1 ? "person" : "people"} going
+                      </span>
+                    </div>
+
+                    {onRSVP && (
+                      <Button
+                        variant={event.isAttending ? "default" : "outline"}
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onRSVP(event.id, !event.isAttending)
+                        }}
+                        className="h-7 px-3 text-xs transition-all duration-[400ms]"
+                      >
+                        {event.isAttending ? "Going" : "RSVP"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
+)
+
+SpaceEventsPanel.displayName = "SpaceEventsPanel"
+
+export { SpaceEventsPanel }

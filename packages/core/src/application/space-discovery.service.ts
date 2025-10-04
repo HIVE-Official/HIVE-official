@@ -5,7 +5,7 @@
 
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedSpace } from '../domain/spaces/aggregates/enhanced-space';
+import { Space } from '../domain/spaces/aggregates/space.aggregate';
 import { SpaceId } from '../domain/spaces/value-objects/space-id.value';
 import { SpaceName } from '../domain/spaces/value-objects/space-name.value';
 import { SpaceDescription } from '../domain/spaces/value-objects/space-description.value';
@@ -40,7 +40,7 @@ export interface SpaceDiscoveryFilters {
 }
 
 export interface SpaceJoinResult {
-  space: EnhancedSpace;
+  space: Space;
   role: 'member' | 'moderator' | 'admin';
   welcomeMessage?: string;
   suggestedActions: Array<{ action: string; description: string }>;
@@ -82,13 +82,13 @@ export class SpaceDiscoveryService extends BaseApplicationService {
    */
   async discoverSpaces(
     filters: SpaceDiscoveryFilters = {}
-  ): Promise<Result<ServiceResult<EnhancedSpace[]>>> {
+  ): Promise<Result<ServiceResult<Space[]>>> {
     return this.execute(async () => {
-      let spaces: EnhancedSpace[] = [];
+      let spaces: Space[] = [];
 
       // Apply different discovery strategies based on filters
       if (filters.searchQuery) {
-        const searchResult = await this.spaceRepo.searchEnhancedSpaces(
+        const searchResult = await this.spaceRepo.searchSpaces(
           filters.searchQuery,
           this.context.campusId
         );
@@ -113,7 +113,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
         }
       } else {
         // Default: get public spaces
-        const publicResult = await this.spaceRepo.findPublicEnhancedSpaces(
+        const publicResult = await this.spaceRepo.findPublicSpaces(
           this.context.campusId,
           filters.limit || 20
         );
@@ -128,9 +128,9 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       }
 
       // Sort spaces based on criteria
-      spaces = this.sortEnhancedSpaces(spaces, filters.sortBy || 'trending');
+      spaces = this.sortSpaces(spaces, filters.sortBy || 'trending');
 
-      const result: ServiceResult<EnhancedSpace[]> = {
+      const result: ServiceResult<Space[]> = {
         data: spaces,
         metadata: {
           totalCount: spaces.length,
@@ -138,18 +138,18 @@ export class SpaceDiscoveryService extends BaseApplicationService {
         }
       };
 
-      return Result.ok<ServiceResult<EnhancedSpace[]>>(result);
-    }, 'EnhancedSpaceDiscovery.discoverSpaces');
+      return Result.ok<ServiceResult<Space[]>>(result);
+    }, 'SpaceDiscovery.discoverSpaces');
   }
 
   /**
    * Get personalized space recommendations for a user
    */
-  async getRecommendedSpaces(userId: string): Promise<Result<ServiceResult<EnhancedSpace[]>>> {
+  async getRecommendedSpaces(userId: string): Promise<Result<ServiceResult<Space[]>>> {
     return this.execute(async () => {
       const userContext = this.validateUserContext();
       if (userContext.isFailure) {
-        return Result.fail<ServiceResult<EnhancedSpace[]>>(userContext.error!);
+        return Result.fail<ServiceResult<Space[]>>(userContext.error!);
       }
 
       // Get user profile to understand interests
@@ -157,43 +157,43 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       const profileResult = await this.profileRepo.findById(profileId);
 
       if (profileResult.isFailure) {
-        return Result.fail<ServiceResult<EnhancedSpace[]>>('User profile not found');
+        return Result.fail<ServiceResult<Space[]>>('User profile not found');
       }
 
       const profile = profileResult.getValue();
       const profileData = profile; // ProfileDTO doesn't need toData
 
       // Get spaces user is already in
-      const userEnhancedSpacesResult = await this.spaceRepo.findByMember(profileId.id);
-      const userSpaceIds = userEnhancedSpacesResult.isSuccess
-        ? userEnhancedSpacesResult.getValue().map((s: any) => typeof s.id === 'string' ? s.id : s.id)
+      const userSpacesResult = await this.spaceRepo.findByMember(profileId.id);
+      const userSpaceIds = userSpacesResult.isSuccess
+        ? userSpacesResult.getValue().map((s: any) => typeof s.id === 'string' ? s.id : s.id)
         : [];
 
       // Build recommendation based on multiple factors
-      const recommendations: EnhancedSpace[] = [];
+      const recommendations: Space[] = [];
 
-      // 1. EnhancedSpaces related to user's major
+      // 1. Spaces related to user's major
       if (profileData.personalInfo.major) {
-        const majorEnhancedSpaces = await this.spaceRepo.findByType(
+        const majorSpaces = await this.spaceRepo.findByType(
           'study-group',
           this.context.campusId
         );
-        if (majorEnhancedSpaces.isSuccess) {
+        if (majorSpaces.isSuccess) {
           recommendations.push(
-            ...majorEnhancedSpaces.getValue().filter(s => !userSpaceIds.includes(s.id))
+            ...majorSpaces.getValue().filter(s => !userSpaceIds.includes(s.id))
           );
         }
       }
 
-      // 2. EnhancedSpaces matching user interests
+      // 2. Spaces matching user interests
       for (const interest of profileData.interests.slice(0, 3)) {
-        const searchResult = await this.spaceRepo.searchEnhancedSpaces(
+        const searchResult = await this.spaceRepo.searchSpaces(
           interest,
           this.context.campusId
         );
         if (searchResult.isSuccess) {
           recommendations.push(
-            ...searchResult.getValue().filter((s: EnhancedSpace) => !userSpaceIds.includes(s.id))
+            ...searchResult.getValue().filter((s: Space) => !userSpaceIds.includes(s.id))
           );
         }
       }
@@ -207,66 +207,66 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       }
 
       // Deduplicate and limit
-      const uniqueEnhancedSpaces = Array.from(
+      const uniqueSpaces = Array.from(
         new Map(recommendations.map(space => [typeof space.id === 'string' ? space.id : space.id, space])).values()
       ).slice(0, 10);
 
-      const result: ServiceResult<EnhancedSpace[]> = {
-        data: uniqueEnhancedSpaces,
+      const result: ServiceResult<Space[]> = {
+        data: uniqueSpaces,
         metadata: {
-          totalCount: uniqueEnhancedSpaces.length
+          totalCount: uniqueSpaces.length
         }
       };
 
-      return Result.ok<ServiceResult<EnhancedSpace[]>>(result);
-    }, 'EnhancedSpaceDiscovery.getRecommendedSpaces');
+      return Result.ok<ServiceResult<Space[]>>(result);
+    }, 'SpaceDiscovery.getRecommendedSpaces');
   }
 
   /**
    * Create a new space
    */
-  async createEnhancedSpace(
+  async createSpace(
     creatorId: string,
     data: SpaceCreationData
-  ): Promise<Result<EnhancedSpace>> {
+  ): Promise<Result<Space>> {
     return this.execute(async () => {
       // Validate creator exists
       const creatorProfileId = ProfileId.create(creatorId).getValue();
       const creatorResult = await this.profileRepo.findById(creatorProfileId);
 
       if (creatorResult.isFailure) {
-        return Result.fail<EnhancedSpace>('Creator profile not found');
+        return Result.fail<Space>('Creator profile not found');
       }
 
       // Create space value objects
       const spaceNameResult = SpaceName.create(data.name);
       if (spaceNameResult.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceNameResult.error!);
+        return Result.fail<Space>(spaceNameResult.error!);
       }
 
       const spaceDescriptionResult = SpaceDescription.create(data.description);
       if (spaceDescriptionResult.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceDescriptionResult.error!);
+        return Result.fail<Space>(spaceDescriptionResult.error!);
       }
 
       const spaceCategoryResult = SpaceCategory.create(data.spaceType);
       if (spaceCategoryResult.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceCategoryResult.error!);
+        return Result.fail<Space>(spaceCategoryResult.error!);
       }
 
       const campusIdResult = CampusId.create(this.context.campusId);
       if (campusIdResult.isFailure) {
-        return Result.fail<EnhancedSpace>(campusIdResult.error!);
+        return Result.fail<Space>(campusIdResult.error!);
       }
 
       // Check if space name already exists
-      const existingEnhancedSpace = await this.spaceRepo.findByName(
+      const existingSpace = await this.spaceRepo.findByName(
         spaceNameResult.getValue().value,
         this.context.campusId
       );
 
-      if (existingEnhancedSpace.isSuccess) {
-        return Result.fail<EnhancedSpace>('A space with this name already exists');
+      if (existingSpace.isSuccess) {
+        return Result.fail<Space>('A space with this name already exists');
       }
 
       // Generate space ID
@@ -275,7 +275,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       ).getValue();
 
       // Create space
-      const spaceResult = EnhancedSpace.create({
+      const spaceResult = Space.create({
         spaceId: spaceId,
         name: spaceNameResult.getValue(),
         description: spaceDescriptionResult.getValue(),
@@ -292,7 +292,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       });
 
       if (spaceResult.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceResult.error!);
+        return Result.fail<Space>(spaceResult.error!);
       }
 
       const space = spaceResult.getValue();
@@ -303,7 +303,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       // Save space
       const saveResult = await this.spaceRepo.save(space);
       if (saveResult.isFailure) {
-        return Result.fail<EnhancedSpace>(saveResult.error!);
+        return Result.fail<Space>(saveResult.error!);
       }
 
       // If RSS URL provided, schedule initial fetch
@@ -311,14 +311,14 @@ export class SpaceDiscoveryService extends BaseApplicationService {
         await this.scheduleRSSFetch(space);
       }
 
-      return Result.ok<EnhancedSpace>(space);
-    }, 'EnhancedSpaceDiscovery.createEnhancedSpace');
+      return Result.ok<Space>(space);
+    }, 'SpaceDiscovery.createSpace');
   }
 
   /**
    * Join a space
    */
-  async joinEnhancedSpace(
+  async joinSpace(
     userId: string,
     spaceId: string
   ): Promise<Result<ServiceResult<SpaceJoinResult>>> {
@@ -336,7 +336,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       const spaceResult = await this.spaceRepo.findById(spaceIdVO);
 
       if (spaceResult.isFailure) {
-        return Result.fail<ServiceResult<SpaceJoinResult>>('EnhancedSpace not found');
+        return Result.fail<ServiceResult<SpaceJoinResult>>('Space not found');
       }
 
       const space = spaceResult.getValue();
@@ -363,9 +363,9 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       // Save updated space
       await this.spaceRepo.save(space);
 
-      // Generate welcome message and suggested actions
-      const welcomeMessage = this.generateWelcomeMessage(space);
-      const suggestedActions = this.generateSuggestedActions(space);
+      // Generate welcome message and suggested actions (using domain logic)
+      const welcomeMessage = space.getWelcomeMessage();
+      const suggestedActions = space.getSuggestedActions();
 
       const result: ServiceResult<SpaceJoinResult> = {
         data: {
@@ -377,7 +377,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       };
 
       return Result.ok<ServiceResult<SpaceJoinResult>>(result);
-    }, 'EnhancedSpaceDiscovery.joinEnhancedSpace');
+    }, 'SpaceDiscovery.joinSpace');
   }
 
   /**
@@ -390,7 +390,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
 
       const spaceResult = await this.spaceRepo.findById(spaceIdVO);
       if (spaceResult.isFailure) {
-        return Result.fail<void>('EnhancedSpace not found');
+        return Result.fail<void>('Space not found');
       }
 
       const space = spaceResult.getValue();
@@ -416,7 +416,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       await this.spaceRepo.save(space);
 
       return Result.ok<void>();
-    }, 'EnhancedSpaceDiscovery.leaveSpace');
+    }, 'SpaceDiscovery.leaveSpace');
   }
 
   /**
@@ -428,7 +428,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       const spaceResult = await this.spaceRepo.findById(spaceIdVO);
 
       if (spaceResult.isFailure) {
-        return Result.fail<ServiceResult<SpaceActivityData>>('EnhancedSpace not found');
+        return Result.fail<ServiceResult<SpaceActivityData>>('Space not found');
       }
 
       const space = spaceResult.getValue();
@@ -466,12 +466,12 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       };
 
       return Result.ok<ServiceResult<SpaceActivityData>>(activity);
-    }, 'EnhancedSpaceDiscovery.getSpaceActivity');
+    }, 'SpaceDiscovery.getSpaceActivity');
   }
 
   // Private helper methods
 
-  private sortEnhancedSpaces(spaces: EnhancedSpace[], sortBy: string): EnhancedSpace[] {
+  private sortSpaces(spaces: Space[], sortBy: string): Space[] {
     switch (sortBy) {
       case 'members':
         return spaces.sort((a, b) => b.getMemberCount() - a.getMemberCount());
@@ -494,43 +494,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
     }
   }
 
-  private generateWelcomeMessage(space: EnhancedSpace): string {
-    const spaceData = space.toData();
-    const name = typeof spaceData.name === 'string' ? spaceData.name : spaceData.name.value;
-    return `Welcome to ${name}! ${spaceData.description}`;
-  }
-
-  private generateSuggestedActions(space: EnhancedSpace): Array<{ action: string; description: string }> {
-    const spaceData = space.toData();
-    const actions = [];
-
-    if (spaceData.posts.length > 0) {
-      actions.push({
-        action: 'read_recent_posts',
-        description: 'Catch up on recent discussions'
-      });
-    }
-
-    actions.push({
-      action: 'introduce_yourself',
-      description: 'Post an introduction to let others know you\'re here'
-    });
-
-    if (spaceData.spaceType === 'study-group') {
-      actions.push({
-        action: 'share_resources',
-        description: 'Share helpful study materials or notes'
-      });
-    }
-
-    actions.push({
-      action: 'invite_friends',
-      description: 'Invite classmates who might be interested'
-    });
-
-    return actions;
-  }
-
+  // NOTE: Trending topics extraction could become a domain service if it grows more complex
   private extractTrendingTopics(posts: any[]): string[] {
     // Simple word frequency analysis (would be more sophisticated in production)
     const wordFrequency = new Map<string, number>();
@@ -550,8 +514,13 @@ export class SpaceDiscoveryService extends BaseApplicationService {
       .map(([word]) => word);
   }
 
-  private async scheduleRSSFetch(space: EnhancedSpace): Promise<void> {
+  private async scheduleRSSFetch(space: Space): Promise<void> {
     // This would trigger an RSS fetch job in production
     console.log(`Scheduling RSS fetch for space ${typeof space.id === 'string' ? space.id : space.id}`);
   }
+
+  // Business logic methods removed - now in Space aggregate:
+  // - generateWelcomeMessage() -> Space.getWelcomeMessage()
+  // - generateSuggestedActions() -> Space.getSuggestedActions()
+  // NOTE: sortSpaces() kept here as it's orchestration logic (could be pushed to repository layer)
 }

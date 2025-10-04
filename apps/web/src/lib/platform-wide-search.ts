@@ -837,6 +837,7 @@ export class HivePlatformSearchEngine {
           : session.token;
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
     
     return '';

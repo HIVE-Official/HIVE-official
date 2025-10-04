@@ -57,7 +57,7 @@ export declare const profileAggregator: ProfileAggregator;
 export declare function useProfileAggregator(): ProfileAggregator;
 export declare function withProfileData<T>(Component: React.ComponentType<T & {
     profileData: AggregatedProfileData;
-}>): (props: T) => import("react/jsx-runtime").JSX.Element;
+}>): (props: T) => any;
 export declare const profileUtils: {
     calculateEngagementScore: (profileData: AggregatedProfileData) => number;
     getActivityTrend: (profileData: AggregatedProfileData) => "up" | "down" | "stable";

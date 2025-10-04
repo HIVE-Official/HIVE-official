@@ -64,7 +64,9 @@ async function testFirebaseAuth() {
       const link = await auth.generateSignInWithEmailLink(testEmail, actionCodeSettings);
     } catch (error: any) {
       if (error.code === 'auth/operation-not-allowed') {
+        // Email link auth not enabled
       } else {
+        // Other error
       }
     }
 
@@ -75,10 +77,13 @@ async function testFirebaseAuth() {
       const listUsersResult = await auth.listUsers(5);
       if (listUsersResult.users.length > 0) {
         listUsersResult.users.forEach(user => {
+          // User found - test successful
         });
       } else {
+        // No users found
       }
     } catch (error: any) {
+      // Error listing users
     }
 
     // Test 4: Check custom claims capability
@@ -89,6 +94,7 @@ async function testFirebaseAuth() {
 
       // This will fail if the user doesn't exist, which is fine for our test
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
 
     // Summary

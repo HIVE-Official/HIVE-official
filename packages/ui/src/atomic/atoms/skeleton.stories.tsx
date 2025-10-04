@@ -1,135 +1,121 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Skeleton } from './skeleton';
 
-/**
- * Skeleton component from HIVE design system
- *
- * HIVE Design System Story
- * All UI/UX built in Storybook first
- */
-
-// REQUIRED: Meta configuration following HIVE standards
 const meta = {
   title: 'Atoms/Skeleton',
   component: Skeleton,
   parameters: {
     layout: 'centered',
-    docs: {
-      description: {
-        component: 'Skeleton component from HIVE design system. Built with HIVE design system standards: CVA variants, mobile-first sizing (44px minimum touch targets), HIVE CSS variables, React.forwardRef pattern.',
-      },
-    },
+    backgrounds: { default: 'dark', values: [{ name: 'dark', value: '#000000' }] },
   },
-  tags: ['autodocs'], // REQUIRED: Enables automatic prop documentation
-  argTypes: {
-    variant: {
-      control: 'select',
-      description: 'Visual variant of the component',
-    },
-    size: {
-      control: 'select',
-      description: 'Size variant (all sizes are mobile-friendly with 44px+ touch targets)',
-    },
-  },
+  tags: ['autodocs'],
 } satisfies Meta<typeof Skeleton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// REQUIRED: Default story showing base component
 export const Default: Story = {
-  args: {
-    children: 'Default Skeleton',
-  },
-};
-
-// REQUIRED: Show all variants if component has variants
-export const AllVariants: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap items-center">
-      <Skeleton variant="default">Default</Skeleton>
-      <Skeleton variant="secondary">Secondary</Skeleton>
-      <Skeleton variant="outline">Outline</Skeleton>
-      <Skeleton variant="ghost">Ghost</Skeleton>
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'All available variants following HIVE design system.',
-      },
-    },
-  },
 };
 
-// REQUIRED: Show all sizes
-export const Sizes: Story = {
+export const ProfileCardLoading: Story = {
   render: () => (
-    <div className="flex gap-4 items-center">
-      <Skeleton size="sm">Small</Skeleton>
-      <Skeleton size="default">Default</Skeleton>
-      <Skeleton size="lg">Large</Skeleton>
+    <div className="w-[320px] rounded-lg border border-white/8 bg-[#0c0c0c] p-6 space-y-4">
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2 flex-1">
+          <Skeleton className="h-4 w-[120px]" />
+          <Skeleton className="h-3 w-[80px]" />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[90%]" />
+      </div>
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Size variants. All sizes maintain 44px+ minimum for mobile touch targets.',
-      },
-    },
-  },
 };
 
-// REQUIRED: Interactive states (hover, focus, disabled)
-export const States: Story = {
+export const SpaceCardLoading: Story = {
   render: () => (
-    <div className="flex gap-4 flex-wrap">
-      <Skeleton>Default</Skeleton>
-      <Skeleton className="hover:opacity-80">Hover State</Skeleton>
-      <Skeleton disabled>Disabled</Skeleton>
+    <div className="w-[280px] rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden">
+      <Skeleton className="h-[160px] w-full rounded-none" />
+      <div className="p-4 space-y-3">
+        <Skeleton className="h-5 w-[80%]" />
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[90%]" />
+        <div className="flex justify-between pt-2">
+          <Skeleton className="h-4 w-[60px]" />
+          <Skeleton className="h-4 w-[80px]" />
+        </div>
+      </div>
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Interactive states. Focus states use HIVE brand primary color for consistency.',
-      },
-    },
-  },
 };
 
-// RECOMMENDED: Responsive examples
-export const Responsive: Story = {
+export const FeedPostLoading: Story = {
   render: () => (
-    <div className="w-full max-w-sm">
-      <Skeleton className="w-full">Full Width</Skeleton>
+    <div className="w-[500px] rounded-lg border border-white/8 bg-[#0c0c0c] p-4 space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-3 w-[100px]" />
+            <Skeleton className="h-2 w-[60px]" />
+          </div>
+        </div>
+        <Skeleton className="h-8 w-8 rounded-md" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[95%]" />
+        <Skeleton className="h-3 w-[85%]" />
+      </div>
+      <Skeleton className="h-[200px] w-full rounded-md" />
+      <div className="flex justify-between pt-2">
+        <Skeleton className="h-8 w-[100px]" />
+        <Skeleton className="h-8 w-[80px]" />
+      </div>
     </div>
   ),
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile',
-    },
-    docs: {
-      description: {
-        story: 'Component behavior on mobile viewports. HIVE components are mobile-first by design.',
-      },
-    },
-  },
 };
 
-// RECOMMENDED: Dark theme demonstration (default for HIVE)
-export const DarkTheme: Story = {
-  args: {
-    children: 'Dark Theme (HIVE Default)',
-  },
-  parameters: {
-    backgrounds: {
-      default: 'hive-dark',
-    },
-    docs: {
-      description: {
-        story: 'Component in dark theme (HIVE default). Uses CSS variables for consistent theming.',
-      },
-    },
-  },
+export const ListLoading: Story = {
+  render: () => (
+    <div className="w-[400px] space-y-2">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="flex items-center space-x-3 p-3 rounded-md border border-white/8 bg-[#0c0c0c]">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3 w-[60%]" />
+            <Skeleton className="h-2 w-[40%]" />
+          </div>
+          <Skeleton className="h-6 w-[60px] rounded-full" />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const TextLoading: Story = {
+  render: () => (
+    <div className="w-[600px] space-y-3">
+      <Skeleton className="h-8 w-[300px]" />
+      <div className="space-y-2">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-[98%]" />
+        <Skeleton className="h-3 w-[95%]" />
+        <Skeleton className="h-3 w-[92%]" />
+        <Skeleton className="h-3 w-[80%]" />
+      </div>
+    </div>
+  ),
 };

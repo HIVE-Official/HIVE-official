@@ -183,6 +183,18 @@ export default [
     },
   },
 
+  // Three.js / React Three Fiber components - allow Three.js properties
+  {
+    files: [
+      "**/components/landing/3d/**/*.{ts,tsx}",
+      "**/components/**/*3d*.{ts,tsx}",
+      "**/components/**/*3D*.{ts,tsx}",
+    ],
+    rules: {
+      "react/no-unknown-property": "off", // Three.js uses special props
+    },
+  },
+
   // Ignore patterns specific to web app
   {
     ignores: [

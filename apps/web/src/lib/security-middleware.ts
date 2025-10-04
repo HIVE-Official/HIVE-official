@@ -240,7 +240,7 @@ export function verifySecureToken(token: string, secret: string): { valid: boole
 /**
  * Security headers for API responses
  */
-export function getSecurityHeaders(): HeadersInit {
+export function getSecurityHeaders(): Record<string, string> {
   return {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',

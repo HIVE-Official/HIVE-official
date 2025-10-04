@@ -164,6 +164,7 @@ export class FeatureRevealSystem {
       }
       
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
     
     return unlockedFeatures;
@@ -311,6 +312,7 @@ export class FeatureRevealSystem {
       });
       
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }
   

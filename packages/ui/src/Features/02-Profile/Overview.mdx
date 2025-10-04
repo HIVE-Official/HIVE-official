@@ -1,224 +1,209 @@
-import { Meta } from '@storybook/addon-docs';
+import { Meta } from "@storybook/blocks";
 
-<Meta title="Features/02-Profile/Overview" />
+<Meta title="02-Profile/Overview" />
 
-# 👤 Profile System
+# Profile System
 
-**Campus identity. Show who you are, what you do, and who you know.**
+**Student identity and coordination hub**
 
----
+## Architecture
 
-## Overview
+Profile pages follow the same design system as Spaces:
+- **shadcn/ui components** - No custom styling
+- **Framer Motion** - Smooth interactions (`whileHover`, `layout`)
+- **HIVE motion tokens** - `transition-smooth`, `ease-liquid`
+- **Mobile-first** - Responsive grid that stacks on mobile
 
-The Profile System is the **campus identity layer** for HIVE. Every student has a profile that showcases their identity, activity, connections, and spaces. Designed to be **authentic, not professional** - this is NOT LinkedIn.
+## Layout Structure
 
----
+### Desktop (lg+)
+```
+┌─────────────┬──────────────────────────────────┐
+│   Carousel  │  Identity Card                   │
+│   (340px)   │  ──────────────────────────────  │
+│   Sticky    │  Stats Grid (2x2 or 4 cols)     │
+│             │  ──────────────────────────────  │
+│             │  Schedule Preview                │
+│             │  ──────────────────────────────  │
+│             │  My Spaces (2x3 grid)            │
+│             │  ──────────────────────────────  │
+│             │  HiveLab Widget                  │
+└─────────────┴──────────────────────────────────┘
+```
 
-## Components in this Feature
+### Mobile (< lg)
+- Carousel (full width)
+- Identity Card
+- Stats (2x2 grid)
+- Schedule Preview
+- Spaces (2 col grid)
+- HiveLab
 
-### 🎯 Profile Identity Widget
-Core identity display
-- Name, handle, year, major
-- Avatar and cover photo
-- Bio and interests
-- Social links
-- **Location**: `organisms/profile-identity-widget`
+## Components
 
-### 📊 Profile Activity Widget
-Recent activity feed
-- Posts, comments, likes
-- Space joins
-- Event RSVPs
-- Tool creations
-- **Location**: `organisms/profile-activity-widget`
+### Page-Level
+- **ProfilePage** - Complete profile page with 3 variants:
+  - `OwnProfile` - Full access to all widgets
+  - `ConnectedView` - Viewing a connection's profile
+  - `NotConnected` - Limited view for non-connections
 
-### 👥 Profile Connections Widget
-Friends and connections
-- Connection count
-- Mutual friends
-- Connection requests
-- Recent connections
-- **Location**: `organisms/profile-connections-widget`
+### Atomic Components (Reusable)
+- **ProfileHeader** - Identity section (name, bio, badges)
+- **ProfileStats** - Metrics grid (connections, spaces, posts, events)
+- **PhotoCarousel** - Portrait carousel (3:4 ratio, max 5 photos)
+- **ProfileCard** - Compact profile card for lists
+- **ProfileCompletion** - Progress toward 100% completion
+- **ActivityTimeline** - Recent activity feed
+- **ConnectionList** - Connections display with avatars
 
-### 🏠 Profile Spaces Widget
-Joined spaces display
-- Space memberships
-- Space roles (member, mod, founder)
-- Most active spaces
-- Space discovery
-- **Location**: `organisms/profile-spaces-widget`
+## Key Features
 
-### ✅ Profile Completion Card
-Progress and prompts
-- Completion percentage
-- Next steps
-- Missing profile elements
-- Quick actions
-- **Location**: `organisms/profile-completion-card`
+### 1. Portrait Carousel
+- Tinder-style swipeable photos
+- 3:4 aspect ratio (portrait)
+- Max 5 photos
+- Dot indicators + photo counter
+- Sticky on desktop scroll
 
-### 📐 Profile Bento Grid
-Layout system for profile
-- Flexible grid layout
-- Responsive design
-- Widget arrangement
-- Mobile-optimized
-- **Location**: `organisms/profile-bento-grid`
+### 2. Schedule Preview Widget
+- Shows today's 3 upcoming events
+- "View All →" button links to `/schedule` page
+- Compact event cards with emoji, time, location
+- RSVP button for quick actions
 
-### 📄 Profile View Layout
-Page template
-- Header, content, sidebar
-- Responsive layout
-- Mobile navigation
-- Scroll optimization
-- **Location**: `templates/profile-view-layout`
+### 3. Spaces Grid
+- Shows user's joined spaces
+- Leader badge (Star icon) for spaces they lead
+- Matches `space-card.tsx` hover patterns
+- Links to individual space pages
 
----
+### 4. HiveLab Access
+- Only visible for Space Leaders
+- Shows active tools with usage stats
+- "+ New Tool" CTA for creating tools
+- Locked state for non-leaders
 
-## Profile Architecture
+## Privacy Model
 
-### Own Profile (Editing)
-When viewing your own profile:
-- ✏️ Edit buttons visible
-- 📊 Completion card shown
-- 🔒 Privacy controls accessible
-- 📈 Analytics visible
+Profile widgets respect privacy levels:
+- **Visible** (🌍) - Everyone can see
+- **Private** (🔒) - Only connections can see
+- **Ghost** (👻) - Only you can see
 
-### Other's Profile (Viewing)
-When viewing someone else:
-- 💬 Message button
-- 👥 Connect button
-- 📤 Share profile
-- 🚩 Report (if needed)
+### View States
+1. **Own Profile** - See everything, edit buttons visible
+2. **Connected** - See visible + private widgets
+3. **Not Connected** - See only visible widgets + basic info
+4. **Campus Visitor** - See only visible widgets (no connection request)
 
----
+## Data Flow
 
-## Design Principles
+### Profile Data (`@hive/core`)
+```typescript
+import type { Profile, UIProfile } from '@hive/core';
+import { profileToUIProfile, canViewWidget } from '@hive/core';
 
-### Authentic, Not Professional
-This is NOT LinkedIn:
-- ❌ No "seeking opportunities"
-- ❌ No "professional headline"
-- ❌ No endorsements
-- ✅ Real campus identity
-- ✅ Casual, friendly tone
-- ✅ Actual interests and vibes
+// Convert domain model to UI model
+const uiProfile = profileToUIProfile(domainProfile, {
+  isOwnProfile: true,
+  isConnected: false,
+  mutualConnections: 5,
+  mutualSpaces: 2
+});
 
-### 70% Completion Target
-Profiles are useful before 100%:
-- Basic info → 30%
-- + Avatar → 50%
-- + Interests → 70% ✓ (Good enough!)
-- + Full bio → 100%
+// Check widget privacy
+const canView = canViewWidget(
+  profile.privacy.widgets.mySpaces,
+  { isOwnProfile: false, isConnected: true }
+);
+```
 
-### Social Proof
-Show community connections:
-- Mutual friends
-- Shared spaces
-- Common interests
-- Activity overlap
+### Real-Time Updates
+- Firebase listeners for profile changes
+- Optimistic UI for all interactions
+- SSE for connection requests/acceptances
 
-### Privacy by Default
-Students control visibility:
-- Public: Everyone on campus
-- Friends: Only connections
-- Private: Only me
-- Per-field privacy controls
+## Motion Patterns
 
----
+### Card Lift
+```tsx
+<motion.div
+  whileHover={{ y: -4 }}
+  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+>
+  <Card>...</Card>
+</motion.div>
+```
 
-## Profile Fields
+### Image Scale
+```tsx
+<img className="transition-smooth ease-liquid group-hover:scale-105" />
+```
 
-### Required (30%)
-- Name
-- Email (@buffalo.edu)
-- Graduation year
+### Layout Animations
+```tsx
+<motion.div layout>
+  <Card>...</Card>
+</motion.div>
+```
 
-### Basic (50%)
-- Avatar photo
-- Handle (@username)
-- Major/program
+### Inline Hover
+```tsx
+<motion.div
+  whileHover={{ x: 4 }}
+  transition={{ duration: 0.15 }}
+>
+  <EventCard>...</EventCard>
+</motion.div>
+```
 
-### Complete (70%)
-- Interests (3+)
-- Bio (1-2 sentences)
-- Spaces joined (2+)
+## Usage Example
 
-### Full (100%)
-- Cover photo
-- Residence hall
-- Hobbies
-- Social links
-- Full bio
+```tsx
+import { ProfilePage } from '@hive/ui/Features/02-Profile';
 
----
+// Own profile
+<ProfilePage
+  profile={currentUserProfile}
+  isOwnProfile={true}
+  onEditProfile={() => router.push('/profile/edit')}
+/>
 
-## Mobile-First Design
+// Viewing another user
+<ProfilePage
+  profile={otherUserProfile}
+  isOwnProfile={false}
+  isConnected={true}
+  onMessage={() => openMessageDialog()}
+  onConnect={() => sendConnectionRequest()}
+/>
+```
 
-Profile optimized for mobile:
-- **Vertical scroll** - no tabs
-- **Sticky header** with avatar
-- **Quick actions** at top
-- **Lazy loading** widgets
-- **Fast images** optimized
+## Routes
 
----
+- `/profile/[handle]` - View profile
+- `/profile/edit` - Edit own profile
+- `/profile/settings` - Privacy & settings
+- `/schedule` - Full calendar/events page (linked from preview)
 
-## Behavioral Psychology
+## Accessibility
 
-### Completion Motivation
-- Progress bar visible
-- Next step prompts
-- Quick wins highlighted
-- "Almost there!" messaging
+- ARIA labels on all interactive elements
+- Keyboard navigation for carousel
+- Focus states on all buttons
+- Screen reader friendly stats grid
+- Alt text on all images
 
-### Social Proof
-- "X mutual friends"
-- "Member of Y spaces"
-- "Active in [Space Name]"
-- Recent activity shown
+## Performance
 
-### Relief Amplifier
-- "Someone wants to connect with you"
-- "People viewed your profile"
-- "You have messages"
+- Lazy load photos (after first)
+- Virtual scrolling for connections list (>100)
+- Optimistic UI for likes/follows
+- Cached profile data (5 min TTL)
+- SSE connection for real-time updates
 
----
+## Related Documentation
 
-## Privacy & Security
-
-### Campus Isolation
-- Only UB students see profiles
-- Email verification required
-- No external access
-- Campus-only data
-
-### Privacy Controls
-- Per-field privacy settings
-- Block users
-- Hide from search
-- Activity visibility
-
-### Data Ownership
-- Students own their data
-- Export profile anytime
-- Delete account option
-- Clear data policies
-
----
-
-## Metrics
-
-Success metrics for profiles:
-- **Completion Rate (70%)**: > 75%
-- **Connections per User**: > 10
-- **Profile Views per Week**: > 5
-- **Edit Frequency**: Once per month
-
----
-
-## See Also
-
-- **Onboarding** → Profile creation flow
-- **Connections** → Friend system
-- **Spaces** → Community memberships
-- **Feed** → Activity stream
+- [Spaces System](/docs/03-spaces-overview) - Similar layout patterns
+- [MONOCHROME_DESIGN_SYSTEM.md](/packages/ui/MONOCHROME_DESIGN_SYSTEM.md) - Design tokens
+- [spec.md](/spec.md) - Profile schema (lines 2115-2249)

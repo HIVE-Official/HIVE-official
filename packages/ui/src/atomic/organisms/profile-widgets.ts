@@ -11,9 +11,33 @@ export { ProfileCompletionCard } from './profile-completion-card';
 export { HiveLabWidget } from './hivelab-widget';
 
 // Export profile type utilities
-export { specProfileToUIProfile } from './profile-types';
+export {
+  profileToUIProfile,
+  canViewWidget,
+  getPrivacyIndicator
+} from './profile-types';
 
-// Re-export types
+// Re-export all profile types
+export type {
+  PrivacyLevel,
+  UserType,
+  ConnectionType,
+  ProfileBadge,
+  WidgetPrivacy,
+  ProfileIdentity,
+  ProfileAcademic,
+  ProfileInterests,
+  ProfileSocial,
+  ProfilePrivacy,
+  ProfileActivity,
+  ProfileActivityItem,
+  ProfileStatus,
+  Profile,
+  Connection,
+  UIProfile
+} from './profile-types';
+
+// Re-export component prop types
 export type { ProfileIdentityWidgetProps } from './profile-identity-widget';
 export type { MyActivityWidgetProps } from './profile-activity-widget';
 export type { MySpacesWidgetProps } from './profile-spaces-widget';

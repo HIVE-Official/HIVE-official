@@ -17,6 +17,8 @@ interface ParticipationProps {
   streakCount: number;
   totalPoints: number;
   achievements: string[];
+  completedMilestones?: string[];
+  longestStreak?: number;
   isActive: boolean;
   metadata?: Record<string, any>;
 }
@@ -145,6 +147,14 @@ export class Participation extends Entity<ParticipationProps> {
     this.updateMilestoneProgress(milestoneId, 100);
     this.addAchievement(`milestone_${milestoneId}`);
     this.addPoints(50); // Bonus points for milestone completion
+
+    // Add to completedMilestones array if not already there
+    if (!this.props.completedMilestones) {
+      this.props.completedMilestones = [];
+    }
+    if (!this.props.completedMilestones.includes(milestoneId)) {
+      this.props.completedMilestones.push(milestoneId);
+    }
   }
 
   public addPoints(points: number): void {
@@ -158,7 +168,7 @@ export class Participation extends Entity<ParticipationProps> {
   public toData(): any {
     return {
       id: this.id,
-      profileId: this.props.profileId.value,
+      profileId: this.props.profileId, // Return full object for compatibility
       ritualId: this.props.ritualId.value,
       joinedAt: this.props.joinedAt,
       lastParticipatedAt: this.props.lastParticipatedAt,
@@ -166,6 +176,12 @@ export class Participation extends Entity<ParticipationProps> {
       streakCount: this.props.streakCount,
       totalPoints: this.props.totalPoints,
       achievements: this.props.achievements,
+      completedMilestones: this.props.completedMilestones || [],
+      streak: {
+        currentDays: this.props.streakCount || 0,
+        longestStreak: this.props.longestStreak || 0,
+        lastParticipationDate: this.props.lastParticipatedAt
+      },
       isActive: this.props.isActive,
       metadata: this.props.metadata
     };

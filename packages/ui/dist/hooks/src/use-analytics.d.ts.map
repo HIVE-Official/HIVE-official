@@ -1,0 +1,1 @@
+{"version":3,"file":"use-analytics.d.ts","sourceRoot":"","sources":["../../../../hooks/src/use-analytics.ts"],"names":[],"mappings":"AAEA,UAAU,cAAc;IACtB,IAAI,EAAE,MAAM,CAAC;IACb,UAAU,CAAC,EAAE,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC,CAAC;CACtC;AAED,wBAAgB,YAAY;mBACQ,cAAc;uBAWV,MAAM,WAAW,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;iBAS9C,MAAM,eAAe,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;EAc7E"}

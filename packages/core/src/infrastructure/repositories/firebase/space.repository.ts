@@ -20,7 +20,7 @@ import {
 import { db } from '@hive/firebase';
 import { ISpaceRepository } from '../interfaces';
 import { Result } from '../../../domain/shared/base/Result';
-import { EnhancedSpace } from '../../../domain/spaces/aggregates/enhanced-space';
+import { Space } from '../../../domain/spaces/aggregates/space.aggregate';
 import { SpaceId } from '../../../domain/spaces/value-objects/space-id.value';
 import { SpaceName } from '../../../domain/spaces/value-objects/space-name.value';
 import { SpaceDescription } from '../../../domain/spaces/value-objects/space-description.value';
@@ -33,24 +33,24 @@ import { Widget } from '../../../domain/spaces/entities/widget';
 export class FirebaseSpaceRepository implements ISpaceRepository {
   private readonly collectionName = 'spaces';
 
-  async findById(id: SpaceId | any): Promise<Result<EnhancedSpace>> {
+  async findById(id: SpaceId | any): Promise<Result<Space>> {
     try {
       const spaceId = typeof id === 'string' ? id : id.id;
       const docRef = doc(db, this.collectionName, spaceId);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
-        return Result.fail<EnhancedSpace>('Space not found');
+        return Result.fail<Space>('Space not found');
       }
 
       const data = docSnap.data();
       return this.toDomain(spaceId, data);
     } catch (error) {
-      return Result.fail<EnhancedSpace>(`Failed to find space: ${error}`);
+      return Result.fail<Space>(`Failed to find space: ${error}`);
     }
   }
 
-  async findByName(name: string, campusId: string): Promise<Result<EnhancedSpace>> {
+  async findByName(name: string, campusId: string): Promise<Result<Space>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -61,17 +61,17 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       const snapshot = await getDocs(q);
 
       if (snapshot.empty) {
-        return Result.fail<EnhancedSpace>('Space not found');
+        return Result.fail<Space>('Space not found');
       }
 
       const doc = snapshot.docs[0];
       return this.toDomain(doc.id, doc.data());
     } catch (error) {
-      return Result.fail<EnhancedSpace>(`Failed to find space: ${error}`);
+      return Result.fail<Space>(`Failed to find space: ${error}`);
     }
   }
 
-  async findByCampus(campusId: string, limitCount: number = 50): Promise<Result<EnhancedSpace[]>> {
+  async findByCampus(campusId: string, limitCount: number = 50): Promise<Result<Space[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -82,7 +82,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -90,13 +90,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find spaces: ${error}`);
     }
   }
 
-  async findByCategory(category: string, campusId: string): Promise<Result<EnhancedSpace[]>> {
+  async findByCategory(category: string, campusId: string): Promise<Result<Space[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -108,7 +108,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -116,13 +116,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find spaces: ${error}`);
     }
   }
 
-  async findUserSpaces(userId: string): Promise<Result<EnhancedSpace[]>> {
+  async findUserSpaces(userId: string): Promise<Result<Space[]>> {
     try {
       // Query spaces where user is a member
       const q = query(
@@ -134,7 +134,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -142,13 +142,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find user spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find user spaces: ${error}`);
     }
   }
 
-  async findTrending(campusId: string, limitCount: number = 20): Promise<Result<EnhancedSpace[]>> {
+  async findTrending(campusId: string, limitCount: number = 20): Promise<Result<Space[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -161,7 +161,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -169,17 +169,17 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find trending spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find trending spaces: ${error}`);
     }
   }
 
-  async findRecommended(campusId: string, interests: string[], major?: string): Promise<Result<EnhancedSpace[]>> {
+  async findRecommended(campusId: string, interests: string[], major?: string): Promise<Result<Space[]>> {
     try {
       // For MVP, recommend based on member count and category
       // In production, this would use a recommendation engine
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
 
       // Get popular spaces
       const popularQuery = query(
@@ -217,13 +217,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find recommended spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find recommended spaces: ${error}`);
     }
   }
 
-  async searchSpaces(searchQuery: string, campusId: string): Promise<Result<EnhancedSpace[]>> {
+  async searchSpaces(searchQuery: string, campusId: string): Promise<Result<Space[]>> {
     try {
       // Firebase doesn't support full-text search natively
       // For MVP, we'll do a simple name-based search
@@ -237,7 +237,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
 
       const snapshot = await getDocs(q);
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       const searchLower = searchQuery.toLowerCase();
 
       for (const doc of snapshot.docs) {
@@ -253,13 +253,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Search failed: ${error}`);
+      return Result.fail<Space[]>(`Search failed: ${error}`);
     }
   }
 
-  async save(space: EnhancedSpace): Promise<Result<void>> {
+  async save(space: Space): Promise<Result<void>> {
     try {
       const data = this.toPersistence(space);
       const docRef = doc(db, this.collectionName, space.spaceId.value);
@@ -297,43 +297,43 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
   }
 
   // Helper methods for domain mapping
-  private async toDomain(id: string, data: any): Promise<Result<EnhancedSpace>> {
+  private async toDomain(id: string, data: any): Promise<Result<Space>> {
     try {
       // Create value objects
       const nameResult = SpaceName.create(data.name);
       if (nameResult.isFailure) {
-        return Result.fail<EnhancedSpace>(nameResult.error!);
+        return Result.fail<Space>(nameResult.error!);
       }
 
       const descriptionResult = SpaceDescription.create(data.description);
       if (descriptionResult.isFailure) {
-        return Result.fail<EnhancedSpace>(descriptionResult.error!);
+        return Result.fail<Space>(descriptionResult.error!);
       }
 
       const categoryResult = SpaceCategory.create(data.category);
       if (categoryResult.isFailure) {
-        return Result.fail<EnhancedSpace>(categoryResult.error!);
+        return Result.fail<Space>(categoryResult.error!);
       }
 
       const campusIdResult = CampusId.create(data.campusId);
       if (campusIdResult.isFailure) {
-        return Result.fail<EnhancedSpace>(campusIdResult.error!);
+        return Result.fail<Space>(campusIdResult.error!);
       }
 
       // Create ProfileId for creator
       const creatorId = ProfileId.create(data.creatorId);
       if (creatorId.isFailure) {
-        return Result.fail<EnhancedSpace>(creatorId.error!);
+        return Result.fail<Space>(creatorId.error!);
       }
 
       // Create SpaceId
       const spaceId = SpaceId.create(id);
       if (spaceId.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceId.error!);
+        return Result.fail<Space>(spaceId.error!);
       }
 
       // Create space
-      const spaceResult = EnhancedSpace.create({
+      const spaceResult = Space.create({
         spaceId: spaceId.getValue(),
         name: nameResult.getValue(),
         description: descriptionResult.getValue(),
@@ -344,7 +344,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       });
 
       if (spaceResult.isFailure) {
-        return Result.fail<EnhancedSpace>(spaceResult.error!);
+        return Result.fail<Space>(spaceResult.error!);
       }
 
       const space = spaceResult.getValue();
@@ -393,13 +393,13 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         space.setWidgets(widgets);
       }
 
-      return Result.ok<EnhancedSpace>(space);
+      return Result.ok<Space>(space);
     } catch (error) {
-      return Result.fail<EnhancedSpace>(`Failed to map to domain: ${error}`);
+      return Result.fail<Space>(`Failed to map to domain: ${error}`);
     }
   }
 
-  private toPersistence(space: EnhancedSpace): any {
+  private toPersistence(space: Space): any {
     return {
       name: space.name.name,
       description: space.description.value,
@@ -444,7 +444,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
   }
 
   // Additional methods required by interface
-  async findByType(type: string, campusId: string): Promise<Result<EnhancedSpace[]>> {
+  async findByType(type: string, campusId: string): Promise<Result<Space[]>> {
     try {
       // Type could be a sub-category or feature type
       const q = query(
@@ -457,7 +457,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -465,19 +465,19 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
       // If 'type' field doesn't exist, fallback to category
       return this.findByCategory(type, campusId);
     }
   }
 
-  async findByMember(userId: string): Promise<Result<EnhancedSpace[]>> {
+  async findByMember(userId: string): Promise<Result<Space[]>> {
     // This is the same as findUserSpaces, just delegate
     return this.findUserSpaces(userId);
   }
 
-  async findPublicSpaces(campusId: string, limit: number = 100): Promise<Result<EnhancedSpace[]>> {
+  async findPublicSpaces(campusId: string, limit: number = 100): Promise<Result<Space[]>> {
     try {
       const q = query(
         collection(db, this.collectionName),
@@ -489,7 +489,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       );
       const snapshot = await getDocs(q);
 
-      const spaces: EnhancedSpace[] = [];
+      const spaces: Space[] = [];
       for (const doc of snapshot.docs) {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
@@ -497,20 +497,9 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
         }
       }
 
-      return Result.ok<EnhancedSpace[]>(spaces);
+      return Result.ok<Space[]>(spaces);
     } catch (error) {
-      return Result.fail<EnhancedSpace[]>(`Failed to find public spaces: ${error}`);
+      return Result.fail<Space[]>(`Failed to find public spaces: ${error}`);
     }
-  }
-
-  // Missing method implementations from interface
-  async findPublicEnhancedSpaces(campusId: string, limit: number = 100): Promise<Result<EnhancedSpace[]>> {
-    // This is the same as findPublicSpaces since we already return EnhancedSpace
-    return this.findPublicSpaces(campusId, limit);
-  }
-
-  async searchEnhancedSpaces(query: string, campusId: string): Promise<Result<EnhancedSpace[]>> {
-    // This is the same as searchSpaces since we already return EnhancedSpace
-    return this.searchSpaces(query, campusId);
   }
 }

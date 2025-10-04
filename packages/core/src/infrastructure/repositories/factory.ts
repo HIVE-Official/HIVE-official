@@ -8,7 +8,8 @@ import {
   ISpaceRepository,
   IFeedRepository,
   IRitualRepository,
-  IConnectionRepository
+  IConnectionRepository,
+  IToolRepository
 } from './interfaces';
 
 // Import real Firebase implementations
@@ -17,6 +18,7 @@ import { FirebaseSpaceRepository } from './firebase/space.repository';
 import { FirebaseFeedRepository } from './firebase/feed.repository';
 import { FirebaseRitualRepository } from './firebase/ritual.repository';
 import { FirebaseConnectionRepository } from './firebase/connection.repository';
+import { FirebaseToolRepository } from './firebase/tool.repository';
 
 // Singleton instances
 let profileRepo: IProfileRepository | null = null;
@@ -24,6 +26,7 @@ let spaceRepo: ISpaceRepository | null = null;
 let feedRepo: IFeedRepository | null = null;
 let ritualRepo: IRitualRepository | null = null;
 let connectionRepo: IConnectionRepository | null = null;
+let toolRepo: IToolRepository | null = null;
 
 /**
  * Get or create ProfileRepository instance
@@ -76,6 +79,16 @@ export function getConnectionRepository(): IConnectionRepository {
 }
 
 /**
+ * Get or create ToolRepository instance
+ */
+export function getToolRepository(): IToolRepository {
+  if (!toolRepo) {
+    toolRepo = new FirebaseToolRepository();
+  }
+  return toolRepo;
+}
+
+/**
  * Initialize repositories with custom implementations (for testing)
  */
 export function initializeRepositories(config: {
@@ -84,12 +97,14 @@ export function initializeRepositories(config: {
   feed?: IFeedRepository;
   ritual?: IRitualRepository;
   connection?: IConnectionRepository;
+  tool?: IToolRepository;
 }) {
   if (config.profile) profileRepo = config.profile;
   if (config.space) spaceRepo = config.space;
   if (config.feed) feedRepo = config.feed;
   if (config.ritual) ritualRepo = config.ritual;
   if (config.connection) connectionRepo = config.connection;
+  if (config.tool) toolRepo = config.tool;
 }
 
 /**
@@ -101,4 +116,5 @@ export function resetRepositories(): void {
   feedRepo = null;
   ritualRepo = null;
   connectionRepo = null;
+  toolRepo = null;
 }

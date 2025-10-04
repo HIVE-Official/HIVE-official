@@ -74,6 +74,31 @@ interface ResourcesPanelProps {
   isLeader: boolean;
 }
 
+// Helper functions (moved outside components for reusability)
+const formatFileSize = (bytes?: number) => {
+  if (!bytes) return '';
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+};
+
+const getFileIcon = (type: string, fileType?: string) => {
+  switch (type) {
+    case 'document':
+      return <FileText className="w-5 h-5 text-blue-400" />;
+    case 'link':
+      return <Link2 className="w-5 h-5 text-green-400" />;
+    case 'media':
+      return fileType?.startsWith('video/')
+        ? <Video className="w-5 h-5 text-purple-400" />
+        : <Image className="w-5 h-5 text-pink-400" />;
+    case 'form':
+      return <File className="w-5 h-5 text-orange-400" />;
+    default:
+      return <File className="w-5 h-5 text-gray-400" />;
+  }
+};
+
 export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: ResourcesPanelProps) {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,30 +218,6 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
 
   const pinnedResources = filteredResources.filter(r => r.isPinned && !r.isArchived);
   const regularResources = filteredResources.filter(r => !r.isPinned);
-
-  const formatFileSize = (bytes?: number) => {
-    if (!bytes) return '';
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
-  };
-
-  const getFileIcon = (type: string, fileType?: string) => {
-    switch (type) {
-      case 'document':
-        return <FileText className="w-5 h-5 text-blue-400" />;
-      case 'link':
-        return <Link2 className="w-5 h-5 text-green-400" />;
-      case 'media':
-        return fileType?.startsWith('video/')
-          ? <Video className="w-5 h-5 text-purple-400" />
-          : <Image className="w-5 h-5 text-pink-400" />;
-      case 'form':
-        return <File className="w-5 h-5 text-orange-400" />;
-      default:
-        return <File className="w-5 h-5 text-gray-400" />;
-    }
-  };
 
   if (loading) {
     return (

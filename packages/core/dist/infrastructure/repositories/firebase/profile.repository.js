@@ -8,7 +8,7 @@ exports.FirebaseProfileRepository = void 0;
 const firestore_1 = require("firebase/firestore");
 const firebase_1 = require("@hive/firebase");
 const Result_1 = require("../../../domain/shared/base/Result");
-const enhanced_profile_1 = require("../../../domain/profile/aggregates/enhanced-profile");
+const profile_aggregate_1 = require("../../../domain/profile/aggregates/profile.aggregate");
 const profile_id_value_1 = require("../../../domain/profile/value-objects/profile-id.value");
 const value_objects_1 = require("../../../domain/profile/value-objects");
 const profile_handle_value_1 = require("../../../domain/profile/value-objects/profile-handle.value");
@@ -204,7 +204,7 @@ class FirebaseProfileRepository {
                 return Result_1.Result.fail(userTypeResult.error);
             }
             // Create profile
-            const profile = enhanced_profile_1.EnhancedProfile.create({
+            const profile = profile_aggregate_1.Profile.create({
                 profileId: profile_id_value_1.ProfileId.create(id).getValue(),
                 email: emailResult.getValue(),
                 handle: handleResult.getValue(),

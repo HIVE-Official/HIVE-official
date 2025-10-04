@@ -10,6 +10,6 @@ export { SpaceDiscoveryService } from './space-discovery.service';
 export type { SpaceCreationData, SpaceDiscoveryFilters, SpaceJoinResult, SpaceActivityData } from './space-discovery.service';
 export { FeedGenerationService } from './feed-generation.service';
 export type { FeedGenerationOptions, FeedInsights, FeedContent } from './feed-generation.service';
-export { EnhancedRitualParticipationService } from './ritual-participation.service';
-export type { EnhancedRitualCreationData, EnhancedRitualProgress, LeaderboardEntry } from './ritual-participation.service';
+export { RitualParticipationService } from './ritual-participation.service';
+export type { RitualCreationData, RitualProgress, LeaderboardEntry } from './ritual-participation.service';
 //# sourceMappingURL=index.d.ts.map

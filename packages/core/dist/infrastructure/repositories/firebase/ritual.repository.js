@@ -8,7 +8,7 @@ exports.FirebaseRitualRepository = void 0;
 const firestore_1 = require("firebase/firestore");
 const firebase_1 = require("@hive/firebase");
 const Result_1 = require("../../../domain/shared/base/Result");
-const enhanced_ritual_1 = require("../../../domain/rituals/aggregates/enhanced-ritual");
+const ritual_aggregate_1 = require("../../../domain/rituals/aggregates/ritual.aggregate");
 const ritual_id_value_1 = require("../../../domain/rituals/value-objects/ritual-id.value");
 const campus_id_value_1 = require("../../../domain/profile/value-objects/campus-id.value");
 const profile_id_value_1 = require("../../../domain/profile/value-objects/profile-id.value");
@@ -163,7 +163,7 @@ class FirebaseRitualRepository {
             if (campusIdResult.isFailure) {
                 return Result_1.Result.fail(campusIdResult.error);
             }
-            // Create ritual
+            // Create ritual ID
             const ritualIdResult = ritual_id_value_1.RitualId.create(id);
             if (ritualIdResult.isFailure) {
                 return Result_1.Result.fail(ritualIdResult.error);
@@ -173,65 +173,67 @@ class FirebaseRitualRepository {
             if (createdBy.isFailure) {
                 return Result_1.Result.fail(createdBy.error);
             }
-            const ritualResult = enhanced_ritual_1.EnhancedRitual.create({
+            // Create ritual with new model
+            const ritualResult = ritual_aggregate_1.Ritual.create({
                 ritualId: ritualIdResult.getValue(),
                 name: data.name,
                 description: data.description,
-                type: data.type,
-                campusId: campusIdResult.getValue(),
-                createdBy: createdBy.getValue(),
-                startDate: data.startDate?.toDate(),
+                icon: data.icon,
+                type: data.type || 'short', // short, anticipatory, yearbook
+                category: data.category || 'social', // social, academic, wellness, community
+                duration: data.duration || '1 week',
+                startDate: data.startDate?.toDate() || new Date(),
                 endDate: data.endDate?.toDate(),
-                milestones: data.milestones || []
+                goals: data.goals || [],
+                requirements: data.requirements || [],
+                rewards: data.rewards || [],
+                campusId: campusIdResult.getValue(),
+                targetAudience: data.targetAudience || 'all',
+                createdBy: createdBy.getValue(),
+                status: data.status || 'draft',
+                visibility: data.visibility || 'public',
+                announcedAt: data.announcedAt?.toDate(),
+                activatedAt: data.activatedAt?.toDate(),
+                launchedAt: data.launchedAt?.toDate(),
+                completedAt: data.completedAt?.toDate()
             });
             if (ritualResult.isFailure) {
                 return Result_1.Result.fail(ritualResult.error);
             }
             const ritual = ritualResult.getValue();
-            // Set additional properties using setter methods
+            // Set timestamps
             if (data.createdAt) {
                 ritual.setCreatedAt(data.createdAt.toDate());
             }
             if (data.updatedAt) {
                 ritual.setUpdatedAt(data.updatedAt.toDate());
             }
-            // Load participants
-            if (data.participants && Array.isArray(data.participants)) {
-                data.participants.forEach((participantData) => {
-                    ritual.addParticipant(participantData.profileId);
-                    // Note: Participant data is now stored separately in participation entities
-                    // The participant is just a ProfileId, additional data would be in the Participation aggregate
+            // Load participants (without triggering events)
+            if (data.participantIds && Array.isArray(data.participantIds)) {
+                data.participantIds.forEach((profileId) => {
+                    ritual.addParticipant(profileId);
                 });
             }
-            // Load milestones
-            if (data.milestones && Array.isArray(data.milestones)) {
-                const milestones = data.milestones.map((milestoneData) => ({
-                    id: milestoneData.id,
-                    name: milestoneData.name,
-                    title: milestoneData.title || milestoneData.name,
-                    description: milestoneData.description,
-                    targetValue: milestoneData.targetValue || milestoneData.threshold || 100,
-                    currentValue: milestoneData.currentValue || 0,
-                    rewards: milestoneData.rewards || [],
-                    isCompleted: milestoneData.isCompleted || milestoneData.isReached || false,
-                    threshold: milestoneData.threshold || milestoneData.targetValue || 100,
-                    isReached: milestoneData.isReached || milestoneData.isCompleted || false,
-                    reachedAt: milestoneData.reachedAt?.toDate()
-                }));
-                ritual.setMilestones(milestones);
+            // Set goals if they exist
+            if (data.goals && Array.isArray(data.goals)) {
+                ritual.setGoals(data.goals.map((goal) => ({
+                    id: goal.id,
+                    description: goal.description,
+                    type: goal.type || 'individual',
+                    targetValue: goal.targetValue || 100,
+                    currentValue: goal.currentValue || 0,
+                    isCompleted: goal.isCompleted || false,
+                    completedAt: goal.completedAt?.toDate()
+                })));
             }
-            // TODO: Load rewards - temporarily disabled
-            // if (data.rewards && Array.isArray(data.rewards)) {
-            //   ritual.rewards = data.rewards.map((rewardData: any) => ({
-            //     id: { id: rewardData.id, equals: () => false },
-            //     type: rewardData.type,
-            //     name: rewardData.name,
-            //     description: rewardData.description,
-            //     icon: rewardData.icon,
-            //     threshold: rewardData.threshold,
-            //     isClaimed: rewardData.isClaimed || false
-            //   }));
-            // }
+            // Set requirements if they exist
+            if (data.requirements && Array.isArray(data.requirements)) {
+                ritual.setRequirements(data.requirements);
+            }
+            // Set rewards if they exist
+            if (data.rewards && Array.isArray(data.rewards)) {
+                ritual.setRewards(data.rewards);
+            }
             return Result_1.Result.ok(ritual);
         }
         catch (error) {
@@ -240,36 +242,42 @@ class FirebaseRitualRepository {
     }
     toPersistence(ritual) {
         return {
+            // Identity
             name: ritual.name,
             description: ritual.description,
-            type: ritual.type,
-            campusId: ritual.campusId.value,
+            icon: ritual.ritualId.value, // Use icon if available
+            // Classification
+            type: ritual.type, // short, anticipatory, yearbook
+            category: ritual.category, // social, academic, wellness, community
+            duration: ritual.duration,
+            // Timing
             startDate: ritual.startDate ? firestore_1.Timestamp.fromDate(ritual.startDate) : null,
             endDate: ritual.endDate ? firestore_1.Timestamp.fromDate(ritual.endDate) : null,
-            isActive: ritual.isActive,
+            // Goals, Requirements, Rewards
+            goals: ritual.goals,
+            requirements: ritual.requirements,
+            rewards: ritual.rewards,
+            // Participation
             participantIds: ritual.getParticipants().map((p) => p.value),
-            participants: ritual.getParticipants().map((p) => ({
-                profileId: p.value,
-                totalPoints: 0,
-                lastActivity: null,
-                joinedAt: firestore_1.Timestamp.now()
-            })),
-            milestones: ritual.milestones.map(milestone => ({
-                id: milestone.id,
-                name: milestone.name,
-                title: milestone.title,
-                description: milestone.description,
-                targetValue: milestone.targetValue,
-                currentValue: milestone.currentValue,
-                threshold: milestone.threshold,
-                isReached: milestone.isReached,
-                isCompleted: milestone.isCompleted,
-                reachedAt: milestone.reachedAt ? firestore_1.Timestamp.fromDate(milestone.reachedAt) : null,
-                rewards: milestone.rewards
-            })),
-            totalProgress: ritual.getTotalProgress(),
             participantCount: ritual.getParticipantCount(),
-            totalActivities: ritual.getTotalActivities(),
+            targetParticipation: ritual.participationStats.total,
+            participationStats: ritual.participationStats,
+            // Campus
+            campusId: ritual.campusId.value,
+            targetAudience: ritual.targetAudience,
+            createdBy: ritual.ritualId.value, // Need proper createdBy tracking
+            // Status
+            status: ritual.status,
+            visibility: ritual.visibility,
+            // Lifecycle Timestamps
+            announcedAt: ritual.announcedAt ? firestore_1.Timestamp.fromDate(ritual.announcedAt) : null,
+            activatedAt: ritual.activatedAt ? firestore_1.Timestamp.fromDate(ritual.activatedAt) : null,
+            launchedAt: ritual.launchedAt ? firestore_1.Timestamp.fromDate(ritual.launchedAt) : null,
+            completedAt: ritual.completedAt ? firestore_1.Timestamp.fromDate(ritual.completedAt) : null,
+            // Progress Metrics
+            totalProgress: ritual.getTotalProgress(),
+            completionPercentage: ritual.getCompletionPercentage(),
+            // Metadata
             createdAt: firestore_1.Timestamp.fromDate(ritual.createdAt),
             updatedAt: firestore_1.Timestamp.fromDate(ritual.updatedAt)
         };

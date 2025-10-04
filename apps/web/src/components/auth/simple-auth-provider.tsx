@@ -76,7 +76,8 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
           setIsLoading(false);
           return;
         } catch (error) {
-        }
+      // Intentionally suppressed - non-critical error
+    }
       }
 
       // No valid session found

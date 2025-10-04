@@ -11,9 +11,20 @@ import React from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { axe, toHaveNoViolations, JestAxeConfigureOptions } from 'jest-axe';
 import '@testing-library/jest-dom';
+import { expect } from 'vitest';
 
-// Extend Jest matchers with jest-axe
+// Extend Vitest matchers with jest-axe
 expect.extend(toHaveNoViolations);
+
+// Type declaration for jest-axe matcher
+declare module 'vitest' {
+  interface Assertion {
+    toHaveNoViolations(): void;
+  }
+  interface AsymmetricMatchersContaining {
+    toHaveNoViolations(): void;
+  }
+}
 
 /**
  * Default axe configuration for HIVE components
@@ -123,8 +134,8 @@ export async function testKeyboardNavigation(
     enterActivates?: boolean;
     spaceActivates?: boolean;
     escapeCloses?: boolean;
-    onActivate?: jest.Mock;
-    onClose?: jest.Mock;
+    onActivate?: (...args: any[]) => any;
+    onClose?: (...args: any[]) => any;
   }
 ): Promise<void> {
   const { userEvent } = await import('@testing-library/user-event');

@@ -158,6 +158,7 @@ export function EventDetailsModal({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 

@@ -1,10 +1,10 @@
 /**
- * EnhancedRitual Participation Service
+ * Ritual Participation Service
  * Orchestrates ritual participation, progress tracking, and rewards
  */
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedRitual } from '../domain/rituals/aggregates/enhanced-ritual';
+import { Ritual } from '../domain/rituals/aggregates/ritual.aggregate';
 import { Participation } from '../domain/rituals/entities/participation';
 interface Milestone {
     id: string;
@@ -23,21 +23,29 @@ interface Milestone {
     }[];
 }
 import { IRitualRepository, IProfileRepository, IFeedRepository } from '../infrastructure/repositories/interfaces';
-export interface EnhancedRitualCreationData {
+export interface RitualCreationData {
     name: string;
     description: string;
-    ritualType: 'daily-challenge' | 'weekly-goal' | 'study-challenge' | 'social-mission' | 'campus-event';
+    ritualType: 'short' | 'anticipatory' | 'yearbook';
+    category: 'social' | 'academic' | 'wellness' | 'community';
+    duration: string;
     startDate: Date;
-    endDate: Date;
-    milestones: Array<{
+    endDate?: Date;
+    goals: Array<{
+        description: string;
+        type: 'individual' | 'space' | 'campus' | 'stretch';
+        targetValue: number;
+    }>;
+    requirements: Array<{
+        action: string;
+        target: number;
+        validation: 'manual' | 'automatic' | 'peer';
+    }>;
+    rewards: Array<{
+        type: 'badge' | 'feature_unlock' | 'special_access' | 'recognition' | 'points';
         name: string;
         description: string;
-        targetValue: number;
-        rewards: Array<{
-            type: 'points' | 'badge' | 'achievement';
-            value: string;
-            description: string;
-        }>;
+        value?: string | number;
     }>;
     settings?: {
         maxParticipants?: number;
@@ -46,8 +54,8 @@ export interface EnhancedRitualCreationData {
         isVisible?: boolean;
     };
 }
-export interface EnhancedRitualProgress {
-    ritual: EnhancedRitual;
+export interface RitualProgress {
+    ritual: Ritual;
     participation: Participation;
     completionPercentage: number;
     currentStreak: number;
@@ -67,7 +75,7 @@ export interface LeaderboardEntry {
     completedMilestones: number;
     streak: number;
 }
-export declare class EnhancedRitualParticipationService extends BaseApplicationService {
+export declare class RitualParticipationService extends BaseApplicationService {
     private ritualRepo;
     private profileRepo;
     private feedRepo;
@@ -75,19 +83,19 @@ export declare class EnhancedRitualParticipationService extends BaseApplicationS
     /**
      * Create a new ritual campaign
      */
-    createEnhancedRitual(creatorId: string, data: EnhancedRitualCreationData): Promise<Result<EnhancedRitual>>;
+    createRitual(creatorId: string, data: RitualCreationData): Promise<Result<Ritual>>;
     /**
      * Join a ritual
      */
-    joinEnhancedRitual(userId: string, ritualId: string): Promise<Result<ServiceResult<Participation>>>;
+    joinRitual(userId: string, ritualId: string): Promise<Result<ServiceResult<Participation>>>;
     /**
      * Record progress on a ritual milestone
      */
-    recordProgress(userId: string, ritualId: string, milestoneId: string, progress: number): Promise<Result<EnhancedRitualProgress>>;
+    recordProgress(userId: string, ritualId: string, milestoneId: string, progress: number): Promise<Result<RitualProgress>>;
     /**
      * Get user's ritual progress
      */
-    getEnhancedRitualProgress(userId: string, ritualId: string): Promise<Result<EnhancedRitualProgress>>;
+    getRitualProgress(userId: string, ritualId: string): Promise<Result<RitualProgress>>;
     /**
      * Get ritual leaderboard
      */
@@ -95,23 +103,20 @@ export declare class EnhancedRitualParticipationService extends BaseApplicationS
     /**
      * Get user's active rituals
      */
-    getUserEnhancedRituals(userId: string): Promise<Result<ServiceResult<EnhancedRitual[]>>>;
+    getUserRituals(userId: string): Promise<Result<ServiceResult<Ritual[]>>>;
     /**
      * Get available rituals to join
      */
-    getAvailableEnhancedRituals(): Promise<Result<ServiceResult<EnhancedRitual[]>>>;
+    getAvailableRituals(): Promise<Result<ServiceResult<Ritual[]>>>;
     /**
      * Subscribe to ritual updates
      */
-    subscribeToEnhancedRitual(ritualId: string, callback: (ritual: EnhancedRitual | null) => void): () => void;
+    subscribeToRitual(ritualId: string, callback: (ritual: Ritual | null) => void): () => void;
     /**
      * Subscribe to active rituals feed
      */
-    subscribeToActiveEnhancedRituals(callback: (rituals: EnhancedRitual[]) => void): () => void;
-    private calculateEnhancedRitualProgress;
-    private calculateMilestonePoints;
-    private generateParticipationWarnings;
-    private mapRitualType;
+    subscribeToActiveRituals(callback: (rituals: Ritual[]) => void): () => void;
+    private calculateRitualProgress;
 }
 export {};
 //# sourceMappingURL=ritual-participation.service.d.ts.map

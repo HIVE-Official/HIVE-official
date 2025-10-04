@@ -10,7 +10,7 @@ export declare const getAuthAdmin: () => admin.auth.Auth;
 export declare const environmentInfo: {
     environment: "development" | "staging" | "production";
     firebaseConfigured: boolean;
-    projectId: string;
+    projectId: any;
     credentialSource: string;
 };
 //# sourceMappingURL=firebase-admin.d.ts.map

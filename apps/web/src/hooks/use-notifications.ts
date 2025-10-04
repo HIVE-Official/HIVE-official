@@ -271,7 +271,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 /**
  * Show browser notification
  */
-export function showBrowserNotification(title: string, options?: NotificationOptions) {
+export function showBrowserNotification(title: string, options?: { body?: string; icon?: string; tag?: string }) {
   if (!('Notification' in window) || Notification.permission !== 'granted') {
     return;
   }

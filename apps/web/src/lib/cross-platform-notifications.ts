@@ -412,6 +412,7 @@ export class CrossPlatformNotificationManager {
         return preferences;
       }
     } catch (error) {
+      console.error('Failed to fetch user notification preferences:', error);
     }
 
     // Return default preferences
@@ -451,6 +452,7 @@ export class CrossPlatformNotificationManager {
         this.userPreferences.set(userId, updated);
       }
     } catch (error) {
+      console.error('Failed to update user notification preferences:', error);
     }
   }
 
@@ -597,12 +599,8 @@ export class CrossPlatformNotificationManager {
   }
 
   private async deliverInApp(config: NotificationConfig): Promise<boolean> {
-    try {
-      // In-app notifications are handled by the unified state management
-      return true;
-    } catch (error) {
-      return false;
-    }
+    // In-app notifications are handled by the unified state management
+    return true;
   }
 
   private async deliverPush(config: NotificationConfig): Promise<boolean> {
@@ -703,6 +701,7 @@ export class CrossPlatformNotificationManager {
         })
       });
     } catch (error) {
+      console.error('Failed to log notification delivery results:', error);
     }
   }
 
@@ -710,8 +709,10 @@ export class CrossPlatformNotificationManager {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw-notifications.js')
         .then(registration => {
+          console.log('Service worker registered successfully:', registration);
         })
         .catch(error => {
+          console.error('Failed to register service worker:', error);
         });
     }
   }

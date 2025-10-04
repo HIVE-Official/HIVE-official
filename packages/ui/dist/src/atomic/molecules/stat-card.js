@@ -1,0 +1,14 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import * as React from "react";
+import { Card, CardContent, CardHeader } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { Progress } from "../atoms/progress";
+import { cn } from "../../lib/utils";
+const StatCard = React.forwardRef(({ className, icon, label, value, description, trend, trendValue, badge, badgeVariant = "secondary", progress, progressColor, size = "default", ...props }, ref) => {
+    const isSmall = size === "sm";
+    return (_jsxs(Card, { ref: ref, className: cn("transition-all duration-smooth ease-liquid hover:shadow-md hover:border-primary/50", className), ...props, children: [_jsxs(CardHeader, { className: cn("flex flex-row items-start justify-between space-y-0", isSmall ? "pb-1" : "pb-2"), children: [_jsxs("div", { className: "flex items-start gap-2", children: [icon && (_jsx("div", { className: cn("flex items-center justify-center rounded-lg bg-primary/10 text-primary transition-smooth ease-liquid", isSmall ? "h-6 w-6" : "h-8 w-8"), children: icon })), _jsxs("div", { className: "flex flex-col gap-0.5", children: [_jsx("p", { className: cn("font-medium text-muted-foreground", isSmall ? "text-xs" : "text-sm"), children: label }), badge && (_jsx(Badge, { variant: badgeVariant, className: "w-fit transition-smooth ease-liquid text-xs", children: badge }))] })] }), trend && (_jsxs("div", { className: cn("flex items-center gap-1 font-medium transition-smooth ease-liquid", isSmall ? "text-[10px]" : "text-xs", trend === "up" && "text-green-500", trend === "down" && "text-destructive", trend === "neutral" && "text-muted-foreground"), children: [trend === "up" && (_jsx("svg", { className: cn(isSmall ? "h-2.5 w-2.5" : "h-3 w-3"), fill: "none", strokeWidth: "2.5", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M4.5 15.75l7.5-7.5 7.5 7.5" }) })), trend === "down" && (_jsx("svg", { className: cn(isSmall ? "h-2.5 w-2.5" : "h-3 w-3"), fill: "none", strokeWidth: "2.5", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 8.25l-7.5 7.5-7.5-7.5" }) })), trendValue] }))] }), _jsxs(CardContent, { className: cn(isSmall ? "space-y-1" : "space-y-2"), children: [_jsx("div", { className: cn("font-bold text-foreground", isSmall ? "text-lg" : "text-2xl"), children: value }), description && (_jsx("p", { className: "text-xs text-muted-foreground", children: description })), progress !== undefined && (_jsx(Progress, { value: progress, className: cn(isSmall ? "h-1.5" : "h-2", progressColor) }))] })] }));
+});
+StatCard.displayName = "StatCard";
+export { StatCard };
+//# sourceMappingURL=stat-card.js.map

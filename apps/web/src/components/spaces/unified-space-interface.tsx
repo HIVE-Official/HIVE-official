@@ -106,6 +106,7 @@ export function UnifiedSpaceInterface({
             const data = JSON.parse(event.data);
             handleRealtimeMessage(data);
           } catch (error) {
+            // Intentionally suppressed - non-critical error
           }
         };
 
@@ -237,6 +238,7 @@ export function UnifiedSpaceInterface({
         setInstalledTools(transformedTools);
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     } finally {
       setLoading(false);
     }

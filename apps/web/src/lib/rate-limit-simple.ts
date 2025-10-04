@@ -237,8 +237,10 @@ function secureCleanup() {
     
     const cleaned = beforeSize - clients.size;
     if (cleaned > 0) {
+      // Cleanup successful
     }
   } catch (error) {
+    // Intentionally suppressed - non-critical error
   }
 }
 

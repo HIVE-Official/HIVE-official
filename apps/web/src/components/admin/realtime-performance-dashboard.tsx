@@ -89,6 +89,7 @@ export function RealtimePerformanceDashboard() {
         setSystemMetrics(data.metrics.current);
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     } finally {
       setIsLoading(false);
     }
@@ -115,6 +116,7 @@ export function RealtimePerformanceDashboard() {
         }));
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   };
 
@@ -127,6 +129,7 @@ export function RealtimePerformanceDashboard() {
       });
       await fetchSystemMetrics();
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   };
 

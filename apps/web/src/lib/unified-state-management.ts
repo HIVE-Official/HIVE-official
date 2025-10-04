@@ -602,7 +602,8 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
               state.refreshProfile(options)
             ]);
           } catch (error) {
-          } finally {
+      // Intentionally suppressed - non-critical error
+    } finally {
             state.setSyncInProgress(false);
           }
         },
@@ -757,7 +758,8 @@ async function getAuthToken(): Promise<string> {
         : session.token;
     }
   } catch (error) {
-  }
+      // Intentionally suppressed - non-critical error
+    }
   
   return '';
 }

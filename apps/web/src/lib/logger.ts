@@ -516,8 +516,11 @@ class Logger {
     this.log(this.createLogEntry('warn', message, context, error));
   }
 
-  error(message: string, context?: LogContext, error?: Error): void {
-    this.log(this.createLogEntry('error', message, context, error));
+  error(message: string, contextOrError?: LogContext | Error, error?: Error): void {
+    // Support both signatures: error(msg, context, error) and error(msg, error)
+    const context = contextOrError instanceof Error ? undefined : contextOrError;
+    const actualError = contextOrError instanceof Error ? contextOrError : error;
+    this.log(this.createLogEntry('error', message, context, actualError));
   }
 
   // Specialized logging methods for common patterns

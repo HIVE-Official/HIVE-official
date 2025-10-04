@@ -5,7 +5,7 @@
  * This file will be deleted once all references are updated
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.Space = exports.SpaceType = exports.Participation = exports.Ritual = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.EnhancedProfile = exports.EnhancedSpace = exports.EnhancedRitual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
+exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.SpaceType = exports.Participation = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.Profile = exports.Space = exports.Ritual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
 exports.getProfileCompleteness = getProfileCompleteness;
 exports.getDefaultActionCodeSettings = getDefaultActionCodeSettings;
 exports.validateEmailDomain = validateEmailDomain;
@@ -33,12 +33,12 @@ Object.defineProperty(exports, "ConnectionId", { enumerable: true, get: function
 // Re-export aggregates
 var enhanced_feed_1 = require("../../domain/feed/enhanced-feed");
 Object.defineProperty(exports, "EnhancedFeed", { enumerable: true, get: function () { return enhanced_feed_1.EnhancedFeed; } });
-var enhanced_ritual_1 = require("../../domain/rituals/aggregates/enhanced-ritual");
-Object.defineProperty(exports, "EnhancedRitual", { enumerable: true, get: function () { return enhanced_ritual_1.EnhancedRitual; } });
-var enhanced_space_1 = require("../../domain/spaces/aggregates/enhanced-space");
-Object.defineProperty(exports, "EnhancedSpace", { enumerable: true, get: function () { return enhanced_space_1.EnhancedSpace; } });
-var enhanced_profile_1 = require("../../domain/profile/aggregates/enhanced-profile");
-Object.defineProperty(exports, "EnhancedProfile", { enumerable: true, get: function () { return enhanced_profile_1.EnhancedProfile; } });
+var ritual_aggregate_1 = require("../../domain/rituals/aggregates/ritual.aggregate");
+Object.defineProperty(exports, "Ritual", { enumerable: true, get: function () { return ritual_aggregate_1.Ritual; } });
+var space_aggregate_1 = require("../../domain/spaces/aggregates/space.aggregate");
+Object.defineProperty(exports, "Space", { enumerable: true, get: function () { return space_aggregate_1.Space; } });
+var profile_aggregate_1 = require("../../domain/profile/aggregates/profile.aggregate");
+Object.defineProperty(exports, "Profile", { enumerable: true, get: function () { return profile_aggregate_1.Profile; } });
 var connection_1 = require("../../domain/profile/aggregates/connection");
 Object.defineProperty(exports, "Connection", { enumerable: true, get: function () { return connection_1.Connection; } });
 // Re-export entities and types
@@ -90,54 +90,8 @@ class FeedFilter {
     }
 }
 exports.FeedFilter = FeedFilter;
-class Ritual {
-    constructor(id, name, description, milestones) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.milestones = milestones;
-        this.participants = 0;
-        this.isActive = true;
-        this.settings = { isVisible: true };
-    }
-    static create(data) {
-        return {
-            isSuccess: true,
-            isFailure: false,
-            getValue: () => {
-                const ritual = new Ritual(data.id, data.name, data.description, data.milestones || []);
-                ritual.participants = data.participants || 0;
-                ritual.isActive = data.isActive !== undefined ? data.isActive : true;
-                ritual.settings = data.settings || { isVisible: true };
-                ritual.startDate = data.startDate;
-                ritual.endDate = data.endDate;
-                return ritual;
-            },
-            error: null
-        };
-    }
-    addParticipant(profileId) {
-        this.participants++;
-        return { isSuccess: true, isFailure: false };
-    }
-    updateMilestoneProgress(milestoneId, progress) {
-        return { isSuccess: true, isFailure: false };
-    }
-    toData() {
-        return {
-            id: this.id,
-            name: this.name,
-            description: this.description,
-            milestones: this.milestones,
-            participants: this.participants,
-            isActive: this.isActive,
-            settings: this.settings,
-            startDate: this.startDate,
-            endDate: this.endDate
-        };
-    }
-}
-exports.Ritual = Ritual;
+// NOTE: Ritual is now exported from domain/rituals/aggregates/ritual.aggregate
+// Legacy wrapper removed - use proper domain model instead
 class Participation {
     constructor(id, profileId, ritualId, completedMilestones = [], progress = 0) {
         this.id = id;

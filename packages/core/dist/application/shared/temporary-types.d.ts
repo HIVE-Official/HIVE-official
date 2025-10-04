@@ -10,12 +10,12 @@ export { RitualId } from '../../domain/rituals/value-objects/ritual-id.value';
 export { CampusId } from '../../domain/profile/value-objects/campus-id.value';
 export { ConnectionId } from '../../domain/profile/value-objects/connection-id.value';
 export { EnhancedFeed } from '../../domain/feed/enhanced-feed';
-export { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual';
-export { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
-export { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profile';
+export { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
+export { Space } from '../../domain/spaces/aggregates/space.aggregate';
+export { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 export { Connection } from '../../domain/profile/aggregates/connection';
 export { FeedItem } from '../../domain/feed/feed-item';
-export type { Milestone, Reward } from '../../domain/rituals/aggregates/enhanced-ritual';
+export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
 export declare function getProfileCompleteness(profile: any): number;
 export declare function getDefaultActionCodeSettings(continueUrl?: string): {
     url: string;
@@ -41,47 +41,6 @@ export declare class FeedFilter {
         isFailure: boolean;
         getValue: () => FeedFilter;
         error: null;
-    };
-}
-export declare class Ritual {
-    id: string;
-    name: string;
-    description: string;
-    milestones: any[];
-    participants: number;
-    isActive: boolean;
-    settings: {
-        isVisible: boolean;
-    };
-    startDate?: Date;
-    endDate?: Date;
-    constructor(id: string, name: string, description: string, milestones: any[]);
-    static create(data: any): {
-        isSuccess: boolean;
-        isFailure: boolean;
-        getValue: () => Ritual;
-        error: null;
-    };
-    addParticipant(profileId: string): {
-        isSuccess: boolean;
-        isFailure: boolean;
-    };
-    updateMilestoneProgress(milestoneId: string, progress: number): {
-        isSuccess: boolean;
-        isFailure: boolean;
-    };
-    toData(): {
-        id: string;
-        name: string;
-        description: string;
-        milestones: any[];
-        participants: number;
-        isActive: boolean;
-        settings: {
-            isVisible: boolean;
-        };
-        startDate: Date | undefined;
-        endDate: Date | undefined;
     };
 }
 export declare class Participation {

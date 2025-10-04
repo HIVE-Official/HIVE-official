@@ -19,32 +19,36 @@ export class ProfileHandle extends ValueObject<ProfileHandleProps> {
     return this.props.value;
   }
 
+  get handle(): string {
+    return this.props.value;
+  }
+
   private constructor(props: ProfileHandleProps) {
     super(props);
   }
 
   public static create(handle: string): Result<ProfileHandle> {
-    const normalized = handle.toLowerCase().trim();
+    const trimmed = handle.trim();
 
-    if (normalized.length < ProfileHandle.MIN_LENGTH) {
+    if (trimmed.length < ProfileHandle.MIN_LENGTH) {
       return Result.fail<ProfileHandle>(
         `Handle must be at least ${ProfileHandle.MIN_LENGTH} characters`
       );
     }
 
-    if (normalized.length > ProfileHandle.MAX_LENGTH) {
+    if (trimmed.length > ProfileHandle.MAX_LENGTH) {
       return Result.fail<ProfileHandle>(
         `Handle must be no more than ${ProfileHandle.MAX_LENGTH} characters`
       );
     }
 
-    if (!ProfileHandle.VALID_PATTERN.test(normalized)) {
+    if (!ProfileHandle.VALID_PATTERN.test(trimmed)) {
       return Result.fail<ProfileHandle>(
         'Handle can only contain lowercase letters, numbers, and underscores'
       );
     }
 
-    return Result.ok<ProfileHandle>(new ProfileHandle({ value: normalized }));
+    return Result.ok<ProfileHandle>(new ProfileHandle({ value: trimmed }));
   }
 
   public toString(): string {
