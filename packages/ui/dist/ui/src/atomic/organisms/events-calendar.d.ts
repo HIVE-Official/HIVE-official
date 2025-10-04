@@ -1,13 +1,5 @@
 import * as React from "react";
-export interface EventCampusContext {
-    friendsGoing?: Array<{
-        id: string;
-        name: string;
-        avatar: string;
-    }>;
-    popularityRank?: number;
-    proximityToUser?: string;
-}
+import type { EventCampusContext } from "../molecules/feed-event-card";
 /**
  * Calendar event with campus context
  */

@@ -5,7 +5,7 @@
  * Displays page name, type, and dimensions.
  */
 import React from 'react';
-import type { Page } from '@/types/hivelab.types';
+import type { Page } from '../../../types/hivelab.types';
 export interface PageFrameProps {
     /** Page data */
     page: Page;

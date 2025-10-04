@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Dialog, DialogContent } from "../atoms/dialog.js";
-import { Button } from "../atoms/button.js";
-import { Input } from "../atoms/input.js";
-import { Textarea } from "../atoms/textarea.js";
+import { cn } from "../../lib/utils";
+import { Dialog, DialogContent } from "../atoms/dialog";
+import { Button } from "../atoms/button";
+import { Input } from "../atoms/input";
+import { Textarea } from "../atoms/textarea";
 import { Trophy, Sparkles, Zap, PartyPopper, Check, Loader2 } from "lucide-react";
 const RitualActionModal = React.forwardRef(({ open, onClose, action, ritualName, onComplete, isLoading = false, }, ref) => {
     const [formData, setFormData] = React.useState({});

@@ -14,13 +14,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv } from "../../shells/motion-safe.js";
-import { transitions } from "../../lib/animations/index.js";
+import { MotionDiv } from "../../shells/motion-safe";
+import { transitions } from "../../lib/animations";
 import { Users, MessageCircle, CheckCircle2, Plus, Flame, GraduationCap } from "lucide-react";
-import { Card } from "../atoms/card.js";
-import { Badge } from "../atoms/badge.js";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 /**
  * Space Card Component
  */

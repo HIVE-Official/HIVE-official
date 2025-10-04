@@ -35,7 +35,7 @@ page,
 // Loading animations
 loading, 
 // Gesture presets
-gesture, } from './presets.js';
+gesture, } from './presets';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // GESTURE SYSTEM
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -53,7 +53,7 @@ pinchToZoomProps,
 // Haptic feedback
 triggerHaptic, 
 // Gesture presets
-gesturePresets, } from './gestures.js';
+gesturePresets, } from './gestures';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // LAYOUT ANIMATIONS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -81,7 +81,7 @@ masonryItemProps,
 // Magic move
 magicMoveProps, 
 // Utilities
-reorderArray, findIndexByPosition, } from './layout.js';
+reorderArray, findIndexByPosition, } from './layout';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // SCROLL ANIMATIONS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -101,9 +101,9 @@ useScrollDirection, useHideOnScroll,
 // Scroll snap
 useScrollSnap, 
 // Scroll velocity
-useScrollVelocity, } from './scroll.js';
+useScrollVelocity, } from './scroll';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // RE-EXPORTS FROM SHELLS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { MotionDiv, MotionSpan, MotionButton, MotionLink, MotionNav, MotionAside, AnimatePresence, } from '../../shells/motion-safe.js';
+export { MotionDiv, MotionSpan, MotionButton, MotionLink, MotionNav, MotionAside, AnimatePresence, } from '../../shells/motion-safe';
 //# sourceMappingURL=index.js.map

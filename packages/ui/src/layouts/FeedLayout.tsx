@@ -52,16 +52,16 @@ export const FeedLayout: React.FC<{ children?: React.ReactNode }> = ({ children 
             {/* Asymmetric Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-4 mt-6">
               <div className="lg:col-span-6">
-                <PostCard size="large" />
+                <PostCard size="lg" />
               </div>
               <div className="lg:col-span-4">
-                <PostCard size="small" />
+                <PostCard size="sm" />
               </div>
               <div className="lg:col-span-4">
-                <PostCard size="small" />
+                <PostCard size="sm" />
               </div>
               <div className="lg:col-span-6">
-                <PostCard size="large" />
+                <PostCard size="lg" />
               </div>
               <div className="lg:col-span-10">
                 <RitualCard />

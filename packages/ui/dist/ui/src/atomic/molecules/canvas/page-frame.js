@@ -6,7 +6,7 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { Maximize2, Layout, Layers } from 'lucide-react';
 export function PageFrame({ page, isCurrent = false, isHovered = false, zoom = 1, onClick, onDoubleClick, className, }) {
     // Page type icons and colors

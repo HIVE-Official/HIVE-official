@@ -3,8 +3,8 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, } from "lucide-react";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
-import { cn } from "../../lib/utils.js";
-import { Button, buttonVariants } from "./button.js";
+import { cn } from "../../lib/utils";
+import { Button, buttonVariants } from "./button";
 function Calendar({ className, classNames, showOutsideDays = true, captionLayout = "label", buttonVariant = "ghost", formatters, components, ...props }) {
     const defaultClassNames = getDefaultClassNames();
     return (_jsx(DayPicker, { showOutsideDays: showOutsideDays, className: cn("bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw `rtl:**:[.rdp-button\_next>svg]:rotate-180`, String.raw `rtl:**:[.rdp-button\_previous>svg]:rotate-180`, className), captionLayout: captionLayout, formatters: {

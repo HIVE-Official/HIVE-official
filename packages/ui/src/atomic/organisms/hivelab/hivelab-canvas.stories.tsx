@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { HiveLabCanvas } from './hivelab-canvas';
-import type { Page, Element, Connection, Viewport } from '@/types/hivelab.types';
+import type { Page, Element, Connection, Viewport } from '../../../types/hivelab.types';
 
 /**
  * # HiveLab Canvas

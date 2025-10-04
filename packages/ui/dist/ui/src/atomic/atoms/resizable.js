@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as ResizablePrimitive from "react-resizable-panels";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { DragHandleDots2Icon } from "@radix-ui/react-icons";
 const ResizablePanelGroup = ({ className, ...props }) => (_jsx(ResizablePrimitive.PanelGroup, { className: cn("flex h-full w-full data-[panel-group-direction=vertical]:flex-col", className), ...props }));
 const ResizablePanel = ResizablePrimitive.Panel;

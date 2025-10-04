@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { SpaceData, SpaceActionHandler } from "../../types/space.types";
-export interface SpaceHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd'> {
+export interface SpaceHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
     /** Space data (canonical type) */
     space: SpaceData;
     /** Layout mode: header or sidebar */

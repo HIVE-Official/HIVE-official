@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { UserCard } from "../molecules/user-card.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs.js";
-import { cn } from "../../lib/utils.js";
+import { UserCard } from "../molecules/user-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs";
+import { cn } from "../../lib/utils";
 const ConnectionList = React.forwardRef(({ className, connections, variant = "following", following = [], showActions = true, onToggleFollow, onConnectionClick, ...props }, ref) => {
     if (variant === "both") {
         return (_jsx("div", { ref: ref, className: cn("w-full", className), ...props, children: _jsxs(Tabs, { defaultValue: "followers", className: "w-full", children: [_jsxs(TabsList, { className: "grid w-full grid-cols-2", children: [_jsxs(TabsTrigger, { value: "followers", children: ["Followers", _jsx("span", { className: "ml-2 text-xs text-muted-foreground", children: connections.length })] }), _jsxs(TabsTrigger, { value: "following", children: ["Following", _jsx("span", { className: "ml-2 text-xs text-muted-foreground", children: following.length })] })] }), _jsx(TabsContent, { value: "followers", className: "mt-6", children: connections.length === 0 ? (_jsx(EmptyState, { text: "No followers yet" })) : (_jsx("div", { className: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3", children: connections.map((connection) => (_jsx(ConnectionCard, { connection: connection, showActions: showActions, onToggleFollow: onToggleFollow, onConnectionClick: onConnectionClick }, connection.id))) })) }), _jsx(TabsContent, { value: "following", className: "mt-6", children: following.length === 0 ? (_jsx(EmptyState, { text: "Not following anyone yet" })) : (_jsx("div", { className: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3", children: following.map((connection) => (_jsx(ConnectionCard, { connection: connection, showActions: showActions, onToggleFollow: onToggleFollow, onConnectionClick: onConnectionClick }, connection.id))) })) })] }) }));

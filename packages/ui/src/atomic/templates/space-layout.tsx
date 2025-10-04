@@ -38,7 +38,7 @@ import type { SpaceData, SpaceActionHandler, ContextPanelState } from "../../typ
  * - Controlled context panel state
  * - 60/40 responsive layout
  */
-export interface SpaceLayoutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {
+export interface SpaceLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Space data (canonical type) */
   space: SpaceData
 
@@ -553,6 +553,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     showComposer={isJoined}
                     hasMore={hasMorePosts}
                     isLoading={isLoadingPosts}
+                    onAction={handleAction}
                   />
                 </TabsContent>
 
@@ -564,6 +565,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                       showComposer={false}
                       hasMore={false}
                       isLoading={false}
+                      onAction={handleAction}
                     />
                   </TabsContent>
                 ))}
@@ -575,6 +577,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 showComposer={isJoined}
                 hasMore={hasMorePosts}
                 isLoading={isLoadingPosts}
+                onAction={handleAction}
               />
             )}
           </MotionDiv>
@@ -637,6 +640,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                   showComposer={isJoined}
                   hasMore={hasMorePosts}
                   isLoading={isLoadingPosts}
+                  onAction={handleAction}
                 />
               </TabsContent>
 
@@ -648,6 +652,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     showComposer={false}
                     hasMore={false}
                     isLoading={false}
+                    onAction={handleAction}
                   />
                 </TabsContent>
               ))}
@@ -659,6 +664,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
               showComposer={isJoined}
               hasMore={hasMorePosts}
               isLoading={isLoadingPosts}
+              onAction={handleAction}
             />
           )}
         </div>
@@ -724,12 +730,9 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     count: event.attendeeCount || 0
                   },
                   rsvp: {
-                    status: event.userRSVP
-                      ? (event.userRSVP === 'attending' ? 'going' :
-                         event.userRSVP === 'maybe' ? 'interested' : 'not-going') as 'going' | 'interested' | 'not-going'
-                      : null
+                    status: event.userRSVP || null
                   },
-                  category: (event.category || 'social') as 'sports' | 'greek' | 'social' | 'academic' | 'wellness',
+                  category: event.category,
                   campusContext: event.campusContext
                 }))}
                 onEventClick={(eventId) => {
@@ -756,6 +759,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 canInvite={isLeader}
                 previewLimit={50}
                 isLoading={isLoadingMembers}
+                onAction={handleAction}
               />
             </div>
           </DialogContent>
@@ -773,6 +777,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 canAddResources={isLeader}
                 alwaysShowAddButton={isLeader}
                 isLoading={isLoadingResources}
+                onAction={handleAction}
               />
             </div>
           </DialogContent>
@@ -797,6 +802,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 createdBy={space.creator}
                 rules={space.rules}
                 isLeader={isLeader}
+                onAction={handleAction}
               />
             </div>
           </DialogContent>

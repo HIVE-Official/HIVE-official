@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { Calendar, BarChart3, CheckSquare, FileText } from "lucide-react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "../atoms/button.js";
+import { cn } from "../../lib/utils";
+import { Button } from "../atoms/button";
 export const InlineToolsWidget = React.forwardRef(({ isLeader = false, isNewMember = false, onCreateEvent, onCreatePoll, onCreateTask, onUploadResource }, ref) => {
     const tools = [
         {

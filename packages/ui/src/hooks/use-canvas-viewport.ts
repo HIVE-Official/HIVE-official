@@ -7,14 +7,14 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
-import { useHiveLab, useHiveLabActions } from '@/contexts/hivelab-context';
+import { useHiveLab, useHiveLabActions } from '../contexts/hivelab-context';
 import {
   clampZoom,
   calculateZoomDelta,
   screenToCanvas,
   canvasToScreen,
   type Position,
-} from '@/lib/hivelab-utils';
+} from '../lib/hivelab-utils';
 
 interface UseCanvasViewportOptions {
   containerRef: React.RefObject<HTMLElement>;

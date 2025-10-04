@@ -8,8 +8,8 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { Page } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { Page } from '../../../types/hivelab.types';
 import { Maximize2, Layout, Layers } from 'lucide-react';
 
 export interface PageFrameProps {

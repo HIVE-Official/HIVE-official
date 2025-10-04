@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 const SpacePostFeed = React.forwardRef(({ className, posts = [], showComposer = true, composerPlaceholder = "Message #space...", canPost = false, hasMore = false, isLoading = false, emptyStateMessage = "No messages yet. Start the conversation!", onAction, 
 // Legacy handlers
 onCreatePost, onPostClick, onLike, onComment, onShare, onLoadMore, ...props }, ref) => {

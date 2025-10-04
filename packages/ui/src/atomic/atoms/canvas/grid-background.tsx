@@ -8,8 +8,8 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import type { Viewport } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { Viewport } from '../../../types/hivelab.types';
 
 export interface GridBackgroundProps {
   /** Viewport state (x, y, zoom) */

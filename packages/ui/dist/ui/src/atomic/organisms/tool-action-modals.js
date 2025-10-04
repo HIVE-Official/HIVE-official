@@ -2,12 +2,12 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { Plus, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../atoms/dialog.js";
-import { Button } from "../atoms/button.js";
-import { Input } from "../atoms/input.js";
-import { Label } from "../atoms/label.js";
-import { Textarea } from "../atoms/textarea.js";
-import { Switch } from "../atoms/switch.js";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../atoms/dialog";
+import { Button } from "../atoms/button";
+import { Input } from "../atoms/input";
+import { Label } from "../atoms/label";
+import { Textarea } from "../atoms/textarea";
+import { Switch } from "../atoms/switch";
 export const PollModal = ({ open, onOpenChange, onSubmit }) => {
     const [question, setQuestion] = React.useState("");
     const [options, setOptions] = React.useState(["", ""]);

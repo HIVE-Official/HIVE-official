@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { ElementLibraryItem } from './element-library-item';
-import type { ElementDefinition } from '@/types/hivelab.types';
-import { ELEMENT_LIBRARY } from '@/lib/hivelab-element-library';
+import type { ElementDefinition } from '../../../types/hivelab.types';
+import { ELEMENT_LIBRARY } from '../../../lib/hivelab-element-library';
 
 /**
  * # Element Library Item

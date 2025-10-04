@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { Loader2, RefreshCw } from "lucide-react";
 const FeedPullToRefresh = React.forwardRef(({ className, children, onRefresh, pullThreshold = 80, maxPullDistance = 120, enabled = true, ...props }, ref) => {
     const [pullDistance, setPullDistance] = React.useState(0);

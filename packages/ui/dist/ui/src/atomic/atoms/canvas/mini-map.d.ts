@@ -4,7 +4,7 @@
  * Overview map showing entire canvas with viewport indicator.
  * Allows quick navigation by clicking or dragging viewport rectangle.
  */
-import type { Viewport, Page } from '@/types/hivelab.types';
+import type { Viewport, Page } from '../../../types/hivelab.types';
 export interface MiniMapProps {
     /** Current viewport */
     viewport: Viewport;

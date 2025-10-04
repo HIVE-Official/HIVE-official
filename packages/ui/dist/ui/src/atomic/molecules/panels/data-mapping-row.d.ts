@@ -4,7 +4,7 @@
  * Shows a single data mapping/connection between element ports.
  * Used in properties panel to visualize how data flows through elements.
  */
-import type { Port } from '@/types/hivelab.types';
+import type { Port } from '../../../types/hivelab.types';
 export interface DataMappingRowProps {
     /** Port (when used in simplified mode) */
     port?: Port;

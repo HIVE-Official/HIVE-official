@@ -5,8 +5,8 @@
  * Handles pan/zoom, element rendering, connections, and user interactions.
  */
 import React from 'react';
-import type { Element, Connection, Page, Viewport } from '@/types/hivelab.types';
-import type { Position } from '@/types/hivelab.types';
+import type { Element, Connection, Page, Viewport } from '../../../types/hivelab.types';
+import type { Position } from '../../../types/hivelab.types';
 export interface HiveLabCanvasProps {
     /** All pages in the tool */
     pages: Page[];

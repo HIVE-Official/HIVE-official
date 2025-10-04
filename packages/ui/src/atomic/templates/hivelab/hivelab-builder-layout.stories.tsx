@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { HiveLabBuilderLayout } from './hivelab-builder-layout';
-import type { Tool } from '@/types/hivelab.types';
+import type { Tool } from '../../../../types/hivelab.types';
 
 /**
  * # HiveLab Builder Layout

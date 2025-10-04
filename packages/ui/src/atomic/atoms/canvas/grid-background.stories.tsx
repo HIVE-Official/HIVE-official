@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { GridBackground } from './grid-background';
-import type { Viewport } from '@/types/hivelab.types';
+import type { Viewport } from '../../../types/hivelab.types';
 
 /**
  * # Grid Background

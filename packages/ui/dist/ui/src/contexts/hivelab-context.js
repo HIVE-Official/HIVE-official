@@ -7,7 +7,7 @@
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
-import { generatePageId, generateElementId } from '@/lib/hivelab-utils';
+import { generatePageId, generateElementId } from '../lib/hivelab-utils';
 // ============================================================================
 // Initial State Factory
 // ============================================================================

@@ -11,10 +11,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Card } from "../atoms/card.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
 import { CheckCircle, Calendar, Users, Crown, Flame, Target, TrendingUp, Zap, Award, } from "lucide-react";
 const RitualProgressCard = React.forwardRef(({ className, ritual, onCheckIn, onViewDetails, onViewLeaderboard, onShare, compact = false, enablePsychology = true, ...props }, ref) => {
     const [isAnimating, setIsAnimating] = React.useState(false);

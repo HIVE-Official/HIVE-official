@@ -151,7 +151,7 @@ export async function testKeyboardNavigation(
   if (options.enterActivates && options.onActivate) {
     await user.keyboard('{Enter}');
     expect(options.onActivate).toHaveBeenCalled();
-    (options.onActivate as any).mockClear();
+    options.onActivate.mockClear();
   }
 
   // Test Space activation
@@ -159,7 +159,7 @@ export async function testKeyboardNavigation(
     element.focus();
     await user.keyboard(' ');
     expect(options.onActivate).toHaveBeenCalled();
-    (options.onActivate as any).mockClear();
+    options.onActivate.mockClear();
   }
 
   // Test Escape closes

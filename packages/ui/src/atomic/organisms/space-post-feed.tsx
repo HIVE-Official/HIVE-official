@@ -523,7 +523,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                 <textarea
                   ref={textareaRef}
                   value={composerValue}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setComposerValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setComposerValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={composerPlaceholder}
                   className="w-full resize-none rounded-3xl bg-transparent px-6 py-3 pr-24 text-sm text-white placeholder:text-white/50 focus:outline-none min-h-[52px] max-h-[200px]"

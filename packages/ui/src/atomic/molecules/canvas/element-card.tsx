@@ -8,10 +8,10 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Port } from '@/atomic/atoms/elements/port';
-import { DataTypeBadge } from '@/atomic/atoms/elements/data-type-badge';
-import type { Element } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import { Port } from '../../atoms/elements/port';
+import { DataTypeBadge } from '../../atoms/elements/data-type-badge';
+import type { Element } from '../../../types/hivelab.types';
 import { GripVertical } from 'lucide-react';
 
 export interface ElementCardProps {

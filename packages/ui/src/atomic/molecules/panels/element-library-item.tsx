@@ -8,8 +8,8 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { ElementDefinition } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { ElementDefinition } from '../../../types/hivelab.types';
 import { GripVertical } from 'lucide-react';
 
 export interface ElementLibraryItemProps {

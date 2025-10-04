@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Carousel, CarouselContent, CarouselItem, } from "../atoms/carousel.js";
-import { cn } from "../../lib/utils.js";
+import { Carousel, CarouselContent, CarouselItem, } from "../atoms/carousel";
+import { cn } from "../../lib/utils";
 const PhotoCarousel = React.forwardRef(({ className, photos, altPrefix = "Photo", aspectRatio = "portrait", ...props }, ref) => {
     const [api, setApi] = React.useState();
     const [current, setCurrent] = React.useState(0);

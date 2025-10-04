@@ -7,7 +7,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useRef, useState, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 export function MiniMap({ viewport, pages, currentPageId, containerWidth, containerHeight, width = 200, height = 150, position = 'bottom-left', onViewportChange, className, showElementCount = true, }) {
     const miniMapRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);

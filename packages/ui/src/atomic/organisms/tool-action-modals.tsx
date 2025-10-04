@@ -93,7 +93,7 @@ export const PollModal = ({ open, onOpenChange, onSubmit }: PollModalProps) => {
               id="poll-question"
               placeholder="What's your question?"
               value={question}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setQuestion(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setQuestion(e.target.value)}
             />
           </div>
 
@@ -105,7 +105,7 @@ export const PollModal = ({ open, onOpenChange, onSubmit }: PollModalProps) => {
                 <Input
                   placeholder={`Option ${index + 1}`}
                   value={option}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateOption(index, e.target.value)}
+                  onChange={(e: React.ChangeEvent) => updateOption(index, e.target.value)}
                 />
                 {options.length > 2 && (
                   <Button
@@ -155,7 +155,7 @@ export const PollModal = ({ open, onOpenChange, onSubmit }: PollModalProps) => {
                 id="poll-end"
                 type="datetime-local"
                 value={endDate}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setEndDate(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setEndDate(e.target.value)}
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
               id="event-title"
               placeholder="Event name"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
             />
           </div>
 
@@ -290,7 +290,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
                 id="event-start"
                 type="datetime-local"
                 value={startTime}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setStartTime(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setStartTime(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -299,7 +299,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
                 id="event-end"
                 type="datetime-local"
                 value={endTime}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setEndTime(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setEndTime(e.target.value)}
               />
             </div>
           </div>
@@ -311,7 +311,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
               id="event-location"
               placeholder="Where is this happening?"
               value={location}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setLocation(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setLocation(e.target.value)}
             />
           </div>
 
@@ -322,7 +322,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
               id="event-description"
               placeholder="Event details..."
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               rows={3}
             />
           </div>
@@ -335,7 +335,7 @@ export const EventModal = ({ open, onOpenChange, onSubmit }: EventModalProps) =>
               type="number"
               placeholder="Max attendees"
               value={rsvpLimit}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setRsvpLimit(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setRsvpLimit(e.target.value)}
             />
           </div>
         </div>
@@ -416,7 +416,7 @@ export const TaskModal = ({ open, onOpenChange, onSubmit }: TaskModalProps) => {
               id="task-title"
               placeholder="What needs to be done?"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
             />
           </div>
 
@@ -427,7 +427,7 @@ export const TaskModal = ({ open, onOpenChange, onSubmit }: TaskModalProps) => {
               id="task-description"
               placeholder="Task details..."
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               rows={3}
             />
           </div>
@@ -441,7 +441,7 @@ export const TaskModal = ({ open, onOpenChange, onSubmit }: TaskModalProps) => {
               id="task-due"
               type="datetime-local"
               value={dueDate}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDueDate(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDueDate(e.target.value)}
             />
           </div>
 
@@ -563,7 +563,7 @@ export const ResourceModal = ({ open, onOpenChange, onSubmit }: ResourceModalPro
               id="resource-title"
               placeholder="Resource name"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
             />
           </div>
 
@@ -578,7 +578,7 @@ export const ResourceModal = ({ open, onOpenChange, onSubmit }: ResourceModalPro
                 type="url"
                 placeholder="https://..."
                 value={url}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUrl(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setUrl(e.target.value)}
               />
             </div>
           ) : (
@@ -599,7 +599,7 @@ export const ResourceModal = ({ open, onOpenChange, onSubmit }: ResourceModalPro
               id="resource-description"
               placeholder="What is this resource for?"
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               rows={3}
             />
           </div>

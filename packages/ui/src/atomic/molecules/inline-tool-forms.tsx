@@ -61,7 +61,7 @@ export const InlineEventForm = React.forwardRef<HTMLDivElement, InlineEventFormP
             <Input
               id="event-title"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
               placeholder="Weekly build session"
               required
               className="mt-1"
@@ -75,7 +75,7 @@ export const InlineEventForm = React.forwardRef<HTMLDivElement, InlineEventFormP
                 id="event-date"
                 type="date"
                 value={startDate}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setStartDate(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setStartDate(e.target.value)}
                 required
                 className="mt-1"
               />
@@ -86,7 +86,7 @@ export const InlineEventForm = React.forwardRef<HTMLDivElement, InlineEventFormP
                 id="event-time"
                 type="time"
                 value={startTime}
-                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setStartTime(e.target.value)}
+                onChange={(e: React.ChangeEvent) => setStartTime(e.target.value)}
                 required
                 className="mt-1"
               />
@@ -98,7 +98,7 @@ export const InlineEventForm = React.forwardRef<HTMLDivElement, InlineEventFormP
             <Input
               id="event-location"
               value={location}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setLocation(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setLocation(e.target.value)}
               placeholder="Davis Hall Lab 101"
               className="mt-1"
             />
@@ -109,7 +109,7 @@ export const InlineEventForm = React.forwardRef<HTMLDivElement, InlineEventFormP
             <Textarea
               id="event-description"
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               placeholder="Hands-on work on competition bot..."
               rows={2}
               className="mt-1"
@@ -193,7 +193,7 @@ export const InlinePollForm = React.forwardRef<HTMLDivElement, InlinePollFormPro
             <Input
               id="poll-question"
               value={question}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setQuestion(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setQuestion(e.target.value)}
               placeholder="What time works best for the meeting?"
               required
               className="mt-1"
@@ -206,7 +206,7 @@ export const InlinePollForm = React.forwardRef<HTMLDivElement, InlinePollFormPro
               <div key={index} className="flex gap-2">
                 <Input
                   value={option}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateOption(index, e.target.value)}
+                  onChange={(e: React.ChangeEvent) => updateOption(index, e.target.value)}
                   placeholder={`Option ${index + 1}`}
                   required
                   className="flex-1"
@@ -297,7 +297,7 @@ export const InlineTaskForm = React.forwardRef<HTMLDivElement, InlineTaskFormPro
             <Input
               id="task-title"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
               placeholder="Clean common room"
               required
               className="mt-1"
@@ -310,7 +310,7 @@ export const InlineTaskForm = React.forwardRef<HTMLDivElement, InlineTaskFormPro
               id="task-due"
               type="date"
               value={dueDate}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDueDate(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDueDate(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -320,7 +320,7 @@ export const InlineTaskForm = React.forwardRef<HTMLDivElement, InlineTaskFormPro
             <Textarea
               id="task-description"
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               placeholder="Details about the task..."
               rows={2}
               className="mt-1"
@@ -387,7 +387,7 @@ export const InlineResourceForm = React.forwardRef<HTMLDivElement, InlineResourc
             <Input
               id="resource-title"
               value={title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setTitle(e.target.value)}
               placeholder="Study guide"
               required
               className="mt-1"
@@ -400,7 +400,7 @@ export const InlineResourceForm = React.forwardRef<HTMLDivElement, InlineResourc
               id="resource-url"
               type="url"
               value={url}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUrl(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setUrl(e.target.value)}
               placeholder="https://..."
               required
               className="mt-1"
@@ -412,7 +412,7 @@ export const InlineResourceForm = React.forwardRef<HTMLDivElement, InlineResourc
             <Textarea
               id="resource-description"
               value={description}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setDescription(e.target.value)}
               placeholder="What is this resource for?"
               rows={2}
               className="mt-1"

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { InterPageArrow } from './inter-page-arrow';
 import { PageFrame } from './page-frame';
-import type { Page } from '@/types/hivelab.types';
+import type { Page } from '../../../types/hivelab.types';
 
 /**
  * # Inter-Page Arrow

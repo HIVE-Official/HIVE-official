@@ -14,7 +14,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  */
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { MotionDiv, MotionSpan, MotionButton, MotionLink, MotionNav, MotionAside, AnimatePresence } from './motion-safe.js';
+import { MotionDiv, MotionSpan, MotionButton, MotionLink, MotionNav, MotionAside, AnimatePresence } from './motion-safe';
 import { Home, Users, User, Wrench, Calendar, Sparkles, MessageCircle, Search, Menu, X, Plus, ChevronDown, TrendingUp, Activity, Settings, LogOut, Moon, Sun, } from 'lucide-react';
 // NotificationSystem was deleted - use shadcn/ui Sonner toast instead
 // HIVE Easing Curves from Design System

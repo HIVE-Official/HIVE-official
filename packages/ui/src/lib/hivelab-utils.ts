@@ -14,10 +14,10 @@ import type {
   Page,
   Viewport,
   Connection
-} from '@/types/hivelab.types';
+} from '../types/hivelab.types';
 
 // Re-export types for convenience
-export type { DataType, Element, Port, Position, Connection } from '@/types/hivelab.types';
+export type { DataType, Element, Port, Position, Connection } from '../types/hivelab.types';
 
 // ============================================================================
 // Type Compatibility

@@ -8,12 +8,12 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { Port, DataType } from '@/types/hivelab.types';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { Port, DataType } from '../../../types/hivelab.types';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types';
 import { ArrowRight, X } from 'lucide-react';
-import { Button } from '@/atomic/atoms/button';
-import { DataTypeBadge } from '@/atomic/atoms/elements/data-type-badge';
+import { Button } from '../../atoms/button';
+import { DataTypeBadge } from '../../atoms/elements/data-type-badge';
 
 export interface DataMappingRowProps {
   /** Port (when used in simplified mode) */

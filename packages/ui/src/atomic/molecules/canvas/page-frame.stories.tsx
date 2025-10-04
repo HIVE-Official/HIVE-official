@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { PageFrame } from './page-frame';
-import type { Page } from '@/types/hivelab.types';
+import type { Page } from '../../../types/hivelab.types';
 
 /**
  * # Page Frame

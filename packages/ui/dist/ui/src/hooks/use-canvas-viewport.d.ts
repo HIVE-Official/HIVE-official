@@ -3,7 +3,7 @@
  *
  * Handles pan, zoom, and viewport transformations for the HiveLab canvas.
  */
-import { type Position } from '@/lib/hivelab-utils';
+import { type Position } from '../lib/hivelab-utils';
 interface UseCanvasViewportOptions {
     containerRef: React.RefObject<HTMLElement>;
     minZoom?: number;
@@ -11,7 +11,7 @@ interface UseCanvasViewportOptions {
     zoomSpeed?: number;
 }
 export declare function useCanvasViewport({ containerRef, minZoom, maxZoom, zoomSpeed, }: UseCanvasViewportOptions): {
-    viewport: import("../types/hivelab.types").Viewport;
+    viewport: import("../..").Viewport;
     zoomIn: () => void;
     zoomOut: () => void;
     resetZoom: () => void;

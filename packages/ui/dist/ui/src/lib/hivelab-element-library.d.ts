@@ -4,7 +4,7 @@
  * Complete library of 48 v1 elements organized by category.
  * These are the building blocks for creating custom tools.
  */
-import type { ElementDefinition, ElementCategory } from '@/types/hivelab.types';
+import type { ElementDefinition, ElementCategory } from '../types/hivelab.types';
 export declare const TRIGGER_ELEMENTS: ElementDefinition[];
 export declare const COLLECTOR_ELEMENTS: ElementDefinition[];
 export declare const TRANSFORMER_ELEMENTS: ElementDefinition[];

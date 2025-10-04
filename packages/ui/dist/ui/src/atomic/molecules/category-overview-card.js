@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv } from "../../shells/motion-safe.js";
-import { transitions } from "../../lib/animations/index.js";
-import { Card, CardContent } from "../atoms/card.js";
-import { Badge } from "../atoms/badge.js";
-import { cn } from "../../lib/utils.js";
+import { MotionDiv } from "../../shells/motion-safe";
+import { transitions } from "../../lib/animations";
+import { Card, CardContent } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { cn } from "../../lib/utils";
 import { ChevronRight } from "lucide-react";
 /**
  * Category Overview Card

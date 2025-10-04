@@ -5,7 +5,7 @@
  * Represents an element type that can be dragged onto the canvas.
  */
 import React from 'react';
-import type { ElementDefinition } from '@/types/hivelab.types';
+import type { ElementDefinition } from '../../../types/hivelab.types';
 export interface ElementLibraryItemProps {
     /** Element definition */
     element: ElementDefinition;

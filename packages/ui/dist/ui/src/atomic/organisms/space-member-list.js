@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { UserCard } from "../molecules/user-card.js";
-import { Input } from "../atoms/input.js";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select.js";
-import { cn } from "../../lib/utils.js";
+import { UserCard } from "../molecules/user-card";
+import { Input } from "../atoms/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select";
+import { cn } from "../../lib/utils";
 const SpaceMemberList = React.forwardRef(({ className, members, currentUserId, isSpaceLeader = false, onMemberClick, onMemberAction, showSearch = true, showFilters = true, emptyStateMessage = "No members found", ...props }, ref) => {
     const [searchQuery, setSearchQuery] = React.useState("");
     const [roleFilter, setRoleFilter] = React.useState("all");

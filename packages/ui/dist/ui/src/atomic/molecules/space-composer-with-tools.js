@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { InlineToolMenu } from "./inline-tool-menu.js";
-import { useSlashCommands } from "../../hooks/use-slash-commands.js";
+import { cn } from "../../lib/utils";
+import { InlineToolMenu } from "./inline-tool-menu";
+import { useSlashCommands } from "../../hooks/use-slash-commands";
 import { Plus, Paperclip, Image as ImageIcon, Send } from "lucide-react";
 const SpaceComposerWithTools = React.forwardRef(({ className, value, onValueChange, onCreatePost, onToolSelect, placeholder = "Message #space...", canAttach = true, onAttachFile, onAttachImage, showInlineTools = true, ...props }, ref) => {
     const textareaRef = React.useRef(null);

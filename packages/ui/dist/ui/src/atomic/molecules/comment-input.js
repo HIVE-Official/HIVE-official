@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Textarea } from "../atoms/textarea.js";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Textarea } from "../atoms/textarea";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 const CommentInput = React.forwardRef(({ className, avatar, userName, placeholder = "Write a comment...", maxLength = 500, showCharCount = false, isLoading = false, disabled = false, onSubmit, submitLabel = "Post", ...props }, ref) => {
     const [value, setValue] = React.useState("");
     const [rows, setRows] = React.useState(1);

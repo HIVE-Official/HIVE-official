@@ -3,18 +3,13 @@
 import * as React from "react"
 import { Calendar } from "../atoms/calendar"
 import { Badge } from "../atoms/badge"
-import { Avatar, AvatarGroup, AvatarImage, AvatarFallback } from "../atoms/avatar"
+import { Avatar, AvatarGroup } from "../atoms/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card"
 import { Button } from "../atoms/button"
 import { ScrollArea } from "../atoms/scroll-area"
 import { cn } from "../../lib/utils"
 import { Clock, MapPin, Users, ChevronRight } from "lucide-react"
-// Campus context type
-export interface EventCampusContext {
-  friendsGoing?: Array<{ id: string; name: string; avatar: string }>
-  popularityRank?: number
-  proximityToUser?: string
-}
+import type { EventCampusContext } from "../molecules/feed-event-card"
 
 /**
  * Calendar event with campus context
@@ -318,14 +313,8 @@ function CalendarEventPreview({ event, onClick, onRsvp }: CalendarEventPreviewPr
           <AvatarGroup
             size="sm"
             max={2}
-          >
-            {event.campusContext.friendsGoing.map(f => (
-              <Avatar key={f.id}>
-                <AvatarImage src={f.avatar} alt={f.name} />
-                <AvatarFallback>{f.name[0]}</AvatarFallback>
-              </Avatar>
-            ))}
-          </AvatarGroup>
+            avatars={event.campusContext.friendsGoing.map(f => ({ src: f.avatar, alt: f.name }))}
+          />
           <span className="font-medium text-foreground">
             {event.campusContext.friendsGoing.length === 1
               ? event.campusContext.friendsGoing[0].name

@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, } from "../atoms/dropdown-menu.js";
-import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, } from "../atoms/dropdown-menu";
+import { cn } from "../../lib/utils";
 const SpaceLeaderToolbar = React.forwardRef(({ className, pendingPosts = 0, pendingMembers = 0, reportedContent = 0, onEdit, onSettings, onAnalytics, onInvite, onManageContent, onManageMembers, onManageEvents, onExportData, variant = "full", showBadges = true, ...props }, ref) => {
     const isCompact = variant === "compact";
     const totalPending = pendingPosts + pendingMembers + reportedContent;

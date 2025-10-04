@@ -5,7 +5,7 @@
  * Combines toolbar, canvas, element library, and properties panel
  * into a cohesive Figma-like building experience.
  */
-import type { Tool } from '@/types/hivelab.types';
+import type { Tool } from '../../../../types/hivelab.types';
 export interface HiveLabBuilderLayoutProps {
     /** Initial tool (optional, will create empty tool if not provided) */
     initialTool?: Tool;

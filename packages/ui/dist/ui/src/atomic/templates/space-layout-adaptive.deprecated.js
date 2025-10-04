@@ -17,13 +17,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { MessageSquare, Pin, Wrench, Calendar as CalendarIcon, FileText, Users, Plus, ChevronRight, MoreHorizontal } from "lucide-react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { Avatar, AvatarFallback } from "../atoms/avatar.js";
-import { ScrollArea } from "../atoms/scroll-area.js";
-import { SpacePostFeed } from "../organisms/space-post-feed.js";
-import { EventsCalendar } from "../organisms/events-calendar.js";
+import { cn } from "../../lib/utils";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Avatar, AvatarFallback } from "../atoms/avatar";
+import { ScrollArea } from "../atoms/scroll-area";
+import { SpacePostFeed } from "../organisms/space-post-feed";
+import { EventsCalendar } from "../organisms/events-calendar";
 const SpaceLayoutAdaptive = React.forwardRef(({ className, space, posts = [], pinnedPosts = [], tools = [], events = [], filesCount = 0, members = [], onlineCount = 0, initialView = 'stream', onAction, ...props }, ref) => {
     const [activeView, setActiveView] = React.useState(initialView);
     const [selectedToolId, setSelectedToolId] = React.useState(null);

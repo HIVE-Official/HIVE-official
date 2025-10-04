@@ -5,8 +5,8 @@
  */
 'use client';
 import { useCallback, useEffect, useRef } from 'react';
-import { useHiveLab, useHiveLabActions } from '@/contexts/hivelab-context';
-import { clampZoom, calculateZoomDelta, screenToCanvas, canvasToScreen, } from '@/lib/hivelab-utils';
+import { useHiveLab, useHiveLabActions } from '../contexts/hivelab-context';
+import { clampZoom, calculateZoomDelta, screenToCanvas, canvasToScreen, } from '../lib/hivelab-utils';
 export function useCanvasViewport({ containerRef, minZoom = 0.1, maxZoom = 4, zoomSpeed = 0.001, }) {
     const { state } = useHiveLab();
     const { updateViewport } = useHiveLabActions();

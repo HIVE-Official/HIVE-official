@@ -8,9 +8,9 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
-import { Badge } from '@/atomic/atoms/badge';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
+import { Badge } from '../../atoms/badge';
 import { Eye, Copy } from 'lucide-react';
 
 export interface ToolTemplate {

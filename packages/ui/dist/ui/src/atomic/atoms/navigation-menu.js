@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 const NavigationMenu = React.forwardRef(({ className, children, ...props }, ref) => (_jsxs(NavigationMenuPrimitive.Root, { ref: ref, className: cn("relative z-10 flex max-w-max flex-1 items-center justify-center", className), ...props, children: [children, _jsx(NavigationMenuViewport, {})] })));
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName;

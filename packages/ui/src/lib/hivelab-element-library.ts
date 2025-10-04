@@ -5,7 +5,7 @@
  * These are the building blocks for creating custom tools.
  */
 
-import type { ElementDefinition, ElementCategory } from '@/types/hivelab.types';
+import type { ElementDefinition, ElementCategory } from '../types/hivelab.types';
 
 // ============================================================================
 // TRIGGER Elements (5 total)

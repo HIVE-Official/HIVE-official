@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 const HiveLogo = React.forwardRef(({ className, variant = "gold", size = 32, ...props }, ref) => {
     const fillColor = {
         white: "#FFFFFF",

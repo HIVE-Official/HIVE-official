@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv, MotionButton } from "../../shells/motion-safe.js";
-import { transitions, gesturePresets } from "../../lib/animations/index.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { StatCard } from "../molecules/stat-card.js";
-import { cn } from "../../lib/utils.js";
+import { MotionDiv, MotionButton } from "../../shells/motion-safe";
+import { transitions, gesturePresets } from "../../lib/animations";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { StatCard } from "../molecules/stat-card";
+import { cn } from "../../lib/utils";
 const SpaceHeader = React.forwardRef(({ className, space, layout = "header", isCollapsed = false, isLoading = false, onAction, onToggleLayout, 
 // Legacy callbacks
 onJoin, onLeave, onEdit, onSettings, onAnalytics, onInvite, ...props }, ref) => {

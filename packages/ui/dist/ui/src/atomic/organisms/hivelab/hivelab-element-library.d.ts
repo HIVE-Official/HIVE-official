@@ -4,7 +4,7 @@
  * Floating panel containing all available elements organized by category.
  * Users can search, filter, and drag elements onto the canvas.
  */
-import type { ElementDefinition } from '@/types/hivelab.types';
+import type { ElementDefinition } from '../../../types/hivelab.types';
 export interface HiveLabElementLibraryProps {
     /** Available element definitions */
     elements: ElementDefinition[];

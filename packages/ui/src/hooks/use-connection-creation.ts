@@ -7,7 +7,7 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import { useHiveLab, useHiveLabActions } from '@/contexts/hivelab-context';
+import { useHiveLab, useHiveLabActions } from '../contexts/hivelab-context';
 import {
   isCompatibleTypes,
   generateConnectionId,
@@ -19,8 +19,8 @@ import {
   type Connection,
   type Element,
   type Port,
-} from '@/lib/hivelab-utils';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+} from '../lib/hivelab-utils';
+import { DATA_TYPE_COLORS } from '../types/hivelab.types';
 
 interface UseConnectionCreationOptions {
   containerRef: React.RefObject<HTMLElement>;

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { ElementCard } from './element-card';
-import type { Element } from '@/types/hivelab.types';
+import type { Element } from '../../../types/hivelab.types';
 
 /**
  * # Element Card

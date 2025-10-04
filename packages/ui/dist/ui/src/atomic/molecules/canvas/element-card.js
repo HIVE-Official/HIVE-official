@@ -6,9 +6,9 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
-import { Port } from '@/atomic/atoms/elements/port';
-import { DataTypeBadge } from '@/atomic/atoms/elements/data-type-badge';
+import { cn } from '../../../lib/utils';
+import { Port } from '../../atoms/elements/port';
+import { DataTypeBadge } from '../../atoms/elements/data-type-badge';
 import { GripVertical } from 'lucide-react';
 export function ElementCard({ element, isSelected = false, isDragging = false, isHovered = false, zoom = 1, hoveredPort = null, connectionState, onDragStart, onClick, onDoubleClick, onPortMouseDown, onPortClick, onPortHover, className, }) {
     // Get category color

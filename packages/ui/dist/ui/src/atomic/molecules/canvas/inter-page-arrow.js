@@ -6,7 +6,7 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { ExternalLink } from 'lucide-react';
 export function InterPageArrow({ sourcePage, targetPage, sourceName, targetName, routerElement, isSelected = false, isHovered = false, color = 'hsl(var(--primary))', onClick, className, }) {
     // Calculate start and end points (center of page edges)

@@ -6,7 +6,7 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { GripVertical } from 'lucide-react';
 // Category colors (matches element-card.tsx)
 const categoryColors = {

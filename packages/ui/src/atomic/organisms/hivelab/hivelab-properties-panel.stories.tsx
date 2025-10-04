@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { HiveLabPropertiesPanel } from './hivelab-properties-panel';
-import type { Element } from '@/types/hivelab.types';
+import type { Element } from '../../../types/hivelab.types';
 
 /**
  * # HiveLab Properties Panel

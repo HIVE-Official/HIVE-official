@@ -8,8 +8,8 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { Position } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { Position } from '../../../types/hivelab.types';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 
 export interface InterPageArrowProps {

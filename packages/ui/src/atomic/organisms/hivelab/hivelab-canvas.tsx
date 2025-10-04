@@ -8,16 +8,16 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { Element, Connection, Page, Viewport } from '@/types/hivelab.types';
-import { GridBackground } from '@/atomic/atoms/canvas/grid-background';
-import { ZoomControls } from '@/atomic/atoms/canvas/zoom-controls';
-import { MiniMap } from '@/atomic/atoms/canvas/mini-map';
-import { ElementCard } from '@/atomic/molecules/canvas/element-card';
-import { ConnectionLayer } from '@/atomic/molecules/canvas/connection-layer';
-import { PageFrame } from '@/atomic/molecules/canvas/page-frame';
-import { SelectionBox } from '@/atomic/molecules/canvas/selection-box';
-import type { Position } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { Element, Connection, Page, Viewport } from '../../../types/hivelab.types';
+import { GridBackground } from '../../atoms/canvas/grid-background';
+import { ZoomControls } from '../../atoms/canvas/zoom-controls';
+import { MiniMap } from '../../atoms/canvas/mini-map';
+import { ElementCard } from '../../molecules/canvas/element-card';
+import { ConnectionLayer } from '../../molecules/canvas/connection-layer';
+import { PageFrame } from '../../molecules/canvas/page-frame';
+import { SelectionBox } from '../../molecules/canvas/selection-box';
+import type { Position } from '../../../types/hivelab.types';
 
 export interface HiveLabCanvasProps {
   /** All pages in the tool */

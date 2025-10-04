@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { useTouchGestures } from "@hive/hooks";
-import { Card } from "../atoms/card.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { Avatar } from "../atoms/avatar.js";
+import { Card } from "../atoms/card";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Avatar } from "../atoms/avatar";
 import { Heart, MessageCircle, Repeat2, Quote, Bookmark, MoreHorizontal, TrendingUp, } from "lucide-react";
 const FeedPostCard = React.forwardRef(({ className, post, onReact, onComment, onRepost, onRequote, onSave, onHide, onSpaceClick, onAuthorClick, compact = false, enableMobileGestures = true, ...props }, ref) => {
     const [showFullContent, setShowFullContent] = React.useState(false);

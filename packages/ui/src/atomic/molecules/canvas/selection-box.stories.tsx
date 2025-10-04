@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { SelectionBox } from './selection-box';
 import { ElementCard } from './element-card';
-import type { Position, Element } from '@/types/hivelab.types';
+import type { Position, Element } from '../../../types/hivelab.types';
 
 /**
  * # Selection Box

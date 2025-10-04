@@ -14,21 +14,22 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils.js';
-import { HiveLabProvider, useHiveLab } from '../../contexts/hivelab-context.js';
-import { HiveLabToolbar } from './hivelab/hivelab-toolbar.js';
-import { HiveLabCanvas } from './hivelab/hivelab-canvas.js';
-import { HiveLabElementLibrary } from './hivelab/hivelab-element-library.js';
-import { HiveLabPropertiesPanel } from './hivelab/hivelab-properties-panel.js';
-import { ELEMENT_LIBRARY } from '../../lib/hivelab-element-library.js';
-import { Button } from '../atoms/button.js';
-import { Badge } from '../atoms/badge.js';
+import { cn } from '../../lib/utils';
+import { HiveLabProvider, useHiveLab, useHiveLabActions } from '../../contexts/hivelab-context';
+import { HiveLabToolbar } from './hivelab/hivelab-toolbar';
+import { HiveLabCanvas } from './hivelab/hivelab-canvas';
+import { HiveLabElementLibrary } from './hivelab/hivelab-element-library';
+import { HiveLabPropertiesPanel } from './hivelab/hivelab-properties-panel';
+import { ELEMENT_LIBRARY } from '../../lib/hivelab-element-library';
+import { Button } from '../atoms/button';
+import { Badge } from '../atoms/badge';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 /**
  * Internal builder (wrapped by provider)
  */
 function SpaceToolBuilderInternal({ space, onSave, onPreview, onExit, className, }) {
-    const { state, actions } = useHiveLab();
+    const state = useHiveLab();
+    const actions = useHiveLabActions();
     const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);
     const [propertiesCollapsed, setPropertiesCollapsed] = React.useState(false);
     const currentPage = state.tool.pages.find((p) => p.id === state.currentPage);

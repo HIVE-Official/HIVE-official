@@ -6,7 +6,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 const ModalContext = createContext({
     modals: [],
     openModal: () => '',

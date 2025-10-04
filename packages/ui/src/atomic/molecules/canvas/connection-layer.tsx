@@ -8,10 +8,10 @@
 'use client';
 
 import React from 'react';
-import { ConnectionWire } from '@/atomic/atoms/elements/connection-wire';
-import type { Connection, Element, Port, Position } from '@/types/hivelab.types';
-import { generateConnectionPath, generateBezierPath, getPortById } from '@/lib/hivelab-utils';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { ConnectionWire } from '../../atoms/elements/connection-wire';
+import type { Connection, Element, Port, Position } from '../../../types/hivelab.types';
+import { generateConnectionPath, generateBezierPath, getPortById } from '../../../lib/hivelab-utils';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types';
 
 export interface ConnectionLayerProps {
   /** All elements on this page */

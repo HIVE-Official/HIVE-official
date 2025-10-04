@@ -4,7 +4,7 @@
  * Floating panel for configuring selected element properties.
  * Shows element info, configuration fields, port connections, and actions.
  */
-import type { Element } from '@/types/hivelab.types';
+import type { Element } from '../../../types/hivelab.types';
 export interface HiveLabPropertiesPanelProps {
     /** Selected element (null if nothing selected) */
     selectedElement: Element | null;

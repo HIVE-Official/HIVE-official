@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 const SpaceResourcesPanel = React.forwardRef(({ className, resources = [], onAddResource, onResourceClick, onRemoveResource, canAddResources = false, alwaysShowAddButton = false, emptyStateMessage = "No resources added yet", ...props }, ref) => {
     // Separate pinned and regular resources
     const pinnedResources = React.useMemo(() => resources.filter((r) => r.isPinned).sort((a, b) => b.addedAt.getTime() - a.addedAt.getTime()), [resources]);

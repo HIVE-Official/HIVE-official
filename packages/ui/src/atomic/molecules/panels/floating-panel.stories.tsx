@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { FloatingPanel } from './floating-panel';
-import { Button } from '@/atomic/atoms/button';
+import { Button } from '../../atoms/button';
 
 /**
  * # Floating Panel

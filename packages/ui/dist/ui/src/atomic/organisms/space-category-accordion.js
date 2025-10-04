@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { AccordionContent, AccordionItem, AccordionTrigger, } from "../atoms/accordion.js";
-import { cn } from "../../lib/utils.js";
+import { AccordionContent, AccordionItem, AccordionTrigger, } from "../atoms/accordion";
+import { cn } from "../../lib/utils";
 /**
  * Space Category Accordion Item
  *

@@ -5,7 +5,7 @@
  * Handles connection selection, hover states, and draft connections.
  */
 import React from 'react';
-import type { Connection, Element, Position } from '@/types/hivelab.types';
+import type { Connection, Element, Position } from '../../../types/hivelab.types';
 export interface ConnectionLayerProps {
     /** All elements on this page */
     elements: Element[];

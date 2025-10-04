@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../atoms/sheet.js";
-import { Button } from "../atoms/button.js";
-import { Input } from "../atoms/input.js";
-import { Textarea } from "../atoms/textarea.js";
-import { Label } from "../atoms/label.js";
-import { Badge } from "../atoms/badge.js";
-import { Separator } from "../atoms/separator.js";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "../atoms/sheet";
+import { Button } from "../atoms/button";
+import { Input } from "../atoms/input";
+import { Textarea } from "../atoms/textarea";
+import { Label } from "../atoms/label";
+import { Badge } from "../atoms/badge";
+import { Separator } from "../atoms/separator";
 import { Edit, Upload, X } from "lucide-react";
 /**
  * Profile Edit Sheet

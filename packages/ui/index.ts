@@ -15,6 +15,7 @@ export * from "./src/hooks"
 
 // Export utilities
 export { cn } from "./src/lib/utils"
+// Note: hivelab-utils are internal-only, not exported from package
 
 // Re-export common types
 export type { ButtonProps } from "./src/atomic/atoms/button"
@@ -22,3 +23,36 @@ export type { ButtonProps } from "./src/atomic/atoms/button"
 // Export types
 export type { Event, Comment } from "./src/types/event"
 export type { SearchableItem, SearchResult, SearchFilters } from "./src/types/search"
+
+// Export HiveLab types (selective to avoid conflicts with components)
+export type {
+  DataType,
+  ElementCategory,
+  ElementComplexity,
+  Port,
+  Element,
+  ElementDefinition,
+  Connection,
+  PageType,
+  PageTransition,
+  RequiredRole,
+  Page,
+  RouterConfig,
+  ToolStatus,
+  ToolVisibility,
+  Tool,
+  Viewport,
+  // SelectionBox - SKIP: conflicts with SelectionBox component from molecules
+  CanvasMode,
+  PanelState,
+  ConnectionDraft,
+  HiveLabState,
+  HiveLabAction,
+  ToolTemplate,
+  Position,
+  Size,
+  BoundingBox,
+  ConnectionPath
+} from "./src/types/hivelab.types"
+
+export { DATA_TYPE_COLORS, getPrimaryType } from "./src/types/hivelab.types"

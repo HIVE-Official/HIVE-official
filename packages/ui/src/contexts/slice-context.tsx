@@ -10,7 +10,7 @@ import type { FeedPost, Space, Tool } from "@hive/core"
  */
 
 // Slice identification
-export type SliceType = 'feed' | 'spaces' | 'profile' | 'hivelab' | 'hivelab'
+export type SliceType = 'feed' | 'spaces' | 'profile' | 'hivelab'
 
 // Feed slice context
 export interface FeedSliceContext {

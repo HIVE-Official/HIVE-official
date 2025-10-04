@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionNav } from "../../shells/motion-safe.js";
-import { transitions } from "../../lib/animations/index.js";
-import { Badge } from "../atoms/badge.js";
-import { HiveLogo } from "../atoms/hive-logo.js";
-import { SearchBar } from "../molecules/search-bar.js";
-import { NotificationItem } from "../molecules/notification-item.js";
-import { cn } from "../../lib/utils.js";
+import { MotionNav } from "../../shells/motion-safe";
+import { transitions } from "../../lib/animations";
+import { Badge } from "../atoms/badge";
+import { HiveLogo } from "../atoms/hive-logo";
+import { SearchBar } from "../molecules/search-bar";
+import { NotificationItem } from "../molecules/notification-item";
+import { cn } from "../../lib/utils";
 const NavigationShell = React.forwardRef(({ className, children, currentUserName = "Guest", currentUserAvatar, currentUserHandle = "@guest", links = [], notificationCount = 0, notifications = [], onSearch, onNotificationClick, onProfileClick, onSettingsClick, onSignOutClick, showSearch = true, layout = "header", isCollapsed = false, onToggleLayout, ...props }, ref) => {
     const [showNotifications, setShowNotifications] = React.useState(false);
     const [showUserMenu, setShowUserMenu] = React.useState(false);

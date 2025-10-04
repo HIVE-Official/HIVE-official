@@ -5,9 +5,9 @@
  */
 'use client';
 import { useCallback, useEffect } from 'react';
-import { useHiveLab, useHiveLabActions } from '@/contexts/hivelab-context';
-import { isCompatibleTypes, generateConnectionId, generateDraftConnectionPath, generateConnectionPath, getPortById, } from '@/lib/hivelab-utils';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { useHiveLab, useHiveLabActions } from '../contexts/hivelab-context';
+import { isCompatibleTypes, generateConnectionId, generateDraftConnectionPath, generateConnectionPath, getPortById, } from '../lib/hivelab-utils';
+import { DATA_TYPE_COLORS } from '../types/hivelab.types';
 export function useConnectionCreation({ containerRef, onConnectionCreated, onConnectionFailed, }) {
     const { state } = useHiveLab();
     const { startConnection, updateConnectionMouse, endConnection, createConnection, } = useHiveLabActions();

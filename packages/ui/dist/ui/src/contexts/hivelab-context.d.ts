@@ -5,7 +5,7 @@
  * Handles elements, connections, viewport, selection, and history.
  */
 import React, { type ReactNode } from 'react';
-import type { HiveLabState, HiveLabAction, Tool, Page, Element, Connection, Viewport } from '@/types/hivelab.types';
+import type { HiveLabState, HiveLabAction, Tool, Page, Element, Connection, Viewport } from '../types/hivelab.types';
 export interface HiveLabContextValue {
     state: HiveLabState;
     dispatch: React.Dispatch<HiveLabAction>;

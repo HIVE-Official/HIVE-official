@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "../atoms/button.js";
-import { Badge } from "../atoms/badge.js";
-import { Card } from "../atoms/card.js";
-import { RitualProgressRing } from "../molecules/ritual-progress-ring.js";
-import { RitualMilestoneTrack } from "../organisms/ritual-milestone-track.js";
-import { RitualLeaderboard } from "../organisms/ritual-leaderboard.js";
+import { cn } from "../../lib/utils";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Card } from "../atoms/card";
+import { RitualProgressRing } from "../molecules/ritual-progress-ring";
+import { RitualMilestoneTrack } from "../organisms/ritual-milestone-track";
+import { RitualLeaderboard } from "../organisms/ritual-leaderboard";
 import { Calendar, Users, Trophy, Clock, ArrowLeft } from "lucide-react";
 const RitualDetailView = React.forwardRef(({ className, ritual, onJoin, onLeave, onMilestoneClick, onBack, onShare, showLeaderboard = true, ...props }, ref) => {
     const [isJoining, setIsJoining] = React.useState(false);

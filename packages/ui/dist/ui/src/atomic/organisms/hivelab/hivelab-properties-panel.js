@@ -6,12 +6,12 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
-import { Badge } from '@/atomic/atoms/badge';
-import { FloatingPanel } from '@/atomic/molecules/panels/floating-panel';
-import { PropertyField } from '@/atomic/molecules/panels/property-field';
-import { DataMappingRow } from '@/atomic/molecules/panels/data-mapping-row';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
+import { Badge } from '../../atoms/badge';
+import { FloatingPanel } from '../../molecules/panels/floating-panel';
+import { PropertyField } from '../../molecules/panels/property-field';
+import { DataMappingRow } from '../../molecules/panels/data-mapping-row';
 import { Settings, Trash2, Copy } from 'lucide-react';
 /**
  * Get element category label

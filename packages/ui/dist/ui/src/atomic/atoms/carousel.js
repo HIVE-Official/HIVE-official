@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "./button.js";
+import { cn } from "../../lib/utils";
+import { Button } from "./button";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 const CarouselContext = React.createContext(null);
 function useCarousel() {

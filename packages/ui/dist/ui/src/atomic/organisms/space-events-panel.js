@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
-import { Badge } from "../atoms/badge.js";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 const SpaceEventsPanel = React.forwardRef(({ className, events = [], onCreateEvent, onEventClick, onRSVP, canCreateEvents = false, showPastEvents = false, emptyStateMessage = "No upcoming events", ...props }, ref) => {
     // Filter events based on status
     const upcomingEvents = React.useMemo(() => {

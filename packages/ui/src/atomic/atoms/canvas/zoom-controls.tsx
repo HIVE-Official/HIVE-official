@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Button } from '@/atomic/atoms/button';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   ZoomIn,
   ZoomOut,

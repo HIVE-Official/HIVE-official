@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { Loader2 } from "lucide-react";
 const FeedInfiniteScroll = React.forwardRef(({ className, children, onLoadMore, hasMore = false, isLoading = false, initialLoad = 15, scrollIncrement = 10, maxInMemory = 50, loadThreshold = 0.8, loadingComponent, endComponent, ...props }, ref) => {
     const [isLoadingMore, setIsLoadingMore] = React.useState(false);

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { DataMappingRow } from './data-mapping-row';
-import type { Port } from '@/types/hivelab.types';
+import type { Port } from '../../../types/hivelab.types';
 
 /**
  * # Data Mapping Row

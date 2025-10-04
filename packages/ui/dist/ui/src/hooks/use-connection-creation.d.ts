@@ -3,7 +3,7 @@
  *
  * Handles wire dragging logic for creating connections between element ports.
  */
-import { type Position, type Connection, type Element, type Port } from '@/lib/hivelab-utils';
+import { type Position, type Connection, type Element, type Port } from '../lib/hivelab-utils';
 interface UseConnectionCreationOptions {
     containerRef: React.RefObject<HTMLElement>;
     onConnectionCreated?: (connection: Connection) => void;

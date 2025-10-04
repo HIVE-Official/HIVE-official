@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Card } from "../atoms/card.js";
-import { Input } from "../atoms/input.js";
-import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import { Input } from "../atoms/input";
+import { Badge } from "../atoms/badge";
 import { Search, Star } from "lucide-react";
 const categories = [
     { id: "all", name: "All Elements", icon: "🎨", color: "text-white" },

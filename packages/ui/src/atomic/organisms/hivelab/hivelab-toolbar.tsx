@@ -8,8 +8,8 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
 import {
   Save,
   Undo,

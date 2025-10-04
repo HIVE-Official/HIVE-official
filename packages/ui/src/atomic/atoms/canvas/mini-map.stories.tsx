@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MiniMap } from './mini-map';
 import { GridBackground } from './grid-background';
 import { ZoomControls } from './zoom-controls';
-import type { Page, Viewport } from '@/types/hivelab.types';
+import type { Page, Viewport } from '../../../types/hivelab.types';
 
 /**
  * # Mini-Map

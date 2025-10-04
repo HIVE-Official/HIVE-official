@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 /**
  * Profile Photo Carousel

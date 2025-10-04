@@ -6,8 +6,8 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
 import { Save, Undo, Redo, Play, Settings, Download, Upload, Copy, Trash2, Grid3x3, ZoomIn, ZoomOut, Maximize2, Code, FileText, } from 'lucide-react';
 export function HiveLabToolbar({ toolName = 'Untitled Tool', canUndo = false, canRedo = false, zoom = 1, isSaved = true, isRunning = false, showGrid = true, onUndo, onRedo, onSave, onRun, onSettings, onExport, onImport, onDelete, onDuplicate, onZoomIn, onZoomOut, onZoomToFit, onToggleGrid, onViewCode, onViewDocs, className, }) {
     const zoomPercentage = Math.round(zoom * 100);

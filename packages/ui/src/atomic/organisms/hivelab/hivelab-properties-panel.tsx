@@ -8,14 +8,14 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
-import { Badge } from '@/atomic/atoms/badge';
-import { Separator } from '@/atomic/atoms/separator';
-import { FloatingPanel } from '@/atomic/molecules/panels/floating-panel';
-import { PropertyField, type PropertyFieldType } from '@/atomic/molecules/panels/property-field';
-import { DataMappingRow } from '@/atomic/molecules/panels/data-mapping-row';
-import type { Element, Port } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
+import { Badge } from '../../atoms/badge';
+import { Separator } from '../../atoms/separator';
+import { FloatingPanel } from '../../molecules/panels/floating-panel';
+import { PropertyField, type PropertyFieldType } from '../../molecules/panels/property-field';
+import { DataMappingRow } from '../../molecules/panels/data-mapping-row';
+import type { Element, Port } from '../../../types/hivelab.types';
 import { Settings, Trash2, Copy, ExternalLink } from 'lucide-react';
 
 export interface HiveLabPropertiesPanelProps {

@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
-import { Card } from "../atoms/card.js";
-import { Badge } from "../atoms/badge.js";
-import { Progress } from "../atoms/progress.js";
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { Progress } from "../atoms/progress";
 import { Trophy, Users, Zap, Heart, Target, Flame, Clock, TrendingUp, } from "lucide-react";
 const RitualsCardStrip = React.forwardRef(({ className, rituals = [], onRitualClick, onJoinRitual, showEmptyState = false, ...props }, ref) => {
     if (rituals.length === 0 && !showEmptyState) {

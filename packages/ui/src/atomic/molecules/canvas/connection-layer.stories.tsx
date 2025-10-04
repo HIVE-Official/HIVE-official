@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { ConnectionLayer } from './connection-layer';
 import { ElementCard } from './element-card';
-import type { Element, Connection } from '@/types/hivelab.types';
+import type { Element, Connection } from '../../../types/hivelab.types';
 
 /**
  * # Connection Layer

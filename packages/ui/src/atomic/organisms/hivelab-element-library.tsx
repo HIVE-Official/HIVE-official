@@ -129,7 +129,7 @@ const HiveLabElementLibrary = React.forwardRef<HTMLDivElement, HiveLabElementLib
             <Input
               placeholder="Search elements..."
               value={search}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSearch(e.target.value)}
               className="pl-9 h-9 text-sm"
             />
           </div>

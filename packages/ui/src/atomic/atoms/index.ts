@@ -346,3 +346,6 @@ export { HiveLogo } from './hive-logo';
 
 export { BulletinCard } from './bulletin-card';
 export { BulletinSection } from './bulletin-section';
+
+// Note: Canvas elements (ConnectionWire, Port, DataTypeBadge) are internal-only
+// They're used within HiveLab organisms but not exported from the package

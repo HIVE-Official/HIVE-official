@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
-import { Badge } from "../atoms/badge.js";
-import { Button } from "../atoms/button.js";
-import { cn } from "../../lib/utils.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
+import { Badge } from "../atoms/badge";
+import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils";
 const SpaceMembersPanel = React.forwardRef(({ className, members = [], totalMemberCount, previewLimit = 6, canInvite = false, showOnlineStatus = true, emptyStateMessage = "No members yet", isLoading = false, onAction, 
 // Legacy handlers
 onInvite, onViewAll, onMemberClick, ...props }, ref) => {

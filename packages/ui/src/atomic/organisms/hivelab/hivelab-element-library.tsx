@@ -8,13 +8,13 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import { Input } from '@/atomic/atoms/input';
-import { Badge } from '@/atomic/atoms/badge';
-import { Button } from '@/atomic/atoms/button';
-import { FloatingPanel } from '@/atomic/molecules/panels/floating-panel';
-import { ElementLibraryItem } from '@/atomic/molecules/panels/element-library-item';
-import type { ElementDefinition, ElementCategory } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import { Input } from '../../atoms/input';
+import { Badge } from '../../atoms/badge';
+import { Button } from '../../atoms/button';
+import { FloatingPanel } from '../../molecules/panels/floating-panel';
+import { ElementLibraryItem } from '../../molecules/panels/element-library-item';
+import type { ElementDefinition, ElementCategory } from '../../../types/hivelab.types';
 import { Search, Star, Grid3x3, List } from 'lucide-react';
 
 export interface HiveLabElementLibraryProps {

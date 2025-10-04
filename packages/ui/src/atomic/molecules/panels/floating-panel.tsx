@@ -8,8 +8,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/atomic/atoms/button';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../atoms/button';
 import { ChevronDown, ChevronUp, GripVertical, X, Maximize2, Minimize2 } from 'lucide-react';
 
 export interface FloatingPanelProps {

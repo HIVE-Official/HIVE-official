@@ -1,7 +1,7 @@
-export { SpaceLayout } from './space-layout.js';
+export { SpaceLayout } from './space-layout';
 // SpaceLayoutAdaptive deprecated - use SpaceLayout instead (see space-layout-adaptive.deprecated.tsx)
-export { FeedLayout } from './feed-layout.js';
-export { RitualDetailView } from './ritual-detail-view.js';
+export { FeedLayout } from './feed-layout';
+export { RitualDetailView } from './ritual-detail-view';
 // HiveLab Templates
-export { HiveLabBuilderLayout } from './hivelab/index.js';
+export { HiveLabBuilderLayout } from './hivelab';
 //# sourceMappingURL=index.js.map

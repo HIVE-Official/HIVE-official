@@ -5,7 +5,7 @@
  * Handles drag, selection, hover states, and port interactions.
  */
 import React from 'react';
-import type { Element } from '@/types/hivelab.types';
+import type { Element } from '../../../types/hivelab.types';
 export interface ElementCardProps {
     /** Element data */
     element: Element;

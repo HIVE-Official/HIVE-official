@@ -18,8 +18,8 @@ import type {
   Viewport,
   CanvasMode,
   PanelState,
-} from '@/types/hivelab.types';
-import { generatePageId, generateElementId, generateConnectionId } from '@/lib/hivelab-utils';
+} from '../types/hivelab.types';
+import { generatePageId, generateElementId, generateConnectionId } from '../lib/hivelab-utils';
 
 // ============================================================================
 // Initial State Factory

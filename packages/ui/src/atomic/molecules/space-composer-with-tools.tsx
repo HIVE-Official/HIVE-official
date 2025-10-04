@@ -140,7 +140,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
             <textarea
               ref={textareaRef}
               value={value}
-              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onValueChange(e.target.value)}
+              onChange={(e: React.ChangeEvent) => onValueChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
               className={cn(

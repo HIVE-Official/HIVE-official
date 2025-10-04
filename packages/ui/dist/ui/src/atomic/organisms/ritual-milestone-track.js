@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils.js";
+import { cn } from "../../lib/utils";
 import { Check, Lock, Circle } from "lucide-react";
-import { Badge } from "../atoms/badge.js";
+import { Badge } from "../atoms/badge";
 const RitualMilestoneTrack = React.forwardRef(({ className, milestones, orientation = "vertical", compact = false, onMilestoneClick, ...props }, ref) => {
     const isVertical = orientation === "vertical";
     return (_jsx("div", { ref: ref, className: cn("relative", isVertical ? "space-y-6" : "flex gap-6 overflow-x-auto pb-4", className), ...props, children: milestones.map((milestone, index) => {

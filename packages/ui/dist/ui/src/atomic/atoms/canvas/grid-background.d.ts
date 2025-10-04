@@ -4,7 +4,7 @@
  * Infinite grid background for HiveLab canvas with dot or line pattern.
  * Scales with zoom and pans with viewport.
  */
-import type { Viewport } from '@/types/hivelab.types';
+import type { Viewport } from '../../../types/hivelab.types';
 export interface GridBackgroundProps {
     /** Viewport state (x, y, zoom) */
     viewport: Viewport;

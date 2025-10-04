@@ -4,7 +4,7 @@
  * Visual rectangle shown during multi-select drag operation.
  * Updates in real-time as the user drags to select multiple elements.
  */
-import type { Position } from '@/types/hivelab.types';
+import type { Position } from '../../../types/hivelab.types';
 export interface SelectionBoxProps {
     /** Start position of the selection (where drag began) */
     start: Position;
