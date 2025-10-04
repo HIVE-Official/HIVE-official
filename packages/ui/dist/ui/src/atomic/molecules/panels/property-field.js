@@ -13,8 +13,9 @@ import { Textarea } from '@/atomic/atoms/textarea';
 import { Switch } from '@/atomic/atoms/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/atomic/atoms/select';
 import { HelpCircle } from 'lucide-react';
-export function PropertyField({ label, type, value, onChange, required = false, helpText, placeholder, options = [], min, max, disabled = false, className, }) {
+export function PropertyField({ label, type, value, onChange, required = false, helpText: propHelpText, help, placeholder, options = [], min, max, disabled = false, className, }) {
     const id = `field-${label.toLowerCase().replace(/\s+/g, '-')}`;
+    const helpText = propHelpText ?? help;
     const renderField = () => {
         switch (type) {
             case 'text':

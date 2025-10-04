@@ -20,7 +20,7 @@ import { ToolArchivedEvent } from '../events/tool-archived.event';
  */
 export class Tool extends AggregateRoot {
     constructor(props, id) {
-        super(props, id);
+        super(props, id || props.toolId.value);
     }
     // Getters
     get toolId() {

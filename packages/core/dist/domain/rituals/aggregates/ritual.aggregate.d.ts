@@ -108,6 +108,10 @@ export declare class Ritual extends AggregateRoot<RitualProps> {
     get participationStats(): ParticipationStats;
     get createdAt(): Date;
     get updatedAt(): Date;
+    get announcedAt(): Date | undefined;
+    get activatedAt(): Date | undefined;
+    get launchedAt(): Date | undefined;
+    get completedAt(): Date | undefined;
     static create(props: Omit<RitualProps, 'ritualId' | 'createdAt' | 'updatedAt' | 'participants' | 'participationStats'> & {
         ritualId?: RitualId;
     }, id?: string): Result<Ritual>;
@@ -195,5 +199,6 @@ export declare class Ritual extends AggregateRoot<RitualProps> {
     setGoals(goals: RitualGoal[]): void;
     setRequirements(requirements: RitualRequirement[]): void;
     setRewards(rewards: RitualReward[]): void;
+    toData(): any;
 }
 //# sourceMappingURL=ritual.aggregate.d.ts.map

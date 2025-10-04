@@ -16,6 +16,16 @@ class ToolDeployedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolDeployed';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            toolName: this.toolName,
+            spaceIds: this.spaceIds,
+            totalDeployments: this.totalDeployments
+        };
+    }
 }
 exports.ToolDeployedEvent = ToolDeployedEvent;
 //# sourceMappingURL=tool-deployed.event.js.map

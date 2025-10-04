@@ -265,12 +265,10 @@ class FirebaseProfileRepository {
             userType: profile.userType.value,
             campusId: profile.campusId.id,
             privacy: profile.privacy ? {
-                level: profile.privacy.level,
+                profileVisibility: profile.privacy.profileVisibility,
                 showEmail: profile.privacy.showEmail,
-                showPhone: profile.privacy.showPhone,
-                showDorm: profile.privacy.showDorm,
-                showSchedule: profile.privacy.showSchedule,
-                showActivity: profile.privacy.showActivity
+                showConnections: profile.privacy.showConnections,
+                allowConnectionRequests: profile.privacy.allowConnectionRequests
             } : {},
             badges: profile.badges,
             blockedUsers: profile.blockedUsers,
@@ -352,7 +350,7 @@ class FirebaseProfileRepository {
             });
             // Fetch all connected profiles
             const profiles = [];
-            for (const connectedId of connectedProfileIds) {
+            for (const connectedId of Array.from(connectedProfileIds)) {
                 const result = await this.findById(connectedId);
                 if (result.isSuccess) {
                     profiles.push(result.getValue());

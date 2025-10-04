@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../atoms/avatar";
-import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../atoms/avatar.js";
+import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils.js";
 const ActivityTimeline = React.forwardRef(({ className, activities, variant = "default", limit, showViewAll = true, onViewAll, ...props }, ref) => {
     const displayActivities = limit ? activities.slice(0, limit) : activities;
     const hasMore = limit && activities.length > limit;

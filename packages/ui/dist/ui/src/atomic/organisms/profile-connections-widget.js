@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { Card } from '../atoms/card';
-import { Avatar } from '../atoms/avatar';
-import { Badge } from '../atoms/badge';
+import { Card } from '../atoms/card.js';
+import { Avatar } from '../atoms/avatar.js';
+import { Badge } from '../atoms/badge.js';
 import { Users, UserPlus, Heart, Link, Sparkles, ChevronRight, Shield } from 'lucide-react';
-import { PrivacyControl } from '../molecules/privacy-control';
-import { PresenceIndicator } from '../atoms/presence-indicator';
+import { PrivacyControl } from '../molecules/privacy-control.js';
+import { PresenceIndicator } from '../atoms/presence-indicator.js';
 /**
  * My Connections Widget - DESIGN_SPEC Compliant
  *

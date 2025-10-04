@@ -18,6 +18,8 @@ export interface PropertyFieldProps {
     required?: boolean;
     /** Help text */
     helpText?: string;
+    /** Help text (alias for helpText) */
+    help?: string;
     /** Placeholder text */
     placeholder?: string;
     /** Options (for select type) */
@@ -34,7 +36,7 @@ export interface PropertyFieldProps {
     /** Additional class names */
     className?: string;
 }
-export declare function PropertyField({ label, type, value, onChange, required, helpText, placeholder, options, min, max, disabled, className, }: PropertyFieldProps): import("react/jsx-runtime").JSX.Element;
+export declare function PropertyField({ label, type, value, onChange, required, helpText: propHelpText, help, placeholder, options, min, max, disabled, className, }: PropertyFieldProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace PropertyField {
     var displayName: string;
 }

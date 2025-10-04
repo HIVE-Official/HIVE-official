@@ -11,21 +11,24 @@ class ProfileHandle extends ValueObject_base_1.ValueObject {
     get value() {
         return this.props.value;
     }
+    get handle() {
+        return this.props.value;
+    }
     constructor(props) {
         super(props);
     }
     static create(handle) {
-        const normalized = handle.toLowerCase().trim();
-        if (normalized.length < ProfileHandle.MIN_LENGTH) {
+        const trimmed = handle.trim();
+        if (trimmed.length < ProfileHandle.MIN_LENGTH) {
             return Result_1.Result.fail(`Handle must be at least ${ProfileHandle.MIN_LENGTH} characters`);
         }
-        if (normalized.length > ProfileHandle.MAX_LENGTH) {
+        if (trimmed.length > ProfileHandle.MAX_LENGTH) {
             return Result_1.Result.fail(`Handle must be no more than ${ProfileHandle.MAX_LENGTH} characters`);
         }
-        if (!ProfileHandle.VALID_PATTERN.test(normalized)) {
+        if (!ProfileHandle.VALID_PATTERN.test(trimmed)) {
             return Result_1.Result.fail('Handle can only contain lowercase letters, numbers, and underscores');
         }
-        return Result_1.Result.ok(new ProfileHandle({ value: normalized }));
+        return Result_1.Result.ok(new ProfileHandle({ value: trimmed }));
     }
     toString() {
         return this.props.value;

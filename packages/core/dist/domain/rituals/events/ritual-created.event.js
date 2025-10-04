@@ -12,6 +12,16 @@ class RitualCreatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'RitualCreated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            name: this.name,
+            type: this.type,
+            createdBy: this.createdBy
+        };
+    }
 }
 exports.RitualCreatedEvent = RitualCreatedEvent;
 //# sourceMappingURL=ritual-created.event.js.map

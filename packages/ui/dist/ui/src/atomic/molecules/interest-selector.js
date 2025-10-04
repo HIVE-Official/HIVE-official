@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Check, Sparkles, Hash, TrendingUp, BookOpen, Users, Smartphone, Coffee, Heart, Zap, AlertCircle } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Input } from '../atoms/input';
-import { Button } from '../atoms/button';
+import { cn } from '../../lib/utils.js';
+import { Input } from '../atoms/input.js';
+import { Button } from '../atoms/button.js';
 /**
  * SPEC-Compliant Interest Selector
  * Per SPEC.md and HIVE_INTERESTS.md:

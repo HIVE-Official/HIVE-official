@@ -12,6 +12,16 @@ class MilestoneCompletedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'MilestoneCompleted';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            milestoneId: this.milestoneId,
+            milestoneName: this.milestoneName,
+            rewards: this.rewards
+        };
+    }
 }
 exports.MilestoneCompletedEvent = MilestoneCompletedEvent;
 //# sourceMappingURL=milestone-completed.event.js.map

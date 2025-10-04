@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv, AnimatePresence } from "../../shells/motion-safe";
-import { transitions } from "../../lib/animations";
-import { cn } from "../../lib/utils";
+import { MotionDiv, AnimatePresence } from "../../shells/motion-safe.js";
+import { transitions } from "../../lib/animations/index.js";
+import { cn } from "../../lib/utils.js";
 import { ChevronDown } from "lucide-react";
 /**
  * HIVE Category Section

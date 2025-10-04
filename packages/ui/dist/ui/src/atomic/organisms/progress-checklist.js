@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card";
-import { Progress } from "../atoms/progress";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card.js";
+import { Progress } from "../atoms/progress.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils.js";
 const ProgressChecklist = React.forwardRef(({ className, title = "Progress", description, items, percentage: overridePercentage, targetPercentage = 100, targetReachedLabel = "✓ Target Reached", targetNotReachedLabel, variant = "default", showIncompleteOnly = false, ...props }, ref) => {
     // Calculate percentage from items if not provided
     const calculatedPercentage = React.useMemo(() => {
@@ -28,7 +28,7 @@ const ProgressChecklist = React.forwardRef(({ className, title = "Progress", des
     if (variant === "compact") {
         return (_jsxs("div", { ref: ref, className: cn("space-y-3", className), ...props, children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("span", { className: "text-sm font-medium text-foreground", children: title }), _jsxs("span", { className: "text-sm font-bold text-foreground", children: [percentage, "%"] })] }), _jsx(Progress, { value: percentage, className: "h-2" }), !isTargetReached && (_jsxs("p", { className: "text-xs text-muted-foreground", children: [targetPercentage - percentage, "% to complete \u2022 Target: ", targetPercentage, "%"] }))] }));
     }
-    return (_jsxs(Card, { ref: ref, className: cn("", className), ...props, children: [_jsx(CardHeader, { children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex-1", children: [_jsxs(CardTitle, { className: "flex items-center gap-2", children: [title, isTargetReached && (_jsx(Badge, { variant: "default", className: "ml-2", children: targetReachedLabel }))] }), _jsx(CardDescription, { children: finalDescription })] }), _jsxs("div", { className: "text-right", children: [_jsxs("div", { className: "text-3xl font-bold text-foreground", children: [percentage, "%"] }), _jsx("div", { className: "text-xs text-muted-foreground", children: "Complete" })] })] }) }), _jsxs(CardContent, { className: "space-y-4", children: [_jsx(Progress, { value: percentage, className: "h-3" }), displayItems.length > 0 && (_jsx("div", { className: "space-y-3 pt-2", children: displayItems.map((item) => (_jsxs("div", { className: cn("flex items-start gap-3 p-3 rounded-lg border border-border transition-smooth ease-liquid", item.completed
+    return (_jsxs(Card, { ref: ref, className: cn("", className), ...props, children: [_jsx(CardHeader, { children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex-1", children: [_jsxs(CardTitle, { className: "flex items-center gap-2", children: [title, isTargetReached && (_jsx(Badge, { variant: "freshman", className: "ml-2", children: targetReachedLabel }))] }), _jsx(CardDescription, { children: finalDescription })] }), _jsxs("div", { className: "text-right", children: [_jsxs("div", { className: "text-3xl font-bold text-foreground", children: [percentage, "%"] }), _jsx("div", { className: "text-xs text-muted-foreground", children: "Complete" })] })] }) }), _jsxs(CardContent, { className: "space-y-4", children: [_jsx(Progress, { value: percentage, className: "h-3" }), displayItems.length > 0 && (_jsx("div", { className: "space-y-3 pt-2", children: displayItems.map((item) => (_jsxs("div", { className: cn("flex items-start gap-3 p-3 rounded-lg border border-border transition-smooth ease-liquid", item.completed
                                 ? "bg-primary/5 border-primary/20"
                                 : "bg-muted/30 hover:bg-muted/50"), children: [_jsx("div", { className: cn("shrink-0 h-5 w-5 rounded-full flex items-center justify-center mt-0.5", item.completed
                                         ? "bg-primary text-primary-foreground"

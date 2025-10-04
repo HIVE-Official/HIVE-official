@@ -5,7 +5,7 @@
  * This file will be deleted once all references are updated
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.SpaceType = exports.Participation = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.Profile = exports.Space = exports.Ritual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
+exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.Space = exports.SpaceType = exports.Participation = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.Profile = exports.Ritual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
 exports.getProfileCompleteness = getProfileCompleteness;
 exports.getDefaultActionCodeSettings = getDefaultActionCodeSettings;
 exports.validateEmailDomain = validateEmailDomain;
@@ -35,8 +35,7 @@ var enhanced_feed_1 = require("../../domain/feed/enhanced-feed");
 Object.defineProperty(exports, "EnhancedFeed", { enumerable: true, get: function () { return enhanced_feed_1.EnhancedFeed; } });
 var ritual_aggregate_1 = require("../../domain/rituals/aggregates/ritual.aggregate");
 Object.defineProperty(exports, "Ritual", { enumerable: true, get: function () { return ritual_aggregate_1.Ritual; } });
-var space_aggregate_1 = require("../../domain/spaces/aggregates/space.aggregate");
-Object.defineProperty(exports, "Space", { enumerable: true, get: function () { return space_aggregate_1.Space; } });
+// export { Space } from '../../domain/spaces/aggregates/space.aggregate'; // Commented out - using local stub class below
 var profile_aggregate_1 = require("../../domain/profile/aggregates/profile.aggregate");
 Object.defineProperty(exports, "Profile", { enumerable: true, get: function () { return profile_aggregate_1.Profile; } });
 var connection_1 = require("../../domain/profile/aggregates/connection");

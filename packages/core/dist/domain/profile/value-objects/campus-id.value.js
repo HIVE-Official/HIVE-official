@@ -23,7 +23,7 @@ class CampusId extends ValueObject_base_1.ValueObject {
         }
         // For v1, only UB Buffalo is supported
         if (id !== CampusId.UB_BUFFALO) {
-            return Result_1.Result.fail('Only UB Buffalo campus is supported in v1');
+            return Result_1.Result.fail('Only ub-buffalo campus is supported in v1');
         }
         return Result_1.Result.ok(new CampusId({ value: id }));
     }

@@ -9,5 +9,6 @@ export declare class ToolCreatedEvent extends DomainEvent {
     readonly spaceId?: string | undefined;
     constructor(aggregateId: string, toolName: string, creatorId: string, spaceId?: string | undefined);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=tool-created.event.d.ts.map

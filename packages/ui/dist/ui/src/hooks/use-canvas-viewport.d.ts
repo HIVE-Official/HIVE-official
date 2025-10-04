@@ -16,8 +16,8 @@ export declare function useCanvasViewport({ containerRef, minZoom, maxZoom, zoom
     zoomOut: () => void;
     resetZoom: () => void;
     zoomAt: (clientX: number, clientY: number, deltaZoom: number) => void;
-    screenToCanvas: (pos: Position) => import("../types/hivelab.types").Position;
-    canvasToScreen: (pos: Position) => import("../types/hivelab.types").Position;
+    screenToCanvas: (pos: Position) => Position;
+    canvasToScreen: (pos: Position) => Position;
 };
 export {};
 //# sourceMappingURL=use-canvas-viewport.d.ts.map

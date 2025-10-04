@@ -13,7 +13,7 @@ import type { SpaceData, SpaceActionHandler, ContextPanelState } from "../../typ
  * - Controlled context panel state
  * - 60/40 responsive layout
  */
-export interface SpaceLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceLayoutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {
     /** Space data (canonical type) */
     space: SpaceData;
     /** Posts for main feed */

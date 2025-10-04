@@ -19,5 +19,4 @@ export interface RitualMilestoneTrackProps extends React.HTMLAttributes<HTMLDivE
 }
 declare const RitualMilestoneTrack: React.ForwardRefExoticComponent<RitualMilestoneTrackProps & React.RefAttributes<HTMLDivElement>>;
 export { RitualMilestoneTrack };
-export type { Milestone };
 //# sourceMappingURL=ritual-milestone-track.d.ts.map

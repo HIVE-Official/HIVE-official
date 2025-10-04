@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 import { DotFilledIcon } from "@radix-ui/react-icons";
 const RadioGroup = React.forwardRef(({ className, ...props }, ref) => {
     return (_jsx(RadioGroupPrimitive.Root, { className: cn("grid gap-2", className), ...props, ref: ref }));

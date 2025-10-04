@@ -12,7 +12,7 @@ exports.handleRitualActivated = exports.handleMilestoneCompleted = exports.handl
  * 3. Track creation analytics
  */
 const handleRitualCreated = async (event) => {
-    console.log(`[RitualEventHandler] Ritual created: ${event.ritualName} by ${event.createdBy}`);
+    console.log(`[RitualEventHandler] Ritual created: ${event.name} by ${event.createdBy}`);
     try {
         // TODO: Add to campus ritual feed
         // TODO: Calculate and notify eligible participants
@@ -49,7 +49,7 @@ exports.handleParticipantJoined = handleParticipantJoined;
  * 4. Post achievement to user's feed
  */
 const handleMilestoneCompleted = async (event) => {
-    console.log(`[RitualEventHandler] Milestone ${event.milestoneId} completed by ${event.profileId}`);
+    console.log(`[RitualEventHandler] Milestone ${event.milestoneName} (${event.milestoneId}) completed in ritual ${event.aggregateId}`);
     try {
         // TODO: Award points and badges
         // TODO: Recalculate leaderboard rankings

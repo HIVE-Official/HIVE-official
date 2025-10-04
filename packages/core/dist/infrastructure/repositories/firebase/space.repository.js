@@ -386,15 +386,6 @@ class FirebaseSpaceRepository {
             return Result_1.Result.fail(`Failed to find public spaces: ${error}`);
         }
     }
-    // Missing method implementations from interface
-    async findPublicSpaces(campusId, limit = 100) {
-        // This is the same as findPublicSpaces since we already return Space
-        return this.findPublicSpaces(campusId, limit);
-    }
-    async searchSpaces(query, campusId) {
-        // This is the same as searchSpaces since we already return Space
-        return this.searchSpaces(query, campusId);
-    }
 }
 exports.FirebaseSpaceRepository = FirebaseSpaceRepository;
 //# sourceMappingURL=space.repository.js.map

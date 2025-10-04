@@ -12,6 +12,16 @@ class MemberRoleUpdatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'MemberRoleUpdated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            profileId: this.profileId,
+            oldRole: this.oldRole,
+            newRole: this.newRole
+        };
+    }
 }
 exports.MemberRoleUpdatedEvent = MemberRoleUpdatedEvent;
 //# sourceMappingURL=member-role-updated.event.js.map

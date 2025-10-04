@@ -5,5 +5,6 @@ export declare class MemberJoinedEvent extends DomainEvent {
     readonly memberCount: number;
     constructor(aggregateId: string, profileId: string, role: 'admin' | 'moderator' | 'member', memberCount: number);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=member-joined.event.d.ts.map

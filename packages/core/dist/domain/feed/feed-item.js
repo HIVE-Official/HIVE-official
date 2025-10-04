@@ -45,7 +45,7 @@ class FeedItem extends Entity_base_1.Entity {
             source: props.source,
             relevanceScore: props.relevanceScore || 1.0,
             interactions: [],
-            createdAt: new Date(),
+            createdAt: props.createdAt || new Date(),
             isVisible: props.isVisible !== false,
             isTrending: props.isTrending || false,
             isPinned: props.isPinned || false,
@@ -106,6 +106,7 @@ class FeedItem extends Entity_base_1.Entity {
                 userId: i.userId.value,
                 timestamp: i.timestamp
             })),
+            engagementCount: this.props.interactions.length, // Calculated from interactions
             createdAt: this.props.createdAt,
             isVisible: this.props.isVisible,
             isTrending: this.props.isTrending,

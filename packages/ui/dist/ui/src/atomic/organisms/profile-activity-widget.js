@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../atoms/card';
+import { Card } from '../atoms/card.js';
 import { Activity, Users, MessageCircle, Heart, Zap, ChevronRight } from 'lucide-react';
-import { PrivacyControl } from '../molecules/privacy-control';
+import { PrivacyControl } from '../molecules/privacy-control.js';
 /**
  * My Activity Widget - DESIGN_SPEC Compliant
  *

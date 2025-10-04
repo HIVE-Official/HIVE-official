@@ -8,5 +8,6 @@ export declare class ToolPublishedEvent extends DomainEvent {
     readonly visibility: string;
     constructor(aggregateId: string, toolName: string, visibility: string);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=tool-published.event.d.ts.map

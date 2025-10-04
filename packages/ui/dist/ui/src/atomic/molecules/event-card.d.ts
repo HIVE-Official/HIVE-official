@@ -70,5 +70,4 @@ export interface EventCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 declare const EventCard: React.ForwardRefExoticComponent<EventCardProps & React.RefAttributes<HTMLDivElement>>;
 export { EventCard };
-export type { FeedEventData };
 //# sourceMappingURL=event-card.d.ts.map

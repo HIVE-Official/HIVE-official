@@ -12,6 +12,16 @@ class SpaceCreatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'SpaceCreated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            name: this.name,
+            category: this.category,
+            createdBy: this.createdBy
+        };
+    }
 }
 exports.SpaceCreatedEvent = SpaceCreatedEvent;
 //# sourceMappingURL=space-created.event.js.map

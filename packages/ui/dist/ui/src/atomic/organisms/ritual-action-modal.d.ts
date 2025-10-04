@@ -24,5 +24,4 @@ export interface RitualActionModalProps {
 }
 declare const RitualActionModal: React.ForwardRefExoticComponent<RitualActionModalProps & React.RefAttributes<HTMLDivElement>>;
 export { RitualActionModal };
-export type { RitualAction };
 //# sourceMappingURL=ritual-action-modal.d.ts.map

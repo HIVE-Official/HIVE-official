@@ -12,7 +12,7 @@ interface UseConnectionCreationOptions {
 export declare function useConnectionCreation({ containerRef, onConnectionCreated, onConnectionFailed, }: UseConnectionCreationOptions): {
     isConnecting: boolean;
     draftConnectionPath: string;
-    draftConnectionColor: any;
+    draftConnectionColor: string;
     handlePortMouseDown: (element: Element, port: Port, e: React.MouseEvent) => void;
     handlePortClick: (element: Element, port: Port) => void;
     findPortAtPosition: (pos: Position) => {

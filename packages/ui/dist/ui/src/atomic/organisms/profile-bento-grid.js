@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useRef, useEffect } from 'react';
-import { Card } from '../atoms/card';
-import { Button } from '../atoms/button';
+import { Card } from '../atoms/card.js';
+import { Button } from '../atoms/button.js';
 import { Users, Calendar, TrendingUp, Activity, Search, Zap, Settings, GripVertical, Maximize2, Minimize2 } from 'lucide-react';
 /**
  * Mobile-first responsive Bento Grid

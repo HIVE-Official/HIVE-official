@@ -30,7 +30,7 @@ export declare const activityTracker: ActivityTracker;
 export declare function useActivityTracker(): ActivityTracker;
 export declare function withSpaceTracking<T extends {
     spaceId: string;
-}>(Component: React.ComponentType<T>): (props: T) => any;
+}>(Component: React.ComponentType<T>): (props: T) => import("react/jsx-runtime").JSX.Element;
 export declare const trackingUtils: {
     trackPageView: (userId: string, page: string, metadata?: Record<string, unknown>) => void;
     trackButtonClick: (userId: string, buttonId: string, spaceId?: string, metadata?: Record<string, unknown>) => void;

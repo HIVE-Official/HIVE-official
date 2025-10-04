@@ -771,7 +771,7 @@ export function useHiveLab() {
     throw new Error('useHiveLab must be used within a HiveLabProvider');
   }
 
-  return { state: context.state, actions: context.actions };
+  return { state: context.state, actions: context.actions, dispatch: context.dispatch };
 }
 
 // ============================================================================

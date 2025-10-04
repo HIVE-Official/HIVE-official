@@ -11,6 +11,15 @@ class ParticipantJoinedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ParticipantJoined';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            profileId: this.profileId,
+            participantCount: this.participantCount
+        };
+    }
 }
 exports.ParticipantJoinedEvent = ParticipantJoinedEvent;
 //# sourceMappingURL=participant-joined.event.js.map

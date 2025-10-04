@@ -243,7 +243,7 @@ export function useTouchGestures(options = {}, callbacks = {}) {
             e.preventDefault();
         }
     }, [enableSwipe, enablePullToRefresh, onSwipe, onPullToRefresh, onTouchEnd, calculateDistance, calculateVelocity, getSwipeDirection, swipeThreshold, swipeVelocityThreshold, pullToRefreshState.isTriggered, pullToRefreshState.isRefreshing, triggerHaptic, preventDefault, log]);
-    const handleTouchCancel = useCallback((e) => {
+    const handleTouchCancel = useCallback((_e) => {
         // Clear all timers and reset state
         if (longPressTimerRef.current) {
             clearTimeout(longPressTimerRef.current);

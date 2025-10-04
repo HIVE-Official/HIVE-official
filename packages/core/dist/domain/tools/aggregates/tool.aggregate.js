@@ -23,7 +23,7 @@ const tool_archived_event_1 = require("../events/tool-archived.event");
  */
 class Tool extends AggregateRoot_base_1.AggregateRoot {
     constructor(props, id) {
-        super(props, id);
+        super(props, id || props.toolId.value);
     }
     // Getters
     get toolId() {

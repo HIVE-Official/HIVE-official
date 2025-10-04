@@ -106,8 +106,8 @@ export function useFeedSSE(options = {}) {
                     isReconnecting: false
                 }));
             };
-            eventSource.onerror = (error) => {
-                log('SSE connection error:', error);
+            eventSource.onerror = (_error) => {
+                log('SSE connection error:', _error);
                 setConnectionState(prev => ({
                     ...prev,
                     status: 'error'

@@ -38,7 +38,7 @@ import type { SpaceData, SpaceActionHandler, ContextPanelState } from "../../typ
  * - Controlled context panel state
  * - 60/40 responsive layout
  */
-export interface SpaceLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceLayoutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'> {
   /** Space data (canonical type) */
   space: SpaceData
 
@@ -724,9 +724,12 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     count: event.attendeeCount || 0
                   },
                   rsvp: {
-                    status: event.userRSVP || null
+                    status: event.userRSVP
+                      ? (event.userRSVP === 'attending' ? 'going' :
+                         event.userRSVP === 'maybe' ? 'interested' : 'not-going') as 'going' | 'interested' | 'not-going'
+                      : null
                   },
-                  category: event.category,
+                  category: (event.category || 'social') as 'sports' | 'greek' | 'social' | 'academic' | 'wellness',
                   campusContext: event.campusContext
                 }))}
                 onEventClick={(eventId) => {

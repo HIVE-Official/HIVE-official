@@ -9,6 +9,13 @@ class RitualDeactivatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'RitualDeactivated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt
+        };
+    }
 }
 exports.RitualDeactivatedEvent = RitualDeactivatedEvent;
 //# sourceMappingURL=ritual-deactivated.event.js.map

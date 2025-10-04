@@ -9,7 +9,7 @@ import { StatCard } from "../molecules/stat-card"
 import { cn } from "../../lib/utils"
 import type { SpaceData, SpaceActionHandler } from "../../types/space.types"
 
-export interface SpaceHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd'> {
   /** Space data (canonical type) */
   space: SpaceData
   /** Layout mode: header or sidebar */
@@ -115,7 +115,7 @@ const SpaceHeader = React.forwardRef<HTMLDivElement, SpaceHeaderProps>(
           width: isSidebar ? (isCollapsed ? 72 : 320) : "100%"
         }}
         transition={transitions.slow}
-        {...props}
+        {...(props as any)}
       >
         {/* Toggle Layout Button (Sidebar only) */}
         {isSidebar && onToggleLayout && (

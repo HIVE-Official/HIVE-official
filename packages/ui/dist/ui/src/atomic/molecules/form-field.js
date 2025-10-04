@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const FormField = React.forwardRef(({ children, className, ...props }, ref) => {
     return (_jsx("div", { ref: ref, className: cn("space-y-2", className), ...props, children: children }));
 });

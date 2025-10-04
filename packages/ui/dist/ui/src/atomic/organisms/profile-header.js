@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../atoms/avatar";
-import { Badge } from "../atoms/badge";
-import { Button } from "../atoms/button";
-import { Carousel, CarouselContent, CarouselItem, } from "../atoms/carousel";
-import { cn } from "../../lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../atoms/avatar.js";
+import { Badge } from "../atoms/badge.js";
+import { Button } from "../atoms/button.js";
+import { Carousel, CarouselContent, CarouselItem, } from "../atoms/carousel.js";
+import { cn } from "../../lib/utils.js";
 const ProfileHeader = React.forwardRef(({ className, name, handle, avatarUrl, photos, bio, major, academicYear, graduationYear, pronouns, verified = false, isOwnProfile = false, isConnected = false, badges = [], onConnect, onMessage, onEdit, ...props }, ref) => {
     // Generate initials from name
     const initials = name

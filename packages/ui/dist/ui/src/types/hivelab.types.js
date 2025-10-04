@@ -20,4 +20,10 @@ export const DATA_TYPE_COLORS = {
     file: 'hsl(160, 100%, 40%)',
     validation: 'hsl(320, 100%, 50%)'
 };
+/**
+ * Get primary data type (for display/color)
+ */
+export function getPrimaryType(type) {
+    return Array.isArray(type) ? type[0] : type;
+}
 //# sourceMappingURL=hivelab.types.js.map

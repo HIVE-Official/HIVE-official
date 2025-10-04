@@ -15,6 +15,15 @@ class ToolPublishedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolPublished';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            toolName: this.toolName,
+            visibility: this.visibility
+        };
+    }
 }
 exports.ToolPublishedEvent = ToolPublishedEvent;
 //# sourceMappingURL=tool-published.event.js.map

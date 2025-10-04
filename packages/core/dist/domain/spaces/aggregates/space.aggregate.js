@@ -313,10 +313,12 @@ class Space extends AggregateRoot_base_1.AggregateRoot {
             tabs: this.props.tabs,
             widgets: this.props.widgets,
             settings: this.props.settings,
+            rssUrl: this.props.rssUrl,
             visibility: this.props.visibility,
             isActive: this.props.isActive,
             memberCount: this.memberCount,
             postCount: this.props.postCount,
+            posts: [], // Posts are stored as subcollection, not in aggregate
             createdAt: this.props.createdAt,
             updatedAt: this.props.updatedAt,
             lastActivityAt: this.props.lastActivityAt

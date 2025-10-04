@@ -6,7 +6,7 @@
  */
 'use client';
 import { jsx as _jsx } from "react/jsx-runtime";
-import { createContext, useContext, useReducer, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
 import { generatePageId, generateElementId } from '@/lib/hivelab-utils';
 // ============================================================================
 // Initial State Factory
@@ -532,7 +532,72 @@ export function HiveLabProvider({ children, initialTool }) {
     const [state, dispatch] = useReducer(hiveLabReducer, initialTool
         ? { ...createInitialState(), tool: initialTool, currentPage: initialTool.startPage }
         : createInitialState());
-    return (_jsx(HiveLabContext.Provider, { value: { state, dispatch }, children: children }));
+    // Create actions object
+    const actions = React.useMemo(() => ({
+        // Tool actions
+        loadTool: (tool) => dispatch({ type: 'LOAD_TOOL', tool }),
+        updateTool: (updates) => dispatch({ type: 'UPDATE_TOOL', updates }),
+        // Page actions
+        addPage: (page) => dispatch({ type: 'ADD_PAGE', page }),
+        deletePage: (pageId) => dispatch({ type: 'DELETE_PAGE', pageId }),
+        updatePage: (pageId, updates) => dispatch({ type: 'UPDATE_PAGE', pageId, updates }),
+        setCurrentPage: (pageId) => dispatch({ type: 'SET_CURRENT_PAGE', pageId }),
+        // Element actions
+        addElement: (element, pageId) => {
+            dispatch({ type: 'PUSH_HISTORY' });
+            dispatch({ type: 'ADD_ELEMENT', element, pageId });
+        },
+        removeElement: (elementId, pageId) => {
+            dispatch({ type: 'PUSH_HISTORY' });
+            dispatch({ type: 'REMOVE_ELEMENT', elementId, pageId });
+        },
+        updateElement: (elementId, pageId, updates) => {
+            dispatch({ type: 'UPDATE_ELEMENT', elementId, pageId, updates });
+        },
+        moveElement: (elementId, pageId, x, y) => {
+            dispatch({ type: 'MOVE_ELEMENT', elementId, pageId, x, y });
+        },
+        duplicateElement: (elementId, pageId) => {
+            dispatch({ type: 'PUSH_HISTORY' });
+            dispatch({ type: 'DUPLICATE_ELEMENT', elementId, pageId });
+        },
+        // Connection actions
+        createConnection: (connection, pageId) => {
+            dispatch({ type: 'PUSH_HISTORY' });
+            dispatch({ type: 'CREATE_CONNECTION', connection, pageId });
+        },
+        deleteConnection: (connectionId, pageId) => {
+            dispatch({ type: 'PUSH_HISTORY' });
+            dispatch({ type: 'DELETE_CONNECTION', connectionId, pageId });
+        },
+        // Selection actions
+        selectElements: (elementIds) => dispatch({ type: 'SELECT_ELEMENTS', elementIds }),
+        selectConnection: (connectionId) => dispatch({ type: 'SELECT_CONNECTION', connectionId }),
+        clearSelection: () => dispatch({ type: 'CLEAR_SELECTION' }),
+        // Viewport actions
+        updateViewport: (viewport) => dispatch({ type: 'UPDATE_VIEWPORT', viewport }),
+        zoomToFit: () => dispatch({ type: 'ZOOM_TO_FIT' }),
+        zoomToPage: (pageId) => dispatch({ type: 'ZOOM_TO_PAGE', pageId }),
+        // Connection draft actions
+        startConnection: (sourceElementId, sourcePortId, sourceType) => {
+            dispatch({ type: 'START_CONNECTION', sourceElementId, sourcePortId, sourceType });
+        },
+        updateConnectionMouse: (position) => {
+            dispatch({ type: 'UPDATE_CONNECTION_MOUSE', position });
+        },
+        endConnection: () => dispatch({ type: 'END_CONNECTION' }),
+        // History actions
+        undo: () => dispatch({ type: 'UNDO' }),
+        redo: () => dispatch({ type: 'REDO' }),
+        // Panel actions
+        togglePanel: (panel) => dispatch({ type: 'TOGGLE_PANEL', panel }),
+        // UI actions
+        setDraggingElement: (isDragging) => dispatch({ type: 'SET_DRAGGING_ELEMENT', isDragging }),
+        setHoveredPort: (portId) => dispatch({ type: 'SET_HOVERED_PORT', portId }),
+        toggleGrid: () => dispatch({ type: 'TOGGLE_GRID' }),
+        toggleSnapToGrid: () => dispatch({ type: 'TOGGLE_SNAP_TO_GRID' }),
+    }), []);
+    return (_jsx(HiveLabContext.Provider, { value: { state, dispatch, actions }, children: children }));
 }
 // ============================================================================
 // Hook
@@ -542,7 +607,7 @@ export function useHiveLab() {
     if (context === undefined) {
         throw new Error('useHiveLab must be used within a HiveLabProvider');
     }
-    return context;
+    return { state: context.state, actions: context.actions, dispatch: context.dispatch };
 }
 // ============================================================================
 // Helper Action Functions

@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useState } from 'react';
-import { Card } from '../atoms/card';
+import { Card } from '../atoms/card.js';
 import { Award, Camera, User, MapPin, BookOpen, Users, Sparkles, ChevronRight, Check, Lock, Zap } from 'lucide-react';
 /**
  * Profile Completion Card - DESIGN_SPEC Compliant with Behavioral Psychology

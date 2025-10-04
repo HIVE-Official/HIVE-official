@@ -11,7 +11,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  */
 import React, { useState, useEffect } from 'react';
 import { Bell, BellRing } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 // Create motion components (these should match the shell's motion implementation)
 const MotionDiv = React.forwardRef(({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
 MotionDiv.displayName = 'MotionDiv';

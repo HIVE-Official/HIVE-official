@@ -10,6 +10,14 @@ import React from 'react';
 import { RenderOptions } from '@testing-library/react';
 import { JestAxeConfigureOptions } from 'jest-axe';
 import '@testing-library/jest-dom';
+declare module 'vitest' {
+    interface Assertion {
+        toHaveNoViolations(): void;
+    }
+    interface AsymmetricMatchersContaining {
+        toHaveNoViolations(): void;
+    }
+}
 /**
  * Default axe configuration for HIVE components
  *
@@ -68,8 +76,8 @@ export declare function testKeyboardNavigation(element: HTMLElement, options: {
     enterActivates?: boolean;
     spaceActivates?: boolean;
     escapeCloses?: boolean;
-    onActivate?: jest.Mock;
-    onClose?: jest.Mock;
+    onActivate?: (...args: any[]) => any;
+    onClose?: (...args: any[]) => any;
 }): Promise<void>;
 /**
  * Test ARIA attributes on element

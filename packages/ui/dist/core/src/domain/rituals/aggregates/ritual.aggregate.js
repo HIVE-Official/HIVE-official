@@ -23,7 +23,7 @@ import { RitualDeactivatedEvent } from '../events/ritual-deactivated.event';
  */
 export class Ritual extends AggregateRoot {
     constructor(props, id) {
-        super(props, id);
+        super(props, id || props.ritualId.value);
     }
     // Getters
     get ritualId() {
@@ -79,6 +79,18 @@ export class Ritual extends AggregateRoot {
     }
     get updatedAt() {
         return this.props.updatedAt;
+    }
+    get announcedAt() {
+        return this.props.announcedAt;
+    }
+    get activatedAt() {
+        return this.props.activatedAt;
+    }
+    get launchedAt() {
+        return this.props.launchedAt;
+    }
+    get completedAt() {
+        return this.props.completedAt;
     }
     // Factory Method
     static create(props, id) {
@@ -424,11 +436,9 @@ export class Ritual extends AggregateRoot {
             goals: this.props.goals,
             requirements: this.props.requirements,
             rewards: this.props.rewards,
-            milestones: this.props.milestones || [],
             participants: this.props.participants || [],
             participationStats: this.props.participationStats,
             targetParticipation: this.props.targetParticipation,
-            settings: this.props.settings || { isVisible: this.props.visibility === 'public' },
             createdAt: this.props.createdAt,
             updatedAt: this.props.updatedAt
         };

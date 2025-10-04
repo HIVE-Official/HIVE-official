@@ -9,5 +9,6 @@ export declare class ToolUsedEvent extends DomainEvent {
     readonly totalUses: number;
     constructor(aggregateId: string, toolName: string, userId: string, totalUses: number);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=tool-used.event.d.ts.map

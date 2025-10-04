@@ -26,7 +26,7 @@ const ritual_deactivated_event_1 = require("../events/ritual-deactivated.event")
  */
 class Ritual extends AggregateRoot_base_1.AggregateRoot {
     constructor(props, id) {
-        super(props, id);
+        super(props, id || props.ritualId.value);
     }
     // Getters
     get ritualId() {
@@ -83,6 +83,18 @@ class Ritual extends AggregateRoot_base_1.AggregateRoot {
     get updatedAt() {
         return this.props.updatedAt;
     }
+    get announcedAt() {
+        return this.props.announcedAt;
+    }
+    get activatedAt() {
+        return this.props.activatedAt;
+    }
+    get launchedAt() {
+        return this.props.launchedAt;
+    }
+    get completedAt() {
+        return this.props.completedAt;
+    }
     // Factory Method
     static create(props, id) {
         // Validation
@@ -105,7 +117,7 @@ class Ritual extends AggregateRoot_base_1.AggregateRoot {
             return Result_1.Result.fail('Yearbook rituals must be 3 weeks duration');
         }
         // Create ritual ID if not provided
-        const ritualId = props.ritualId || ritual_id_value_1.RitualId.create().getValue();
+        const ritualId = props.ritualId || ritual_id_value_1.RitualId.generate().getValue();
         const ritualProps = {
             ...props,
             ritualId,
@@ -407,6 +419,32 @@ class Ritual extends AggregateRoot_base_1.AggregateRoot {
     }
     setRewards(rewards) {
         this.props.rewards = rewards;
+    }
+    toData() {
+        return {
+            id: this.id,
+            ritualId: this.props.ritualId,
+            name: this.props.name,
+            description: this.props.description,
+            type: this.props.type,
+            category: this.props.category,
+            duration: this.props.duration,
+            campusId: this.props.campusId,
+            startDate: this.props.startDate,
+            endDate: this.props.endDate,
+            createdBy: this.props.createdBy,
+            targetAudience: this.props.targetAudience,
+            visibility: this.props.visibility,
+            status: this.props.status,
+            goals: this.props.goals,
+            requirements: this.props.requirements,
+            rewards: this.props.rewards,
+            participants: this.props.participants || [],
+            participationStats: this.props.participationStats,
+            targetParticipation: this.props.targetParticipation,
+            createdAt: this.props.createdAt,
+            updatedAt: this.props.updatedAt
+        };
     }
 }
 exports.Ritual = Ritual;

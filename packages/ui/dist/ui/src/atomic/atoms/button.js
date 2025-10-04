@@ -2,11 +2,12 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const buttonVariants = cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
     variants: {
         variant: {
             default: "bg-white text-black border border-white hover:bg-white/90 hover:-translate-y-0.5 hover:scale-[1.02]",
+            secondary: "bg-white/10 text-white border border-white/20 hover:bg-white/20",
             outline: "border border-white/20 text-white hover:bg-white hover:text-black",
             ghost: "text-white/80 hover:bg-white/10 hover:text-white",
             destructive: "border border-red-500 text-red-500 hover:bg-red-500 hover:text-white",

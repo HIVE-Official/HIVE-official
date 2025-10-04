@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "./avatar.js";
 import { cn } from "@/lib/utils";
 const sizeClasses = {
     sm: "h-8 w-8",

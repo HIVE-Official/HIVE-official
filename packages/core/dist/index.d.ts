@@ -12,7 +12,7 @@ export type { SpaceProps, SpaceMember, SpaceSettings, RushMode } from "./domain/
 export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
 export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
 export { SpaceDescription } from "./domain/spaces/value-objects/space-description.value";
-export { SpaceCategory } from "./domain/spaces/value-objects/space-category.value";
+export { SpaceCategory, SpaceCategoryEnum } from "./domain/spaces/value-objects/space-category.value";
 export { Tab } from "./domain/spaces/entities/tab";
 export { Widget } from "./domain/spaces/entities/widget";
 export { Ritual } from "./domain/rituals/aggregates/ritual.aggregate";
@@ -23,6 +23,7 @@ export type { ToolProps, ToolStatus, ToolVisibility, ElementInstance, ToolPermis
 export { ToolId } from "./domain/tools/value-objects/tool-id.value";
 export { FeedItem } from "./domain/feed/feed-item";
 export { EnhancedFeed } from "./domain/feed/enhanced-feed";
+export type { FeedPost, ScoredPost } from "./domain/feed/services/feed-algorithm.service";
 export * from "./application";
 export * from "./infrastructure/repositories/interfaces";
 export * from "./infrastructure/repositories/factory";

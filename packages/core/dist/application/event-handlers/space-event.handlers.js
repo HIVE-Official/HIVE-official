@@ -13,7 +13,7 @@ const factory_1 = require("../../infrastructure/repositories/factory");
  * 3. Notify campus admins if public
  */
 const handleSpaceCreated = async (event) => {
-    console.log(`[SpaceEventHandler] Space created: ${event.spaceName} by ${event.createdBy}`);
+    console.log(`[SpaceEventHandler] Space created: ${event.name} by ${event.createdBy}`);
     // TODO: Track creation analytics
     // TODO: Add to space recommendation pool
     // TODO: Send notifications if public space

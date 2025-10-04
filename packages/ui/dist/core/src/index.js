@@ -10,7 +10,7 @@ export { Space } from "./domain/spaces/aggregates/space.aggregate";
 export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
 export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
 export { SpaceDescription } from "./domain/spaces/value-objects/space-description.value";
-export { SpaceCategory } from "./domain/spaces/value-objects/space-category.value";
+export { SpaceCategory, SpaceCategoryEnum } from "./domain/spaces/value-objects/space-category.value";
 export { Tab } from "./domain/spaces/entities/tab";
 export { Widget } from "./domain/spaces/entities/widget";
 export { Ritual } from "./domain/rituals/aggregates/ritual.aggregate";

@@ -4,7 +4,7 @@ import type { FeedPost, Space, Tool } from "@hive/core";
  * Slice-specific context system
  * Provides context for each main slice while integrating with campus context
  */
-export type SliceType = 'feed' | 'spaces' | 'profile' | 'hivelab';
+export type SliceType = 'feed' | 'spaces' | 'profile' | 'hivelab' | 'hivelab';
 export interface FeedSliceContext {
     content: {
         personalFeed: FeedPost[];

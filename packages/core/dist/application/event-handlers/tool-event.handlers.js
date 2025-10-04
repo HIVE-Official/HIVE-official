@@ -11,7 +11,7 @@ exports.handleToolForked = exports.handleToolUsed = exports.handleToolPublished 
  * 2. Add to creator's tool list
  */
 const handleToolCreated = async (event) => {
-    console.log(`[ToolEventHandler] Tool created: ${event.toolName} by ${event.createdBy}`);
+    console.log(`[ToolEventHandler] Tool created: ${event.toolName} by ${event.creatorId}`);
     try {
         // TODO: Track tool creation analytics
         // TODO: Add to creator's published tools
@@ -28,7 +28,7 @@ exports.handleToolCreated = handleToolCreated;
  * 3. Track publish analytics
  */
 const handleToolPublished = async (event) => {
-    console.log(`[ToolEventHandler] Tool published: ${event.aggregateId} by ${event.publishedBy}`);
+    console.log(`[ToolEventHandler] Tool published: ${event.toolName} (${event.aggregateId}) with visibility ${event.visibility}`);
     try {
         // TODO: Add to template browser
         // TODO: Send notifications to relevant users
@@ -46,7 +46,7 @@ exports.handleToolPublished = handleToolPublished;
  * 3. Track usage analytics
  */
 const handleToolUsed = async (event) => {
-    console.log(`[ToolEventHandler] Tool used: ${event.aggregateId} by ${event.usedBy}`);
+    console.log(`[ToolEventHandler] Tool used: ${event.toolName} by ${event.userId} (total: ${event.totalUses})`);
     try {
         // TODO: Increment usage counter
         // TODO: Update popularity/trending score

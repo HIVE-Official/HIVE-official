@@ -16,6 +16,16 @@ class ToolCreatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolCreated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            toolName: this.toolName,
+            creatorId: this.creatorId,
+            spaceId: this.spaceId
+        };
+    }
 }
 exports.ToolCreatedEvent = ToolCreatedEvent;
 //# sourceMappingURL=tool-created.event.js.map

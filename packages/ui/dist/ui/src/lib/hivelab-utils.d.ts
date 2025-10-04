@@ -4,6 +4,7 @@
  * Helper functions for canvas calculations, connections, and element management.
  */
 import type { DataType, Element, Port, Position, BoundingBox, Page, Viewport } from '@/types/hivelab.types';
+export type { DataType, Element, Port, Position, Connection } from '@/types/hivelab.types';
 /**
  * Check if two data types are compatible for connections
  */

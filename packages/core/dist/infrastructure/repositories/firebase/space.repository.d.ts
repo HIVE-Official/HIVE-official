@@ -15,6 +15,7 @@ export declare class FirebaseSpaceRepository implements ISpaceRepository {
     findUserSpaces(userId: string): Promise<Result<Space[]>>;
     findTrending(campusId: string, limitCount?: number): Promise<Result<Space[]>>;
     findRecommended(campusId: string, interests: string[], major?: string): Promise<Result<Space[]>>;
+    searchSpaces(searchQuery: string, campusId: string): Promise<Result<Space[]>>;
     save(space: Space): Promise<Result<void>>;
     delete(id: SpaceId | any): Promise<Result<void>>;
     private toDomain;

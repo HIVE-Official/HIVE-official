@@ -12,6 +12,16 @@ class PostCreatedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'PostCreated';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            postId: this.postId,
+            authorId: this.authorId,
+            postCount: this.postCount
+        };
+    }
 }
 exports.PostCreatedEvent = PostCreatedEvent;
 //# sourceMappingURL=post-created.event.js.map

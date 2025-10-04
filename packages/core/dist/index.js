@@ -18,7 +18,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchQueryHandler = exports.SearchType = exports.GetFeedQueryHandler = exports.feedListener = exports.storage = exports.auth = exports.db = exports.app = exports.presenceService = exports.FirebaseUnitOfWork = exports.EnhancedFeed = exports.FeedItem = exports.ToolId = exports.Tool = exports.RitualId = exports.Ritual = exports.Widget = exports.Tab = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.Space = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.createDefaultProfile = exports.getProfileCompletionPercentage = exports.isProfileComplete = exports.Profile = void 0;
+exports.SearchQueryHandler = exports.SearchType = exports.GetFeedQueryHandler = exports.feedListener = exports.storage = exports.auth = exports.db = exports.app = exports.presenceService = exports.FirebaseUnitOfWork = exports.EnhancedFeed = exports.FeedItem = exports.ToolId = exports.Tool = exports.RitualId = exports.Ritual = exports.Widget = exports.Tab = exports.SpaceCategoryEnum = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.Space = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.createDefaultProfile = exports.getProfileCompletionPercentage = exports.isProfileComplete = exports.Profile = void 0;
 // Domain Models - Specific exports to avoid conflicts
 var profile_aggregate_1 = require("./domain/profile/aggregates/profile.aggregate");
 Object.defineProperty(exports, "Profile", { enumerable: true, get: function () { return profile_aggregate_1.Profile; } });
@@ -40,6 +40,7 @@ var space_description_value_1 = require("./domain/spaces/value-objects/space-des
 Object.defineProperty(exports, "SpaceDescription", { enumerable: true, get: function () { return space_description_value_1.SpaceDescription; } });
 var space_category_value_1 = require("./domain/spaces/value-objects/space-category.value");
 Object.defineProperty(exports, "SpaceCategory", { enumerable: true, get: function () { return space_category_value_1.SpaceCategory; } });
+Object.defineProperty(exports, "SpaceCategoryEnum", { enumerable: true, get: function () { return space_category_value_1.SpaceCategoryEnum; } });
 var tab_1 = require("./domain/spaces/entities/tab");
 Object.defineProperty(exports, "Tab", { enumerable: true, get: function () { return tab_1.Tab; } });
 var widget_1 = require("./domain/spaces/entities/widget");

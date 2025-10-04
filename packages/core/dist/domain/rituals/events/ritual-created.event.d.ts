@@ -5,5 +5,6 @@ export declare class RitualCreatedEvent extends DomainEvent {
     readonly createdBy: string;
     constructor(aggregateId: string, name: string, type: string, createdBy: string);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=ritual-created.event.d.ts.map

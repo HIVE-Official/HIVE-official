@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const RitualProgressRing = React.forwardRef(({ className, personal, campus, target = 100, size = "md", showLabels = true, ...props }, ref) => {
     const sizeConfig = {
         sm: { ring: 80, stroke: 6, fontSize: "text-lg" },

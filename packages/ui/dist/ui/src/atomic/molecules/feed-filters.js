@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
 import { CalendarDays, Layers, Users, LayoutGrid, Clock, TrendingUp, Heart, Sparkles, } from "lucide-react";
 const FeedFilters = React.forwardRef(({ className, activeFilter = "all", onFilterChange, activeTimeFilter = null, onTimeFilterChange, eventsCount = 0, urgentEventsCount = 0, ritualsCount = 0, trendingCount = 0, showTimeFilters = false, enablePsychology = true, showLiveActivity = true, compact = false, ...props }, ref) => {
     const filters = [

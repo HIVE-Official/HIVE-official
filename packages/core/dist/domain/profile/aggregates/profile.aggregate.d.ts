@@ -95,6 +95,7 @@ export declare class Profile extends AggregateRoot<ProfileProps> {
     get username(): string;
     get photos(): string[];
     get badges(): string[];
+    get achievements(): string[];
     get blockedUsers(): string[];
     get lastSeen(): Date | undefined;
     get onboardingCompleted(): boolean;
@@ -126,7 +127,7 @@ export declare class Profile extends AggregateRoot<ProfileProps> {
     leaveSpace(spaceId: string): void;
     addAchievement(achievementId: string): void;
     addPhoto(photoUrl: string): Promise<Result<void>>;
-    completeOnboarding(personalInfo?: PersonalInfo, interests?: string[]): Result<void>;
+    completeOnboarding(academicInfo: AcademicInfo, interests: string[], selectedSpaces: string[]): Result<void>;
     verify(): void;
     deactivate(): void;
     reactivate(): void;
@@ -140,16 +141,22 @@ export declare class Profile extends AggregateRoot<ProfileProps> {
         id: string;
         name: string;
     }>): Array<{
-        action: string;
+        title: string;
         description: string;
-        priority: number;
+        completed: boolean;
     }>;
     getOnboardingWarnings(): string[];
     getOnboardingStatus(): {
         isComplete: boolean;
         completedSteps: string[];
         remainingSteps: string[];
-        percentComplete: number;
+        completionPercentage: number;
+        nextSteps: Array<{
+            title: string;
+            description: string;
+            completed: boolean;
+        }>;
+        warnings: string[];
     };
     toData(): any;
     toDTO(): any;

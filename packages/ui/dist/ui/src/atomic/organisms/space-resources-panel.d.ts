@@ -27,6 +27,8 @@ export interface SpaceResourcesPanelProps extends React.HTMLAttributes<HTMLDivEl
     canAddResources?: boolean;
     /** Show add button even when resources exist */
     alwaysShowAddButton?: boolean;
+    /** Loading state */
+    isLoading?: boolean;
     /** Empty state message */
     emptyStateMessage?: string;
 }

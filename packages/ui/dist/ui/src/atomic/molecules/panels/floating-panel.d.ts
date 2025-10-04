@@ -8,14 +8,24 @@ import React from 'react';
 export interface FloatingPanelProps {
     /** Panel title */
     title: string;
+    /** Panel icon */
+    icon?: React.ReactNode;
     /** Panel content */
     children: React.ReactNode;
-    /** Initial position */
+    /** Panel position (renamed from initialPosition for consistency) */
+    position?: 'left' | 'right' | 'top' | 'bottom';
+    /** Initial position (deprecated, use position) */
     initialPosition?: 'left' | 'right' | 'top' | 'bottom';
-    /** Initial width (for left/right panels) */
+    /** Panel width (renamed from initialWidth for consistency) */
+    width?: number;
+    /** Initial width (deprecated, use width) */
     initialWidth?: number;
-    /** Initial height (for top/bottom panels) */
+    /** Panel height (renamed from initialHeight for consistency) */
+    height?: number;
+    /** Initial height (deprecated, use height) */
     initialHeight?: number;
+    /** Is panel collapsed? */
+    isCollapsed?: boolean;
     /** Can the panel be closed? */
     closable?: boolean;
     /** Can the panel be collapsed? */
@@ -24,16 +34,18 @@ export interface FloatingPanelProps {
     draggable?: boolean;
     /** Can the panel be resized? */
     resizable?: boolean;
-    /** Initially collapsed? */
+    /** Initially collapsed? (deprecated, use isCollapsed) */
     defaultCollapsed?: boolean;
     /** Close handler */
     onClose?: () => void;
+    /** Toggle collapse handler */
+    onToggleCollapse?: () => void;
     /** Collapse state change handler */
     onCollapseChange?: (collapsed: boolean) => void;
     /** Additional class names */
     className?: string;
 }
-export declare function FloatingPanel({ title, children, initialPosition, initialWidth, initialHeight, closable, collapsible, draggable, resizable, defaultCollapsed, onClose, onCollapseChange, className, }: FloatingPanelProps): import("react/jsx-runtime").JSX.Element;
+export declare function FloatingPanel({ title, icon, children, position: propPosition, initialPosition, width: propWidth, initialWidth, height: propHeight, initialHeight, isCollapsed: controlledIsCollapsed, closable, collapsible, draggable, resizable, defaultCollapsed, onClose, onToggleCollapse, onCollapseChange, className, }: FloatingPanelProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace FloatingPanel {
     var displayName: string;
 }

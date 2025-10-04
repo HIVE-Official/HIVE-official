@@ -158,10 +158,8 @@ export class RitualParticipationService extends BaseApplicationService {
                 participation.addPoints(points);
                 // Add achievement
                 participation.addAchievement(`Completed: ${milestone.name}`);
-                // Update ritual milestone completion (if method exists)
-                if (ritual.updateMilestoneProgress) {
-                    ritual.updateMilestoneProgress(milestoneId, progress);
-                }
+                // Note: updateMilestoneProgress method not available on Ritual aggregate
+                // Milestone progress is tracked through participation records
             }
             // Update streak
             participation.updateStreak(participation.streakCount + 1);

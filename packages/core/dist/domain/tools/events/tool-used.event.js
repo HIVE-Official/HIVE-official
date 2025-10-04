@@ -16,6 +16,16 @@ class ToolUsedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolUsed';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            toolName: this.toolName,
+            userId: this.userId,
+            totalUses: this.totalUses
+        };
+    }
 }
 exports.ToolUsedEvent = ToolUsedEvent;
 //# sourceMappingURL=tool-used.event.js.map

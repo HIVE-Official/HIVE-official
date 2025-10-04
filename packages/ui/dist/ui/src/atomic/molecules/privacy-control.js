@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 import { Users, Globe, Lock, Ghost } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select';
-import { Button } from '../atoms/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select.js';
+import { Button } from '../atoms/button.js';
 const privacyLevels = [
     {
         value: 'public',

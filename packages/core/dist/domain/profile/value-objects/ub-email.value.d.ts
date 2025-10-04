@@ -9,6 +9,8 @@ export declare class UBEmail extends ValueObject<UBEmailProps> {
     private static isValidEmail;
     private static isUBEmail;
     get value(): string;
+    get email(): string;
+    get username(): string;
     toString(): string;
 }
 export {};

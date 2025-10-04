@@ -2,7 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import '@testing-library/jest-dom';
-// Extend Jest matchers with jest-axe
+import { expect } from 'vitest';
+// Extend Vitest matchers with jest-axe
 expect.extend(toHaveNoViolations);
 /**
  * Default axe configuration for HIVE components

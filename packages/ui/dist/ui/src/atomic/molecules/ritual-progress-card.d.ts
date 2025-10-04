@@ -75,5 +75,4 @@ export interface RitualProgressCardProps extends React.HTMLAttributes<HTMLDivEle
 }
 declare const RitualProgressCard: React.ForwardRefExoticComponent<RitualProgressCardProps & React.RefAttributes<HTMLDivElement>>;
 export { RitualProgressCard };
-export type { RitualData };
 //# sourceMappingURL=ritual-progress-card.d.ts.map

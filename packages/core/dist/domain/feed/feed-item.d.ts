@@ -57,6 +57,7 @@ export declare class FeedItem extends Entity<FeedItemProps> {
         isTrending?: boolean;
         isPinned?: boolean;
         expiresAt?: Date;
+        createdAt?: Date;
     }, id?: string): Result<FeedItem>;
     addInteraction(interaction: FeedItemInteraction): void;
     removeInteraction(userId: ProfileId, type: string): void;

@@ -17,6 +17,16 @@ class ToolForkedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolForked';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            forkedToolId: this.forkedToolId,
+            forkedBy: this.forkedBy,
+            totalForks: this.totalForks
+        };
+    }
 }
 exports.ToolForkedEvent = ToolForkedEvent;
 //# sourceMappingURL=tool-forked.event.js.map

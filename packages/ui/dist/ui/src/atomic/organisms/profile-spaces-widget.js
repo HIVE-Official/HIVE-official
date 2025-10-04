@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { Card } from '../atoms/card';
-import { Badge } from '../atoms/badge';
+import { Card } from '../atoms/card.js';
+import { Badge } from '../atoms/badge.js';
 import { Users, Lock, Unlock, Crown, Star, ChevronRight, Plus } from 'lucide-react';
-import { PrivacyControl } from '../molecules/privacy-control';
+import { PrivacyControl } from '../molecules/privacy-control.js';
 /**
  * My Spaces Widget - DESIGN_SPEC Compliant
  *

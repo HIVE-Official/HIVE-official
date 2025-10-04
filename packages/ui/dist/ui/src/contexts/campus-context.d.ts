@@ -89,7 +89,7 @@ export interface CampusContextValue {
     actions: {
         updateLocation: (location: CampusLocation | null) => void;
         refreshCommunityData: () => Promise<void>;
-        updateToolContext: (context: 'feed' | 'spaces' | 'profile') => void;
+        updateToolContext: (context: 'feed' | 'spaces' | 'profile' | 'hivelab') => void;
         requestLocationPermission: () => Promise<boolean>;
     };
 }
@@ -145,6 +145,6 @@ export declare function useCampusTools(): {
     contextualSuggestions: ToolSuggestion[];
     recentlyUsed: Tool[];
     spaceTools: Record<string, Tool[]>;
-    updateContext: (context: "feed" | "spaces" | "profile") => void;
+    updateContext: (context: "feed" | "spaces" | "profile" | "hivelab") => void;
 };
 //# sourceMappingURL=campus-context.d.ts.map

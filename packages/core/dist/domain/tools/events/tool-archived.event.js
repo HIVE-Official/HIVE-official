@@ -14,6 +14,14 @@ class ToolArchivedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ToolArchived';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            toolName: this.toolName
+        };
+    }
 }
 exports.ToolArchivedEvent = ToolArchivedEvent;
 //# sourceMappingURL=tool-archived.event.js.map

@@ -1,16 +1,16 @@
 /**
  * Spaces Domain Exports
  */
-export { Space, SpaceProps, SpaceMember, SpaceSettings, RushMode } from './aggregates/space.aggregate';
-export { Tab } from './entities/tab';
-export { Widget } from './entities/widget';
-export { SpaceId } from './value-objects/space-id.value';
-export { SpaceName } from './value-objects/space-name.value';
-export { SpaceDescription } from './value-objects/space-description.value';
-export { SpaceCategory } from './value-objects/space-category.value';
-export { SpaceCreatedEvent } from './events/space-created.event';
-export { MemberJoinedEvent } from './events/member-joined.event';
-export { MemberRemovedEvent } from './events/member-removed.event';
-export { MemberRoleUpdatedEvent } from './events/member-role-updated.event';
-export { PostCreatedEvent } from './events/post-created.event';
+export type { Space, SpaceProps, SpaceMember, SpaceSettings, RushMode } from './aggregates/space.aggregate';
+export type { Tab } from './entities/tab';
+export type { Widget } from './entities/widget';
+export type { SpaceId } from './value-objects/space-id.value';
+export type { SpaceName } from './value-objects/space-name.value';
+export type { SpaceDescription } from './value-objects/space-description.value';
+export type { SpaceCategory } from './value-objects/space-category.value';
+export type { SpaceCreatedEvent } from './events/space-created.event';
+export type { MemberJoinedEvent } from './events/member-joined.event';
+export type { MemberRemovedEvent } from './events/member-removed.event';
+export type { MemberRoleUpdatedEvent } from './events/member-role-updated.event';
+export type { PostCreatedEvent } from './events/post-created.event';
 //# sourceMappingURL=index.d.ts.map

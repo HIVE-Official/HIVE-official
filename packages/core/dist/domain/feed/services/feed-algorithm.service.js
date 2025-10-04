@@ -13,6 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.defaultFeedConfig = exports.FeedAlgorithmService = void 0;
+const space_category_value_1 = require("../../spaces/value-objects/space-category.value");
 class FeedAlgorithmService {
     constructor(config) {
         this.config = config;
@@ -53,7 +54,8 @@ class FeedAlgorithmService {
         // Loneliness relief - critical for first-year students
         if (signals.loneliness) {
             score += 35;
-            if (user.profile?.graduationYear && this.isFirstYear(user.profile.graduationYear)) {
+            // Note: Profile doesn't have nested profile property, access graduationYear directly
+            if (user.academicInfo?.graduationYear && this.isFirstYear(user.academicInfo.graduationYear)) {
                 score += 15;
             }
         }
@@ -68,7 +70,7 @@ class FeedAlgorithmService {
         // Academic help - major-specific boost
         if (signals.academicHelp) {
             score += 25;
-            if (space.category === 'academic' && space.name.includes(user.profile?.major || '')) {
+            if (space.category.value === space_category_value_1.SpaceCategoryEnum.ACADEMIC && space.name.toString().includes(user.personalInfo?.major || '')) {
                 score += 25;
             }
         }
@@ -83,7 +85,7 @@ class FeedAlgorithmService {
         // Social anxiety relief
         if (signals.socialAnxiety) {
             score += 25;
-            if (space.category === 'social') {
+            if (space.category.value === space_category_value_1.SpaceCategoryEnum.SOCIAL) {
                 score += 20; // Social spaces feel safer for social anxiety
             }
         }
@@ -200,7 +202,7 @@ class FeedAlgorithmService {
             newMemberRestricted: space.settings?.requireApproval || false,
             leaderOnly: post.authorRole === 'leader',
             timeExclusive: post.expiresAt ? new Date(post.expiresAt) > new Date() : false,
-            greekExclusive: space.category === 'social' && space.name.toLowerCase().includes('fraternity|sorority|greek')
+            greekExclusive: space.category.value === space_category_value_1.SpaceCategoryEnum.SOCIAL && space.name.toString().toLowerCase().includes('fraternity|sorority|greek')
         };
     }
     /**

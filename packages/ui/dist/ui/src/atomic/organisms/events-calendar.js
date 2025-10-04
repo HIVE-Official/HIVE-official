@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Calendar } from "../atoms/calendar";
-import { Badge } from "../atoms/badge";
-import { AvatarGroup } from "../atoms/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
-import { ScrollArea } from "../atoms/scroll-area";
-import { cn } from "../../lib/utils";
+import { Calendar } from "../atoms/calendar.js";
+import { Badge } from "../atoms/badge.js";
+import { Avatar, AvatarGroup, AvatarImage, AvatarFallback } from "../atoms/avatar.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
+import { ScrollArea } from "../atoms/scroll-area.js";
+import { cn } from "../../lib/utils.js";
 import { Clock, MapPin, Users } from "lucide-react";
 /**
  * Events Calendar
@@ -71,9 +71,9 @@ const EventsCalendar = React.forwardRef(({ className, events, selectedDate: cont
 });
 EventsCalendar.displayName = "EventsCalendar";
 function CalendarEventPreview({ event, onClick, onRsvp }) {
-    return (_jsxs("div", { className: cn("p-3 rounded-md border transition-all duration-fast hover:border-primary hover:shadow-hive-sm cursor-pointer", event.rsvp.status === "going" && "border-[#FFD700] bg-[#FFD700]/5"), onClick: onClick, children: [_jsxs("div", { className: "flex items-start justify-between gap-2 mb-2", children: [_jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h4", { className: "text-sm font-semibold text-foreground line-clamp-1", children: event.title }), _jsx("p", { className: "text-xs text-muted-foreground", children: event.space.name })] }), event.category && (_jsx(Badge, { variant: "outline", className: "text-[9px] h-5 shrink-0", children: event.category }))] }), _jsxs("div", { className: "space-y-1 mb-2", children: [_jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(Clock, { className: "h-3 w-3" }), _jsx("span", { children: event.dateTime.display })] }), _jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(MapPin, { className: "h-3 w-3" }), _jsx("span", { className: "truncate", children: event.location.name })] })] }), event.campusContext?.friendsGoing && event.campusContext.friendsGoing.length > 0 && (_jsxs("div", { className: "flex items-center gap-2 py-1.5 px-2 bg-primary/5 border border-primary/20 rounded text-xs mb-2", children: [_jsx(AvatarGroup, { size: "xs", max: 2, avatars: event.campusContext.friendsGoing.map(f => ({ src: f.avatar, alt: f.name })) }), _jsx("span", { className: "font-medium text-foreground", children: event.campusContext.friendsGoing.length === 1
+    return (_jsxs("div", { className: cn("p-3 rounded-md border transition-all duration-fast hover:border-primary hover:shadow-hive-sm cursor-pointer", event.rsvp.status === "going" && "border-[#FFD700] bg-[#FFD700]/5"), onClick: onClick, children: [_jsxs("div", { className: "flex items-start justify-between gap-2 mb-2", children: [_jsxs("div", { className: "flex-1 min-w-0", children: [_jsx("h4", { className: "text-sm font-semibold text-foreground line-clamp-1", children: event.title }), _jsx("p", { className: "text-xs text-muted-foreground", children: event.space.name })] }), event.category && (_jsx(Badge, { variant: "freshman", className: "text-[9px] h-5 shrink-0", children: event.category }))] }), _jsxs("div", { className: "space-y-1 mb-2", children: [_jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(Clock, { className: "h-3 w-3" }), _jsx("span", { children: event.dateTime.display })] }), _jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(MapPin, { className: "h-3 w-3" }), _jsx("span", { className: "truncate", children: event.location.name })] })] }), event.campusContext?.friendsGoing && event.campusContext.friendsGoing.length > 0 && (_jsxs("div", { className: "flex items-center gap-2 py-1.5 px-2 bg-primary/5 border border-primary/20 rounded text-xs mb-2", children: [_jsx(AvatarGroup, { size: "sm", max: 2, children: event.campusContext.friendsGoing.map(f => (_jsxs(Avatar, { children: [_jsx(AvatarImage, { src: f.avatar, alt: f.name }), _jsx(AvatarFallback, { children: f.name[0] })] }, f.id))) }), _jsx("span", { className: "font-medium text-foreground", children: event.campusContext.friendsGoing.length === 1
                             ? event.campusContext.friendsGoing[0].name
-                            : `${event.campusContext.friendsGoing[0].name} +${event.campusContext.friendsGoing.length - 1}` }), _jsx("span", { className: "text-muted-foreground", children: "going" })] })), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(Users, { className: "h-3 w-3" }), _jsxs("span", { children: [event.attendees.count, " going"] })] }), event.rsvp.status === "going" && (_jsx(Badge, { variant: "default", className: "h-5 text-[9px] bg-[#FFD700] text-black border-none", children: "You're going \u2713" })), event.rsvp.status === "interested" && (_jsx(Badge, { variant: "secondary", className: "h-5 text-[9px]", children: "Interested" }))] })] }));
+                            : `${event.campusContext.friendsGoing[0].name} +${event.campusContext.friendsGoing.length - 1}` }), _jsx("span", { className: "text-muted-foreground", children: "going" })] })), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [_jsx(Users, { className: "h-3 w-3" }), _jsxs("span", { children: [event.attendees.count, " going"] })] }), event.rsvp.status === "going" && (_jsx(Badge, { variant: "freshman", className: "h-5 text-[9px] bg-[#FFD700] text-black border-none", children: "You're going \u2713" })), event.rsvp.status === "interested" && (_jsx(Badge, { variant: "sophomore", className: "h-5 text-[9px]", children: "Interested" }))] })] }));
 }
 export { EventsCalendar };
 //# sourceMappingURL=events-calendar.js.map

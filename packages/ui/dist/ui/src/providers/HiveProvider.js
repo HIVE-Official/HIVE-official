@@ -7,8 +7,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { NotificationProvider } from '../systems/modal-toast-system';
-import UniversalShell from '../shells/UniversalShell';
+import { NotificationProvider } from '../systems/modal-toast-system.js';
+import UniversalShell from '../shells/UniversalShell.js';
 const HiveContext = createContext({
     config: {
         environment: 'development',

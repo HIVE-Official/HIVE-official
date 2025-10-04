@@ -1,16 +1,16 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Badge } from "../atoms/badge";
-import { Progress } from "../atoms/progress";
+import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card.js";
+import { Badge } from "../atoms/badge.js";
+import { Progress } from "../atoms/progress.js";
 import { Trophy, Users, Zap, Heart, Target, Flame, Clock, TrendingUp, } from "lucide-react";
 const RitualsCardStrip = React.forwardRef(({ className, rituals = [], onRitualClick, onJoinRitual, showEmptyState = false, ...props }, ref) => {
     if (rituals.length === 0 && !showEmptyState) {
         return null;
     }
-    return (_jsxs("div", { ref: ref, className: cn("space-y-2", className), ...props, children: [_jsxs("div", { className: "flex items-center justify-between px-1", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Flame, { className: "h-4 w-4 text-[#FFD700]" }), _jsx("h3", { className: "text-sm font-bold text-foreground uppercase tracking-wide", children: "Campus Rituals" })] }), rituals.length > 0 && (_jsxs(Badge, { variant: "outline", className: "text-xs border-black", children: [rituals.filter(r => r.hasJoined).length, " active"] }))] }), _jsxs("div", { className: "flex gap-3 overflow-x-auto pb-2 scrollbar-hide", children: [rituals.map((ritual) => (_jsx(RitualCard, { ritual: ritual, onClick: () => onRitualClick?.(ritual.id), onJoin: () => onJoinRitual?.(ritual.id) }, ritual.id))), showEmptyState && rituals.length === 0 && (_jsxs(Card, { className: "p-6 flex-shrink-0 w-64 flex flex-col items-center justify-center text-center border-2 border-gray-200", children: [_jsx("div", { className: "text-4xl mb-2", children: "\uD83C\uDFAF" }), _jsx("p", { className: "text-sm font-semibold text-foreground mb-1", children: "No Active Rituals" }), _jsx("p", { className: "text-xs text-muted-foreground", children: "Check back soon for campus-wide challenges" })] }))] })] }));
+    return (_jsxs("div", { ref: ref, className: cn("space-y-2", className), ...props, children: [_jsxs("div", { className: "flex items-center justify-between px-1", children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx(Flame, { className: "h-4 w-4 text-[#FFD700]" }), _jsx("h3", { className: "text-sm font-bold text-foreground uppercase tracking-wide", children: "Campus Rituals" })] }), rituals.length > 0 && (_jsxs(Badge, { variant: "freshman", className: "text-xs border-black", children: [rituals.filter(r => r.hasJoined).length, " active"] }))] }), _jsxs("div", { className: "flex gap-3 overflow-x-auto pb-2 scrollbar-hide", children: [rituals.map((ritual) => (_jsx(RitualCard, { ritual: ritual, onClick: () => onRitualClick?.(ritual.id), onJoin: () => onJoinRitual?.(ritual.id) }, ritual.id))), showEmptyState && rituals.length === 0 && (_jsxs(Card, { className: "p-6 flex-shrink-0 w-64 flex flex-col items-center justify-center text-center border-2 border-gray-200", children: [_jsx("div", { className: "text-4xl mb-2", children: "\uD83C\uDFAF" }), _jsx("p", { className: "text-sm font-semibold text-foreground mb-1", children: "No Active Rituals" }), _jsx("p", { className: "text-xs text-muted-foreground", children: "Check back soon for campus-wide challenges" })] }))] })] }));
 });
 RitualsCardStrip.displayName = "RitualsCardStrip";
 const RitualCard = ({ ritual, onClick, onJoin }) => {

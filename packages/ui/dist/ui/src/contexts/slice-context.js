@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { useCampusContext } from "./campus-context";
+import { useCampusContext } from "./campus-context.js";
 // Slice context React context
 const SliceContext = React.createContext(undefined);
 /**

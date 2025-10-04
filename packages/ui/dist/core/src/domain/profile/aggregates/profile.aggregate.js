@@ -176,7 +176,7 @@ export class Profile extends AggregateRoot {
         };
         const profile = new Profile(profileProps, id);
         // Fire domain event
-        profile.addDomainEvent(new ProfileCreatedEvent(profile.id, props.email.value, props.handle.value));
+        profile.addDomainEvent(new ProfileCreatedEvent(profile.id, props.handle.value, props.email.value, profileProps.campusId.value));
         return Result.ok(profile);
     }
     updatePersonalInfo(info) {
@@ -272,7 +272,7 @@ export class Profile extends AggregateRoot {
         this.props.isOnboarded = true;
         this.props.updatedAt = new Date();
         // Fire domain event
-        this.addDomainEvent(new ProfileOnboardedEvent(this.id));
+        this.addDomainEvent(new ProfileOnboardedEvent(this.id, this.props.campusId.value, this.props.socialInfo.interests));
         return Result.ok();
     }
     verify() {

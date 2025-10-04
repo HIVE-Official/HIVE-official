@@ -11,11 +11,10 @@ export { CampusId } from '../../domain/profile/value-objects/campus-id.value';
 export { ConnectionId } from '../../domain/profile/value-objects/connection-id.value';
 export { EnhancedFeed } from '../../domain/feed/enhanced-feed';
 export { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
-export { Space } from '../../domain/spaces/aggregates/space.aggregate';
 export { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 export { Connection } from '../../domain/profile/aggregates/connection';
 export { FeedItem } from '../../domain/feed/feed-item';
-export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
+export type { RitualReward as Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
 export declare function getProfileCompleteness(profile: any): number;
 export declare function getDefaultActionCodeSettings(continueUrl?: string): {
     url: string;

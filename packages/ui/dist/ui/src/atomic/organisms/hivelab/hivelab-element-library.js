@@ -128,7 +128,7 @@ export function HiveLabElementLibrary({ elements, onElementSelect, onToggleFavor
         });
         return grouped;
     }, [filteredElements]);
-    return (_jsxs(FloatingPanel, { title: "Element Library", icon: _jsx(Grid3x3, { className: "h-4 w-4" }), position: position, width: width, isCollapsed: isCollapsed, onToggleCollapse: onToggleCollapse, onClose: onClose, className: className, children: [_jsxs("div", { className: "px-3 py-2 border-b space-y-3", children: [_jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" }), _jsx(Input, { placeholder: "Search elements...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "pl-9 h-9 text-sm" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Button, { variant: viewMode === 'list' ? 'default' : 'ghost', size: "sm", onClick: () => setViewMode('list'), className: "h-7 w-7 p-0", title: "List view", children: _jsx(List, { className: "h-3.5 w-3.5" }) }), _jsx(Button, { variant: viewMode === 'grid' ? 'default' : 'ghost', size: "sm", onClick: () => setViewMode('grid'), className: "h-7 w-7 p-0", title: "Grid view", children: _jsx(Grid3x3, { className: "h-3.5 w-3.5" }) })] }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsxs(Button, { variant: localShowFavorites ? 'default' : 'ghost', size: "sm", onClick: () => setLocalShowFavorites(!localShowFavorites), className: "h-7 gap-1 px-2", title: "Show new elements only", children: [_jsx(Star, { className: cn('h-3.5 w-3.5', localShowFavorites && 'fill-current') }), _jsx("span", { className: "text-xs", children: "New" })] }), _jsx(Badge, { variant: "secondary", className: "h-5 px-1.5 text-xs", children: filteredElements.length })] })] })] }), _jsx("div", { className: "px-3 py-2 border-b overflow-x-auto", children: _jsx("div", { className: "flex gap-1.5 min-w-max", children: categories.map((category) => (_jsxs("button", { onClick: () => setSelectedCategory(category.id), className: cn('px-2.5 py-1.5 rounded-md text-xs font-medium transition-all shrink-0', 'hover:bg-white/10', selectedCategory === category.id
+    return (_jsxs(FloatingPanel, { title: "Element Library", icon: _jsx(Grid3x3, { className: "h-4 w-4" }), position: position, width: width, isCollapsed: isCollapsed, onToggleCollapse: onToggleCollapse, onClose: onClose, className: className, children: [_jsxs("div", { className: "px-3 py-2 border-b space-y-3", children: [_jsxs("div", { className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/70" }), _jsx(Input, { placeholder: "Search elements...", value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "pl-9 h-9 text-sm" })] }), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-1", children: [_jsx(Button, { variant: viewMode === 'list' ? 'default' : 'ghost', size: "sm", onClick: () => setViewMode('list'), className: "h-7 w-7 p-0", title: "List view", children: _jsx(List, { className: "h-3.5 w-3.5" }) }), _jsx(Button, { variant: viewMode === 'grid' ? 'default' : 'ghost', size: "sm", onClick: () => setViewMode('grid'), className: "h-7 w-7 p-0", title: "Grid view", children: _jsx(Grid3x3, { className: "h-3.5 w-3.5" }) })] }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsxs(Button, { variant: localShowFavorites ? 'default' : 'ghost', size: "sm", onClick: () => setLocalShowFavorites(!localShowFavorites), className: "h-7 gap-1 px-2", title: "Show new elements only", children: [_jsx(Star, { className: cn('h-3.5 w-3.5', localShowFavorites && 'fill-current') }), _jsx("span", { className: "text-xs", children: "New" })] }), _jsx(Badge, { variant: "sophomore", className: "h-5 px-1.5 text-xs", children: filteredElements.length })] })] })] }), _jsx("div", { className: "px-3 py-2 border-b overflow-x-auto", children: _jsx("div", { className: "flex gap-1.5 min-w-max", children: categories.map((category) => (_jsxs("button", { onClick: () => setSelectedCategory(category.id), className: cn('px-2.5 py-1.5 rounded-md text-xs font-medium transition-all shrink-0', 'hover:bg-white/10', selectedCategory === category.id
                             ? 'bg-[#FFD700] text-black'
                             : 'bg-white/10 text-white/70'), title: category.description, children: [_jsx("span", { className: "mr-1", children: category.icon }), category.name] }, category.id))) }) }), _jsxs("div", { className: "flex-1 overflow-y-auto p-3", children: [selectedCategory === 'all' ? (
                     // Grouped view
@@ -136,46 +136,14 @@ export function HiveLabElementLibrary({ elements, onElementSelect, onToggleFavor
                             const categoryElements = groupedElements[category.id];
                             if (!categoryElements || categoryElements.length === 0)
                                 return null;
-                            return (_jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center gap-2 mb-2", children: [_jsxs("span", { className: cn('text-sm font-semibold', category.color), children: [category.icon, " ", category.name] }), _jsx(Badge, { variant: "secondary", className: "h-5 px-1.5 text-xs", children: categoryElements.length })] }), _jsx("div", { className: cn(viewMode === 'grid'
+                            return (_jsxs("div", { className: "space-y-2", children: [_jsxs("div", { className: "flex items-center gap-2 mb-2", children: [_jsxs("span", { className: cn('text-sm font-semibold', category.color), children: [category.icon, " ", category.name] }), _jsx(Badge, { variant: "sophomore", className: "h-5 px-1.5 text-xs", children: categoryElements.length })] }), _jsx("div", { className: cn(viewMode === 'grid'
                                             ? 'grid grid-cols-2 gap-2'
-                                            : 'space-y-1'), children: categoryElements.map((element) => (_jsx(ElementLibraryItem, { element: {
-                                                id: element.id,
-                                                name: element.name,
-                                                icon: element.icon,
-                                                category: element.category,
-                                                description: element.description,
-                                                inputs: element.defaultInputs.map((input, i) => ({
-                                                    ...input,
-                                                    id: `${element.id}-in-${i}`,
-                                                })),
-                                                outputs: element.defaultOutputs.map((output, i) => ({
-                                                    ...output,
-                                                    id: `${element.id}-out-${i}`,
-                                                })),
-                                                isNew: element.isNew,
-                                                complexity: element.complexity,
-                                            }, onSelect: onElementSelect ? () => onElementSelect(element) : undefined, onToggleFavorite: onToggleFavorite, compact: viewMode === 'grid' }, element.id))) })] }, category.id));
+                                            : 'space-y-1'), children: categoryElements.map((element) => (_jsx(ElementLibraryItem, { element: element, onSelect: onElementSelect ? () => onElementSelect(element) : undefined, onToggleFavorite: onToggleFavorite, compact: viewMode === 'grid' }, element.id))) })] }, category.id));
                         }) })) : (
                     // Flat list for specific category
                     _jsx("div", { className: cn(viewMode === 'grid'
                             ? 'grid grid-cols-2 gap-2'
-                            : 'space-y-1'), children: filteredElements.map((element) => (_jsx(ElementLibraryItem, { element: {
-                                id: element.id,
-                                name: element.name,
-                                icon: element.icon,
-                                category: element.category,
-                                description: element.description,
-                                inputs: element.defaultInputs.map((input, i) => ({
-                                    ...input,
-                                    id: `${element.id}-in-${i}`,
-                                })),
-                                outputs: element.defaultOutputs.map((output, i) => ({
-                                    ...output,
-                                    id: `${element.id}-out-${i}`,
-                                })),
-                                isNew: element.isNew,
-                                complexity: element.complexity,
-                            }, onSelect: onElementSelect ? () => onElementSelect(element) : undefined, onToggleFavorite: onToggleFavorite, compact: viewMode === 'grid' }, element.id))) })), filteredElements.length === 0 && (_jsxs("div", { className: "flex flex-col items-center justify-center py-12 text-center", children: [_jsx("div", { className: "text-4xl mb-3", children: "\uD83D\uDD0D" }), _jsx("p", { className: "text-sm font-medium mb-1", children: "No elements found" }), _jsx("p", { className: "text-xs text-white/70", children: "Try a different search or category" })] }))] }), _jsx("div", { className: "px-3 py-2 border-t bg-white/5", children: _jsx("p", { className: "text-[10px] text-white/70 text-center", children: "\uD83D\uDCA1 Drag elements to the canvas to build your tool" }) })] }));
+                            : 'space-y-1'), children: filteredElements.map((element) => (_jsx(ElementLibraryItem, { element: element, onSelect: onElementSelect ? () => onElementSelect(element) : undefined, onToggleFavorite: onToggleFavorite, compact: viewMode === 'grid' }, element.id))) })), filteredElements.length === 0 && (_jsxs("div", { className: "flex flex-col items-center justify-center py-12 text-center", children: [_jsx("div", { className: "text-4xl mb-3", children: "\uD83D\uDD0D" }), _jsx("p", { className: "text-sm font-medium mb-1", children: "No elements found" }), _jsx("p", { className: "text-xs text-white/70", children: "Try a different search or category" })] }))] }), _jsx("div", { className: "px-3 py-2 border-t bg-white/5", children: _jsx("p", { className: "text-[10px] text-white/70 text-center", children: "\uD83D\uDCA1 Drag elements to the canvas to build your tool" }) })] }));
 }
 HiveLabElementLibrary.displayName = 'HiveLabElementLibrary';
 //# sourceMappingURL=hivelab-element-library.js.map

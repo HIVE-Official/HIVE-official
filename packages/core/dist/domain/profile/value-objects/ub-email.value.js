@@ -30,6 +30,12 @@ class UBEmail extends ValueObject_base_1.ValueObject {
     get value() {
         return this.props.value;
     }
+    get email() {
+        return this.props.value;
+    }
+    get username() {
+        return this.props.value.split('@')[0];
+    }
     toString() {
         return this.props.value;
     }

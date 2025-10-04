@@ -52,7 +52,13 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
                 id: space.id.id,
                 name: space.name.name
             }));
-            const nextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
+            const domainNextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
+            // Map domain next steps to expected format
+            const nextSteps = domainNextSteps.map((step, index) => ({
+                action: step.title || step.action,
+                description: step.description,
+                priority: index + 1
+            }));
             const result = {
                 data: {
                     profile,
@@ -84,9 +90,13 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             // Check if onboarding is complete (using domain logic)
             const onboardingStatus = profile.getOnboardingStatus();
             if (onboardingStatus.isComplete && !profile.isOnboarded) {
-                const completeResult = profile.completeOnboarding(profile.personalInfo, profile.interests);
-                if (completeResult.isSuccess) {
-                    await this.profileRepo.save(profile);
+                // Note: completeOnboarding expects AcademicInfo, need to access academicInfo properly
+                if (profile.academicInfo) {
+                    const completeResult = profile.completeOnboarding(profile.academicInfo, profile.interests, [] // selectedSpaces - empty for now
+                    );
+                    if (completeResult.isSuccess) {
+                        await this.profileRepo.save(profile);
+                    }
                 }
             }
             return Result_1.Result.ok();
@@ -104,7 +114,14 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             }
             const profile = profileResult.getValue();
             // Use domain logic
-            const status = profile.getOnboardingStatus();
+            const domainStatus = profile.getOnboardingStatus();
+            // Map to service response format
+            const status = {
+                isComplete: domainStatus.isComplete,
+                completedSteps: domainStatus.completedSteps,
+                remainingSteps: domainStatus.remainingSteps,
+                percentComplete: domainStatus.completionPercentage
+            };
             return Result_1.Result.ok(status);
         }, 'ProfileOnboarding.getOnboardingStatus');
     }
@@ -195,7 +212,7 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             suggestions.push(...trendingSpaces.getValue());
         }
         // Deduplicate
-        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.spaceId.value, space])).values());
+        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values());
         return Result_1.Result.ok(uniqueSpaces);
     }
     async joinDefaultSpaces(profile) {

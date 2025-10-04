@@ -7,5 +7,6 @@ export declare class ToolArchivedEvent extends DomainEvent {
     readonly toolName: string;
     constructor(aggregateId: string, toolName: string);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=tool-archived.event.d.ts.map

@@ -10,7 +10,7 @@ import * as React from "react";
  * - Mobile: Bottom sheet with swipe gestures
  * - Hash URL: Updates to #events, #members, #resources
  */
-export interface SpaceSidePanelProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceSidePanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd'> {
     /** Panel is open */
     isOpen: boolean;
     /** Panel type (determines hash URL) */

@@ -6,12 +6,14 @@
  */
 import type { Port } from '@/types/hivelab.types';
 export interface DataMappingRowProps {
+    /** Port (when used in simplified mode) */
+    port?: Port;
     /** Source port */
-    sourcePort: Port;
+    sourcePort?: Port;
     /** Target port */
-    targetPort: Port;
+    targetPort?: Port;
     /** Source element name */
-    sourceElementName: string;
+    sourceElementName?: string | null;
     /** Is this mapping selected? */
     isSelected?: boolean;
     /** Can this mapping be removed? */
@@ -23,7 +25,7 @@ export interface DataMappingRowProps {
     /** Additional class names */
     className?: string;
 }
-export declare function DataMappingRow({ sourcePort, targetPort, sourceElementName, isSelected, removable, onClick, onRemove, className, }: DataMappingRowProps): import("react/jsx-runtime").JSX.Element;
+export declare function DataMappingRow({ port, sourcePort: propSourcePort, targetPort: propTargetPort, sourceElementName, isSelected, removable, onClick, onRemove, className, }: DataMappingRowProps): import("react/jsx-runtime").JSX.Element;
 export declare namespace DataMappingRow {
     var displayName: string;
 }

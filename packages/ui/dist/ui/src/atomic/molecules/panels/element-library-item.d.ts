@@ -17,6 +17,12 @@ export interface ElementLibraryItemProps {
     onDragEnd?: (e: React.DragEvent) => void;
     /** Click handler */
     onClick?: (element: ElementDefinition) => void;
+    /** Select handler (alternative to onClick) */
+    onSelect?: (element: ElementDefinition) => void;
+    /** Toggle favorite handler */
+    onToggleFavorite?: (elementId: string) => void;
+    /** Show compact version */
+    compact?: boolean;
     /** Additional class names */
     className?: string;
 }

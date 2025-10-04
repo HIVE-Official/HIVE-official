@@ -14,22 +14,21 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { HiveLabProvider, useHiveLab, useHiveLabActions } from '../../contexts/hivelab-context';
-import { HiveLabToolbar } from './hivelab/hivelab-toolbar';
-import { HiveLabCanvas } from './hivelab/hivelab-canvas';
-import { HiveLabElementLibrary } from './hivelab/hivelab-element-library';
-import { HiveLabPropertiesPanel } from './hivelab/hivelab-properties-panel';
-import { ELEMENT_LIBRARY } from '../../lib/hivelab-element-library';
-import { Button } from '../atoms/button';
-import { Badge } from '../atoms/badge';
+import { cn } from '../../lib/utils.js';
+import { HiveLabProvider, useHiveLab } from '../../contexts/hivelab-context.js';
+import { HiveLabToolbar } from './hivelab/hivelab-toolbar.js';
+import { HiveLabCanvas } from './hivelab/hivelab-canvas.js';
+import { HiveLabElementLibrary } from './hivelab/hivelab-element-library.js';
+import { HiveLabPropertiesPanel } from './hivelab/hivelab-properties-panel.js';
+import { ELEMENT_LIBRARY } from '../../lib/hivelab-element-library.js';
+import { Button } from '../atoms/button.js';
+import { Badge } from '../atoms/badge.js';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 /**
  * Internal builder (wrapped by provider)
  */
 function SpaceToolBuilderInternal({ space, onSave, onPreview, onExit, className, }) {
-    const state = useHiveLab();
-    const actions = useHiveLabActions();
+    const { state, actions } = useHiveLab();
     const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);
     const [propertiesCollapsed, setPropertiesCollapsed] = React.useState(false);
     const currentPage = state.tool.pages.find((p) => p.id === state.currentPage);
@@ -103,7 +102,7 @@ function SpaceToolBuilderInternal({ space, onSave, onPreview, onExit, className,
             actions.selectElements([elementId]);
         }
     };
-    return (_jsxs("div", { className: cn('space-tool-builder h-full w-full flex flex-col bg-[#0c0c0c]', className), children: [_jsxs("div", { className: "px-6 py-3 border-b flex items-center justify-between", style: { backgroundColor: `${space.color}15` }, children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsxs(Button, { variant: "ghost", size: "sm", onClick: handleExit, className: "gap-2", children: [_jsx(ArrowLeft, { className: "h-4 w-4" }), "Back to ", space.name] }), _jsx("div", { className: "h-6 w-px bg-white/8" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("span", { className: "text-xl", children: space.emoji }), _jsxs("div", { children: [_jsx("div", { className: "text-xs text-white/70", children: "Building for" }), _jsx("div", { className: "text-sm font-semibold", children: space.name })] })] }), hasChanges && (_jsxs(_Fragment, { children: [_jsx("div", { className: "h-6 w-px bg-white/8" }), _jsxs("div", { className: "flex items-center gap-1.5 text-xs text-white/70", children: [_jsx(AlertCircle, { className: "h-3.5 w-3.5" }), _jsx("span", { children: "Unsaved changes" })] })] }))] }), _jsxs("div", { className: "flex items-center gap-2", children: [state.tool.status === 'draft' && _jsx(Badge, { variant: "outline", children: "Draft" }), _jsxs(Badge, { style: { backgroundColor: space.color, color: 'white' }, children: [space.memberCount, " members"] })] })] }), _jsx(HiveLabToolbar, { toolName: state.tool.name, canUndo: state.history.past.length > 0, canRedo: state.history.future.length > 0, zoom: state.viewport.zoom, isSaved: !hasChanges, showGrid: state.showGrid, onUndo: actions.undo, onRedo: actions.redo, onSave: handleSave, onRun: handlePreview, onZoomIn: () => actions.updateViewport({ zoom: Math.min(state.viewport.zoom + 0.25, 4) }), onZoomOut: () => actions.updateViewport({ zoom: Math.max(state.viewport.zoom - 0.25, 0.1) }), onZoomToFit: () => actions.updateViewport({ x: 0, y: 0, zoom: 1 }), onToggleGrid: actions.toggleGrid }), _jsxs("div", { className: "flex-1 flex relative overflow-hidden", children: [_jsx(HiveLabElementLibrary, { elements: ELEMENT_LIBRARY, onElementSelect: handleElementSelect, position: "left", width: 280, isCollapsed: libraryCollapsed, onToggleCollapse: () => setLibraryCollapsed(!libraryCollapsed) }), _jsx("div", { className: "flex-1", children: _jsx(HiveLabCanvas, { pages: state.tool.pages, currentPageId: state.currentPage, elements: currentPage?.elements || [], connections: currentPage?.connections || [], viewport: state.viewport, selectedElementIds: state.selectedElements, selectedConnectionId: state.selectedConnection, showGrid: state.showGrid, showMiniMap: true, showZoomControls: true, onViewportChange: (viewport) => actions.updateViewport(viewport), onElementClick: handleElementClick, onConnectionClick: (id, e) => {
+    return (_jsxs("div", { className: cn('space-tool-builder h-full w-full flex flex-col bg-[#0c0c0c]', className), children: [_jsxs("div", { className: "px-6 py-3 border-b flex items-center justify-between", style: { backgroundColor: `${space.color}15` }, children: [_jsxs("div", { className: "flex items-center gap-4", children: [_jsxs(Button, { variant: "ghost", size: "sm", onClick: handleExit, className: "gap-2", children: [_jsx(ArrowLeft, { className: "h-4 w-4" }), "Back to ", space.name] }), _jsx("div", { className: "h-6 w-px bg-white/8" }), _jsxs("div", { className: "flex items-center gap-2", children: [_jsx("span", { className: "text-xl", children: space.emoji }), _jsxs("div", { children: [_jsx("div", { className: "text-xs text-white/70", children: "Building for" }), _jsx("div", { className: "text-sm font-semibold", children: space.name })] })] }), hasChanges && (_jsxs(_Fragment, { children: [_jsx("div", { className: "h-6 w-px bg-white/8" }), _jsxs("div", { className: "flex items-center gap-1.5 text-xs text-white/70", children: [_jsx(AlertCircle, { className: "h-3.5 w-3.5" }), _jsx("span", { children: "Unsaved changes" })] })] }))] }), _jsxs("div", { className: "flex items-center gap-2", children: [state.tool.status === 'draft' && _jsx(Badge, { variant: "freshman", children: "Draft" }), _jsxs(Badge, { style: { backgroundColor: space.color, color: 'white' }, children: [space.memberCount, " members"] })] })] }), _jsx(HiveLabToolbar, { toolName: state.tool.name, canUndo: state.history.past.length > 0, canRedo: state.history.future.length > 0, zoom: state.viewport.zoom, isSaved: !hasChanges, showGrid: state.showGrid, onUndo: actions.undo, onRedo: actions.redo, onSave: handleSave, onRun: handlePreview, onZoomIn: () => actions.updateViewport({ zoom: Math.min(state.viewport.zoom + 0.25, 4) }), onZoomOut: () => actions.updateViewport({ zoom: Math.max(state.viewport.zoom - 0.25, 0.1) }), onZoomToFit: () => actions.updateViewport({ x: 0, y: 0, zoom: 1 }), onToggleGrid: actions.toggleGrid }), _jsxs("div", { className: "flex-1 flex relative overflow-hidden", children: [_jsx(HiveLabElementLibrary, { elements: ELEMENT_LIBRARY, onElementSelect: handleElementSelect, position: "left", width: 280, isCollapsed: libraryCollapsed, onToggleCollapse: () => setLibraryCollapsed(!libraryCollapsed) }), _jsx("div", { className: "flex-1", children: _jsx(HiveLabCanvas, { pages: state.tool.pages, currentPageId: state.currentPage, elements: currentPage?.elements || [], connections: currentPage?.connections || [], viewport: state.viewport, selectedElementIds: state.selectedElements, selectedConnectionId: state.selectedConnection, showGrid: state.showGrid, showMiniMap: true, showZoomControls: true, onViewportChange: (viewport) => actions.updateViewport(viewport), onElementClick: handleElementClick, onConnectionClick: (id, e) => {
                                 e.stopPropagation();
                                 actions.selectConnection(id);
                             }, onCanvasClick: () => actions.clearSelection(), onPageClick: (id) => actions.setCurrentPage(id), onZoomIn: () => actions.updateViewport({ zoom: Math.min(state.viewport.zoom + 0.25, 4) }), onZoomOut: () => actions.updateViewport({ zoom: Math.max(state.viewport.zoom - 0.25, 0.1) }), onZoomToFit: () => actions.updateViewport({ x: 0, y: 0, zoom: 1 }) }) }), _jsx(HiveLabPropertiesPanel, { selectedElement: selectedElement, allElements: currentPage?.elements, onPropertyChange: handlePropertyChange, onDeleteElement: () => {

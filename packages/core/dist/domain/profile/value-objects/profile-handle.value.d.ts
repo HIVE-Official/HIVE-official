@@ -12,6 +12,7 @@ export declare class ProfileHandle extends ValueObject<ProfileHandleProps> {
     private static readonly MAX_LENGTH;
     private static readonly VALID_PATTERN;
     get value(): string;
+    get handle(): string;
     private constructor();
     static create(handle: string): Result<ProfileHandle>;
     toString(): string;

@@ -5,5 +5,6 @@ export declare class SpaceCreatedEvent extends DomainEvent {
     readonly createdBy: string;
     constructor(aggregateId: string, name: string, category: string, createdBy: string);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=space-created.event.d.ts.map

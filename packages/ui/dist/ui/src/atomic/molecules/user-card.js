@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent } from "../atoms/card";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { Card, CardContent } from "../atoms/card.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils.js";
 const UserCard = React.forwardRef(({ className, name, handle, avatar, bio, badge, badgeVariant = "secondary", actionLabel, onAction, actionVariant = "default", isOnline, disabled, ...props }, ref) => {
     // Generate initials from name
     const initials = name

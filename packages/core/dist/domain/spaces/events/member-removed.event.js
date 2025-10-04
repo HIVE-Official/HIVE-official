@@ -11,6 +11,15 @@ class MemberRemovedEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'MemberRemoved';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            profileId: this.profileId,
+            memberCount: this.memberCount
+        };
+    }
 }
 exports.MemberRemovedEvent = MemberRemovedEvent;
 //# sourceMappingURL=member-removed.event.js.map

@@ -10,5 +10,6 @@ export declare class ToolForkedEvent extends DomainEvent {
     constructor(aggregateId: string, // Original tool ID
     forkedToolId: string, forkedBy: string, totalForks: number);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=tool-forked.event.d.ts.map

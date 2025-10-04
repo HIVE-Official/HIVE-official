@@ -3,9 +3,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Sparkles, Eye, TrendingUp, Clock, Heart } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { HiveCard } from '../atoms/hive-card';
-import { SimpleAvatar } from '../atoms/simple-avatar';
+import { cn } from '../../lib/utils.js';
+import { HiveCard } from '../atoms/hive-card.js';
+import { SimpleAvatar } from '../atoms/simple-avatar.js';
 // Mock data - replace with real API calls
 const mockActivityData = [
     {

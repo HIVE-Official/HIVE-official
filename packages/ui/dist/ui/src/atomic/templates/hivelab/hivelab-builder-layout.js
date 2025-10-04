@@ -9,7 +9,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { HiveLabProvider, useHiveLab, useHiveLabActions } from '@/contexts/hivelab-context';
+import { HiveLabProvider, useHiveLab } from '@/contexts/hivelab-context';
 import { HiveLabToolbar } from '@/atomic/organisms/hivelab/hivelab-toolbar';
 import { HiveLabCanvas } from '@/atomic/organisms/hivelab/hivelab-canvas';
 import { HiveLabElementLibrary } from '@/atomic/organisms/hivelab/hivelab-element-library';
@@ -19,8 +19,7 @@ import { ELEMENT_LIBRARY } from '@/lib/hivelab-element-library';
  * Internal builder component (wrapped by provider)
  */
 function HiveLabBuilderInternal({ onSave, onRun, onExport, onImport, onDelete, className, }) {
-    const state = useHiveLab();
-    const actions = useHiveLabActions();
+    const { state, actions } = useHiveLab();
     // Panel states
     const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);
     const [propertiesCollapsed, setPropertiesCollapsed] = React.useState(false);

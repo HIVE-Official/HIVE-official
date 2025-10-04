@@ -174,6 +174,14 @@ export type SpaceAction = {
     eventId: string;
     attending: boolean;
 } | {
+    type: 'tool.event.create';
+} | {
+    type: 'tool.poll.create';
+} | {
+    type: 'tool.task.create';
+} | {
+    type: 'tool.resource.upload';
+} | {
     type: 'resource.add';
 } | {
     type: 'resource.click';
@@ -303,8 +311,8 @@ export declare const isLeaderAction: (action: SpaceAction) => boolean;
  * Re-export common types from other domains
  * (These will reference actual types once we integrate with @hive/core)
  */
-export type { SpacePost } from '../organisms/space-post-feed';
-export type { SpaceEvent } from '../organisms/space-events-panel';
-export type { SpaceResource } from '../organisms/space-resources-panel';
-export type { SpaceMemberPreview } from '../organisms/space-members-panel';
+export type { SpacePost } from '../atomic/organisms/space-post-feed';
+export type { SpaceEvent } from '../atomic/organisms/space-events-panel';
+export type { SpaceResource } from '../atomic/organisms/space-resources-panel';
+export type { SpaceMemberPreview } from '../atomic/organisms/space-members-panel';
 //# sourceMappingURL=space.types.d.ts.map

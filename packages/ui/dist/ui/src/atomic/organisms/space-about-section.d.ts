@@ -8,14 +8,14 @@ export interface SpaceAboutSectionProps extends React.HTMLAttributes<HTMLDivElem
     createdAt?: Date;
     createdBy?: {
         name: string;
-        handle: string;
+        handle?: string;
         avatar?: string;
     };
     /** Space rules/guidelines */
     rules?: string[];
     /** Space category */
     category?: string;
-    type?: "academic" | "social" | "residential" | "interest" | "official";
+    type?: "academic" | "greek" | "social" | "residential" | "interest" | "official";
     /** Quick stats */
     memberCount?: number;
     postCount?: number;

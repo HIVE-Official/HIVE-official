@@ -13,6 +13,10 @@ export type DataType = 'any' | 'text' | 'number' | 'boolean' | 'date' | 'user' |
  */
 export declare const DATA_TYPE_COLORS: Record<DataType, string>;
 /**
+ * Get primary data type (for display/color)
+ */
+export declare function getPrimaryType(type: DataType | DataType[]): DataType;
+/**
  * Element categories (8 types from spec)
  */
 export type ElementCategory = 'trigger' | 'collector' | 'transformer' | 'router' | 'storage' | 'display' | 'action' | 'connector';

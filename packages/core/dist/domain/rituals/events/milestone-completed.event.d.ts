@@ -13,5 +13,6 @@ export declare class MilestoneCompletedEvent extends DomainEvent {
         description: string;
     }>);
     getEventName(): string;
+    toData(): any;
 }
 //# sourceMappingURL=milestone-completed.event.d.ts.map

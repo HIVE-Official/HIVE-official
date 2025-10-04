@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card } from "../atoms/card";
-import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card.js";
+import { cn } from "../../lib/utils.js";
 const StatGrid = React.forwardRef(({ className, stats, variant = "grid", columns, ...props }, ref) => {
     if (variant === "inline") {
         return (_jsx("div", { ref: ref, className: cn("flex flex-wrap gap-6", className), ...props, children: stats.map((stat, index) => (_jsxs("div", { className: "flex flex-col", children: [_jsxs("div", { className: "flex items-baseline gap-2", children: [_jsx("span", { className: "text-2xl font-bold text-foreground", children: typeof stat.value === 'number' && stat.value > 999

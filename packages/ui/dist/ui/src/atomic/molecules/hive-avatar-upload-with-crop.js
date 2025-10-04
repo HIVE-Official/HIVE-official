@@ -3,10 +3,10 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useState, useCallback, useRef } from 'react';
 import Cropper from 'react-easy-crop';
 import { Camera, Upload, X, Check, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
-import { Button } from '../atoms/button';
-import { Dialog, DialogContent } from '../atoms/dialog';
-import { Slider } from '../atoms/slider';
-import { cn } from '../../lib/utils';
+import { Button } from '../atoms/button.js';
+import { Dialog, DialogContent } from '../atoms/dialog.js';
+import { Slider } from '../atoms/slider.js';
+import { cn } from '../../lib/utils.js';
 async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
     const image = new Image();
     image.src = imageSrc;

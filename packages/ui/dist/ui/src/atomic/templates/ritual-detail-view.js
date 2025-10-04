@@ -1,13 +1,13 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { Card } from "../atoms/card";
-import { RitualProgressRing } from "../molecules/ritual-progress-ring";
-import { RitualMilestoneTrack } from "../organisms/ritual-milestone-track";
-import { RitualLeaderboard } from "../organisms/ritual-leaderboard";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { Card } from "../atoms/card.js";
+import { RitualProgressRing } from "../molecules/ritual-progress-ring.js";
+import { RitualMilestoneTrack } from "../organisms/ritual-milestone-track.js";
+import { RitualLeaderboard } from "../organisms/ritual-leaderboard.js";
 import { Calendar, Users, Trophy, Clock, ArrowLeft } from "lucide-react";
 const RitualDetailView = React.forwardRef(({ className, ritual, onJoin, onLeave, onMilestoneClick, onBack, onShare, showLeaderboard = true, ...props }, ref) => {
     const [isJoining, setIsJoining] = React.useState(false);
@@ -25,7 +25,7 @@ const RitualDetailView = React.forwardRef(({ className, ritual, onJoin, onLeave,
             setIsJoining(false);
         }
     };
-    return (_jsxs("div", { ref: ref, className: cn("min-h-screen bg-[#000000] pb-20", className), ...props, children: [_jsx("div", { className: "sticky top-0 z-50 border-b border-white/8 bg-[#0c0c0c]/95 backdrop-blur", children: _jsxs("div", { className: "max-w-4xl mx-auto px-6 py-4 flex items-center justify-between", children: [onBack && (_jsxs(Button, { variant: "ghost", size: "sm", onClick: onBack, className: "text-white/70 hover:text-white", children: [_jsx(ArrowLeft, { className: "h-4 w-4 mr-2" }), "Back"] })), _jsx("div", { className: "flex-1" }), onShare && (_jsx(Button, { variant: "outline", size: "sm", onClick: onShare, className: "border-white/20 text-white", children: "Share" }))] }) }), _jsxs("div", { className: "max-w-4xl mx-auto px-6 py-8 space-y-8", children: [_jsxs("div", { className: "text-center space-y-4", children: [_jsx("div", { className: "text-6xl mb-4", children: ritual.icon }), _jsx("h1", { className: "text-3xl md:text-4xl font-bold text-white", children: ritual.title }), _jsx("p", { className: "text-lg text-white/70 max-w-2xl mx-auto", children: ritual.description }), _jsxs("div", { className: "flex items-center justify-center gap-2", children: [_jsx(Badge, { variant: "outline", className: "border-white/20 text-white", children: ritual.type }), _jsx(Badge, { variant: "outline", className: "border-white/20 text-white", children: ritual.category })] })] }), _jsx("div", { className: "flex justify-center", children: _jsx(Button, { size: "lg", onClick: handleJoinLeave, disabled: isJoining, className: cn("min-w-[200px] text-base font-semibold", ritual.hasJoined
+    return (_jsxs("div", { ref: ref, className: cn("min-h-screen bg-[#000000] pb-20", className), ...props, children: [_jsx("div", { className: "sticky top-0 z-50 border-b border-white/8 bg-[#0c0c0c]/95 backdrop-blur", children: _jsxs("div", { className: "max-w-4xl mx-auto px-6 py-4 flex items-center justify-between", children: [onBack && (_jsxs(Button, { variant: "ghost", size: "sm", onClick: onBack, className: "text-white/70 hover:text-white", children: [_jsx(ArrowLeft, { className: "h-4 w-4 mr-2" }), "Back"] })), _jsx("div", { className: "flex-1" }), onShare && (_jsx(Button, { variant: "outline", size: "sm", onClick: onShare, className: "border-white/20 text-white", children: "Share" }))] }) }), _jsxs("div", { className: "max-w-4xl mx-auto px-6 py-8 space-y-8", children: [_jsxs("div", { className: "text-center space-y-4", children: [_jsx("div", { className: "text-6xl mb-4", children: ritual.icon }), _jsx("h1", { className: "text-3xl md:text-4xl font-bold text-white", children: ritual.title }), _jsx("p", { className: "text-lg text-white/70 max-w-2xl mx-auto", children: ritual.description }), _jsxs("div", { className: "flex items-center justify-center gap-2", children: [_jsx(Badge, { variant: "freshman", className: "border-white/20 text-white", children: ritual.type }), _jsx(Badge, { variant: "freshman", className: "border-white/20 text-white", children: ritual.category })] })] }), _jsx("div", { className: "flex justify-center", children: _jsx(Button, { size: "lg", onClick: handleJoinLeave, disabled: isJoining, className: cn("min-w-[200px] text-base font-semibold", ritual.hasJoined
                                 ? "bg-white/10 text-white border border-white/20 hover:bg-white/20"
                                 : "bg-[#FFD700] text-black hover:bg-[#FFD700]/90 border border-[#FFD700]"), children: isJoining
                                 ? "..."

@@ -11,6 +11,15 @@ class ParticipantLeftEvent extends DomainEvent_base_1.DomainEvent {
     getEventName() {
         return 'ParticipantLeft';
     }
+    toData() {
+        return {
+            eventType: this.getEventName(),
+            aggregateId: this.aggregateId,
+            occurredAt: this.occurredAt,
+            profileId: this.profileId,
+            participantCount: this.participantCount
+        };
+    }
 }
 exports.ParticipantLeftEvent = ParticipantLeftEvent;
 //# sourceMappingURL=participant-left.event.js.map

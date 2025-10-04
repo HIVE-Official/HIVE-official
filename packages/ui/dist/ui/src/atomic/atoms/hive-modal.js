@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { X } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../lib/utils.js';
 export function HiveModal({ open, onOpenChange, children, className, size = 'md', closeOnOverlay = true }) {
     if (!open)
         return null;

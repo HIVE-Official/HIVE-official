@@ -115,6 +115,9 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
     get badges() {
         return this.props.achievements;
     }
+    get achievements() {
+        return this.props.achievements;
+    }
     get blockedUsers() {
         // Implement blocked users logic - for now return empty array
         return [];
@@ -176,7 +179,7 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
         };
         const profile = new Profile(profileProps, id);
         // Fire domain event
-        profile.addDomainEvent(new profile_created_event_1.ProfileCreatedEvent(profile.id, props.email.value, props.handle.value));
+        profile.addDomainEvent(new profile_created_event_1.ProfileCreatedEvent(profile.id, props.handle.value, props.email.value, profileProps.campusId.value));
         return Result_1.Result.ok(profile);
     }
     updatePersonalInfo(info) {
@@ -204,7 +207,7 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
             return Result_1.Result.fail('Interest already exists');
         }
         if (this.props.socialInfo.interests.length >= 10) {
-            return Result_1.Result.fail('Maximum of 10 interests allowed');
+            return Result_1.Result.fail('maximum of 10 interests allowed');
         }
         this.props.socialInfo.interests.push(interest);
         this.props.updatedAt = new Date();
@@ -217,11 +220,13 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
     addConnection(connectionId) {
         if (!this.props.connections.includes(connectionId)) {
             this.props.connections.push(connectionId);
+            this.props.connectionCount = this.props.connections.length;
             this.props.updatedAt = new Date();
         }
     }
     removeConnection(connectionId) {
         this.props.connections = this.props.connections.filter(id => id !== connectionId);
+        this.props.connectionCount = this.props.connections.length;
         this.props.updatedAt = new Date();
     }
     joinSpace(spaceId) {
@@ -248,29 +253,29 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
         this.props.updatedAt = new Date();
         return Result_1.Result.ok();
     }
-    completeOnboarding(personalInfo, interests) {
+    completeOnboarding(academicInfo, interests, selectedSpaces) {
+        // Check if already onboarded FIRST (for proper error messaging)
         if (this.props.isOnboarded) {
             return Result_1.Result.fail('Profile is already onboarded');
         }
-        // Update personal info if provided
-        if (personalInfo) {
-            this.props.personalInfo = { ...this.props.personalInfo, ...personalInfo };
+        // Validate required fields
+        if (!academicInfo) {
+            return Result_1.Result.fail('Academic information is required for students');
         }
-        // Update interests if provided
-        if (interests) {
+        // Update academic info
+        this.props.academicInfo = academicInfo;
+        // Update interests if provided and non-empty
+        if (interests && interests.length > 0) {
             this.props.socialInfo.interests = interests;
         }
-        // Validate required fields
-        if (!this.props.personalInfo.firstName || !this.props.personalInfo.lastName) {
-            return Result_1.Result.fail('First and last name are required for onboarding');
-        }
-        if (this.props.userType.isStudent() && !this.props.academicInfo) {
-            return Result_1.Result.fail('Academic information is required for students');
+        // Add spaces if provided and non-empty
+        if (selectedSpaces && selectedSpaces.length > 0) {
+            selectedSpaces.forEach(spaceId => this.joinSpace(spaceId));
         }
         this.props.isOnboarded = true;
         this.props.updatedAt = new Date();
         // Fire domain event
-        this.addDomainEvent(new profile_onboarded_event_1.ProfileOnboardedEvent(this.id));
+        this.addDomainEvent(new profile_onboarded_event_1.ProfileOnboardedEvent(this.id, this.props.campusId.value, this.props.socialInfo.interests));
         return Result_1.Result.ok();
     }
     verify() {
@@ -301,6 +306,9 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
         // Social info minimum
         if (socialInfo.interests.length === 0)
             return false;
+        // Must be in at least one space
+        if (this.props.spaces.length === 0)
+            return false;
         return true;
     }
     getCompletionPercentage() {
@@ -326,10 +334,16 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
             if (this.props.academicInfo?.courses.length)
                 completed++;
         }
-        // Social Info (30%)
+        // Social Info (30%) - Granular calculation with progressive scoring
         total += 3;
-        if (this.props.socialInfo.interests.length > 0)
+        // Interests: 0 = 0, 1 = 0.33, 2 = 0.66, 3+ = 1.0
+        const interestCount = this.props.socialInfo.interests.length;
+        if (interestCount >= 3) {
             completed++;
+        }
+        else {
+            completed += interestCount / 3;
+        }
         if (this.props.socialInfo.clubs.length > 0)
             completed++;
         if (this.props.socialInfo.instagram || this.props.socialInfo.snapchat)
@@ -341,54 +355,62 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
      */
     getOnboardingNextSteps(suggestedSpaces) {
         const steps = [];
-        // Priority 1: Profile photo
-        if (!this.props.personalInfo.profilePhoto) {
-            steps.push({
-                action: 'add_profile_photo',
-                description: 'Add a profile photo to help others recognize you',
-                priority: 1
-            });
-        }
-        // Priority 2: Interests
-        if (this.props.socialInfo.interests.length < 3) {
-            steps.push({
-                action: 'add_interests',
-                description: 'Add more interests to get better space recommendations',
-                priority: 2
-            });
-        }
-        // Priority 3: Join spaces
+        // Complete onboarding step
+        steps.push({
+            title: 'Complete onboarding',
+            description: 'Finish setting up your profile with academic info, interests, and join spaces',
+            completed: this.props.isOnboarded
+        });
+        // Profile photo step
+        steps.push({
+            title: 'Add profile photo',
+            description: 'Add a profile photo to help others recognize you',
+            completed: !!this.props.personalInfo.profilePhoto
+        });
+        // Interests step
+        steps.push({
+            title: 'Add interests',
+            description: 'Add interests to get better space recommendations',
+            completed: this.props.socialInfo.interests.length >= 3
+        });
+        // Join spaces step
         if (suggestedSpaces.length > 0) {
             steps.push({
-                action: 'join_spaces',
+                title: 'Join spaces',
                 description: `Join spaces like "${suggestedSpaces[0].name}" to connect with others`,
-                priority: 3
+                completed: this.props.spaces.length > 0
             });
         }
-        // Priority 4: Explore feed
+        // Explore feed step
         steps.push({
-            action: 'explore_feed',
+            title: 'Explore feed',
             description: 'Check out your personalized feed to see what\'s happening on campus',
-            priority: 4
+            completed: false // Always show as incomplete for exploration
         });
-        // Priority 5: Connect with others
+        // Connect with others step
         steps.push({
-            action: 'connect_with_others',
+            title: 'Connect with others',
             description: 'Find and connect with classmates in your major',
-            priority: 5
+            completed: this.props.connections.length > 0
         });
-        return steps.sort((a, b) => a.priority - b.priority);
+        return steps;
     }
     getOnboardingWarnings() {
         const warnings = [];
         if (!this.props.personalInfo.bio) {
             warnings.push('Adding a bio helps others learn more about you');
         }
-        if (!this.props.personalInfo.major && !this.props.academicInfo?.major) {
-            warnings.push('Adding your major helps you find relevant study groups');
+        if (!this.props.academicInfo) {
+            warnings.push('Adding academic information helps you find relevant study groups');
         }
         if (this.props.socialInfo.interests.length === 0) {
             warnings.push('Adding interests improves your feed and space recommendations');
+        }
+        if (this.props.spaces.length === 0) {
+            warnings.push('Joining at least one space helps you connect with others');
+        }
+        if (!this.props.personalInfo.profilePhoto) {
+            warnings.push('Adding a profile photo helps others recognize you');
         }
         return warnings;
     }
@@ -416,12 +438,13 @@ class Profile extends AggregateRoot_base_1.AggregateRoot {
         if (this.props.spaces.length > 0)
             completedSteps.push('first_space_joined');
         const remainingSteps = requiredSteps.filter(step => !completedSteps.includes(step));
-        const percentComplete = Math.round((completedSteps.length / requiredSteps.length) * 100);
         return {
             isComplete: this.props.isOnboarded,
             completedSteps,
             remainingSteps,
-            percentComplete
+            completionPercentage: this.getCompletionPercentage(),
+            nextSteps: this.getOnboardingNextSteps([]),
+            warnings: this.getOnboardingWarnings()
         };
     }
     toData() {
