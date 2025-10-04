@@ -272,7 +272,7 @@ export function PostCard({
                     </span>
                   )}
                 </div>
-                <Button variant="secondary" size="sm">
+                <Button variant="outline" size="sm">
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
@@ -381,7 +381,7 @@ export function PostCard({
           >
             {post.event.isAttending ? 'Attending' : 'Attend'}
           </Button>
-          <Button variant="secondary" size="sm">
+          <Button variant="outline" size="sm">
             <Calendar className="h-4 w-4 mr-2" />
             Add to Calendar
           </Button>
@@ -525,7 +525,7 @@ export function PostCard({
           
           <div className="flex items-center space-x-2">
             {post.isPinned && <Pin className="h-4 w-4 text-[var(--hive-brand-primary)]" />}
-            <Button variant="secondary" size="sm">
+            <Button variant="outline" size="sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
@@ -638,7 +638,7 @@ export function PostCard({
                 
                 <div className="flex items-center space-x-2">
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => {
                       setIsCommenting(false);

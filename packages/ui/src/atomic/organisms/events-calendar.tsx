@@ -3,13 +3,18 @@
 import * as React from "react"
 import { Calendar } from "../atoms/calendar"
 import { Badge } from "../atoms/badge"
-import { Avatar, AvatarGroup } from "../atoms/avatar"
+import { Avatar, AvatarGroup, AvatarImage, AvatarFallback } from "../atoms/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card"
 import { Button } from "../atoms/button"
 import { ScrollArea } from "../atoms/scroll-area"
 import { cn } from "../../lib/utils"
 import { Clock, MapPin, Users, ChevronRight } from "lucide-react"
-import type { EventCampusContext } from "../molecules/feed-event-card"
+// Campus context type
+export interface EventCampusContext {
+  friendsGoing?: Array<{ id: string; name: string; avatar: string }>
+  popularityRank?: number
+  proximityToUser?: string
+}
 
 /**
  * Calendar event with campus context
@@ -289,7 +294,7 @@ function CalendarEventPreview({ event, onClick, onRsvp }: CalendarEventPreviewPr
         </div>
 
         {event.category && (
-          <Badge variant="outline" className="text-[9px] h-5 shrink-0">
+          <Badge variant="freshman" className="text-[9px] h-5 shrink-0">
             {event.category}
           </Badge>
         )}
@@ -311,10 +316,16 @@ function CalendarEventPreview({ event, onClick, onRsvp }: CalendarEventPreviewPr
       {event.campusContext?.friendsGoing && event.campusContext.friendsGoing.length > 0 && (
         <div className="flex items-center gap-2 py-1.5 px-2 bg-primary/5 border border-primary/20 rounded text-xs mb-2">
           <AvatarGroup
-            size="xs"
+            size="sm"
             max={2}
-            avatars={event.campusContext.friendsGoing.map(f => ({ src: f.avatar, alt: f.name }))}
-          />
+          >
+            {event.campusContext.friendsGoing.map(f => (
+              <Avatar key={f.id}>
+                <AvatarImage src={f.avatar} alt={f.name} />
+                <AvatarFallback>{f.name[0]}</AvatarFallback>
+              </Avatar>
+            ))}
+          </AvatarGroup>
           <span className="font-medium text-foreground">
             {event.campusContext.friendsGoing.length === 1
               ? event.campusContext.friendsGoing[0].name
@@ -333,12 +344,12 @@ function CalendarEventPreview({ event, onClick, onRsvp }: CalendarEventPreviewPr
 
         {/* RSVP Status */}
         {event.rsvp.status === "going" && (
-          <Badge variant="default" className="h-5 text-[9px] bg-[#FFD700] text-black border-none">
+          <Badge variant="freshman" className="h-5 text-[9px] bg-[#FFD700] text-black border-none">
             You're going ✓
           </Badge>
         )}
         {event.rsvp.status === "interested" && (
-          <Badge variant="secondary" className="h-5 text-[9px]">
+          <Badge variant="sophomore" className="h-5 text-[9px]">
             Interested
           </Badge>
         )}

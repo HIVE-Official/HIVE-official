@@ -655,7 +655,7 @@ export function RitualManagementPanel() {
                     <input
                       type="text"
                       value={newRitual.title}
-                      onChange={(e) => setNewRitual({ ...newRitual, title: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, title: e.target.value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                       placeholder="e.g., Spring Study Marathon"
                     />
@@ -667,7 +667,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.type}
-                      onChange={(e) => setNewRitual({ ...newRitual, type: e.target.value as Ritual['type'] })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, type: e.target.value as Ritual['type'] })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="competition">Competition</option>
@@ -686,7 +686,7 @@ export function RitualManagementPanel() {
                   </label>
                   <textarea
                     value={newRitual.description}
-                    onChange={(e) => setNewRitual({ ...newRitual, description: e.target.value })}
+                    onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, description: e.target.value })}
                     className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     rows={3}
                     placeholder="Describe what students will do and why they should participate..."
@@ -701,7 +701,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.duration}
-                      onChange={(e) => setNewRitual({ ...newRitual, duration: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, duration: e.target.value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="3_days">3 Days</option>
@@ -717,7 +717,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.mechanics?.targetMetric}
-                      onChange={(e) => setNewRitual({
+                      onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
                         mechanics: { ...newRitual.mechanics!, targetMetric: e.target.value }
                       })}
@@ -739,7 +739,7 @@ export function RitualManagementPanel() {
                     <input
                       type="number"
                       value={newRitual.mechanics?.targetValue}
-                      onChange={(e) => setNewRitual({
+                      onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
                         mechanics: { ...newRitual.mechanics!, targetValue: parseInt(e.target.value) }
                       })}
@@ -779,7 +779,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.color}
-                      onChange={(e) => setNewRitual({ ...newRitual, color: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, color: e.target.value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -791,7 +791,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.accentColor}
-                      onChange={(e) => setNewRitual({ ...newRitual, accentColor: e.target.value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, accentColor: e.target.value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -803,7 +803,7 @@ export function RitualManagementPanel() {
                     <input
                       type="checkbox"
                       checked={newRitual.config?.showInFeed}
-                      onChange={(e) => setNewRitual({
+                      onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
                         config: { ...newRitual.config!, showInFeed: e.target.checked }
                       })}
@@ -816,7 +816,7 @@ export function RitualManagementPanel() {
                     <input
                       type="checkbox"
                       checked={newRitual.config?.showLeaderboard}
-                      onChange={(e) => setNewRitual({
+                      onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
                         config: { ...newRitual.config!, showLeaderboard: e.target.checked }
                       })}
@@ -829,7 +829,7 @@ export function RitualManagementPanel() {
                     <input
                       type="checkbox"
                       checked={newRitual.config?.allowLateJoin}
-                      onChange={(e) => setNewRitual({
+                      onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
                         config: { ...newRitual.config!, allowLateJoin: e.target.checked }
                       })}
@@ -842,7 +842,7 @@ export function RitualManagementPanel() {
                 {/* Actions */}
                 <div className="flex justify-end gap-3">
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => {
                       setShowCreateForm(false);
                       resetForm();
@@ -920,7 +920,7 @@ function RitualCard({
                 {ritual.title}
               </h3>
               <StatusBadge status={ritual.status} />
-              <Badge variant="secondary">{ritual.type}</Badge>
+              <Badge variant="sophomore">{ritual.type}</Badge>
             </div>
 
             <p className="text-sm text-hive-text-secondary mb-4">
@@ -987,7 +987,7 @@ function RitualCard({
 
           {ritual.status === 'draft' && (
             <Button
-              variant="primary"
+              variant="default"
               size="sm"
               onClick={() => onLaunch(ritual.id)}
               className="bg-green-500 hover:bg-green-600"
@@ -999,7 +999,7 @@ function RitualCard({
 
           {ritual.status === 'active' && (
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => onPause(ritual.id)}
             >
@@ -1010,7 +1010,7 @@ function RitualCard({
 
           {ritual.status === 'paused' && (
             <Button
-              variant="primary"
+              variant="default"
               size="sm"
               onClick={() => onLaunch(ritual.id)}
               className="bg-green-500 hover:bg-green-600"
@@ -1022,7 +1022,7 @@ function RitualCard({
 
           {(ritual.status === 'active' || ritual.status === 'paused') && (
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => onEnd(ritual.id)}
               className="text-red-400 hover:text-red-500"
@@ -1193,7 +1193,7 @@ function RitualDetailModal({
           {/* Actions */}
           <div className="flex justify-end gap-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={onClose}
             >
               Close

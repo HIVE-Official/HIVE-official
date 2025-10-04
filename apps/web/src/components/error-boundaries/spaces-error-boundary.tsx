@@ -45,7 +45,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
             Retry Spaces
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/feed'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -53,7 +53,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
             Check Feed
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/spaces/create'}
             className="border-hive-border text-hive-text-secondary"
           >

@@ -217,7 +217,7 @@ export function FeedConfigurationPanel() {
             )}
 
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={resetToDefaults}
               disabled={saving}
             >
@@ -317,7 +317,7 @@ export function FeedConfigurationPanel() {
                 min="0"
                 max="100"
                 value={value}
-                onChange={(e) => updateAlgorithm(key as keyof FeedConfiguration['algorithms'], parseInt(e.target.value))}
+                onChange={(e: React.ChangeEvent) => updateAlgorithm(key as keyof FeedConfiguration['algorithms'], parseInt(e.target.value))}
                 className="w-full h-2 bg-hive-background rounded-lg appearance-none cursor-pointer slider"
               />
             </div>
@@ -342,7 +342,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="30"
               value={config.postingRules.minAccountAgeDays}
-              onChange={(e) => updatePostingRule('minAccountAgeDays', parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minAccountAgeDays', parseInt(e.target.value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -356,7 +356,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="10"
               value={config.postingRules.minSpaceMemberships}
-              onChange={(e) => updatePostingRule('minSpaceMemberships', parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minSpaceMemberships', parseInt(e.target.value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -370,7 +370,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="100"
               value={config.postingRules.minEngagementScore}
-              onChange={(e) => updatePostingRule('minEngagementScore', parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minEngagementScore', parseInt(e.target.value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -384,7 +384,7 @@ export function FeedConfigurationPanel() {
               min="1"
               max="50"
               value={config.postingRules.dailyPostLimit}
-              onChange={(e) => updatePostingRule('dailyPostLimit', parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('dailyPostLimit', parseInt(e.target.value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -395,7 +395,7 @@ export function FeedConfigurationPanel() {
             <input
               type="checkbox"
               checked={config.postingRules.requireProfileComplete}
-              onChange={(e) => updatePostingRule('requireProfileComplete', e.target.checked)}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('requireProfileComplete', e.target.checked)}
               className="w-4 h-4 rounded"
             />
             <span className="text-sm text-hive-text-primary">Require complete profile</span>
@@ -405,7 +405,7 @@ export function FeedConfigurationPanel() {
             <input
               type="checkbox"
               checked={config.postingRules.specialEventOverride}
-              onChange={(e) => updatePostingRule('specialEventOverride', e.target.checked)}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('specialEventOverride', e.target.checked)}
               className="w-4 h-4 rounded"
             />
             <span className="text-sm text-hive-text-primary">Allow ritual override of posting rules</span>

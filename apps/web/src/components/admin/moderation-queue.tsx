@@ -256,7 +256,7 @@ export function ModerationQueue() {
 
         <Button
           onClick={fetchModerationQueue}
-          variant="secondary"
+          variant="outline"
           size="sm"
           disabled={isLoading}
         >
@@ -474,7 +474,7 @@ export function ModerationQueue() {
                   {/* Actions */}
                   <div className="flex items-center space-x-2 ml-4">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
                       onClick={() => {
                         setSelectedReport(report);
@@ -616,7 +616,7 @@ export function ModerationQueue() {
 
             <div className="flex justify-end space-x-3 pt-4">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() =>
                   setActionDialog({ isOpen: false, report: null, action: "" })
                 }

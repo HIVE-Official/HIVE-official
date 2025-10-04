@@ -271,7 +271,7 @@ export default function SettingsPage() {
               <h4 className="text-white text-sm font-medium mb-4">Data Management</h4>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   onClick={handleDownloadData}
                   disabled={isDownloading}
                   className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] disabled:opacity-50"
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                   {isDownloading ? 'Downloading...' : 'Download My Data'}
                 </Button>
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   onClick={() => setShowDeleteConfirm(true)}
                   className="border-red-500/20 text-red-400 hover:bg-red-500/10"
                 >
@@ -299,7 +299,7 @@ export default function SettingsPage() {
                 <p className="text-[#A1A1AA] text-sm">Sign out of your HIVE account on this device</p>
               </div>
               <Button 
-                variant="secondary" 
+                variant="outline" 
                 className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 onClick={logout}
               >
@@ -338,7 +338,7 @@ export default function SettingsPage() {
               
               <div className="flex gap-3 pt-4">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => setShowDeleteConfirm(false)}
                   className="flex-1 border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 >

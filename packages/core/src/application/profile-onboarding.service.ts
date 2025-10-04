@@ -97,7 +97,14 @@ export class ProfileOnboardingService extends BaseApplicationService {
         id: space.id.id,
         name: space.name.name
       }));
-      const nextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
+      const domainNextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
+
+      // Map domain next steps to expected format
+      const nextSteps = domainNextSteps.map((step: any, index: number) => ({
+        action: step.title || step.action,
+        description: step.description,
+        priority: index + 1
+      }));
 
       const result: ServiceResult<OnboardingResult> = {
         data: {
@@ -140,12 +147,16 @@ export class ProfileOnboardingService extends BaseApplicationService {
       // Check if onboarding is complete (using domain logic)
       const onboardingStatus = profile.getOnboardingStatus();
       if (onboardingStatus.isComplete && !profile.isOnboarded) {
-        const completeResult = profile.completeOnboarding(
-          profile.personalInfo,
-          profile.interests
-        );
-        if (completeResult.isSuccess) {
-          await this.profileRepo.save(profile);
+        // Note: completeOnboarding expects AcademicInfo, need to access academicInfo properly
+        if (profile.academicInfo) {
+          const completeResult = profile.completeOnboarding(
+            profile.academicInfo,
+            profile.interests,
+            [] // selectedSpaces - empty for now
+          );
+          if (completeResult.isSuccess) {
+            await this.profileRepo.save(profile);
+          }
         }
       }
 
@@ -300,7 +311,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
 
     // Deduplicate
     const uniqueSpaces = Array.from(
-      new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values()
+      new Map(suggestions.map(space => [(space as any).id?.id || (space as any).spaceId?.value, space])).values()
     );
 
     return Result.ok(uniqueSpaces);

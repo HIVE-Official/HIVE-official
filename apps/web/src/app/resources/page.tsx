@@ -280,7 +280,7 @@ export default function ResourcesPage() {
               Join Discord
             </Button>
             <Button 
-              variant="secondary" 
+              variant="outline" 
               className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
               onClick={() => window.open('https://calendly.com/hive-university/office-hours', '_blank')}
             >

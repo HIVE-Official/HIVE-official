@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, HiveCard, Badge, HiveInput, Alert } from "@hive/ui";
+import { Dialog, Button, Card, Badge, Input, Alert } from "@hive/ui";
 import { 
   ArrowRight, 
   ArrowLeft,
@@ -253,7 +253,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 const isSelected = spaceData.type === type;
                 
                 return (
-                  <HiveCard
+                  <Card
                     key={type}
                     className={`p-4 cursor-pointer transition-all duration-200 ${
                       isSelected 
@@ -284,7 +284,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                       </div>
                     </div>
-                  </HiveCard>
+                  </Card>
                 );
               })}
             </div>
@@ -312,7 +312,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
-                <HiveInput
+                <Input
                   value={spaceData.name}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: e.target.value })}
                   placeholder="Enter a clear, descriptive name..."
@@ -408,7 +408,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.visibility === option.value;
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -425,7 +425,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -459,7 +459,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.joinProcess === option.value;
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -476,7 +476,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -613,7 +613,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.tools.includes(toolId);
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={toolId}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -630,7 +630,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -646,7 +646,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     const isSelected = spaceData.tools.includes(toolId);
                     
                     return (
-                      <HiveCard
+                      <Card
                         key={toolId}
                         className={`p-4 cursor-pointer transition-all duration-200 ${
                           isSelected 
@@ -663,7 +663,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                           </div>
                           {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                         </div>
-                      </HiveCard>
+                      </Card>
                     );
                   })}
               </div>
@@ -734,7 +734,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             <div className="space-y-4">
               {/* Basic Info */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-3">Basic Information</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -754,16 +754,16 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     <span className="text-white capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
                   </div>
                 </div>
-              </HiveCard>
+              </Card>
 
               {/* Description */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-2">Description</h4>
                 <p className="text-zinc-300 text-sm leading-relaxed">{spaceData.description}</p>
-              </HiveCard>
+              </Card>
 
               {/* Guidelines */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-3">Community Guidelines ({spaceData.rules.length})</h4>
                 <div className="space-y-2">
                   {spaceData.rules.map((rule, index) => (
@@ -773,11 +773,11 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     </div>
                   ))}
                 </div>
-              </HiveCard>
+              </Card>
 
               {/* Tools */}
               {spaceData.tools.length > 0 && (
-                <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+                <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                   <h4 className="font-medium text-white mb-3">Enabled Tools ({spaceData.tools.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {spaceData.tools.map((toolId) => (
@@ -787,7 +787,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       </Badge>
                     ))}
                   </div>
-                </HiveCard>
+                </Card>
               )}
             </div>
           </div>
@@ -799,7 +799,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
   };
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={handleClose}
      
@@ -848,7 +848,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           )}
           <div className="flex items-center justify-between">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={currentStepIndex === 0 ? handleClose : prevStep}
               className="flex items-center space-x-2"
               disabled={isLoading}
@@ -877,6 +877,6 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

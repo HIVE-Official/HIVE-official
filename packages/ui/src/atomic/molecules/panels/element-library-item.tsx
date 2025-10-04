@@ -23,6 +23,12 @@ export interface ElementLibraryItemProps {
   onDragEnd?: (e: React.DragEvent) => void;
   /** Click handler */
   onClick?: (element: ElementDefinition) => void;
+  /** Select handler (alternative to onClick) */
+  onSelect?: (element: ElementDefinition) => void;
+  /** Toggle favorite handler */
+  onToggleFavorite?: (elementId: string) => void;
+  /** Show compact version */
+  compact?: boolean;
   /** Additional class names */
   className?: string;
 }
@@ -100,14 +106,14 @@ export function ElementLibraryItem({
 
       {/* Port count indicator */}
       <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
-        {element.inputs.length > 0 && (
-          <span title={`${element.inputs.length} input${element.inputs.length === 1 ? '' : 's'}`}>
-            ⬅️ {element.inputs.length}
+        {element.defaultInputs.length > 0 && (
+          <span title={`${element.defaultInputs.length} input${element.defaultInputs.length === 1 ? '' : 's'}`}>
+            ⬅️ {element.defaultInputs.length}
           </span>
         )}
-        {element.outputs.length > 0 && (
-          <span title={`${element.outputs.length} output${element.outputs.length === 1 ? '' : 's'}`}>
-            {element.outputs.length} ➡️
+        {element.defaultOutputs.length > 0 && (
+          <span title={`${element.defaultOutputs.length} output${element.defaultOutputs.length === 1 ? '' : 's'}`}>
+            {element.defaultOutputs.length} ➡️
           </span>
         )}
       </div>

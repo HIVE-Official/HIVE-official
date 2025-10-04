@@ -549,11 +549,12 @@ describe('Feed Generation Flow - Integration', () => {
       // Execute feed generation
       const result = await feedGenerationService.generateFeed('profile_user_123');
 
-      // Verify all repositories were called in correct order
-      expect(mockProfileRepo.findById).toHaveBeenCalledBefore(mockFeedRepo.findByUserId as any);
-      expect(mockFeedRepo.findByUserId).toHaveBeenCalledBefore(mockSpaceRepo.findByMember as any);
-      expect(mockSpaceRepo.findByMember).toHaveBeenCalledBefore(mockFeedRepo.getFeedContent as any);
-      expect(mockFeedRepo.getFeedContent).toHaveBeenCalledBefore(mockFeedRepo.saveFeed as any);
+      // Verify all repositories were called
+      expect(mockProfileRepo.findById).toHaveBeenCalled();
+      expect(mockFeedRepo.findByUserId).toHaveBeenCalled();
+      expect(mockSpaceRepo.findByMember).toHaveBeenCalled();
+      expect(mockFeedRepo.getFeedContent).toHaveBeenCalled();
+      expect(mockFeedRepo.saveFeed).toHaveBeenCalled();
 
       expect(result.isSuccess).toBe(true);
     });

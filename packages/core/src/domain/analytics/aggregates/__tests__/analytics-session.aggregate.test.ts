@@ -61,7 +61,7 @@ vi.useFakeTimers();
 
 describe('AnalyticsSession Aggregate', () => {
   let session: AnalyticsSession;
-  let mockFlushCallback: vi.Mock;
+  let mockFlushCallback: ReturnType<typeof vi.fn>;
 
   // Test data factories
   const createValidCreationEvent = (): CreationAnalyticsEvent => ({
@@ -205,7 +205,7 @@ describe('AnalyticsSession Aggregate', () => {
 
       const events = session.getEvents();
       expect(events).toHaveLength(1);
-      expect(events[0].eventType).toBe('post_created');
+      expect((events[0] as CreationAnalyticsEvent).eventType).toBe('post_created');
     });
 
     it('should add onboarding event to session', () => {

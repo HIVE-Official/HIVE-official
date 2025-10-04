@@ -15,8 +15,8 @@ import {
   X
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Tabs,
   TabsList,
@@ -365,46 +365,46 @@ export function UnifiedSpaceInterface({
 
               {/* Action Buttons */}
               <div className="flex items-center gap-3">
-                <HiveButton
+                <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setContextPanelVisible(!contextPanelVisible)}
                   className="lg:hidden border-gray-700 text-gray-300"
                 >
                   <Menu className="w-4 h-4" />
-                </HiveButton>
+                </Button>
 
                 {userPermissions.role !== 'guest' && (
                   <>
-                    <HiveButton
+                    <Button
                       variant="outline"
                       size="sm"
                       className="border-gray-700 text-gray-300 hover:text-white"
                     >
                       <Bell className="w-4 h-4" />
-                    </HiveButton>
+                    </Button>
 
                     {hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'space:settings') && (
-                      <HiveButton
+                      <Button
                         variant="outline"
                         size="sm"
                         className="border-gray-700 text-gray-300 hover:text-white"
                       >
                         <Settings className="w-4 h-4 mr-2" />
                         Settings
-                      </HiveButton>
+                      </Button>
                     )}
                   </>
                 )}
 
-                <HiveButton
+                <Button
                   variant="outline"
                   size="sm"
                   className="border-gray-700 text-gray-300 hover:text-white"
                 >
                   <Share className="w-4 h-4 mr-2" />
                   Share
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -458,17 +458,17 @@ export function UnifiedSpaceInterface({
 
               {/* Tab Content */}
               <TabsContent value="posts">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-0 overflow-hidden">
+                <Card className="bg-gray-900/50 border-gray-800 p-0 overflow-hidden">
                   <SpacePostFeed
                     spaceId={spaceId}
                     canPost={hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'posts:create')}
                     spaceRules={spaceRules}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               <TabsContent value="members">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                <Card className="bg-gray-900/50 border-gray-800 p-6">
                   <SpaceMemberList
                     spaceId={spaceId}
                     userMembership={spaceData.userMembership}
@@ -476,23 +476,23 @@ export function UnifiedSpaceInterface({
                     spaceRules={spaceRules}
                     onClose={() => {}}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               <TabsContent value="events">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                <Card className="bg-gray-900/50 border-gray-800 p-6">
                   <SpaceEventCalendar
                     spaceId={spaceId}
                     canCreateEvents={hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'events:create')}
                     spaceRules={spaceRules}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               {/* Tool Tab Contents */}
               {inlineTools.map(tool => (
                 <TabsContent key={tool.id} value={`tool-${tool.id}`}>
-                  <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                  <Card className="bg-gray-900/50 border-gray-800 p-6">
                     <SpaceToolRenderer
                       tool={tool}
                       spaceId={spaceId}
@@ -500,7 +500,7 @@ export function UnifiedSpaceInterface({
                       spaceRules={spaceRules}
                       position="inline"
                     />
-                  </HiveCard>
+                  </Card>
                 </TabsContent>
               ))}
             </Tabs>
@@ -531,13 +531,13 @@ export function UnifiedSpaceInterface({
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white">Space Info</h3>
-                  <HiveButton
+                  <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setContextPanelVisible(false)}
                   >
                     <X className="w-4 h-4" />
-                  </HiveButton>
+                  </Button>
                 </div>
                 <SpaceContextPanel
                   space={space}

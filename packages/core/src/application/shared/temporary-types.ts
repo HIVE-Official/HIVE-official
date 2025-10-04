@@ -21,7 +21,8 @@ export { Connection } from '../../domain/profile/aggregates/connection';
 
 // Re-export entities and types
 export { FeedItem } from '../../domain/feed/feed-item';
-export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
+// export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate'; // These types don't exist - use RitualGoal and RitualReward instead
+export type { RitualReward as Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
 
 // Profile utility functions
 export function getProfileCompleteness(profile: any): number {

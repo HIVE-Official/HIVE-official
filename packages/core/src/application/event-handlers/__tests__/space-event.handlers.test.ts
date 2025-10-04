@@ -131,7 +131,7 @@ describe('Space Event Handlers', () => {
         const event = new MemberJoinedEvent(
           'space_123',
           `profile_${role}`,
-          role,
+          role as 'admin' | 'moderator' | 'member',
           1
         );
 

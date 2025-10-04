@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { HiveButton as BaseButton } from '@hive/ui';
+import { Button as BaseButton } from '@hive/ui';
 import { cn } from '../../lib/utils';
 
 interface TouchSafeButtonProps extends React.ComponentPropsWithoutRef<typeof BaseButton> {

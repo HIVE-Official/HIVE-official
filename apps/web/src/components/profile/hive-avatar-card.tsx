@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveCard } from "@hive/ui";
+import { Card } from "@hive/ui";
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -47,7 +47,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
           transition: { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
         }}
       >
-        <HiveCard
+        <Card
           className="h-full p-0 bg-hive-background-tertiary border border-hive-border-default hover:border-hive-border-hover focus:border-hive-brand-primary overflow-hidden cursor-pointer group relative font-sans hover:shadow-hive-level3 hover:shadow-hive-gold-glow"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -253,7 +253,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
             <div className="w-12 h-1 bg-hive-overlay-white rounded-full" />
           </div>
         </div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </div>
   );

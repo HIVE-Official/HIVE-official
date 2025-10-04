@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
-import { HiveButton } from "@hive/ui";
+import { Button } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);
@@ -191,7 +191,7 @@ export function FeedbackToast() {
                       Maybe later
                     </button>
                     
-                    <HiveButton
+                    <Button
                       onClick={handleSubmit}
                       disabled={!feedback.trim() || isSubmitting}
                       variant="default"
@@ -203,7 +203,7 @@ export function FeedbackToast() {
                       )}
                     >
                       {isSubmitting ? "Sending..." : "Send"}
-                    </HiveButton>
+                    </Button>
                   </div>
                 </div>
               )}

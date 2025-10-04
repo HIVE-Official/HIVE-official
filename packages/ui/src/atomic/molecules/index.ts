@@ -1,27 +1,16 @@
 export { ActivityTimeline } from './activity-timeline';
 export { CategoryOverviewCard } from './category-overview-card';
 export { CommentCard } from './comment-card';
-export { HiveSpaceCard } from './hive-space-card';
 export { CommentInput } from './comment-input';
-export { CompletionPsychologyEnhancer } from './completion-psychology-enhancer';
 export { ConnectionLayer } from './canvas/connection-layer';
 export { DataMappingRow } from './panels/data-mapping-row';
-export { DiscoverableSpaceCard } from './discoverable-space-card';
 export { ElementCard } from './canvas/element-card';
 export { ElementLibraryItem } from './panels/element-library-item';
-export { JoinedSpaceCard } from './joined-space-card';
-export { CrisisReliefInterface } from './crisis-relief-interface';
-export { FeedCommentThread } from './feed-comment-thread';
-export { FeedComment } from './feed-comment';
 export { FeedFilters } from './feed-filters';
 export { FeedPostCard } from './feed-post-card';
-export { FeedSearchBar } from './feed-search-bar';
 export { FloatingPanel } from './panels/floating-panel';
-export { FormField } from './form-field';
-export { FriendRequestManager } from './friend-request-manager';
-export { HiveAvatarUploadWithCrop } from './hive-avatar-upload-with-crop';
 export { InlineToolMenu } from './inline-tool-menu';
-export type { InlineToolMenuProps, ToolActionType, ToolActionHandler } from './inline-tool-menu';
+export type { InlineToolMenuProps } from './inline-tool-menu';
 export { InlineToolsWidget } from './inline-tools-widget';
 export type { InlineToolsWidgetProps } from './inline-tools-widget';
 export {
@@ -40,41 +29,22 @@ export type {
   ResourceFormData,
   InlineResourceFormProps
 } from './inline-tool-forms';
-export { InterestSelector } from './interest-selector';
 export { InterPageArrow } from './canvas/inter-page-arrow';
-export { NotificationDropdown } from './notification-dropdown';
-export { NotificationItem } from './notification-item';
-export { NotificationToastManager } from './notification-toast-manager';
-export { OnboardingEmailVerification } from './onboarding-email-verification';
-export { OnboardingStepIndicator } from './onboarding-step-indicator';
-export { PageContainer } from './page-container';
 export { PageFrame } from './canvas/page-frame';
 export { PhotoCarousel } from './photo-carousel';
 export { ProfilePhotoCarousel } from './profile-photo-carousel';
 export { ProfileActionBar } from './profile-action-bar';
-export { PrivacyControl } from './privacy-control';
-export { ProfileBioEditor } from './profile-bio-editor';
 // Removed ProfileCard - use UserCard instead
 // Removed ProfileCompletion - use ProgressChecklist from organisms instead
 // Removed ProfileStats - use StatGrid instead
-export { ProfileSocialLinks } from './profile-social-links';
 export { PropertyField } from './panels/property-field';
-export { ProfileStatCard } from './profile-stat-card';
 export { StatGrid } from './stat-grid';
-export { RitualCard } from './ritual-card';
-export { RitualCheckInButton } from './ritual-check-in-button';
-export { RitualProgressTracker } from './ritual-progress-tracker';
 export { RitualProgressRing } from './ritual-progress-ring';
-export { RitualRewardDisplay } from './ritual-reward-display';
 export { RitualsCardStrip } from './rituals-card-strip';
-export { RitualStreakCounter } from './ritual-streak-counter';
 export { SearchBar } from './search-bar';
 export { SelectionBox } from './canvas/selection-box';
-export { SocialProofAccelerator } from './social-proof-accelerator';
 export { SpaceCard } from './space-card';
 export { SpaceComposerWithTools } from './space-composer-with-tools';
-export { SpaceEventCard } from './space-event-card';
-export { SpaceMemberCard } from './space-member-card';
 export { StatCard } from './stat-card';
 export { TemplateCard } from './panels/template-card';
 export { UserCard } from './user-card';

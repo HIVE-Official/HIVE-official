@@ -211,7 +211,7 @@ export function ResultListElement({ config, data }: ElementProps) {
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
@@ -222,7 +222,7 @@ export function ResultListElement({ config, data }: ElementProps) {
               {currentPage} of {totalPages}
             </span>
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}

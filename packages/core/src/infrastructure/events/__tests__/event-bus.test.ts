@@ -123,9 +123,10 @@ describe('EventBus', () => {
     });
 
     it('should handle async handlers', async () => {
-      const asyncHandler = vi.fn(async (event: TestEvent) => {
+      const asyncHandler = vi.fn(async (event: TestEvent): Promise<void> => {
         await new Promise(resolve => setTimeout(resolve, 10));
-        return event.testData;
+        // Process event data without returning
+        void event.testData;
       });
       const event = new TestEvent('test_123', 'async data');
 

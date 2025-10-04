@@ -226,7 +226,7 @@ export function ToolExecutionPanel({
         return (
           <div className="mt-1">
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => handleInputChange(key, !value)}
               className={value ? 'bg-green-500/20 border-green-500' : ''}
@@ -295,14 +295,14 @@ export function ToolExecutionPanel({
             {result && (
               <>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={copyResult}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={exportResult}
                 >
@@ -312,7 +312,7 @@ export function ToolExecutionPanel({
             )}
             {isExecuting ? (
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={handleCancel}
                 className="text-red-400 border-red-400"

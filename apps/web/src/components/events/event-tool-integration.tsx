@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, HiveModal, HiveModalHeader, HiveModalTitle, HiveModalContent } from "@hive/ui";
+import { Button, Card, Badge, Dialog, HiveModalHeader, HiveModalTitle, DialogContent } from "@hive/ui";
 import { 
   Zap, 
   Play, 
@@ -218,7 +218,7 @@ export function EventToolIntegration({
                         Live
                       </Badge>
                       <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
                         onClick={() => onToolLaunch(session.toolId, { sessionId: session.id })}
                       >
@@ -347,7 +347,7 @@ export function EventToolIntegration({
       </div>
 
       {/* Tool Setup Modal */}
-      <HiveModal
+      <Dialog
         open={showSetupModal}
         onOpenChange={() => setShowSetupModal(false)}
         size="lg"
@@ -355,7 +355,7 @@ export function EventToolIntegration({
         <HiveModalHeader>
           <HiveModalTitle>Setup {selectedTool ? getToolDefinition(selectedTool).name : 'Tool'}</HiveModalTitle>
         </HiveModalHeader>
-        <HiveModalContent>
+        <DialogContent>
         {selectedTool && (
           <div className="space-y-6">
             <div className="text-center">
@@ -454,7 +454,7 @@ export function EventToolIntegration({
             </div>
 
             <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
-              <Button variant="secondary" onClick={() => setShowSetupModal(false)}>
+              <Button variant="outline" onClick={() => setShowSetupModal(false)}>
                 Cancel
               </Button>
               <Button 
@@ -466,8 +466,8 @@ export function EventToolIntegration({
             </div>
           </div>
         )}
-        </HiveModalContent>
-      </HiveModal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

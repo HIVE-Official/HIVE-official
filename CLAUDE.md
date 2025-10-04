@@ -99,8 +99,7 @@ pnpm indexes:validate
 ## 🏗️ Architecture Overview
 
 ### Monorepo Structure (Turborepo + pnpm)
-- **apps/web**: Main Next.js 15.3.3 application (port 3000)
-- **apps/admin**: Admin dashboard (port 3001)
+- **apps/web**: Main Next.js 15.3.3 application (port 3000) - includes admin dashboard at `/admin`
 - **packages/ui**: @hive/ui - Atomic design system (70+ components)
 - **packages/core**: @hive/core - Business logic, domain models, DDD architecture
 - **packages/firebase**: @hive/firebase - Firebase integration layer
@@ -126,8 +125,7 @@ pnpm indexes:validate
 7. @hive/ui             # UI components (depends on tokens, hooks)
 8. @hive/api-client     # API client (depends on core)
 9. @hive/analytics      # Analytics (depends on core)
-10. apps/web            # Main app (depends on all)
-11. apps/admin          # Admin dashboard
+10. apps/web            # Main app (depends on all) - includes admin at /admin
 ```
 
 **Key Dependency Rules:**

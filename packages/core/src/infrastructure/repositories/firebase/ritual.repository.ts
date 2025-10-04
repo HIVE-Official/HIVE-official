@@ -90,7 +90,7 @@ export class FirebaseRitualRepository implements IRitualRepository {
         const result = await this.toDomain(doc.id, doc.data());
         if (result.isSuccess) {
           const ritual = result.getValue();
-          if (ritual.isActive) {
+          if (ritual.isActive()) {
             rituals.push(ritual);
           }
         }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert, AlertDescription } from "@hive/ui";
+import { Dialog, DialogContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert, AlertDescription } from "@hive/ui";
 import { 
   Link, 
   Shield, 
@@ -123,8 +123,8 @@ export function IntegrationConnectionModal({
 
   if (connectionStep === 'connecting') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose}>
-        <HiveModalContent className="max-w-md">
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-[var(--hive-brand-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Loader2 className="h-8 w-8 text-[var(--hive-brand-primary)] animate-spin" />
@@ -137,15 +137,15 @@ export function IntegrationConnectionModal({
             </p>
             <Progress value={75} className="h-2" />
           </div>
-        </HiveModalContent>
-      </HiveModal>
+        </DialogContent>
+      </Dialog>
     );
   }
 
   if (connectionStep === 'success') {
     return (
-      <HiveModal open={isOpen} onOpenChange={onClose}>
-        <HiveModalContent className="max-w-md">
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-md">
           <div className="p-8 text-center">
             <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-green-400" />
@@ -157,14 +157,14 @@ export function IntegrationConnectionModal({
               {integration.name} has been connected to your HIVE profile
             </p>
           </div>
-        </HiveModalContent>
-      </HiveModal>
+        </DialogContent>
+      </Dialog>
     );
   }
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose}>
-      <HiveModalContent className="max-w-2xl">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl">
         <HiveModalHeader>
           <HiveModalTitle className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -293,7 +293,7 @@ export function IntegrationConnectionModal({
             <div>
               {integration.isConnected && onDisconnect && (
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={handleDisconnect}
                   disabled={isConnecting}
                   className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -305,7 +305,7 @@ export function IntegrationConnectionModal({
             </div>
             <div className="flex items-center space-x-3">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={onClose}
                 disabled={isConnecting}
               >
@@ -322,7 +322,7 @@ export function IntegrationConnectionModal({
                 </Button>
               ) : (
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => window.open(`/settings/integrations/${integration.id}`, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
@@ -332,7 +332,7 @@ export function IntegrationConnectionModal({
             </div>
           </div>
         </HiveModalFooter>
-      </HiveModalContent>
-    </HiveModal>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -21,11 +21,11 @@ import {
   Hash
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Avatar,
   Badge,
-  HiveInput
+  Input
 } from '@hive/ui';
 import type { User } from '@hive/core';
 import { useRealtimePosts } from '@/hooks/use-realtime-posts';
@@ -273,7 +273,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                 <textarea
                   ref={textareaRef}
                   value={newPostContent}
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent) => {
                     setNewPostContent(e.target.value);
                     adjustTextareaHeight();
                   }}
@@ -304,7 +304,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                   </button>
                 </div>
 
-                <HiveButton
+                <Button
                   onClick={handleCreatePost}
                   disabled={!newPostContent.trim() || posting}
                   className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 disabled:opacity-50"
@@ -315,7 +315,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                   ) : (
                     <Send className="w-4 h-4" />
                   )}
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>

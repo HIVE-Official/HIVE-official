@@ -130,7 +130,7 @@ const HiveLabTemplateBrowser = React.forwardRef<HTMLDivElement, HiveLabTemplateB
                 60-second deploy · Fork and customize
               </p>
             </div>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="freshman" className="text-xs">
               {filteredTemplates.length} templates
             </Badge>
           </div>
@@ -141,7 +141,7 @@ const HiveLabTemplateBrowser = React.forwardRef<HTMLDivElement, HiveLabTemplateB
             <Input
               placeholder="Search templates or problems..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setSearch(e.target.value)}
               className="pl-9 h-10"
             />
           </div>
@@ -341,13 +341,13 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             </div>
           </div>
           {template.isTrending && (
-            <Badge variant="default" className="h-5 px-1.5 text-[9px]">
+            <Badge variant="freshman" className="h-5 px-1.5 text-[9px]">
               <TrendingUp className="h-3 w-3 mr-0.5" />
               HOT
             </Badge>
           )}
           {template.isNew && (
-            <Badge variant="default" className="h-5 px-1.5 text-[9px]">
+            <Badge variant="freshman" className="h-5 px-1.5 text-[9px]">
               <Sparkles className="h-3 w-3 mr-0.5" />
               NEW
             </Badge>
@@ -386,11 +386,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
           {template.tags.slice(0, 3).map((tag, idx) => (
-            <Badge key={idx} variant="secondary" className="h-5 px-1.5 text-[9px]">
+            <Badge key={idx} variant="sophomore" className="h-5 px-1.5 text-[9px]">
               {tag}
             </Badge>
           ))}
-          <Badge variant="outline" className="h-5 px-1.5 text-[9px]">
+          <Badge variant="freshman" className="h-5 px-1.5 text-[9px]">
             {template.elementCount} elements
           </Badge>
         </div>
@@ -400,7 +400,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           <Button
             size="sm"
             className="flex-1 h-7 text-xs"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               onDeploy?.(template.id)
             }}
@@ -411,7 +411,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             size="sm"
             variant="outline"
             className="h-7 px-2"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               onFork?.(template.id)
             }}

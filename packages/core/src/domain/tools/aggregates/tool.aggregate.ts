@@ -96,7 +96,7 @@ export interface ToolProps {
 export class Tool extends AggregateRoot<ToolProps> {
 
   private constructor(props: ToolProps, id?: string) {
-    super(props, id);
+    super(props, id || props.toolId.value);
   }
 
   // Getters

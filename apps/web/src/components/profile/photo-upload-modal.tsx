@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Button, Progress } from "@hive/ui";
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert } from "@hive/ui";
+import { Dialog, DialogContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert } from "@hive/ui";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload,
@@ -114,8 +114,8 @@ export function PhotoUploadModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={handleClose}>
-      <HiveModalContent className="max-w-2xl">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-2xl">
         <HiveModalHeader>
           <HiveModalTitle className="flex items-center space-x-2 font-sans">
             <Camera className="h-5 w-5 text-hive-brand-primary" />
@@ -189,7 +189,7 @@ export function PhotoUploadModal({
                   </div>
                   <div className="flex items-center justify-center space-x-4">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
                       className="font-sans"
                       onClick={(e: React.MouseEvent) => {
@@ -277,7 +277,7 @@ export function PhotoUploadModal({
 
         <HiveModalFooter>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={handleClose}
             disabled={isUploading}
             className="font-sans"
@@ -323,7 +323,7 @@ export function PhotoUploadModal({
             </AnimatePresence>
           </Button>
         </HiveModalFooter>
-      </HiveModalContent>
-    </HiveModal>
+      </DialogContent>
+    </Dialog>
   );
 }

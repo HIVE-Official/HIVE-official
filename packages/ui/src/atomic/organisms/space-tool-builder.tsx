@@ -61,8 +61,7 @@ function SpaceToolBuilderInternal({
   onExit,
   className,
 }: Omit<SpaceToolBuilderProps, 'initialTool'>) {
-  const state = useHiveLab();
-  const actions = useHiveLabActions();
+  const { state, actions } = useHiveLab();
 
   const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);
   const [propertiesCollapsed, setPropertiesCollapsed] = React.useState(false);
@@ -180,7 +179,7 @@ function SpaceToolBuilderInternal({
           )}
         </div>
         <div className="flex items-center gap-2">
-          {state.tool.status === 'draft' && <Badge variant="outline">Draft</Badge>}
+          {state.tool.status === 'draft' && <Badge variant="freshman">Draft</Badge>}
           <Badge style={{ backgroundColor: space.color, color: 'white' }}>
             {space.memberCount} members
           </Badge>

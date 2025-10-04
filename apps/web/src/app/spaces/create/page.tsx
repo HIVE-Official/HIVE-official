@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge } from '@hive/ui';
+import { Button, Card, Input, Badge } from '@hive/ui';
 import {
   ArrowLeft,
   Shield,
@@ -237,7 +237,7 @@ export default function CreateSpacePage() {
   if (globalLock) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <HiveCard className="bg-gray-900/50 border-red-500/30 max-w-md w-full p-8 text-center">
+        <Card className="bg-gray-900/50 border-red-500/30 max-w-md w-full p-8 text-center">
           <Lock className="w-20 h-20 text-red-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">Space Creation Locked</h1>
           <p className="text-gray-400 mb-6">{lockReason}</p>
@@ -258,14 +258,14 @@ export default function CreateSpacePage() {
             </ul>
           </div>
 
-          <HiveButton
+          <Button
             onClick={() => router.push('/spaces')}
             variant="outline"
             className="border-gray-700 w-full"
           >
             Browse Existing Spaces
-          </HiveButton>
-        </HiveCard>
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -275,7 +275,7 @@ export default function CreateSpacePage() {
       {/* Header */}
       <div className="bg-gray-900 border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <HiveButton
+          <Button
             onClick={() => router.back()}
             variant="ghost"
             size="sm"
@@ -283,7 +283,7 @@ export default function CreateSpacePage() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </HiveButton>
+          </Button>
 
           <div className="flex items-center justify-between">
             <div>
@@ -321,7 +321,7 @@ export default function CreateSpacePage() {
 
             <div className="grid gap-4">
               {Object.entries(SPACE_CATEGORIES).map(([key, cat]) => (
-                <HiveCard
+                <Card
                   key={key}
                   className={`p-4 cursor-pointer transition-all ${
                     cat.locked
@@ -348,7 +348,7 @@ export default function CreateSpacePage() {
                     </div>
                     {!cat.locked && <ChevronRight className="w-5 h-5 text-gray-400" />}
                   </div>
-                </HiveCard>
+                </Card>
               ))}
             </div>
           </div>
@@ -363,7 +363,7 @@ export default function CreateSpacePage() {
               {/* Name */}
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Space Name</label>
-                <HiveInput
+                <Input
                   {...register('name')}
                   placeholder="e.g., CS Study Group"
                   className="bg-gray-900 border-gray-700"
@@ -391,9 +391,9 @@ export default function CreateSpacePage() {
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Tags</label>
                 <div className="flex gap-2 mb-2">
-                  <HiveInput
+                  <Input
                     value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
+                    onChange={(e: React.ChangeEvent) => setTagInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -403,9 +403,9 @@ export default function CreateSpacePage() {
                     placeholder="Add tag"
                     className="bg-gray-900 border-gray-700"
                   />
-                  <HiveButton type="button" onClick={handleAddTag} variant="outline">
+                  <Button type="button" onClick={handleAddTag} variant="outline">
                     Add
-                  </HiveButton>
+                  </Button>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {tags.map(tag => (
@@ -423,9 +423,9 @@ export default function CreateSpacePage() {
                 )}
               </div>
 
-              <HiveButton type="button" onClick={() => setCurrentStep(3)}>
+              <Button type="button" onClick={() => setCurrentStep(3)}>
                 Continue
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}
@@ -461,7 +461,7 @@ export default function CreateSpacePage() {
             </div>
 
             {/* Guidelines Agreement */}
-            <HiveCard className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
+            <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
               <div className="flex gap-3">
                 <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-1" />
                 <div className="flex-1">
@@ -489,25 +489,25 @@ export default function CreateSpacePage() {
                   )}
                 </div>
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Actions */}
             <div className="flex gap-3">
-              <HiveButton
+              <Button
                 type="button"
                 onClick={() => setCurrentStep(2)}
                 variant="outline"
                 className="border-gray-700"
               >
                 Back
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 type="submit"
                 disabled={loading}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 flex-1"
               >
                 {loading ? 'Creating...' : 'Create Space'}
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}

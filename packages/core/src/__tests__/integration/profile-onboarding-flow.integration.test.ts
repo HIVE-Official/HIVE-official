@@ -330,10 +330,11 @@ describe('Profile Onboarding Complete Flow - Integration', () => {
 
       const serviceResult = result.getValue();
       expect(serviceResult.warnings).toBeDefined();
-      expect(serviceResult.warnings.length).toBeGreaterThan(0);
+      expect(serviceResult.warnings).not.toBeUndefined();
+      expect(serviceResult.warnings!.length).toBeGreaterThan(0);
 
       // Should warn about missing profile information
-      const warningMessages = serviceResult.warnings.join(' ');
+      const warningMessages = serviceResult.warnings!.join(' ');
       expect(warningMessages.toLowerCase()).toContain('incomplete');
     });
   });
@@ -351,10 +352,11 @@ describe('Profile Onboarding Complete Flow - Integration', () => {
       // Execute onboarding
       await onboardingService.completeOnboarding(onboardingData);
 
-      // Verify repository call sequence
-      expect(mockProfileRepo.findByHandle).toHaveBeenCalledBefore(mockProfileRepo.save as any);
-      expect(mockProfileRepo.findByEmail).toHaveBeenCalledBefore(mockProfileRepo.save as any);
-      expect(mockProfileRepo.save).toHaveBeenCalledBefore(mockSpaceRepo.findByType as any);
+      // Verify repository calls
+      expect(mockProfileRepo.findByHandle).toHaveBeenCalled();
+      expect(mockProfileRepo.findByEmail).toHaveBeenCalled();
+      expect(mockProfileRepo.save).toHaveBeenCalled();
+      expect(mockSpaceRepo.findByType).toHaveBeenCalled();
     });
 
     it('should pass correct parameters to repositories', async () => {

@@ -13,7 +13,7 @@ import { Button } from '@/atomic/atoms/button';
 import { Badge } from '@/atomic/atoms/badge';
 import { Separator } from '@/atomic/atoms/separator';
 import { FloatingPanel } from '@/atomic/molecules/panels/floating-panel';
-import { PropertyField } from '@/atomic/molecules/panels/property-field';
+import { PropertyField, type PropertyFieldType } from '@/atomic/molecules/panels/property-field';
 import { DataMappingRow } from '@/atomic/molecules/panels/data-mapping-row';
 import type { Element, Port } from '@/types/hivelab.types';
 import { Settings, Trash2, Copy, ExternalLink } from 'lucide-react';
@@ -181,16 +181,16 @@ export function HiveLabPropertiesPanel({
         {/* Element Metadata */}
         <div className="flex items-center gap-2 flex-wrap">
           {selectedElement.complexity && (
-            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+            <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
               {selectedElement.complexity}
             </Badge>
           )}
           {selectedElement.isNew && (
-            <Badge variant="default" className="h-5 px-1.5 text-xs">
+            <Badge variant="freshman" className="h-5 px-1.5 text-xs">
               NEW
             </Badge>
           )}
-          <Badge variant="outline" className="h-5 px-1.5 text-xs">
+          <Badge variant="freshman" className="h-5 px-1.5 text-xs">
             {selectedElement.inputs.length} ⬅️ | ➡️ {selectedElement.outputs.length}
           </Badge>
         </div>
@@ -224,7 +224,7 @@ export function HiveLabPropertiesPanel({
           <div className="px-3 py-3 space-y-3 border-b">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold">Input Connections</h4>
-              <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+              <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
                 {selectedElement.inputs.length}
               </Badge>
             </div>
@@ -246,7 +246,7 @@ export function HiveLabPropertiesPanel({
           <div className="px-3 py-3 space-y-3 border-b">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-semibold">Output Connections</h4>
-              <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+              <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
                 {selectedElement.outputs.length}
               </Badge>
             </div>
@@ -271,7 +271,7 @@ export function HiveLabPropertiesPanel({
           {Object.keys(selectedElement.config).length > 0 ? (
             Object.entries(selectedElement.config).map(([key, value]) => {
               // Infer field type from value
-              let fieldType: PropertyField['type'] = 'text';
+              let fieldType: PropertyFieldType = 'text';
               if (typeof value === 'boolean') fieldType = 'boolean';
               else if (typeof value === 'number') fieldType = 'number';
 

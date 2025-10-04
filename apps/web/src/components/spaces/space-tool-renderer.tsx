@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { renderElement } from '../tools/element-renderers';
-import { HiveCard, HiveButton, Badge } from '@hive/ui';
+import { Card, Button, Badge } from '@hive/ui';
 import { Settings, Maximize2, Minimize2, RefreshCw } from 'lucide-react';
 import type { SpaceTypeRules } from '@/lib/space-type-rules';
 import {
@@ -160,14 +160,14 @@ export function SpaceToolRenderer({
     return (
       <div className="p-4 text-center text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg">
         <div className="text-sm">{error}</div>
-        <HiveButton
+        <Button
           variant="outline"
           size="sm"
           onClick={() => initializeTool()}
           className="mt-2 border-red-500/30 text-red-400"
         >
           Retry
-        </HiveButton>
+        </Button>
       </div>
     );
   }
@@ -182,7 +182,7 @@ export function SpaceToolRenderer({
             <span className="text-lg">{tool.icon || '🔧'}</span>
             <div>
               <h4 className="font-semibold text-white text-sm">{tool.name}</h4>
-              <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+              <Badge variant="freshman" className="text-xs border-gray-600 text-gray-400">
                 {tool.category}
               </Badge>
             </div>
@@ -190,21 +190,21 @@ export function SpaceToolRenderer({
 
           <div className="flex items-center gap-1">
             {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
-              <HiveButton
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => handleToolAction('configure')}
               >
                 <Settings className="w-3 h-3" />
-              </HiveButton>
+              </Button>
             )}
-            <HiveButton
+            <Button
               variant="ghost"
               size="sm"
               onClick={() => setExpanded(!expanded)}
             >
               {expanded ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
-            </HiveButton>
+            </Button>
           </div>
         </div>
 
@@ -257,7 +257,7 @@ export function SpaceToolRenderer({
           </Badge>
 
           {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
-            <HiveButton
+            <Button
               variant="outline"
               size="sm"
               onClick={() => handleToolAction('configure')}
@@ -265,17 +265,17 @@ export function SpaceToolRenderer({
             >
               <Settings className="w-4 h-4 mr-2" />
               Configure
-            </HiveButton>
+            </Button>
           )}
 
-          <HiveButton
+          <Button
             variant="outline"
             size="sm"
             onClick={() => handleToolAction('refresh')}
             className="border-gray-700 text-gray-300"
           >
             <RefreshCw className="w-4 h-4" />
-          </HiveButton>
+          </Button>
         </div>
       </div>
 
@@ -321,14 +321,14 @@ export function SpaceToolRenderer({
               This tool is being configured for your space.
             </div>
             {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
-              <HiveButton
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleToolAction('configure')}
                 className="mt-4 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
               >
                 Configure Tool
-              </HiveButton>
+              </Button>
             )}
           </div>
         )}
@@ -343,7 +343,7 @@ export function SpaceToolRenderer({
 
           <div className="flex items-center gap-2">
             {tool.configuration?.actions?.map((action: any, index: number) => (
-              <HiveButton
+              <Button
                 key={index}
                 variant="outline"
                 size="sm"
@@ -351,7 +351,7 @@ export function SpaceToolRenderer({
                 className="border-gray-700 text-gray-300 text-xs"
               >
                 {action.label}
-              </HiveButton>
+              </Button>
             ))}
           </div>
         </div>

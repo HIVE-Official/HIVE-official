@@ -343,7 +343,7 @@ export function SpaceTransferInterface({
           
           <div className="flex gap-4 mt-6">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => {
                 setSelectedTargetSpace(null);
                 setTransferReason('');
@@ -411,7 +411,7 @@ export function SpaceTransferInterface({
               
               <div className="flex gap-3">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => setShowConfirmation(false)}
                   className="flex-1"
                   disabled={transferMutation.isPending}

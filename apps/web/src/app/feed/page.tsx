@@ -527,13 +527,13 @@ export default function FeedPage() {
               </div>
               
               {/* Feed Settings */}
-              <Button variant="secondary" size="sm">
+              <Button variant="outline" size="sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               
               {/* Notifications */}
-              <Button variant="secondary" size="sm" className="relative">
+              <Button variant="outline" size="sm" className="relative">
                 <Bell className="h-4 w-4" />
                 <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                   3
@@ -607,7 +607,7 @@ export default function FeedPage() {
                     Browse Spaces
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => window.location.href = '/spaces'}
                   >
                     View Your Spaces
@@ -647,7 +647,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={loadMore}
                 disabled={isLoadingMore}
                 className="w-full max-w-md"
@@ -665,7 +665,7 @@ export default function FeedPage() {
               <AlertTriangle className="h-4 w-4 text-red-400" />
               <span className="text-red-400 text-sm">{error}</span>
               <Button 
-                variant="secondary" 
+                variant="outline" 
                 size="sm" 
                 onClick={refresh}
                 className="ml-auto"

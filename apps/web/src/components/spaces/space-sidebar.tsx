@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { HiveCard, HiveButton, Badge } from '@hive/ui';
+import { Card, Button, Badge } from '@hive/ui';
 import {
   Users,
   Calendar,
@@ -104,14 +104,14 @@ export function SpaceSidebar({
   if (collapsed) {
     return (
       <div className="p-2">
-        <HiveButton
+        <Button
           size="sm"
           variant="ghost"
           onClick={onToggleCollapse}
           className="mb-4"
         >
           <ChevronRight className="w-4 h-4" />
-        </HiveButton>
+        </Button>
 
         {/* Collapsed icons */}
         <div className="space-y-4">
@@ -151,7 +151,7 @@ export function SpaceSidebar({
   return (
     <div className="p-4 space-y-4">
       {/* Collapse Button */}
-      <HiveButton
+      <Button
         size="sm"
         variant="ghost"
         onClick={onToggleCollapse}
@@ -159,10 +159,10 @@ export function SpaceSidebar({
       >
         <ChevronLeft className="w-4 h-4 mr-2" />
         Collapse
-      </HiveButton>
+      </Button>
 
       {/* Members Widget */}
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-white flex items-center gap-2">
             <Users className="w-4 h-4" />
@@ -201,10 +201,10 @@ export function SpaceSidebar({
             </div>
           )}
         </div>
-      </HiveCard>
+      </Card>
 
       {/* Events Widget */}
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-white flex items-center gap-2">
             <Calendar className="w-4 h-4" />
@@ -263,10 +263,10 @@ export function SpaceSidebar({
             ))}
           </div>
         )}
-      </HiveCard>
+      </Card>
 
       {/* Resources Widget */}
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-white flex items-center gap-2">
             <FileText className="w-4 h-4" />
@@ -302,7 +302,7 @@ export function SpaceSidebar({
             ))}
           </div>
         )}
-      </HiveCard>
+      </Card>
 
       {/* Tools Widget */}
       <ToolsWidget

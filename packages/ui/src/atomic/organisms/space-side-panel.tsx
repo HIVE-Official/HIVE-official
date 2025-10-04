@@ -99,7 +99,7 @@ export const SpaceSidePanel = React.forwardRef<HTMLDivElement, SpaceSidePanelPro
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={transitions.panel}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className={cn(
                 "fixed right-0 top-0 z-50 h-full bg-[#0c0c0c] border-l border-white/8",
                 "flex flex-col overflow-hidden",

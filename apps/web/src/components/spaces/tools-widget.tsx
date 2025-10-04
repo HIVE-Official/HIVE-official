@@ -15,11 +15,11 @@ import {
   Zap
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
-  HiveInput,
+  Button,
+  Card,
+  Input,
   HiveTextarea,
-  HiveModal,
+  Dialog,
   Badge,
   Tabs,
   TabsList,
@@ -113,7 +113,7 @@ export function ToolsWidget({
 
   return (
     <>
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-semibold text-white flex items-center gap-2">
             <Zap className="w-4 h-4 text-[var(--hive-brand-primary)]" />
@@ -126,7 +126,7 @@ export function ToolsWidget({
             {availableTools.map(tool => {
               const IconComponent = tool.icon;
               return (
-                <HiveButton
+                <Button
                   key={tool.id}
                   variant="outline"
                   size="sm"
@@ -135,7 +135,7 @@ export function ToolsWidget({
                 >
                   <IconComponent className={`w-5 h-5 ${tool.color}`} />
                   <span className="text-xs">{tool.name}</span>
-                </HiveButton>
+                </Button>
               );
             })}
           </div>
@@ -146,7 +146,7 @@ export function ToolsWidget({
             <p className="text-xs text-gray-500">Contact space leaders</p>
           </div>
         )}
-      </HiveCard>
+      </Card>
 
       {/* Tool Modals */}
       {activeModal && (
@@ -287,7 +287,7 @@ function EventCreationModal({
   };
 
   return (
-    <HiveModal
+    <Dialog
       isOpen={true}
       onClose={onClose}
       title="Create Event"
@@ -301,7 +301,7 @@ function EventCreationModal({
           </label>
           <div className="grid grid-cols-3 gap-2">
             {Object.entries(templates).map(([key, template]) => (
-              <HiveButton
+              <Button
                 key={key}
                 type="button"
                 variant={formData.template === key ? 'default' : 'outline'}
@@ -310,7 +310,7 @@ function EventCreationModal({
                 className="text-xs"
               >
                 {key.charAt(0).toUpperCase() + key.slice(1)}
-              </HiveButton>
+              </Button>
             ))}
           </div>
         </div>
@@ -320,9 +320,9 @@ function EventCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Event Title *
           </label>
-          <HiveInput
+          <Input
             value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Enter event title"
             required
           />
@@ -335,7 +335,7 @@ function EventCreationModal({
           </label>
           <HiveTextarea
             value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Event description..."
             rows={3}
           />
@@ -347,10 +347,10 @@ function EventCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Start Date *
             </label>
-            <HiveInput
+            <Input
               type="date"
               value={formData.startDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
               required
             />
           </div>
@@ -358,10 +358,10 @@ function EventCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Start Time *
             </label>
-            <HiveInput
+            <Input
               type="time"
               value={formData.startTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
               required
             />
           </div>
@@ -373,20 +373,20 @@ function EventCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               End Date
             </label>
-            <HiveInput
+            <Input
               type="date"
               value={formData.endDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white mb-1">
               End Time
             </label>
-            <HiveInput
+            <Input
               type="time"
               value={formData.endTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
             />
           </div>
         </div>
@@ -396,9 +396,9 @@ function EventCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Location
           </label>
-          <HiveInput
+          <Input
             value={formData.location}
-            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: e.target.value }))}
             placeholder="Event location or 'Online'"
           />
         </div>
@@ -409,10 +409,10 @@ function EventCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Max Attendees
             </label>
-            <HiveInput
+            <Input
               type="number"
               value={formData.maxAttendees}
-              onChange={(e) => setFormData(prev => ({ ...prev, maxAttendees: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, maxAttendees: e.target.value }))}
               placeholder="Leave empty for unlimited"
             />
           </div>
@@ -421,7 +421,7 @@ function EventCreationModal({
               type="checkbox"
               id="requireRsvp"
               checked={formData.requireRsvp}
-              onChange={(e) => setFormData(prev => ({ ...prev, requireRsvp: e.target.checked }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, requireRsvp: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="requireRsvp" className="text-sm text-white">
@@ -432,24 +432,24 @@ function EventCreationModal({
 
         {/* Actions */}
         <div className="flex gap-3 pt-4">
-          <HiveButton
+          <Button
             type="button"
             variant="outline"
             onClick={onClose}
             className="flex-1"
           >
             Cancel
-          </HiveButton>
-          <HiveButton
+          </Button>
+          <Button
             type="submit"
             disabled={loading || !formData.title || !formData.startDate || !formData.startTime}
             className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Event'}
-          </HiveButton>
+          </Button>
         </div>
       </form>
-    </HiveModal>
+    </Dialog>
   );
 }
 
@@ -523,7 +523,7 @@ function PollCreationModal({
     formData.options.filter(opt => opt.trim()).length >= 2;
 
   return (
-    <HiveModal
+    <Dialog
       isOpen={true}
       onClose={onClose}
       title="Create Poll"
@@ -535,9 +535,9 @@ function PollCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Poll Question *
           </label>
-          <HiveInput
+          <Input
             value={formData.question}
-            onChange={(e) => setFormData(prev => ({ ...prev, question: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, question: e.target.value }))}
             placeholder="What would you like to ask?"
             required
           />
@@ -551,14 +551,14 @@ function PollCreationModal({
           <div className="space-y-2">
             {formData.options.map((option, index) => (
               <div key={index} className="flex gap-2">
-                <HiveInput
+                <Input
                   value={option}
-                  onChange={(e) => updateOption(index, e.target.value)}
+                  onChange={(e: React.ChangeEvent) => updateOption(index, e.target.value)}
                   placeholder={`Option ${index + 1}`}
                   className="flex-1"
                 />
                 {formData.options.length > 2 && (
-                  <HiveButton
+                  <Button
                     type="button"
                     variant="outline"
                     size="sm"
@@ -566,12 +566,12 @@ function PollCreationModal({
                     className="border-red-600 text-red-400"
                   >
                     <X className="w-4 h-4" />
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             ))}
             {formData.options.length < 5 && (
-              <HiveButton
+              <Button
                 type="button"
                 variant="outline"
                 size="sm"
@@ -580,7 +580,7 @@ function PollCreationModal({
               >
                 <Plus className="w-4 h-4 mr-1" />
                 Add Option
-              </HiveButton>
+              </Button>
             )}
           </div>
         </div>
@@ -592,7 +592,7 @@ function PollCreationModal({
               type="checkbox"
               id="allowMultiple"
               checked={formData.allowMultiple}
-              onChange={(e) => setFormData(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, allowMultiple: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="allowMultiple" className="text-sm text-white">
@@ -604,7 +604,7 @@ function PollCreationModal({
               type="checkbox"
               id="anonymous"
               checked={formData.anonymous}
-              onChange={(e) => setFormData(prev => ({ ...prev, anonymous: e.target.checked }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, anonymous: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="anonymous" className="text-sm text-white">
@@ -619,16 +619,16 @@ function PollCreationModal({
             Auto-close (optional)
           </label>
           <div className="grid grid-cols-2 gap-2">
-            <HiveInput
+            <Input
               type="date"
               value={formData.endDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
               placeholder="End date"
             />
-            <HiveInput
+            <Input
               type="time"
               value={formData.endTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
               placeholder="End time"
             />
           </div>
@@ -636,24 +636,24 @@ function PollCreationModal({
 
         {/* Actions */}
         <div className="flex gap-3 pt-4">
-          <HiveButton
+          <Button
             type="button"
             variant="outline"
             onClick={onClose}
             className="flex-1"
           >
             Cancel
-          </HiveButton>
-          <HiveButton
+          </Button>
+          <Button
             type="submit"
             disabled={loading || !isValid}
             className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Poll'}
-          </HiveButton>
+          </Button>
         </div>
       </form>
-    </HiveModal>
+    </Dialog>
   );
 }
 
@@ -699,7 +699,7 @@ function TaskCreationModal({
   };
 
   return (
-    <HiveModal
+    <Dialog
       isOpen={true}
       onClose={onClose}
       title="Create Task"
@@ -711,9 +711,9 @@ function TaskCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Task Title *
           </label>
-          <HiveInput
+          <Input
             value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="What needs to be done?"
             required
           />
@@ -726,7 +726,7 @@ function TaskCreationModal({
           </label>
           <HiveTextarea
             value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Task details and requirements..."
             rows={3}
           />
@@ -738,20 +738,20 @@ function TaskCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Due Date
             </label>
-            <HiveInput
+            <Input
               type="date"
               value={formData.dueDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-white mb-1">
               Due Time
             </label>
-            <HiveInput
+            <Input
               type="time"
               value={formData.dueTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, dueTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueTime: e.target.value }))}
             />
           </div>
         </div>
@@ -763,7 +763,7 @@ function TaskCreationModal({
           </label>
           <div className="grid grid-cols-3 gap-2">
             {(['low', 'medium', 'high'] as const).map(priority => (
-              <HiveButton
+              <Button
                 key={priority}
                 type="button"
                 variant={formData.priority === priority ? 'default' : 'outline'}
@@ -776,7 +776,7 @@ function TaskCreationModal({
                 }`}
               >
                 {priority.charAt(0).toUpperCase() + priority.slice(1)}
-              </HiveButton>
+              </Button>
             ))}
           </div>
         </div>
@@ -816,24 +816,24 @@ function TaskCreationModal({
 
         {/* Actions */}
         <div className="flex gap-3 pt-4">
-          <HiveButton
+          <Button
             type="button"
             variant="outline"
             onClick={onClose}
             className="flex-1"
           >
             Cancel
-          </HiveButton>
-          <HiveButton
+          </Button>
+          <Button
             type="submit"
             disabled={loading || !formData.title}
             className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             {loading ? 'Creating...' : 'Create Task'}
-          </HiveButton>
+          </Button>
         </div>
       </form>
-    </HiveModal>
+    </Dialog>
   );
 }
 
@@ -907,7 +907,7 @@ function ResourceCreationModal({
     : formData.url && formData.title;
 
   return (
-    <HiveModal
+    <Dialog
       isOpen={true}
       onClose={onClose}
       title="Add Resource"
@@ -950,10 +950,10 @@ function ResourceCreationModal({
               <label className="block text-sm font-medium text-white mb-1">
                 URL *
               </label>
-              <HiveInput
+              <Input
                 type="url"
                 value={formData.url}
-                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, url: e.target.value }))}
                 placeholder="https://example.com/resource"
                 required
               />
@@ -965,9 +965,9 @@ function ResourceCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Title *
             </label>
-            <HiveInput
+            <Input
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="Resource title"
               required
             />
@@ -980,7 +980,7 @@ function ResourceCreationModal({
             </label>
             <HiveTextarea
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="What is this resource for?"
               rows={2}
             />
@@ -991,33 +991,33 @@ function ResourceCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Tags
             </label>
-            <HiveInput
+            <Input
               value={formData.tags}
-              onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
               placeholder="study, notes, exam (comma separated)"
             />
           </div>
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
-            <HiveButton
+            <Button
               type="button"
               variant="outline"
               onClick={onClose}
               className="flex-1"
             >
               Cancel
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               type="submit"
               disabled={loading || !isValid}
               className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               {loading ? 'Adding...' : `Add ${mode === 'upload' ? 'File' : 'Link'}`}
-            </HiveButton>
+            </Button>
           </div>
         </form>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

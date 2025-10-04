@@ -359,7 +359,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-2 block max-w-md rounded border border-white/8 bg-white/5 p-3 transition-all duration-[400ms] hover:border-white/20 hover:bg-white/10"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <div className="flex gap-3">
                           {post.linkPreview.image && (
@@ -394,7 +394,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         {/* Like */}
                         {post.likeCount > 0 && (
                           <button
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                               e.stopPropagation()
                               handleLike(post.id, post.isLiked || false)
                             }}
@@ -423,7 +423,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         {/* Comment */}
                         {post.commentCount > 0 && (
                           <button
-                            onClick={(e) => {
+                            onClick={(e: React.MouseEvent) => {
                               e.stopPropagation()
                               handleComment(post.id)
                             }}
@@ -452,7 +452,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                   {/* Hover Actions (Discord-style) */}
                   <div className="absolute top-0 right-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-y-2 bg-[#0c0c0c] border border-white/8 rounded-md shadow-lg flex gap-0.5 p-0.5">
                     <button
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation()
                         handleLike(post.id, post.isLiked || false)
                       }}
@@ -474,7 +474,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                       </svg>
                     </button>
                     <button
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation()
                         handleComment(post.id)
                       }}
@@ -490,7 +490,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                       </svg>
                     </button>
                     <button
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent) => {
                         e.stopPropagation()
                         handleShare(post.id)
                       }}
@@ -523,7 +523,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                 <textarea
                   ref={textareaRef}
                   value={composerValue}
-                  onChange={(e) => setComposerValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setComposerValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={composerPlaceholder}
                   className="w-full resize-none rounded-3xl bg-transparent px-6 py-3 pr-24 text-sm text-white placeholder:text-white/50 focus:outline-none min-h-[52px] max-h-[200px]"

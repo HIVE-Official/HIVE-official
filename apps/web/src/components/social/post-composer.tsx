@@ -308,7 +308,7 @@ export function PostComposer({
           </div>
           {onCancel && (
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={onCancel}
             >
@@ -365,7 +365,7 @@ export function PostComposer({
                     />
                     {poll.options.length > 2 && (
                       <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
                         onClick={() => removePollOption(index)}
                         className="text-red-400 border-red-400"
@@ -379,7 +379,7 @@ export function PostComposer({
               
               <div className="flex items-center justify-between">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={addPollOption}
                   disabled={poll.options.length >= 4}
@@ -459,7 +459,7 @@ export function PostComposer({
                     )}
                   </div>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => removeAttachment(attachment.id)}
                     className="text-red-400 border-red-400"
@@ -490,7 +490,7 @@ export function PostComposer({
               {allowedTypes.map(type => (
                 <Button
                   key={type}
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => setPostType(type)}
                   className={postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
@@ -510,7 +510,7 @@ export function PostComposer({
             {allowedTypes.includes('image') && (
               <>
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
@@ -529,7 +529,7 @@ export function PostComposer({
 
             {/* Additional Tools */}
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setShowAdvanced(!showAdvanced)}
               className={showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
@@ -558,7 +558,7 @@ export function PostComposer({
                 {['public', 'space', 'private'].map(vis => (
                   <Button
                     key={vis}
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
                     className={visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}

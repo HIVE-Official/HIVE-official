@@ -255,7 +255,7 @@ export default function FeedPageStoryBookMigration() {
             </div>
 
             {/* 🔔 **CAMPUS NOTIFICATIONS** */}
-            <Button variant="secondary" size="sm" className="relative">
+            <Button variant="outline" size="sm" className="relative">
               <Bell className="h-4 w-4" />
               <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                 3
@@ -339,7 +339,7 @@ export default function FeedPageStoryBookMigration() {
                       Browse Spaces
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       onClick={() => setShowComposer(true)}
                     >
                       Create Post
@@ -361,7 +361,7 @@ export default function FeedPageStoryBookMigration() {
           {feedPosts.length > 0 && (
             <div className="text-center">
               <Button
-                variant="secondary"
+                variant="outline"
                 className="w-full max-w-md"
                 onClick={() => {}}
               >

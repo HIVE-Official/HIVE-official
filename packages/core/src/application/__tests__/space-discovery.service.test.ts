@@ -229,8 +229,8 @@ describe('SpaceDiscoveryService', () => {
       expect(result.isSuccess).toBe(true);
       const serviceResult = result.getValue();
       expect(serviceResult.metadata).toBeDefined();
-      expect(serviceResult.metadata.totalCount).toBe(1);
-      expect(serviceResult.metadata.hasMore).toBe(false);
+      expect(serviceResult.metadata!.totalCount).toBe(1);
+      expect(serviceResult.metadata!.hasMore).toBe(false);
     });
   });
 

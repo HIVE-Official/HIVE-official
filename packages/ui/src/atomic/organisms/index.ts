@@ -46,7 +46,8 @@ export { HiveLabBuilderCanvas } from './hivelab-builder-canvas';
 export { HiveLabElementLibrary } from './hivelab-element-library';
 export { HiveLabPropertiesPanel } from './hivelab-properties-panel';
 export { HiveLabTemplateBrowser } from './hivelab-template-browser';
-export { ToolActionModals } from './tool-action-modals';
+export { PollModal, EventModal, TaskModal, ResourceModal } from './tool-action-modals';
+export type { PollModalProps, PollData, EventModalProps, EventData, TaskModalProps, TaskData, ResourceModalProps, ResourceData } from './tool-action-modals';
 
 // Navigation
 export { NavigationShell } from './navigation-shell';

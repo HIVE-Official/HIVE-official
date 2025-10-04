@@ -389,7 +389,7 @@ export function RitualHorizontalCards({
                   <div className="flex gap-2">
                     {card.primaryAction && (
                       <Button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           card.primaryAction!.onClick();
                         }}
@@ -407,7 +407,7 @@ export function RitualHorizontalCards({
                     )}
                     {card.secondaryAction && (
                       <Button
-                        onClick={(e) => {
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           card.secondaryAction!.onClick();
                         }}

@@ -9,9 +9,9 @@ import { useAuth } from "@hive/auth-logic";
 import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  HiveButton,
-  HiveCard,
-  HiveProgress,
+  Button,
+  Card,
+  Progress,
   HiveLogo,
   CompletionPsychologyEnhancer
 } from "@hive/ui";
@@ -50,7 +50,7 @@ function OnboardingProgress({ value, isComplete, className }: {
   className?: string;
 }) {
   return (
-    <HiveProgress
+    <Progress
       value={value}
       variant={isComplete ? "success" : "default"}
       size="lg"
@@ -70,7 +70,7 @@ function StepIndicator({
   stepTitles: string[];
 }) {
   return (
-    <HiveCard 
+    <Card 
       className="hidden lg:block p-[var(--hive-spacing-6)]"
     >
       <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-[var(--hive-spacing-4)]">
@@ -119,7 +119,7 @@ function StepIndicator({
           );
         })}
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -426,7 +426,7 @@ export function HiveOnboardingWizard() {
         {/* Background Effects using HIVE tokens */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--hive-brand-primary)]/5 via-transparent to-[var(--hive-status-success)]/5" />
         
-        <HiveCard
+        <Card
           className="max-w-md text-center p-[var(--hive-spacing-8)] relative z-10"
         >
           <motion.div
@@ -487,7 +487,7 @@ export function HiveOnboardingWizard() {
               );
             })}
           </motion.div>
-        </HiveCard>
+        </Card>
       </div>
     );
   }
@@ -514,7 +514,7 @@ export function HiveOnboardingWizard() {
       
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-[var(--hive-spacing-4)] pt-24 relative z-10">
-        <HiveCard
+        <Card
           className="w-full max-w-2xl overflow-hidden"
         >
           {/* Header with enhanced progress */}
@@ -581,7 +581,7 @@ export function HiveOnboardingWizard() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-[var(--hive-spacing-6)]"
               >
-                <HiveCard
+                <Card
                   className="p-[var(--hive-spacing-4)]"
                 >
                   <div className="flex items-center gap-[var(--hive-spacing-2)]">
@@ -590,15 +590,15 @@ export function HiveOnboardingWizard() {
                     </div>
                     <span className="text-sm text-[var(--hive-status-error)]">{error}</span>
                   </div>
-                </HiveCard>
+                </Card>
               </motion.div>
             )}
 
             {/* Navigation using HIVE Buttons - Hidden on Welcome Step */}
             {currentStep !== 0 && (
               <div className="flex justify-between items-center mt-[var(--hive-spacing-8)] pt-[var(--hive-spacing-6)] mb-[var(--hive-spacing-6)]">
-                <HiveButton
-                  variant="secondary"
+                <Button
+                  variant="outline"
                   size="lg"
                   onClick={goBack}
                   disabled={!canGoBack()}
@@ -607,10 +607,10 @@ export function HiveOnboardingWizard() {
                   aria-label="Go to previous step"
                 >
                   Back
-                </HiveButton>
+                </Button>
 
                 {currentStep === TOTAL_STEPS - 1 ? (
-                  <HiveButton
+                  <Button
                     variant="default"
                     size="lg"
                     onClick={handleSubmit}
@@ -620,9 +620,9 @@ export function HiveOnboardingWizard() {
                     aria-label="Complete onboarding and enter HIVE"
                   >
                     {isSubmitting ? "Creating your profile..." : "Enter HIVE"}
-                  </HiveButton>
+                  </Button>
                 ) : (
-                  <HiveButton
+                  <Button
                     variant="default"
                     size="lg"
                     onClick={goNext}
@@ -632,12 +632,12 @@ export function HiveOnboardingWizard() {
                     aria-label="Continue to next step"
                   >
                     Continue
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             )}
           </div>
-        </HiveCard>
+        </Card>
       </div>
 
       {/* Enhanced Sidebar */}
@@ -658,7 +658,7 @@ export function HiveOnboardingWizard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <HiveCard
+            <Card
               className="p-[var(--hive-spacing-4)]"
             >
               <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-[var(--hive-spacing-4)]">
@@ -668,7 +668,7 @@ export function HiveOnboardingWizard() {
               {/* Overlapping Card Design */}
               <div className="relative space-y-3">
                 {/* Profile Photo Card - Clean, no text */}
-                <HiveCard
+                <Card
                   className="w-20 h-24 p-0 overflow-hidden"
                 >
                   {data.profilePhoto ? (
@@ -684,33 +684,33 @@ export function HiveOnboardingWizard() {
                       <User className="w-6 h-6 text-[var(--hive-text-muted)]" />
                     </div>
                   )}
-                </HiveCard>
+                </Card>
 
                 {/* Separate Info Cards - Overlapping slightly */}
                 <div className="relative -ml-2 space-y-2">
                   {/* Name Card */}
-                  <HiveCard className="p-3 rotate-1">
+                  <Card className="p-3 rotate-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Name</div>
                     <div className="text-[var(--hive-text-primary)] font-semibold text-sm">
                       {data.fullName || "Your name"}
                     </div>
-                  </HiveCard>
+                  </Card>
 
                   {/* Handle Card */}
-                  <HiveCard className="p-3 -rotate-1 relative -mt-1">
+                  <Card className="p-3 -rotate-1 relative -mt-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Handle</div>
                     <div className="text-[var(--hive-brand-primary)] font-medium text-sm">
                       @{data.handle || "your-handle"}
                     </div>
-                  </HiveCard>
+                  </Card>
 
                   {/* Major Card */}
-                  <HiveCard className="p-3 rotate-1 relative -mt-1">
+                  <Card className="p-3 rotate-1 relative -mt-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Major</div>
                     <div className="text-[var(--hive-text-secondary)] text-sm">
                       {data.major || "Your major"}
                     </div>
-                  </HiveCard>
+                  </Card>
 
                   {/* Builder Spaces Badge */}
                   {data.builderRequestSpaces && data.builderRequestSpaces.length > 0 && (
@@ -718,17 +718,17 @@ export function HiveOnboardingWizard() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
-                      <HiveCard className="p-2 -rotate-1 relative -mt-1">
+                      <Card className="p-2 -rotate-1 relative -mt-1">
                         <div className="inline-flex items-center text-[var(--hive-brand-primary)] text-xs">
                           <Users className="w-3 h-3 mr-1" />
                           <span>{data.builderRequestSpaces.length} Space{data.builderRequestSpaces.length !== 1 ? 's' : ''}</span>
                         </div>
-                      </HiveCard>
+                      </Card>
                     </motion.div>
                   )}
                 </div>
               </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         </div>
       </div>

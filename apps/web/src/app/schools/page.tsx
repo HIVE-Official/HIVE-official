@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton } from '@hive/ui';
+import { Button } from '@hive/ui';
 import { SchoolsPageHeader } from '../../components/temp-stubs';
 
 
@@ -531,9 +531,9 @@ export default function SchoolsPage() {
             <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
               We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
-            <HiveButton variant="default" size="lg" className="px-8 py-3">
+            <Button variant="default" size="lg" className="px-8 py-3">
               Join General Waitlist
-            </HiveButton>
+            </Button>
           </div>
         </div>
       </div>

@@ -395,7 +395,7 @@ export function SearchInterface({
                 {results.suggestions.slice(0, 3).map((suggestion, index) => (
                   <Button
                     key={index}
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={() => handleSuggestionClick(suggestion)}
                   >
@@ -506,7 +506,7 @@ export function SearchInterface({
           {results.hasMore && (
             <div className="text-center">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() => performSearch()}
                 disabled={isSearching}
               >
@@ -537,7 +537,7 @@ export function SearchInterface({
                     {results.suggestions.map((suggestion, index) => (
                       <Button
                         key={index}
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge, Grid, useToast } from '@hive/ui';
+import { Button, Card, Input, Badge, Grid, useToast } from '@hive/ui';
 import { Search, Plus, Users, TrendingUp, Shield, Sparkles, UserCheck, Lock } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
 import { api } from '@/lib/api-client';
@@ -186,30 +186,30 @@ export default function SpacesDirectoryPage() {
             <div className="flex items-center gap-3 flex-1 max-w-2xl">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <HiveInput
+                <Input
                   placeholder="Search spaces, clubs, communities..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10 bg-gray-900 border-gray-700"
                 />
               </div>
 
-              <HiveButton
+              <Button
                 onClick={() => router.push('/spaces/browse')}
                 variant="outline"
                 className="border-gray-700"
               >
                 Browse All
-              </HiveButton>
+              </Button>
 
-              <HiveButton
+              <Button
                 onClick={() => router.push('/spaces/create')}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 lg:mr-2" />
                 <span className="hidden lg:inline">Create Space</span>
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -357,12 +357,12 @@ export default function SpacesDirectoryPage() {
                 ? `No spaces matching "${searchQuery}"`
                 : "Be the first to create a space!"}
             </p>
-            <HiveButton
+            <Button
               onClick={() => router.push('/spaces/create')}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               Create the First Space
-            </HiveButton>
+            </Button>
           </div>
         )}
       </div>
@@ -393,7 +393,7 @@ function SpaceCard({
   };
 
   return (
-    <HiveCard
+    <Card
       className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)] transition-all cursor-pointer group"
       onClick={onClick}
     >
@@ -481,16 +481,16 @@ function SpaceCard({
           </div>
 
           {/* Join Button */}
-          <HiveButton
+          <Button
             size="sm"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onJoin();
             }}
             className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
           >
             Join
-          </HiveButton>
+          </Button>
         </div>
 
         {/* 70% Completion Rate Indicator */}
@@ -502,6 +502,6 @@ function SpaceCard({
           </div>
         )}
       </div>
-    </HiveCard>
+    </Card>
   );
 }

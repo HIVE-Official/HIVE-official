@@ -80,7 +80,7 @@ class StructuredLogger {
       const level = String(logObject.level);
       const color = this.getConsoleColor(level);
 
-      // eslint-disable-next-line no-console
+       
       console.log(
         `%c[${level}]%c ${logObject.message}`,
         `color: ${color}; font-weight: bold`,
@@ -176,14 +176,14 @@ class StructuredLogger {
   // Performance logging
   time(label: string): void {
     if (this.isDevelopment) {
-      // eslint-disable-next-line no-console
+       
       console.time(label);
     }
   }
 
   timeEnd(label: string): void {
     if (this.isDevelopment) {
-      // eslint-disable-next-line no-console
+       
       console.timeEnd(label);
     }
   }

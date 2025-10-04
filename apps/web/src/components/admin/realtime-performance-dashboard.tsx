@@ -187,7 +187,7 @@ export function RealtimePerformanceDashboard() {
         <div className="flex items-center space-x-3">
           <Button
             onClick={handleForceHealthCheck}
-            variant="secondary"
+            variant="outline"
             size="sm"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
@@ -438,7 +438,7 @@ export function RealtimePerformanceDashboard() {
               <Button
                 onClick={performanceActions.runSpeedTest}
                 size="sm"
-                variant="secondary"
+                variant="outline"
               >
                 <Zap className="h-4 w-4 mr-1" />
                 Speed Test
@@ -447,7 +447,7 @@ export function RealtimePerformanceDashboard() {
               <Button
                 onClick={performanceActions.optimizeConnection}
                 size="sm"
-                variant="secondary"
+                variant="outline"
               >
                 <Settings className="h-4 w-4 mr-1" />
                 Optimize

@@ -247,7 +247,7 @@ export function EnhancedEventCard({
 
             <Button
               onClick={handleBookmark}
-              variant="secondary"
+              variant="outline"
               size="sm"
               disabled={actionLoading === 'bookmark'}
             >
@@ -256,7 +256,7 @@ export function EnhancedEventCard({
 
             <Button
               onClick={handleShare}
-              variant="secondary"
+              variant="outline"
               size="sm"
               disabled={actionLoading === 'share'}
             >
@@ -266,7 +266,7 @@ export function EnhancedEventCard({
 
           <Button
             onClick={handleCardClick}
-            variant="secondary"
+            variant="outline"
             size="sm"
           >
             View Details
@@ -318,7 +318,7 @@ export function EnhancedEventCard({
             {isMobile && (
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleRSVP();
                   }}
@@ -365,12 +365,12 @@ export function EnhancedEventCard({
           {event.tags && event.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
               {event.tags.slice(0, 3).map(tag => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+                <Badge key={tag} variant="sophomore" className="text-xs">
                   {tag}
                 </Badge>
               ))}
               {event.tags.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="sophomore" className="text-xs">
                   +{event.tags.length - 3}
                 </Badge>
               )}
@@ -390,7 +390,7 @@ export function EnhancedEventCard({
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-hive-border">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleBookmark();
                   }}
@@ -405,7 +405,7 @@ export function EnhancedEventCard({
                 </button>
 
                 <button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleShare();
                   }}
@@ -418,7 +418,7 @@ export function EnhancedEventCard({
 
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleRSVP();
                   }}
@@ -445,7 +445,7 @@ export function EnhancedEventCard({
 
                 <Button
                   onClick={handleCardClick}
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                 >
                   <ChevronRight className="h-4 w-4" />

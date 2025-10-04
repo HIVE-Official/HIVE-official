@@ -46,8 +46,7 @@ function HiveLabBuilderInternal({
   onDelete,
   className,
 }: Omit<HiveLabBuilderLayoutProps, 'initialTool'>) {
-  const state = useHiveLab();
-  const actions = useHiveLabActions();
+  const { state, actions } = useHiveLab();
 
   // Panel states
   const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);

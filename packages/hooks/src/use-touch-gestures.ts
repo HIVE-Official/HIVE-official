@@ -163,7 +163,7 @@ export function useTouchGestures(
   const lastTapTimeRef = useRef<number>(0)
   const initialScrollTopRef = useRef<number>(0)
 
-  const log = useCallback((message: string, ...args: any[]) => {
+  const log = useCallback((message: string, ...args: unknown[]) => {
     if (debug) {
       console.log(`[TouchGestures] ${message}`, ...args)
     }
@@ -410,7 +410,7 @@ export function useTouchGestures(
     }
   }, [enableSwipe, enablePullToRefresh, onSwipe, onPullToRefresh, onTouchEnd, calculateDistance, calculateVelocity, getSwipeDirection, swipeThreshold, swipeVelocityThreshold, pullToRefreshState.isTriggered, pullToRefreshState.isRefreshing, triggerHaptic, preventDefault, log])
 
-  const handleTouchCancel = useCallback((e: TouchEvent | React.TouchEvent) => {
+  const handleTouchCancel = useCallback((_e: TouchEvent | React.TouchEvent) => {
     // Clear all timers and reset state
     if (longPressTimerRef.current) {
       clearTimeout(longPressTimerRef.current)

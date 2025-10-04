@@ -128,7 +128,7 @@ export interface RitualProps {
 export class Ritual extends AggregateRoot<RitualProps> {
 
   private constructor(props: RitualProps, id?: string) {
-    super(props, id);
+    super(props, id || props.ritualId.value);
   }
 
   // Getters

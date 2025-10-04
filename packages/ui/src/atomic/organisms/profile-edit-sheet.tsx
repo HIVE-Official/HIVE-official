@@ -199,7 +199,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="fullName"
                   value={editedData.fullName}
-                  onChange={(e) => handleFieldChange('fullName', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleFieldChange('fullName', e.target.value)}
                   placeholder="Sarah Chen"
                   disabled={isLoading}
                 />
@@ -210,7 +210,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Textarea
                   id="bio"
                   value={editedData.bio || ''}
-                  onChange={(e) => handleFieldChange('bio', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleFieldChange('bio', e.target.value)}
                   placeholder="Tell people about yourself..."
                   rows={3}
                   disabled={isLoading}
@@ -226,7 +226,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="pronouns"
                   value={editedData.pronouns || ''}
-                  onChange={(e) => handleFieldChange('pronouns', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleFieldChange('pronouns', e.target.value)}
                   placeholder="she/her"
                   disabled={isLoading}
                 />
@@ -242,7 +242,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="major"
                   value={editedData.major}
-                  onChange={(e) => handleFieldChange('major', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleFieldChange('major', e.target.value)}
                   placeholder="Computer Science"
                   disabled={isLoading}
                 />
@@ -254,7 +254,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                   <select
                     id="academicYear"
                     value={editedData.academicYear || ''}
-                    onChange={(e) => handleFieldChange('academicYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleFieldChange('academicYear', e.target.value)}
                     disabled={isLoading}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
@@ -273,7 +273,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                     id="graduationYear"
                     type="number"
                     value={editedData.graduationYear || ''}
-                    onChange={(e) => handleFieldChange('graduationYear', parseInt(e.target.value))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleFieldChange('graduationYear', parseInt(e.target.value))}
                     placeholder="2026"
                     disabled={isLoading}
                   />
@@ -289,7 +289,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Label>Interests</Label>
                 <div className="flex flex-wrap gap-2">
                   {editedData.interests.map((interest, index) => (
-                    <Badge key={index} variant="secondary">
+                    <Badge key={index} variant="sophomore">
                       {interest}
                     </Badge>
                   ))}

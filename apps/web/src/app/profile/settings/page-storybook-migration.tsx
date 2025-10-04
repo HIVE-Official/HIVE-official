@@ -306,7 +306,7 @@ export default function ProfileSettingsStorybook() {
         ]}
         actions={
           <div className="flex items-center gap-3">
-            <Button variant="secondary" onClick={() => router.push("/profile")}>
+            <Button variant="outline" onClick={() => router.push("/profile")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Profile
             </Button>

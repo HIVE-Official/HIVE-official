@@ -53,7 +53,7 @@ export default function NotificationsPage() {
             <div className="flex items-center gap-3">
               <Bell className="w-6 h-6 text-[var(--hive-brand-primary)]" />
               <h1 className="text-2xl font-bold text-white">Notifications</h1>
-              <Badge variant="secondary" className="bg-[var(--hive-brand-primary)] text-black">
+              <Badge variant="sophomore" className="bg-[var(--hive-brand-primary)] text-black">
                 3
               </Badge>
             </div>

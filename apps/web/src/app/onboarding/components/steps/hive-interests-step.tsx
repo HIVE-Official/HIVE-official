@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Tag, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton } from "@hive/ui";
+import { Card, Button } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveInterestsStepProps {
@@ -293,7 +293,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <HiveCard className="p-[var(--hive-spacing-4)]">
+        <Card className="p-[var(--hive-spacing-4)]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Tag className="w-4 h-4 text-[var(--hive-brand-primary)]" />
@@ -326,7 +326,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
               animate={{ width: `${(selectedInterests.length / 6) * 100}%` }}
             />
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
 
       {/* Search */}
@@ -339,7 +339,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
           type="text"
           placeholder="Search interests..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent) => setSearchTerm(e.target.value)}
           className="w-full p-3 rounded-xl bg-[var(--hive-background-secondary)]/20 border border-[var(--hive-border-primary)]/30 text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 focus:ring-1 focus:ring-[var(--hive-brand-primary)]/20 transition-all"
         />
       </motion.div>
@@ -360,7 +360,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 + categoryIndex * 0.05 }}
             >
-              <HiveCard className="overflow-hidden">
+              <Card className="overflow-hidden">
                 {/* Category Header */}
                 <button
                   onClick={() => toggleCategory(category.id)}
@@ -431,7 +431,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </HiveCard>
+              </Card>
             </motion.div>
           );
         })}
@@ -444,7 +444,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <HiveCard className="p-[var(--hive-spacing-4)]">
+          <Card className="p-[var(--hive-spacing-4)]">
             <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-3 flex items-center">
               <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
               Your Vibe
@@ -461,7 +461,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
                 </motion.span>
               ))}
             </div>
-          </HiveCard>
+          </Card>
         </motion.div>
       )}
 
@@ -484,14 +484,14 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
           animate={{ opacity: 1, y: 0 }}
           className="text-center pt-4"
         >
-          <HiveButton
+          <Button
             variant="default"
             size="lg"
             onClick={onNext}
             className="px-8"
           >
             Continue to Final Step
-          </HiveButton>
+          </Button>
         </motion.div>
       )}
     </motion.div>

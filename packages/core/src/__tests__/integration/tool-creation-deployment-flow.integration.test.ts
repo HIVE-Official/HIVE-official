@@ -446,7 +446,7 @@ describe('Tool Creation & Deployment Flow - Integration', () => {
 
       const tools = result.getValue();
       expect(tools).toHaveLength(2);
-      expect(tools.every(tool => tool.isPublished)).toBe(true);
+      expect(tools.every((tool: any) => tool.isPublished)).toBe(true);
     });
 
     it('should search tools through repository layer', async () => {

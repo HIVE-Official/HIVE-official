@@ -118,7 +118,7 @@ const HiveLabElementLibrary = React.forwardRef<HTMLDivElement, HiveLabElementLib
         <div className="p-4 border-b border-white/8">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-white">Element Library</h3>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="freshman" className="text-xs">
               {filteredElements.length} elements
             </Badge>
           </div>
@@ -129,7 +129,7 @@ const HiveLabElementLibrary = React.forwardRef<HTMLDivElement, HiveLabElementLib
             <Input
               placeholder="Search elements..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setSearch(e.target.value)}
               className="pl-9 h-9 text-sm"
             />
           </div>
@@ -172,7 +172,7 @@ const HiveLabElementLibrary = React.forwardRef<HTMLDivElement, HiveLabElementLib
                       <span className={cn("text-sm font-semibold", category.color)}>
                         {category.icon} {category.name}
                       </span>
-                      <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                      <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
                         {categoryElements.length}
                       </Badge>
                     </div>
@@ -263,12 +263,12 @@ const ElementCard: React.FC<ElementCardProps> = ({ element, onSelect, onToggleFa
         <div className="flex items-center gap-2">
           <p className="text-xs font-medium text-white truncate">{element.name}</p>
           {element.isNew && (
-            <Badge variant="default" className="h-4 px-1 text-[9px] shrink-0">
+            <Badge variant="freshman" className="h-4 px-1 text-[9px] shrink-0">
               NEW
             </Badge>
           )}
           {element.complexity && element.complexity !== "simple" && (
-            <Badge variant="secondary" className="h-4 px-1 text-[9px] shrink-0">
+            <Badge variant="sophomore" className="h-4 px-1 text-[9px] shrink-0">
               {element.complexity === "advanced" ? "Advanced" : "Med"}
             </Badge>
           )}
@@ -278,7 +278,7 @@ const ElementCard: React.FC<ElementCardProps> = ({ element, onSelect, onToggleFa
 
       {/* Favorite Button */}
       <button
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent) => {
           e.stopPropagation()
           onToggleFavorite?.(element.id)
         }}

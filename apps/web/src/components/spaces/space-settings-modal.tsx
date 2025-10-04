@@ -24,10 +24,10 @@ import {
   MessageSquare
 } from 'lucide-react';
 import {
-  HiveModal,
-  HiveButton,
-  HiveInput,
-  HiveCard,
+  Dialog,
+  Button,
+  Input,
+  Card,
   Badge,
   Tabs,
   TabsList,
@@ -119,7 +119,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-4xl max-h-[90vh]">
+    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-4xl max-h-[90vh]">
       <div className="flex flex-col h-full">
         {/* Header */}
         <div className="p-6 border-b border-gray-800">
@@ -200,9 +200,9 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">Space Name</label>
-                      <HiveInput
+                      <Input
                         value={settings.name}
-                        onChange={(e) => updateSettings({ name: e.target.value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ name: e.target.value })}
                         placeholder="Enter space name"
                         maxLength={50}
                       />
@@ -213,7 +213,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Description</label>
                       <textarea
                         value={settings.description}
-                        onChange={(e) => updateSettings({ description: e.target.value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ description: e.target.value })}
                         placeholder="Describe your space"
                         maxLength={500}
                         rows={4}
@@ -226,7 +226,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Welcome Message</label>
                       <textarea
                         value={settings.welcomeMessage}
-                        onChange={(e) => updateSettings({ welcomeMessage: e.target.value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ welcomeMessage: e.target.value })}
                         placeholder="Message shown to new members (optional)"
                         maxLength={200}
                         rows={3}
@@ -240,27 +240,27 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                   <h3 className="text-lg font-semibold text-white mb-4">Space Icon & Banner</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <HiveCard className="p-4 bg-gray-800/50 border-gray-700">
+                    <Card className="p-4 bg-gray-800/50 border-gray-700">
                       <div className="text-center">
                         <Image className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                         <h4 className="font-medium text-white mb-2">Space Icon</h4>
-                        <HiveButton variant="secondary" size="sm">
+                        <Button variant="outline" size="sm">
                           <Upload className="w-4 h-4 mr-2" />
                           Upload Icon
-                        </HiveButton>
+                        </Button>
                       </div>
-                    </HiveCard>
+                    </Card>
 
-                    <HiveCard className="p-4 bg-gray-800/50 border-gray-700">
+                    <Card className="p-4 bg-gray-800/50 border-gray-700">
                       <div className="text-center">
                         <Image className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                         <h4 className="font-medium text-white mb-2">Cover Banner</h4>
-                        <HiveButton variant="secondary" size="sm">
+                        <Button variant="outline" size="sm">
                           <Upload className="w-4 h-4 mr-2" />
                           Upload Banner
-                        </HiveButton>
+                        </Button>
                       </div>
-                    </HiveCard>
+                    </Card>
                   </div>
                 </div>
               </TabsContent>
@@ -278,7 +278,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.isPrivate}
-                        onChange={(e) => updateSettings({ isPrivate: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ isPrivate: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -291,7 +291,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.requireApproval}
-                        onChange={(e) => updateSettings({ requireApproval: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ requireApproval: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -304,7 +304,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.allowInvites}
-                        onChange={(e) => updateSettings({ allowInvites: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ allowInvites: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -324,7 +324,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       </div>
                       <select
                         value={settings.slowMode}
-                        onChange={(e) => updateSettings({ slowMode: Number(e.target.value) })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ slowMode: Number(e.target.value) })}
                         className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white"
                       >
                         <option value={0}>Off</option>
@@ -344,7 +344,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.allowGuestPosts}
-                        onChange={(e) => updateSettings({ allowGuestPosts: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ allowGuestPosts: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -353,12 +353,12 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-4">Content Filters</h3>
-                  <HiveCard className="p-4 bg-gray-800/50 border-gray-700">
+                  <Card className="p-4 bg-gray-800/50 border-gray-700">
                     <p className="text-gray-400 text-sm">
                       Automatic content filtering is enabled for all spaces.
                       Content that violates community guidelines will be automatically flagged for review.
                     </p>
-                  </HiveCard>
+                  </Card>
                 </div>
               </TabsContent>
 
@@ -374,10 +374,10 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                           className="w-10 h-10 rounded-lg border border-gray-600"
                           style={{ backgroundColor: settings.primaryColor }}
                         />
-                        <HiveInput
+                        <Input
                           type="color"
                           value={settings.primaryColor}
-                          onChange={(e) => updateSettings({ primaryColor: e.target.value })}
+                          onChange={(e: React.ChangeEvent) => updateSettings({ primaryColor: e.target.value })}
                           className="w-20"
                         />
                         <span className="text-gray-400">{settings.primaryColor}</span>
@@ -392,7 +392,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.customEmojis}
-                        onChange={(e) => updateSettings({ customEmojis: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ customEmojis: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -413,7 +413,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.defaultNotifications}
-                        onChange={(e) => updateSettings({ defaultNotifications: e.target.checked })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ defaultNotifications: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -426,7 +426,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                   <h3 className="text-lg font-semibold text-red-400 mb-4">Danger Zone</h3>
 
                   <div className="space-y-4">
-                    <HiveCard className="p-4 border-red-500/20 bg-red-500/5">
+                    <Card className="p-4 border-red-500/20 bg-red-500/5">
                       <div className="flex items-start space-x-3">
                         <Archive className="w-5 h-5 text-red-400 mt-0.5" />
                         <div className="flex-1">
@@ -434,14 +434,14 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                           <p className="text-sm text-gray-400 mb-3">
                             Archive this space. It will be hidden from discovery but data will be preserved.
                           </p>
-                          <HiveButton variant="outline" className="border-red-500 text-red-400 hover:bg-red-500/10">
+                          <Button variant="outline" className="border-red-500 text-red-400 hover:bg-red-500/10">
                             Archive Space
-                          </HiveButton>
+                          </Button>
                         </div>
                       </div>
-                    </HiveCard>
+                    </Card>
 
-                    <HiveCard className="p-4 border-red-500/20 bg-red-500/5">
+                    <Card className="p-4 border-red-500/20 bg-red-500/5">
                       <div className="flex items-start space-x-3">
                         <Trash2 className="w-5 h-5 text-red-400 mt-0.5" />
                         <div className="flex-1">
@@ -451,13 +451,13 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                           </p>
 
                           {!showDeleteWarning ? (
-                            <HiveButton
+                            <Button
                               variant="outline"
                               className="border-red-500 text-red-400 hover:bg-red-500/10"
                               onClick={() => setShowDeleteWarning(true)}
                             >
                               Delete Space
-                            </HiveButton>
+                            </Button>
                           ) : (
                             <div className="space-y-3">
                               <div className="p-3 border border-red-500/20 bg-red-500/10 rounded-lg flex items-start space-x-2">
@@ -470,36 +470,36 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                                 </div>
                               </div>
 
-                              <HiveInput
+                              <Input
                                 value={deleteConfirm}
-                                onChange={(e) => setDeleteConfirm(e.target.value)}
+                                onChange={(e: React.ChangeEvent) => setDeleteConfirm(e.target.value)}
                                 placeholder={`Type "${space.name}" to confirm`}
                                 className="border-red-500/50"
                               />
 
                               <div className="flex space-x-2">
-                                <HiveButton
+                                <Button
                                   onClick={handleDeleteSpace}
                                   disabled={deleteConfirm !== space.name}
                                   className="bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
                                 >
                                   Delete Forever
-                                </HiveButton>
-                                <HiveButton
-                                  variant="secondary"
+                                </Button>
+                                <Button
+                                  variant="outline"
                                   onClick={() => {
                                     setShowDeleteWarning(false);
                                     setDeleteConfirm('');
                                   }}
                                 >
                                   Cancel
-                                </HiveButton>
+                                </Button>
                               </div>
                             </div>
                           )}
                         </div>
                       </div>
-                    </HiveCard>
+                    </Card>
                   </div>
                 </div>
               </TabsContent>
@@ -510,10 +510,10 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
         {/* Footer */}
         <div className="p-6 border-t border-gray-800 bg-gray-950/50">
           <div className="flex justify-end space-x-3">
-            <HiveButton variant="secondary" onClick={onClose}>
+            <Button variant="outline" onClick={onClose}>
               Cancel
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               onClick={handleSave}
               disabled={saving}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
@@ -529,10 +529,10 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                   Save Changes
                 </>
               )}
-            </HiveButton>
+            </Button>
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

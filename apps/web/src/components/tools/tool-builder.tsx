@@ -332,14 +332,14 @@ export function ToolBuilder({
         </div>
         <div className="flex items-center space-x-3">
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="h-4 w-4 mr-2" />
             Import
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={exportTool}
             disabled={!formData.name}
           >
@@ -347,7 +347,7 @@ export function ToolBuilder({
             Export
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => setShowPreview(!showPreview)}
           >
             <Eye className="h-4 w-4 mr-2" />
@@ -374,7 +374,7 @@ export function ToolBuilder({
               {Object.keys(toolTemplates).map(template => (
                 <Button
                   key={template}
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={() => loadTemplate(template)}
                 >
@@ -477,7 +477,7 @@ export function ToolBuilder({
                 <div className="flex items-center justify-between mb-3">
                   <Label className="text-white">Input Fields</Label>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={addInputField}
                   >
@@ -529,7 +529,7 @@ export function ToolBuilder({
                         </div>
                         <div className="col-span-1">
                           <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             onClick={() => removeInputField(index)}
                             className="text-red-400 border-red-400"
@@ -553,7 +553,7 @@ export function ToolBuilder({
                 <div className="flex items-center justify-between mb-3">
                   <Label className="text-white">Output Fields</Label>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     onClick={addOutputField}
                   >
@@ -599,7 +599,7 @@ export function ToolBuilder({
                         </div>
                         <div className="col-span-1">
                           <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             onClick={() => removeOutputField(index)}
                             className="text-red-400 border-red-400"
@@ -698,7 +698,7 @@ export function ToolBuilder({
           {/* Actions */}
           <div className="flex items-center justify-between">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={onCancel}
               disabled={isSaving}
             >

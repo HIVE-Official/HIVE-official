@@ -16,7 +16,7 @@ export interface SSEFeedEvent {
   type: 'new-post' | 'update-post' | 'delete-post' | 'reaction' | 'comment'
   data: {
     id: string
-    content?: any
+    content?: unknown
     postId?: string
     count?: number
     timestamp: string
@@ -105,7 +105,7 @@ export function useFeedSSE(options: UseFeedSSEOptions = {}): UseFeedSSEReturn {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const subscribersRef = useRef<Map<string, Set<(event: SSEFeedEvent) => void>>>(new Map())
 
-  const log = useCallback((message: string, ...args: any[]) => {
+  const log = useCallback((message: string, ...args: unknown[]) => {
     if (debug) {
       console.log(`[FeedSSE] ${message}`, ...args)
     }
@@ -208,8 +208,8 @@ export function useFeedSSE(options: UseFeedSSEOptions = {}): UseFeedSSEReturn {
         }))
       }
 
-      eventSource.onerror = (error) => {
-        log('SSE connection error:', error)
+      eventSource.onerror = (_error) => {
+        log('SSE connection error:', _error)
 
         setConnectionState(prev => ({
           ...prev,

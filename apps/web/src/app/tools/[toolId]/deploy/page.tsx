@@ -386,7 +386,7 @@ export default function ToolDeployPage() {
 
       <div className="flex gap-3">
         <Button
-          variant="secondary"
+          variant="outline"
           onClick={() => setStep('target')}
           className="border-[var(--hive-border-primary)]"
         >
@@ -460,7 +460,7 @@ export default function ToolDeployPage() {
 
         <div className="flex gap-3">
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => setStep('config')}
             className="border-[var(--hive-border-primary)]"
           >
@@ -505,7 +505,7 @@ export default function ToolDeployPage() {
 
       <div className="flex gap-3 justify-center">
         <Button
-          variant="secondary"
+          variant="outline"
           onClick={() => ToolNavigation.toMarketplace()}
           className="border-[var(--hive-border-primary)]"
         >

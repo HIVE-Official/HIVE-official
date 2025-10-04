@@ -216,7 +216,7 @@ export function ReportContentModal({
     }}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="secondary" size="sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
+          <Button variant="outline" size="sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
             <Flag className="h-4 w-4 mr-2" />
             Report
           </Button>
@@ -376,7 +376,7 @@ export function ReportContentModal({
                   />
                   <Button
                     onClick={addEvidenceUrl}
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     disabled={!newUrl.trim()}
                   >
@@ -514,7 +514,7 @@ export function ReportContentModal({
             <div className="flex justify-between pt-4 border-t border-gray-800">
               <Button
                 onClick={handleBack}
-                variant="secondary"
+                variant="outline"
                 disabled={currentStep === 'category'}
               >
                 Back

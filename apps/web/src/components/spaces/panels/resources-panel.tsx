@@ -24,9 +24,9 @@ import {
   Folder
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
-  HiveInput,
+  Button,
+  Card,
+  Input,
   Badge,
   Tabs,
   TabsList,
@@ -244,7 +244,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Resources</h3>
           {canUpload && (
-            <HiveButton
+            <Button
               size="sm"
               onClick={() => document.getElementById('file-upload')?.click()}
               disabled={uploading}
@@ -252,7 +252,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
             >
               <Plus className="w-4 h-4 mr-1" />
               Add
-            </HiveButton>
+            </Button>
           )}
         </div>
 
@@ -270,10 +270,10 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
         {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <HiveInput
+          <Input
             placeholder="Search resources..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -291,7 +291,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy(e.target.value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recent</option>
@@ -306,7 +306,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <input
             type="checkbox"
             checked={showArchived}
-            onChange={(e) => setShowArchived(e.target.checked)}
+            onChange={(e: React.ChangeEvent) => setShowArchived(e.target.checked)}
             className="rounded"
           />
           Show archived
@@ -318,7 +318,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           type="file"
           multiple
           className="hidden"
-          onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+          onChange={(e: React.ChangeEvent) => e.target.files && handleFileUpload(e.target.files)}
           accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png,.gif,.mp4,.mp3"
         />
       </div>
@@ -372,14 +372,14 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
                   {searchQuery ? `No resources found for "${searchQuery}"` : 'No resources yet'}
                 </p>
                 {canUpload && !searchQuery && (
-                  <HiveButton
+                  <Button
                     size="sm"
                     variant="outline"
                     className="mt-3"
                     onClick={() => document.getElementById('file-upload')?.click()}
                   >
                     Add First Resource
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             )}
@@ -421,7 +421,7 @@ function ResourceCard({
   const isOwnResource = resource.createdBy === 'current-user-id'; // TODO: get from auth context
 
   return (
-    <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
+    <Card className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
       resource.isPinned ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     } ${resource.isArchived ? 'opacity-60' : ''}`}>
       <div className="flex items-start gap-3">
@@ -458,9 +458,9 @@ function ResourceCard({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <HiveButton size="sm" variant="ghost">
+                <Button size="sm" variant="ghost">
                   <MoreVertical className="w-4 h-4" />
-                </HiveButton>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-700">
                 {resource.type === 'link' ? (
@@ -546,6 +546,6 @@ function ResourceCard({
           </div>
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

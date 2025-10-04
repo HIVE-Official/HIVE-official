@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, Badge, Card } from "@hive/ui";
+import { Dialog, Button, Badge, Card } from "@hive/ui";
 import { Alert } from "@/components/temp-stubs";
 import { 
   Calendar, 
@@ -169,7 +169,7 @@ export function EventDetailsModal({
   };
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={onClose}
      
@@ -376,7 +376,7 @@ export function EventDetailsModal({
                       {event.location.virtualLink && (
                         <div className="mt-2">
                           <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             onClick={() => window.open(event.location.virtualLink, '_blank')}
                             className="flex items-center space-x-2"
@@ -445,7 +445,7 @@ export function EventDetailsModal({
                     {event.capacity.max - event.capacity.current} spots left
                   </Badge>
                   {event.organizer.id === currentUserId && (
-                    <Button variant="secondary" size="sm">
+                    <Button variant="outline" size="sm">
                       <UserPlus className="h-4 w-4 mr-1" />
                       Invite
                     </Button>
@@ -576,7 +576,7 @@ export function EventDetailsModal({
                   Discussion ({event.engagement.comments})
                 </h3>
                 {event.organizer.id === currentUserId && (
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" size="sm">
                     <Settings className="h-4 w-4 mr-1" />
                     Moderate
                   </Button>
@@ -690,7 +690,7 @@ export function EventDetailsModal({
                     
                     {event.engagement.comments > 3 && (
                       <div className="text-center">
-                        <Button variant="secondary" size="sm">
+                        <Button variant="outline" size="sm">
                           Load {event.engagement.comments - 3} more comments
                         </Button>
                       </div>
@@ -710,6 +710,6 @@ export function EventDetailsModal({
           )}
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

@@ -266,7 +266,7 @@ export function VisualToolComposer({
 
         <div className="flex items-center space-x-2">
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => setShowGrid(!showGrid)}
             className={showGrid ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
           >
@@ -292,7 +292,7 @@ export function VisualToolComposer({
           </div>
 
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={handlePreview}
             disabled={canvasElements.length === 0}
           >
@@ -309,7 +309,7 @@ export function VisualToolComposer({
             Save Tool
           </Button>
           
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
         </div>
@@ -443,7 +443,7 @@ export function VisualToolComposer({
                         {(schema as any).type === 'boolean' && (
                           <div className="mt-1">
                             <Button
-                              variant="secondary"
+                              variant="outline"
                               size="sm"
                               onClick={() => handleElementConfigChange(selectedCanvasElement.id, {
                                 [key]: !selectedCanvasElement.config[key]
@@ -470,7 +470,7 @@ export function VisualToolComposer({
 
                   <div className="pt-4 border-t border-hive-border-default">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
                       onClick={() => handleElementDelete(selectedCanvasElement.id)}
                       className="text-red-400 border-red-400 hover:bg-red-500/10"

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from "lucide-react";
-import { HiveButton, HiveLogo } from "@hive/ui";
+import { Button, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveWelcomeStepProps {
@@ -69,7 +69,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
           className="flex justify-center"
         >
-          <HiveButton
+          <Button
             variant="default"
             size="lg"
             onClick={onNext}
@@ -79,7 +79,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
             aria-label="Start the onboarding process"
           >
             Get Started
-          </HiveButton>
+          </Button>
         </motion.div>
       </motion.div>
     </motion.div>

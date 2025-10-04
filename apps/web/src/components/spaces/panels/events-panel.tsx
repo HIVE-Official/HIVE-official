@@ -16,14 +16,14 @@ import {
   Star
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
+  Button,
+  Card,
   Badge,
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
-  HiveInput
+  Input
 } from '@hive/ui';
 import { api } from '@/lib/api-client';
 
@@ -117,14 +117,14 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Events & Schedule</h3>
           {canCreateEvents && (
-            <HiveButton
+            <Button
               size="sm"
               onClick={() => setShowCreateModal(true)}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-1" />
               Create
-            </HiveButton>
+            </Button>
           )}
         </div>
 
@@ -200,14 +200,14 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
                     <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 text-sm">No upcoming events</p>
                     {canCreateEvents && (
-                      <HiveButton
+                      <Button
                         size="sm"
                         variant="outline"
                         className="mt-3"
                         onClick={() => setShowCreateModal(true)}
                       >
                         Create First Event
-                      </HiveButton>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -279,7 +279,7 @@ function EventCard({
   };
 
   return (
-    <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
+    <Card className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
       isToday ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     }`}>
       <div className="flex items-start justify-between mb-2">
@@ -328,7 +328,7 @@ function EventCard({
 
         {event.isRsvpRequired && (
           <div className="flex gap-1">
-            <HiveButton
+            <Button
               size="sm"
               variant={event.userRsvp === 'going' ? 'default' : 'outline'}
               className={`text-xs h-6 px-2 ${
@@ -339,8 +339,8 @@ function EventCard({
               onClick={() => onRsvp(event.id, 'going')}
             >
               Going
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               size="sm"
               variant={event.userRsvp === 'maybe' ? 'default' : 'outline'}
               className={`text-xs h-6 px-2 ${
@@ -351,10 +351,10 @@ function EventCard({
               onClick={() => onRsvp(event.id, 'maybe')}
             >
               Maybe
-            </HiveButton>
+            </Button>
           </div>
         )}
       </div>
-    </HiveCard>
+    </Card>
   );
 }

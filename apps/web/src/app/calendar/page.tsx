@@ -344,7 +344,7 @@ export default function CalendarPage() {
             {/* Conflict Warning */}
             {conflictEvents.length > 0 && (
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() => setShowConflicts(true)}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
@@ -371,7 +371,7 @@ export default function CalendarPage() {
 
             {/* Settings */}
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setShowIntegrations(true)}
             >
@@ -396,7 +396,7 @@ export default function CalendarPage() {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() => navigateDate('prev')}
               >
@@ -410,7 +410,7 @@ export default function CalendarPage() {
               </h2>
               
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() => navigateDate('next')}
               >
@@ -419,7 +419,7 @@ export default function CalendarPage() {
             </div>
             
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setCurrentDate(new Date())}
             >
@@ -655,14 +655,14 @@ export default function CalendarPage() {
                   {formatDate(event.startTime)} • {formatTime(event.startTime)} - {formatTime(event.endTime)}
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" size="sm">
                     <X className="h-3 w-3 mr-1" />
                     Remove
                   </Button>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" size="sm">
                     Reschedule
                   </Button>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" size="sm">
                     Keep Both
                   </Button>
                 </div>

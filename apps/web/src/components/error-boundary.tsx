@@ -255,7 +255,7 @@ function DefaultErrorFallback({
 
           {!isGlobalError && (
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => window.location.reload()}
               className="border-hive-border text-hive-text-secondary"
             >
@@ -265,7 +265,7 @@ function DefaultErrorFallback({
           )}
 
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/feed'}
             className="border-hive-border text-hive-text-secondary"
           >

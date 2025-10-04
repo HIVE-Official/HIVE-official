@@ -13,6 +13,7 @@
 
 import type { Profile } from '../../profile/aggregates/profile.aggregate'
 import type { Space } from '../../spaces/aggregates/space.aggregate'
+import { SpaceCategoryEnum } from '../../spaces/value-objects/space-category.value'
 
 // Use Profile as User (they're the same in HIVE)
 type User = Profile
@@ -144,7 +145,8 @@ export class FeedAlgorithmService {
     // Loneliness relief - critical for first-year students
     if (signals.loneliness) {
       score += 35
-      if (user.profile?.graduationYear && this.isFirstYear(user.profile.graduationYear)) {
+      // Note: Profile doesn't have nested profile property, access graduationYear directly
+      if ((user as any).academicInfo?.graduationYear && this.isFirstYear((user as any).academicInfo.graduationYear)) {
         score += 15
       }
     }
@@ -161,7 +163,7 @@ export class FeedAlgorithmService {
     // Academic help - major-specific boost
     if (signals.academicHelp) {
       score += 25
-      if (space.category.value === 'academic' && space.name.value.includes(user.personalInfo?.major || '')) {
+      if (space.category.value === SpaceCategoryEnum.ACADEMIC && space.name.toString().includes(user.personalInfo?.major || '')) {
         score += 25
       }
     }
@@ -178,7 +180,7 @@ export class FeedAlgorithmService {
     // Social anxiety relief
     if (signals.socialAnxiety) {
       score += 25
-      if (space.category === 'social') {
+      if (space.category.value === SpaceCategoryEnum.SOCIAL) {
         score += 20 // Social spaces feel safer for social anxiety
       }
     }
@@ -326,7 +328,7 @@ export class FeedAlgorithmService {
       newMemberRestricted: space.settings?.requireApproval || false,
       leaderOnly: post.authorRole === 'leader',
       timeExclusive: post.expiresAt ? new Date(post.expiresAt) > new Date() : false,
-      greekExclusive: space.category === 'social' && space.name.toLowerCase().includes('fraternity|sorority|greek')
+      greekExclusive: space.category.value === SpaceCategoryEnum.SOCIAL && space.name.toString().toLowerCase().includes('fraternity|sorority|greek')
     }
   }
 

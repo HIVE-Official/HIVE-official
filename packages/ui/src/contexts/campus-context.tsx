@@ -114,7 +114,7 @@ export interface CampusContextValue {
   actions: {
     updateLocation: (location: CampusLocation | null) => void
     refreshCommunityData: () => Promise<void>
-    updateToolContext: (context: 'feed' | 'spaces' | 'profile') => void
+    updateToolContext: (context: 'feed' | 'spaces' | 'profile' | 'hivelab') => void
     requestLocationPermission: () => Promise<boolean>
   }
 }
@@ -274,7 +274,7 @@ export function CampusProvider({
   }, [user])
 
   // Update tool context based on current slice
-  const updateToolContext = React.useCallback((context: 'feed' | 'spaces' | 'profile') => {
+  const updateToolContext = React.useCallback((context: 'feed' | 'spaces' | 'profile' | 'hivelab') => {
     // Generate contextual tool suggestions based on current slice
     const suggestions: ToolSuggestion[] = []
 

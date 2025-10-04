@@ -45,7 +45,7 @@ function ProfileErrorFallback({ error, retry, errorId }: ProfileErrorFallbackPro
             Retry Profile
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/feed'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -53,7 +53,7 @@ function ProfileErrorFallback({ error, retry, errorId }: ProfileErrorFallbackPro
             Go to Feed
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/settings'}
             className="border-hive-border text-hive-text-secondary"
           >

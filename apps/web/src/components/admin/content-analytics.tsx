@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Progress,
   Tabs,
   TabsContent,
@@ -181,10 +181,10 @@ export function ContentAnalytics() {
               <TabsTrigger value="90d">90 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <HiveButton variant="outline" size="sm">
+          <Button variant="outline" size="sm">
             <Calendar className="w-4 h-4 mr-2" />
             Export Report
-          </HiveButton>
+          </Button>
         </div>
       </div>
 
@@ -384,10 +384,10 @@ export function ContentAnalytics() {
               <CardTitle>Space Health Monitor</CardTitle>
               <CardDescription>Track community space vitality and growth</CardDescription>
             </div>
-            <HiveButton variant="outline" size="sm">
+            <Button variant="outline" size="sm">
               <BarChart3 className="w-4 h-4 mr-2" />
               Detailed Report
-            </HiveButton>
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -398,7 +398,7 @@ export function ContentAnalytics() {
                   <div>
                     <h4 className="font-medium text-white">{space.name}</h4>
                     <div className="flex items-center gap-3 mt-1">
-                      <Badge variant="outline" className="text-xs">{space.type}</Badge>
+                      <Badge variant="freshman" className="text-xs">{space.type}</Badge>
                       <span className="text-xs text-gray-400">
                         {space.metrics.members} members
                       </span>

@@ -263,7 +263,7 @@ export default function ConnectionsPage() {
           <Input
             placeholder="Search connections..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             className="mb-4 bg-gray-900 border-white/8"
           />
 

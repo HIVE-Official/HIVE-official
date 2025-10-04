@@ -38,6 +38,8 @@ export interface PropertyFieldProps {
   required?: boolean;
   /** Help text */
   helpText?: string;
+  /** Help text (alias for helpText) */
+  help?: string;
   /** Placeholder text */
   placeholder?: string;
   /** Options (for select type) */
@@ -58,7 +60,8 @@ export function PropertyField({
   value,
   onChange,
   required = false,
-  helpText,
+  helpText: propHelpText,
+  help,
   placeholder,
   options = [],
   min,
@@ -67,6 +70,7 @@ export function PropertyField({
   className,
 }: PropertyFieldProps) {
   const id = `field-${label.toLowerCase().replace(/\s+/g, '-')}`;
+  const helpText = propHelpText ?? help;
 
   const renderField = () => {
     switch (type) {
@@ -76,7 +80,7 @@ export function PropertyField({
             id={id}
             type="text"
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
             required={required}
@@ -89,7 +93,7 @@ export function PropertyField({
             id={id}
             type="number"
             value={value ?? ''}
-            onChange={(e) => onChange(e.target.valueAsNumber)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange((e.target as HTMLInputElement).valueAsNumber)}
             placeholder={placeholder}
             min={min}
             max={max}
@@ -134,7 +138,7 @@ export function PropertyField({
           <Textarea
             id={id}
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)}
             placeholder={placeholder}
             disabled={disabled}
             required={required}
@@ -149,14 +153,14 @@ export function PropertyField({
               id={id}
               type="color"
               value={value || '#000000'}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)}
               disabled={disabled}
               className="h-9 w-16 rounded border cursor-pointer"
             />
             <Input
               type="text"
               value={value || ''}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)}
               placeholder="#000000"
               disabled={disabled}
               className="flex-1"
@@ -170,7 +174,7 @@ export function PropertyField({
             id={id}
             type="date"
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)}
             disabled={disabled}
             required={required}
           />

@@ -766,11 +766,11 @@ function AdminDashboardInternal() {
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Review Pending
                 </Button>
-                <Button variant="secondary">
+                <Button variant="outline">
                   <BarChart3 className="h-4 w-4 mr-2" />
                   View Analytics
                 </Button>
-                <Button variant="secondary">
+                <Button variant="outline">
                   <Activity className="h-4 w-4 mr-2" />
                   Export Data
                 </Button>
@@ -791,11 +791,11 @@ function AdminDashboardInternal() {
                   <Flag className="h-4 w-4 mr-2" />
                   {flagsLoading ? 'Loading...' : 'Refresh Flags'}
                 </Button>
-                <Button variant="secondary">
+                <Button variant="outline">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   View Analytics
                 </Button>
-                <Button variant="secondary">
+                <Button variant="outline">
                   <Settings className="h-4 w-4 mr-2" />
                   Create Flag
                 </Button>

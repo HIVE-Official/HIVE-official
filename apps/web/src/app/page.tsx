@@ -40,7 +40,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <HiveLogo size="xl" variant="gradient" showText={true} className="mx-auto mb-8" />
+          <HiveLogo size="lg" variant="gradient" showText={true} className="mx-auto mb-8" />
           <h1 className="text-5xl font-bold mb-6">
             Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
           </h1>
@@ -51,7 +51,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              variant="primary"
+              variant="default"
               onClick={() => router.push('/auth/login')}
             >
               Join HIVE

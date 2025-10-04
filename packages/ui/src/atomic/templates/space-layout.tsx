@@ -275,7 +275,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 <Users className="h-4 w-4 text-white/70" />
                 <h3 className="text-sm font-semibold text-white">Members</h3>
               </div>
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="sophomore" className="text-xs">
                 {stats.memberCount}
               </Badge>
             </div>
@@ -319,7 +319,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 <h3 className="text-sm font-semibold text-white">Events</h3>
               </div>
               {events.length > 0 && (
-                <Badge variant="default" className="text-xs bg-[#FFD700] text-black">
+                <Badge variant="freshman" className="text-xs bg-[#FFD700] text-black">
                   {events.length}
                 </Badge>
               )}
@@ -360,7 +360,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 <Wrench className="h-4 w-4 text-white/70" />
                 <h3 className="text-sm font-semibold text-white">Quick Tools</h3>
               </div>
-              <Badge variant="default" className="text-xs bg-[#FFD700] text-black">
+              <Badge variant="freshman" className="text-xs bg-[#FFD700] text-black">
                 4
               </Badge>
             </div>
@@ -386,7 +386,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                   <FileText className="h-4 w-4 text-white/70" />
                   <h3 className="text-sm font-semibold text-white">Resources</h3>
                 </div>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="sophomore" className="text-xs">
                   {resources.length}
                 </Badge>
               </div>
@@ -539,7 +539,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                       className="data-[state=active]:border-b-2 data-[state=active]:border-[#FFD700]"
                     >
                       <span className="truncate max-w-[120px]">{thread.title}</span>
-                      <Badge variant="secondary" className="ml-2 text-xs">
+                      <Badge variant="sophomore" className="ml-2 text-xs">
                         {thread.replyCount}
                       </Badge>
                     </TabsTrigger>
@@ -553,7 +553,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     showComposer={isJoined}
                     hasMore={hasMorePosts}
                     isLoading={isLoadingPosts}
-                    onAction={handleAction}
                   />
                 </TabsContent>
 
@@ -565,7 +564,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                       showComposer={false}
                       hasMore={false}
                       isLoading={false}
-                      onAction={handleAction}
                     />
                   </TabsContent>
                 ))}
@@ -577,7 +575,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 showComposer={isJoined}
                 hasMore={hasMorePosts}
                 isLoading={isLoadingPosts}
-                onAction={handleAction}
               />
             )}
           </MotionDiv>
@@ -626,7 +623,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     className="data-[state=active]:border-b-2 data-[state=active]:border-[#FFD700]"
                   >
                     <span className="truncate max-w-[120px]">{thread.title}</span>
-                    <Badge variant="secondary" className="ml-2 text-xs">
+                    <Badge variant="sophomore" className="ml-2 text-xs">
                       {thread.replyCount}
                     </Badge>
                   </TabsTrigger>
@@ -640,7 +637,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                   showComposer={isJoined}
                   hasMore={hasMorePosts}
                   isLoading={isLoadingPosts}
-                  onAction={handleAction}
                 />
               </TabsContent>
 
@@ -652,7 +648,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     showComposer={false}
                     hasMore={false}
                     isLoading={false}
-                    onAction={handleAction}
                   />
                 </TabsContent>
               ))}
@@ -664,7 +659,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
               showComposer={isJoined}
               hasMore={hasMorePosts}
               isLoading={isLoadingPosts}
-              onAction={handleAction}
             />
           )}
         </div>
@@ -759,7 +753,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 canInvite={isLeader}
                 previewLimit={50}
                 isLoading={isLoadingMembers}
-                onAction={handleAction}
               />
             </div>
           </DialogContent>
@@ -777,7 +770,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 canAddResources={isLeader}
                 alwaysShowAddButton={isLeader}
                 isLoading={isLoadingResources}
-                onAction={handleAction}
               />
             </div>
           </DialogContent>
@@ -802,7 +794,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 createdBy={space.creator}
                 rules={space.rules}
                 isLeader={isLeader}
-                onAction={handleAction}
               />
             </div>
           </DialogContent>

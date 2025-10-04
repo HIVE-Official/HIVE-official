@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveInput } from "@hive/ui";
+import { Card, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveFacultyInfoStepProps {
@@ -76,11 +76,11 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
         transition={{ delay: 0.3 }}
         className="space-y-[var(--hive-spacing-6)]"
       >
-        <HiveCard className="p-[var(--hive-spacing-6)]">
+        <Card className="p-[var(--hive-spacing-6)]">
           <div className="space-y-[var(--hive-spacing-5)]">
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hive-spacing-4)]">
-              <HiveInput
+              <Input
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
@@ -90,7 +90,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 required
               />
               
-              <HiveInput
+              <Input
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
@@ -102,10 +102,10 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
             </div>
 
           </div>
-        </HiveCard>
+        </Card>
 
         {/* Faculty Info */}
-        <HiveCard className="p-[var(--hive-spacing-4)]">
+        <Card className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full mr-2" />
             Faculty Access
@@ -125,7 +125,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
               <span>Access to advanced moderation and content tools</span>
             </div>
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

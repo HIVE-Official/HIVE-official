@@ -102,7 +102,7 @@ export function WaitlistForm({
             opportunities.
           </p>
           <Button
-            variant="secondary"
+            variant="outline"
             className="w-full"
             onClick={() => router.push("/welcome")}
           >

@@ -210,7 +210,7 @@ export function HiveLabElementLibrary({
           <Input
             placeholder="Search elements..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setSearchQuery(e.target.value)}
             className="pl-9 h-9 text-sm"
           />
         </div>
@@ -250,7 +250,7 @@ export function HiveLabElementLibrary({
               <span className="text-xs">New</span>
             </Button>
 
-            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+            <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
               {filteredElements.length}
             </Badge>
           </div>
@@ -296,7 +296,7 @@ export function HiveLabElementLibrary({
                     <span className={cn('text-sm font-semibold', category.color)}>
                       {category.icon} {category.name}
                     </span>
-                    <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                    <Badge variant="sophomore" className="h-5 px-1.5 text-xs">
                       {categoryElements.length}
                     </Badge>
                   </div>
@@ -312,23 +312,7 @@ export function HiveLabElementLibrary({
                     {categoryElements.map((element) => (
                       <ElementLibraryItem
                         key={element.id}
-                        element={{
-                          id: element.id,
-                          name: element.name,
-                          icon: element.icon,
-                          category: element.category,
-                          description: element.description,
-                          inputs: element.defaultInputs.map((input, i) => ({
-                            ...input,
-                            id: `${element.id}-in-${i}`,
-                          })),
-                          outputs: element.defaultOutputs.map((output, i) => ({
-                            ...output,
-                            id: `${element.id}-out-${i}`,
-                          })),
-                          isNew: element.isNew,
-                          complexity: element.complexity,
-                        }}
+                        element={element}
                         onSelect={onElementSelect ? () => onElementSelect(element) : undefined}
                         onToggleFavorite={onToggleFavorite}
                         compact={viewMode === 'grid'}
@@ -351,23 +335,7 @@ export function HiveLabElementLibrary({
             {filteredElements.map((element) => (
               <ElementLibraryItem
                 key={element.id}
-                element={{
-                  id: element.id,
-                  name: element.name,
-                  icon: element.icon,
-                  category: element.category,
-                  description: element.description,
-                  inputs: element.defaultInputs.map((input, i) => ({
-                    ...input,
-                    id: `${element.id}-in-${i}`,
-                  })),
-                  outputs: element.defaultOutputs.map((output, i) => ({
-                    ...output,
-                    id: `${element.id}-out-${i}`,
-                  })),
-                  isNew: element.isNew,
-                  complexity: element.complexity,
-                }}
+                element={element}
                 onSelect={onElementSelect ? () => onElementSelect(element) : undefined}
                 onToggleFavorite={onToggleFavorite}
                 compact={viewMode === 'grid'}

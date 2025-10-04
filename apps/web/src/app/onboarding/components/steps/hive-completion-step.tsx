@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from 'framer-motion';
 import { CheckCircle, Sparkles, ArrowRight, Heart, Users, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
+import { Card, Button, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveCompletionStepProps {
@@ -93,7 +93,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        <HiveCard className="p-[var(--hive-spacing-6)] text-left">
+        <Card className="p-[var(--hive-spacing-6)] text-left">
           <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4 text-center">
             Your HIVE Profile
           </h3>
@@ -139,7 +139,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
               </div>
             )}
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
 
       {/* What's Next */}
@@ -148,7 +148,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        <HiveCard className="p-[var(--hive-spacing-6)]">
+        <Card className="p-[var(--hive-spacing-6)]">
           <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4">
             What's next?
           </h3>
@@ -171,7 +171,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
               <span>Join your first campus ritual</span>
             </div>
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
 
       {/* Terms Acceptance & Complete Button */}
@@ -207,10 +207,10 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         </div>
 
         {/* Completion Button */}
-        <HiveButton
+        <Button
           onClick={handleComplete}
           disabled={isCompleting}
-          variant="primary"
+          variant="default"
           size="lg"
           className="w-full max-w-md mx-auto"
         >
@@ -230,7 +230,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
               <ArrowRight className="w-5 h-5" />
             </div>
           )}
-        </HiveButton>
+        </Button>
       </motion.div>
     </motion.div>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
+import { Button, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
 import {
   Hash,
   Users,
@@ -184,48 +184,48 @@ export default function SpaceDetailPage() {
               <div className="flex items-center gap-2">
                 {membership ? (
                   <>
-                    <HiveButton
+                    <Button
                       size="sm"
                       variant="outline"
                       className="border-gray-700"
                       onClick={() => {}}
                     >
                       <Bell className="w-4 h-4" />
-                    </HiveButton>
-                    <HiveButton
+                    </Button>
+                    <Button
                       size="sm"
                       variant="outline"
                       className="border-gray-700"
                       onClick={() => {}}
                     >
                       <Share className="w-4 h-4" />
-                    </HiveButton>
+                    </Button>
                     {isLeader && (
-                      <HiveButton
+                      <Button
                         size="sm"
                         variant="outline"
                         className="border-gray-700"
                         onClick={() => router.push(`/spaces/${spaceId}/settings`)}
                       >
                         <Settings className="w-4 h-4" />
-                      </HiveButton>
+                      </Button>
                     )}
-                    <HiveButton
+                    <Button
                       size="sm"
                       variant="outline"
                       className="border-red-500 text-red-400 hover:bg-red-500/10"
                       onClick={handleLeaveSpace}
                     >
                       Leave
-                    </HiveButton>
+                    </Button>
                   </>
                 ) : (
-                  <HiveButton
+                  <Button
                     className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                     onClick={handleJoinSpace}
                   >
                     Join Space
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             </div>
@@ -308,13 +308,13 @@ export default function SpaceDetailPage() {
           <div className={`${contextWidth} bg-gray-900 border-l border-gray-800 animate-slide-in-right`}>
             <div className="p-4 border-b border-gray-800 flex items-center justify-between">
               <h3 className="font-bold text-white capitalize">{contextPanel}</h3>
-              <HiveButton
+              <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => setContextPanel(null)}
               >
                 <X className="w-4 h-4" />
-              </HiveButton>
+              </Button>
             </div>
 
             {/* Context Panel Content */}

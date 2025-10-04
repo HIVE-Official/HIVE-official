@@ -18,9 +18,9 @@ import {
   Filter
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
-  HiveInput,
+  Button,
+  Card,
+  Input,
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -194,9 +194,9 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           {isLeader && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <HiveButton size="sm" variant="outline" className="border-gray-700">
+                <Button size="sm" variant="outline" className="border-gray-700">
                   <MoreVertical className="w-4 h-4" />
-                </HiveButton>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-700">
                 <DropdownMenuItem onClick={exportMembers}>
@@ -219,10 +219,10 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
         {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <HiveInput
+          <Input
             placeholder="Search members..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -249,7 +249,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           <Filter className="w-4 h-4 text-gray-400" />
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy(e.target.value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recently Joined</option>
@@ -291,14 +291,14 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
               {selectedMembers.length} selected
             </span>
             <div className="flex gap-2">
-              <HiveButton size="sm" variant="outline" className="border-red-600 text-red-400">
+              <Button size="sm" variant="outline" className="border-red-600 text-red-400">
                 <UserMinus className="w-4 h-4 mr-1" />
                 Remove
-              </HiveButton>
-              <HiveButton size="sm" variant="outline" className="border-blue-600 text-blue-400">
+              </Button>
+              <Button size="sm" variant="outline" className="border-blue-600 text-blue-400">
                 <MessageSquare className="w-4 h-4 mr-1" />
                 Message
-              </HiveButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -352,7 +352,7 @@ function MemberCard({
   };
 
   return (
-    <HiveCard className="p-3 bg-gray-900/50 border-gray-800 hover:border-gray-700 transition-colors">
+    <Card className="p-3 bg-gray-900/50 border-gray-800 hover:border-gray-700 transition-colors">
       <div className="flex items-center gap-3">
         <div className="relative">
           <Avatar className="w-10 h-10">
@@ -401,9 +401,9 @@ function MemberCard({
         {isLeader && member.role !== 'owner' && userRole !== member.role && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <HiveButton size="sm" variant="ghost">
+              <Button size="sm" variant="ghost">
                 <MoreVertical className="w-4 h-4" />
-              </HiveButton>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-gray-900 border-gray-700">
               <DropdownMenuItem>
@@ -455,6 +455,6 @@ function MemberCard({
           </div>
         </div>
       )}
-    </HiveCard>
+    </Card>
   );
 }

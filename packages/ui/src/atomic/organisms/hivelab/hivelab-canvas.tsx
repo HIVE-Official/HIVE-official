@@ -146,7 +146,7 @@ export function HiveLabCanvas({
             key={element.id}
             element={element}
             isSelected={selectedElementIds.includes(element.id)}
-            onClick={(e) => onElementClick?.(element.id, e)}
+            onClick={(e: React.MouseEvent) => onElementClick?.(element.id, e)}
             onDoubleClick={() => onElementDoubleClick?.(element.id)}
             zoom={viewport.zoom}
           />
@@ -169,6 +169,7 @@ export function HiveLabCanvas({
           maxZoom={4}
           onZoomIn={onZoomIn}
           onZoomOut={onZoomOut}
+          onZoomReset={() => onViewportChange?.({ ...viewport, zoom: 1 })}
           onZoomToFit={onZoomToFit}
           position="bottom-right"
           className="absolute bottom-4 right-4"
@@ -179,14 +180,15 @@ export function HiveLabCanvas({
       {showMiniMap && currentPage && (
         <MiniMap
           pages={pages}
-          elements={elements}
           currentPageId={currentPageId}
           viewport={viewport}
-          onNavigate={(pos) => {
+          containerWidth={1200}
+          containerHeight={800}
+          onViewportChange={(pos) => {
             onViewportChange?.({
               ...viewport,
-              x: -pos.x * viewport.zoom,
-              y: -pos.y * viewport.zoom,
+              x: pos.x ?? viewport.x,
+              y: pos.y ?? viewport.y,
             });
           }}
           className="absolute top-4 right-4"

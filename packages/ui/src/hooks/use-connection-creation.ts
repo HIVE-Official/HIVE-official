@@ -20,7 +20,6 @@ import {
   type Element,
   type Port,
 } from '@/lib/hivelab-utils';
-import { DATA_TYPE_COLORS, getPrimaryType } from '@/types/hivelab.types';
 
 interface UseConnectionCreationOptions {
   containerRef: React.RefObject<HTMLElement>;

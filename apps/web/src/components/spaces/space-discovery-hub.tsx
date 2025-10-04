@@ -20,8 +20,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Input,
   Tabs,
@@ -233,7 +233,7 @@ export function SpaceDiscoveryHub() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
                   placeholder={currentCategory.searchPlaceholder}
                   className="pl-10 bg-gray-800 border-gray-700 text-white"
                 />
@@ -241,7 +241,7 @@ export function SpaceDiscoveryHub() {
 
               {/* Activity View Toggle */}
               <div className="flex gap-2">
-                <HiveButton
+                <Button
                   variant={activityView === 'trending' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('trending')}
@@ -249,8 +249,8 @@ export function SpaceDiscoveryHub() {
                 >
                   <TrendingUp className="w-4 h-4 mr-1" />
                   Trending
-                </HiveButton>
-                <HiveButton
+                </Button>
+                <Button
                   variant={activityView === 'active' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('active')}
@@ -258,8 +258,8 @@ export function SpaceDiscoveryHub() {
                 >
                   <Activity className="w-4 h-4 mr-1" />
                   Active Now
-                </HiveButton>
-                <HiveButton
+                </Button>
+                <Button
                   variant={activityView === 'new' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setActivityView('new')}
@@ -267,7 +267,7 @@ export function SpaceDiscoveryHub() {
                 >
                   <Sparkles className="w-4 h-4 mr-1" />
                   New
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -327,7 +327,7 @@ export function SpaceDiscoveryHub() {
               const activeCount = realtimeActivity.get(space.id) || space.activeNow;
 
               return (
-                <HiveCard
+                <Card
                   key={space.id}
                   className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)]/50 transition-all cursor-pointer group"
                   onClick={() => handleSpaceClick(space.id)}
@@ -412,7 +412,7 @@ export function SpaceDiscoveryHub() {
                       </div>
                     )}
                   </div>
-                </HiveCard>
+                </Card>
               );
             })}
           </div>

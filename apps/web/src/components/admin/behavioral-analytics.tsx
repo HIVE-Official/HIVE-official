@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Progress,
   Tabs,
   TabsContent,
@@ -163,10 +163,10 @@ export function BehavioralAnalytics() {
               <TabsTrigger value="30d">30 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <HiveButton variant="outline" size="sm" onClick={loadBehavioralMetrics}>
+          <Button variant="outline" size="sm" onClick={loadBehavioralMetrics}>
             <Activity className="w-4 h-4 mr-2" />
             Refresh
-          </HiveButton>
+          </Button>
         </div>
       </div>
 
@@ -324,7 +324,7 @@ export function BehavioralAnalytics() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Triggered</span>
-                      <Badge variant="outline">{data.triggered}</Badge>
+                      <Badge variant="freshman">{data.triggered}</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-400">Relieved</span>

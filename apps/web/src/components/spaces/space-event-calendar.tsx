@@ -33,12 +33,12 @@ import {
   Globe
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Avatar,
-  HiveModal,
-  HiveInput
+  Dialog,
+  Input
 } from '@hive/ui';
 import type { User } from '@hive/core';
 
@@ -241,24 +241,24 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
 
           {/* Filter */}
           <div className="relative">
-            <HiveButton variant="secondary" size="sm">
+            <Button variant="outline" size="sm">
               <Filter className="w-4 h-4 mr-2" />
               {filter === 'all' ? 'All Events' :
                filter === 'upcoming' ? 'Upcoming' :
                filter === 'attending' ? 'Attending' : 'Organizing'}
-            </HiveButton>
+            </Button>
             {/* Simplified filter - would need proper dropdown */}
           </div>
 
           {/* Create Event */}
           {canCreateEvents && (
-            <HiveButton
+            <Button
               onClick={() => setShowCreateModal(true)}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Event
-            </HiveButton>
+            </Button>
           )}
         </div>
       </div>
@@ -272,27 +272,27 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
               {format(currentDate, 'MMMM yyyy')}
             </h4>
             <div className="flex items-center space-x-2">
-              <HiveButton
-                variant="secondary"
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setCurrentDate(subMonths(currentDate, 1))}
               >
                 <ChevronLeft className="w-4 h-4" />
-              </HiveButton>
-              <HiveButton
-                variant="secondary"
+              </Button>
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setCurrentDate(new Date())}
               >
                 Today
-              </HiveButton>
-              <HiveButton
-                variant="secondary"
+              </Button>
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setCurrentDate(addMonths(currentDate, 1))}
               >
                 <ChevronRight className="w-4 h-4" />
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -361,13 +361,13 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
                 }
               </p>
               {canCreateEvents && filter === 'all' && (
-                <HiveButton
+                <Button
                   onClick={() => setShowCreateModal(true)}
                   className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create First Event
-                </HiveButton>
+                </Button>
               )}
             </div>
           ) : (
@@ -427,14 +427,14 @@ function EventCard({
   const isUpcoming = new Date(event.startTime) > new Date();
 
   return (
-    <HiveCard className="p-4 hover:border-[var(--hive-brand-primary)]/50 transition-colors">
+    <Card className="p-4 hover:border-[var(--hive-brand-primary)]/50 transition-colors">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-1">
             <h4 className="font-semibold text-white cursor-pointer hover:text-[var(--hive-brand-primary)]" onClick={onView}>
               {event.title}
             </h4>
-            {isPast && <Badge variant="secondary" className="text-xs">Past</Badge>}
+            {isPast && <Badge variant="sophomore" className="text-xs">Past</Badge>}
             {event.isRecurring && <Repeat className="w-4 h-4 text-gray-400" />}
             {event.isVirtual && <Video className="w-4 h-4 text-blue-400" />}
           </div>
@@ -522,7 +522,7 @@ function EventCard({
           </button>
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -543,7 +543,7 @@ function EventDetailModal({
   const isPast = new Date(event.endTime) < new Date();
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-2xl">
+    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-2xl">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
@@ -593,30 +593,30 @@ function EventDetailModal({
           <div className="mb-6">
             <h4 className="font-medium text-white mb-3">Will you attend?</h4>
             <div className="flex space-x-3">
-              <HiveButton
+              <Button
                 variant={event.userRSVP === 'yes' ? 'default' : 'secondary'}
                 onClick={() => onRSVP(event.id, 'yes')}
                 className={event.userRSVP === 'yes' ? 'bg-green-500 hover:bg-green-600' : ''}
               >
                 <Check className="w-4 h-4 mr-2" />
                 Going
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 variant={event.userRSVP === 'maybe' ? 'default' : 'secondary'}
                 onClick={() => onRSVP(event.id, 'maybe')}
                 className={event.userRSVP === 'maybe' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
               >
                 <AlertCircle className="w-4 h-4 mr-2" />
                 Maybe
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 variant={event.userRSVP === 'no' ? 'default' : 'secondary'}
                 onClick={() => onRSVP(event.id, 'no')}
                 className={event.userRSVP === 'no' ? 'bg-red-500 hover:bg-red-600' : ''}
               >
                 <X className="w-4 h-4 mr-2" />
                 Can't Go
-              </HiveButton>
+              </Button>
             </div>
           </div>
         )}
@@ -647,7 +647,7 @@ function EventDetailModal({
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }
 
@@ -692,15 +692,15 @@ function CreateEventModal({
   };
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-lg">
+    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-lg">
       <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <h2 className="text-2xl font-bold text-white mb-4">Create Event</h2>
 
         <div>
           <label className="block text-sm font-medium text-white mb-2">Event Title</label>
-          <HiveInput
+          <Input
             value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Enter event title"
             required
           />
@@ -710,7 +710,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Description</label>
           <textarea
             value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Describe your event"
             rows={3}
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
@@ -723,7 +723,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.startTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -734,7 +734,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.endTime}
-              onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -743,22 +743,22 @@ function CreateEventModal({
 
         <div>
           <label className="block text-sm font-medium text-white mb-2">Location</label>
-          <HiveInput
+          <Input
             value={formData.location}
-            onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: e.target.value }))}
             placeholder="Event location or virtual link"
           />
         </div>
 
         <div className="flex justify-end space-x-3 pt-4">
-          <HiveButton type="button" variant="secondary" onClick={onClose}>
+          <Button type="button" variant="outline" onClick={onClose}>
             Cancel
-          </HiveButton>
-          <HiveButton type="submit" className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400">
+          </Button>
+          <Button type="submit" className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400">
             Create Event
-          </HiveButton>
+          </Button>
         </div>
       </form>
-    </HiveModal>
+    </Dialog>
   );
 }

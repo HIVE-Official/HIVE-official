@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User, Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveNameStepProps {
@@ -141,7 +141,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
         transition={{ delay: 0.3 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HiveInput
+          <Input
             id="firstName"
             type="text"
             label="First Name"
@@ -156,7 +156,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             className="w-full"
           />
           
-          <HiveInput
+          <Input
             id="lastName"
             type="text"
             label="Last Name"

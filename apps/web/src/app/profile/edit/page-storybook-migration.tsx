@@ -21,7 +21,7 @@ import {
   AvatarImage,
   AvatarFallback,
   Badge,
-  HiveModal
+  Dialog
 } from "@hive/ui";
 import { useHiveProfile } from '../../../hooks/use-hive-profile';
 import { ErrorBoundary } from '../../../components/error-boundary';
@@ -260,7 +260,7 @@ export default function ProfileEditPageStorybook() {
         actions={
           <div className="flex items-center gap-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -493,7 +493,7 @@ export default function ProfileEditPageStorybook() {
         </div>
 
         {/* 📷 **SOPHISTICATED AVATAR UPLOAD MODAL** */}
-        <HiveModal
+        <Dialog
           open={showAvatarModal}
           onOpenChange={() => setShowAvatarModal(false)}
         >
@@ -511,7 +511,7 @@ export default function ProfileEditPageStorybook() {
               Recommended: Square image, at least 400x400 pixels
             </p>
           </div>
-        </HiveModal>
+        </Dialog>
 
         {/* 🗂️ **DATA LISTS FOR ENHANCED UX** */}
         <datalist id="majors-list">
@@ -559,7 +559,7 @@ export default function ProfileEditPageStorybook() {
  * AFTER (@hive/ui components):
  * - FormField component with automatic accessibility
  * - InputEnhanced with sophisticated interactions
- * - HiveModal with liquid motion animations
+ * - Dialog with liquid motion animations
  * - Consistent design tokens throughout
  * - Built-in validation and error states
  * 

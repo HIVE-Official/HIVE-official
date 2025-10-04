@@ -286,7 +286,7 @@ export default function ToolEditPage() {
             <div className="flex items-center gap-3">
               <Button
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onClick={handleTest}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -295,7 +295,7 @@ export default function ToolEditPage() {
               </Button>
               <Button
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onClick={handlePreview}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
@@ -382,7 +382,7 @@ export default function ToolEditPage() {
                       <Button
                         key={elementType.type}
                         size="sm"
-                        variant="secondary"
+                        variant="outline"
                         className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[var(--hive-brand-primary)]/30 p-2 h-auto"
                         onClick={() => {
                           const newElement: ToolElement = {

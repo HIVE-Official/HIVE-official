@@ -10,7 +10,7 @@ import {
   Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput, HiveCard } from "@hive/ui";
+import { Input, Card } from "@hive/ui";
 import { UB_MAJORS } from "@hive/core";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -175,9 +175,9 @@ export function HiveAcademicsStep({
           </AnimatePresence>
         </div>
 
-        {/* Major Selection using HiveInput */}
+        {/* Major Selection using Input */}
         <div className="space-y-[var(--hive-spacing-3)]">
-          <HiveInput
+          <Input
             label="Major *"
             placeholder="Search for your major..."
             value={data.major || searchQuery}
@@ -307,7 +307,7 @@ export function HiveAcademicsStep({
           <div className="relative">
             <textarea
               value={bio}
-              onChange={(e) => {
+              onChange={(e: React.ChangeEvent) => {
                 const value = e.target.value.slice(0, 200);
                 setBio(value);
                 updateData({ bio: value });
@@ -374,7 +374,7 @@ export function HiveAcademicsStep({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <HiveCard className="p-[var(--hive-spacing-4)]">
+            <Card className="p-[var(--hive-spacing-4)]">
               <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
                 <BookOpen className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
                 Your Academic Journey
@@ -393,7 +393,7 @@ export function HiveAcademicsStep({
                   <span>Discover career-focused communities</span>
                 </div>
               </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         )}
       </motion.form>

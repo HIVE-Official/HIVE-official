@@ -2,42 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, 
-  Crown, 
-  Shield, 
-  User, 
-  UserPlus, 
-  UserMinus, 
-  MoreHorizontal, 
+import {
+  Users,
+  Crown,
+  Shield,
+  User,
+  UserPlus,
+  UserMinus,
   Search,
-  Filter,
   Settings,
   AlertTriangle,
   CheckCircle,
-  XCircle,
-  Mail,
-  MessageSquare,
   Eye,
-  EyeOff,
   Ban,
   UserCheck,
-  Star,
-  Calendar,
-  Activity,
-  TrendingUp,
-  Clock,
-  MapPin,
-  ExternalLink,
-  Download,
-  Upload,
-  Trash2,
-  Edit3,
-  Save,
-  X,
-  Plus
+  X
 } from 'lucide-react';
-import { Button, Badge, Alert } from "@hive/ui";
+import { Button, Badge } from "@hive/ui";
 // Space Member Management Interface for Claimed Leaders
 export interface MemberManagementProps {
   spaceId: string;
@@ -119,16 +100,16 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
   const [selectedRole, setSelectedRole] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedMember, setSelectedMember] = useState<MemberData | null>(null);
-  const [showMemberDetails, setShowMemberDetails] = useState(false);
+  const [_showMemberDetails, setShowMemberDetails] = useState(false);
   const [showRoleChangeModal, setShowRoleChangeModal] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [_showInviteModal, setShowInviteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
 
   // Permission checks
   const canChangeRoles = currentUserRole === 'owner' || currentUserRole === 'admin';
   const canRemoveMembers = currentUserRole === 'owner' || currentUserRole === 'admin';
-  const canSuspendMembers = true; // currentUserRole is always admin/owner/moderator
+  const _canSuspendMembers = true; // currentUserRole is always admin/owner/moderator
   const canInviteMembers = true; // currentUserRole is always admin/owner/moderator
 
   // Fetch members from API
@@ -375,7 +356,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             )}
             
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               className="border-white/[0.2] text-white hover:bg-white/[0.1]"
               onClick={onClose}
@@ -522,7 +503,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                   <div className="flex items-center gap-2">
                     {/* View Details */}
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
                       className="border-white/[0.2] text-white hover:bg-white/[0.1]"
                       onClick={() => {
@@ -537,7 +518,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                       <>
                         {/* Change Role */}
                         <Button
-                          variant="secondary"
+                          variant="outline"
                           size="sm"
                           className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
                           onClick={() => {
@@ -550,7 +531,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                         {/* Suspend/Unsuspend */}
                         <Button
-                          variant="secondary"
+                          variant="outline"
                           size="sm"
                           className={member.flags?.isSuspended 
                             ? "border-green-500/30 text-green-400 hover:bg-green-500/10"
@@ -564,7 +545,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {/* Remove Member */}
                         {canRemoveMembers && member.role !== 'owner' && (
                           <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                             onClick={() => handleRemoveMember(member.id)}
@@ -632,7 +613,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
               <div className="flex gap-3">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
                   onClick={() => {
                     setShowRoleChangeModal(false);

@@ -197,7 +197,7 @@ export default function ToolPage() {
                 )}
                 
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   onClick={() => router.push(`/tools/${tool.id}/analytics`)}
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
@@ -205,7 +205,7 @@ export default function ToolPage() {
                 </Button>
                 
                 <Button 
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => router.push(`/tools/${tool.id}/settings`)}
                 >
                   <Settings className="h-4 w-4 mr-2" />

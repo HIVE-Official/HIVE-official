@@ -340,7 +340,7 @@ export default function FeedPageV2() {
                 {hasMore && (
                   <div className="text-center py-4">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       onClick={loadMore}
                       disabled={loading}
                       className="w-full max-w-xs"
