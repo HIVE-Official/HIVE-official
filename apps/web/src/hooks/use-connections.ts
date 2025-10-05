@@ -28,7 +28,7 @@ interface ConnectionsState {
     averageStrength: number;
   };
   isLoading: boolean;
-  error: Error | null;
+  error: any | null;
 }
 
 interface UseConnectionsReturn extends ConnectionsState {

@@ -105,7 +105,7 @@ function getRequestContext(request: NextRequest): {
  * Handle and format API errors consistently with security
  */
 export async function handleApiError(
-  error: unknown,
+  error: any,
   request: NextRequest,
   userId?: string
 ): Promise<NextResponse<ApiErrorResponse>> {
@@ -114,7 +114,7 @@ export async function handleApiError(
   
   return handleSecureError(error, request, {
     userId,
-    operation: 'api_call'
+    action: 'api_call'
   }) as unknown as Promise<NextResponse<ApiErrorResponse>>;
 }
 

@@ -7,12 +7,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useMemo } from 'react';
-import { cn } from '../../../lib/utils';
-import { Input } from '../../atoms/input';
-import { Badge } from '../../atoms/badge';
-import { Button } from '../../atoms/button';
-import { FloatingPanel } from '../../molecules/panels/floating-panel';
-import { ElementLibraryItem } from '../../molecules/panels/element-library-item';
+import { cn } from '../../../lib/utils.js';
+import { Input } from '../../atoms/input.js';
+import { Badge } from '../../atoms/badge.js';
+import { Button } from '../../atoms/button.js';
+import { FloatingPanel } from '../../molecules/panels/floating-panel.js';
+import { ElementLibraryItem } from '../../molecules/panels/element-library-item.js';
 import { Search, Star, Grid3x3, List } from 'lucide-react';
 /**
  * Category definitions matching ElementCategory type

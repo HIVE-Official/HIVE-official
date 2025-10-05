@@ -5,6 +5,7 @@ import { authAdmin } from "./firebase-admin";
 
 export interface AuthUser {
   uid: string;
+  id: string; // Alias for uid for backwards compatibility
   email: string;
   emailVerified: boolean;
   customClaims?: Record<string, any>;
@@ -30,6 +31,7 @@ export async function verifyAuthToken(
 
     return {
       uid: decodedToken.uid,
+      id: decodedToken.uid, // Alias for backwards compatibility
       email: decodedToken.email || "",
       emailVerified: decodedToken.email_verified || false,
       customClaims: decodedToken.custom_claims,

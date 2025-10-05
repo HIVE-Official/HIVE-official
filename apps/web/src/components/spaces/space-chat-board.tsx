@@ -316,8 +316,8 @@ export function SpaceChatBoard({
               <Sparkles className="w-4 h-4 text-[var(--hive-brand-primary)]" />
               <span className="text-sm text-[var(--hive-brand-primary)]">{enhancementSuggestion}</span>
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 className="ml-auto text-[var(--hive-brand-primary)]"
                 onClick={() => {
                   if (enhancementSuggestion.includes('poll')) setPostType('poll');
@@ -352,7 +352,7 @@ export function SpaceChatBoard({
         <div className="flex gap-2">
           <Input
             value={newPostContent}
-            onChange={(e: React.ChangeEvent) => setNewPostContent((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent) => setNewPostContent((e.target as any).value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

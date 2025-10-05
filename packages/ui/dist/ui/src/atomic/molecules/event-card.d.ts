@@ -69,5 +69,12 @@ export interface EventCardProps extends React.HTMLAttributes<HTMLDivElement> {
     enablePsychology?: boolean;
 }
 declare const EventCard: React.ForwardRefExoticComponent<EventCardProps & React.RefAttributes<HTMLDivElement>>;
+export type EventCampusContext = {
+    friendsGoing: Array<{
+        id: string;
+        name: string;
+        avatar: string;
+    }>;
+};
 export { EventCard };
 //# sourceMappingURL=event-card.d.ts.map

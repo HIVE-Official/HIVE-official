@@ -186,7 +186,7 @@ export const CommandPalette: React.FC<{
           <input
             type="text"
             value={search}
-            onChange={(e: React.ChangeEvent) => setSearch(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearch((e.target as HTMLInputElement).value)}
             placeholder="Type a command or search..."
             className="w-full bg-transparent text-white placeholder-white/40 outline-none text-lg"
             autoFocus

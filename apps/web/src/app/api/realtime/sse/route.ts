@@ -21,13 +21,13 @@ export async function GET(request: NextRequest) {
     const channels = channelsParam ? channelsParam.split(',') : ['global'];
 
     logger.info('SSE connection requested', { 
-      userId: user.uid, 
+      userId: user.id, 
       channels,
       userAgent: request.headers.get('user-agent') || undefined 
     });
 
     // Create SSE stream
-    const stream = sseRealtimeService.createConnection(user.uid, channels);
+    const stream = sseRealtimeService.createConnection(user.id, channels);
 
     // Return SSE response with proper headers
     return new Response(stream, {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('SSE connection error', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('SSE connection error', { error: error instanceof Error ? error.message : String(error) });
     return new Response('Internal Server Error', { status: 500 });
   }
 }

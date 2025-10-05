@@ -1,14 +1,14 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Input } from "../atoms/input";
-import { Label } from "../atoms/label";
-import { Textarea } from "../atoms/textarea";
-import { Switch } from "../atoms/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select";
-import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card.js";
+import { Input } from "../atoms/input.js";
+import { Label } from "../atoms/label.js";
+import { Textarea } from "../atoms/textarea.js";
+import { Switch } from "../atoms/switch.js";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select.js";
+import { Button } from "../atoms/button.js";
 import { Settings, Trash2 } from "lucide-react";
 const HiveLabPropertiesPanel = React.forwardRef(({ className, selectedElement, onPropertyChange, onDeleteElement, ...props }, ref) => {
     if (!selectedElement) {

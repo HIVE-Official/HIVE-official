@@ -8,9 +8,9 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import type { DataType, Port as PortType } from '@/types/hivelab.types';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils';
+import type { DataType, Port as PortType } from '../../../types/hivelab.types';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types';
 
 export interface PortProps {
   /** Port data */

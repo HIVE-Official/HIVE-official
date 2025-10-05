@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv } from "../../shells/motion-safe";
-import { transitions } from "../../lib/animations";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card";
-import { Badge } from "./badge";
-import { Button } from "./button";
-import { cn } from "../../lib/utils";
+import { MotionDiv } from "../../shells/motion-safe.js";
+import { transitions } from "../../lib/animations/index.js";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card.js";
+import { Badge } from "./badge.js";
+import { Button } from "./button.js";
+import { cn } from "../../lib/utils.js";
 import { Users, Pin, TrendingUp } from "lucide-react";
 /**
  * Bulletin Board Card Component

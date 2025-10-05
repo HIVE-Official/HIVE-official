@@ -188,7 +188,7 @@ export function useRealtimeFeed(options: FeedOptions = {}) {
         ...prev,
         isLoading: false,
         isLoadingMore: false,
-        error: error instanceof Error ? error.message : 'Failed to load feed',
+        error: error instanceof Error ? error.message : String(error),
         connectionStatus: 'disconnected'
       }));
     }

@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Badge } from "../atoms/badge";
-import { Button } from "../atoms/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select";
+import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card.js";
+import { Badge } from "../atoms/badge.js";
+import { Button } from "../atoms/button.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs.js";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select.js";
 import { TrendingUp, TrendingDown, Users, Eye, MousePointerClick, Calendar, Download, Lightbulb, AlertCircle, CheckCircle2, } from "lucide-react";
 const HiveLabAnalyticsDashboard = React.forwardRef(({ className, toolsAnalytics = [], selectedToolId, onToolSelect, dateRange = "30d", onDateRangeChange, onExport, insights = [], ...props }, ref) => {
     const selectedTool = toolsAnalytics.find((t) => t.toolId === selectedToolId);

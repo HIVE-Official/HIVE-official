@@ -192,7 +192,7 @@ export interface ErrorContext {
  * Error monitoring service
  */
 export class ErrorMonitor {
-  private static instance: ErrorMonitor;
+  private static instance: ErrorMonitor | null = null;
 
   static getInstance(): ErrorMonitor {
     if (!ErrorMonitor.instance) {
@@ -247,7 +247,7 @@ export class ErrorMonitor {
   /**
    * Capture an error with full context
    */
-  async captureError(error: Error, context?: ErrorContext): Promise<string | null> {
+  async captureError(error: any, context?: ErrorContext): Promise<string | null> {
     await this.ensureInitialized();
 
     const errorId = this.generateErrorId();
@@ -354,7 +354,7 @@ export class ErrorMonitor {
     }
   }
 
-  private async sendToSentry(error: Error, context?: ErrorContext, errorId?: string): Promise<string> {
+  private async sendToSentry(error: any, context?: ErrorContext, errorId?: string): Promise<string> {
     return new Promise((resolve) => {
       sentryHub!.withScope((scope) => {
         // Set user context
@@ -428,7 +428,7 @@ export const logWarn = (message: string, context?: Record<string, any>) =>
 export const logError = (message: string, context?: Record<string, any>) => 
   errorMonitor.log(LogLevel.ERROR, message, context);
 
-export const captureError = (error: Error, context?: ErrorContext) => 
+export const captureError = (error: any, context?: ErrorContext) => 
   errorMonitor.captureError(error, context);
 
 export const setUser = (user: { id?: string; email?: string; username?: string }) => 

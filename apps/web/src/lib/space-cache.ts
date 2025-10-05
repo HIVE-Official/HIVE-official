@@ -166,7 +166,7 @@ export const SpaceCaching = {
       spaceCache.set(cacheKey, fresh, ttl);
       return fresh;
     } catch (error) {
-      logger.error('Failed to fetch space data for cache', { spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to fetch space data for cache', { spaceId, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   },
@@ -192,7 +192,7 @@ export const SpaceCaching = {
       spaceCache.set(cacheKey, fresh, ttl);
       return fresh;
     } catch (error) {
-      logger.error('Failed to fetch membership data for cache', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to fetch membership data for cache', { userId, spaceId, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   },
@@ -217,7 +217,7 @@ export const SpaceCaching = {
       spaceCache.set(cacheKey, fresh, ttl);
       return fresh;
     } catch (error) {
-      logger.error('Failed to fetch tools data for cache', { spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to fetch tools data for cache', { spaceId, error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   },

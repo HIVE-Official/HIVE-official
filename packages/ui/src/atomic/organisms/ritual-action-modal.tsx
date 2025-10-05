@@ -173,7 +173,7 @@ const RitualActionModal = React.forwardRef<HTMLDivElement, RitualActionModalProp
               {action.type === "text" && (
                 <Textarea
                   value={formData.text || ""}
-                  onChange={(e: React.ChangeEvent) => setFormData({ ...formData, text: e.target.value })}
+                  onChange={(e: React.ChangeEvent) => setFormData({ ...formData, text: (e.target as HTMLInputElement).value })}
                   placeholder={action.placeholder || "Share your thoughts..."}
                   required={action.required}
                   className="bg-white/5 border-white/8 text-white placeholder:text-white/50 text-base min-h-[120px] focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/50 transition-all"
@@ -185,7 +185,7 @@ const RitualActionModal = React.forwardRef<HTMLDivElement, RitualActionModalProp
                   type="number"
                   step="0.1"
                   value={formData.value || ""}
-                  onChange={(e: React.ChangeEvent) => setFormData({ ...formData, value: parseFloat(e.target.value) })}
+                  onChange={(e: React.ChangeEvent) => setFormData({ ...formData, value: parseFloat((e.target as HTMLInputElement).value) })}
                   placeholder={action.placeholder || "0"}
                   required={action.required}
                   className="bg-white/5 border-white/8 text-white text-3xl font-bold text-center h-20 placeholder:text-white/50 focus:border-[#FFD700]/50 focus:ring-1 focus:ring-[#FFD700]/50 transition-all"

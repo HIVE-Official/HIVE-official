@@ -223,7 +223,7 @@ function LoginPageContent() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = (e.target as HTMLInputElement).value;
+    const email = (e.target as any).value;
     setFormData({ email });
 
     // Clear previous errors
@@ -397,8 +397,7 @@ function LoginPageContent() {
                           autoComplete="email"
                           autoFocus
                           variant={error ? 'destructive' : 'default'}
-                          size="lg"
-                          className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50 focus:ring-[var(--hive-brand-primary)]/20 text-white placeholder-white/40"
+                          className="max-w-lg w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50 focus:ring-[var(--hive-brand-primary)]/20 text-white placeholder-white/40"
                           data-testid="email-input"
                         />
                       </div>
@@ -430,8 +429,7 @@ function LoginPageContent() {
                       type="submit"
                       disabled={isLoading || !formData.email || !!error}
                       variant="default"
-                      size="lg"
-                      className="w-full"
+                      className="max-w-lg w-full"
                       data-testid="send-magic-link-button"
                     >
                       {isLoading ? (
@@ -455,7 +453,7 @@ function LoginPageContent() {
       <Dialog
         open={success}
         onOpenChange={() => setSuccess(false)}
-        size="sm"
+        className="max-w-sm"
       >
         <DialogContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
           <motion.div
@@ -502,8 +500,7 @@ function LoginPageContent() {
               {devMagicLink && selectedSchool?.domain === 'test.edu' && (
                 <Button
                   variant="default"
-                  size="lg"
-                  className="w-full"
+                  className="max-w-lg w-full"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
@@ -512,8 +509,7 @@ function LoginPageContent() {
 
               <Button
                 variant="default"
-                size="lg"
-                className="w-full"
+                className="max-w-lg w-full"
                 onClick={() => {
                   setSuccess(false);
                   setDevMagicLink(null);

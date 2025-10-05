@@ -218,7 +218,7 @@ export default function FeedPageStoryBookMigration() {
             <div className="flex items-center bg-hive-background-overlay rounded-lg p-1">
               <Button
                 variant={feedFilter === "all" ? "primary" : "ghost"}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter("all")}
                 className="text-xs"
               >
@@ -227,7 +227,7 @@ export default function FeedPageStoryBookMigration() {
               </Button>
               <Button
                 variant={feedFilter === "following" ? "primary" : "ghost"}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter("following")}
                 className="text-xs"
               >
@@ -236,7 +236,7 @@ export default function FeedPageStoryBookMigration() {
               </Button>
               <Button
                 variant={feedFilter === "spaces" ? "primary" : "ghost"}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter("spaces")}
                 className="text-xs"
               >
@@ -245,7 +245,7 @@ export default function FeedPageStoryBookMigration() {
               </Button>
               <Button
                 variant={feedFilter === "academic" ? "primary" : "ghost"}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter("academic")}
                 className="text-xs"
               >
@@ -255,7 +255,7 @@ export default function FeedPageStoryBookMigration() {
             </div>
 
             {/* 🔔 **CAMPUS NOTIFICATIONS** */}
-            <Button variant="outline" size="sm" className="relative">
+            <Button variant="outline" className="max-w-sm" className="relative">
               <Bell className="h-4 w-4" />
               <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                 3

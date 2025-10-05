@@ -247,7 +247,7 @@ export function UnifiedSpaceInterface({
   // Get space type rules
   const spaceRules = useMemo(() => {
     if (!spaceData?.space?.type) return null;
-    return getSpaceTypeRules(spaceData.space.type as SpaceType);
+    return getSpaceTypeRules(spaceData.space.spaceType as SpaceType);
   }, [spaceData?.space?.type]);
 
   // Determine user permissions using unified permission system
@@ -340,7 +340,7 @@ export function UnifiedSpaceInterface({
                     <div className="flex items-center gap-3 mb-1">
                       <h1 className="text-2xl font-bold text-white">{space.name}</h1>
                       <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
-                        {space.type?.replace('_', ' ')}
+                        {space.spaceType?.replace('_', ' ')}
                       </Badge>
                     </div>
                     <p className="text-gray-400 max-w-2xl text-sm">
@@ -367,9 +367,8 @@ export function UnifiedSpaceInterface({
               <div className="flex items-center gap-3">
                 <Button
                   variant="outline"
-                  size="sm"
+                  className="max-w-sm lg:hidden border-gray-700 text-gray-300"
                   onClick={() => setContextPanelVisible(!contextPanelVisible)}
-                  className="lg:hidden border-gray-700 text-gray-300"
                 >
                   <Menu className="w-4 h-4" />
                 </Button>
@@ -378,8 +377,7 @@ export function UnifiedSpaceInterface({
                   <>
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="border-gray-700 text-gray-300 hover:text-white"
+                      className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                     >
                       <Bell className="w-4 h-4" />
                     </Button>
@@ -387,8 +385,7 @@ export function UnifiedSpaceInterface({
                     {hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'space:settings') && (
                       <Button
                         variant="outline"
-                        size="sm"
-                        className="border-gray-700 text-gray-300 hover:text-white"
+                        className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                       >
                         <Settings className="w-4 h-4 mr-2" />
                         Settings
@@ -399,8 +396,7 @@ export function UnifiedSpaceInterface({
 
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="border-gray-700 text-gray-300 hover:text-white"
+                  className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                 >
                   <Share className="w-4 h-4 mr-2" />
                   Share
@@ -532,8 +528,8 @@ export function UnifiedSpaceInterface({
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white">Space Info</h3>
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm"
                     onClick={() => setContextPanelVisible(false)}
                   >
                     <X className="w-4 h-4" />

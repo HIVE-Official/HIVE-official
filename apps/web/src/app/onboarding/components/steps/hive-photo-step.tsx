@@ -220,7 +220,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   }, [cropPosition, cropSize]);
 
   // Generate default avatar options based on user data
-  const avatarOptions = getDefaultAvatarOptions(data.handle || data.fullName || 'user');
+  const avatarOptions = getDefaultAvatarOptions(data.handle || data.displayName || 'user');
 
   // Show cropper modal
   if (showCropper && originalImage) {
@@ -344,7 +344,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  size="sm"
+                  className="max-w-sm"
                   onClick={cancelCrop}
                 >
                   <X className="w-4 h-4" /> Cancel
@@ -352,7 +352,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 
                 <Button
                   variant="default"
-                  size="sm"
+                  className="max-w-sm"
                   onClick={cropImage}
                 >
                   <CheckCircle className="w-4 h-4" /> Apply Crop
@@ -446,7 +446,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             <Button
               onClick={openFileDialog}
               variant="outline"
-              size="sm"
+              className="max-w-sm"
             >
               <Upload className="w-4 h-4" /> Change Photo
             </Button>

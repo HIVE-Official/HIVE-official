@@ -32,7 +32,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
     }, 1000);
   };
 
-  const firstName = data.fullName?.split(' ')[0] || 'there';
+  const firstName = data.displayName?.split(' ')[0] || 'there';
 
   return (
     <motion.div
@@ -211,8 +211,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
           onClick={handleComplete}
           disabled={isCompleting}
           variant="default"
-          size="lg"
-          className="w-full max-w-md mx-auto"
+          className="max-w-lg w-full max-w-md mx-auto"
         >
           {isCompleting ? (
             <div className="flex items-center justify-center gap-3">

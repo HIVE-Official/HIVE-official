@@ -35,7 +35,7 @@ const MOCK_TOOL_COMPOSITION: ToolComposition = {
   description: 'Create interactive polls for spaces and events',
   elements: [
     {
-      elementId: 'form-builder',
+      // id: 'form-builder',
       instanceId: 'poll-form',
       config: {
         fields: [
@@ -51,7 +51,7 @@ const MOCK_TOOL_COMPOSITION: ToolComposition = {
       size: { width: 400, height: 300 }
     },
     {
-      elementId: 'filter-selector',
+      // id: 'filter-selector',
       instanceId: 'poll-settings',
       config: {
         options: [
@@ -66,7 +66,7 @@ const MOCK_TOOL_COMPOSITION: ToolComposition = {
       size: { width: 300, height: 150 }
     },
     {
-      elementId: 'result-list',
+      // id: 'result-list',
       instanceId: 'poll-preview',
       config: {
         itemsPerPage: 10,
@@ -108,7 +108,7 @@ const ToolRuntimeWrapper = ({ composition, mode }: { composition: ToolCompositio
     <div className="space-y-4">
       <ToolRuntime
         composition={composition}
-        userId={user?.uid || 'anonymous'}
+        userId={user?.id || 'anonymous'}
         mode={mode}
         onExecutionResult={handleExecutionResult}
         onError={handleError}
@@ -192,8 +192,8 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => ToolNavigation.goBack('marketplace')}
                 className="text-[#A1A1AA] hover:text-white"
               >
@@ -213,7 +213,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
             <div className="flex items-center gap-3">
               <div className="flex items-center bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg">
                 <Button
-                  size="sm"
+                  className="max-w-sm"
                   variant={previewMode === 'preview' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('preview')}
                   className={previewMode === 'preview' ? 'bg-[var(--hive-brand-primary)] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
@@ -222,7 +222,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   Preview
                 </Button>
                 <Button
-                  size="sm"
+                  className="max-w-sm"
                   variant={previewMode === 'live' ? 'default' : 'ghost'}
                   onClick={() => setPreviewMode('live')}
                   className={previewMode === 'live' ? 'bg-[var(--hive-brand-primary)] text-[#0A0A0A]' : 'text-[#A1A1AA] hover:text-white'}
@@ -233,7 +233,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               </div>
               
               <Button
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
                 onClick={() => setIsFullscreen(!isFullscreen)}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
@@ -242,7 +242,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               </Button>
               
               <Button
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
                 onClick={handleEdit}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
@@ -252,7 +252,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               </Button>
               
               <Button
-                size="sm"
+                className="max-w-sm"
                 onClick={handleRun}
                 className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
               >
@@ -272,7 +272,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
               <h2 className="text-lg font-semibold text-white">Tool Preview</h2>
               <div className="flex items-center gap-2">
                 <Button
-                  size="sm"
+                  className="max-w-sm"
                   variant="outline"
                   onClick={() => window.location.reload()}
                   className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
@@ -280,7 +280,7 @@ export const ${composition.name.replace(/\s+/g, '')}Tool = {
                   <RefreshCw className="h-4 w-4" />
                 </Button>
                 <Button
-                  size="sm"
+                  className="max-w-sm"
                   variant="outline"
                   onClick={() => setShowCode(!showCode)}
                   className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"

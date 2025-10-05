@@ -65,7 +65,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize((e.target as HTMLInputElement).value);
+    const capitalized = autoCapitalize((e.target as any).value);
     setFirstName(capitalized);
     const newFullName = `${capitalized} ${lastName}`.trim();
     const newHandle = generateHandle(capitalized, lastName);
@@ -78,7 +78,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize((e.target as HTMLInputElement).value);
+    const capitalized = autoCapitalize((e.target as any).value);
     setLastName(capitalized);
     const newFullName = `${firstName} ${capitalized}`.trim();
     const newHandle = generateHandle(firstName, capitalized);
@@ -146,29 +146,27 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             type="text"
             label="First Name"
             placeholder="First name"
-            value={firstName}
-            onChange={handleFirstNameChange}
-            variant="default"
-            size="lg"
-            maxLength={50}
-            autoFocus
-            required
-            className="w-full"
-          />
+          value={firstName}
+          onChange={handleFirstNameChange}
+          variant="default"
+          className="max-w-lg w-full"
+          maxLength={50}
+          autoFocus
+          required
+        />
           
           <Input
             id="lastName"
             type="text"
             label="Last Name"
             placeholder="Last name"
-            value={lastName}
-            onChange={handleLastNameChange}
-            variant="default"
-            size="lg"
-            maxLength={50}
-            required
-            className="w-full"
-          />
+          value={lastName}
+          onChange={handleLastNameChange}
+          variant="default"
+          className="max-w-lg w-full"
+          maxLength={50}
+          required
+        />
         </div>
 
         {/* Live Preview */}

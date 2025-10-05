@@ -268,7 +268,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
     const sidebarContent = (
       <div className="space-y-4">
         {/* Members Widget */}
-        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-[400ms] hover:border-white/20">
+        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-smooth hover:border-white/20">
           <div className="p-4 border-b border-white/8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -311,7 +311,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
         </div>
 
         {/* Events Widget */}
-        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-[400ms] hover:border-white/20">
+        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-smooth hover:border-white/20">
           <div className="p-4 border-b border-white/8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -353,7 +353,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
         </div>
 
         {/* Tools Widget - SPEC Compliant Inline Tools */}
-        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-[400ms] hover:border-white/20">
+        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-smooth hover:border-white/20">
           <div className="p-4 border-b border-white/8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -379,7 +379,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
 
         {/* Resources Widget */}
         {(resources.length > 0 || isLeader) && (
-          <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-[400ms] hover:border-white/20">
+          <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-smooth hover:border-white/20">
             <div className="p-4 border-b border-white/8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -416,7 +416,7 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
         )}
 
         {/* About Widget */}
-        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-[400ms] hover:border-white/20">
+        <div className="rounded-lg border border-white/8 bg-[#0c0c0c] overflow-hidden transition-all duration-smooth hover:border-white/20">
           <div className="p-4 border-b border-white/8">
             <div className="flex items-center gap-2">
               <Info className="h-4 w-4 text-white/70" />
@@ -730,9 +730,12 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                     count: event.attendeeCount || 0
                   },
                   rsvp: {
-                    status: event.userRSVP || null
+                    status: event.userRSVP
+                      ? (event.userRSVP === 'attending' ? 'going' :
+                         event.userRSVP === 'maybe' ? 'interested' : 'not-going') as 'going' | 'interested' | 'not-going'
+                      : null
                   },
-                  category: event.category,
+                  category: (event.category || 'social') as 'sports' | 'greek' | 'social' | 'academic' | 'wellness',
                   campusContext: event.campusContext
                 }))}
                 onEventClick={(eventId) => {
@@ -777,7 +780,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 canAddResources={isLeader}
                 alwaysShowAddButton={isLeader}
                 isLoading={isLoadingResources}
-                onAction={handleAction}
               />
             </div>
           </DialogContent>
@@ -802,7 +804,6 @@ const SpaceLayout = React.forwardRef<HTMLDivElement, SpaceLayoutProps>(
                 createdBy={space.creator}
                 rules={space.rules}
                 isLeader={isLeader}
-                onAction={handleAction}
               />
             </div>
           </DialogContent>

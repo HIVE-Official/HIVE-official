@@ -40,7 +40,7 @@ export async function validateApiAuth(
       ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
       userAgent: request.headers.get('user-agent') || undefined,
       path: new URL(request.url).pathname,
-      operation: operation || '',
+      action: operation || '',
       tags: { reason: 'missing_auth_header' }
     });
 
@@ -55,7 +55,7 @@ export async function validateApiAuth(
   // In production, never allow development bypasses for sensitive operations
   if (isProductionEnvironment() && !allowDevelopmentBypass) {
     const validation = await validateAuthToken(token, request, {
-      operation: operation || '',
+      action: operation || '',
       requireRealAuth: true
     });
 
@@ -64,7 +64,7 @@ export async function validateApiAuth(
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        operation: operation || '',
+        action: operation || '',
         tags: { reason: validation.reason || 'invalid_token' }
       });
 
@@ -81,7 +81,7 @@ export async function validateApiAuth(
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        operation: operation || '',
+        action: operation || '',
         tags: { userId: validation.userId || '', reason: 'insufficient_permissions' }
       });
 
@@ -118,7 +118,7 @@ export async function validateApiAuth(
           }
         };
       } else {
-        console.warn(`⚠️ Development bypass denied for sensitive operation: ${operation}`);
+        console.warn(`⚠️ Development bypass denied for sensitive action: ${operation}`);
         throw new Response(
           JSON.stringify({ error: 'Real authentication required for this operation' }),
           { status: 401, headers: { 'content-type': 'application/json' } }

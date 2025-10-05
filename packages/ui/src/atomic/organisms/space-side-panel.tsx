@@ -19,7 +19,7 @@ import { Button } from "../atoms/button"
  * - Hash URL: Updates to #events, #members, #resources
  */
 
-export interface SpaceSidePanelProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceSidePanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'> {
   /** Panel is open */
   isOpen: boolean
 
@@ -99,7 +99,7 @@ export const SpaceSidePanel = React.forwardRef<HTMLDivElement, SpaceSidePanelPro
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={transitions.panel}
+              transition={transitions.default}
               className={cn(
                 "fixed right-0 top-0 z-50 h-full bg-[#0c0c0c] border-l border-white/8",
                 "flex flex-col overflow-hidden",

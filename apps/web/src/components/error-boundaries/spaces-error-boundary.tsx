@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ErrorBoundary } from '../error-boundary';
 
 interface SpacesErrorFallbackProps {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
 }
@@ -70,7 +70,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
           <div className="flex gap-2 justify-center flex-wrap">
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => window.location.href = '/spaces/search'}
               className="border-hive-border text-hive-text-tertiary"
             >
@@ -79,7 +79,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
             </Button>
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => window.location.href = '/spaces/browse'}
               className="border-hive-border text-hive-text-tertiary"
             >

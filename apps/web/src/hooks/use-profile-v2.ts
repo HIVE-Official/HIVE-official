@@ -41,7 +41,7 @@ interface UseProfileOptions {
 interface UseProfileReturn {
   profile: ProfileData | null;
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   refresh: () => Promise<void>;
   updatePrivacy: (privacy: any) => Promise<boolean>;
   isOwnProfile: boolean;

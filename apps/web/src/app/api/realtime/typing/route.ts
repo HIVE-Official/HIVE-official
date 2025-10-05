@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify access to channel
-    const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
+    const hasAccess = await verifyChannelAccess(user.id, channelId, spaceId);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(now.getTime() + 30000); // 30 seconds
 
     const typingIndicator: TypingIndicator = {
-      id: `typing_${user.uid}_${channelId}`,
-      userId: user.uid,
+      id: `typing_${user.id}_${channelId}`,
+      userId: user.id,
       userName: user.displayName || user.email || 'Unknown User',
       channelId,
       spaceId,
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     await dbAdmin.collection('typingIndicators').doc(typingIndicator.id).set(typingIndicator);
 
     // Send typing indicator to Firebase Realtime Database
-    await realtimeService.setTypingIndicator(spaceId, user.uid, true);
+    await realtimeService.setTypingIndicator(spaceId, user.id, true);
 
     // Broadcast typing indicator to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'start');
@@ -103,7 +103,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const typingId = `typing_${user.uid}_${channelId}`;
+    const typingId = `typing_${user.id}_${channelId}`;
     const typingDoc = await dbAdmin.collection('typingIndicators').doc(typingId).get();
 
     if (!typingDoc.exists) {
@@ -149,7 +149,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Channel ID and space ID are required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const typingId = `typing_${user.uid}_${channelId}`;
+    const typingId = `typing_${user.id}_${channelId}`;
     const typingDoc = await dbAdmin.collection('typingIndicators').doc(typingId).get();
 
     if (!typingDoc.exists) {
@@ -162,7 +162,7 @@ export async function DELETE(request: NextRequest) {
     await dbAdmin.collection('typingIndicators').doc(typingId).delete();
 
     // Remove typing indicator from Firebase Realtime Database
-    await realtimeService.setTypingIndicator(spaceId, user.uid, false);
+    await realtimeService.setTypingIndicator(spaceId, user.id, false);
 
     // Broadcast typing stop to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'stop');
@@ -197,7 +197,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify access
-    const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
+    const hasAccess = await verifyChannelAccess(user.id, channelId, spaceId);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -211,7 +211,7 @@ export async function GET(request: NextRequest) {
     const typingSnapshot = await typingQuery.get();
     const typingUsers = typingSnapshot.docs
       .map(doc => doc.data() as TypingIndicator)
-      .filter(indicator => indicator.userId !== user.uid) // Exclude current user
+      .filter(indicator => indicator.userId !== user.id) // Exclude current user
       .map(indicator => ({
         userId: indicator.userId,
         userName: indicator.userName,

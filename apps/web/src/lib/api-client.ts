@@ -30,7 +30,7 @@ class ApiClient {
           try {
             const userData = JSON.parse(devUser);
             // Return dev token format that backend expects
-            return `dev_token_${userData.uid || userData.id || 'debug-user'}`;
+            return `dev_token_${userData.id || userData.id || 'debug-user'}`;
           } catch (e) {
             console.error('Failed to parse dev user data:', e);
           }

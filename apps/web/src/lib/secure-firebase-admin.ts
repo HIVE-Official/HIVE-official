@@ -15,7 +15,7 @@ import { captureError, LogLevel } from "./error-monitoring";
 let firebaseInitialized = false;
 let dbAdmin: admin.firestore.Firestore = {} as admin.firestore.Firestore;
 let authAdmin: admin.auth.Auth = {} as admin.auth.Auth;
-let initializationError: Error | null = null;
+let initializationError: any | null = null;
 
 /**
  * Credential validation without logging sensitive data

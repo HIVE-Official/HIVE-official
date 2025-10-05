@@ -199,7 +199,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="fullName"
                   value={editedData.fullName}
-                  onChange={(e: React.ChangeEvent) => handleFieldChange('fullName', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleFieldChange('fullName', (e.target as HTMLInputElement).value)}
                   placeholder="Sarah Chen"
                   disabled={isLoading}
                 />
@@ -210,7 +210,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Textarea
                   id="bio"
                   value={editedData.bio || ''}
-                  onChange={(e: React.ChangeEvent) => handleFieldChange('bio', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleFieldChange('bio', (e.target as HTMLInputElement).value)}
                   placeholder="Tell people about yourself..."
                   rows={3}
                   disabled={isLoading}
@@ -226,7 +226,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="pronouns"
                   value={editedData.pronouns || ''}
-                  onChange={(e: React.ChangeEvent) => handleFieldChange('pronouns', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleFieldChange('pronouns', (e.target as HTMLInputElement).value)}
                   placeholder="she/her"
                   disabled={isLoading}
                 />
@@ -242,7 +242,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                 <Input
                   id="major"
                   value={editedData.major}
-                  onChange={(e: React.ChangeEvent) => handleFieldChange('major', e.target.value)}
+                  onChange={(e: React.ChangeEvent) => handleFieldChange('major', (e.target as HTMLInputElement).value)}
                   placeholder="Computer Science"
                   disabled={isLoading}
                 />
@@ -254,7 +254,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                   <select
                     id="academicYear"
                     value={editedData.academicYear || ''}
-                    onChange={(e: React.ChangeEvent) => handleFieldChange('academicYear', e.target.value)}
+                    onChange={(e: React.ChangeEvent) => handleFieldChange('academicYear', (e.target as HTMLInputElement).value)}
                     disabled={isLoading}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
@@ -273,7 +273,7 @@ const ProfileEditSheet = React.forwardRef<HTMLDivElement, ProfileEditSheetProps>
                     id="graduationYear"
                     type="number"
                     value={editedData.graduationYear || ''}
-                    onChange={(e: React.ChangeEvent) => handleFieldChange('graduationYear', parseInt(e.target.value))}
+                    onChange={(e: React.ChangeEvent) => handleFieldChange('graduationYear', parseInt((e.target as HTMLInputElement).value))}
                     placeholder="2026"
                     disabled={isLoading}
                   />

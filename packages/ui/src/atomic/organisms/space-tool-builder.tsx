@@ -61,7 +61,7 @@ function SpaceToolBuilderInternal({
   onExit,
   className,
 }: Omit<SpaceToolBuilderProps, 'initialTool'>) {
-  const state = useHiveLab();
+  const { state } = useHiveLab();
   const actions = useHiveLabActions();
 
   const [libraryCollapsed, setLibraryCollapsed] = React.useState(false);

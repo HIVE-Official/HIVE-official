@@ -181,7 +181,7 @@ export function ContentAnalytics() {
               <TabsTrigger value="90d">90 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" className="max-w-sm">
             <Calendar className="w-4 h-4 mr-2" />
             Export Report
           </Button>
@@ -384,7 +384,7 @@ export function ContentAnalytics() {
               <CardTitle>Space Health Monitor</CardTitle>
               <CardDescription>Track community space vitality and growth</CardDescription>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" className="max-w-sm">
               <BarChart3 className="w-4 h-4 mr-2" />
               Detailed Report
             </Button>
@@ -398,7 +398,7 @@ export function ContentAnalytics() {
                   <div>
                     <h4 className="font-medium text-white">{space.name}</h4>
                     <div className="flex items-center gap-3 mt-1">
-                      <Badge variant="secondary" className="text-xs">{space.type}</Badge>
+                      <Badge variant="secondary" className="text-xs">{space.spaceType}</Badge>
                       <span className="text-xs text-gray-400">
                         {space.metrics.members} members
                       </span>

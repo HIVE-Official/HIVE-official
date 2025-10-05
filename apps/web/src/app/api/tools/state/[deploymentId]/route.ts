@@ -46,12 +46,12 @@ export async function GET(
     }
     
     // Verify user can access this deployment
-    if (!await canUserAccessState(user.uid, deployment)) {
+    if (!await canUserAccessState(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get user's state for this deployment
-    const stateId = `${deploymentId}_${user.uid}`;
+    const stateId = `${deploymentId}_${user.id}`;
     const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
     
     if (!stateDoc.exists) {
@@ -118,11 +118,11 @@ export async function PUT(
     }
     
     // Verify user can access this deployment
-    if (!await canUserAccessState(user.uid, deployment)) {
+    if (!await canUserAccessState(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    const stateId = `${deploymentId}_${user.uid}`;
+    const stateId = `${deploymentId}_${user.id}`;
     const now = new Date().toISOString();
 
     // Get existing state if merging
@@ -150,7 +150,7 @@ export async function PUT(
     const stateDocument: ToolState = {
       deploymentId,
       toolId: deployment.toolId || '',
-      userId: user.uid,
+      userId: user.id,
       state: finalState,
       metadata: {
         version: metadata?.version || '1.0.0',
@@ -220,11 +220,11 @@ export async function PATCH(
     }
     
     // Verify user can access this deployment
-    if (!await canUserAccessState(user.uid, deployment)) {
+    if (!await canUserAccessState(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    const stateId = `${deploymentId}_${user.uid}`;
+    const stateId = `${deploymentId}_${user.id}`;
     const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
     
     if (!stateDoc.exists) {
@@ -322,11 +322,11 @@ export async function DELETE(
     }
     
     // Verify user can access this deployment
-    if (!await canUserAccessState(user.uid, deployment)) {
+    if (!await canUserAccessState(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    const stateId = `${deploymentId}_${user.uid}`;
+    const stateId = `${deploymentId}_${user.id}`;
     
     // Delete user's state
     await dbAdmin.collection('toolStates').doc(stateId).delete();

@@ -87,7 +87,7 @@ export class CircuitBreaker {
     private _config: CircuitBreakerConfig
   ) {}
 
-  async execute<T>(operation: () => Promise<T>): Promise<T> {
+  async execute<T>(action: () => Promise<T>): Promise<T> {
     this.cleanOldFailures();
 
     if (this.state === CircuitBreakerState._OPEN) {
@@ -100,7 +100,7 @@ export class CircuitBreaker {
     }
 
     try {
-      const result = await operation();
+      const result = await action();
       
       if (this.state === CircuitBreakerState._HALF_OPEN) {
         this.successes++;
@@ -242,7 +242,7 @@ export class RetryManager {
   private static circuitBreakers = new Map<string, CircuitBreaker>();
 
   static async executeWithRetry<T>(
-    operation: () => Promise<T>,
+    action: () => Promise<T>,
     config: Partial<RetryConfig> = {},
     circuitBreakerName?: string
   ): Promise<T> {
@@ -257,9 +257,9 @@ export class RetryManager {
 
     const executeOperation = async (): Promise<T> => {
       if (circuitBreaker) {
-        return circuitBreaker.execute(operation);
+        return circuitBreaker.execute(action);
       }
-      return operation();
+      return action();
     };
 
     for (let attempt = 0; attempt <= retryConfig.maxRetries; attempt++) {
@@ -383,11 +383,11 @@ export interface FallbackConfig<T> {
 
 export class GracefulDegradation {
   static async withFallback<T>(
-    operation: () => Promise<T>,
+    action: () => Promise<T>,
     config: FallbackConfig<T>
   ): Promise<T> {
     try {
-      return await operation();
+      return await action();
     } catch (error) {
       const classifiedError = ErrorClassifier.classify(error);
       

@@ -62,7 +62,7 @@ export async function GET(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -123,7 +123,7 @@ export async function GET(
         .collection("events")
         .doc(doc.id)
         .collection("rsvps")
-        .doc(decodedToken.uid)
+        .doc(decodedToken.id)
         .get();
 
       const userRsvpStatus = userRsvpDoc.exists 
@@ -136,7 +136,7 @@ export async function GET(
         organizer: organizer
           ? {
               id: organizerDoc.id,
-              fullName: organizer.fullName,
+              fullName: organizer.displayName,
               handle: organizer.handle,
               photoURL: organizer.photoURL,
             }
@@ -185,7 +185,7 @@ export async function POST(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -209,7 +209,7 @@ export async function POST(
       startDate,
       endDate,
       rsvpDeadline: validatedData.rsvpDeadline ? new Date(validatedData.rsvpDeadline) : null,
-      organizerId: decodedToken.uid,
+      organizerId: decodedToken.id,
       spaceId: spaceId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -222,15 +222,15 @@ export async function POST(
       .add(eventData);
 
     // Get the created event with organizer info
-    const organizerDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
+    const organizerDoc = await dbAdmin.collection("users").doc(decodedToken.id).get();
     const organizer = organizerDoc.data();
 
     const createdEvent = {
       id: eventRef.id,
       ...eventData,
       organizer: {
-        id: decodedToken.uid,
-        fullName: organizer?.fullName || "Unknown User",
+        id: decodedToken.id,
+        fullName: organizer?.displayName || "Unknown User",
         handle: organizer?.handle || "unknown",
         photoURL: organizer?.photoURL || null,
       },

@@ -12,6 +12,7 @@ import { logger } from "@/lib/structured-logger";
 export interface AuthenticatedRequest extends NextRequest {
   user: {
     uid: string;
+    id: string; // Alias for uid for backwards compatibility
     email: string;
     decodedToken: DecodedIdToken;
   };
@@ -19,6 +20,9 @@ export interface AuthenticatedRequest extends NextRequest {
 
 export interface RouteParams {
   params?: Record<string, string>;
+  // Additional properties for specific routes
+  isAdmin?: boolean;
+  userId?: string;
 }
 
 export type AuthenticatedHandler<T extends RouteParams = {}> = (
@@ -78,6 +82,7 @@ export function withAuth<T extends RouteParams>(
 
           authenticatedRequest.user = {
             uid: userId,
+            id: userId, // Alias for backwards compatibility
             email: email,
             decodedToken: {
               uid: userId,
@@ -126,6 +131,7 @@ export function withAuth<T extends RouteParams>(
         const authenticatedRequest = request as AuthenticatedRequest;
         authenticatedRequest.user = {
           uid: userId,
+          id: userId, // Alias for backwards compatibility
           email: `${userId}@test.edu`, // Generate a test email
           decodedToken: {
             uid: userId,
@@ -181,6 +187,7 @@ export function withAuth<T extends RouteParams>(
       const authenticatedRequest = request as AuthenticatedRequest;
       authenticatedRequest.user = {
         uid: decodedToken.uid,
+        id: decodedToken.uid, // Alias for backwards compatibility
         email: decodedToken.email,
         decodedToken
       };
@@ -243,7 +250,7 @@ export function withAdminAuth<T extends RouteParams>(
  * Helps migration from old pattern
  */
 export function getUserId(request: AuthenticatedRequest): string {
-  return request.user.uid;
+  return request.user.id;
 }
 
 /**

@@ -106,12 +106,12 @@ export async function POST(request: NextRequest) {
     // Process each user and apply text search + privacy filters
     for (const userData of usersToSearch) {
       // Skip private profiles unless explicitly requested or it's the current user
-      if (!includePrivateProfiles && userData.privacy?.profileVisibility === 'private' && userData.id !== decodedToken.uid) {
+      if (!includePrivateProfiles && userData.privacy?.profileVisibility === 'private' && userData.id !== decodedToken.id) {
         continue;
       }
 
       // Text matching
-      const fullName = (userData.fullName || '').toLowerCase();
+      const fullName = (userData.displayName || '').toLowerCase();
       const handle = (userData.handle || '').toLowerCase();
       const bio = (userData.bio || '').toLowerCase();
       const major = (userData.academic?.major || '').toLowerCase();
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
         // Check if they're connected (simplified - would need proper connection/follow system)
         const connectionDoc = await db
           .collection('users')
-          .doc(decodedToken.uid)
+          .doc(decodedToken.id)
           .collection('connections')
           .doc(userData.id)
           .get();
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
           // Get user's spaces
           const currentUserSpacesSnapshot = await db
             .collectionGroup('members')
-            .where('userId', '==', decodedToken.uid)
+            .where('userId', '==', decodedToken.id)
             .get();
           
           const currentUserSpaceIds = currentUserSpacesSnapshot.docs
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
 
       users.push({
         id: userData.id,
-        fullName: userData.fullName,
+        fullName: userData.displayName,
         handle: userData.handle,
         photoURL: userData.photoURL || null,
         bio: userData.bio,
@@ -238,7 +238,7 @@ export async function POST(request: NextRequest) {
           return bTime - aTime;
         }
         case 'alphabetical':
-          return (a.fullName || '').localeCompare(b.fullName || '');
+          return (a.displayName || '').localeCompare(b.displayName || '');
         case 'relevance':
         default:
           // Secondary sort by mutual spaces, then relevance

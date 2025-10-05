@@ -110,7 +110,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
           )}
 
           {/* Textarea Container with Claude-style rounded border */}
-          <div className="relative rounded-3xl border border-white/8 bg-[#0c0c0c] focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/20 transition-all duration-[400ms]">
+          <div className="relative rounded-3xl border border-white/8 bg-[#0c0c0c] focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/20 transition-all duration-smooth">
             {/* Left Tools (Plus Button for Inline Menu) */}
             {showInlineTools && (
               <div className="absolute left-2 bottom-2 flex items-center gap-1">
@@ -123,7 +123,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
                     <button
                       type="button"
                       className={cn(
-                        "p-2 hover:bg-white/10 rounded-full transition-all duration-[400ms]",
+                        "p-2 hover:bg-white/10 rounded-full transition-all duration-smooth",
                         toolMenuOpen
                           ? "bg-white/10 text-white"
                           : "text-white/70 hover:text-white"
@@ -140,7 +140,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
             <textarea
               ref={textareaRef}
               value={value}
-              onChange={(e: React.ChangeEvent) => onValueChange(e.target.value)}
+              onChange={(e: React.ChangeEvent) => onValueChange((e.target as HTMLInputElement).value)}
               onKeyDown={handleKeyDown}
               placeholder={placeholder}
               className={cn(
@@ -157,7 +157,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
                 <button
                   type="button"
                   onClick={onAttachFile}
-                  className="p-2 hover:bg-white/10 rounded-full transition-all duration-[400ms] text-white/70 hover:text-white"
+                  className="p-2 hover:bg-white/10 rounded-full transition-all duration-smooth text-white/70 hover:text-white"
                   title="Attach file"
                 >
                   <Paperclip className="h-5 w-5" />
@@ -169,7 +169,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
                 <button
                   type="button"
                   onClick={onAttachImage}
-                  className="p-2 hover:bg-white/10 rounded-full transition-all duration-[400ms] text-white/70 hover:text-white"
+                  className="p-2 hover:bg-white/10 rounded-full transition-all duration-smooth text-white/70 hover:text-white"
                   title="Add image"
                 >
                   <ImageIcon className="h-5 w-5" />
@@ -182,7 +182,7 @@ const SpaceComposerWithTools = React.forwardRef<HTMLDivElement, SpaceComposerWit
                 onClick={handlePost}
                 disabled={!value.trim()}
                 className={cn(
-                  "p-2 rounded-full transition-all duration-[400ms]",
+                  "p-2 rounded-full transition-all duration-smooth",
                   value.trim()
                     ? "bg-white text-black hover:bg-white/90"
                     : "bg-white/10 text-white/30 cursor-not-allowed"

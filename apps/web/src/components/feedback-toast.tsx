@@ -166,7 +166,7 @@ export function FeedbackToast() {
                     <textarea
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback((e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback((e.target as any).value)}
                       rows={4}
                       maxLength={500}
                       className="w-full px-4 py-3 bg-[var(--hive-background-secondary)] 

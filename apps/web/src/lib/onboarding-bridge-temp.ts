@@ -99,7 +99,7 @@ export function useOnboardingBridge() {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }, [unifiedAuth]);

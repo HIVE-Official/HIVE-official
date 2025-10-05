@@ -19,8 +19,19 @@ export async function GET() {
         id: "test-university",
         name: "Test University (Development)",
         domain: "test.edu",
-        status: "active",
-        waitlistCount: 0,
+        logo: undefined,
+        location: {
+          city: "Test City",
+          state: "Test State",
+          country: "US"
+        },
+        stats: {
+          studentCount: 1000,
+          facultyCount: 100
+        },
+        campusId: "test-university",
+        isActive: true,
+        createdAt: new Date(),
       };
       
       // Remove any existing test university and add it at the beginning
@@ -46,8 +57,19 @@ export async function GET() {
         id: "test-university",
         name: "Test University (Development)",
         domain: "test.edu",
-        status: "active",
-        waitlistCount: 0,
+        logo: undefined,
+        location: {
+          city: "Test City",
+          state: "Test State",
+          country: "US"
+        },
+        stats: {
+          studentCount: 1000,
+          facultyCount: 100
+        },
+        campusId: "test-university",
+        isActive: true,
+        createdAt: new Date(),
       }
     ];
     

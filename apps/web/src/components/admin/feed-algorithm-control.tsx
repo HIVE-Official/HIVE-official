@@ -259,11 +259,11 @@ export function FeedAlgorithmControl() {
               Last updated: {lastUpdated.toLocaleTimeString()}
             </span>
           )}
-          <Button onClick={loadMetrics} variant="outline" size="sm">
+          <Button onClick={loadMetrics} variant="outline" className="max-w-sm">
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={resetToDefaults} variant="outline" size="sm">
+          <Button onClick={resetToDefaults} variant="outline" className="max-w-sm">
             Reset Defaults
           </Button>
           <Button

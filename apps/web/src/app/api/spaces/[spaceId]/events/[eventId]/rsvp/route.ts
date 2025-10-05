@@ -34,7 +34,7 @@ export async function POST(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -81,7 +81,7 @@ export async function POST(
 
     // Create or update RSVP
     const rsvpData = {
-      userId: decodedToken.uid,
+      userId: decodedToken.id,
       eventId,
       spaceId,
       status,
@@ -95,7 +95,7 @@ export async function POST(
       .collection("events")
       .doc(eventId)
       .collection("rsvps")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .set(rsvpData, { merge: true });
 
     // Get updated attendee count
@@ -156,7 +156,7 @@ export async function GET(
       .collection("events")
       .doc(eventId)
       .collection("rsvps")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     const rsvpStatus = rsvpDoc.exists ? rsvpDoc.data()?.status : null;

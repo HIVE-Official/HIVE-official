@@ -48,16 +48,16 @@ export function usePresence() {
   const presenceRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     const campusId = 'ub-buffalo';
-    const userPresenceRef = doc(db, 'presence', user.uid);
+    const userPresenceRef = doc(db, 'presence', user.id);
 
     // Function to update presence
     const updatePresence = async (status: 'online' | 'away' | 'offline') => {
       try {
         await setDoc(userPresenceRef, {
-          userId: user.uid,
+          userId: user.id,
           status,
           lastSeen: serverTimestamp(),
           campusId,
@@ -67,7 +67,7 @@ export function usePresence() {
           }
         }, { merge: true });
       } catch (error) {
-        logger.error('Failed to update presence', { error: error instanceof Error ? error : new Error(String(error)) });
+        logger.error('Failed to update presence', { error: error instanceof Error ? error.message : String(error) });
       }
     };
 
@@ -100,13 +100,13 @@ export function usePresence() {
       try {
         // This will automatically set status to offline when connection is lost
         await onDisconnect(userPresenceRef).set({
-          userId: user.uid,
+          userId: user.id,
           status: 'offline',
           lastSeen: serverTimestamp(),
           campusId
         });
       } catch (error) {
-        logger.error('Failed to setup disconnect handler', { error: error instanceof Error ? error : new Error(String(error)) });
+        logger.error('Failed to setup disconnect handler', { error: error instanceof Error ? error.message : String(error) });
       }
     };
 
@@ -132,7 +132,7 @@ export function usePresence() {
       window.removeEventListener('offline', handleOffline);
       clearInterval(heartbeatInterval);
     };
-  }, [user?.uid]);
+  }, [user?.id]);
 
   return { isOnline };
 }
@@ -192,7 +192,7 @@ export function useOnlineUsers(spaceId?: string) {
               });
             }
           } catch (error) {
-            logger.error('Failed to fetch user data', { error: error instanceof Error ? error : new Error(String(error)), userId: presence.userId });
+            logger.error('Failed to fetch user data', { error: error instanceof Error ? error.message : String(error), userId: presence.userId });
           }
         });
 
@@ -202,7 +202,7 @@ export function useOnlineUsers(spaceId?: string) {
         setLoading(false);
       },
       (error) => {
-        logger.error('Failed to subscribe to online users', { error: error instanceof Error ? error : new Error(String(error)) });
+        logger.error('Failed to subscribe to online users', { error: error instanceof Error ? error.message : String(error) });
         setLoading(false);
       }
     );
@@ -235,7 +235,7 @@ export function useTypingIndicator(contextId: string) {
         const data = doc.data();
         // Only show if typed within last 3 seconds
         if (data.timestamp && (now - data.timestamp.toMillis()) < 3000) {
-          if (doc.id !== user?.uid) {
+          if (doc.id !== user?.id) {
             typing.push(doc.id);
           }
         }
@@ -245,13 +245,13 @@ export function useTypingIndicator(contextId: string) {
     });
 
     return () => unsubscribe();
-  }, [contextId, user?.uid]);
+  }, [contextId, user?.id]);
 
   // Function to indicate current user is typing
   const setTyping = async (isTyping: boolean) => {
-    if (!user?.uid || !contextId) return;
+    if (!user?.id || !contextId) return;
 
-    const typingRef = doc(db, 'typing', contextId, 'users', user.uid);
+    const typingRef = doc(db, 'typing', contextId, 'users', user.id);
 
     if (isTyping) {
       // Clear existing timeout
@@ -262,7 +262,7 @@ export function useTypingIndicator(contextId: string) {
       // Set typing indicator
       await setDoc(typingRef, {
         timestamp: serverTimestamp(),
-        userId: user.uid
+        userId: user.id
       });
 
       // Auto-clear after 3 seconds
@@ -277,7 +277,7 @@ export function useTypingIndicator(contextId: string) {
 
       await setDoc(typingRef, {
         timestamp: null,
-        userId: user.uid
+        userId: user.id
       });
     }
   };
@@ -310,7 +310,7 @@ export function useUserStatus(userId: string) {
         }
       },
       (error) => {
-        logger.error('Failed to get user status', { error: error instanceof Error ? error : new Error(String(error)), userId });
+        logger.error('Failed to get user status', { error: error instanceof Error ? error.message : String(error), userId });
         setStatus('offline');
       }
     );

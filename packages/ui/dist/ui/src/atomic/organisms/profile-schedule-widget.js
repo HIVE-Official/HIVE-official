@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils.js";
 import { Clock, MapPin, ChevronRight, Calendar as CalendarIcon, Plus, Upload } from "lucide-react";
 /**
  * Profile Schedule Widget

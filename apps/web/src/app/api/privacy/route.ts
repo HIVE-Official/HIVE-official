@@ -94,18 +94,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
     
     if (!privacyDoc.exists) {
       // Create default settings if none exist
       const newSettings: PrivacySettings = {
-        userId: user.uid,
+        userId: user.id,
         ...defaultPrivacySettings,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
       
-      await dbAdmin.collection('privacySettings').doc(user.uid).set(newSettings);
+      await dbAdmin.collection('privacySettings').doc(user.id).set(newSettings);
       return NextResponse.json({ settings: newSettings });
     }
 
@@ -137,9 +137,9 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get existing settings
-    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
     const existingSettings = privacyDoc.exists ? privacyDoc.data() as PrivacySettings : {
-      userId: user.uid,
+      userId: user.id,
       ...defaultPrivacySettings,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -156,10 +156,10 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await dbAdmin.collection('privacySettings').doc(user.uid).set(updatedSettings);
+    await dbAdmin.collection('privacySettings').doc(user.id).set(updatedSettings);
 
     // Apply privacy changes immediately
-    await applyPrivacyChanges(user.uid, updatedSettings);
+    await applyPrivacyChanges(user.id, updatedSettings);
 
     return NextResponse.json({ 
       settings: updatedSettings,

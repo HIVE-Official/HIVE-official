@@ -7,7 +7,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/atomic/atoms/button';
+import { Button } from '../button';
 import { cn } from '../../../lib/utils';
 import {
   ZoomIn,

@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { ProfileViewLayout, specProfileToUIProfile } from '@hive/ui';
 import { useSession } from '@/hooks/use-session';
 import { useToast } from '@/hooks/use-toast';
-import type { SpecCompliantProfile } from '@hive/core/domain/profile/spec-compliant-profile';
+import type { SpecCompliantProfile } from '@hive/core';
 
 export default function EditProfilePage() {
   const router = useRouter();

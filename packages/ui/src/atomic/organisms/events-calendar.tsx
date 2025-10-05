@@ -3,13 +3,13 @@
 import * as React from "react"
 import { Calendar } from "../atoms/calendar"
 import { Badge } from "../atoms/badge"
-import { Avatar, AvatarGroup } from "../atoms/avatar"
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "../atoms/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card"
 import { Button } from "../atoms/button"
 import { ScrollArea } from "../atoms/scroll-area"
 import { cn } from "../../lib/utils"
 import { Clock, MapPin, Users, ChevronRight } from "lucide-react"
-import type { EventCampusContext } from "../molecules/feed-event-card"
+import type { EventCampusContext } from "../molecules/event-card"
 
 /**
  * Calendar event with campus context
@@ -310,11 +310,14 @@ function CalendarEventPreview({ event, onClick, onRsvp }: CalendarEventPreviewPr
       {/* Campus Context: Friends Going */}
       {event.campusContext?.friendsGoing && event.campusContext.friendsGoing.length > 0 && (
         <div className="flex items-center gap-2 py-1.5 px-2 bg-primary/5 border border-primary/20 rounded text-xs mb-2">
-          <AvatarGroup
-            size="sm"
-            max={2}
-            avatars={event.campusContext.friendsGoing.map(f => ({ src: f.avatar, alt: f.name }))}
-          />
+          <AvatarGroup size="sm" max={2}>
+            {event.campusContext.friendsGoing.map(f => (
+              <Avatar key={f.id}>
+                <AvatarImage src={f.avatar} alt={f.name} />
+                <AvatarFallback>{f.name[0]}</AvatarFallback>
+              </Avatar>
+            ))}
+          </AvatarGroup>
           <span className="font-medium text-foreground">
             {event.campusContext.friendsGoing.length === 1
               ? event.campusContext.friendsGoing[0].name

@@ -582,7 +582,7 @@ export class PlatformIntegration {
       if (sessionJson) {
         const session = JSON.parse(sessionJson);
         return process.env.NODE_ENV === 'development' 
-          ? `dev_token_${session.uid}` 
+          ? `dev_token_${session.id}` 
           : session.token;
       }
     } catch (error) {

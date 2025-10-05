@@ -1,7 +1,7 @@
 import { dbAdmin } from "@/lib/firebase-admin";
 import { type Post } from "@hive/core";
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { z } from 'zod';
 
 const GetActivityFeedSchema = z.object({
@@ -89,7 +89,7 @@ export const GET = withAuthAndErrors(async (
               const authorData = authorDoc.data();
               author = {
                 id: postData.authorId,
-                name: authorData?.fullName || 'Unknown User',
+                name: authorData?.displayName || 'Unknown User',
                 avatar: authorData?.photoURL,
                 handle: authorData?.handle,
               };
@@ -120,7 +120,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch posts for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
+        logger.warn('Failed to fetch posts for activity feed', { error: error instanceof Error ? error.message : String(error), spaceId });
       }
     }
 
@@ -147,7 +147,7 @@ export const GET = withAuthAndErrors(async (
               const organizerData = organizerDoc.data();
               organizer = {
                 id: eventData.organizerId,
-                name: organizerData?.fullName || 'Unknown User',
+                name: organizerData?.displayName || 'Unknown User',
                 avatar: organizerData?.photoURL,
                 handle: organizerData?.handle,
               };
@@ -179,7 +179,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch events for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
+        logger.warn('Failed to fetch events for activity feed', { error: error instanceof Error ? error.message : String(error), spaceId });
       }
     }
 
@@ -206,7 +206,7 @@ export const GET = withAuthAndErrors(async (
               const userData = userDoc.data();
               member = {
                 id: memberDoc.id,
-                name: userData?.fullName || 'Unknown User',
+                name: userData?.displayName || 'Unknown User',
                 avatar: userData?.photoURL,
                 handle: userData?.handle,
               };
@@ -228,7 +228,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch member joins for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
+        logger.warn('Failed to fetch member joins for activity feed', { error: error instanceof Error ? error.message : String(error), spaceId });
       }
     }
 
@@ -254,7 +254,7 @@ export const GET = withAuthAndErrors(async (
               const userData = userDoc.data();
               deployer = {
                 id: deploymentData.userId,
-                name: userData?.fullName || 'Unknown User',
+                name: userData?.displayName || 'Unknown User',
                 avatar: userData?.photoURL,
                 handle: userData?.handle,
               };
@@ -290,7 +290,7 @@ export const GET = withAuthAndErrors(async (
           });
         }
       } catch (error) {
-        logger.warn('Failed to fetch tool deployments for activity feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId });
+        logger.warn('Failed to fetch tool deployments for activity feed', { error: error instanceof Error ? error.message : String(error), spaceId });
       }
     }
 

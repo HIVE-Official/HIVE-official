@@ -32,7 +32,7 @@ export function withErrorHandling(handler: ApiHandler): ApiHandler {
  * Centralized error handling logic
  * Replaces duplicate error handling in 133+ files
  */
-export function handleApiError(error: unknown, request: NextRequest): Response {
+export function handleApiError(error: any, request: NextRequest): Response {
   const endpoint = new URL(request.url).pathname;
 
   // Handle Zod validation errors
@@ -57,7 +57,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Authentication errors
     if (message.includes('unauthorized') || message.includes('invalid token')) {
-      logger.warn('Authentication error', { error: error.message, endpoint });
+      logger.warn('Authentication error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error("Authentication failed", "UNAUTHORIZED"),
         { status: HttpStatus.UNAUTHORIZED }
@@ -66,7 +66,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Authorization errors
     if (message.includes('forbidden') || message.includes('access denied')) {
-      logger.warn('Authorization error', { error: error.message, endpoint });
+      logger.warn('Authorization error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error("Access denied", "FORBIDDEN"),
         { status: HttpStatus.FORBIDDEN }
@@ -75,7 +75,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Not found errors
     if (message.includes('not found')) {
-      logger.info('Resource not found', { error: error.message, endpoint });
+      logger.info('Resource not found', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error("Resource not found", "RESOURCE_NOT_FOUND"),
         { status: HttpStatus.NOT_FOUND }
@@ -84,7 +84,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Conflict errors (already exists, etc.)
     if (message.includes('already exists') || message.includes('conflict')) {
-      logger.warn('Conflict error', { error: error.message, endpoint });
+      logger.warn('Conflict error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error(error.message, "CONFLICT"),
         { status: HttpStatus.CONFLICT }
@@ -93,7 +93,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Bad request errors
     if (message.includes('invalid') || message.includes('bad request')) {
-      logger.warn('Bad request error', { error: error.message, endpoint });
+      logger.warn('Bad request error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error(error.message, "INVALID_INPUT"),
         { status: HttpStatus.BAD_REQUEST }
@@ -102,7 +102,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Rate limiting errors
     if (message.includes('rate limit') || message.includes('too many requests')) {
-      logger.warn('Rate limit error', { error: error.message, endpoint });
+      logger.warn('Rate limit error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error("Rate limit exceeded", "RATE_LIMITED"),
         { status: HttpStatus.TOO_MANY_REQUESTS }
@@ -111,7 +111,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
 
     // Firebase-specific errors
     if (message.includes('firebase') || message.includes('firestore')) {
-      logger.error('Firebase error', { error: error.message, endpoint });
+      logger.error('Firebase error', { error: error instanceof Error ? error.message : String(error), endpoint });
       return NextResponse.json(
         ApiResponseHelper.error("Database operation failed", "INTERNAL_ERROR"),
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -119,7 +119,7 @@ export function handleApiError(error: unknown, request: NextRequest): Response {
     }
 
     // Generic application errors
-    logger.error('Application error', { error: error.message, endpoint });
+    logger.error('Application error', { error: error instanceof Error ? error.message : String(error), endpoint });
     return NextResponse.json(
       ApiResponseHelper.error("Operation failed", "INTERNAL_ERROR"),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

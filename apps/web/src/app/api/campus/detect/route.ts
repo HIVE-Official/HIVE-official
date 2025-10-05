@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error('Campus detection failed', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Campus detection failed', { error: error instanceof Error ? error.message : String(error) });
     
     return NextResponse.json({
       id: 'unknown',

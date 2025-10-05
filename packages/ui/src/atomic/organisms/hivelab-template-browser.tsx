@@ -141,7 +141,7 @@ const HiveLabTemplateBrowser = React.forwardRef<HTMLDivElement, HiveLabTemplateB
             <Input
               placeholder="Search templates or problems..."
               value={search}
-              onChange={(e: React.ChangeEvent) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setSearch((e.target as HTMLInputElement).value)}
               className="pl-9 h-10"
             />
           </div>

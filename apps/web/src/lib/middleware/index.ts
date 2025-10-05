@@ -99,7 +99,7 @@ export function withAdminAuthAndErrors<T = RouteParams>(
 }
 
 /**
- * Public routes pattern: Error Handling + Response Formatting only
+ * Public routes pattern: any Handling + Response Formatting only
  */
 export function withErrors<T extends any>(
   handler: (

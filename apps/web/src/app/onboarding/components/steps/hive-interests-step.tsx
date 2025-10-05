@@ -339,7 +339,7 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
           type="text"
           placeholder="Search interests..."
           value={searchTerm}
-          onChange={(e: React.ChangeEvent) => setSearchTerm((e.target as HTMLInputElement).value)}
+          onChange={(e: React.ChangeEvent) => setSearchTerm((e.target as any).value)}
           className="w-full p-3 rounded-xl bg-[var(--hive-background-secondary)]/20 border border-[var(--hive-border-primary)]/30 text-[var(--hive-text-primary)] placeholder-[var(--hive-text-muted)] focus:outline-none focus:border-[var(--hive-brand-primary)]/50 focus:ring-1 focus:ring-[var(--hive-brand-primary)]/20 transition-all"
         />
       </motion.div>
@@ -486,9 +486,8 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
         >
           <Button
             variant="default"
-            size="lg"
+            className="max-w-lg px-8"
             onClick={onNext}
-            className="px-8"
           >
             Continue to Final Step
           </Button>

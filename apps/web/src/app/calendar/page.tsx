@@ -93,7 +93,7 @@ export default function CalendarPage() {
                 return parsed.userId || 'anonymous';
               } catch (error) {
                 logger.error('Failed to parse session for calendar auth', {
-                  error: error instanceof Error ? error.message : 'Unknown error'
+                  error: error instanceof Error ? error.message : String(error)
                 });
                 return 'anonymous';
               }
@@ -105,11 +105,11 @@ export default function CalendarPage() {
           throw new Error(`Failed to fetch calendar events: ${response.status}`);
         }
         
-        const data = await response.json() as { events?: unknown[] };
+        const data = await response.json() as { events?: any[] };
         const fetchedEvents = data.events || [];
         
         // Transform API events to match UI format
-        const transformedEvents: CalendarEvent[] = fetchedEvents.map((event: unknown) => {
+        const transformedEvents: CalendarEvent[] = fetchedEvents.map((event: any) => {
           const eventData = event as Record<string, unknown>;
           return {
             id: String(eventData.id || ''),
@@ -157,7 +157,7 @@ export default function CalendarPage() {
         setIntegrations(defaultIntegrations);
       } catch (error) {
         logger.error('Error fetching calendar events', {
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : String(error),
           stack: error instanceof Error ? error.stack : undefined
         });
         // Fallback to empty state on error
@@ -231,7 +231,7 @@ export default function CalendarPage() {
       type: getEventDataType(event.type),
       organizer: {
         id: user?.id || 'organizer-unknown',
-        name: user?.fullName || 'Event Organizer',
+        name: user?.displayName || 'Event Organizer',
         handle: user?.handle || 'organizer',
         verified: false
       },
@@ -345,7 +345,7 @@ export default function CalendarPage() {
             {conflictEvents.length > 0 && (
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setShowConflicts(true)}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
               >
@@ -360,7 +360,7 @@ export default function CalendarPage() {
                 <Button
                   key={mode}
                   variant={viewMode === mode ? 'primary' : 'ghost'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setViewMode(mode as 'month' | 'week' | 'day')}
                   className="text-xs capitalize"
                 >
@@ -372,7 +372,7 @@ export default function CalendarPage() {
             {/* Settings */}
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => setShowIntegrations(true)}
             >
               <Settings className="h-4 w-4 mr-2" />
@@ -397,7 +397,7 @@ export default function CalendarPage() {
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => navigateDate('prev')}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -411,7 +411,7 @@ export default function CalendarPage() {
               
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => navigateDate('next')}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -420,7 +420,7 @@ export default function CalendarPage() {
             
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => setCurrentDate(new Date())}
             >
               Today
@@ -432,7 +432,7 @@ export default function CalendarPage() {
             <Filter className="h-4 w-4 text-zinc-400" />
             <select
               value={eventTypeFilter}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEventTypeFilter((e.target as HTMLInputElement).value as CalendarEvent['type'] | 'all')}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEventTypeFilter((e.target as any).value as CalendarEvent['type'] | 'all')}
               className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1 text-white text-sm focus:border-[var(--hive-brand-primary)] focus:outline-none"
             >
               <option value="all">All Events</option>
@@ -596,7 +596,7 @@ export default function CalendarPage() {
         <HiveModal
           open={showIntegrations}
           onOpenChange={() => setShowIntegrations(false)}
-          size="lg"
+          className="max-w-lg"
         >
           <HiveModalContent>
             <div className="space-y-6">
@@ -618,7 +618,7 @@ export default function CalendarPage() {
                   </div>
                   <Button
                     variant={integration.isConnected ? 'outline' : 'primary'}
-                    size="sm"
+                    className="max-w-sm"
                   >
                     {integration.isConnected ? 'Disconnect' : 'Connect'}
                   </Button>
@@ -640,7 +640,7 @@ export default function CalendarPage() {
         <HiveModal
           open={showConflicts}
           onOpenChange={() => setShowConflicts(false)}
-          size="lg"
+          className="max-w-lg"
         >
           <HiveModalContent>
             <div className="space-y-4">
@@ -655,14 +655,14 @@ export default function CalendarPage() {
                   {formatDate(event.startTime)} • {formatTime(event.startTime)} - {formatTime(event.endTime)}
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" className="max-w-sm">
                     <X className="h-3 w-3 mr-1" />
                     Remove
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" className="max-w-sm">
                     Reschedule
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" className="max-w-sm">
                     Keep Both
                   </Button>
                 </div>

@@ -6,11 +6,11 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../../lib/utils';
-import { DATA_TYPE_COLORS } from '../../../types/hivelab.types';
+import { cn } from '../../../lib/utils.js';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types.js';
 import { ArrowRight, X } from 'lucide-react';
-import { Button } from '../../atoms/button';
-import { DataTypeBadge } from '../../atoms/elements/data-type-badge';
+import { Button } from '../../atoms/button.js';
+import { DataTypeBadge } from '../../atoms/elements/data-type-badge.js';
 export function DataMappingRow({ port, sourcePort: propSourcePort, targetPort: propTargetPort, sourceElementName, isSelected = false, removable = true, onClick, onRemove, className, }) {
     // Support simplified usage with just 'port'
     const sourcePort = propSourcePort ?? port;

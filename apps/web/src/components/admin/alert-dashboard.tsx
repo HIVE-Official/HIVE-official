@@ -273,7 +273,7 @@ export function AlertDashboard() {
               Auto-refresh
             </label>
           </div>
-          <Button onClick={loadAlerts} variant="outline" size="sm">
+          <Button onClick={loadAlerts} variant="outline" className="max-w-sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
@@ -375,13 +375,13 @@ export function AlertDashboard() {
                 placeholder="Search alerts..."
                 className="pl-10"
                 value={filters.search}
-                onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, search: (e.target as HTMLInputElement).value }))}
+                onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, search: (e.target as any).value }))}
               />
             </div>
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.severity}
-              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, severity: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, severity: (e.target as any).value }))}
             >
               <option value="">All Severities</option>
               <option value="critical">Critical</option>
@@ -392,7 +392,7 @@ export function AlertDashboard() {
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.component}
-              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, component: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, component: (e.target as any).value }))}
             >
               <option value="">All Components</option>
               <option value="database">Database</option>
@@ -745,7 +745,7 @@ function AlertCard({
         <div className="flex items-center gap-2 ml-4">
           {!alert.acknowledged && (
             <Button
-              size="sm"
+              className="max-w-sm"
               variant="outline"
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
@@ -757,7 +757,7 @@ function AlertCard({
           )}
           {!alert.resolved && (
             <Button
-              size="sm"
+              className="max-w-sm"
               variant="outline"
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
@@ -948,7 +948,7 @@ function AlertDetailModal({
             <Textarea
               placeholder="Add notes (optional)..."
               value={notes}
-              onChange={(e: React.ChangeEvent) => setNotes((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent) => setNotes((e.target as any).value)}
               className="mb-3"
             />
             <div className="flex gap-2">

@@ -91,7 +91,7 @@ if (redisUrl && redisToken) {
 
     logger.info('Redis rate limiter initialized successfully');
   } catch (error) {
-    logger.error('Failed to initialize Redis rate limiter', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to initialize Redis rate limiter', { error: error instanceof Error ? error.message : String(error) });
     // Fall back to in-memory rate limiting
   }
 } else {
@@ -143,7 +143,6 @@ export async function checkRedisRateLimit(
         identifier,
         limit,
         remaining,
-        reset,
       });
     }
 
@@ -151,11 +150,11 @@ export async function checkRedisRateLimit(
       success,
       limit,
       remaining,
-      reset,
+      // reset,
       retryAfter: success ? undefined : Math.ceil((reset - Date.now()) / 1000),
     };
   } catch (error) {
-    logger.error('Redis rate limit check failed', { error: error instanceof Error ? error : new Error(String(error)), limitType, identifier });
+    logger.error('Redis rate limit check failed', { error: error instanceof Error ? error.message : String(error), limitType, identifier });
 
     // On error, allow the request but log it
     return {
@@ -200,7 +199,7 @@ export async function trackFailedLoginRedis(
 
     return count;
   } catch (error) {
-    logger.error('Failed to track login attempt', { error: error instanceof Error ? error : new Error(String(error)), identifier });
+    logger.error('Failed to track login attempt', { error: error instanceof Error ? error.message : String(error), identifier });
     return 0;
   }
 }
@@ -217,7 +216,7 @@ export async function resetFailedLoginsRedis(identifier: string): Promise<void> 
     await redis.del(`hive:failed:login:${identifier}`);
     await redis.del(`hive:locked:account:${identifier}`);
   } catch (error) {
-    logger.error('Failed to reset login attempts', { error: error instanceof Error ? error : new Error(String(error)), identifier });
+    logger.error('Failed to reset login attempts', { error: error instanceof Error ? error.message : String(error), identifier });
   }
 }
 
@@ -233,7 +232,7 @@ export async function isAccountLockedRedis(identifier: string): Promise<boolean>
     const locked = await redis.get(`hive:locked:account:${identifier}`);
     return locked === 'locked';
   } catch (error) {
-    logger.error('Failed to check account lock status', { error: error instanceof Error ? error : new Error(String(error)), identifier });
+    logger.error('Failed to check account lock status', { error: error instanceof Error ? error.message : String(error), identifier });
     return false;
   }
 }
@@ -285,7 +284,7 @@ export async function checkCampusRateLimit(
   campusId: string,
   action: string,
   limit: number = 1000,
-  window: string = '1 h'
+  window: string = '1h'
 ): Promise<boolean> {
   if (!redis) {
     return true;
@@ -294,7 +293,7 @@ export async function checkCampusRateLimit(
   try {
     const limiter = new Ratelimit({
       redis,
-      limiter: Ratelimit.slidingWindow(limit, window),
+      limiter: Ratelimit.slidingWindow(limit, window as any),
       analytics: true,
       prefix: `hive:campus:${campusId}:${action}`,
     });
@@ -312,7 +311,7 @@ export async function checkCampusRateLimit(
 
     return success;
   } catch (error) {
-    logger.error('Campus rate limit check failed', { error: error instanceof Error ? error : new Error(String(error)), campusId, action });
+    logger.error('Campus rate limit check failed', { error: error instanceof Error ? error.message : String(error), campusId, action });
     return true; // Allow on error
   }
 }

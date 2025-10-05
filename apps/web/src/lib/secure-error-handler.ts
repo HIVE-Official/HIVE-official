@@ -204,7 +204,7 @@ function sanitizeStackTrace(stack?: string): string | undefined {
  * Main secure error handler
  */
 export async function handleSecureError(
-  error: unknown,
+  error: any,
   request: NextRequest,
   context?: {
     userId?: string;
@@ -296,7 +296,7 @@ export async function handleSecureError(
       userId: context?.userId,
       ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
       userAgent: request.headers.get('user-agent') || undefined,
-      operation: context?.operation || 'error_handling',
+      action: context?.operation || 'error_handling',
       tags: {
         errorLevel: 'critical',
         errorCode
@@ -320,7 +320,7 @@ export async function handleSecureError(
           securityLevel,
           errorCode,
           statusCode: statusCode.toString(),
-          operation: context?.operation || 'unknown'
+          action: context?.operation || 'unknown'
         },
         extra: {
           originalMessage: errorMessage,

@@ -169,7 +169,7 @@ export async function withSecureAuth(
     if (decodedToken.email && !decodedToken.email.endsWith('@buffalo.edu')) {
       logger.error('Non-UB email attempted access', {
         email: decodedToken.email,
-        uid: decodedToken.uid,
+        uid: decodedToken.id,
         ip,
         path: request.nextUrl.pathname
       });
@@ -193,7 +193,7 @@ export async function withSecureAuth(
       if (!decodedToken.email || !adminEmails.includes(decodedToken.email)) {
         logger.warn('Non-admin attempted admin endpoint', {
           email: decodedToken.email,
-          uid: decodedToken.uid,
+          uid: decodedToken.id,
           ip,
           path: request.nextUrl.pathname
         });
@@ -207,12 +207,12 @@ export async function withSecureAuth(
 
     // 8. Apply user-specific rate limiting
     if (rateLimit) {
-      const identifier = rateLimit.identifier || decodedToken.uid;
+      const identifier = rateLimit.identifier || decodedToken.id;
       const rateLimitResult = await checkRedisRateLimit(rateLimit.type, identifier);
 
       if (!rateLimitResult.success) {
         logger.warn('User rate limit exceeded', {
-          uid: decodedToken.uid,
+          uid: decodedToken.id,
           type: rateLimit.type,
           identifier
         });
@@ -254,7 +254,7 @@ export async function withSecureAuth(
 
         return response;
       } catch (error) {
-        logger.error('Request body sanitization failed', { error: error instanceof Error ? error : new Error(String(error)) });
+        logger.error('Request body sanitization failed', { error: error instanceof Error ? error.message : String(error) });
         return NextResponse.json(
           { error: 'Invalid request body' },
           { status: 400, headers: getSecurityHeaders() }
@@ -274,7 +274,7 @@ export async function withSecureAuth(
     return response;
 
   } catch (error) {
-    logger.error('Auth middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Auth middleware error', { error: error instanceof Error ? error.message : String(error) });
 
     return NextResponse.json(
       { error: 'Authentication service error' },

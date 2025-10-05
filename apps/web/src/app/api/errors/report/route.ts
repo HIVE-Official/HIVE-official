@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 const ErrorReportSchema = z.object({
   errorId: z.string().min(1).max(100),

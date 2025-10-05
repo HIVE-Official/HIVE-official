@@ -125,7 +125,7 @@ const ElementCard = ({ element, onSelect, isSelected }: {
             {element.type}
           </div>
         </div>
-        <Button size="sm" variant="ghost" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
+        <Button className="max-w-sm" variant="outline" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
           <MoreHorizontal className="h-3 w-3 text-[#A1A1AA]" />
         </Button>
       </div>
@@ -265,8 +265,8 @@ export default function ToolEditPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => router.back()}
                 className="text-[#A1A1AA] hover:text-white"
               >
@@ -285,7 +285,7 @@ export default function ToolEditPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
                 onClick={handleTest}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
@@ -294,7 +294,7 @@ export default function ToolEditPage() {
                 Test
               </Button>
               <Button
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
                 onClick={handlePreview}
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
@@ -303,7 +303,7 @@ export default function ToolEditPage() {
                 Preview
               </Button>
               <Button
-                size="sm"
+                className="max-w-sm"
                 onClick={handleSave}
                 className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 disabled={!hasChanges}
@@ -330,7 +330,7 @@ export default function ToolEditPage() {
                     type="text"
                     value={tool.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setTool({ ...tool, name: (e.target as HTMLInputElement).value });
+                      setTool({ ...tool, name: (e.target as any).value });
                       setHasChanges(true);
                     }}
                     className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
@@ -341,7 +341,7 @@ export default function ToolEditPage() {
                   <select
                     value={tool.privacy}
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                      setTool({ ...tool, privacy: (e.target as HTMLInputElement).value as any });
+                      setTool({ ...tool, privacy: (e.target as any).value as any });
                       setHasChanges(true);
                     }}
                     className="w-full p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
@@ -358,7 +358,7 @@ export default function ToolEditPage() {
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-semibold text-white">Elements</h3>
-                <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                <Button className="max-w-sm" variant="outline" className="h-6 w-6 p-0">
                   <MoreHorizontal className="h-3 w-3 text-[#A1A1AA]" />
                 </Button>
               </div>
@@ -381,7 +381,7 @@ export default function ToolEditPage() {
                     return (
                       <Button
                         key={elementType.type}
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[var(--hive-brand-primary)]/30 p-2 h-auto"
                         onClick={() => {

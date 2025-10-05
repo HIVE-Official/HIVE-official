@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
-import { Badge } from "../atoms/badge";
-import { Button } from "../atoms/button";
-import { cn } from "../../lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card.js";
+import { Badge } from "../atoms/badge.js";
+import { Button } from "../atoms/button.js";
+import { cn } from "../../lib/utils.js";
 const SpaceAboutSection = React.forwardRef(({ className, description, tags = [], createdAt, createdBy, rules = [], category, type, memberCount, postCount, eventCount, onEditDescription, onEditRules, isLeader = false, defaultExpanded = true, ...props }, ref) => {
     const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
     const [showAllRules, setShowAllRules] = React.useState(false);

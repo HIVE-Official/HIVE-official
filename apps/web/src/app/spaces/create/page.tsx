@@ -277,9 +277,8 @@ export default function CreateSpacePage() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <Button
             onClick={() => router.back()}
-            variant="ghost"
-            size="sm"
-            className="mb-4"
+            variant="outline"
+            className="max-w-sm mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
@@ -393,7 +392,7 @@ export default function CreateSpacePage() {
                 <div className="flex gap-2 mb-2">
                   <Input
                     value={tagInput}
-                    onChange={(e: React.ChangeEvent) => setTagInput((e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => setTagInput((e.target as any).value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();

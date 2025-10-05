@@ -155,17 +155,16 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail((e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail((e.target as any).value)}
                     variant="default"
-                    size="lg"
+                    className="max-w-lg"
                   />
                   
                   <Button
                     onClick={submitWaitlist}
                     disabled={!waitlistEmail.trim() || !waitlistEmail.includes('@') || isSubmittingWaitlist}
                     variant="default"
-                    size="lg"
-                    className="w-full"
+                    className="max-w-lg w-full"
                     leftIcon={isSubmittingWaitlist ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}><Mail className="w-4 h-4" /></motion.div> : <Mail className="w-4 h-4" />}
                   >
                     {isSubmittingWaitlist ? "Adding to waitlist..." : "Join Waitlist"}
@@ -197,7 +196,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
           
           <Button
             variant="outline"
-            size="lg"
+            className="max-w-lg"
             onClick={() => setSelectedType(null)}
             leftIcon={<ArrowRight className="w-4 h-4 rotate-180" />}
           >

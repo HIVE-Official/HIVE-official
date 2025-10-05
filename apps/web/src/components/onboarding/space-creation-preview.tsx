@@ -147,8 +147,8 @@ export function SpaceCreationPreview({
           </h3>
           <div className="space-y-3">
             {autoJoinSpaces.map((space) => {
-              const IconComponent = typeIcons[space.type];
-              const colorClass = typeColors[space.type];
+              const IconComponent = typeIcons[space.spaceType];
+              const colorClass = typeColors[space.spaceType];
               
               return (
                 <div key={space.id} className="flex items-start p-4 bg-[var(--hive-background-secondary)] rounded-lg border">
@@ -168,7 +168,7 @@ export function SpaceCreationPreview({
                       {space.description}
                     </p>
                     <div className="flex items-center mt-2 text-xs text-[var(--hive-text-muted)]">
-                      <span className="capitalize">{space.type}</span>
+                      <span className="capitalize">{space.spaceType}</span>
                       <span className="mx-2">•</span>
                       <span>{space.category}</span>
                       <span className="mx-2">•</span>
@@ -191,8 +191,8 @@ export function SpaceCreationPreview({
           </h3>
           <div className="space-y-3">
             {recommendedSpaces.map((space) => {
-              const IconComponent = typeIcons[space.type];
-              const colorClass = typeColors[space.type];
+              const IconComponent = typeIcons[space.spaceType];
+              const colorClass = typeColors[space.spaceType];
               
               return (
                 <div key={space.id} className="flex items-start p-4 border border-dashed border-gray-300 rounded-lg">
@@ -212,7 +212,7 @@ export function SpaceCreationPreview({
                       {space.description}
                     </p>
                     <div className="flex items-center mt-2 text-xs text-[var(--hive-text-muted)]">
-                      <span className="capitalize">{space.type}</span>
+                      <span className="capitalize">{space.spaceType}</span>
                       <span className="mx-2">•</span>
                       <span>{space.category}</span>
                     </div>

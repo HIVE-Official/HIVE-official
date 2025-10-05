@@ -180,7 +180,7 @@ export function AdvancedAuthLoading({
               <Button
                 onClick={onRetry}
                 variant="default"
-                size="lg"
+                className="max-w-lg"
                 className="mx-auto"
               >
                 Try Again

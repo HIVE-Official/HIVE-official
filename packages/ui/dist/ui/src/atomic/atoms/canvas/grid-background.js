@@ -7,7 +7,7 @@
 'use client';
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo } from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../../lib/utils.js';
 export function GridBackground({ viewport, gridSize = 20, pattern = 'dots', color = 'hsl(var(--muted-foreground) / 0.15)', backgroundColor = 'hsl(var(--background))', majorGridEvery = 5, majorColor = 'hsl(var(--muted-foreground) / 0.25)', className, }) {
     // ============================================================================
     // Calculate Grid Pattern

@@ -221,7 +221,7 @@ export function SearchInterface({
           <Input
             ref={searchInputRef}
             value={query}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery((e.target as any).value)}
             onFocus={() => setShowSuggestions(true)}
             placeholder={placeholder}
             className="pl-12 pr-12 py-3 text-lg"
@@ -229,8 +229,8 @@ export function SearchInterface({
           {query && (
             <Button
               type="button"
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={clearSearch}
               className="absolute right-2 top-1/2 transform -translate-y-1/2"
             >
@@ -396,7 +396,7 @@ export function SearchInterface({
                   <Button
                     key={index}
                     variant="outline"
-                    size="sm"
+                    className="max-w-sm"
                     onClick={() => handleSuggestionClick(suggestion)}
                   >
                     {suggestion}
@@ -538,7 +538,7 @@ export function SearchInterface({
                       <Button
                         key={index}
                         variant="outline"
-                        size="sm"
+                        className="max-w-sm"
                         onClick={() => handleSuggestionClick(suggestion)}
                       >
                         {suggestion}

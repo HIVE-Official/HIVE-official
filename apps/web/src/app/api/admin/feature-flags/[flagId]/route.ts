@@ -46,7 +46,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       retrievedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error getting feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId });
+    logger.error('Error getting feature flag', { error: error instanceof Error ? error.message : String(error), flagId });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get feature flag', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -108,11 +108,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       }
     }
 
-    await featureFlagService.setFeatureFlag(updatedFlag, user.uid);
+    await featureFlagService.setFeatureFlag(updatedFlag, user.id);
     
     logger.info('Feature flag updated', { 
       flagId, 
-      adminUserId: user.uid, 
+      adminUserId: user.id, 
       action: 'feature_flag_updated'
     });
 
@@ -123,7 +123,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       updatedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error updating feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId });
+    logger.error('Error updating feature flag', { error: error instanceof Error ? error.message : String(error), flagId });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update feature flag', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -155,11 +155,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    await featureFlagService.deleteFeatureFlag(flagId, user.uid);
+    await featureFlagService.deleteFeatureFlag(flagId, user.id);
     
     logger.info('Feature flag deleted', { 
       flagId, 
-      adminUserId: user.uid,
+      adminUserId: user.id,
       action: 'feature_flag_deleted'
     });
 
@@ -170,7 +170,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       deletedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error deleting feature flag', { error: error instanceof Error ? error : new Error(String(error)), flagId });
+    logger.error('Error deleting feature flag', { error: error instanceof Error ? error.message : String(error), flagId });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to delete feature flag', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

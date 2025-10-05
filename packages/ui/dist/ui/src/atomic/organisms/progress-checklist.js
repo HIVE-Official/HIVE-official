@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card";
-import { Progress } from "../atoms/progress";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../atoms/card.js";
+import { Progress } from "../atoms/progress.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { cn } from "../../lib/utils.js";
 const ProgressChecklist = React.forwardRef(({ className, title = "Progress", description, items, percentage: overridePercentage, targetPercentage = 100, targetReachedLabel = "✓ Target Reached", targetNotReachedLabel, variant = "default", showIncompleteOnly = false, ...props }, ref) => {
     // Calculate percentage from items if not provided
     const calculatedPercentage = React.useMemo(() => {

@@ -29,7 +29,7 @@ export function useSession(): any {
   const user: LegacySessionUser | null = hiveAuth.user ? {
     id: hiveAuth.user.id,
     email: hiveAuth.user.email || '',
-    fullName: hiveAuth.user.fullName || undefined,
+    fullName: hiveAuth.user.displayName || undefined,
     handle: hiveAuth.user.handle || undefined,
     major: hiveAuth.user.major || undefined,
     majors: hiveAuth.user.major ? [hiveAuth.user.major] : undefined,
@@ -47,7 +47,7 @@ export function useSession(): any {
     onboardingCompleted: hiveAuth.user.onboardingCompleted,
     verifiedAt: new Date().toISOString(),
     profileData: {
-      fullName: hiveAuth.user.fullName || '',
+      fullName: hiveAuth.user.displayName || '',
       handle: hiveAuth.user.handle || '',
       major: hiveAuth.user.major || undefined,
       majors: hiveAuth.user.major ? [hiveAuth.user.major] : [],

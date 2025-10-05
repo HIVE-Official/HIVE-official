@@ -7,7 +7,7 @@ import {
   TransactionError
 } from "@/lib/transaction-manager";
 import { createRequestLogger } from "@/lib/structured-logger";
-import { withAuthValidationAndErrors, getUserId, getUserEmail, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthValidationAndErrors, getUserId, getUserEmail, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { currentEnvironment, isFirebaseAdminConfigured } from "@/lib/env";
 import { NextResponse } from "next/server";
 

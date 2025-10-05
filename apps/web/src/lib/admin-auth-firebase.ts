@@ -47,7 +47,7 @@ export async function isUserAdmin(userId: string): Promise<boolean> {
 
     return false;
   } catch (error) {
-    logger.error('Error checking admin status', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error checking admin status', { userId, error: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }
@@ -83,7 +83,7 @@ export async function logAdminAction(
   } catch (error) {
     logger.error('Failed to log admin action', {
       metadata: { adminId, action },
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : String(error)
     } as any);
   }
 }

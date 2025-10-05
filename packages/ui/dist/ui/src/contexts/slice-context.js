@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { useCampusContext } from "./campus-context";
+import { useCampusContext } from "./campus-context.js";
 // Slice context React context
 const SliceContext = React.createContext(undefined);
 /**
@@ -120,7 +120,10 @@ export function SliceContextProvider({ children, initialSlice = 'feed' }) {
     });
     // Update campus tool context when slice changes
     React.useEffect(() => {
-        campusContext.actions.updateToolContext(currentSlice);
+        // Only update for main slices (hivelab is not tracked in campus context)
+        if (currentSlice !== 'hivelab') {
+            campusContext.actions.updateToolContext(currentSlice);
+        }
     }, [currentSlice, campusContext.actions]);
     // Sync spaces context with campus community data
     React.useEffect(() => {

@@ -190,8 +190,7 @@ export function PhotoUploadModal({
                   <div className="flex items-center justify-center space-x-4">
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="font-sans"
+                      className="max-w-sm font-sans"
                       onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                         handleReset();

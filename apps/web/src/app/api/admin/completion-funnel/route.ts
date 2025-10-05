@@ -35,7 +35,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching completion funnel', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching completion funnel', { error: error instanceof Error ? error.message : String(error), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -146,7 +146,7 @@ async function getCompletionFunnelData(since: Date) {
     return funnel;
 
   } catch (error) {
-    logger.error('Error calculating completion funnel', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating completion funnel', { error: error instanceof Error ? error.message : String(error) });
     return getMockCompletionFunnel();
   }
 }

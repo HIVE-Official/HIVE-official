@@ -99,7 +99,7 @@ export async function getUserSpaceMembership(spaceId: string): Promise<SpaceMemb
     
     return {
       spaceId,
-      userId: userMembership.uid,
+      userId: userMembership.id,
       role: userMembership.role,
       joinedAt: new Date(userMembership.joinedAt),
       permissions: userMembership.permissions || DEFAULT_PERMISSIONS[userMembership.role as SpaceRole]

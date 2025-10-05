@@ -182,7 +182,7 @@ export function HiveAcademicsStep({
             placeholder="Search for your major..."
             value={data.major || searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = (e.target as HTMLInputElement).value;
+              const value = (e.target as any).value;
               if (data.major) {
                 // If they start typing, clear the selected major
                 updateData({ major: "" });
@@ -197,13 +197,12 @@ export function HiveAcademicsStep({
               if (!data.major && searchQuery.length > 0) setShowDropdown(true);
             }}
             onBlur={() => {
-              setFocusedField(null);
-              setTimeout(() => setShowDropdown(false), 200);
-            }}
-            variant="default"
-            size="lg"
-            className="w-full"
-          />
+          setFocusedField(null);
+          setTimeout(() => setShowDropdown(false), 200);
+        }}
+        variant="default"
+        className="max-w-lg w-full"
+      />
 
           {/* Dropdown */}
           <AnimatePresence>
@@ -272,7 +271,7 @@ export function HiveAcademicsStep({
                   : ""
               }
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const year = (e.target as HTMLInputElement).value.replace("'", "");
+                const year = (e.target as any).value.replace("'", "");
                 const fullYear = parseInt(`20${year}`);
                 updateData({ graduationYear: fullYear });
               }}
@@ -308,7 +307,7 @@ export function HiveAcademicsStep({
             <textarea
               value={bio}
               onChange={(e: React.ChangeEvent) => {
-                const value = (e.target as HTMLInputElement).value.slice(0, 200);
+                const value = (e.target as any).value.slice(0, 200);
                 setBio(value);
                 updateData({ bio: value });
               }}

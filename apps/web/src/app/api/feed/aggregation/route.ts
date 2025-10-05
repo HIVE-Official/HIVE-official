@@ -74,14 +74,14 @@ export async function POST(request: NextRequest) {
     const startTime = Date.now();
 
     // Get user's accessible spaces if not specified
-    const targetSpaceIds = spaceIds.length > 0 ? spaceIds : await getUserAccessibleSpaces(user.uid);
+    const targetSpaceIds = spaceIds.length > 0 ? spaceIds : await getUserAccessibleSpaces(user.id);
 
     // Get active content sources
     const contentSources = await getActiveContentSources(targetSpaceIds);
 
     // Aggregate content from all sources
     const aggregatedContent = await aggregateFromAllSources({
-      userId: user.uid,
+      userId: user.id,
       sources: contentSources,
       config,
       forceRefresh
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     const processingTime = Date.now() - startTime;
 
     // Log aggregation metrics
-    await logAggregationMetrics(user.uid, {
+    await logAggregationMetrics(user.id, {
       sourcesProcessed: contentSources.length,
       itemsAggregated: aggregatedContent.length,
       itemsProcessed: processedContent.length,
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
       });
     } else {
       // Get all accessible sources
-      const accessibleSpaces = await getUserAccessibleSpaces(user.uid);
+      const accessibleSpaces = await getUserAccessibleSpaces(user.id);
       const allSources = await getActiveContentSources(accessibleSpaces);
       
       const sourcesBySpace = allSources.reduce((acc, source) => {
@@ -164,7 +164,7 @@ export async function GET(request: NextRequest) {
 
       let metrics = null;
       if (includeMetrics) {
-        metrics = await getAggregationMetrics(user.uid);
+        metrics = await getAggregationMetrics(user.id);
       }
 
       return NextResponse.json({
@@ -332,7 +332,7 @@ async function aggregateFromAllSources(params: {
 
       aggregatedItems.push(...enhancedContent);
     } catch (error) {
-      logger.error('Error aggregating from source', { sourceId: source.id, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/feed/aggregation' });
+      logger.error('Error aggregating from source', { sourceId: source.id, error: error instanceof Error ? error.message : String(error), endpoint: '/api/feed/aggregation' });
     }
   }
 
@@ -369,7 +369,7 @@ async function aggregateFromSource(
         return [];
     }
   } catch (error) {
-    logger.error('Error in source aggregation for', { sourceType: source.type, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/feed/aggregation'  });
+    logger.error('Error in source aggregation for', { sourceType: source.type, error: error instanceof Error ? error.message : String(error), endpoint: '/api/feed/aggregation'  });
     return [];
   }
 }

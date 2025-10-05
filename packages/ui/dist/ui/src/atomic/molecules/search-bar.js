@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Input } from "../atoms/input";
-import { cn } from "../../lib/utils";
+import { Input } from "../atoms/input.js";
+import { cn } from "../../lib/utils.js";
 const SearchBar = React.forwardRef(({ className, onSearch, isLoading, showShortcut = false, ...props }, ref) => {
     const [value, setValue] = React.useState("");
     const handleChange = (e) => {

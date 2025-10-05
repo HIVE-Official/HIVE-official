@@ -294,7 +294,7 @@ export function createAdminHandler(
       ...config,
       auth: {
         required: true,
-        operation: 'admin_access'
+        action: 'admin_access'
       }
     }
   );

@@ -3,43 +3,43 @@
  * Only exports components that actually exist
  */
 // Profile
-export { ProfileHeader } from './profile-header';
-export { ProfileEditSheet } from './profile-edit-sheet';
-export { ProfileScheduleWidget } from './profile-schedule-widget';
-export { ProfilePhotoLightbox } from './profile-photo-lightbox';
-export { ProfileCalendarModal } from './profile-calendar-modal';
-export { ConnectionList } from './connection-list';
-export { ProgressChecklist } from './progress-checklist';
+export { ProfileHeader } from './profile-header.js';
+export { ProfileEditSheet } from './profile-edit-sheet.js';
+export { ProfileScheduleWidget } from './profile-schedule-widget.js';
+export { ProfilePhotoLightbox } from './profile-photo-lightbox.js';
+export { ProfileCalendarModal } from './profile-calendar-modal.js';
+export { ConnectionList } from './connection-list.js';
+export { ProgressChecklist } from './progress-checklist.js';
 // Feed
-export { FeedInfiniteScroll } from './feed-infinite-scroll';
-export { FeedPullToRefresh } from './feed-pull-to-refresh';
+export { FeedInfiniteScroll } from './feed-infinite-scroll.js';
+export { FeedPullToRefresh } from './feed-pull-to-refresh.js';
 // Rituals
-export { RitualMilestoneTrack } from './ritual-milestone-track';
-export { RitualActionModal } from './ritual-action-modal';
-export { RitualLeaderboard } from './ritual-leaderboard';
+export { RitualMilestoneTrack } from './ritual-milestone-track.js';
+export { RitualActionModal } from './ritual-action-modal.js';
+export { RitualLeaderboard } from './ritual-leaderboard.js';
 // Spaces
-export { SpaceAboutSection } from './space-about-section';
-export { SpaceCategoryAccordion } from './space-category-accordion';
-export { SpaceEventsPanel } from './space-events-panel';
-export { SpaceHeader } from './space-header';
-export { SpaceLeaderToolbar } from './space-leader-toolbar';
-export { SpaceMemberList } from './space-member-list';
-export { SpaceMembersPanel } from './space-members-panel';
-export { SpacePostFeed } from './space-post-feed';
-export { SpaceResourcesPanel } from './space-resources-panel';
-export { SpaceSidePanel } from './space-side-panel';
-export { SpaceToolBuilder } from './space-tool-builder';
-export { SpaceToolsPanel } from './space-tools-panel';
+export { SpaceAboutSection } from './space-about-section.js';
+export { SpaceCategoryAccordion } from './space-category-accordion.js';
+export { SpaceEventsPanel } from './space-events-panel.js';
+export { SpaceHeader } from './space-header.js';
+export { SpaceLeaderToolbar } from './space-leader-toolbar.js';
+export { SpaceMemberList } from './space-member-list.js';
+export { SpaceMembersPanel } from './space-members-panel.js';
+export { SpacePostFeed } from './space-post-feed.js';
+export { SpaceResourcesPanel } from './space-resources-panel.js';
+export { SpaceSidePanel } from './space-side-panel.js';
+export { SpaceToolBuilder } from './space-tool-builder.js';
+export { SpaceToolsPanel } from './space-tools-panel.js';
 // HiveLab
-export { HiveLabAnalyticsDashboard } from './hivelab-analytics-dashboard';
-export { HiveLabBuilderCanvas } from './hivelab-builder-canvas';
-export { HiveLabElementLibrary } from './hivelab-element-library';
-export { HiveLabPropertiesPanel } from './hivelab-properties-panel';
-export { HiveLabTemplateBrowser } from './hivelab-template-browser';
-export { PollModal, EventModal, TaskModal, ResourceModal } from './tool-action-modals';
+export { HiveLabAnalyticsDashboard } from './hivelab-analytics-dashboard.js';
+export { HiveLabBuilderCanvas } from './hivelab-builder-canvas.js';
+export { HiveLabElementLibrary } from './hivelab-element-library.js';
+export { HiveLabPropertiesPanel } from './hivelab-properties-panel.js';
+export { HiveLabTemplateBrowser } from './hivelab-template-browser.js';
+export { PollModal, EventModal, TaskModal, ResourceModal } from './tool-action-modals.js';
 // Navigation
-export { NavigationShell } from './navigation-shell';
+export { NavigationShell } from './navigation-shell.js';
 // Misc
-export { EventsCalendar } from './events-calendar';
-export { HiveCategorySection } from './hive-category-section';
+export { EventsCalendar } from './events-calendar.js';
+export { HiveCategorySection } from './hive-category-section.js';
 //# sourceMappingURL=index.js.map

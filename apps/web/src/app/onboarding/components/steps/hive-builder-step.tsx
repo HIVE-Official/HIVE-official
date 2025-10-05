@@ -81,7 +81,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       // Filter spaces based on user type
       const filteredSpaces = (result.spaces || []).filter((space: Space) => {
         // Always exclude campus living spaces
-        if (space.type === 'campus_living') {
+        if (space.spaceType === 'campus_living') {
           return false;
         }
         
@@ -175,9 +175,9 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
             : "Search for communities you want to help build..."
           }
           value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm((e.target as HTMLInputElement).value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm((e.target as any).value)}
           variant="default"
-          size="lg"
+          className="max-w-lg"
         />
       </motion.div>
 

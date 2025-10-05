@@ -271,12 +271,12 @@ export class HivePerformanceCollector {
     });
   }
 
-  recordCacheMetrics(operation: 'hit' | 'miss', cacheType: string): void {
+  recordCacheMetrics(action: 'hit' | 'miss', cacheType: string): void {
     this.record({
       type: MetricType._CACHE_HIT_RATE,
-      value: operation === 'hit' ? 1 : 0,
+      value: action === 'hit' ? 1 : 0,
       unit: 'ratio',
-      labels: { operation, cache_type: cacheType }
+      labels: { operation: action, cache_type: cacheType }
     });
   }
 

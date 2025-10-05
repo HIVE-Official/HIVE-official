@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
     // Rate limiting - check if user has submitted too many reports recently
-    const recentReportsCount = await checkRecentReports(user.uid);
+    const recentReportsCount = await checkRecentReports(user.id);
     if (recentReportsCount >= 10) { // Max 10 reports per hour
       return NextResponse.json(
         ApiResponseHelper.error('Rate limit exceeded. Please wait before submitting more reports.', 'RATE_LIMITED'),
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     // Submit report
     const reportId = await contentModerationService.submitReport({
-      reporterId: user.uid,
+      reporterId: user.id,
       contentId: reportData.contentId,
       contentType: reportData.contentType,
       category: reportData.category,
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     // Log successful report submission
     logger.info('Content report submitted successfully', {
       reportId,
-      reporterId: user.uid,
+      reporterId: user.id,
       postId: reportData.contentId,
       metadata: {
         contentType: reportData.contentType,
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error submitting content report', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error submitting content report', { error: error instanceof Error ? error.message : String(error) });
     
     if (error instanceof Error && error.message.includes('Content not found')) {
       return NextResponse.json(
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || 'all';
 
     // Get user's reports (implement this method in the service if needed)
-    const reports = await getUserReports(user.uid, status, limit);
+    const reports = await getUserReports(user.id, status, limit);
 
     return NextResponse.json({
       success: true,
@@ -145,7 +145,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting user reports', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting user reports', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get reports', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -167,7 +167,7 @@ async function checkRecentReports(userId: string): Promise<number> {
     
     return snapshot.size;
   } catch (error) {
-    logger.error('Error checking recent reports', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error checking recent reports', { error: error instanceof Error ? error.message : String(error) });
     return 0;
   }
 }
@@ -196,7 +196,7 @@ async function getUserReports(userId: string, status: string, limit: number) {
       assignedModerator: undefined
     }));
   } catch (error) {
-    logger.error('Error getting user reports', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error getting user reports', { error: error instanceof Error ? error.message : String(error), userId });
     return [];
   }
 }

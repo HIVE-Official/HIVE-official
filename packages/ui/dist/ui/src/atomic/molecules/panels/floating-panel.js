@@ -7,8 +7,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { cn } from '../../../lib/utils';
-import { Button } from '../../atoms/button';
+import { cn } from '../../../lib/utils.js';
+import { Button } from '../../atoms/button.js';
 import { ChevronDown, ChevronUp, GripVertical, X, Maximize2, Minimize2 } from 'lucide-react';
 export function FloatingPanel({ title, icon, children, position: propPosition, initialPosition, width: propWidth, initialWidth, height: propHeight, initialHeight, isCollapsed: controlledIsCollapsed, closable = true, collapsible = true, draggable = false, resizable = true, defaultCollapsed = false, onClose, onToggleCollapse, onCollapseChange, className, }) {
     // Support both new and deprecated prop names

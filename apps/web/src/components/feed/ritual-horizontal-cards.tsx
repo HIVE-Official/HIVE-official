@@ -394,12 +394,11 @@ export function RitualHorizontalCards({
                           card.primaryAction!.onClick();
                         }}
                         disabled={card.primaryAction.disabled}
-                        className={`flex-1 ${
+                        className={`max-w-sm flex-1 ${
                           card.primaryAction.variant === 'gold'
                             ? 'bg-[var(--hive-brand-primary)] text-black hover:bg-hive-champagne'
                             : 'bg-white/20 hover:bg-white/30 text-white border-white/40'
                         }`}
-                        size="sm"
                       >
                         {card.primaryAction.label}
                         <ArrowRight className="h-4 w-4 ml-2" />
@@ -411,9 +410,8 @@ export function RitualHorizontalCards({
                           e.stopPropagation();
                           card.secondaryAction!.onClick();
                         }}
-                        variant="ghost"
-                        className="text-white hover:bg-white/10"
-                        size="sm"
+                        variant="outline"
+                        className="max-w-sm text-white hover:bg-white/10"
                       >
                         {card.secondaryAction.label}
                       </Button>
@@ -439,8 +437,7 @@ export function RitualHorizontalCards({
               </p>
               <Button
                 onClick={() => window.location.href = '/hivelab'}
-                className="w-full bg-[var(--hive-brand-primary)] text-black hover:bg-hive-champagne"
-                size="sm"
+                className="max-w-sm w-full bg-[var(--hive-brand-primary)] text-black hover:bg-hive-champagne"
               >
                 Explore HiveLab
                 <ArrowRight className="h-4 w-4 ml-2" />

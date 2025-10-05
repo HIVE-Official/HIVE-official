@@ -33,7 +33,7 @@ export const WelcomeMatProvider = ({ children }: WelcomeMatProviderProps) => {
       {shouldShowWelcomeMat && (
         <WelcomeMat
           onDismiss={closeFlow}
-          userName={user.fullName || undefined}
+          userName={user.displayName || undefined}
         />
       )}
     </>

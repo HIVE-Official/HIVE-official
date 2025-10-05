@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     // Filter by user if specified
     if (userId && currentUser) {
       // If requesting own tools, show all. If requesting other's tools, show only public
-      if (userId === currentUser.uid) {
+      if (userId === currentUser.id) {
         query = query.where("ownerId", "==", userId);
       } else {
         query = query
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Apply additional filters
     if (status && ["draft", "published", "archived"].includes(status)) {
       // Only allow status filtering for user's own tools
-      if (userId && currentUser && userId === currentUser.uid) {
+      if (userId && currentUser && userId === currentUser.id) {
         query = query.where("status", "==", status);
       }
     }
@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
         let countQuery: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
         
         if (userId && currentUser) {
-          if (userId === currentUser.uid) {
+          if (userId === currentUser.id) {
             countQuery = countQuery.where("ownerId", "==", userId);
           } else {
             countQuery = countQuery

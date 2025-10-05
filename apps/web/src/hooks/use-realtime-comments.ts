@@ -91,7 +91,7 @@ export function useRealtimeComments(postId: string | null) {
             createdAt: data.createdAt?.toDate?.() || new Date(),
             updatedAt: data.updatedAt?.toDate?.(),
             likes: data.likes || 0,
-            hasLiked: user?.uid ? data.likedBy?.includes(user.uid) : false,
+            hasLiked: user?.id ? data.likedBy?.includes(user.id) : false,
             replies: [],
             isDeleted: data.isDeleted
           };
@@ -137,7 +137,7 @@ export function useRealtimeComments(postId: string | null) {
         });
       },
       (error) => {
-        logger.error('Comments subscription error', { error: error instanceof Error ? error : new Error(String(error)), postId });
+        logger.error('Comments subscription error', { error: error instanceof Error ? error.message : String(error), postId });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -147,14 +147,14 @@ export function useRealtimeComments(postId: string | null) {
     );
 
     return () => unsubscribe();
-  }, [postId, user?.uid]);
+  }, [postId, user?.id]);
 
   // Add a comment
   const addComment = useCallback(async (
     content: string,
     parentId?: string
   ): Promise<boolean> => {
-    if (!user?.uid || !postId) return false;
+    if (!user?.id || !postId) return false;
 
     try {
       const commentsRef = collection(db, 'posts', postId, 'comments');
@@ -162,7 +162,7 @@ export function useRealtimeComments(postId: string | null) {
         postId,
         parentId: parentId || null,
         content,
-        authorId: user.uid,
+        authorId: user.id,
         authorName: user.displayName || 'Anonymous',
         authorAvatar: user.photoURL || undefined,
         createdAt: serverTimestamp(),
@@ -186,14 +186,14 @@ export function useRealtimeComments(postId: string | null) {
 
       return true;
     } catch (error) {
-      logger.error('Failed to add comment', { error: error instanceof Error ? error : new Error(String(error)), postId });
+      logger.error('Failed to add comment', { error: error instanceof Error ? error.message : String(error), postId });
       return false;
     }
   }, [user, postId]);
 
   // Like a comment
   const likeComment = useCallback(async (commentId: string): Promise<boolean> => {
-    if (!user?.uid || !postId) return false;
+    if (!user?.id || !postId) return false;
 
     try {
       const commentRef = doc(db, 'posts', postId, 'comments', commentId);
@@ -206,29 +206,29 @@ export function useRealtimeComments(postId: string | null) {
       await updateDoc(commentRef, {
         likes: increment(hasLiked ? -1 : 1),
         likedBy: hasLiked
-          ? (comment as any).likedBy?.filter((id: string) => id !== user.uid)
-          : [...((comment as any).likedBy || []), user.uid]
+          ? (comment as any).likedBy?.filter((id: string) => id !== user.id)
+          : [...((comment as any).likedBy || []), user.id]
       });
 
       logger.info('Comment like toggled', { commentId, liked: !hasLiked });
       return true;
     } catch (error) {
-      logger.error('Failed to like comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
+      logger.error('Failed to like comment', { error: error instanceof Error ? error.message : String(error), commentId });
       return false;
     }
-  }, [user?.uid, postId, state.comments]);
+  }, [user?.id, postId, state.comments]);
 
   // Delete a comment (soft delete)
   const deleteComment = useCallback(async (commentId: string): Promise<boolean> => {
-    if (!user?.uid || !postId) return false;
+    if (!user?.id || !postId) return false;
 
     try {
       const commentRef = doc(db, 'posts', postId, 'comments', commentId);
       const comment = state.comments.find(c => c.id === commentId);
 
       // Only author can delete
-      if (comment?.authorId !== user.uid) {
-        logger.warn('Unauthorized delete attempt', { commentId, userId: user.uid });
+      if (comment?.authorId !== user.id) {
+        logger.warn('Unauthorized delete attempt', { commentId, userId: user.id });
         return false;
       }
 
@@ -247,25 +247,25 @@ export function useRealtimeComments(postId: string | null) {
       logger.info('Comment deleted', { commentId });
       return true;
     } catch (error) {
-      logger.error('Failed to delete comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
+      logger.error('Failed to delete comment', { error: error instanceof Error ? error.message : String(error), commentId });
       return false;
     }
-  }, [user?.uid, postId, state.comments]);
+  }, [user?.id, postId, state.comments]);
 
   // Edit a comment
   const editComment = useCallback(async (
     commentId: string,
     newContent: string
   ): Promise<boolean> => {
-    if (!user?.uid || !postId) return false;
+    if (!user?.id || !postId) return false;
 
     try {
       const commentRef = doc(db, 'posts', postId, 'comments', commentId);
       const comment = state.comments.find(c => c.id === commentId);
 
       // Only author can edit
-      if (comment?.authorId !== user.uid) {
-        logger.warn('Unauthorized edit attempt', { commentId, userId: user.uid });
+      if (comment?.authorId !== user.id) {
+        logger.warn('Unauthorized edit attempt', { commentId, userId: user.id });
         return false;
       }
 
@@ -278,10 +278,10 @@ export function useRealtimeComments(postId: string | null) {
       logger.info('Comment edited', { commentId });
       return true;
     } catch (error) {
-      logger.error('Failed to edit comment', { error: error instanceof Error ? error : new Error(String(error)), commentId });
+      logger.error('Failed to edit comment', { error: error instanceof Error ? error.message : String(error), commentId });
       return false;
     }
-  }, [user?.uid, postId, state.comments]);
+  }, [user?.id, postId, state.comments]);
 
   return {
     comments: state.comments,

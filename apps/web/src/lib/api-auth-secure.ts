@@ -130,7 +130,7 @@ export function withSecureAuth(
       // 6. User-based rate limiting
       if (rateLimit) {
         const userLimitResult = await checkUserRateLimit(
-          decodedToken.uid,
+          decodedToken.id,
           rateLimit.type
         );
 
@@ -157,7 +157,7 @@ export function withSecureAuth(
 
         if (!adminEmails.includes(decodedToken.email || '')) {
           logger.warn('Non-admin attempted admin access', {
-            userId: decodedToken.uid,
+            userId: decodedToken.id,
             email: decodedToken.email,
             url: request.url
           });
@@ -172,7 +172,7 @@ export function withSecureAuth(
       // 8. Campus isolation check
       if (campusId && !enforceCampusIsolation(decodedToken, campusId)) {
         logger.warn('Campus isolation violation', {
-          userId: decodedToken.uid,
+          userId: decodedToken.id,
           expectedCampus: campusId,
           userEmail: decodedToken.email
         });

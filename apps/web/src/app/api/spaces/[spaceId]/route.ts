@@ -3,7 +3,7 @@ import { type Space } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { findSpaceOptimized } from "@/lib/space-query-optimizer";
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 const UpdateSpaceSchema = z.object({
   name: z.string().min(1).max(100).optional(),

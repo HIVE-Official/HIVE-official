@@ -119,8 +119,8 @@ export function WaitlistForm({
         <div className="flex items-center mb-4">
           <Link href="/welcome">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               className="p-2 text-zinc-400 hover:text-white"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -148,8 +148,8 @@ export function WaitlistForm({
               className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
               disabled={isSubmitting}
             />
-            {errors.fullName && (
-              <p className="text-sm text-red-400">{errors.fullName.message}</p>
+            {errors.displayName && (
+              <p className="text-sm text-red-400">{errors.displayName.message}</p>
             )}
           </div>
 

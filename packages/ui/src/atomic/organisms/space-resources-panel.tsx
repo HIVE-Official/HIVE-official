@@ -133,10 +133,10 @@ const SpaceResourcesPanel = React.forwardRef<HTMLDivElement, SpaceResourcesPanel
             onResourceClick(resource)
           }
         }}
-        className="group flex items-start gap-3 rounded-lg border border-white/8 bg-[#0c0c0c] p-3 transition-all duration-[400ms] hover:border-white/20 hover:bg-white/10"
+        className="group flex items-start gap-3 rounded-lg border border-white/8 bg-[#0c0c0c] p-3 transition-all duration-smooth hover:border-white/20 hover:bg-white/10"
       >
         {/* Icon */}
-        <div className="shrink-0 mt-0.5 text-white/70 group-hover:text-[#FFD700] transition-all duration-[400ms]">
+        <div className="shrink-0 mt-0.5 text-white/70 group-hover:text-[#FFD700] transition-all duration-smooth">
           {getResourceIcon(resource.type)}
         </div>
 
@@ -144,7 +144,7 @@ const SpaceResourcesPanel = React.forwardRef<HTMLDivElement, SpaceResourcesPanel
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-all duration-[400ms] truncate">
+              <h4 className="text-sm font-medium text-white group-hover:text-[#FFD700] transition-all duration-smooth truncate">
                 {resource.title}
               </h4>
               <p className="text-xs text-white/70 truncate mt-0.5">
@@ -170,14 +170,14 @@ const SpaceResourcesPanel = React.forwardRef<HTMLDivElement, SpaceResourcesPanel
         </div>
 
         {/* External link indicator */}
-        <svg className="h-3.5 w-3.5 shrink-0 text-white/70 group-hover:text-[#FFD700] transition-all duration-[400ms]" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-3.5 w-3.5 shrink-0 text-white/70 group-hover:text-[#FFD700] transition-all duration-smooth" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
         </svg>
       </a>
     )
 
     return (
-      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+      <Card ref={ref} className={cn("transition-all duration-smooth", className)} {...props}>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-semibold tracking-tight leading-tight">Resources</CardTitle>
@@ -186,7 +186,7 @@ const SpaceResourcesPanel = React.forwardRef<HTMLDivElement, SpaceResourcesPanel
                 variant="ghost"
                 size="sm"
                 onClick={onAddResource}
-                className="h-8 px-2 transition-all duration-[400ms]"
+                className="h-8 px-2 transition-all duration-smooth"
               >
                 <svg className="h-3.5 w-3.5 mr-1" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -208,7 +208,7 @@ const SpaceResourcesPanel = React.forwardRef<HTMLDivElement, SpaceResourcesPanel
                   variant="outline"
                   size="sm"
                   onClick={onAddResource}
-                  className="mt-3 transition-all duration-[400ms]"
+                  className="mt-3 transition-all duration-smooth"
                 >
                   <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

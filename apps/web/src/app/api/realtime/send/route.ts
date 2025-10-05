@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const messageId = await sseRealtimeService.sendMessage({
       type,
       channel,
-      senderId: user.uid,
+      senderId: user.id,
       targetUsers,
       content,
       metadata: {
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       messageId,
       type,
       channel,
-      userId: user.uid
+      userId: user.id
     });
 
     return NextResponse.json({
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error sending real-time message', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error sending real-time message', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to send message', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

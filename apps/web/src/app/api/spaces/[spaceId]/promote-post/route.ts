@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
@@ -173,7 +173,10 @@ export const POST = withAuthAndErrors(async (
         }
       });
     } catch (sseError) {
-      logger.warn('Failed to broadcast promoted post via SSE', { sseError, feedPostId: feedRef.id });
+      logger.warn('Failed to broadcast promoted post via SSE', {
+        error: sseError instanceof Error ? sseError : new Error(String(sseError)),
+        feedPostId: feedRef.id
+      });
     }
 
     return respond.success({
@@ -185,7 +188,7 @@ export const POST = withAuthAndErrors(async (
     });
 
   } catch (error) {
-    logger.error('Error promoting post to feed', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
+    logger.error('Error promoting post to feed', { error: error instanceof Error ? error.message : String(error), spaceId, userId });
     return respond.error("Failed to promote post", "INTERNAL_ERROR", { status: 500 });
   }
 });
@@ -290,7 +293,7 @@ function calculateViralityScore(postData: any): number {
 /**
  * GET /api/spaces/[spaceId]/promote-post - Check promotion eligibility
  */
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context: { params: Promise<{ spaceId: string }> }, respond) => {
   const userId = getUserId(request);
   const { spaceId } = await context.params;
 
@@ -366,7 +369,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     return respond.success(eligibility);
 
   } catch (error) {
-    logger.error('Error checking promotion eligibility', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
+    logger.error('Error checking promotion eligibility', { error: error instanceof Error ? error.message : String(error), spaceId, userId });
     return respond.error("Failed to check eligibility", "INTERNAL_ERROR", { status: 500 });
   }
 });

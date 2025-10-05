@@ -3,7 +3,7 @@
  * Handles automatic connection detection and retrieval
  */
 
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import type { ConnectionSource } from '@hive/core';
@@ -82,7 +82,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
           isMutual,
           isFriend,
           profile: userData ? {
-            fullName: userData.fullName,
+            fullName: userData.displayName,
             handle: userData.handle,
             avatarUrl: userData.avatarUrl,
             major: userData.academic?.major,

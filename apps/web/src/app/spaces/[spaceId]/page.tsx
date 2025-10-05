@@ -185,7 +185,7 @@ export default function SpaceDetailPage() {
                 {membership ? (
                   <>
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       className="border-gray-700"
                       onClick={() => {}}
@@ -193,7 +193,7 @@ export default function SpaceDetailPage() {
                       <Bell className="w-4 h-4" />
                     </Button>
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       className="border-gray-700"
                       onClick={() => {}}
@@ -202,7 +202,7 @@ export default function SpaceDetailPage() {
                     </Button>
                     {isLeader && (
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         className="border-gray-700"
                         onClick={() => router.push(`/spaces/${spaceId}/settings`)}
@@ -211,7 +211,7 @@ export default function SpaceDetailPage() {
                       </Button>
                     )}
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       className="border-red-500 text-red-400 hover:bg-red-500/10"
                       onClick={handleLeaveSpace}
@@ -309,8 +309,8 @@ export default function SpaceDetailPage() {
             <div className="p-4 border-b border-gray-800 flex items-center justify-between">
               <h3 className="font-bold text-white capitalize">{contextPanel}</h3>
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => setContextPanel(null)}
               >
                 <X className="w-4 h-4" />

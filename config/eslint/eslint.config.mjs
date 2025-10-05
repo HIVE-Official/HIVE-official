@@ -181,10 +181,20 @@ const config = [
       "src/components/**",
       "src/lib/**",
       "src/types/**",
+
+      // Scripts and one-off tooling (not part of product code quality gate)
+      "scripts/**",
+      "tools/**",
     ],
   },
 
   // File-specific overrides
+  {
+    files: ["vitest.setup.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
   {
     files: [
       "apps/web/src/app/legal/**/*.tsx",

@@ -31,7 +31,7 @@ export async function GET(
     const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     // Check if user is member of the space
     const memberDoc = await db
@@ -73,7 +73,7 @@ export async function GET(
       author: author
         ? {
             id: authorDoc.id,
-            fullName: author.fullName,
+            fullName: author.displayName,
             handle: author.handle,
             photoURL: author.photoURL,
           }
@@ -107,7 +107,7 @@ export async function PATCH(
     const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     const body = (await request.json()) as unknown;
     const validatedData = EditPostSchema.parse(body);
@@ -186,7 +186,7 @@ export async function PATCH(
       ...updatedPostData,
       author: {
         id: updatedPostData.authorId,
-        fullName: author?.fullName || "Unknown User",
+        fullName: author?.displayName || "Unknown User",
         handle: author?.handle || "unknown",
         photoURL: author?.photoURL || null,
       },
@@ -229,7 +229,7 @@ export async function DELETE(
     const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     // Get the post
     const postDoc = await db
@@ -314,7 +314,7 @@ export async function POST(
     const token = authHeader.substring(7);
     const auth = getAuth();
     const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     const body = (await request.json()) as unknown;
     const { reaction } = ReactionSchema.parse(body);

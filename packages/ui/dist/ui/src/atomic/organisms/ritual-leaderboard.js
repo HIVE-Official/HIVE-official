@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Avatar } from "../atoms/avatar";
-import { Badge } from "../atoms/badge";
+import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card.js";
+import { Avatar } from "../atoms/avatar.js";
+import { Badge } from "../atoms/badge.js";
 import { Trophy, Medal, Award } from "lucide-react";
 const RitualLeaderboard = React.forwardRef(({ className, entries, limit, highlightCurrentUser = true, ...props }, ref) => {
     const displayEntries = limit ? entries.slice(0, limit) : entries;

@@ -188,7 +188,7 @@ export function RealtimePerformanceDashboard() {
           <Button
             onClick={handleForceHealthCheck}
             variant="outline"
-            size="sm"
+            className="max-w-sm"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Health Check
@@ -197,7 +197,7 @@ export function RealtimePerformanceDashboard() {
           <Button
             onClick={handleOptimizationToggle}
             variant={config.enableAutoOptimization ? "default" : "outline"}
-            size="sm"
+            className="max-w-sm"
           >
             <Settings className="h-4 w-4 mr-2" />
             Auto-Optimization {config.enableAutoOptimization ? 'ON' : 'OFF'}
@@ -215,8 +215,8 @@ export function RealtimePerformanceDashboard() {
                 <span>{alert.message}</span>
                 <Button
                   onClick={() => performanceActions.acknowledgeAlert(alert.id)}
-                  size="sm"
-                  variant="ghost"
+                  className="max-w-sm"
+                  variant="outline"
                 >
                   Acknowledge
                 </Button>
@@ -437,7 +437,7 @@ export function RealtimePerformanceDashboard() {
             <div className="flex space-x-2 pt-2">
               <Button
                 onClick={performanceActions.runSpeedTest}
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
               >
                 <Zap className="h-4 w-4 mr-1" />
@@ -446,7 +446,7 @@ export function RealtimePerformanceDashboard() {
               
               <Button
                 onClick={performanceActions.optimizeConnection}
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
               >
                 <Settings className="h-4 w-4 mr-1" />
@@ -467,8 +467,8 @@ export function RealtimePerformanceDashboard() {
             </CardTitle>
             <Button
               onClick={performanceActions.clearAlerts}
-              size="sm"
-              variant="ghost"
+              className="max-w-sm"
+              variant="outline"
             >
               Clear All
             </Button>
@@ -492,8 +492,8 @@ export function RealtimePerformanceDashboard() {
                   {!alert.acknowledged && (
                     <Button
                       onClick={() => performanceActions.acknowledgeAlert(alert.id)}
-                      size="sm"
-                      variant="ghost"
+                      className="max-w-sm"
+                      variant="outline"
                       className="text-xs"
                     >
                       Ack

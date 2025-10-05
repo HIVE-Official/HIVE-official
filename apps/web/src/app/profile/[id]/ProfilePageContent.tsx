@@ -7,7 +7,7 @@ import type { PresenceStatus } from '@hive/ui';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { useSession } from '@/hooks/use-session';
 import { useProfileContext } from '@/components/profile/ProfileContextProvider';
-import type { SpecCompliantProfile } from '@hive/core/domain/profile/spec-compliant-profile';
+import type { SpecCompliantProfile } from '@hive/core';
 import { db } from '@hive/core';
 import { doc, onSnapshot } from 'firebase/firestore';
 import type { PresenceData } from '@hive/core';

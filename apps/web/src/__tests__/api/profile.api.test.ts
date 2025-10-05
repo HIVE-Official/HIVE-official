@@ -65,7 +65,7 @@ describe('Profile API - GET /api/profile', () => {
         email: 'john@buffalo.edu'
       };
 
-      expect(token.uid).toBeDefined();
+      expect(token.id).toBeDefined();
     });
   });
 

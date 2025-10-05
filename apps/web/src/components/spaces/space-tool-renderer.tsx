@@ -162,7 +162,7 @@ export function SpaceToolRenderer({
         <div className="text-sm">{error}</div>
         <Button
           variant="outline"
-          size="sm"
+          className="max-w-sm"
           onClick={() => initializeTool()}
           className="mt-2 border-red-500/30 text-red-400"
         >
@@ -191,16 +191,16 @@ export function SpaceToolRenderer({
           <div className="flex items-center gap-1">
             {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
               <Button
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                className="max-w-sm"
                 onClick={() => handleToolAction('configure')}
               >
                 <Settings className="w-3 h-3" />
               </Button>
             )}
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={() => setExpanded(!expanded)}
             >
               {expanded ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
@@ -259,7 +259,7 @@ export function SpaceToolRenderer({
           {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => handleToolAction('configure')}
               className="border-gray-700 text-gray-300"
             >
@@ -270,7 +270,7 @@ export function SpaceToolRenderer({
 
           <Button
             variant="outline"
-            size="sm"
+            className="max-w-sm"
             onClick={() => handleToolAction('refresh')}
             className="border-gray-700 text-gray-300"
           >
@@ -323,7 +323,7 @@ export function SpaceToolRenderer({
             {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => handleToolAction('configure')}
                 className="mt-4 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
               >
@@ -346,7 +346,7 @@ export function SpaceToolRenderer({
               <Button
                 key={index}
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => handleToolAction(action.id, action.data)}
                 className="border-gray-700 text-gray-300 text-xs"
               >

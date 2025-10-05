@@ -310,7 +310,7 @@ export function withProfileContext<P extends object>(
 /**
  * Development helper: ProfileContext with mock data
  */
-export function MockProfileContextProvider({ children }: { children: ReactNode }) {
+export function MockProfileContextProvider({ children }: { children: React.ReactNode }) {
   const mockData = createMockProfileSystem('mock-dev-user');
 
   return (

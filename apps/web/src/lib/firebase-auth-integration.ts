@@ -18,7 +18,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
   
   const listenToAuthChanges = (callback: (user: FirebaseUser | null) => void): (() => void) => {
     return onAuthStateChanged(auth, (user) => {
-      logger.info('Firebase auth state changed', { userId: user?.uid });
+      logger.info('Firebase auth state changed', { userId: user?.id });
       callback(user);
     });
   };
@@ -35,12 +35,12 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
 
     try {
       const result = await signInWithEmailLink(auth, userEmail, window.location.href);
-      logger.info('Email link sign-in successful', { userId: result.user.uid });
+      logger.info('Email link sign-in successful', { userId: result.user.id });
       
       // Clean up stored email
       window.localStorage.removeItem('emailForSignIn');
     } catch (error) {
-      logger.error('Email link sign-in failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Email link sign-in failed', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   };
@@ -53,7 +53,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
       const token = await getIdToken(user, false); // Don't force refresh by default
       return token;
     } catch (error) {
-      logger.error('Failed to get Firebase token', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to get Firebase token', { error: error instanceof Error ? error.message : String(error) });
       return null;
     }
   };
@@ -63,7 +63,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
       await auth.signOut();
       logger.info('Firebase sign out successful');
     } catch (error) {
-      logger.error('Firebase sign out failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Firebase sign out failed', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   };

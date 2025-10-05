@@ -54,12 +54,12 @@ export const GET = withSecureAuth(
   async (request: NextRequest, token) => {
     try {
       const campusId = 'ub-buffalo';
-      const userDoc = doc(db, 'users', token.uid);
+      const userDoc = doc(db, 'users', token.id);
       const userSnapshot = await getDoc(userDoc);
 
       if (!userSnapshot.exists()) {
         logger.warn('Profile not found', {
-          userId: token.uid,
+          userId: token.id,
           endpoint: '/api/profile'
         });
 
@@ -76,12 +76,12 @@ export const GET = withSecureAuth(
       const response = {
         success: true,
         data: {
-          id: token.uid,
+          id: token.id,
           email: userData.email,
           handle: userData.handle,
           firstName: userData.firstName,
           lastName: userData.lastName,
-          fullName: userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
+          fullName: userData.displayName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim(),
           bio: userData.bio,
           major: userData.major,
           graduationYear: userData.graduationYear,
@@ -118,7 +118,7 @@ export const GET = withSecureAuth(
       };
 
       logger.info('Profile fetched successfully', {
-        userId: token.uid,
+        userId: token.id,
         handle: userData.handle,
         endpoint: '/api/profile'
       });
@@ -130,7 +130,7 @@ export const GET = withSecureAuth(
         'Error fetching profile',
         error instanceof Error ? error : new Error(String(error)),
         {
-          userId: token.uid,
+          userId: token.id,
           endpoint: '/api/profile'
         }
       );
@@ -160,7 +160,7 @@ export const PUT = withSecureAuth(
       const updateData = ProfileUpdateSchema.parse(body);
 
       logger.info('Profile update request', {
-        userId: token.uid,
+        userId: token.id,
         fields: Object.keys(updateData),
         endpoint: '/api/profile'
       });
@@ -175,7 +175,7 @@ export const PUT = withSecureAuth(
         );
         const existingHandleSnapshot = await getDocs(handleQuery);
 
-        if (!existingHandleSnapshot.empty && existingHandleSnapshot.docs[0].id !== token.uid) {
+        if (!existingHandleSnapshot.empty && existingHandleSnapshot.docs[0].id !== token.id) {
           return NextResponse.json(
             { success: false, error: 'Handle already taken' },
             { status: 400 }
@@ -184,7 +184,7 @@ export const PUT = withSecureAuth(
       }
 
       // Update user document
-      const userDoc = doc(db, 'users', token.uid);
+      const userDoc = doc(db, 'users', token.id);
       const updateFields: any = {
         ...updateData,
         updatedAt: serverTimestamp(),
@@ -224,9 +224,9 @@ export const PUT = withSecureAuth(
       await updateDoc(userDoc, updateFields);
 
       logger.info('Profile updated successfully', {
-        userId: token.uid,
+        userId: token.id,
         handle: updateData.handle,
-        fieldsUpdated: Object.keys(updateData),
+        fields: Object.keys(updateData),
         endpoint: '/api/profile'
       });
 
@@ -234,7 +234,7 @@ export const PUT = withSecureAuth(
         success: true,
         message: 'Profile updated successfully',
         data: {
-          id: token.uid,
+          id: token.id,
           handle: updateData.handle,
           updatedFields: Object.keys(updateData)
         }
@@ -245,7 +245,7 @@ export const PUT = withSecureAuth(
         'Error updating profile',
         error instanceof Error ? error : new Error(String(error)),
         {
-          userId: token.uid,
+          userId: token.id,
           endpoint: '/api/profile'
         }
       );

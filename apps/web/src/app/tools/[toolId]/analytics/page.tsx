@@ -199,8 +199,8 @@ export default function ToolAnalyticsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => router.back()}
                 className="text-[#A1A1AA] hover:text-white"
               >
@@ -220,7 +220,7 @@ export default function ToolAnalyticsPage() {
             <div className="flex items-center gap-3">
               <select
                 value={timeRange}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange((e.target as any).value)}
                 className="p-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded text-white text-sm focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               >
                 <option value="7d">Last 7 days</option>
@@ -228,7 +228,7 @@ export default function ToolAnalyticsPage() {
                 <option value="90d">Last 3 months</option>
               </select>
               <Button
-                size="sm"
+                className="max-w-sm"
                 variant="outline"
                 className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >

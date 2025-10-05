@@ -59,11 +59,11 @@ export default function NotificationsPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" className="max-w-sm">
                 <CheckCheck className="w-4 h-4 mr-2" />
                 Mark all read
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" className="max-w-sm">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -107,7 +107,7 @@ export default function NotificationsPage() {
                   </p>
                   <p className="text-gray-500 text-xs mt-2">2 minutes ago</p>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" className="max-w-sm">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
@@ -127,7 +127,7 @@ export default function NotificationsPage() {
                   </p>
                   <p className="text-gray-500 text-xs mt-2">5 minutes ago</p>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" className="max-w-sm">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
@@ -144,7 +144,7 @@ export default function NotificationsPage() {
                   </p>
                   <p className="text-gray-500 text-xs mt-2">1 hour ago</p>
                 </div>
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" className="max-w-sm">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>

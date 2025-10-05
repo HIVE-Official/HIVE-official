@@ -174,9 +174,10 @@ export function createHiveProfile(
     isBuilder?: boolean;
   }
 ): UnifiedHiveProfile {
-  const minimal = createMinimalProfile(id, fullName, handle, email);
+  const minimal = createMinimalProfile({ id, displayName: fullName, handle, email });
 
-  return toUnifiedProfile(minimal, {
+  return toUnifiedProfile({
+    ...minimal,
     // Add default bento grid layout for new users
     grid: {
       cards: [
@@ -230,13 +231,13 @@ export function getProfileCompleteness(profile: UnifiedHiveProfile | HiveProfile
 
   // Fallback calculation for basic HiveProfile
   const fields = [
-    profile.identity.fullName,
-    profile.identity.avatarUrl,
-    profile.academic.major,
-    profile.academic.academicYear,
-    profile.personal.bio,
-    profile.academic.housing,
-    profile.academic.pronouns
+    (profile as any).displayName || (profile as any).identity?.displayName,
+    (profile as any).photoURL || (profile as any).identity?.avatarUrl,
+    (profile as any).major || (profile as any).academic?.major,
+    (profile as any).academicYear || (profile as any).academic?.academicYear,
+    (profile as any).bio || (profile as any).personal?.bio,
+    (profile as any).housing || (profile as any).academic?.housing,
+    (profile as any).pronouns || (profile as any).academic?.pronouns
   ];
 
   const completed = fields.filter(field => field && field.length > 0).length;

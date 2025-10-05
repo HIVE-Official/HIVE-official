@@ -423,5 +423,14 @@ const EventCard = React.forwardRef<HTMLDivElement, EventCardProps>(
 
 EventCard.displayName = "EventCard"
 
+// Export campus context type for calendar integration
+export type EventCampusContext = {
+  friendsGoing: Array<{
+    id: string
+    name: string
+    avatar: string
+  }>
+}
+
 export { EventCard }
 // FeedEventData already exported above

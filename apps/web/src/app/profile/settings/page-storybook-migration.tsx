@@ -245,7 +245,7 @@ export default function ProfileSettingsStorybook() {
       }
     } catch (error) {
       logger.error("Failed to save settings", {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
     }
@@ -261,7 +261,7 @@ export default function ProfileSettingsStorybook() {
       });
     } catch (error) {
       logger.error("Failed to toggle ghost mode", {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
     }
@@ -272,7 +272,7 @@ export default function ProfileSettingsStorybook() {
     if (!profile) return null;
     return {
       id: profile.identity.id,
-      name: profile.identity.fullName || "",
+      name: profile.identity.displayName || "",
       handle: profile.identity.handle || "",
       email: profile.identity.email || "",
       role: profile.builder?.isBuilder ? "builder" : "member",
@@ -739,7 +739,7 @@ export default function ProfileSettingsStorybook() {
                   </p>
                   <Button
                     variant="destructive"
-                    size="sm"
+                    className="max-w-sm"
                     onClick={() => setShowDeleteModal(true)}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />

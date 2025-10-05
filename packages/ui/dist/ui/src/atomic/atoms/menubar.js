@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import * as MenubarPrimitive from "@radix-ui/react-menubar";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 import { CheckIcon, ChevronRightIcon, DotFilledIcon } from "@radix-ui/react-icons";
 function MenubarMenu({ ...props }) {
     return _jsx(MenubarPrimitive.Menu, { ...props });

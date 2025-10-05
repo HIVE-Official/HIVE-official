@@ -1,4 +1,4 @@
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { z } from 'zod';
@@ -238,7 +238,7 @@ export const PUT = withAuthValidationAndErrors(
       return respond.success({ message: 'Event updated successfully' });
     } catch (error) {
       logger.error('Failed to update calendar event', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error : new Error('Unknown error'),
         userId,
         eventId: id,
       });
@@ -291,7 +291,7 @@ export const DELETE = withAuthAndErrors(async (request: AuthenticatedRequest, co
     return respond.success({ message: 'Event deleted successfully' });
   } catch (error) {
     logger.error('Failed to delete calendar event', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error : new Error('Unknown error'),
       userId,
       eventId,
     });

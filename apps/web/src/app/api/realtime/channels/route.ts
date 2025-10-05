@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user has permission to create channels in this space
-    const canCreate = await verifyChannelCreatePermission(user.uid, spaceId);
+    const canCreate = await verifyChannelCreatePermission(user.id, spaceId);
     if (!canCreate) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to create channels in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     const channelId = `ch_${spaceId}_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`;
 
     // Determine initial participants
-    let initialParticipants = [user.uid];
+    let initialParticipants = [user.id];
     if (isPrivate) {
       initialParticipants = [...new Set([...initialParticipants, ...participants])];
     } else {
@@ -112,12 +112,12 @@ export async function POST(request: NextRequest) {
       type: isPrivate ? 'private' : type,
       parentChannelId,
       participants: initialParticipants,
-      admins: [user.uid],
+      admins: [user.id],
       settings,
       unreadCount: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      createdBy: user.uid,
+      createdBy: user.id,
       isActive: true,
       isArchived: false
     };
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     await dbAdmin.collection('chatChannels').doc(channelId).set(channel);
 
     // Create channel memberships for all participants
-    await createChannelMemberships(channelId, spaceId, initialParticipants, user.uid);
+    await createChannelMemberships(channelId, spaceId, initialParticipants, user.id);
 
     // Send system message for channel creation
     await sendChannelSystemMessage(channelId, spaceId, 'channel_created', {
@@ -173,14 +173,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user has access to space
-    const hasAccess = await verifySpaceAccess(user.uid, spaceId);
+    const hasAccess = await verifySpaceAccess(user.id, spaceId);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get user's channel memberships
     const membershipQuery = dbAdmin.collection('channelMemberships')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('spaceId', '==', spaceId)
       .where('isActive', '==', true);
 
@@ -209,7 +209,7 @@ export async function GET(request: NextRequest) {
         
         // Add unread count if requested
         if (includeUnreadCounts) {
-          channelData.unreadCount = { [user.uid]: await getUnreadCount(user.uid, channelId) };
+          channelData.unreadCount = { [user.id]: await getUnreadCount(user.id, channelId) };
         }
         
         channels.push(channelData);
@@ -267,7 +267,7 @@ export async function PUT(request: NextRequest) {
     const channel = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
 
     // Verify user has permission to modify channel
-    const canModify = await verifyChannelModifyPermission(user.uid, channel);
+    const canModify = await verifyChannelModifyPermission(user.id, channel);
     if (!canModify) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to modify this channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -291,7 +291,7 @@ export async function PUT(request: NextRequest) {
           // Create memberships for new participants
           const addedParticipants = participants.filter(p => !channel.participants.includes(p));
           if (addedParticipants.length > 0) {
-            await createChannelMemberships(channelId, channel.spaceId, addedParticipants, user.uid);
+            await createChannelMemberships(channelId, channel.spaceId, addedParticipants, user.id);
           }
         }
         break;
@@ -370,7 +370,7 @@ export async function DELETE(request: NextRequest) {
     const channel = { id: channelDoc.id, ...channelDoc.data() } as ChatChannel;
 
     // Verify user has permission to delete channel
-    const canDelete = await verifyChannelDeletePermission(user.uid, channel);
+    const canDelete = await verifyChannelDeletePermission(user.id, channel);
     if (!canDelete) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to delete this channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -380,7 +380,7 @@ export async function DELETE(request: NextRequest) {
       isActive: false,
       isArchived: true,
       deletedAt: new Date().toISOString(),
-      deletedBy: user.uid,
+      deletedBy: user.id,
       updatedAt: new Date().toISOString()
     });
 

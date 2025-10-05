@@ -452,7 +452,7 @@ function AdminDashboardInternal() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Recent Admin Activity</CardTitle>
-                <Button size="sm" variant="outline">
+                <Button className="max-w-sm" variant="outline">
                   View All
                 </Button>
               </div>

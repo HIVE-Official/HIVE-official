@@ -202,7 +202,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
             <div className="space-y-2">
               {pinnedPosts.map((post) => (
                 <div key={post.id} className="text-sm text-gray-300 bg-gray-800/50 p-3 rounded-lg">
-                  <div className="font-medium">{post.author?.fullName}</div>
+                  <div className="font-medium">{post.author?.displayName}</div>
                   <div className="truncate">{post.content}</div>
                 </div>
               ))}
@@ -274,7 +274,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                   ref={textareaRef}
                   value={newPostContent}
                   onChange={(e: React.ChangeEvent) => {
-                    setNewPostContent((e.target as HTMLInputElement).value);
+                    setNewPostContent((e.target as any).value);
                     adjustTextareaHeight();
                   }}
                   onKeyDown={(e) => {
@@ -307,8 +307,7 @@ export function SpacePostFeed({ spaceId, canPost, pinnedPosts = [], spaceRules }
                 <Button
                   onClick={handleCreatePost}
                   disabled={!newPostContent.trim() || posting}
-                  className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 disabled:opacity-50"
-                  size="sm"
+                  className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 disabled:opacity-50"
                 >
                   {posting ? (
                     <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
@@ -363,7 +362,7 @@ function PostMessage({
         {showAvatar ? (
           <Avatar
             src={post.author.avatarUrl}
-            fallback={post.author.fullName?.[0]}
+            fallback={post.author.displayName?.[0]}
             className="w-8 h-8 mt-1"
           />
         ) : (
@@ -377,7 +376,7 @@ function PostMessage({
         <div className="flex-1 min-w-0">
           {showAvatar && (
             <div className="flex items-center space-x-2 mb-1">
-              <span className="font-medium text-white">{post.author.fullName}</span>
+              <span className="font-medium text-white">{post.author.displayName}</span>
               <span className="text-xs text-gray-500">
                 {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
               </span>

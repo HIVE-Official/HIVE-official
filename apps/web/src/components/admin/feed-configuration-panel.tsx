@@ -286,7 +286,7 @@ export function FeedConfigurationPanel() {
 
               <Button
                 variant={value ? 'primary' : 'secondary'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => toggleFeature(key as keyof FeedConfiguration['features'])}
               >
                 {value ? 'Enabled' : 'Disabled'}
@@ -317,7 +317,7 @@ export function FeedConfigurationPanel() {
                 min="0"
                 max="100"
                 value={value}
-                onChange={(e: React.ChangeEvent) => updateAlgorithm(key as keyof FeedConfiguration['algorithms'], parseInt((e.target as HTMLInputElement).value))}
+                onChange={(e: React.ChangeEvent) => updateAlgorithm(key as keyof FeedConfiguration['algorithms'], parseInt((e.target as any).value))}
                 className="w-full h-2 bg-hive-background rounded-lg appearance-none cursor-pointer slider"
               />
             </div>
@@ -342,7 +342,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="30"
               value={config.postingRules.minAccountAgeDays}
-              onChange={(e: React.ChangeEvent) => updatePostingRule('minAccountAgeDays', parseInt((e.target as HTMLInputElement).value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minAccountAgeDays', parseInt((e.target as any).value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -356,7 +356,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="10"
               value={config.postingRules.minSpaceMemberships}
-              onChange={(e: React.ChangeEvent) => updatePostingRule('minSpaceMemberships', parseInt((e.target as HTMLInputElement).value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minSpaceMemberships', parseInt((e.target as any).value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -370,7 +370,7 @@ export function FeedConfigurationPanel() {
               min="0"
               max="100"
               value={config.postingRules.minEngagementScore}
-              onChange={(e: React.ChangeEvent) => updatePostingRule('minEngagementScore', parseInt((e.target as HTMLInputElement).value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('minEngagementScore', parseInt((e.target as any).value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>
@@ -384,7 +384,7 @@ export function FeedConfigurationPanel() {
               min="1"
               max="50"
               value={config.postingRules.dailyPostLimit}
-              onChange={(e: React.ChangeEvent) => updatePostingRule('dailyPostLimit', parseInt((e.target as HTMLInputElement).value))}
+              onChange={(e: React.ChangeEvent) => updatePostingRule('dailyPostLimit', parseInt((e.target as any).value))}
               className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
             />
           </div>

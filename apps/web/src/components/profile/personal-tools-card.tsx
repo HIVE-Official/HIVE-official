@@ -225,8 +225,7 @@ export function PersonalToolsCard({
                 handleAddTools();
               }}
               variant="outline" 
-              size="sm"
-              className="text-xs"
+              className="max-w-sm text-xs"
             >
               Browse Tools ↗
             </Button>
@@ -298,8 +297,7 @@ export function PersonalToolsCard({
                 handleAddTools();
               }}
               variant="outline" 
-              size="sm"
-              className="text-xs transition-all duration-200 hover:scale-105"
+              className="max-w-sm text-xs transition-all duration-200 hover:scale-105"
             >
               + Add
             </Button>
@@ -308,9 +306,8 @@ export function PersonalToolsCard({
                 e.stopPropagation();
                 handleManageTools();
               }}
-              variant="ghost" 
-              size="sm"
-              className="text-xs transition-all duration-200 hover:scale-105"
+              variant="outline" 
+              className="max-w-sm text-xs transition-all duration-200 hover:scale-105"
             >
               ⚙️ Manage
             </Button>
@@ -400,9 +397,8 @@ export function PersonalToolsCard({
               e.stopPropagation();
               handleManageTools();
             }}
-            variant="ghost" 
-            size="sm"
-            className={`w-full text-xs transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-70'}`}
+            variant="outline" 
+            className={`max-w-sm w-full text-xs transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-70'}`}
           >
             Manage All Tools ↗
           </Button>

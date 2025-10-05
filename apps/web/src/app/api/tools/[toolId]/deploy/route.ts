@@ -1,9 +1,10 @@
+import { ToolSchema } from "@hive/core";
 import { NextRequest, NextResponse } from 'next/server';
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import * as admin from 'firebase-admin';
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { withAuthValidationAndErrors, withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthValidationAndErrors, withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
 // Schema for tool deployment requests

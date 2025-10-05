@@ -113,7 +113,7 @@ export default function UserProfilePage() {
               @{handle}
             </h1>
             <p className="text-[var(--hive-brand-primary)] text-lg">
-              {unifiedProfile?.identity?.fullName || handle}
+              {unifiedProfile?.identity?.displayName || handle}
             </p>
           </div>
 

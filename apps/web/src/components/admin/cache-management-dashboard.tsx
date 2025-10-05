@@ -29,7 +29,7 @@ interface CacheManagementData {
     };
     memoryBreakdown: Record<string, any>;
     slowQueries: Array<{
-      operation: string;
+      action: string;
       key: string;
       responseTime: number;
       timestamp: number;
@@ -455,7 +455,7 @@ export default function CacheManagementDashboard() {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       onClick={() => handleAction('flushNamespace', { namespace: namespace.namespace })}
                       disabled={activeAction === 'flushNamespace'}

@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user has permission to update this tool
-    const hasPermission = await verifyToolUpdatePermission(user.uid, toolId, deploymentId, spaceId);
+    const hasPermission = await verifyToolUpdatePermission(user.id, toolId, deploymentId, spaceId);
     if (!hasPermission) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to update this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -128,14 +128,14 @@ export async function POST(request: NextRequest) {
       toolName: tool?.name || 'Unknown Tool',
       deploymentId,
       spaceId,
-      userId: user.uid,
+      userId: user.id,
       updateType,
       eventData: {
         ...eventData,
         changedFields: eventData.changedFields || [],
         metadata: {
           ...eventData.metadata,
-          triggeredBy: user.uid,
+          triggeredBy: user.id,
           timestamp: new Date().toISOString()
         }
       },
@@ -205,7 +205,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user has access to this tool
-    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId ?? undefined, spaceId ?? undefined);
+    const hasAccess = await verifyToolAccess(user.id, toolId, deploymentId ?? undefined, spaceId ?? undefined);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -243,7 +243,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get sync status
-    const syncStatus = await getToolSyncStatus(toolId, deploymentId ?? undefined, user.uid);
+    const syncStatus = await getToolSyncStatus(toolId, deploymentId ?? undefined, user.id);
 
     return NextResponse.json({
       success: true,
@@ -285,7 +285,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Verify access
-    const hasAccess = await verifyToolAccess(user.uid, toolId, deploymentId ?? undefined);
+    const hasAccess = await verifyToolAccess(user.id, toolId, deploymentId ?? undefined);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -295,7 +295,7 @@ export async function PUT(request: NextRequest) {
     
     if (!serverSnapshot) {
       // No server state exists, create new one with client state
-      await createToolStateSnapshot(toolId, deploymentId, clientState, user.uid);
+      await createToolStateSnapshot(toolId, deploymentId, clientState, user.id);
       
       return NextResponse.json({
         success: true,
@@ -317,7 +317,7 @@ export async function PUT(request: NextRequest) {
         toolName: 'Tool', // This would need to be fetched properly
         deploymentId,
         spaceId: undefined,
-        userId: user.uid,
+        userId: user.id,
         updateType: 'state_change',
         eventData: {
           previousState: serverSnapshot.currentState,
@@ -350,7 +350,7 @@ export async function PUT(request: NextRequest) {
       clientState,
       clientVersion,
       conflictResolution,
-      user.uid
+      user.id
     );
 
     return NextResponse.json({
@@ -389,7 +389,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Verify permission to clean up tool data
-    const hasPermission = await verifyToolUpdatePermission(user.uid, toolId, deploymentId ?? undefined);
+    const hasPermission = await verifyToolUpdatePermission(user.id, toolId, deploymentId ?? undefined);
     if (!hasPermission) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to clean up this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }

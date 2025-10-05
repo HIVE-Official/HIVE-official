@@ -5,7 +5,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import {
   UpdateToolSchema,
   ToolSchema,
@@ -76,12 +76,12 @@ export const PUT = withAuthValidationAndErrors(
   UpdateToolSchema as any,
   async (
     request: AuthenticatedRequest,
-    { params }: { params: Promise<{ toolId: string }> },
+    context: { params: Promise<{ toolId: string }> },
     updateData: UpdateToolData,
     respond
   ) => {
     const userId = getUserId(request);
-    const { toolId } = await params;
+    const { toolId } = await context.params;
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {

@@ -202,7 +202,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Space Name</label>
                       <Input
                         value={settings.name}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ name: (e.target as HTMLInputElement).value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ name: (e.target as any).value })}
                         placeholder="Enter space name"
                         maxLength={50}
                       />
@@ -213,7 +213,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Description</label>
                       <textarea
                         value={settings.description}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ description: (e.target as HTMLInputElement).value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ description: (e.target as any).value })}
                         placeholder="Describe your space"
                         maxLength={500}
                         rows={4}
@@ -226,7 +226,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Welcome Message</label>
                       <textarea
                         value={settings.welcomeMessage}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ welcomeMessage: (e.target as HTMLInputElement).value })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ welcomeMessage: (e.target as any).value })}
                         placeholder="Message shown to new members (optional)"
                         maxLength={200}
                         rows={3}
@@ -244,7 +244,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <div className="text-center">
                         <Image className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                         <h4 className="font-medium text-white mb-2">Space Icon</h4>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" className="max-w-sm">
                           <Upload className="w-4 h-4 mr-2" />
                           Upload Icon
                         </Button>
@@ -255,7 +255,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <div className="text-center">
                         <Image className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                         <h4 className="font-medium text-white mb-2">Cover Banner</h4>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" className="max-w-sm">
                           <Upload className="w-4 h-4 mr-2" />
                           Upload Banner
                         </Button>
@@ -324,7 +324,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       </div>
                       <select
                         value={settings.slowMode}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ slowMode: Number((e.target as HTMLInputElement).value) })}
+                        onChange={(e: React.ChangeEvent) => updateSettings({ slowMode: Number((e.target as any).value) })}
                         className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white"
                       >
                         <option value={0}>Off</option>
@@ -377,7 +377,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         <Input
                           type="color"
                           value={settings.primaryColor}
-                          onChange={(e: React.ChangeEvent) => updateSettings({ primaryColor: (e.target as HTMLInputElement).value })}
+                          onChange={(e: React.ChangeEvent) => updateSettings({ primaryColor: (e.target as any).value })}
                           className="w-20"
                         />
                         <span className="text-gray-400">{settings.primaryColor}</span>
@@ -472,7 +472,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
 
                               <Input
                                 value={deleteConfirm}
-                                onChange={(e: React.ChangeEvent) => setDeleteConfirm((e.target as HTMLInputElement).value)}
+                                onChange={(e: React.ChangeEvent) => setDeleteConfirm((e.target as any).value)}
                                 placeholder={`Type "${space.name}" to confirm`}
                                 className="border-red-500/50"
                               />

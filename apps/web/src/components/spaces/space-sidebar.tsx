@@ -105,8 +105,8 @@ export function SpaceSidebar({
     return (
       <div className="p-2">
         <Button
-          size="sm"
-          variant="ghost"
+          className="max-w-sm"
+          variant="outline"
           onClick={onToggleCollapse}
           className="mb-4"
         >
@@ -152,8 +152,8 @@ export function SpaceSidebar({
     <div className="p-4 space-y-4">
       {/* Collapse Button */}
       <Button
-        size="sm"
-        variant="ghost"
+        className="max-w-sm"
+        variant="outline"
         onClick={onToggleCollapse}
         className="mb-2"
       >

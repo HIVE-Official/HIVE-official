@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 const mySpacesQuerySchema = z.object({
   includeInactive: z.coerce.boolean().default(false),
@@ -14,7 +14,7 @@ const mySpacesQuerySchema = z.object({
  * Get current user's spaces - joined, owned, favorited
  * Updated to use flat collection structure
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
@@ -174,7 +174,4 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: true, 
-  operation: 'get_my_spaces' 
 });

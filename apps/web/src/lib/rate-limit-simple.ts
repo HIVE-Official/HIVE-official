@@ -78,7 +78,7 @@ export function rateLimit(config: RateLimitConfig = { maxRequests: 100, windowMs
           
           // Log security event for rate limit violations
           logSecurityEvent('rate_limit', {
-            operation: 'memory_rate_limit_exceeded',
+            action: 'memory_rate_limit_exceeded',
             tags: {
               clientId: normalizedClientId,
               identifier: identifier,
@@ -120,11 +120,11 @@ export function rateLimit(config: RateLimitConfig = { maxRequests: 100, windowMs
 
         // Log security event
         logSecurityEvent('rate_limit', {
-          operation: 'memory_rate_limiter_failure',
+          action: 'memory_rate_limiter_failure',
           tags: {
             identifier: identifier,
             failures: healthStatus.failures.toString(),
-            error: error instanceof Error ? error.message : 'unknown'
+            error: error instanceof Error ? error.message : String(error)
           }
         });
 

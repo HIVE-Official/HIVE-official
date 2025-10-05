@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
@@ -131,11 +131,17 @@ export const POST = withAuthAndErrors(async (
               }
             });
           } catch (sseError) {
-            logger.warn('Failed to broadcast RSS post via SSE', { sseError, postId: postRef.id });
+            logger.warn('Failed to broadcast RSS post via SSE', {
+              error: sseError instanceof Error ? sseError : new Error(String(sseError)),
+              postId: postRef.id
+            });
           }
         }
       } catch (feedError) {
-        logger.warn('Failed to process RSS feed', { feedUrl, error: feedError });
+        logger.warn('Failed to process RSS feed', {
+          feedUrl,
+          error: feedError instanceof Error ? feedError : new Error(String(feedError))
+        });
       }
     }
 
@@ -154,7 +160,7 @@ export const POST = withAuthAndErrors(async (
     });
 
   } catch (error) {
-    logger.error('Error seeding RSS content', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
+    logger.error('Error seeding RSS content', { error: error instanceof Error ? error.message : String(error), spaceId, userId });
     return respond.error("Failed to seed RSS content", "INTERNAL_ERROR", { status: 500 });
   }
 });

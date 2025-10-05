@@ -140,8 +140,8 @@ export function useResilientApi<T>(
 
       const hiveError: HiveError = error.id ? error : {
         id: `hook_${Date.now()}`,
-        category: ErrorCategory._UNKNOWN,
-        severity: ErrorSeverity._MEDIUM,
+        category: anyCategory._UNKNOWN,
+        severity: anySeverity._MEDIUM,
         message: error.message || 'Request failed',
         timestamp: new Date(),
         retryable: true
@@ -229,7 +229,7 @@ export function useResilientApi<T>(
   return {
     ...state,
     refetch,
-    reset,
+    // reset,
     retry
   };
 }
@@ -392,8 +392,8 @@ export function useResilientMutation<TData, TVariables>(
     } catch (error: any) {
       const hiveError: HiveError = error.id ? error : {
         id: `mutation_${Date.now()}`,
-        category: ErrorCategory._UNKNOWN,
-        severity: ErrorSeverity._MEDIUM,
+        category: anyCategory._UNKNOWN,
+        severity: anySeverity._MEDIUM,
         message: error.message || 'Mutation failed',
         timestamp: new Date(),
         retryable: false

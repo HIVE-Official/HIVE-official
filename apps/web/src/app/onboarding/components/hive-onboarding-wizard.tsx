@@ -53,8 +53,7 @@ function OnboardingProgress({ value, isComplete, className }: {
     <Progress
       value={value}
       variant={isComplete ? "success" : "default"}
-      size="lg"
-      className={cn("w-full", className)}
+      className={cn("max-w-lg w-full", className)}
     />
   );
 }
@@ -333,7 +332,7 @@ export function HiveOnboardingWizard() {
       
       // Prepare onboarding data for the bridge
       const onboardingData: OnboardingData = {
-        fullName: data.fullName,
+        fullName: data.displayName,
         userType: data.userType!,
         firstName: data.firstName,
         lastName: data.lastName,
@@ -450,7 +449,7 @@ export function HiveOnboardingWizard() {
               className="space-y-[var(--hive-spacing-4)]"
             >
               <h2 className="text-4xl font-bold text-[var(--hive-text-primary)]">
-                Welcome to HIVE, {data.fullName.split(" ")[0]}!
+                Welcome to HIVE, {data.displayName.split(" ")[0]}!
               </h2>
               <p className="text-xl text-[var(--hive-text-secondary)]">
                 Your profile is ready. Taking you to your new digital campus...
@@ -599,7 +598,7 @@ export function HiveOnboardingWizard() {
               <div className="flex justify-between items-center mt-[var(--hive-spacing-8)] pt-[var(--hive-spacing-6)] mb-[var(--hive-spacing-6)]">
                 <Button
                   variant="outline"
-                  size="lg"
+                  className="max-w-lg"
                   onClick={goBack}
                   disabled={!canGoBack()}
                  
@@ -612,7 +611,7 @@ export function HiveOnboardingWizard() {
                 {currentStep === TOTAL_STEPS - 1 ? (
                   <Button
                     variant="default"
-                    size="lg"
+                    className="max-w-lg"
                     onClick={handleSubmit}
                     disabled={!canGoNext() || isSubmitting}
                    
@@ -624,7 +623,7 @@ export function HiveOnboardingWizard() {
                 ) : (
                   <Button
                     variant="default"
-                    size="lg"
+                    className="max-w-lg"
                     onClick={goNext}
                     disabled={!canGoNext()}
                    
@@ -692,7 +691,7 @@ export function HiveOnboardingWizard() {
                   <Card className="p-3 rotate-1">
                     <div className="text-xs text-[var(--hive-text-muted)] mb-1">Name</div>
                     <div className="text-[var(--hive-text-primary)] font-semibold text-sm">
-                      {data.fullName || "Your name"}
+                      {data.displayName || "Your name"}
                     </div>
                   </Card>
 

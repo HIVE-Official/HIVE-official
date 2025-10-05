@@ -129,8 +129,7 @@ export function ToolsWidget({
                 <Button
                   key={tool.id}
                   variant="outline"
-                  size="sm"
-                  className="border-gray-700 text-gray-300 hover:text-white hover:border-gray-600 flex flex-col items-center gap-1 h-auto py-3"
+                  className="max-w-sm border-gray-700 text-gray-300 hover:text-white hover:border-gray-600 flex flex-col items-center gap-1 h-auto py-3"
                   onClick={() => handleToolClick(tool.id)}
                 >
                   <IconComponent className={`w-5 h-5 ${tool.color}`} />
@@ -305,9 +304,8 @@ function EventCreationModal({
                 key={key}
                 type="button"
                 variant={formData.template === key ? 'default' : 'outline'}
-                size="sm"
+                className="max-w-sm text-xs"
                 onClick={() => handleTemplateSelect(key as keyof typeof templates)}
-                className="text-xs"
               >
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </Button>
@@ -322,7 +320,7 @@ function EventCreationModal({
           </label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
             placeholder="Enter event title"
             required
           />
@@ -335,7 +333,7 @@ function EventCreationModal({
           </label>
           <HiveTextarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
             placeholder="Event description..."
             rows={3}
           />
@@ -350,7 +348,7 @@ function EventCreationModal({
             <Input
               type="date"
               value={formData.startDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startDate: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startDate: (e.target as any).value }))}
               required
             />
           </div>
@@ -361,7 +359,7 @@ function EventCreationModal({
             <Input
               type="time"
               value={formData.startTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as any).value }))}
               required
             />
           </div>
@@ -376,7 +374,7 @@ function EventCreationModal({
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as any).value }))}
             />
           </div>
           <div>
@@ -386,7 +384,7 @@ function EventCreationModal({
             <Input
               type="time"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
             />
           </div>
         </div>
@@ -398,7 +396,7 @@ function EventCreationModal({
           </label>
           <Input
             value={formData.location}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as any).value }))}
             placeholder="Event location or 'Online'"
           />
         </div>
@@ -412,7 +410,7 @@ function EventCreationModal({
             <Input
               type="number"
               value={formData.maxAttendees}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, maxAttendees: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, maxAttendees: (e.target as any).value }))}
               placeholder="Leave empty for unlimited"
             />
           </div>
@@ -537,7 +535,7 @@ function PollCreationModal({
           </label>
           <Input
             value={formData.question}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, question: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, question: (e.target as any).value }))}
             placeholder="What would you like to ask?"
             required
           />
@@ -553,7 +551,7 @@ function PollCreationModal({
               <div key={index} className="flex gap-2">
                 <Input
                   value={option}
-                  onChange={(e: React.ChangeEvent) => updateOption(index, (e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent) => updateOption(index, (e.target as any).value)}
                   placeholder={`Option ${index + 1}`}
                   className="flex-1"
                 />
@@ -561,9 +559,8 @@ function PollCreationModal({
                   <Button
                     type="button"
                     variant="outline"
-                    size="sm"
+                    className="max-w-sm border-red-600 text-red-400"
                     onClick={() => removeOption(index)}
-                    className="border-red-600 text-red-400"
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -574,9 +571,8 @@ function PollCreationModal({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                className="max-w-sm w-full border-dashed border-gray-600"
                 onClick={addOption}
-                className="w-full border-dashed border-gray-600"
               >
                 <Plus className="w-4 h-4 mr-1" />
                 Add Option
@@ -622,13 +618,13 @@ function PollCreationModal({
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as any).value }))}
               placeholder="End date"
             />
             <Input
               type="time"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
               placeholder="End time"
             />
           </div>
@@ -713,7 +709,7 @@ function TaskCreationModal({
           </label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
             placeholder="What needs to be done?"
             required
           />
@@ -726,7 +722,7 @@ function TaskCreationModal({
           </label>
           <HiveTextarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
             placeholder="Task details and requirements..."
             rows={3}
           />
@@ -741,7 +737,7 @@ function TaskCreationModal({
             <Input
               type="date"
               value={formData.dueDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueDate: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueDate: (e.target as any).value }))}
             />
           </div>
           <div>
@@ -751,7 +747,7 @@ function TaskCreationModal({
             <Input
               type="time"
               value={formData.dueTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueTime: (e.target as any).value }))}
             />
           </div>
         </div>
@@ -767,13 +763,12 @@ function TaskCreationModal({
                 key={priority}
                 type="button"
                 variant={formData.priority === priority ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setFormData(prev => ({ ...prev, priority }))}
-                className={`text-xs ${
+                className={`max-w-sm text-xs ${
                   priority === 'low' ? 'border-green-600 text-green-400' :
                   priority === 'medium' ? 'border-yellow-600 text-yellow-400' :
                   'border-red-600 text-red-400'
                 }`}
+                onClick={() => setFormData(prev => ({ ...prev, priority }))}
               >
                 {priority.charAt(0).toUpperCase() + priority.slice(1)}
               </Button>
@@ -953,7 +948,7 @@ function ResourceCreationModal({
               <Input
                 type="url"
                 value={formData.url}
-                onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, url: (e.target as HTMLInputElement).value }))}
+                onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, url: (e.target as any).value }))}
                 placeholder="https://example.com/resource"
                 required
               />
@@ -967,7 +962,7 @@ function ResourceCreationModal({
             </label>
             <Input
               value={formData.title}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
               placeholder="Resource title"
               required
             />
@@ -980,7 +975,7 @@ function ResourceCreationModal({
             </label>
             <HiveTextarea
               value={formData.description}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
               placeholder="What is this resource for?"
               rows={2}
             />
@@ -993,7 +988,7 @@ function ResourceCreationModal({
             </label>
             <Input
               value={formData.tags}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, tags: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, tags: (e.target as any).value }))}
               placeholder="study, notes, exam (comma separated)"
             />
           </div>

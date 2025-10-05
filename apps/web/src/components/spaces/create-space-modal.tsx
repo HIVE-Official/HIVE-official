@@ -314,7 +314,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
                 <Input
                   value={spaceData.name}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: (e.target as HTMLInputElement).value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: (e.target as any).value })}
                   placeholder="Enter a clear, descriptive name..."
                   maxLength={50}
                   error={errors.name}
@@ -326,7 +326,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Description *</label>
                 <textarea
                   value={spaceData.description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: (e.target as HTMLInputElement).value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: (e.target as any).value })}
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
@@ -506,7 +506,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <input
                   type="text"
                   value={newRule}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule((e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule((e.target as any).value)}
                   placeholder="Enter a community guideline..."
                   className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   onKeyPress={(e) => {
@@ -571,8 +571,8 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     <div key={index} className="flex items-center justify-between p-3 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)] rounded-lg">
                       <span className="text-sm text-white">{rule}</span>
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        variant="outline"
+                        className="max-w-sm"
                         onClick={() => removeRule(index)}
                         className="text-red-400 hover:text-red-300"
                       >

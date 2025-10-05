@@ -3,16 +3,17 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 /**
  * Get Ritual Detail API
  * 
  * GET - Get detailed ritual information including user participation
  */
-export const GET = withAuth(async (request: NextRequest, authContext, { params }) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
+    const { params } = context;
     const ritualId = params?.ritualId as string;
 
     if (!ritualId) {
@@ -319,10 +320,10 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
     });
 
   } catch (error: any) {
-    logger.error('Get ritual detail error', { 
-      error: error.message, 
+    logger.error('Get ritual detail error', {
+      error: error instanceof Error ? error.message : String(error),
       ritualId: params?.ritualId,
-      endpoint: `/api/rituals/${params?.ritualId}` 
+      endpoint: `/api/rituals/${params?.ritualId}`
     });
 
     return NextResponse.json(
@@ -330,7 +331,4 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: true, // Ritual detail viewing is safe for development
-  operation: 'get_ritual_detail' 
 });

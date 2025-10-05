@@ -11,11 +11,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { Avatar } from "../atoms/avatar";
+import { cn } from "../../lib/utils.js";
+import { Card } from "../atoms/card.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { Avatar } from "../atoms/avatar.js";
 import { Calendar, Clock, MapPin, Users, Heart, Share, Bookmark, TrendingUp, AlertCircle, CheckCircle, } from "lucide-react";
 const EventCard = React.forwardRef(({ className, event, onRSVP, onShare, onSave, onSpaceClick, compact = false, enablePsychology = true, ...props }, ref) => {
     const [timeUntilEvent, setTimeUntilEvent] = React.useState('');

@@ -161,7 +161,7 @@ export function SpaceCreationPanel() {
         campusId: 'ub-buffalo', // Hard-coded for vBETA
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        createdBy: user?.uid,
+        createdBy: user?.id,
         memberCount: 0,
         postCount: 0,
         isActive: true,
@@ -186,8 +186,8 @@ export function SpaceCreationPanel() {
       // Create initial subcollections
       await Promise.all([
         // Members collection with creator as owner
-        setDoc(doc(db, 'spaces', spaceData.id, 'members', user!.uid), {
-          userId: user!.uid,
+        setDoc(doc(db, 'spaces', spaceData.id, 'members', user!.id), {
+          userId: user!.id,
           role: 'owner',
           joinedAt: serverTimestamp(),
           addedBy: 'system'
@@ -304,7 +304,7 @@ export function SpaceCreationPanel() {
                 <Input
                   id="name"
                   value={formData.name || ''}
-                  onChange={(e: React.ChangeEvent) => updateFormData('name', (e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent) => updateFormData('name', (e.target as any).value)}
                   placeholder="e.g., Computer Science Club"
                   className="bg-gray-800 border-gray-700 text-white"
                 />
@@ -315,7 +315,7 @@ export function SpaceCreationPanel() {
                 <Input
                   id="handle"
                   value={formData.handle || ''}
-                  onChange={(e: React.ChangeEvent) => updateFormData('handle', (e.target as HTMLInputElement).value.toLowerCase().replace(/\s+/g, '-'))}
+                  onChange={(e: React.ChangeEvent) => updateFormData('handle', (e.target as any).value.toLowerCase().replace(/\s+/g, '-'))}
                   placeholder="e.g., cs-club"
                   className="bg-gray-800 border-gray-700 text-white"
                 />
@@ -330,7 +330,7 @@ export function SpaceCreationPanel() {
               <Textarea
                 id="description"
                 value={formData.description || ''}
-                onChange={(e: React.ChangeEvent) => updateFormData('description', (e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent) => updateFormData('description', (e.target as any).value)}
                 placeholder="Describe what this space is about..."
                 className="bg-gray-800 border-gray-700 text-white min-h-[100px]"
               />
@@ -383,7 +383,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">Department</Label>
                   <Input
                     value={formData.departmentId || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('departmentId', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('departmentId', (e.target as any).value)}
                     placeholder="e.g., Computer Science"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -393,7 +393,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">Course Number</Label>
                   <Input
                     value={formData.courseNumber || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('courseNumber', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('courseNumber', (e.target as any).value)}
                     placeholder="e.g., CSE 442"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -407,7 +407,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">Building Name *</Label>
                   <Input
                     value={formData.buildingName || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('buildingName', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('buildingName', (e.target as any).value)}
                     placeholder="e.g., Ellicott Complex"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -417,7 +417,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">Floor/Section</Label>
                   <Input
                     value={formData.floorNumber || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('floorNumber', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('floorNumber', (e.target as any).value)}
                     placeholder="e.g., 3rd Floor"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -431,7 +431,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">Chapter Name *</Label>
                   <Input
                     value={formData.chapterName || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('chapterName', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('chapterName', (e.target as any).value)}
                     placeholder="e.g., Alpha Phi"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -441,7 +441,7 @@ export function SpaceCreationPanel() {
                   <Label className="text-white">National Organization</Label>
                   <Input
                     value={formData.nationalOrg || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('nationalOrg', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('nationalOrg', (e.target as any).value)}
                     placeholder="e.g., Alpha Phi International"
                     className="bg-gray-800 border-gray-700 text-white"
                   />
@@ -524,7 +524,7 @@ export function SpaceCreationPanel() {
                 {formData.enableRssFeed && (
                   <Input
                     value={formData.rssUrl || ''}
-                    onChange={(e: React.ChangeEvent) => updateFormData('rssUrl', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent) => updateFormData('rssUrl', (e.target as any).value)}
                     placeholder="RSS feed URL"
                     className="bg-gray-800 border-gray-700 text-white"
                   />

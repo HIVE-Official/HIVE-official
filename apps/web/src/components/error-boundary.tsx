@@ -8,7 +8,7 @@ import { errorReporting } from '../lib/error-reporting';
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
+  error?: any;
   errorInfo?: React.ErrorInfo;
   errorId?: string;
   retryCount: number;
@@ -16,7 +16,7 @@ interface ErrorBoundaryState {
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error?: Error; retry: () => void; errorId?: string }>;
+  fallback?: React.ComponentType<{ error?: any; retry: () => void; errorId?: string }>;
   context?: string; // 'global' | 'feed' | 'spaces' | 'profile' | 'tools'
   enableRecovery?: boolean;
   maxRetries?: number;
@@ -30,17 +30,17 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     this.state = { hasError: false, retryCount: 0 };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+  static getDerivedStateFromError(error: any): Partial<ErrorBoundaryState> {
     // Generate unique error ID for tracking
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     return { hasError: true, error, errorId };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: any, errorInfo: React.ErrorInfo) {
     const errorId = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const context = this.props.context || 'global';
 
-    this.setState({ error, errorInfo, errorId });
+    this.setState({ error: error instanceof Error ? error.message : String(error), errorInfo, errorId });
 
     // Enhanced error logging with context and Firebase integration
     logger.error('Error Boundary caught an error', {
@@ -148,7 +148,7 @@ function DefaultErrorFallback({
   retryCount = 0,
   maxRetries = 3
 }: {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
   context?: string;

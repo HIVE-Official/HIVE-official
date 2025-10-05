@@ -225,7 +225,7 @@ export function FirebaseMonitoring() {
           </div>
           <select
             value={timeRange}
-            onChange={(e: React.ChangeEvent) => setTimeRange((e.target as HTMLInputElement).value as any)}
+            onChange={(e: React.ChangeEvent) => setTimeRange((e.target as any).value as any)}
             className="px-3 py-2 bg-gray-800 border border-gray-600 rounded text-sm"
           >
             <option value="1h">Last Hour</option>
@@ -233,7 +233,7 @@ export function FirebaseMonitoring() {
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
           </select>
-          <Button variant="outline" size="sm" onClick={loadFirebaseMetrics}>
+          <Button variant="outline" className="max-w-sm" onClick={loadFirebaseMetrics}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>

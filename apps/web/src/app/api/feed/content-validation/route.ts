@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     const analytics = generateContentAnalytics(validationResults);
 
     // Log validation metrics
-    await logValidationMetrics(user.uid, spaceId, {
+    await logValidationMetrics(user.id, spaceId, {
       totalItems: contentItems.length,
       validItems: enforcedResults.filter(r => r.enforcementAction === 'allow').length,
       analytics

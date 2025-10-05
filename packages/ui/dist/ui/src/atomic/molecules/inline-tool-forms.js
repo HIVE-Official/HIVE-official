@@ -2,11 +2,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { X } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Input } from "../atoms/input";
-import { Textarea } from "../atoms/textarea";
-import { Label } from "../atoms/label";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
+import { Input } from "../atoms/input.js";
+import { Textarea } from "../atoms/textarea.js";
+import { Label } from "../atoms/label.js";
 export const InlineEventForm = React.forwardRef(({ onSubmit, onCancel, className }, ref) => {
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");

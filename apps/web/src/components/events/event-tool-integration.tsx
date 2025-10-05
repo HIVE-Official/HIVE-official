@@ -219,7 +219,7 @@ export function EventToolIntegration({
                       </Badge>
                       <Button
                         variant="outline"
-                        size="sm"
+                        className="max-w-sm"
                         onClick={() => onToolLaunch(session.toolId, { sessionId: session.id })}
                       >
                         <ExternalLink className="h-4 w-4" />
@@ -291,7 +291,7 @@ export function EventToolIntegration({
                     {hasActiveSession ? (
                       <Button
                         variant="default"
-                        size="sm"
+                        className="max-w-sm"
                         onClick={() => onToolLaunch(toolId)}
                       >
                         <Play className="h-4 w-4 mr-1" />
@@ -300,7 +300,7 @@ export function EventToolIntegration({
                     ) : (
                       <Button
                         variant={userRole === 'organizer' ? 'outline' : 'ghost'}
-                        size="sm"
+                        className="max-w-sm"
                         onClick={() => handleToolStart(toolId)}
                         disabled={userRole === 'viewer'}
                       >
@@ -350,7 +350,7 @@ export function EventToolIntegration({
       <Dialog
         open={showSetupModal}
         onOpenChange={() => setShowSetupModal(false)}
-        size="lg"
+        className="max-w-lg"
       >
         <HiveModalHeader>
           <HiveModalTitle>Setup {selectedTool ? getToolDefinition(selectedTool).name : 'Tool'}</HiveModalTitle>
@@ -379,7 +379,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.duration || '25'}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, duration: (e.target as HTMLInputElement).value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, duration: (e.target as any).value}))}
                     >
                       <option value="15">15 minutes</option>
                       <option value="25">25 minutes</option>
@@ -409,7 +409,7 @@ export function EventToolIntegration({
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       placeholder="Enter poll question..."
                       value={toolConfig.title || ''}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, title: (e.target as HTMLInputElement).value}))}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolConfig((prev: any) => ({...prev, title: (e.target as any).value}))}
                     />
                   </div>
                   <div>
@@ -432,7 +432,7 @@ export function EventToolIntegration({
                     <select 
                       className="w-full p-2 bg-zinc-800 border border-zinc-700 rounded text-white"
                       value={toolConfig.method || 'code'}
-                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, method: (e.target as HTMLInputElement).value}))}
+                      onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setToolConfig((prev: any) => ({...prev, method: (e.target as any).value}))}
                     >
                       <option value="code">Check-in Code</option>
                       <option value="location">Location Verification</option>

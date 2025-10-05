@@ -53,7 +53,7 @@ export async function GET(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -98,7 +98,7 @@ export async function GET(
       .collection("events")
       .doc(eventId)
       .collection("rsvps")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     const userRsvpStatus = userRsvpDoc.exists ? userRsvpDoc.data()?.status : null;
@@ -109,7 +109,7 @@ export async function GET(
       organizer: organizer
         ? {
             id: organizerDoc.id,
-            fullName: organizer.fullName,
+            fullName: organizer.displayName,
             handle: organizer.handle,
             photoURL: organizer.photoURL,
           }
@@ -165,7 +165,7 @@ export async function PATCH(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -174,7 +174,7 @@ export async function PATCH(
 
     const memberRole = memberDoc.data()?.role;
     const canEditEvent = 
-      eventData.organizerId === decodedToken.uid || // Event organizer
+      eventData.organizerId === decodedToken.id || // Event organizer
       ['owner', 'admin', 'moderator'].includes(memberRole); // Space leaders
 
     if (!canEditEvent) {
@@ -198,7 +198,7 @@ export async function PATCH(
     const updateData: any = {
       ...validatedData,
       updatedAt: new Date(),
-      updatedBy: decodedToken.uid,
+      updatedBy: decodedToken.id,
     };
 
     // Convert date strings to Date objects
@@ -227,7 +227,7 @@ export async function PATCH(
       .collection("activity")
       .add({
         type: 'event_updated',
-        performedBy: decodedToken.uid,
+        performedBy: decodedToken.id,
         targetEventId: eventId,
         details: {
           updatedFields: Object.keys(validatedData),
@@ -235,7 +235,7 @@ export async function PATCH(
         timestamp: new Date(),
       });
 
-    logger.info(`Event updated: ${eventId} in space ${spaceId} by ${decodedToken.uid}`);
+    logger.info(`Event updated: ${eventId} in space ${spaceId} by ${decodedToken.id}`);
 
     return NextResponse.json(ApiResponseHelper.success({
       message: "Event updated successfully",
@@ -294,7 +294,7 @@ export async function DELETE(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -303,7 +303,7 @@ export async function DELETE(
 
     const memberRole = memberDoc.data()?.role;
     const canDeleteEvent = 
-      eventData.organizerId === decodedToken.uid || // Event organizer
+      eventData.organizerId === decodedToken.id || // Event organizer
       ['owner', 'admin'].includes(memberRole); // Space owners and admins only
 
     if (!canDeleteEvent) {
@@ -343,7 +343,7 @@ export async function DELETE(
       .collection("activity")
       .add({
         type: 'event_deleted',
-        performedBy: decodedToken.uid,
+        performedBy: decodedToken.id,
         targetEventId: eventId,
         details: {
           eventTitle: eventData.title,
@@ -352,7 +352,7 @@ export async function DELETE(
         timestamp: new Date(),
       });
 
-    logger.info(`Event deleted: ${eventId} from space ${spaceId} by ${decodedToken.uid}`);
+    logger.info(`Event deleted: ${eventId} from space ${spaceId} by ${decodedToken.id}`);
 
     return NextResponse.json(ApiResponseHelper.success({
       message: "Event deleted successfully",

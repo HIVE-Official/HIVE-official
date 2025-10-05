@@ -69,7 +69,7 @@ export async function enforceCompusIsolation(userId: string): Promise<string> {
     // For vBETA, hardcoded to UB Buffalo
     return userData?.campusId || 'ub-buffalo';
   } catch (error) {
-    logger.error('Campus isolation check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Campus isolation check failed', { userId, error: error instanceof Error ? error.message : String(error) });
     // Default to UB for vBETA
     return 'ub-buffalo';
   }
@@ -127,7 +127,7 @@ export async function getConnectionType(
 
     return ConnectionType.NONE;
   } catch (error) {
-    logger.error('Connection type check failed', { userId: viewerId, targetId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Connection type check failed', { userId: viewerId, targetId, error: error instanceof Error ? error.message : String(error) });
     return ConnectionType.NONE;
   }
 }
@@ -145,7 +145,7 @@ export async function isGhostModeActive(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.privacy?.ghostMode === true;
   } catch (error) {
-    logger.error('Ghost mode check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Ghost mode check failed', { userId, error: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }
@@ -219,11 +219,11 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 export function checkRateLimit(
   userId: string,
-  operation: string,
+  action: string,
   limit: number = 60,
   windowMs: number = 60000
 ): boolean {
-  const key = `${userId}:${operation}`;
+  const key = `${userId}:${action}`;
   const now = Date.now();
 
   const current = rateLimitMap.get(key);
@@ -249,20 +249,20 @@ export function checkRateLimit(
  */
 export async function auditLog(
   userId: string,
-  operation: string,
+  action: string,
   details: any
 ): Promise<void> {
   try {
     await dbAdmin.collection('audit_logs').add({
       userId,
-      operation,
+      operation: action,
       details,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       ip: details.ip || 'unknown',
       userAgent: details.userAgent || 'unknown'
     });
   } catch (error) {
-    logger.error('Audit logging failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Audit logging failed', { userId, error: error instanceof Error ? error.message : String(error) });
   }
 }
 
@@ -325,7 +325,7 @@ export function withProfileSecurity(
       // Execute the handler
       return await handler(req, context);
     } catch (error) {
-      logger.error('Profile security middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Profile security middleware error', { error: error instanceof Error ? error.message : String(error) });
       return NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 }
@@ -379,7 +379,7 @@ export async function getPrivacySettings(userId: string): Promise<PrivacySetting
       spaceActivityVisibility: new Map(Object.entries(privacy.spaceActivityVisibility || {}))
     };
   } catch (error) {
-    logger.error('Privacy settings fetch failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Privacy settings fetch failed', { userId, error: error instanceof Error ? error.message : String(error) });
     // Return default privacy settings
     return {
       ghostMode: false,

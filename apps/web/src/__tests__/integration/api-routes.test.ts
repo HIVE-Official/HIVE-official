@@ -432,7 +432,7 @@ describe('API Routes Integration', () => {
 
       expect(response.status).toBe(200);
       expect(data.users).toHaveLength(1);
-      expect(data.users[0].fullName).toBe('John Test');
+      expect(data.users[0].displayName).toBe('John Test');
       expect(data.users[0].handle).toBe('johntest');
     });
 
@@ -479,7 +479,7 @@ describe('API Routes Integration', () => {
 
       expect(response.status).toBe(200);
       expect(data.users).toHaveLength(1);
-      expect(data.users[0].fullName).toBe('Public User');
+      expect(data.users[0].displayName).toBe('Public User');
     });
 
     it('should filter by space membership', async () => {

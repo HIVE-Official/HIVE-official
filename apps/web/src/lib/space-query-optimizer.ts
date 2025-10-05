@@ -92,7 +92,7 @@ export async function findSpaceOptimized(spaceId: string): Promise<SpaceQueryRes
 
   } catch (error) {
     logger.error('Space query optimization failed', {
-      spaceId,
+      id: spaceId,
       error: error instanceof Error ? error.message : String(error),
       action: 'space_query_failed'
     });

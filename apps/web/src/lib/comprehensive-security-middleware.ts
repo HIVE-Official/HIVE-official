@@ -28,7 +28,7 @@ export interface SecurityConfig {
     validateBody?: boolean;
     validateQuery?: boolean;
     securityLevel: 'AUTHENTICATION' | 'USER_DATA' | 'CONTENT_CREATION' | 'PUBLIC_READ' | 'ADMIN';
-    operation: string;
+    action: string;
   };
   
   // Session management
@@ -51,7 +51,7 @@ export interface SecurityConfig {
   
   // Logging
   logging?: {
-    operation: string;
+    action: string;
     logSuccess?: boolean;
     logFailures?: boolean;
   };
@@ -94,7 +94,7 @@ export async function comprehensiveSecurityMiddleware(
         violations.push('rate_limit_exceeded');
         
         await logSecurityEvent('invalid_token', {
-          operation: `${config.logging?.operation || 'unknown'}_rate_limited`,
+          action: `${config.logging?.action || 'unknown'}_rate_limited`,
           tags: {
             limiterType: config.rateLimit.limiterType,
             environment: currentEnvironment
@@ -123,7 +123,7 @@ export async function comprehensiveSecurityMiddleware(
       const validationResult = await validateRequest(request, {
         schema: config.validation.schema,
         securityLevel: config.validation.securityLevel,
-        operation: config.validation.operation,
+        action: config.validation.action,
         validateBody: config.validation.validateBody,
         validateQuery: config.validation.validateQuery
       });
@@ -133,7 +133,7 @@ export async function comprehensiveSecurityMiddleware(
         
         if (validationResult.blocked) {
           await logSecurityEvent('invalid_token', {
-            operation: `${config.validation.operation}_input_blocked`,
+            action: `${config.validation.action}_input_blocked`,
             tags: {
               reason: validationResult.reason || 'validation_failed',
               securityLevel: validationResult.securityLevel,
@@ -172,8 +172,8 @@ export async function comprehensiveSecurityMiddleware(
       if (!sessionResult.success && sessionResult.response) {
         violations.push('session_validation_failed');
         
-        await logSecurityEvent('invalid_token', {
-          operation: `${config.logging?.operation || 'unknown'}_session_failed`,
+      await logSecurityEvent('invalid_token', {
+        action: `${config.logging?.action || 'unknown'}_session_failed`,
           tags: {
             environment: currentEnvironment
           }
@@ -213,8 +213,8 @@ export async function comprehensiveSecurityMiddleware(
       if (!csrfResult.valid && csrfResult.response) {
         violations.push('csrf_validation_failed');
         
-        await logSecurityEvent('invalid_token', {
-          operation: `${config.logging?.operation || 'unknown'}_csrf_failed`,
+      await logSecurityEvent('invalid_token', {
+        action: `${config.logging?.action || 'unknown'}_csrf_failed`,
           tags: {
             sessionId: sessionContext.session.sessionId,
             environment: currentEnvironment
@@ -241,7 +241,7 @@ export async function comprehensiveSecurityMiddleware(
     // 6. SUCCESS LOGGING
     if (config.logging?.logSuccess) {
       await logSecurityEvent('invalid_token', {
-        operation: `${config.logging.operation}_success`,
+        action: `${config.logging.action}_success`,
         tags: {
           securityLevel,
           authenticated: sessionContext?.isAuthenticated.toString() || 'false',
@@ -268,9 +268,9 @@ export async function comprehensiveSecurityMiddleware(
     violations.push('middleware_error');
     
     await logSecurityEvent('invalid_token', {
-      operation: `${config.logging?.operation || 'unknown'}_error`,
+      action: `${config.logging?.action || 'unknown'}_error`,
       tags: {
-        error: error instanceof Error ? error.message : 'unknown',
+        error: error instanceof Error ? error.message : String(error),
         environment: currentEnvironment
       }
     });
@@ -392,9 +392,9 @@ export function withComprehensiveSecurity(
       
       // Log handler errors with security context
       await logSecurityEvent('invalid_token', {
-        operation: `${config.logging?.operation || 'unknown'}_handler_error`,
+        action: `${config.logging?.action || 'unknown'}_handler_error`,
         tags: {
-          error: error instanceof Error ? error.message : 'unknown',
+          error: error instanceof Error ? error.message : String(error),
           authenticated: securityResult.context.session?.isAuthenticated.toString() || 'false',
           endpoint: request.url,
           environment: currentEnvironment
@@ -418,84 +418,84 @@ export const SecurityProfiles = {
   /**
    * Authentication endpoints (magic link, login, etc.)
    */
-  authentication: (operation: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
+  authentication: (action: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
     rateLimit: { limiterType: 'authentication' },
     validation: {
       schema,
       validateBody: true,
       securityLevel: 'AUTHENTICATION',
-      operation
+      action
     },
     session: { required: false },
     csrf: { enabled: false }, // CSRF not needed for auth endpoints
     headers: { enabled: true },
-    logging: { operation, logSuccess: true, logFailures: true }
+    logging: { action, logSuccess: true, logFailures: true }
   }),
 
   /**
    * User data endpoints
    */
-  userData: (operation: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
+  userData: (action: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
     rateLimit: { limiterType: 'apiGeneral' },
     validation: {
       schema,
       validateBody: true,
       securityLevel: 'USER_DATA',
-      operation
+      action
     },
     session: { required: true },
     csrf: { enabled: true },
     headers: { enabled: true },
-    logging: { operation, logFailures: true }
+    logging: { action, logFailures: true }
   }),
 
   /**
    * Content creation endpoints
    */
-  contentCreation: (operation: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
+  contentCreation: (action: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
     rateLimit: { limiterType: 'apiGeneral' },
     validation: {
       schema,
       validateBody: true,
       securityLevel: 'CONTENT_CREATION',
-      operation
+      action
     },
     session: { required: true },
     csrf: { enabled: true },
     headers: { enabled: true },
-    logging: { operation, logFailures: true }
+    logging: { action, logFailures: true }
   }),
 
   /**
    * Public read endpoints
    */
-  publicRead: (operation: string): SecurityConfig => ({
+  publicRead: (action: string): SecurityConfig => ({
     rateLimit: { limiterType: 'apiGeneral' },
     validation: {
       validateQuery: true,
       securityLevel: 'PUBLIC_READ',
-      operation
+      action
     },
     session: { required: false },
     csrf: { enabled: false },
     headers: { enabled: true },
-    logging: { operation }
+    logging: { action }
   }),
 
   /**
    * Admin endpoints
    */
-  admin: (operation: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
+  admin: (action: string, schema?: z.ZodSchema<any>): SecurityConfig => ({
     rateLimit: { limiterType: 'adminOperations' },
     validation: {
       schema,
       validateBody: true,
       securityLevel: 'ADMIN',
-      operation
+      action
     },
     session: { required: true, requireElevated: true },
     csrf: { enabled: true, strictMode: true },
     headers: { enabled: true },
-    logging: { operation, logSuccess: true, logFailures: true }
+    logging: { action, logSuccess: true, logFailures: true }
   })
 } as const;

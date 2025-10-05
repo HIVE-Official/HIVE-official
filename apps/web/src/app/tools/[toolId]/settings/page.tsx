@@ -162,8 +162,8 @@ export default function ToolSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => router.back()}
                 className="text-[#A1A1AA] hover:text-white"
               >
@@ -182,7 +182,7 @@ export default function ToolSettingsPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                size="sm"
+                className="max-w-sm"
                 onClick={handleSave}
                 className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 disabled={!hasChanges}
@@ -207,7 +207,7 @@ export default function ToolSettingsPage() {
               <input
                 type="text"
                 value={settings.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({ name: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({ name: (e.target as any).value })}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
             </div>
@@ -216,7 +216,7 @@ export default function ToolSettingsPage() {
               <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Description</label>
               <textarea
                 value={settings.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ description: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ description: (e.target as any).value })}
                 rows={3}
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none resize-none"
               />
@@ -228,7 +228,7 @@ export default function ToolSettingsPage() {
                 <select
                   value={settings.metadata.category}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSettings({
-                    metadata: { ...settings.metadata, category: (e.target as HTMLInputElement).value }
+                    metadata: { ...settings.metadata, category: (e.target as any).value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                 >
@@ -247,7 +247,7 @@ export default function ToolSettingsPage() {
                   type="text"
                   value={settings.metadata.version}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({
-                    metadata: { ...settings.metadata, version: (e.target as HTMLInputElement).value }
+                    metadata: { ...settings.metadata, version: (e.target as any).value }
                   })}
                   className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
                 />
@@ -260,7 +260,7 @@ export default function ToolSettingsPage() {
                 type="text"
                 value={settings.metadata.tags.join(', ')}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSettings({
-                  metadata: { ...settings.metadata, tags: (e.target as HTMLInputElement).value.split(', ').filter(tag => tag.trim()) }
+                  metadata: { ...settings.metadata, tags: (e.target as any).value.split(', ').filter(tag => tag.trim()) }
                 })}
                 placeholder="polling, engagement, voting"
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"

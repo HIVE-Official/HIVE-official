@@ -163,7 +163,7 @@ export function BehavioralAnalytics() {
               <TabsTrigger value="30d">30 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <Button variant="outline" size="sm" onClick={loadBehavioralMetrics}>
+          <Button variant="outline" className="max-w-sm" onClick={loadBehavioralMetrics}>
             <Activity className="w-4 h-4 mr-2" />
             Refresh
           </Button>

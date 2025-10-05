@@ -317,7 +317,7 @@ export default function CampusExpansionDashboard() {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       onClick={() => handleAction('updateCampusStage', { campusId: campus.campusId, stage: 'planning' })}
                       disabled={activeAction === 'updateCampusStage'}
@@ -326,7 +326,7 @@ export default function CampusExpansionDashboard() {
                       Advance Stage
                     </Button>
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       onClick={() => handleAction('generateCampusReport', { campusId: campus.campusId })}
                       disabled={activeAction === 'generateCampusReport'}
@@ -487,7 +487,7 @@ export default function CampusExpansionDashboard() {
                   </div>
                   <div>
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       onClick={() => handleAction('analyzeMarket', { region: market.region })}
                       disabled={activeAction === 'analyzeMarket'}

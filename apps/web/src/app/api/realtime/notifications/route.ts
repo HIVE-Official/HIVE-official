@@ -230,7 +230,7 @@ export async function GET(request: NextRequest) {
 
     // Build query
     let notificationQuery = dbAdmin.collection('liveNotifications')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('isActive', '==', true);
 
     // Add status filter
@@ -276,8 +276,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Get summary statistics
-    const unreadCount = await getUnreadNotificationCount(user.uid);
-    const totalCount = await getTotalNotificationCount(user.uid);
+    const unreadCount = await getUnreadNotificationCount(user.id);
+    const totalCount = await getTotalNotificationCount(user.id);
 
     return NextResponse.json({
       success: true,
@@ -322,7 +322,7 @@ export async function PUT(request: NextRequest) {
     if (markAllAsRead) {
       // Mark all unread notifications as read
       const unreadQuery = dbAdmin.collection('liveNotifications')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('status', '==', 'unread')
         .where('isActive', '==', true);
 
@@ -338,7 +338,7 @@ export async function PUT(request: NextRequest) {
       updatedCount = unreadSnapshot.size;
 
       // Broadcast read status update
-      await broadcastNotificationStatusUpdate(user.uid, 'bulk_read', unreadSnapshot.docs.map(doc => doc.id));
+      await broadcastNotificationStatusUpdate(user.id, 'bulk_read', unreadSnapshot.docs.map(doc => doc.id));
     } else {
       // Handle specific notifications
       if (notificationIds.length === 0) {
@@ -374,7 +374,7 @@ export async function PUT(request: NextRequest) {
       // Update notifications
       const updatePromises = notificationIds.map(async (notificationId: string) => {
         const notificationDoc = await dbAdmin.collection('liveNotifications').doc(notificationId).get();
-        if (notificationDoc.exists && notificationDoc.data()?.userId === user.uid) {
+        if (notificationDoc.exists && notificationDoc.data()?.userId === user.id) {
           await dbAdmin.collection('liveNotifications').doc(notificationId).update(updates);
           updatedCount++;
         }
@@ -383,7 +383,7 @@ export async function PUT(request: NextRequest) {
       await Promise.all(updatePromises);
 
       // Broadcast status update
-      await broadcastNotificationStatusUpdate(user.uid, action, notificationIds);
+      await broadcastNotificationStatusUpdate(user.id, action, notificationIds);
     }
 
     return NextResponse.json({
@@ -419,7 +419,7 @@ export async function DELETE(request: NextRequest) {
     if (deleteAll) {
       // Delete all notifications for user
       const allNotificationsQuery = dbAdmin.collection('liveNotifications')
-        .where('userId', '==', user.uid);
+        .where('userId', '==', user.id);
 
       const allNotificationsSnapshot = await allNotificationsQuery.get();
       const deletePromises = allNotificationsSnapshot.docs.map(doc => doc.ref.delete());
@@ -429,7 +429,7 @@ export async function DELETE(request: NextRequest) {
       // Delete notifications older than specified date
       const cutoffDate = new Date(olderThan).toISOString();
       const oldNotificationsQuery = dbAdmin.collection('liveNotifications')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('metadata.timestamp', '<', cutoffDate);
 
       const oldNotificationsSnapshot = await oldNotificationsQuery.get();
@@ -439,7 +439,7 @@ export async function DELETE(request: NextRequest) {
     } else if (notificationId) {
       // Delete specific notification
       const notificationDoc = await dbAdmin.collection('liveNotifications').doc(notificationId).get();
-      if (notificationDoc.exists && notificationDoc.data()?.userId === user.uid) {
+      if (notificationDoc.exists && notificationDoc.data()?.userId === user.id) {
         await dbAdmin.collection('liveNotifications').doc(notificationId).delete();
         deletedCount = 1;
       }
@@ -696,7 +696,11 @@ async function sendNotificationImmediately(notification: LiveNotification): Prom
 
     // Here you would integrate with actual delivery services
     // For example: push notification service, email service, etc.
-    logger.info('Sending notification via channels', { notificationId: notification.id, data: notification.delivery.channels, endpoint: '/api/realtime/notifications'  });
+    logger.info('Sending notification via channels', {
+      notificationId: notification.id,
+      notificationData: { ...notification, delivery: { channels: notification.delivery.channels } },
+      endpoint: '/api/realtime/notifications'
+    });
   } catch (error) {
     logger.error(
       `Error sending notification immediately at /api/realtime/notifications`,

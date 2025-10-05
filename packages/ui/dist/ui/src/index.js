@@ -1,14 +1,14 @@
 // Export atomic design system
-export * from "./atomic";
+export * from "./atomic/index.js";
 // Export universal components
-export { UniversalShell, useShell } from "./shells/UniversalShell";
-export * from "./navigation/UniversalNav";
-export * from "./systems/modal-toast-system";
-export * from "./providers/HiveProvider";
+export { UniversalShell, useShell } from "./shells/UniversalShell.js";
+export * from "./navigation/UniversalNav.js";
+export * from "./systems/modal-toast-system.js";
+export * from "./providers/HiveProvider.js";
 // Export campus context system
-export * from "./contexts";
+export * from "./contexts/index.js";
 // Export hooks
-export * from "./hooks";
+export * from "./hooks/index.js";
 // Export utilities
-export { cn } from "./lib/utils";
+export { cn } from "./lib/utils.js";
 //# sourceMappingURL=index.js.map

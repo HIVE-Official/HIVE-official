@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
     const userEmail = decodedToken.email;
 
     // Get user profile from Firestore
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
         userProfile = {
           id: userId,
           email: userEmail,
-          fullName: userData?.fullName || "",
+          fullName: userData?.displayName || "",
           handle: userData?.handle || "",
           major: userData?.major || "",
           avatarUrl: userData?.avatarUrl || "",

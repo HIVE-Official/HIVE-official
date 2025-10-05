@@ -57,7 +57,7 @@ export function checkAdminRateLimit(adminId: string, limit: number = 100, window
 /**
  * Admin API response wrapper
  */
-export function adminResponse(data: unknown, status: number = 200) {
+export function adminResponse(data: any, status: number = 200) {
   return NextResponse.json({
     success: true,
     timestamp: new Date().toISOString(),
@@ -68,7 +68,7 @@ export function adminResponse(data: unknown, status: number = 200) {
 /**
  * Admin API error response wrapper
  */
-export function adminErrorResponse(error: string, status: number = 500, details?: unknown) {
+export function adminErrorResponse(error: string, status: number = 500, details?: any) {
   console.error(`Admin API Error: ${error}`, details);
   return NextResponse.json({
     success: false,

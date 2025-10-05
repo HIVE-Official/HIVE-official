@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 const FeedLayout = React.forwardRef(({ className, header, children, sidebar, layoutMode = "centered", ...props }, ref) => {
     if (layoutMode === "sidebar") {
         // Feed with right sidebar (trending, suggestions)

@@ -118,7 +118,7 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
           <h3 className="text-lg font-semibold text-white">Events & Schedule</h3>
           {canCreateEvents && (
             <Button
-              size="sm"
+              className="max-w-sm"
               onClick={() => setShowCreateModal(true)}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
@@ -201,7 +201,7 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
                     <p className="text-gray-400 text-sm">No upcoming events</p>
                     {canCreateEvents && (
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         className="mt-3"
                         onClick={() => setShowCreateModal(true)}
@@ -329,7 +329,7 @@ function EventCard({
         {event.isRsvpRequired && (
           <div className="flex gap-1">
             <Button
-              size="sm"
+              className="max-w-sm"
               variant={event.userRsvp === 'going' ? 'default' : 'outline'}
               className={`text-xs h-6 px-2 ${
                 event.userRsvp === 'going'
@@ -341,7 +341,7 @@ function EventCard({
               Going
             </Button>
             <Button
-              size="sm"
+              className="max-w-sm"
               variant={event.userRsvp === 'maybe' ? 'default' : 'outline'}
               className={`text-xs h-6 px-2 ${
                 event.userRsvp === 'maybe'

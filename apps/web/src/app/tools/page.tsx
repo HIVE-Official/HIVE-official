@@ -362,7 +362,7 @@ export default function ToolsPage() {
     } catch (error) {
       logger.error("Failed to install tool", {
         toolId,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
       const errorMessage =

@@ -243,9 +243,8 @@ export default function ResourcesPage() {
                   <Download className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 </div>
                 <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-3 text-xs hover:bg-[var(--hive-brand-primary)] hover:text-[#0A0A0A]"
+                  variant="outline" 
+                  className="max-w-sm h-8 px-3 text-xs hover:bg-[var(--hive-brand-primary)] hover:text-[#0A0A0A]"
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     window.location.href = `/build?template=${template.name.toLowerCase().replace(/\s+/g, '-')}`;

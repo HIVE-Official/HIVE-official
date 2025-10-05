@@ -272,7 +272,7 @@ export function PostCard({
                     </span>
                   )}
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" className="max-w-sm">
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
@@ -373,15 +373,14 @@ export function PostCard({
         
         <div className="flex items-center space-x-2 mt-3">
           <Button
-            size="sm"
-            className={post.event.isAttending 
+            className={`max-w-sm ${post.event.isAttending 
               ? 'bg-green-500 hover:bg-green-600' 
               : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
-            }
+            }`}
           >
             {post.event.isAttending ? 'Attending' : 'Attend'}
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" className="max-w-sm">
             <Calendar className="h-4 w-4 mr-2" />
             Add to Calendar
           </Button>
@@ -525,7 +524,7 @@ export function PostCard({
           
           <div className="flex items-center space-x-2">
             {post.isPinned && <Pin className="h-4 w-4 text-[var(--hive-brand-primary)]" />}
-            <Button variant="outline" size="sm">
+            <Button variant="outline" className="max-w-sm">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </div>
@@ -625,7 +624,7 @@ export function PostCard({
               <Textarea
                 ref={commentInputRef}
                 value={commentText}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCommentText((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCommentText((e.target as any).value)}
                 placeholder="Write a comment..."
                 rows={2}
                 className="resize-none"
@@ -639,7 +638,7 @@ export function PostCard({
                 <div className="flex items-center space-x-2">
                   <Button
                     variant="outline"
-                    size="sm"
+                    className="max-w-sm"
                     onClick={() => {
                       setIsCommenting(false);
                       setCommentText('');
@@ -647,12 +646,11 @@ export function PostCard({
                   >
                     Cancel
                   </Button>
-                  <Button
-                    onClick={handleComment}
-                    disabled={!commentText.trim() || isActing === 'comment'}
-                    size="sm"
-                    className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
-                  >
+                <Button
+                  onClick={handleComment}
+                  disabled={!commentText.trim() || isActing === 'comment'}
+                  className="max-w-sm bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne"
+                >
                     <Send className="h-4 w-4 mr-2" />
                     {isActing === 'comment' ? 'Posting...' : 'Comment'}
                   </Button>

@@ -8,13 +8,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '../../../../lib/utils';
-import { HiveLabProvider, useHiveLab } from '../../../../contexts/hivelab-context';
-import { HiveLabToolbar } from '../../organisms/hivelab/hivelab-toolbar';
-import { HiveLabCanvas } from '../../organisms/hivelab/hivelab-canvas';
-import { HiveLabElementLibrary } from '../../organisms/hivelab/hivelab-element-library';
-import { HiveLabPropertiesPanel } from '../../organisms/hivelab/hivelab-properties-panel';
-import { ELEMENT_LIBRARY } from '../../../../lib/hivelab-element-library';
+import { cn } from '../../../lib/utils.js';
+import { HiveLabProvider, useHiveLab } from '../../../contexts/hivelab-context.js';
+import { HiveLabToolbar } from '../../organisms/hivelab/hivelab-toolbar.js';
+import { HiveLabCanvas } from '../../organisms/hivelab/hivelab-canvas.js';
+import { HiveLabElementLibrary } from '../../organisms/hivelab/hivelab-element-library.js';
+import { HiveLabPropertiesPanel } from '../../organisms/hivelab/hivelab-properties-panel.js';
+import { ELEMENT_LIBRARY } from '../../../lib/hivelab-element-library.js';
 /**
  * Internal builder component (wrapped by provider)
  */

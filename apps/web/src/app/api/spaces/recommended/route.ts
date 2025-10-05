@@ -1,4 +1,5 @@
-import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware";
+import type { BehavioralSpace } from "@hive/core";
+import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import type { Space } from "@hive/core";
@@ -18,7 +19,7 @@ interface BehavioralSpace extends Space {
 }
 
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = request.user.uid;
+  const userId = request.user.id;
 
   try {
     // Get user profile for personalization
@@ -138,7 +139,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     });
 
   } catch (error) {
-    logger.error('Error generating space recommendations', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error generating space recommendations', { error: error instanceof Error ? error.message : String(error), userId });
     return respond.error("Failed to generate recommendations", "INTERNAL_ERROR", { status: 500 });
   }
 });

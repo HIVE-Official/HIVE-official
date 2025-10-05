@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     // Check if user owns this event
-    if (eventData.userId !== user.uid) {
+    if (eventData.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -84,7 +84,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     // Check if user owns this event
-    if (eventData.userId !== user.uid) {
+    if (eventData.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -142,7 +142,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
     
     // Check if user owns this event
-    if (eventData.userId !== user.uid) {
+    if (eventData.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -210,7 +210,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
     
     // Check if user owns this event
-    if (eventData.userId !== user.uid) {
+    if (eventData.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 

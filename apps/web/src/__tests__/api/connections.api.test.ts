@@ -40,7 +40,7 @@ vi.mock('@/lib/firebase-admin', () => ({
   },
 }));
 
-vi.mock('@/lib/middleware/index', () => ({
+vi.mock('@/lib/middleware', () => ({
   withAuthAndErrors: (handler: any) => handler,
   getUserId: vi.fn((request: any) => request.userId || 'user123'),
 }));

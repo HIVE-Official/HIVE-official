@@ -213,7 +213,7 @@ export default function ExpiredPage() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail((e.target as HTMLInputElement).value);
+    setEmail((e.target as any).value);
     setError(null);
   };
 
@@ -339,8 +339,7 @@ export default function ExpiredPage() {
                   onClick={handleResendLink}
                   disabled={isResending || countdown > 0 || (!email && !schoolId)}
                   variant="default"
-                  size="lg"
-                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
+                  className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
                 >
                   {isResending ? (
                     <>
@@ -362,9 +361,8 @@ export default function ExpiredPage() {
 
                 <Link href="/auth/login" className="block">
                   <Button
-                    variant="ghost"
-                    size="lg"
-                    className="w-full text-white/60 hover:text-white hover:bg-white/[0.05]"
+                    variant="outline"
+                    className="max-w-lg w-full text-white/60 hover:text-white hover:bg-white/[0.05]"
                   >
                     Start over with new login
                   </Button>
@@ -401,7 +399,7 @@ export default function ExpiredPage() {
       <Dialog
         open={resendSuccess}
         onOpenChange={() => setResendSuccess(false)}
-        size="sm"
+        className="max-w-sm"
       >
         <DialogContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
           <div
@@ -434,8 +432,7 @@ export default function ExpiredPage() {
                 </p>
                 <Button
                   variant="default"
-                  size="sm"
-                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
+                  className="max-w-sm w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
@@ -445,8 +442,7 @@ export default function ExpiredPage() {
 
             <Button
               variant="default"
-              size="lg"
-              className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
+              className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
               onClick={() => {
                 setResendSuccess(false);
                 // Clear the form for next attempt

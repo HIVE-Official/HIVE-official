@@ -194,7 +194,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           {isLeader && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="outline" className="border-gray-700">
+                <Button className="max-w-sm" variant="outline" className="border-gray-700">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -222,7 +222,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           <Input
             placeholder="Search members..."
             value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -249,7 +249,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           <Filter className="w-4 h-4 text-gray-400" />
           <select
             value={sortBy}
-            onChange={(e: React.ChangeEvent) => setSortBy((e.target as HTMLInputElement).value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy((e.target as any).value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recently Joined</option>
@@ -291,11 +291,11 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
               {selectedMembers.length} selected
             </span>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" className="border-red-600 text-red-400">
+              <Button className="max-w-sm" variant="outline" className="border-red-600 text-red-400">
                 <UserMinus className="w-4 h-4 mr-1" />
                 Remove
               </Button>
-              <Button size="sm" variant="outline" className="border-blue-600 text-blue-400">
+              <Button className="max-w-sm" variant="outline" className="border-blue-600 text-blue-400">
                 <MessageSquare className="w-4 h-4 mr-1" />
                 Message
               </Button>
@@ -401,7 +401,7 @@ function MemberCard({
         {isLeader && member.role !== 'owner' && userRole !== member.role && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="ghost">
+              <Button className="max-w-sm" variant="outline">
                 <MoreVertical className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>

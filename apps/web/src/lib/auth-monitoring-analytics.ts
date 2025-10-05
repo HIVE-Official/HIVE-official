@@ -232,7 +232,7 @@ export class AuthMonitoringAnalytics {
    * Performance monitoring and optimization suggestions
    */
   getPerformanceInsights(): {
-    slowQueries: Array<{ operation: string; averageTime: number; count: number }>;
+    slowQueries: Array<{ action: string; averageTime: number; count: number }>;
     bottlenecks: Array<{ stage: string; impact: number; suggestion: string }>;
     optimizations: Array<{ area: string; currentScore: number; targetScore: number; actions: string[] }>;
     resourceUsage: {

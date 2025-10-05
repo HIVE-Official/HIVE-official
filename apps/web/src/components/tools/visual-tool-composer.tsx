@@ -50,7 +50,7 @@ interface VisualToolComposerProps {
 
 interface CanvasElement {
   id: string;
-  elementId: string;
+  // id: string;
   instanceId: string;
   position: { x: number; y: number };
   size: { width: number; height: number };
@@ -111,7 +111,7 @@ export function VisualToolComposer({
 
     const newElement: CanvasElement = {
       id: `element_${Date.now()}`,
-      elementId: draggedElement.id,
+      // id: draggedElement.id,
       instanceId: `${draggedElement.id}_${Date.now()}`,
       position: { x: Math.max(0, x - 50), y: Math.max(0, y - 25) },
       size: { width: 200, height: 100 },
@@ -128,7 +128,7 @@ export function VisualToolComposer({
   };
 
   const handleElementSelect = (elementId: string) => {
-    setCanvasElements(prev => 
+    setCanvasElements(prev =>
       prev.map(el => ({ ...el, isSelected: el.id === elementId }))
     );
     setSelectedElement(elementId);
@@ -136,8 +136,8 @@ export function VisualToolComposer({
 
   const handleElementMove = (elementId: string, newPosition: { x: number; y: number }) => {
     setCanvasElements(prev =>
-      prev.map(el => 
-        el.id === elementId 
+      prev.map(el =>
+        el.id === elementId
           ? { ...el, position: newPosition }
           : el
       )
@@ -146,8 +146,8 @@ export function VisualToolComposer({
 
   const handleElementResize = (elementId: string, newSize: { width: number; height: number }) => {
     setCanvasElements(prev =>
-      prev.map(el => 
-        el.id === elementId 
+      prev.map(el =>
+        el.id === elementId
           ? { ...el, size: newSize }
           : el
       )
@@ -186,8 +186,8 @@ export function VisualToolComposer({
 
   const handleElementConfigChange = (elementId: string, newConfig: Record<string, any>) => {
     setCanvasElements(prev =>
-      prev.map(el => 
-        el.id === elementId 
+      prev.map(el =>
+        el.id === elementId
           ? { ...el, config: { ...el.config, ...newConfig } }
           : el
       )
@@ -200,7 +200,7 @@ export function VisualToolComposer({
       name: toolName,
       description: toolDescription,
       elements: canvasElements.map(canvasEl => ({
-        elementId: canvasEl.elementId,
+        // id: canvasEl.elementId,
         instanceId: canvasEl.instanceId,
         config: canvasEl.config,
         position: canvasEl.position,
@@ -254,7 +254,7 @@ export function VisualToolComposer({
           <div className="flex items-center space-x-2">
             <Input
               value={toolName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToolName((e.target as any).value)}
               placeholder="Tool name..."
               className="w-48"
             />
@@ -275,16 +275,16 @@ export function VisualToolComposer({
           
           <div className="flex items-center space-x-1 bg-hive-background-tertiary rounded-lg p-1">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
             >
               -
             </Button>
             <span className="text-sm text-white px-2">{Math.round(zoom * 100)}%</span>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={() => setZoom(Math.min(2, zoom + 0.1))}
             >
               +
@@ -387,7 +387,7 @@ export function VisualToolComposer({
                           type="number"
                           value={selectedCanvasElement.position.x}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
-                            x: parseInt((e.target as HTMLInputElement).value) || 0,
+                            x: parseInt((e.target as any).value) || 0,
                             y: selectedCanvasElement.position.y
                           })}
                           className="w-20"
@@ -397,7 +397,7 @@ export function VisualToolComposer({
                           value={selectedCanvasElement.position.y}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementMove(selectedCanvasElement.id, {
                             x: selectedCanvasElement.position.x,
-                            y: parseInt((e.target as HTMLInputElement).value) || 0
+                            y: parseInt((e.target as any).value) || 0
                           })}
                           className="w-20"
                         />
@@ -411,7 +411,7 @@ export function VisualToolComposer({
                           type="number"
                           value={selectedCanvasElement.size.width}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
-                            width: parseInt((e.target as HTMLInputElement).value) || 100,
+                            width: parseInt((e.target as any).value) || 100,
                             height: selectedCanvasElement.size.height
                           })}
                           className="w-20"
@@ -421,7 +421,7 @@ export function VisualToolComposer({
                           value={selectedCanvasElement.size.height}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementResize(selectedCanvasElement.id, {
                             width: selectedCanvasElement.size.width,
-                            height: parseInt((e.target as HTMLInputElement).value) || 50
+                            height: parseInt((e.target as any).value) || 50
                           })}
                           className="w-20"
                         />
@@ -435,7 +435,7 @@ export function VisualToolComposer({
                           <Input
                             value={selectedCanvasElement.config[key] || ''}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
-                              [key]: (e.target as HTMLInputElement).value
+                              [key]: (e.target as any).value
                             })}
                             className="mt-1"
                           />
@@ -444,7 +444,7 @@ export function VisualToolComposer({
                           <div className="mt-1">
                             <Button
                               variant="outline"
-                              size="sm"
+                              className="max-w-sm"
                               onClick={() => handleElementConfigChange(selectedCanvasElement.id, {
                                 [key]: !selectedCanvasElement.config[key]
                               })}
@@ -459,7 +459,7 @@ export function VisualToolComposer({
                             type="number"
                             value={selectedCanvasElement.config[key] || 0}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleElementConfigChange(selectedCanvasElement.id, {
-                              [key]: parseInt((e.target as HTMLInputElement).value) || 0
+                              [key]: parseInt((e.target as any).value) || 0
                             })}
                             className="mt-1"
                           />
@@ -471,7 +471,7 @@ export function VisualToolComposer({
                   <div className="pt-4 border-t border-hive-border-default">
                     <Button
                       variant="outline"
-                      size="sm"
+                      className="max-w-sm"
                       onClick={() => handleElementDelete(selectedCanvasElement.id)}
                       className="text-red-400 border-red-400 hover:bg-red-500/10"
                     >

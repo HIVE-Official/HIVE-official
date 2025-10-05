@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     const feedContent = await generateFeedContentFromAction({
       deployment,
       tool,
-      user: { uid: user.uid },
+      user: { uid: user.id },
       action,
       data,
       elementId
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the feed post
-    const postId = await createFeedPost(deployment, tool, user.uid, feedContent);
+    const postId = await createFeedPost(deployment, tool, user.id, feedContent);
 
     return NextResponse.json({
       generated: true,
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
     if (!tool) {
       return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
-    if (tool.ownerId !== user.uid && tool.status !== 'published') {
+    if (tool.ownerId !== user.id && tool.status !== 'published') {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 

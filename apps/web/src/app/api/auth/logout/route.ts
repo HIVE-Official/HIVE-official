@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         message: "Logged out successfully" });
     }
 
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     // Revoke all refresh tokens for this user
     // This will force all sessions to re-authenticate

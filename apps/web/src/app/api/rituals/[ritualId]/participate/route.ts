@@ -70,8 +70,8 @@ const ritualFramework = {
       });
 
       return { success: true, participationId: participationRef.id };
-    } catch (error) {
-      logger.error('Error joining ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
+    } catch (err) {
+      logger.error('Error joining ritual', { error: err instanceof Error ? err : new Error(String(err)), ritualId, userId });
       return { success: false, error: 'Failed to join ritual' };
     }
   },
@@ -175,9 +175,9 @@ const ritualFramework = {
         }
       };
 
-    } catch (error) {
-      logger.error('Error recording ritual action', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId, actionId });
-      throw error;
+    } catch (err) {
+      logger.error('Error recording ritual action', { error: err instanceof Error ? err : new Error(String(err)), ritualId, userId, actionId });
+      throw err;
     }
   },
 
@@ -213,15 +213,15 @@ const ritualFramework = {
       });
 
       return true;
-    } catch (error) {
-      logger.error('Error leaving ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
+    } catch (err) {
+      logger.error('Error leaving ritual', { error: err instanceof Error ? err : new Error(String(err)), ritualId, userId });
       return false;
     }
   }
 };
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Participation action schema
 const ParticipationActionSchema = z.object({
@@ -238,14 +238,11 @@ const ParticipationActionSchema = z.object({
  * - Complete specific actions
  * - Leave ritual
  */
-export const POST = withAuth(async (
-  request: NextRequest,
-  authContext,
-  { params }: { params: Promise<{ ritualId: string }> }
-) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
+    const { params } = context;
     const { ritualId } = await params;
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     const body = await request.json();
     const { action, actionId, metadata = {}, entryPoint = 'direct' } = ParticipationActionSchema.parse(body);
@@ -348,7 +345,4 @@ export const POST = withAuth(async (
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: false, // Ritual participation requires authentication
-  operation: 'participate_in_ritual' 
 });

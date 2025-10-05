@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 /**
  * Check and grant pending admin permissions

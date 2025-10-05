@@ -6,9 +6,9 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../../lib/utils';
-import { Button } from '../../atoms/button';
-import { Badge } from '../../atoms/badge';
+import { cn } from '../../../lib/utils.js';
+import { Button } from '../../atoms/button.js';
+import { Badge } from '../../atoms/badge.js';
 import { Eye, Copy } from 'lucide-react';
 export function TemplateCard({ template, isSelected = false, onClick, onPreview, onUse, className, }) {
     return (_jsxs("div", { className: cn('template-card group', 'flex flex-col rounded-lg border bg-card overflow-hidden transition-all', 'hover:shadow-md hover:border-primary/40 cursor-pointer', isSelected && 'ring-2 ring-primary shadow-md', className), onClick: () => onClick?.(template), children: [_jsxs("div", { className: "aspect-video bg-muted relative overflow-hidden", children: [template.thumbnail ? (_jsx("img", { src: template.thumbnail, alt: template.name, className: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" })) : (_jsx("div", { className: "w-full h-full flex items-center justify-center", children: _jsxs("div", { className: "text-center", children: [_jsx("div", { className: "text-4xl mb-2", children: "\uD83D\uDEE0\uFE0F" }), _jsxs("p", { className: "text-xs text-muted-foreground", children: [template.elementCount, " elements \u2022 ", template.pageCount, " page", template.pageCount === 1 ? '' : 's'] })] }) })), _jsx("div", { className: "absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center", children: _jsxs(Button, { variant: "outline", size: "sm", onClick: (e) => {

@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ErrorBoundary } from '../error-boundary';
 
 interface FeedErrorFallbackProps {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
 }

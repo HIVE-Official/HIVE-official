@@ -233,7 +233,7 @@ export function SpaceDiscoveryHub() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
                   placeholder={currentCategory.searchPlaceholder}
                   className="pl-10 bg-gray-800 border-gray-700 text-white"
                 />
@@ -243,7 +243,7 @@ export function SpaceDiscoveryHub() {
               <div className="flex gap-2">
                 <Button
                   variant={activityView === 'trending' ? 'default' : 'outline'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setActivityView('trending')}
                   className={activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
@@ -252,7 +252,7 @@ export function SpaceDiscoveryHub() {
                 </Button>
                 <Button
                   variant={activityView === 'active' ? 'default' : 'outline'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setActivityView('active')}
                   className={activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
@@ -261,7 +261,7 @@ export function SpaceDiscoveryHub() {
                 </Button>
                 <Button
                   variant={activityView === 'new' ? 'default' : 'outline'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setActivityView('new')}
                   className={activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >

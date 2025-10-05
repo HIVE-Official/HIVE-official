@@ -6,14 +6,14 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../../lib/utils';
-import { GridBackground } from '../../atoms/canvas/grid-background';
-import { ZoomControls } from '../../atoms/canvas/zoom-controls';
-import { MiniMap } from '../../atoms/canvas/mini-map';
-import { ElementCard } from '../../molecules/canvas/element-card';
-import { ConnectionLayer } from '../../molecules/canvas/connection-layer';
-import { PageFrame } from '../../molecules/canvas/page-frame';
-import { SelectionBox } from '../../molecules/canvas/selection-box';
+import { cn } from '../../../lib/utils.js';
+import { GridBackground } from '../../atoms/canvas/grid-background.js';
+import { ZoomControls } from '../../atoms/canvas/zoom-controls.js';
+import { MiniMap } from '../../atoms/canvas/mini-map.js';
+import { ElementCard } from '../../molecules/canvas/element-card.js';
+import { ConnectionLayer } from '../../molecules/canvas/connection-layer.js';
+import { PageFrame } from '../../molecules/canvas/page-frame.js';
+import { SelectionBox } from '../../molecules/canvas/selection-box.js';
 export function HiveLabCanvas({ pages, currentPageId, elements, connections, viewport, selectedElementIds = [], selectedConnectionId = null, selectionBox = null, showGrid = true, showMiniMap = true, showZoomControls = true, onViewportChange, onElementClick, onElementDoubleClick, onConnectionClick, onPageClick, onCanvasClick, onZoomIn, onZoomOut, onZoomToFit, className, }) {
     // Get current page
     const currentPage = pages.find((p) => p.id === currentPageId);

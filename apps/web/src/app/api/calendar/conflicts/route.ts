@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Check personal events
     const personalEventsSnapshot = await dbAdmin.collection('personalEvents')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .orderBy('startDate', 'asc')
       .get();
     personalEventsSnapshot.docs.forEach(doc => {
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     // Check space events from user's memberships
     const membershipsSnapshot = await dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('status', '==', 'active')
       .get();
     const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);

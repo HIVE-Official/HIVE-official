@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     // TODO: Add proper admin check
     // For now, allowing all authenticated users for development
-    // if (!await isAdmin(user.uid)) {
+    // if (!await isAdmin(user.id)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
     //     { status: HttpStatus.FORBIDDEN }
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const flags = await featureFlagService.getAllFeatureFlags();
     
     logger.info('Admin feature flags retrieved', { 
-      adminUserId: user.uid, 
+      adminUserId: user.id, 
       flagCount: flags.length 
     });
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       retrievedAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error getting admin feature flags', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error getting admin feature flags', { error });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get feature flags', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Add proper admin check
-    // if (!await isAdmin(user.uid)) {
+    // if (!await isAdmin(user.id)) {
     //   return NextResponse.json(
     //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
     //     { status: HttpStatus.FORBIDDEN }
@@ -121,11 +121,11 @@ export async function POST(request: NextRequest) {
       analytics
     };
 
-    await featureFlagService.setFeatureFlag(flagData, user.uid);
+    await featureFlagService.setFeatureFlag(flagData, user.id);
     
     logger.info('Feature flag created', { 
       flagId: id, 
-      adminUserId: user.uid, 
+      adminUserId: user.id, 
       category, 
       enabled 
     });
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     });
   } catch (error) {
-    logger.error('Error creating feature flag', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error creating feature flag', { error });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to create feature flag', 'INTERNAL_ERROR'), 
       { status: HttpStatus.INTERNAL_SERVER_ERROR }

@@ -28,7 +28,7 @@ export async function POST(
 
     const token = authHeader.substring(7);
     const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     const { toolId } = await params;
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
@@ -213,7 +213,7 @@ export async function GET(
 
     const token = authHeader.substring(7);
     const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
+    const userId = decodedToken.id;
 
     const { toolId } = await params;
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();

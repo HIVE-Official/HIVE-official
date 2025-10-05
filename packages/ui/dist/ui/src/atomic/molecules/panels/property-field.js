@@ -6,12 +6,12 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '../../../lib/utils';
-import { Input } from '../../atoms/input';
-import { Label } from '../../atoms/label';
-import { Textarea } from '../../atoms/textarea';
-import { Switch } from '../../atoms/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/select';
+import { cn } from '../../../lib/utils.js';
+import { Input } from '../../atoms/input.js';
+import { Label } from '../../atoms/label.js';
+import { Textarea } from '../../atoms/textarea.js';
+import { Switch } from '../../atoms/switch.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/select.js';
 import { HelpCircle } from 'lucide-react';
 export function PropertyField({ label, type, value, onChange, required = false, helpText: propHelpText, help, placeholder, options = [], min, max, disabled = false, className, }) {
     const id = `field-${label.toLowerCase().replace(/\s+/g, '-')}`;

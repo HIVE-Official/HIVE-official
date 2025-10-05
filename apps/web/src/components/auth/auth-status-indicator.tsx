@@ -83,7 +83,7 @@ export function AuthStatusIndicator() {
     return (
       <Button
         variant="outline"
-        size="sm"
+        className="max-w-sm"
         onClick={() => router.push('/schools')}
         className="flex items-center gap-2"
       >
@@ -100,7 +100,7 @@ export function AuthStatusIndicator() {
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--hive-background-secondary)] transition-colors duration-200"
       >
-        <Avatar size="sm">
+        <Avatar className="max-w-sm">
           <AvatarImage src="" alt={session.email} />
           <AvatarFallback>{session.email[0]?.toUpperCase()}</AvatarFallback>
         </Avatar>

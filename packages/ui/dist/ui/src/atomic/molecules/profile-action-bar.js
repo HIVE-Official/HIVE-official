@@ -1,8 +1,8 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
 import { ArrowLeft, Edit, MessageCircle, UserPlus, Share2, Settings, UserMinus } from "lucide-react";
 /**
  * Profile Action Bar

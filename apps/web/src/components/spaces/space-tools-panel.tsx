@@ -456,8 +456,7 @@ function ToolCard({
 
             <div className="flex space-x-2">
               <Button
-                size="sm"
-                className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
+                className="max-w-sm flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -465,7 +464,7 @@ function ToolCard({
               </Button>
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <Copy className="w-4 h-4" />
@@ -515,7 +514,7 @@ function AddToolModal({
           <div className="flex-1">
             <Input
               value={searchQuery}
-              onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
               placeholder="Search tools..."
               className="w-full"
             />

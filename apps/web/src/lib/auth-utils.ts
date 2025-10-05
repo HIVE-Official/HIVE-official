@@ -106,7 +106,7 @@ class AuthManager {
    */
   getCurrentUserId(): string | null {
     const session = this.getStoredSession();
-    return session?.uid || null;
+    return session?.id || null;
   }
 
   /**
@@ -126,7 +126,7 @@ class AuthManager {
     try {
       window.localStorage.setItem(this.storageKey, JSON.stringify(session));
       logger.info('Session stored successfully', { 
-        userId: session.uid,
+        userId: session.id,
         action: 'auth_session_stored' 
       });
     } catch (error) {
@@ -163,14 +163,14 @@ class AuthManager {
         // this.setSession({ ...session, token: newToken });
         
         logger.info('Token refresh needed', { 
-          userId: session.uid,
+          userId: session.id,
           action: 'auth_refresh_needed' 
         });
         
         return true;
       } catch (error) {
         logger.error('Token refresh failed', { 
-          userId: session.uid,
+          userId: session.id,
           action: 'auth_refresh_failed' 
         }, error as Error);
         

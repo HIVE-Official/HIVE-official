@@ -92,7 +92,7 @@ vi.mock('@hive/core', () => ({
 }));
 
 // Mock middleware
-vi.mock('@/lib/middleware', () => ({
+vi.mock('@/lib/middleware/index', () => ({
   withValidation: (schema: any, handler: any) => handler
 }));
 
@@ -747,7 +747,7 @@ describe('Auth API - GET /api/auth/session', () => {
       const data = await response.json();
 
       expect(data.valid).toBe(true);
-      expect(data.user.fullName).toBe('John Doe');
+      expect(data.user.displayName).toBe('John Doe');
       expect(data.user.handle).toBe('johndoe');
     });
 

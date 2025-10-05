@@ -107,7 +107,7 @@ export function LeaveSpaceButton({
     <>
       <Button
         variant="outline"
-        size="sm"
+        className="max-w-sm"
         onClick={handleLeaveClick}
         className={`border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 ${className}`}
         disabled={isLeaving}

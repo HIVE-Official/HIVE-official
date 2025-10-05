@@ -275,7 +275,7 @@ export class ContentModerationService {
 
       return reportId;
     } catch (error) {
-      logger.error('Error submitting content report', { error: error instanceof Error ? error : new Error(String(error)), postData: reportData });
+      logger.error('Error submitting content report', { error: error instanceof Error ? error.message : String(error), postData: reportData });
       throw error;
     }
   }
@@ -339,7 +339,7 @@ export class ContentModerationService {
 
       logger.info('Moderation action processed', { reportId, action, moderatorId });
     } catch (error) {
-      logger.error('Error processing moderation action', { error: error instanceof Error ? error : new Error(String(error)), reportId, action });
+      logger.error('Error processing moderation action', { error: error instanceof Error ? error.message : String(error), reportId, action });
       throw error;
     }
   }
@@ -375,7 +375,7 @@ export class ContentModerationService {
       const snapshot = await query.get();
       return snapshot.docs.map(doc => doc.data() as ContentReport);
     } catch (error) {
-      logger.error('Error getting moderation queue', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Error getting moderation queue', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -416,7 +416,7 @@ export class ContentModerationService {
 
       return mockAnalysis;
     } catch (error) {
-      logger.error('Error performing AI analysis', { error: error instanceof Error ? error : new Error(String(error)), reportId: report.id });
+      logger.error('Error performing AI analysis', { error: error instanceof Error ? error.message : String(error), reportId: report.id });
       return null;
     }
   }
@@ -445,7 +445,7 @@ export class ContentModerationService {
         }
       }
     } catch (error) {
-      logger.error('Error applying automated rules', { error: error instanceof Error ? error : new Error(String(error)), reportId });
+      logger.error('Error applying automated rules', { error: error instanceof Error ? error.message : String(error), reportId });
     }
   }
 
@@ -484,7 +484,7 @@ export class ContentModerationService {
           break;
       }
     } catch (error) {
-      logger.error('Error executing moderation action', { error: error instanceof Error ? error : new Error(String(error)), action, reportId: report.id });
+      logger.error('Error executing moderation action', { error: error instanceof Error ? error.message : String(error), action, reportId: report.id });
       throw error;
     }
   }
@@ -501,7 +501,7 @@ export class ContentModerationService {
         hiddenReason: 'Content violates community guidelines'
       });
     } catch (error) {
-      logger.error('Error hiding content', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Error hiding content', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -530,7 +530,7 @@ export class ContentModerationService {
         });
       }
     } catch (error) {
-      logger.error('Error removing content', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Error removing content', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -562,7 +562,7 @@ export class ContentModerationService {
         }
       );
     } catch (error) {
-      logger.error('Error warning user', { error: error instanceof Error ? error : new Error(String(error)), userId, category });
+      logger.error('Error warning user', { error: error instanceof Error ? error.message : String(error), userId, category });
       throw error;
     }
   }
@@ -600,7 +600,7 @@ export class ContentModerationService {
         }
       );
     } catch (error) {
-      logger.error('Error suspending user', { error: error instanceof Error ? error : new Error(String(error)), userId });
+      logger.error('Error suspending user', { error: error instanceof Error ? error.message : String(error), userId });
       throw error;
     }
   }
@@ -627,7 +627,7 @@ export class ContentModerationService {
       // Notify relevant moderators
       await this.notifyModerators('user_banned', { userId });
     } catch (error) {
-      logger.error('Error banning user', { error: error instanceof Error ? error : new Error(String(error)), userId });
+      logger.error('Error banning user', { error: error instanceof Error ? error.message : String(error), userId });
       throw error;
     }
   }

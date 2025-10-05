@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     });
     
     const validationResult = await validateWithSecurity(body, verifyMagicLinkSchema, {
-      operation: 'verify_magic_link',
+      action: 'verify_magic_link',
       ip: request.headers.get('x-forwarded-for') || undefined
     });
 
@@ -373,7 +373,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     await auditAuthEvent('failure', request, {
       operation: 'verify_magic_link',
-      error: error instanceof Error ? error.message : 'unknown'
+      error: error instanceof Error ? error.message : String(error)
     });
     
     return handleApiError(error, request);

@@ -71,7 +71,7 @@ describe('Feed API Route - GET /api/feed', () => {
         email_verified: true
       };
 
-      expect(token.uid).toBeDefined();
+      expect(token.id).toBeDefined();
       expect(token.email).toContain('@buffalo.edu');
     });
   });

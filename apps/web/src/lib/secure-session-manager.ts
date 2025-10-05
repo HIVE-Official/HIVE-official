@@ -217,7 +217,7 @@ export class SecureSessionManager {
 
     // Log session creation
     await logSecurityEvent('invalid_token', {
-      operation: 'session_created',
+      action: 'session_created',
       tags: {
         userId: userData.userId,
         sessionId,
@@ -255,7 +255,7 @@ export class SecureSessionManager {
       const tokenScan = SecurityScanner.scanInput(token, 'session_token');
       if (tokenScan.level === 'dangerous') {
         await logSecurityEvent('invalid_token', {
-          operation: 'dangerous_token_detected',
+          action: 'dangerous_token_detected',
           tags: {
             threats: tokenScan.threats.join(','),
             environment: currentEnvironment
@@ -303,7 +303,7 @@ export class SecureSessionManager {
       const currentFingerprint = this.generateFingerprint(request);
       if (fingerprint !== currentFingerprint) {
         await logSecurityEvent('invalid_token', {
-          operation: 'fingerprint_mismatch',
+          action: 'fingerprint_mismatch',
           tags: {
             userId: sessionData.userId,
             sessionId,
@@ -358,9 +358,9 @@ export class SecureSessionManager {
 
     } catch (error) {
       await logSecurityEvent('invalid_token', {
-        operation: 'session_validation_error',
+        action: 'session_validation_error',
         tags: {
-          error: error instanceof Error ? error.message : 'unknown',
+          error: error instanceof Error ? error.message : String(error),
           environment: currentEnvironment
         }
       });
@@ -389,7 +389,7 @@ export class SecureSessionManager {
       // Check rotation limits
       if (sessionData.rotationCount >= SESSION_CONFIG.MAX_ROTATION_ATTEMPTS) {
         await logSecurityEvent('invalid_token', {
-          operation: 'max_rotations_exceeded',
+          action: 'max_rotations_exceeded',
           tags: {
             userId: sessionData.userId,
             sessionId: sessionData.sessionId,
@@ -437,7 +437,7 @@ export class SecureSessionManager {
       this.sessionStore.set(sessionData.sessionId, sessionData);
 
       await logSecurityEvent('invalid_token', {
-        operation: 'session_rotated',
+        action: 'session_rotated',
         tags: {
           userId: sessionData.userId,
           sessionId: sessionData.sessionId,
@@ -470,7 +470,7 @@ export class SecureSessionManager {
     if (sessionData.metadata.ip !== currentIp && sessionData.metadata.ip !== 'unknown') {
       // Allow IP changes but log them
       await logSecurityEvent('invalid_token', {
-        operation: 'ip_address_change',
+        action: 'ip_address_change',
         tags: {
           userId: sessionData.userId,
           sessionId: sessionData.sessionId,
@@ -488,7 +488,7 @@ export class SecureSessionManager {
 
     if (userAgentSimilarity < 0.8) {
       await logSecurityEvent('invalid_token', {
-        operation: 'user_agent_change',
+        action: 'user_agent_change',
         tags: {
           userId: sessionData.userId,
           sessionId: sessionData.sessionId,
@@ -568,7 +568,7 @@ export class SecureSessionManager {
       this.sessionStore.delete(sessionId);
       
       await logSecurityEvent('invalid_token', {
-        operation: 'session_revoked',
+        action: 'session_revoked',
         tags: {
           userId: sessionData.userId,
           sessionId,

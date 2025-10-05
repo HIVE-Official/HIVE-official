@@ -149,7 +149,7 @@ export function useFeed(options: FeedOptions = {}) {
         ...prev,
         isLoading: false,
         isLoadingMore: false,
-        error: error instanceof Error ? error.message : 'Failed to load feed',
+        error: error instanceof Error ? error.message : String(error),
       }));
     }
   }, [user, getAuthToken, options.limit, options.spaceId, options.userId, options.sortBy, options.types]);

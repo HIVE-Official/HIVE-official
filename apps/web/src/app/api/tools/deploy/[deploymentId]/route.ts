@@ -26,7 +26,7 @@ export async function GET(
     const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() } as { id: string; toolId?: string; [key: string]: any };
 
     // Check access permissions
-    if (!await canUserManageDeployment(user.uid, deployment)) {
+    if (!await canUserManageDeployment(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -38,7 +38,7 @@ export async function GET(
     const toolData = toolDoc.exists ? toolDoc.data() : null;
 
     // Get execution context
-    const executionContext = generateExecutionContext(deployment, user.uid);
+    const executionContext = generateExecutionContext(deployment, user.id);
 
     return NextResponse.json({
       deployment,
@@ -78,7 +78,7 @@ export async function PUT(
     }
 
     // Check access permissions
-    if (!await canUserManageDeployment(user.uid, deployment)) {
+    if (!await canUserManageDeployment(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -121,7 +121,7 @@ export async function PUT(
 
     // Log activity event
     await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
+      userId: user.id,
       type: 'tool_interaction',
       toolId: deployment.toolId,
       spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
@@ -175,7 +175,7 @@ export async function DELETE(
     }
 
     // Check access permissions - only deployer or space admin can remove
-    if (deployment.deployedBy !== user.uid) {
+    if (deployment.deployedBy !== user.id) {
       if (deployment.deployedTo === 'space') {
         // Check if user is space admin
         const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
@@ -184,7 +184,7 @@ export async function DELETE(
         }
         
         const spaceData = spaceDoc.data();
-        if (!spaceData || spaceData.ownerId !== user.uid) {
+        if (!spaceData || spaceData.ownerId !== user.id) {
           return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
       } else {
@@ -208,7 +208,7 @@ export async function DELETE(
 
     // Log activity event
     await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
+      userId: user.id,
       type: 'tool_interaction',
       toolId: deployment.toolId,
       spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,

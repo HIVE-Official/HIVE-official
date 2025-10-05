@@ -100,7 +100,7 @@ export async function createDevSession(
   // SECURITY: Only allow in development
   if (currentEnvironment !== 'development') {
     await logSecurityEvent('invalid_token', {
-      operation: 'dev_session_blocked_in_production',
+      action: 'dev_session_blocked_in_production',
       tags: {
         email,
         environment: currentEnvironment,
@@ -137,7 +137,7 @@ export async function createDevSession(
     );
 
     await logSecurityEvent('invalid_token', {
-      operation: 'dev_session_created',
+      action: 'dev_session_created',
       tags: {
         userId: user.userId,
         email: user.email,

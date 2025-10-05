@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
             isBuilder: memberships.some(m => m.role === 'builder')
           };
         } catch (error) {
-          logger.error('Error getting memberships for user', { userId: user.id, error: error instanceof Error ? error : new Error(String(error))});
+          logger.error('Error getting memberships for user', { userId: user.id, error: error instanceof Error ? error.message : String(error)});
           return {
             ...user,
             memberships: [],
@@ -195,7 +195,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Admin users GET error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Admin users GET error', { error });
     return NextResponse.json(ApiResponseHelper.error("Failed to get users", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
@@ -222,7 +222,7 @@ export async function POST(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -273,7 +273,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Admin users POST error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Admin users POST error', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -311,7 +311,7 @@ export async function DELETE(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -416,7 +416,7 @@ export async function DELETE(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Admin users DELETE error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Admin users DELETE error', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -446,6 +446,6 @@ async function logAdminAction(adminUserId: string, action: string, targetUserId:
       type: 'user_action'
     });
   } catch (error) {
-    logger.error('Error logging admin action', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error logging admin action', { error });
   }
 }

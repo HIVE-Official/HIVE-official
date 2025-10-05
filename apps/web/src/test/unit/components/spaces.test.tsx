@@ -62,7 +62,7 @@ describe('Spaces Components', () => {
 
       const SpaceSearch = ({ onSearch }: { onSearch: (query: string) => void }) => {
         const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-          onSearch((e.target as HTMLInputElement).value);
+          onSearch((e.target as any).value);
         };
 
         return (
@@ -198,7 +198,7 @@ describe('Spaces Components', () => {
           <form>
             <input
               value={name}
-              onChange={(e: React.ChangeEvent) => setName((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent) => setName((e.target as any).value)}
               placeholder="Space name"
             />
             {errors.map((error, i) => (

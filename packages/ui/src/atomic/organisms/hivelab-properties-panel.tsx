@@ -94,7 +94,7 @@ const HiveLabPropertiesPanel = React.forwardRef<HTMLDivElement, HiveLabPropertie
                 placeholder="Enter label..."
                 defaultValue={selectedElement.name}
                 className="h-8 text-sm"
-                onChange={(e: React.ChangeEvent) => onPropertyChange?.("label", e.target.value)}
+                onChange={(e: React.ChangeEvent) => onPropertyChange?.("label", (e.target as HTMLInputElement).value)}
               />
             </div>
 
@@ -108,7 +108,7 @@ const HiveLabPropertiesPanel = React.forwardRef<HTMLDivElement, HiveLabPropertie
                 defaultValue={selectedElement.description}
                 className="text-sm resize-none"
                 rows={2}
-                onChange={(e: React.ChangeEvent) => onPropertyChange?.("description", e.target.value)}
+                onChange={(e: React.ChangeEvent) => onPropertyChange?.("description", (e.target as HTMLInputElement).value)}
               />
             </div>
           </div>
@@ -126,7 +126,7 @@ const HiveLabPropertiesPanel = React.forwardRef<HTMLDivElement, HiveLabPropertie
                   id="placeholder"
                   placeholder="Enter placeholder..."
                   className="h-8 text-sm"
-                  onChange={(e: React.ChangeEvent) => onPropertyChange?.("placeholder", e.target.value)}
+                  onChange={(e: React.ChangeEvent) => onPropertyChange?.("placeholder", (e.target as HTMLInputElement).value)}
                 />
               </div>
 
@@ -190,7 +190,7 @@ const HiveLabPropertiesPanel = React.forwardRef<HTMLDivElement, HiveLabPropertie
                   id="value"
                   placeholder="Enter value..."
                   className="h-8 text-sm"
-                  onChange={(e: React.ChangeEvent) => onPropertyChange?.("compareValue", e.target.value)}
+                  onChange={(e: React.ChangeEvent) => onPropertyChange?.("compareValue", (e.target as HTMLInputElement).value)}
                 />
               </div>
             </div>

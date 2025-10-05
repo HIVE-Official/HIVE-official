@@ -233,7 +233,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
               <p className="text-sm text-gray-400">Control how you appear on HIVE</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button variant="outline" className="max-w-sm" onClick={onClose}>
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -400,7 +400,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               min="1"
                               max="24"
                               value={scheduleHours}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt((e.target as HTMLInputElement).value))}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt((e.target as any).value))}
                               className="flex-1"
                             />
                             <span className="text-sm text-gray-300 w-16">{scheduleHours}h</span>

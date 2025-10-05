@@ -19,7 +19,7 @@ export interface LogContext {
   spaceId?: string;
   action?: string;
   metadata?: Record<string, unknown>;
-  error?: Error | AppError;
+  error?: any | AppError;
   user?: Partial<HiveUser>;
   space?: Partial<Space>;
   post?: Partial<Post>;
@@ -135,7 +135,7 @@ class StructuredLogger {
     }
   }
 
-  error(message: string, error?: Error, context?: LogContext): void {
+  error(message: string, error?: any, context?: LogContext): void {
     if (this.shouldLog(LogLevel.ERROR)) {
       const errorContext = {
         ...context,
@@ -149,7 +149,7 @@ class StructuredLogger {
     }
   }
 
-  critical(message: string, error?: Error, context?: LogContext): void {
+  critical(message: string, error?: any, context?: LogContext): void {
     if (this.shouldLog(LogLevel.CRITICAL)) {
       const errorContext = {
         ...context,
@@ -168,7 +168,7 @@ class StructuredLogger {
     }
   }
 
-  private triggerAlert(message: string, error?: Error): void {
+  private triggerAlert(message: string, error?: any): void {
     // Would integrate with alerting service (PagerDuty, etc.)
     // Placeholder implementation
   }
@@ -254,10 +254,10 @@ export const logInfo = (message: string, context?: LogContext) =>
 export const logWarn = (message: string, context?: LogContext) =>
   logger.warn(message, context);
 
-export const logError = (message: string, error?: Error, context?: LogContext) =>
+export const logError = (message: string, error?: any, context?: LogContext) =>
   logger.error(message, error, context);
 
-export const logCritical = (message: string, error?: Error, context?: LogContext) =>
+export const logCritical = (message: string, error?: any, context?: LogContext) =>
   logger.critical(message, error, context);
 
 export const logEvent = (eventName: string, properties?: Record<string, any>) =>
@@ -321,7 +321,7 @@ export const createRequestLogger = (requestId: string, userId?: string) => {
   return {
     log: (message: string, context?: LogContext) =>
       logger.info(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
-    error: (message: string, error?: Error, context?: LogContext) =>
+    error: (message: string, error?: any, context?: LogContext) =>
       logger.error(message, error, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
     warn: (message: string, context?: LogContext) =>
       logger.warn(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
@@ -339,7 +339,7 @@ export const logApiCall = async (
     userId?: string;
     statusCode?: number;
     duration?: number;
-    error?: Error;
+    error?: any;
     metadata?: Record<string, any>;
   }
 ) => {
@@ -369,7 +369,7 @@ export const logApiCall = async (
 
 // Log performance metrics
 export const logPerformance = async (
-  operation: string,
+  action: string,
   metrics: {
     duration: number;
     success: boolean;
@@ -381,16 +381,16 @@ export const logPerformance = async (
 
   const context: LogContext = {
     userId,
-    action: `performance_${operation}`,
+    action: `performance_${action}`,
     metadata: {
-      operation,
+      operation: action,
       duration: `${duration}ms`,
       success,
       ...metadata,
     },
   };
 
-  const message = `Performance: ${operation} completed in ${duration}ms`;
+  const message = `Performance: ${action} completed in ${duration}ms`;
 
   if (!success) {
     logger.warn(`${message} (failed)`, context);

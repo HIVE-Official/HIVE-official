@@ -1,12 +1,12 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../lib/utils.js";
 import { Plus, Download, Calendar as CalendarIcon } from "lucide-react";
-import { Button } from "../atoms/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../atoms/dialog";
-import { Badge } from "../atoms/badge";
-import { Calendar } from "../atoms/calendar";
+import { Button } from "../atoms/button.js";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../atoms/dialog.js";
+import { Badge } from "../atoms/badge.js";
+import { Calendar } from "../atoms/calendar.js";
 /**
  * Profile Calendar Modal
  *

@@ -9,7 +9,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GET, POST } from '@/app/api/spaces/route';
 import { NextRequest } from 'next/server';
-import type { AuthenticatedRequest } from '@/lib/middleware';
+import type { AuthenticatedRequest } from '@/lib/middleware/index';
 
 // Mock Firebase Admin
 vi.mock('@/lib/firebase-admin', () => ({
@@ -59,10 +59,10 @@ vi.mock('@/lib/secure-firebase-queries', () => ({
 }));
 
 // Mock middleware
-vi.mock('@/lib/middleware', () => ({
+vi.mock('@/lib/middleware/index', () => ({
   withAuthAndErrors: (handler: any) => handler,
   withAuthValidationAndErrors: (schema: any, handler: any) => handler,
-  getUserId: vi.fn((req) => req.user?.uid || 'user-123'),
+  getUserId: vi.fn((req) => req.user?.id || 'user-123'),
   ResponseFormatter: {
     success: (data: any) => ({ json: () => Promise.resolve(data), status: 200 }),
     error: (message: string) => ({ json: () => Promise.resolve({ error: message }), status: 400 })
@@ -116,7 +116,7 @@ describe('Spaces API - GET /api/spaces', () => {
         decodedToken: { email_verified: true }
       } as any;
 
-      expect(request.user.uid).toBeDefined();
+      expect(request.user.id).toBeDefined();
     });
   });
 

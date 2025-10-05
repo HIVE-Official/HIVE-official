@@ -228,7 +228,7 @@ export function DatabasePerformanceDashboard() {
           <select
             className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
             value={selectedCollection}
-            onChange={(e: React.ChangeEvent) => setSelectedCollection((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent) => setSelectedCollection((e.target as any).value)}
           >
             <option value="">All Collections</option>
             <option value="users">Users</option>
@@ -246,7 +246,7 @@ export function DatabasePerformanceDashboard() {
               Auto-refresh
             </label>
           </div>
-          <Button onClick={loadOptimizationData} variant="outline" size="sm">
+          <Button onClick={loadOptimizationData} variant="outline" className="max-w-sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
@@ -357,7 +357,7 @@ export function DatabasePerformanceDashboard() {
                         </Badge>
                       </div>
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         onClick={() => handleOptimizationAction(
                           rec.type === 'index' ? 'create_index' : 'optimize_queries',
                           { collection: rec.collection, suggestion: rec }
@@ -516,12 +516,12 @@ export function DatabasePerformanceDashboard() {
                           </Badge>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline">
+                          <Button className="max-w-sm" variant="outline">
                             <Eye className="w-3 h-3" />
                           </Button>
                           {!index.used && (
                             <Button
-                              size="sm"
+                              className="max-w-sm"
                               variant="outline"
                               onClick={() => handleOptimizationAction('drop_index', {
                                 collection: collectionName,
@@ -550,7 +550,7 @@ export function DatabasePerformanceDashboard() {
                           </Badge>
                         </div>
                         <Button
-                          size="sm"
+                          className="max-w-sm"
                           onClick={() => handleOptimizationAction('create_index', {
                             collection: collectionName,
                             indexName: rec.indexName,
@@ -611,7 +611,7 @@ export function DatabasePerformanceDashboard() {
                     )}
                     <div className="flex justify-end mt-2">
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         onClick={() => handleOptimizationAction('optimize_queries', {
                           collection: query.collection,
@@ -652,7 +652,7 @@ export function DatabasePerformanceDashboard() {
                       <h4 className="font-medium text-white text-sm">{bottleneck.description}</h4>
                       <p className="text-xs text-gray-400 mt-1">{bottleneck.recommendation}</p>
                     </div>
-                    <Button size="sm" variant="outline">
+                    <Button className="max-w-sm" variant="outline">
                       <Wrench className="w-3 h-3" />
                     </Button>
                   </div>
@@ -741,7 +741,7 @@ export function DatabasePerformanceDashboard() {
                   <div className="mt-4 pt-4 border-t border-gray-700">
                     <div className="flex gap-2">
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         onClick={() => handleOptimizationAction('analyze_collection', { collection: name })}
                         disabled={actionInProgress === `analyze_${name}`}
@@ -754,7 +754,7 @@ export function DatabasePerformanceDashboard() {
                         Analyze
                       </Button>
                       <Button
-                        size="sm"
+                        className="max-w-sm"
                         variant="outline"
                         onClick={() => handleOptimizationAction('optimize_queries', { collection: name })}
                         disabled={actionInProgress === `optimize_collection_${name}`}
@@ -1035,7 +1035,7 @@ function OptimizationSuggestionCard({
           </div>
         </div>
         <Button
-          size="sm"
+          className="max-w-sm"
           onClick={() => onAction(getActionType(suggestion.type), {
             collection: suggestion.collection,
             suggestion

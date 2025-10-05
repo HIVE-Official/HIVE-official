@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       const dateStr = currentDate.toISOString().split('T')[0];
       
       // Get all events for this day
-      const dayEvents = await getEventsForDate(user.uid, dateStr);
+      const dayEvents = await getEventsForDate(user.id, dateStr);
       
       // Sort events by start time
       dayEvents.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());

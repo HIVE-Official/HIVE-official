@@ -260,7 +260,7 @@ export function RealTimeModeration() {
               <Badge className="bg-green-500/20 text-green-400">
                 {autoModRules.filter(r => r.enabled).length} Active
               </Badge>
-              <Button size="sm" variant="outline">
+              <Button className="max-w-sm" variant="outline">
                 Configure Rules
               </Button>
             </div>
@@ -380,8 +380,8 @@ export function RealTimeModeration() {
 
                     <div className="flex items-center gap-2">
                       <Button
-                        size="sm"
-                        variant="ghost"
+                        className="max-w-sm"
+                        variant="outline"
                         onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleReportAction(report.id, 'dismissed');
@@ -390,8 +390,8 @@ export function RealTimeModeration() {
                         <XCircle className="w-4 h-4" />
                       </Button>
                       <Button
-                        size="sm"
-                        variant="ghost"
+                        className="max-w-sm"
+                        variant="outline"
                         onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleReportAction(report.id, 'content_removed');
@@ -400,8 +400,8 @@ export function RealTimeModeration() {
                         <Trash2 className="w-4 h-4" />
                       </Button>
                       <Button
-                        size="sm"
-                        variant="ghost"
+                        className="max-w-sm"
+                        variant="outline"
                         onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           setSelectedReport(report);

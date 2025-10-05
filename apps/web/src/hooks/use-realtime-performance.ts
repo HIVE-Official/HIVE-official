@@ -165,7 +165,7 @@ export function useRealtimePerformance(
 
       observer.observe({ entryTypes: ['navigation', 'measure'] });
     } catch (error) {
-      logger.warn('PerformanceObserver not supported', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.warn('PerformanceObserver not supported', { error: error instanceof Error ? error.message : String(error) });
     }
   }, []);
 
@@ -483,7 +483,7 @@ export function useRealtimePerformance(
       
       logger.info('Connection optimization completed');
     } catch (error) {
-      logger.error('Connection optimization failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Connection optimization failed', { error: error instanceof Error ? error.message : String(error) });
       recordError(error);
     }
   }, [clearAlerts, recordError]);

@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -235,7 +235,7 @@ export async function GET(request: NextRequest) {
         spacesByType[type] = spaces;
         allSpaces.push(...spaces);
       } catch (error) {
-        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error : new Error(String(error))});
+        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error.message : String(error)});
         spacesByType[type] = [];
       }
     }
@@ -372,7 +372,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Admin spaces analytics error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Admin spaces analytics error', { error });
     return NextResponse.json(ApiResponseHelper.error("Failed to get space analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

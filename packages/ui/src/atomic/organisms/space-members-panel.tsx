@@ -101,7 +101,7 @@ const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProp
     }
 
     return (
-      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+      <Card ref={ref} className={cn("transition-all duration-smooth", className)} {...props}>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProp
                 size="sm"
                 onClick={handleInvite}
                 disabled={isLoading}
-                className="h-8 px-2 transition-all duration-[400ms]"
+                className="h-8 px-2 transition-all duration-smooth"
               >
                 <svg className="h-3.5 w-3.5 mr-1" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
@@ -141,7 +141,7 @@ const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProp
                   size="sm"
                   onClick={handleInvite}
                   disabled={isLoading}
-                  className="mt-3 transition-all duration-[400ms]"
+                  className="mt-3 transition-all duration-smooth"
                 >
                   <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
@@ -159,7 +159,7 @@ const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProp
                     key={member.userId}
                     onClick={() => handleMemberClick(member)}
                     className={cn(
-                      "group relative flex flex-col items-center p-2 rounded-lg border border-white/8 bg-[#0c0c0c] transition-all duration-[400ms]",
+                      "group relative flex flex-col items-center p-2 rounded-lg border border-white/8 bg-[#0c0c0c] transition-all duration-smooth",
                       (onMemberClick || onAction) && "cursor-pointer hover:border-white/20 hover:bg-white/10"
                     )}
                   >
@@ -214,7 +214,7 @@ const SpaceMembersPanel = React.forwardRef<HTMLDivElement, SpaceMembersPanelProp
                   size="sm"
                   onClick={handleViewAll}
                   disabled={isLoading}
-                  className="w-full mt-2 transition-all duration-[400ms]"
+                  className="w-full mt-2 transition-all duration-smooth"
                 >
                   {hasMore ? `View All ${totalCount} Members` : "View All Members"}
                   <svg className="h-3.5 w-3.5 ml-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">

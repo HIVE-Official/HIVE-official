@@ -76,7 +76,7 @@ export async function GET(
     }
 
     // Build query for posts
-    let query = dbAdmin
+    let query: any = dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts");
@@ -138,7 +138,7 @@ export async function GET(
         author: author
           ? {
               id: authorDoc.id,
-              fullName: author.fullName,
+              fullName: author.displayName,
               handle: author.handle,
               photoURL: author.photoURL,
             }
@@ -165,7 +165,7 @@ export async function GET(
         author: author
           ? {
               id: authorDoc.id,
-              fullName: author.fullName,
+              fullName: author.displayName,
               handle: author.handle,
               photoURL: author.photoURL,
             }
@@ -306,7 +306,7 @@ export async function POST(
       ...postData,
       author: {
         id: decodedToken.uid,
-        fullName: author?.fullName || "Unknown User",
+        fullName: author?.displayName || "Unknown User",
         handle: author?.handle || "unknown",
         photoURL: author?.photoURL || null,
       },

@@ -25,7 +25,7 @@ export type Permission =
   | 'data:export' | 'analytics:view' | 'moderation:access';
 
 export interface UserPermissions {
-  userId: string;
+  id: string;
   spaceId: string;
   role: UserRole;
   customPermissions?: Permission[];

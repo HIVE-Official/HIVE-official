@@ -9,7 +9,7 @@ import { StatCard } from "../molecules/stat-card"
 import { cn } from "../../lib/utils"
 import type { SpaceData, SpaceActionHandler } from "../../types/space.types"
 
-export interface SpaceHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpaceHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart' | 'onAnimationEnd'> {
   /** Space data (canonical type) */
   space: SpaceData
   /** Layout mode: header or sidebar */

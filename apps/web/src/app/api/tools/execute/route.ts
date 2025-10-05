@@ -19,10 +19,10 @@ interface DeploymentData {
   };
   settings?: {
     collectAnalytics?: boolean;
-    [key: string]: unknown;
+    [key: string]: any;
   };
   usageCount?: number;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 // Tool data interface
@@ -30,7 +30,7 @@ interface ToolData {
   id?: string;
   elements?: ToolElement[];
   useCount?: number;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 // Tool element interface
@@ -39,7 +39,7 @@ interface ToolElement {
   type: string;
   config?: Record<string, unknown>;
   actions?: ToolAction[];
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 // Tool action interface
@@ -48,7 +48,7 @@ interface ToolAction {
   type: string;
   handler?: string;
   config?: Record<string, unknown>;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 // Tool execution request interface
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check user permissions
-    if (!await canUserExecuteTool(user.uid, deployment)) {
+    if (!await canUserExecuteTool(user.id, deployment)) {
       return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     const executionResult = await executeToolAction({
       deployment,
       tool,
-      user: { uid: user.uid },
+      user: { uid: user.id },
       action,
       elementId,
       data: data || {},
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
 
     // Log activity event
     await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
+      userId: user.id,
       type: 'tool_interaction',
       toolId: deployment.toolId,
       spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
@@ -168,7 +168,7 @@ export async function POST(request: NextRequest) {
 
     // Generate feed content if requested and successful
     if (executionResult.success && executionResult.feedContent) {
-      await generateFeedContent(deployment, tool, user.uid, executionResult.feedContent);
+      await generateFeedContent(deployment, tool, user.id, executionResult.feedContent);
     }
 
     // Send notifications if any
@@ -215,7 +215,7 @@ async function canUserExecuteTool(userId: string, deployment: DeploymentData): P
         return false;
       }
 
-      const memberData = membershipSnapshot.docs[0].data() as { role: string; [key: string]: unknown };
+      const memberData = membershipSnapshot.docs[0].data() as { role: string; [key: string]: any };
       return deployment.permissions?.allowedRoles?.includes(memberData.role) || false;
     }
 

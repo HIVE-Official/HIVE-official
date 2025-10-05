@@ -245,7 +245,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <h3 className="text-lg font-semibold text-white">Resources</h3>
           {canUpload && (
             <Button
-              size="sm"
+              className="max-w-sm"
               onClick={() => document.getElementById('file-upload')?.click()}
               disabled={uploading}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
@@ -273,7 +273,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <Input
             placeholder="Search resources..."
             value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -291,7 +291,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
 
           <select
             value={sortBy}
-            onChange={(e: React.ChangeEvent) => setSortBy((e.target as HTMLInputElement).value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy((e.target as any).value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recent</option>
@@ -373,7 +373,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
                 </p>
                 {canUpload && !searchQuery && (
                   <Button
-                    size="sm"
+                    className="max-w-sm"
                     variant="outline"
                     className="mt-3"
                     onClick={() => document.getElementById('file-upload')?.click()}
@@ -458,7 +458,7 @@ function ResourceCard({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="ghost">
+                <Button className="max-w-sm" variant="outline">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>

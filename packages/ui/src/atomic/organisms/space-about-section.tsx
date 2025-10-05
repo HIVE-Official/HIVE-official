@@ -80,7 +80,7 @@ const SpaceAboutSection = React.forwardRef<HTMLDivElement, SpaceAboutSectionProp
     const displayedRules = showAllRules ? rules : rules.slice(0, 3)
 
     return (
-      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+      <Card ref={ref} className={cn("transition-all duration-smooth", className)} {...props}>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-semibold tracking-tight leading-tight">About</CardTitle>

@@ -153,7 +153,7 @@ const SpaceMemberList = React.forwardRef<HTMLDivElement, SpaceMemberListProps>(
                 <Input
                   placeholder="Search members..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
                   className="pl-9"
                 />
               </div>

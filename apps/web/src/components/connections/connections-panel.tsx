@@ -152,8 +152,8 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                       <div className="relative">
                         <Avatar
                           src={connection.profile?.avatarUrl}
-                          alt={connection.profile?.fullName}
-                          fallback={connection.profile?.fullName?.[0] || '?'}
+                          alt={connection.profile?.displayName}
+                          fallback={connection.profile?.displayName?.[0] || '?'}
                         />
                         <div
                           className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getAvailabilityColor(
@@ -163,7 +163,7 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                       </div>
 
                       <div>
-                        <p className="font-medium">{connection.profile?.fullName}</p>
+                        <p className="font-medium">{connection.profile?.displayName}</p>
                         <p className="text-sm text-gray-600">
                           {connection.profile?.major} • {connection.profile?.academicYear}
                         </p>
@@ -199,7 +199,7 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                         <Badge variant="secondary">Friends</Badge>
                       ) : (
                         <Button
-                          size="sm"
+                          className="max-w-sm"
                           variant="outline"
                           onClick={() => sendFriendRequest(connection.userId)}
                         >
@@ -233,8 +233,8 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                     <div className="relative">
                       <Avatar
                         src={friend.profile?.avatarUrl}
-                        alt={friend.profile?.fullName}
-                        fallback={friend.profile?.fullName?.[0] || '?'}
+                        alt={friend.profile?.displayName}
+                        fallback={friend.profile?.displayName?.[0] || '?'}
                       />
                       <div
                         className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getAvailabilityColor(
@@ -244,7 +244,7 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                     </div>
 
                     <div>
-                      <p className="font-medium">{friend.profile?.fullName}</p>
+                      <p className="font-medium">{friend.profile?.displayName}</p>
                       <p className="text-sm text-gray-600">
                         {friend.profile?.major} • {friend.profile?.academicYear}
                       </p>
@@ -262,8 +262,8 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                   </div>
 
                   <Button
-                    size="sm"
-                    variant="ghost"
+                    className="max-w-sm"
+                    variant="outline"
                     onClick={() => unfriend(friend.userId)}
                   >
                     Unfriend
@@ -288,12 +288,12 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                   <div className="flex items-center gap-3">
                     <Avatar
                       src={request.fromProfile?.avatarUrl}
-                      alt={request.fromProfile?.fullName}
-                      fallback={request.fromProfile?.fullName?.[0] || '?'}
+                      alt={request.fromProfile?.displayName}
+                      fallback={request.fromProfile?.displayName?.[0] || '?'}
                     />
 
                     <div>
-                      <p className="font-medium">{request.fromProfile?.fullName}</p>
+                      <p className="font-medium">{request.fromProfile?.displayName}</p>
                       <p className="text-sm text-gray-600">
                         {request.fromProfile?.major} • {request.fromProfile?.academicYear}
                       </p>
@@ -305,14 +305,14 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
 
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="default"
                       onClick={() => acceptFriendRequest(request.id)}
                     >
                       <Check className="h-4 w-4" />
                     </Button>
                     <Button
-                      size="sm"
+                      className="max-w-sm"
                       variant="outline"
                       onClick={() => rejectFriendRequest(request.id)}
                     >
@@ -339,12 +339,12 @@ export function ConnectionsPanel({ className }: ConnectionsPanelProps) {
                   <div className="flex items-center gap-3">
                     <Avatar
                       src={request.toProfile?.avatarUrl}
-                      alt={request.toProfile?.fullName}
-                      fallback={request.toProfile?.fullName?.[0] || '?'}
+                      alt={request.toProfile?.displayName}
+                      fallback={request.toProfile?.displayName?.[0] || '?'}
                     />
 
                     <div>
-                      <p className="font-medium">{request.toProfile?.fullName}</p>
+                      <p className="font-medium">{request.toProfile?.displayName}</p>
                       <p className="text-sm text-gray-600">
                         {request.toProfile?.major} • {request.toProfile?.academicYear}
                       </p>

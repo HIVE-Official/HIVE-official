@@ -241,7 +241,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
 
           {/* Filter */}
           <div className="relative">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" className="max-w-sm">
               <Filter className="w-4 h-4 mr-2" />
               {filter === 'all' ? 'All Events' :
                filter === 'upcoming' ? 'Upcoming' :
@@ -274,21 +274,21 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setCurrentDate(subMonths(currentDate, 1))}
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setCurrentDate(new Date())}
               >
                 Today
               </Button>
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setCurrentDate(addMonths(currentDate, 1))}
               >
                 <ChevronRight className="w-4 h-4" />
@@ -467,7 +467,7 @@ function EventCard({
 
             <div className="flex items-center space-x-1 text-sm text-gray-400">
               <Users className="w-4 h-4" />
-              <span>by {event.organizer.fullName}</span>
+              <span>by {event.organizer.displayName}</span>
             </div>
           </div>
         </div>
@@ -632,10 +632,10 @@ function EventDetailModal({
                 <div key={rsvp.id} className="flex items-center space-x-2 bg-gray-800 rounded-lg p-2">
                   <Avatar
                     src={rsvp.user?.avatarUrl}
-                    fallback={rsvp.user?.fullName?.[0]}
+                    fallback={rsvp.user?.displayName?.[0]}
                     className="w-6 h-6"
                   />
-                  <span className="text-sm text-white">{rsvp.user?.fullName}</span>
+                  <span className="text-sm text-white">{rsvp.user?.displayName}</span>
                 </div>
               ))}
 
@@ -700,7 +700,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Event Title</label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
             placeholder="Enter event title"
             required
           />
@@ -710,7 +710,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Description</label>
           <textarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
             placeholder="Describe your event"
             rows={3}
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
@@ -723,7 +723,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.startTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as any).value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -734,7 +734,7 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as HTMLInputElement).value }))}
+              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -745,7 +745,7 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Location</label>
           <Input
             value={formData.location}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as HTMLInputElement).value }))}
+            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as any).value }))}
             placeholder="Event location or virtual link"
           />
         </div>

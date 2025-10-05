@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { EventCampusContext } from "../molecules/feed-event-card";
+import type { EventCampusContext } from "../molecules/event-card";
 /**
  * Calendar event with campus context
  */

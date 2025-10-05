@@ -127,7 +127,7 @@ export class SecureRateLimiter {
 
     // Log security event
     logSecurityEvent('rate_limit', {
-      operation: 'rate_limiter_failure',
+      action: 'rate_limiter_failure',
       tags: {
         reason,
         consecutiveFailures: this.consecutiveFailures.toString(),
@@ -172,7 +172,7 @@ export class SecureRateLimiter {
     // SECURITY: Check strict mode first
     if (this.isStrictModeBlock()) {
       await logSecurityEvent('rate_limit', {
-        operation: 'strict_mode_block',
+        action: 'strict_mode_block',
         tags: {
           clientId: normalizedClientId,
           identifier: this.config.identifier,
@@ -236,7 +236,7 @@ export class SecureRateLimiter {
     // CRITICAL: If all rate limiters fail and blockOnError is true, BLOCK the request
     if (this.config.blockOnError) {
       await logSecurityEvent('rate_limit', {
-        operation: 'all_limiters_failed_blocking',
+        action: 'all_limiters_failed_blocking',
         tags: {
           clientId: normalizedClientId,
           identifier: this.config.identifier,

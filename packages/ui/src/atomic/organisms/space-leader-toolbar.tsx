@@ -63,7 +63,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
       <div
         ref={ref}
         className={cn(
-          "flex items-center gap-2 rounded-lg border border-white/8 bg-[#0c0c0c]/50 backdrop-blur-sm p-3 transition-all duration-[400ms]",
+          "flex items-center gap-2 rounded-lg border border-white/8 bg-[#0c0c0c]/50 backdrop-blur-sm p-3 transition-all duration-smooth",
           className
         )}
         {...props}
@@ -75,7 +75,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
               variant="ghost"
               size="sm"
               onClick={onEdit}
-              className="transition-all duration-[400ms]"
+              className="transition-all duration-smooth"
             >
               <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
@@ -89,7 +89,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
               variant="ghost"
               size="sm"
               onClick={onSettings}
-              className="transition-all duration-[400ms]"
+              className="transition-all duration-smooth"
             >
               <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -104,7 +104,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
               variant="ghost"
               size="sm"
               onClick={onAnalytics}
-              className="transition-all duration-[400ms]"
+              className="transition-all duration-smooth"
             >
               <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
@@ -124,7 +124,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
           <Button
             size="sm"
             onClick={onInvite}
-            className="transition-all duration-[400ms]"
+            className="transition-all duration-smooth"
           >
             <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
@@ -140,7 +140,7 @@ const SpaceLeaderToolbar = React.forwardRef<HTMLDivElement, SpaceLeaderToolbarPr
               <Button
                 variant="ghost"
                 size="sm"
-                className="relative transition-all duration-[400ms]"
+                className="relative transition-all duration-smooth"
               >
                 <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />

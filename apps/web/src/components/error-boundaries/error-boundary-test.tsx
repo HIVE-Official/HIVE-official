@@ -49,8 +49,7 @@ function ErrorTrigger({ errorType, context }: ErrorTriggerProps) {
       <Button
         onClick={triggerError}
         variant="outline"
-        size="sm"
-        className="border-red-500 text-red-400 hover:bg-red-500/10"
+        className="max-w-sm border-red-500 text-red-400 hover:bg-red-500/10"
       >
         <AlertTriangle className="w-4 h-4 mr-2" />
         Trigger {errorType} Error

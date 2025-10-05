@@ -24,7 +24,7 @@ export default function SettingsPage() {
   
   // Form state
   const [formData, setFormData] = useState({
-    fullName: user?.fullName || '',
+    fullName: user?.displayName || '',
     handle: user?.handle || '',
     bio: ''
   });
@@ -136,8 +136,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-white mb-2">Full Name</label>
                   <input 
                     type="text" 
-                    value={formData.fullName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: (e.target as HTMLInputElement).value }))}
+                    value={formData.displayName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: (e.target as any).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.handle}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: (e.target as HTMLInputElement).value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: (e.target as any).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                 <textarea 
                   rows={3}
                   value={formData.bio}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: (e.target as HTMLInputElement).value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: (e.target as any).value }))}
                   className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />

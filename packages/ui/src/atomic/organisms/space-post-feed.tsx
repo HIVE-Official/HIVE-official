@@ -189,7 +189,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                 variant="ghost"
                 size="sm"
                 onClick={handleLoadMore}
-                className="text-xs text-white/70 hover:text-white transition-all duration-[400ms]"
+                className="text-xs text-white/70 hover:text-white transition-all duration-smooth"
               >
                 Load older messages
               </Button>
@@ -253,7 +253,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
               <div
                 key={post.id}
                 className={cn(
-                  "group relative px-1 py-0.5 hover:bg-white/5 rounded transition-all duration-[400ms]",
+                  "group relative px-1 py-0.5 hover:bg-white/5 rounded transition-all duration-smooth",
                   (onPostClick || onAction) && "cursor-pointer"
                 )}
                 onClick={() => handlePostClick(post)}
@@ -358,7 +358,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         href={post.linkPreview.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 block max-w-md rounded border border-white/8 bg-white/5 p-3 transition-all duration-[400ms] hover:border-white/20 hover:bg-white/10"
+                        className="mt-2 block max-w-md rounded border border-white/8 bg-white/5 p-3 transition-all duration-smooth hover:border-white/20 hover:bg-white/10"
                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <div className="flex gap-3">
@@ -399,7 +399,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                               handleLike(post.id, post.isLiked || false)
                             }}
                             className={cn(
-                              "flex items-center gap-1 text-xs transition-all duration-[400ms] hover:text-[#FFD700]",
+                              "flex items-center gap-1 text-xs transition-all duration-smooth hover:text-[#FFD700]",
                               post.isLiked && "text-[#FFD700]"
                             )}
                           >
@@ -427,7 +427,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                               e.stopPropagation()
                               handleComment(post.id)
                             }}
-                            className="flex items-center gap-1 text-xs transition-all duration-[400ms] hover:text-[#FFD700]"
+                            className="flex items-center gap-1 text-xs transition-all duration-smooth hover:text-[#FFD700]"
                           >
                             <svg
                               className="h-3.5 w-3.5"
@@ -456,7 +456,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         e.stopPropagation()
                         handleLike(post.id, post.isLiked || false)
                       }}
-                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-[400ms]"
+                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-smooth"
                       title="Like"
                     >
                       <svg
@@ -478,7 +478,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         e.stopPropagation()
                         handleComment(post.id)
                       }}
-                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-[400ms]"
+                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-smooth"
                       title="Reply"
                     >
                       <svg className="h-4 w-4" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -494,7 +494,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                         e.stopPropagation()
                         handleShare(post.id)
                       }}
-                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-[400ms]"
+                      className="p-1.5 hover:bg-white/10 rounded transition-all duration-smooth"
                       title="Share"
                     >
                       <svg className="h-4 w-4" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -519,11 +519,11 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
           <div className="border-t border-white/8 bg-[#000000] p-4">
             <div className="relative max-w-4xl mx-auto">
               {/* Textarea Container with Claude-style rounded border */}
-              <div className="relative rounded-3xl border border-white/8 bg-[#0c0c0c] focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/20 transition-all duration-[400ms]">
+              <div className="relative rounded-3xl border border-white/8 bg-[#0c0c0c] focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/20 transition-all duration-smooth">
                 <textarea
                   ref={textareaRef}
                   value={composerValue}
-                  onChange={(e: React.ChangeEvent) => setComposerValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setComposerValue((e.target as HTMLInputElement).value)}
                   onKeyDown={handleKeyDown}
                   placeholder={composerPlaceholder}
                   className="w-full resize-none rounded-3xl bg-transparent px-6 py-3 pr-24 text-sm text-white placeholder:text-white/50 focus:outline-none min-h-[52px] max-h-[200px]"
@@ -535,7 +535,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                   {/* Attach File */}
                   <button
                     type="button"
-                    className="p-2 hover:bg-white/10 rounded-full transition-all duration-[400ms] text-white/70 hover:text-white"
+                    className="p-2 hover:bg-white/10 rounded-full transition-all duration-smooth text-white/70 hover:text-white"
                     title="Attach file"
                   >
                     <svg className="h-5 w-5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -550,7 +550,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                   {/* Image */}
                   <button
                     type="button"
-                    className="p-2 hover:bg-white/10 rounded-full transition-all duration-[400ms] text-white/70 hover:text-white"
+                    className="p-2 hover:bg-white/10 rounded-full transition-all duration-smooth text-white/70 hover:text-white"
                     title="Add image"
                   >
                     <svg className="h-5 w-5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -568,7 +568,7 @@ const SpacePostFeed = React.forwardRef<HTMLDivElement, SpacePostFeedProps>(
                     onClick={handlePost}
                     disabled={!composerValue.trim()}
                     className={cn(
-                      "p-2 rounded-full transition-all duration-[400ms]",
+                      "p-2 rounded-full transition-all duration-smooth",
                       composerValue.trim()
                         ? "bg-white text-black hover:bg-white/90"
                         : "bg-white/10 text-white/30 cursor-not-allowed"

@@ -36,7 +36,7 @@ vi.mock('@/lib/firebase-admin', () => ({
   },
 }));
 
-vi.mock('@/lib/api-auth-middleware', () => ({
+vi.mock('@/lib/middleware/index', () => ({
   withAuth: (handler: any) => handler,
 }));
 

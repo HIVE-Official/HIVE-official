@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch user's memberships
     const membershipsSnapshot = await dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .orderBy('lastActivity', 'desc')
       .get();
     const memberships: MembershipData[] = membershipsSnapshot.docs.map(doc => {
@@ -123,17 +123,17 @@ export async function GET(request: NextRequest) {
           
           // Calculate activity level and recent activity
           const recentActivity = includeActivity ? 
-            await getSpaceActivityForUser(user.uid, membership.id, timeRange) : 
+            await getSpaceActivityForUser(user.id, membership.id, timeRange) : 
             { posts: 0, interactions: 0, toolUsage: 0, timeSpent: 0 };
 
           const activityLevel = calculateActivityLevel(recentActivity);
 
           // Get notifications count
-          const notifications = await getSpaceNotifications(user.uid, membership.id);
+          const notifications = await getSpaceNotifications(user.id, membership.id);
 
           // Get quick stats
           const quickStats = includeStats ? 
-            await getSpaceQuickStats(user.uid, membership.id) : 
+            await getSpaceQuickStats(user.id, membership.id) : 
             { myPosts: 0, myTools: 0, myInteractions: 0 };
 
           return {
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
             quickStats
           };
         } catch (error) {
-          logger.error('Error fetching space data for', { spaceId: membership.id, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/profile/spaces' });
+          logger.error('Error fetching space data for', { spaceId: membership.id, error: error instanceof Error ? error.message : String(error), endpoint: '/api/profile/spaces' });
           return null;
         }
       })

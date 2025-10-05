@@ -2,10 +2,10 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
 import { Calendar, BarChart3, ListTodo, FileText, Wrench, Plus, Sparkles } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Card } from "../atoms/card";
-import { Badge } from "../atoms/badge";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
+import { Card } from "../atoms/card.js";
+import { Badge } from "../atoms/badge.js";
 const defaultToolsData = [
     {
         id: "event",

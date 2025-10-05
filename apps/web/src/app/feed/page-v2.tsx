@@ -58,7 +58,7 @@ export default function FeedPageV2() {
 
   // Handle post interactions
   const handleLike = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to like posts',
@@ -80,7 +80,7 @@ export default function FeedPageV2() {
   }, [user, hasEngaged, engagementStartTime, toast]);
 
   const handleComment = useCallback(async (postId: string, content: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to comment',
@@ -97,7 +97,7 @@ export default function FeedPageV2() {
   }, [user, toast]);
 
   const handleShare = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to share posts',
@@ -220,8 +220,8 @@ export default function FeedPageV2() {
               </div>
               <Button
                 onClick={refresh}
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                className="max-w-sm"
                 disabled={loading}
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -232,7 +232,7 @@ export default function FeedPageV2() {
             <div className="flex items-center space-x-2 overflow-x-auto">
               <Button
                 variant={feedFilter === 'all' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter('all')}
               >
                 <Globe className="h-3 w-3 mr-1" />
@@ -240,7 +240,7 @@ export default function FeedPageV2() {
               </Button>
               <Button
                 variant={feedFilter === 'my_spaces' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter('my_spaces')}
               >
                 <Users className="h-3 w-3 mr-1" />
@@ -248,7 +248,7 @@ export default function FeedPageV2() {
               </Button>
               <Button
                 variant={feedFilter === 'trending' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter('trending')}
               >
                 <TrendingUp className="h-3 w-3 mr-1" />
@@ -256,7 +256,7 @@ export default function FeedPageV2() {
               </Button>
               <Button
                 variant={feedFilter === 'events' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter('events')}
               >
                 <Heart className="h-3 w-3 mr-1" />
@@ -264,7 +264,7 @@ export default function FeedPageV2() {
               </Button>
               <Button
                 variant={feedFilter === 'rituals' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setFeedFilter('rituals')}
               >
                 <Bell className="h-3 w-3 mr-1" />
@@ -328,7 +328,7 @@ export default function FeedPageV2() {
                       spaceName: item.spaceName,
                       mediaUrls: item.content.mediaUrls
                     }}
-                    currentUserId={user.uid}
+                    currentUserId={user.id}
                     onLike={handleLike}
                     onComment={handleComment}
                     onShare={handleShare}

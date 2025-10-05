@@ -222,7 +222,7 @@ class SafeExecutionEnvironment {
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : String(error),
         executionTime,
         memoryUsed,
         logs: this.logs
@@ -308,7 +308,7 @@ export class ToolExecutionRuntime {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Execution failed',
+        error: error instanceof Error ? error.message : String(error),
         executionTime: 0,
         memoryUsed: 0,
         logs: []
@@ -417,17 +417,17 @@ switch (operation) {
     throw new Error('Invalid operation');
 }
 
-return { result, operation: \`\${a} \${operation} \${b}\` };
+return { result, action: \`\${a} \${operation} \${b}\` };
     `,
     schema: {
       inputs: {
-        operation: { type: 'string', required: true },
+        action: { type: 'string', required: true },
         a: { type: 'number', required: true },
         b: { type: 'number', required: true }
       },
       outputs: {
         result: { type: 'number' },
-        operation: { type: 'string' }
+        action: { type: 'string' }
       }
     }
   },

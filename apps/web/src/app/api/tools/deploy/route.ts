@@ -86,12 +86,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Check tool permissions
-    if (toolData.ownerId !== user.uid && toolData.status !== 'published') {
+    if (toolData.ownerId !== user.id && toolData.status !== 'published') {
       return NextResponse.json(ApiResponseHelper.error("Tool not available for deployment", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Validate deployment target
-    if (deployTo === 'profile' && targetId !== user.uid) {
+    if (deployTo === 'profile' && targetId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Can only deploy to your own profile", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
 
       // Check if user has permission to deploy tools in this space
       const spaceData = spaceDoc.data();
-      const userRole = spaceData?.members?.[user.uid]?.role;
+      const userRole = spaceData?.members?.[user.id]?.role;
 
       if (!userRole || !['builder', 'admin', 'moderator'].includes(userRole)) {
         return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to deploy tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const deployment: ToolDeployment = {
       toolId,
-      deployedBy: user.uid,
+      deployedBy: user.id,
       deployedTo: deployTo as 'profile' | 'space',
       targetId,
       surface: surface || (deployTo === 'space' ? 'tools' : undefined),
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     // Log activity event
     await dbAdmin.collection('analytics_events').add({
       eventType: 'tool_deployed',
-      userId: user.uid,
+      userId: user.id,
       toolId,
       spaceId: deployTo === 'space' ? targetId : undefined,
       timestamp: new Date(),
@@ -247,7 +247,7 @@ export async function GET(request: NextRequest) {
     // Filter by user permissions
     const accessibleDeployments = [];
     for (const deployment of deployments) {
-      if (await canUserAccessDeployment(user.uid, deployment)) {
+      if (await canUserAccessDeployment(user.id, deployment)) {
         // Fetch tool details
         if (!deployment.toolId) continue;
         const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();

@@ -287,7 +287,7 @@ export function RitualManagementPanel() {
         status: 'draft',
         startDate: Timestamp.fromDate(startDate),
         endDate: Timestamp.fromDate(endDate),
-        createdBy: user.email || user.uid,
+        createdBy: user.email || user.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         participation: {
@@ -655,7 +655,7 @@ export function RitualManagementPanel() {
                     <input
                       type="text"
                       value={newRitual.title}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, title: (e.target as HTMLInputElement).value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, title: (e.target as any).value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                       placeholder="e.g., Spring Study Marathon"
                     />
@@ -667,7 +667,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.type}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, type: (e.target as HTMLInputElement).value as Ritual['type'] })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, type: (e.target as any).value as Ritual['type'] })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="competition">Competition</option>
@@ -686,7 +686,7 @@ export function RitualManagementPanel() {
                   </label>
                   <textarea
                     value={newRitual.description}
-                    onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, description: (e.target as HTMLInputElement).value })}
+                    onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, description: (e.target as any).value })}
                     className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     rows={3}
                     placeholder="Describe what students will do and why they should participate..."
@@ -701,7 +701,7 @@ export function RitualManagementPanel() {
                     </label>
                     <select
                       value={newRitual.duration}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, duration: (e.target as HTMLInputElement).value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, duration: (e.target as any).value })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
                       <option value="3_days">3 Days</option>
@@ -719,7 +719,7 @@ export function RitualManagementPanel() {
                       value={newRitual.mechanics?.targetMetric}
                       onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
-                        mechanics: { ...newRitual.mechanics!, targetMetric: (e.target as HTMLInputElement).value }
+                        mechanics: { ...newRitual.mechanics!, targetMetric: (e.target as any).value }
                       })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                     >
@@ -741,7 +741,7 @@ export function RitualManagementPanel() {
                       value={newRitual.mechanics?.targetValue}
                       onChange={(e: React.ChangeEvent) => setNewRitual({
                         ...newRitual,
-                        mechanics: { ...newRitual.mechanics!, targetValue: parseInt((e.target as HTMLInputElement).value) }
+                        mechanics: { ...newRitual.mechanics!, targetValue: parseInt((e.target as any).value) }
                       })}
                       className="w-full px-3 py-2 bg-hive-background border border-hive-border rounded-lg"
                       placeholder="1000"
@@ -779,7 +779,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.color}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, color: (e.target as HTMLInputElement).value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, color: (e.target as any).value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -791,7 +791,7 @@ export function RitualManagementPanel() {
                     <input
                       type="color"
                       value={newRitual.accentColor}
-                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, accentColor: (e.target as HTMLInputElement).value })}
+                      onChange={(e: React.ChangeEvent) => setNewRitual({ ...newRitual, accentColor: (e.target as any).value })}
                       className="w-full h-10 rounded-lg cursor-pointer"
                     />
                   </div>
@@ -978,8 +978,8 @@ function RitualCard({
         {/* Actions */}
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
+            className="max-w-sm"
             onClick={onView}
           >
             <Eye className="h-4 w-4" />
@@ -988,7 +988,7 @@ function RitualCard({
           {ritual.status === 'draft' && (
             <Button
               variant="default"
-              size="sm"
+              className="max-w-sm"
               onClick={() => onLaunch(ritual.id)}
               className="bg-green-500 hover:bg-green-600"
             >
@@ -1000,7 +1000,7 @@ function RitualCard({
           {ritual.status === 'active' && (
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => onPause(ritual.id)}
             >
               <Pause className="h-4 w-4 mr-2" />
@@ -1011,7 +1011,7 @@ function RitualCard({
           {ritual.status === 'paused' && (
             <Button
               variant="default"
-              size="sm"
+              className="max-w-sm"
               onClick={() => onLaunch(ritual.id)}
               className="bg-green-500 hover:bg-green-600"
             >
@@ -1023,7 +1023,7 @@ function RitualCard({
           {(ritual.status === 'active' || ritual.status === 'paused') && (
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm"
               onClick={() => onEnd(ritual.id)}
               className="text-red-400 hover:text-red-500"
             >

@@ -303,7 +303,10 @@ export function SliceContextProvider({
 
   // Update campus tool context when slice changes
   React.useEffect(() => {
-    campusContext.actions.updateToolContext(currentSlice)
+    // Only update for main slices (hivelab is not tracked in campus context)
+    if (currentSlice !== 'hivelab') {
+      campusContext.actions.updateToolContext(currentSlice)
+    }
   }, [currentSlice, campusContext.actions])
 
   // Sync spaces context with campus community data

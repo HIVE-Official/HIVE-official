@@ -17,8 +17,8 @@ const autoCapitalize = (value: string): string => {
 };
 
 export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepProps) {
-  const [firstName, setFirstName] = useState(data.firstName || data.fullName.split(' ')[0] || "");
-  const [lastName, setLastName] = useState(data.lastName || data.fullName.split(' ').slice(1).join(' ') || "");
+  const [firstName, setFirstName] = useState(data.firstName || data.displayName.split(' ')[0] || "");
+  const [lastName, setLastName] = useState(data.lastName || data.displayName.split(' ').slice(1).join(' ') || "");
   
   const handleFirstNameChange = (value: string) => {
     const capitalized = autoCapitalize(value);
@@ -84,9 +84,9 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFirstNameChange((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFirstNameChange((e.target as any).value)}
                 variant="default"
-                size="lg"
+                className="max-w-lg"
                 required
               />
               
@@ -94,9 +94,9 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLastNameChange((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleLastNameChange((e.target as any).value)}
                 variant="default"
-                size="lg"
+                className="max-w-lg"
                 required
               />
             </div>

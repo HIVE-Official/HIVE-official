@@ -8,12 +8,12 @@ import { logger } from '@/lib/logger';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (error: any, errorInfo: anyInfo) => void;
 }
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  error: any | null;
   errorId: string | null;
 }
 
@@ -23,7 +23,7 @@ export class SpaceErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false, error: null, errorId: null };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: any): State {
     return {
       hasError: true,
       error,
@@ -31,7 +31,7 @@ export class SpaceErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: any, errorInfo: anyInfo) {
     const errorId = this.state.errorId || 'unknown';
 
     // Log error for monitoring
@@ -149,7 +149,7 @@ export function withSpaceErrorBoundary<P extends object>(
 export function useErrorBoundary() {
   const [, setState] = React.useState();
 
-  return React.useCallback((error: Error) => {
+  return React.useCallback((error: any) => {
     setState(() => {
       throw error;
     });

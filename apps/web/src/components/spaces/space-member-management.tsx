@@ -346,8 +346,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
           <div className="flex items-center gap-2">
             {canInviteMembers && (
               <Button
-                size="sm"
-                className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/30"
+                className="max-w-sm bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/30"
                 onClick={() => setShowInviteModal(true)}
               >
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -357,8 +356,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             
             <Button
               variant="outline"
-              size="sm"
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              className="max-w-sm border-white/[0.2] text-white hover:bg-white/[0.1]"
               onClick={onClose}
             >
               <X className="h-4 w-4" />
@@ -376,7 +374,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as any).value)}
                 className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 focus:border-[var(--hive-brand-primary)]/30"
               />
             </div>
@@ -384,7 +382,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole((e.target as any).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Roles</option>
@@ -397,7 +395,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus((e.target as HTMLInputElement).value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus((e.target as any).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Status</option>
@@ -504,8 +502,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                     {/* View Details */}
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                      className="max-w-sm border-white/[0.2] text-white hover:bg-white/[0.1]"
                       onClick={() => {
                         setSelectedMember(member);
                         setShowMemberDetails(true);
@@ -519,8 +516,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {/* Change Role */}
                         <Button
                           variant="outline"
-                          size="sm"
-                          className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+                          className="max-w-sm border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
                           onClick={() => {
                             setSelectedMember(member);
                             setShowRoleChangeModal(true);
@@ -532,11 +528,10 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {/* Suspend/Unsuspend */}
                         <Button
                           variant="outline"
-                          size="sm"
-                          className={member.flags?.isSuspended 
+                          className={`max-w-sm ${member.flags?.isSuspended 
                             ? "border-green-500/30 text-green-400 hover:bg-green-500/10"
                             : "border-orange-500/30 text-orange-400 hover:bg-orange-500/10"
-                          }
+                          }`}
                           onClick={() => handleSuspendMember(member.id, !member.flags?.isSuspended)}
                         >
                           {member.flags?.isSuspended ? <CheckCircle className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
@@ -546,8 +541,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {canRemoveMembers && member.role !== 'owner' && (
                           <Button
                             variant="outline"
-                            size="sm"
-                            className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                            className="max-w-sm border-red-500/30 text-red-400 hover:bg-red-500/10"
                             onClick={() => handleRemoveMember(member.id)}
                           >
                             <UserMinus className="h-4 w-4" />

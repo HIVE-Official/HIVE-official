@@ -3,7 +3,7 @@ import { z } from 'zod';
 import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 
 /**
@@ -84,7 +84,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
 
         allSpaces.push(...spaces);
       } catch (error) {
-        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error : new Error(String(error))});
+        logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error.message : String(error)});
       }
     }
 
@@ -132,7 +132,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
           // Get member count and builder info
           const membersSnapshot = await dbAdmin
             .collection('spaces')
-            .doc(space.type)
+            .doc(space.spaceType)
             .collection('spaces')
             .doc(space.id)
             .collection('members')
@@ -156,7 +156,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
             healthScore: calculateSpaceHealthScore(space, members)
           };
         } catch (error) {
-          logger.error('Error getting detailsfor space', { spaceId: space.id, error: error instanceof Error ? error : new Error(String(error))});
+          logger.error('Error getting detailsfor space', { spaceId: space.id, error: error instanceof Error ? error.message : String(error)});
           return {
             ...space,
             actualMemberCount: space.memberCount || 0,
@@ -437,6 +437,6 @@ async function logAdminAction(adminUserId: string, action: string, targetId: str
       type: 'space_action'
     });
   } catch (error) {
-    logger.error('Error logging admin action', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error logging admin action', { error });
   }
 }

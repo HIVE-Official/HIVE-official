@@ -6,9 +6,9 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { ConnectionWire } from '../../atoms/elements/connection-wire';
-import { generateBezierPath, getPortById } from '../../../lib/hivelab-utils';
-import { DATA_TYPE_COLORS } from '../../../types/hivelab.types';
+import { ConnectionWire } from '../../atoms/elements/connection-wire.js';
+import { generateBezierPath, getPortById } from '../../../lib/hivelab-utils.js';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types.js';
 export function ConnectionLayer({ elements, connections, selectedConnectionId, hoveredConnectionId, draftConnection, onConnectionClick, onConnectionHover, animated = false, className, }) {
     // Helper to get port position
     const getPortPosition = (elementId, portId) => {

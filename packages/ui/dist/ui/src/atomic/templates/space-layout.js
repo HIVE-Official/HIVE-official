@@ -1,20 +1,20 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { MotionDiv, AnimatePresence } from "../../shells/motion-safe";
-import { transitions } from "../../lib/animations";
+import { MotionDiv, AnimatePresence } from "../../shells/motion-safe.js";
+import { transitions } from "../../lib/animations/index.js";
 import { X, Users, Calendar as CalendarIcon, FileText, Info, Wrench } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Badge } from "../atoms/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../atoms/dialog";
-import { SpacePostFeed } from "../organisms/space-post-feed";
-import { SpaceAboutSection } from "../organisms/space-about-section";
-import { SpaceResourcesPanel } from "../organisms/space-resources-panel";
-import { SpaceMembersPanel } from "../organisms/space-members-panel";
-import { EventsCalendar } from "../organisms/events-calendar";
-import { InlineToolsWidget } from "../molecules";
+import { cn } from "../../lib/utils.js";
+import { Button } from "../atoms/button.js";
+import { Badge } from "../atoms/badge.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/tabs.js";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../atoms/dialog.js";
+import { SpacePostFeed } from "../organisms/space-post-feed.js";
+import { SpaceAboutSection } from "../organisms/space-about-section.js";
+import { SpaceResourcesPanel } from "../organisms/space-resources-panel.js";
+import { SpaceMembersPanel } from "../organisms/space-members-panel.js";
+import { EventsCalendar } from "../organisms/events-calendar.js";
+import { InlineToolsWidget } from "../molecules/index.js";
 const SpaceLayout = React.forwardRef(({ className, space, posts = [], hotThreads = [], events = [], resources = [], members = [], contextPanel, onContextPanelChange, isLoadingPosts = false, isLoadingEvents = false, isLoadingResources = false, isLoadingMembers = false, hasMorePosts = false, layoutMode = "sidebar", onAction, 
 // Legacy handlers
 onCreatePost, onPostClick, onLikePost, onCommentPost, onSharePost, onLoadMore, onEditDescription, onEditRules, onCreateEvent, onEventClick, onRSVP, onAddResource, onResourceClick, onInviteMembers, onViewAllMembers, onMemberClick, ...props }, ref) => {
@@ -184,15 +184,18 @@ onCreatePost, onPostClick, onLikePost, onCommentPost, onSharePost, onLoadMore, o
                                         count: event.attendeeCount || 0
                                     },
                                     rsvp: {
-                                        status: event.userRSVP || null
+                                        status: event.userRSVP
+                                            ? (event.userRSVP === 'attending' ? 'going' :
+                                                event.userRSVP === 'maybe' ? 'interested' : 'not-going')
+                                            : null
                                     },
-                                    category: event.category,
+                                    category: (event.category || 'social'),
                                     campusContext: event.campusContext
                                 })), onEventClick: (eventId) => {
                                     handleAction({ type: "event.click", eventId });
                                 }, onRsvp: (eventId, status) => {
                                     handleAction({ type: "event.rsvp", eventId, attending: status === "going" });
-                                } }) })] }) }), _jsx(Dialog, { open: openModal === "members", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Members" }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceMembersPanel, { members: members, totalMemberCount: stats.memberCount, canInvite: isLeader, previewLimit: 50, isLoading: isLoadingMembers, onAction: handleAction }) })] }) }), _jsx(Dialog, { open: openModal === "resources", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Resources" }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceResourcesPanel, { resources: resources, canAddResources: isLeader, alwaysShowAddButton: isLeader, isLoading: isLoadingResources, onAction: handleAction }) })] }) }), _jsx(Dialog, { open: openModal === "about", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-3xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsxs(DialogTitle, { className: "text-2xl font-bold", children: ["About ", space.name] }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceAboutSection, { description: space.description, tags: space.tags, category: space.category, type: space.spaceType, memberCount: stats.memberCount, postCount: stats.postCount, eventCount: stats.eventCount, createdAt: space.createdAt, createdBy: space.creator, rules: space.rules, isLeader: isLeader, onAction: handleAction }) })] }) }), _jsx(Dialog, { open: openModal === "tools", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Space Tools" }) }), _jsx("div", { className: "h-full flex items-center justify-center", children: _jsxs("div", { className: "text-center space-y-4", children: [_jsx(Wrench, { className: "h-16 w-16 mx-auto text-white/30" }), _jsx("h3", { className: "text-xl font-semibold text-white", children: "HiveLab Tools Coming Soon" }), _jsx("p", { className: "text-sm text-white/70 max-w-md", children: "Space leaders will be able to create custom tools for their communities using HiveLab's no-code builder." })] }) })] }) })] }));
+                                } }) })] }) }), _jsx(Dialog, { open: openModal === "members", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Members" }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceMembersPanel, { members: members, totalMemberCount: stats.memberCount, canInvite: isLeader, previewLimit: 50, isLoading: isLoadingMembers, onAction: handleAction }) })] }) }), _jsx(Dialog, { open: openModal === "resources", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Resources" }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceResourcesPanel, { resources: resources, canAddResources: isLeader, alwaysShowAddButton: isLeader, isLoading: isLoadingResources }) })] }) }), _jsx(Dialog, { open: openModal === "about", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-3xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsxs(DialogTitle, { className: "text-2xl font-bold", children: ["About ", space.name] }) }), _jsx("div", { className: "h-full overflow-y-auto", children: _jsx(SpaceAboutSection, { description: space.description, tags: space.tags, category: space.category, type: space.spaceType, memberCount: stats.memberCount, postCount: stats.postCount, eventCount: stats.eventCount, createdAt: space.createdAt, createdBy: space.creator, rules: space.rules, isLeader: isLeader }) })] }) }), _jsx(Dialog, { open: openModal === "tools", onOpenChange: (open) => !open && setOpenModal(null), children: _jsxs(DialogContent, { className: "max-w-4xl h-[80vh] p-6", children: [_jsx(DialogHeader, { children: _jsx(DialogTitle, { className: "text-2xl font-bold", children: "Space Tools" }) }), _jsx("div", { className: "h-full flex items-center justify-center", children: _jsxs("div", { className: "text-center space-y-4", children: [_jsx(Wrench, { className: "h-16 w-16 mx-auto text-white/30" }), _jsx("h3", { className: "text-xl font-semibold text-white", children: "HiveLab Tools Coming Soon" }), _jsx("p", { className: "text-sm text-white/70 max-w-md", children: "Space leaders will be able to create custom tools for their communities using HiveLab's no-code builder." })] }) })] }) })] }));
 });
 SpaceLayout.displayName = "SpaceLayout";
 export { SpaceLayout };

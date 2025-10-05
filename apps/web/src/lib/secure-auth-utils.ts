@@ -149,7 +149,7 @@ export function clearAuthentication(): void {
  * @param error - Error from API call
  * @param redirectToLogin - Whether to redirect to login page
  */
-export function handleAuthError(error: Error, redirectToLogin: boolean = true): void {
+export function handleAuthError(error: any, redirectToLogin: boolean = true): void {
   if (error.message.includes('HIVE_AUTH_')) {
     clearAuthentication();
     

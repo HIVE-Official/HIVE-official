@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     const includeInstalled = searchParams.get('includeInstalled') === 'true';
 
     // Get user context
-    const context = await buildUserContext(user.uid);
+    const context = await buildUserContext(user.id);
 
     // Generate recommendations
     const recommendations = await generateRecommendations(context, {

@@ -12,8 +12,8 @@ interface Props {
 
 interface State {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: ErrorInfo;
+  error?: any;
+  errorInfo?: anyInfo;
   errorId: string;
 }
 
@@ -43,7 +43,7 @@ export class ProfileErrorBoundaryEnhanced extends Component<Props, State> {
     };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: any): State {
     return {
       hasError: true,
       error,
@@ -51,7 +51,7 @@ export class ProfileErrorBoundaryEnhanced extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: any, errorInfo: anyInfo) {
     console.group('🚨 HIVE Profile Error Boundary - Critical Error Caught');
     console.error('Error ID:', this.state.errorId);
     console.error('Error:', error);
@@ -70,7 +70,7 @@ export class ProfileErrorBoundaryEnhanced extends Component<Props, State> {
     this.reportError(error, errorInfo);
   }
 
-  private reportError = (error: Error, errorInfo: ErrorInfo) => {
+  private reportError = (error: any, errorInfo: anyInfo) => {
     try {
       // PRODUCTION: Replace with your error tracking service
       // Example: Sentry, LogRocket, Bugsnag, etc.
@@ -95,7 +95,7 @@ export class ProfileErrorBoundaryEnhanced extends Component<Props, State> {
     }
   };
 
-  private categorizeError = (error: Error): string => {
+  private categorizeError = (error: any): string => {
     const message = error.message.toLowerCase();
     
     if (message.includes('auth') || message.includes('login') || message.includes('token')) {

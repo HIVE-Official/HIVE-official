@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Space, SpaceType } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { getSecureSpacesQuery, getSecureSpacesWithCursor, addSecureCampusMetadata, CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 const createSpaceSchema = z.object({
@@ -54,7 +54,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       }
     });
   } catch (error) {
-    logger.error('Error fetching spaces', { error: error instanceof Error ? error : new Error(String(error)), filterType: filterType || undefined, searchTerm: searchTerm || undefined, limit, cursor });
+    logger.error('Error fetching spaces', { error: error instanceof Error ? error.message : String(error), filterType: filterType || undefined, searchTerm: searchTerm || undefined, limit, cursor });
     return respond.error("Failed to fetch spaces", "INTERNAL_ERROR", { status: 500 });
   }
 });
@@ -319,7 +319,7 @@ async function ensureSampleSpaces() {
         name: space.name,
         name_lowercase: space.name.toLowerCase(),
         description: space.description,
-        type: space.type,
+        type: space.spaceType,
         subType: null,
         status: 'active',
         isActive: true,

@@ -141,7 +141,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
               return a.isOnline ? -1 : 1;
             }
 
-            return a.user.fullName.localeCompare(b.user.fullName);
+            return a.user.displayName.localeCompare(b.user.displayName);
           });
 
           setMembers(membersWithOnlineStatus);
@@ -158,7 +158,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
 
   // Filter members based on search and tab
   const filteredMembers = members.filter(member => {
-    const matchesSearch = member.user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch = member.user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          member.user.handle?.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesTab = activeTab === 'all' ||
@@ -217,7 +217,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
             {canManageMembers && (
               <Button
                 variant="outline"
-                size="sm"
+                className="max-w-sm"
                 onClick={() => setShowInviteModal(true)}
               >
                 <UserPlus className="w-4 h-4" />
@@ -238,7 +238,7 @@ export function SpaceMemberList({ spaceId, userMembership, onlineMembers, onClos
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
             value={searchQuery}
-            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
             placeholder="Search members..."
             className="pl-10 bg-gray-800 border-gray-700 text-white text-sm"
           />
@@ -356,7 +356,7 @@ function MemberItem({
       <div className="relative">
         <Avatar
           src={member.user.avatarUrl}
-          fallback={member.user.fullName?.[0]}
+          fallback={member.user.displayName?.[0]}
           className="w-8 h-8"
         />
 
@@ -370,7 +370,7 @@ function MemberItem({
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium text-white truncate">
-            {member.user.fullName}
+            {member.user.displayName}
             {isCurrentUser && (
               <span className="text-xs text-gray-400 ml-1">(you)</span>
             )}

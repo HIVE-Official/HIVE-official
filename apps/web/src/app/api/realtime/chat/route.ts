@@ -115,13 +115,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user has access to channel and space
-    const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
+    const hasAccess = await verifyChannelAccess(user.id, channelId, spaceId);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get user's space context for role information
-    const userContext = await getUserSpaceContext(user.uid, spaceId);
+    const userContext = await getUserSpaceContext(user.id, spaceId);
     if (!userContext) {
       return NextResponse.json(ApiResponseHelper.error("User not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       id: messageId,
       channelId,
       spaceId,
-      senderId: user.uid,
+      senderId: user.id,
       senderName: user.displayName || user.email || 'Unknown User',
       senderRole: userContext.role,
       content,
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
       delivery: {
         sent: true,
         delivered: [],
-        read: [user.uid], // Sender automatically reads their own message
+        read: [user.id], // Sender automatically reads their own message
         failed: []
       }
     };
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
     await dbAdmin.collection('chatMessages').doc(messageId).set(message);
 
     // Send message to Firebase Realtime Database for real-time updates
-    await sseRealtimeService.sendChatMessage(spaceId, user.uid, content, messageType);
+    await sseRealtimeService.sendChatMessage(spaceId, user.id, content, messageType);
 
     // Update channel's last message
     await updateChannelLastMessage(channelId, message);
@@ -226,7 +226,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify access
-    const hasAccess = await verifyChannelAccess(user.uid, channelId, spaceId);
+    const hasAccess = await verifyChannelAccess(user.id, channelId, spaceId);
     if (!hasAccess) {
       return NextResponse.json(ApiResponseHelper.error("Access denied to channel", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -253,7 +253,7 @@ export async function GET(request: NextRequest) {
     })) as ChatMessage[];
 
     // Mark messages as read for this user
-    await markMessagesAsRead(user.uid, channelId, messages.map(m => m.id));
+    await markMessagesAsRead(user.id, channelId, messages.map(m => m.id));
 
     // Get channel info
     const channel = await getChannel(channelId);
@@ -319,7 +319,7 @@ export async function PUT(request: NextRequest) {
     const message = { id: messageDoc.id, ...messageDoc.data() } as ChatMessage;
 
     // Verify permissions
-    const canPerformAction = await verifyMessageAction(user.uid, message, action, spaceId);
+    const canPerformAction = await verifyMessageAction(user.id, message, action, spaceId);
     if (!canPerformAction) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to perform this action", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -328,7 +328,7 @@ export async function PUT(request: NextRequest) {
 
     switch (action) {
       case 'edit':
-        if (message.senderId !== user.uid) {
+        if (message.senderId !== user.id) {
           return NextResponse.json(ApiResponseHelper.error("Can only edit your own messages", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
         }
         updates = {
@@ -342,13 +342,13 @@ export async function PUT(request: NextRequest) {
         const reactionKey = emoji;
         const currentReaction = message.reactions[reactionKey];
         
-        if (currentReaction && currentReaction.users.includes(user.uid)) {
+        if (currentReaction && currentReaction.users.includes(user.id)) {
           return NextResponse.json(ApiResponseHelper.error("Already reacted with this emoji", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
 
         updates[`reactions.${reactionKey}`] = {
           emoji,
-          users: [...(currentReaction?.users || []), user.uid],
+          users: [...(currentReaction?.users || []), user.id],
           count: (currentReaction?.count || 0) + 1
         };
         break;
@@ -358,11 +358,11 @@ export async function PUT(request: NextRequest) {
         const unreactKey = emoji;
         const existingReaction = message.reactions[unreactKey];
         
-        if (!existingReaction || !existingReaction.users.includes(user.uid)) {
+        if (!existingReaction || !existingReaction.users.includes(user.id)) {
           return NextResponse.json(ApiResponseHelper.error("No reaction to remove", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
 
-        const updatedUsers = existingReaction.users.filter(uid => uid !== user.uid);
+        const updatedUsers = existingReaction.users.filter(uid => uid !== user.id);
         
         if (updatedUsers.length === 0) {
           updates[`reactions.${unreactKey}`] = null; // Remove the reaction entirely
@@ -377,9 +377,9 @@ export async function PUT(request: NextRequest) {
       }
 
       case 'delete':
-        if (message.senderId !== user.uid) {
+        if (message.senderId !== user.id) {
           // Check if user is admin/moderator
-          const userContext = await getUserSpaceContext(user.uid, message.spaceId);
+          const userContext = await getUserSpaceContext(user.id, message.spaceId);
           if (!userContext || !['admin', 'moderator'].includes(userContext.role)) {
             return NextResponse.json(ApiResponseHelper.error("Not authorized to delete this message", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
           }
@@ -441,8 +441,8 @@ export async function DELETE(request: NextRequest) {
     const message = { id: messageDoc.id, ...messageDoc.data() } as ChatMessage;
 
     // Check permissions
-    const canDelete = message.senderId === user.uid || 
-      await hasModeratorPermissions(user.uid, message.spaceId);
+    const canDelete = message.senderId === user.id || 
+      await hasModeratorPermissions(user.id, message.spaceId);
     
     if (!canDelete) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to delete this message", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
@@ -630,7 +630,7 @@ async function handleMessageMentions(message: ChatMessage, mentions: string[]): 
         senderId: 'system',
         content: {
           type: 'mention',
-          messageId: message.id,
+          id: message.id,
           channelId: message.channelId,
           spaceId: message.spaceId,
           senderName: message.senderName,
@@ -737,16 +737,16 @@ async function getThreadMessages(parentMessageId: string): Promise<ChatMessage[]
 }
 
 // Helper function to broadcast message updates
-async function broadcastMessageUpdate(messageId: string, action: string, updates: any, channelId: string): Promise<void> {
+async function broadcastMessageUpdate(id: string, action: string, updates: any, channelId: string): Promise<void> {
   try {
     const updateMessage = {
-      id: `chat_update_${messageId}_${Date.now()}`,
+      id: `chat_update_${id}_${Date.now()}`,
       type: 'chat',
       channel: `channel:${channelId}:updates`,
       senderId: 'system',
       content: {
         action: 'message_updated',
-        messageId,
+        messageId: id,
         updateType: action,
         updates
       },
@@ -774,16 +774,16 @@ async function broadcastMessageUpdate(messageId: string, action: string, updates
 }
 
 // Helper function to broadcast message deletion
-async function broadcastMessageDeletion(messageId: string, channelId: string): Promise<void> {
+async function broadcastMessageDeletion(id: string, channelId: string): Promise<void> {
   try {
     const deletionMessage = {
-      id: `chat_delete_${messageId}_${Date.now()}`,
+      id: `chat_delete_${id}_${Date.now()}`,
       type: 'chat',
       channel: `channel:${channelId}:updates`,
       senderId: 'system',
       content: {
         action: 'message_deleted',
-        messageId
+        messageId: id
       },
       metadata: {
         timestamp: new Date().toISOString(),

@@ -167,8 +167,7 @@ function VerifyPageContent() {
                 <>
                   <Button
                     variant="default"
-                    size="lg"
-                    className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
+                    className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
                     onClick={() => {
                       const email = localStorage.getItem('emailForSignIn');
                       const schoolId = new URLSearchParams(window.location.search).get('schoolId');
@@ -178,9 +177,8 @@ function VerifyPageContent() {
                     Get a new magic link
                   </Button>
                   <Button
-                    variant="ghost"
-                    size="lg"
-                    className="w-full text-white/60 hover:text-white"
+                    variant="outline"
+                    className="max-w-lg w-full text-white/60 hover:text-white"
                     onClick={() => router.push("/auth/login")}
                   >
                     Start over
@@ -189,8 +187,7 @@ function VerifyPageContent() {
               ) : (
                 <Button
                   variant="outline"
-                  size="lg"
-                  className="w-full"
+                  className="max-w-lg w-full"
                   onClick={() => router.push("/auth/login")}
                 >
                   Try again

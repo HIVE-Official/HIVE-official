@@ -72,7 +72,7 @@ export async function sessionMiddleware(
       // Check security level requirements
       if (requireElevated && session.securityLevel === 'standard') {
         await logSecurityEvent('invalid_token', {
-          operation: 'insufficient_security_level',
+          action: 'insufficient_security_level',
           tags: {
             userId: session.userId,
             sessionId: session.sessionId,
@@ -157,7 +157,7 @@ export async function sessionMiddleware(
     if (validationResult.securityViolation) {
       // Log security violations
       await logSecurityEvent('invalid_token', {
-        operation: 'session_security_violation',
+        action: 'session_security_violation',
         tags: {
           violation: validationResult.securityViolation,
           environment: currentEnvironment,
@@ -210,9 +210,9 @@ export async function sessionMiddleware(
     console.error('Session middleware error:', error);
     
     await logSecurityEvent('invalid_token', {
-      operation: 'session_middleware_error',
+      action: 'session_middleware_error',
       tags: {
-        error: error instanceof Error ? error.message : 'unknown',
+        error: error instanceof Error ? error.message : String(error),
         environment: currentEnvironment
       }
     });
@@ -268,10 +268,10 @@ export function withSession(
       // Log handler errors with session context
       if (middlewareResult.context.isAuthenticated) {
         await logSecurityEvent('invalid_token', {
-          operation: 'authenticated_handler_error',
+          action: 'authenticated_handler_error',
           tags: {
             userId: middlewareResult.context.user?.userId || 'unknown',
-            error: error instanceof Error ? error.message : 'unknown',
+            error: error instanceof Error ? error.message : String(error),
             endpoint: request.url
           }
         });
@@ -372,7 +372,7 @@ export function withResourceOwnership(
     
     if (!hasResourcePermission(context, resourceUserId, action)) {
       await logSecurityEvent('invalid_token', {
-        operation: 'unauthorized_resource_access',
+        action: 'unauthorized_resource_access',
         tags: {
           userId: context.user?.userId || 'anonymous',
           resourceUserId,

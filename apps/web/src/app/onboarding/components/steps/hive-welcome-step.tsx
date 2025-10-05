@@ -27,7 +27,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         className="mx-auto w-32 h-32 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
       >
-        <HiveLogo size="lg" variant="gradient" showText={false} />
+        <HiveLogo className="max-w-lg" variant="gradient" showText={false} />
         
         {/* Pulse animation */}
         <motion.div
@@ -71,9 +71,8 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         >
           <Button
             variant="default"
-            size="lg"
+            className="max-w-lg px-[var(--hive-spacing-8)]"
             onClick={onNext}
-            className="px-[var(--hive-spacing-8)]"
             data-testid="get-started"
             aria-label="Start the onboarding process"
           >

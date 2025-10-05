@@ -91,7 +91,7 @@ export const GET = withSecureAuth(
       const nextCursor = lastDoc?.id;
 
       logger.info('Feed fetched', {
-        userId: token.uid,
+        userId: token.id,
         count: posts.length,
         type: params.type
       });
@@ -107,7 +107,7 @@ export const GET = withSecureAuth(
         }
       });
     } catch (error) {
-      logger.error('Feed fetch error', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Feed fetch error', { error: error instanceof Error ? error.message : String(error) });
       return NextResponse.json(
         { success: false, error: 'Failed to fetch feed' },
         { status: 500 }

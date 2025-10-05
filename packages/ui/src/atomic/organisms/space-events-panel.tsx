@@ -128,7 +128,7 @@ const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>
     }
 
     return (
-      <Card ref={ref} className={cn("transition-all duration-[400ms]", className)} {...props}>
+      <Card ref={ref} className={cn("transition-all duration-smooth", className)} {...props}>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">Upcoming Events</CardTitle>
@@ -137,7 +137,7 @@ const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>
                 variant="ghost"
                 size="sm"
                 onClick={onCreateEvent}
-                className="h-8 px-2 transition-all duration-[400ms]"
+                className="h-8 px-2 transition-all duration-smooth"
               >
                 <svg className="h-3.5 w-3.5 mr-1" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -159,7 +159,7 @@ const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>
                   variant="outline"
                   size="sm"
                   onClick={onCreateEvent}
-                  className="mt-3 transition-all duration-[400ms]"
+                  className="mt-3 transition-all duration-smooth"
                 >
                   <svg className="h-4 w-4 mr-1.5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -175,7 +175,7 @@ const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>
                   key={event.id}
                   onClick={() => onEventClick?.(event)}
                   className={cn(
-                    "group relative rounded-lg border border-white/8 bg-[#0c0c0c] p-3 transition-all duration-[400ms]",
+                    "group relative rounded-lg border border-white/8 bg-[#0c0c0c] p-3 transition-all duration-smooth",
                     onEventClick && "cursor-pointer hover:border-white/20 hover:bg-white/10"
                   )}
                 >
@@ -239,7 +239,7 @@ const SpaceEventsPanel = React.forwardRef<HTMLDivElement, SpaceEventsPanelProps>
                           e.stopPropagation()
                           onRSVP(event.id, !event.isAttending)
                         }}
-                        className="h-7 px-3 text-xs transition-all duration-[400ms]"
+                        className="h-7 px-3 text-xs transition-all duration-smooth"
                       >
                         {event.isAttending ? "Going" : "RSVP"}
                       </Button>

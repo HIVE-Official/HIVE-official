@@ -189,7 +189,7 @@ export default function SpacesDirectoryPage() {
                 <Input
                   placeholder="Search spaces, clubs, communities..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10 bg-gray-900 border-gray-700"
                 />
@@ -482,7 +482,7 @@ function SpaceCard({
 
           {/* Join Button */}
           <Button
-            size="sm"
+            className="max-w-sm"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               onJoin();

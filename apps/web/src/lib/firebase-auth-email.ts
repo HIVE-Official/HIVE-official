@@ -124,7 +124,7 @@ export async function createOrUpdateFirebaseUser(email: string, additionalClaims
         });
 
         logger.info('New Firebase user created via magic link', {
-          userId: user.uid, // Using userId key to match LogContext type
+          userId: user.id, // Using userId key to match LogContext type
           email: email.replace(/(.{3}).*@/, '$1***@')
         });
       } else {
@@ -134,7 +134,7 @@ export async function createOrUpdateFirebaseUser(email: string, additionalClaims
 
     // Set custom claims if provided
     if (additionalClaims) {
-      await auth.setCustomUserClaims(user.uid, additionalClaims);
+      await auth.setCustomUserClaims(user.id, additionalClaims);
     }
 
     return user;

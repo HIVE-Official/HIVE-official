@@ -71,7 +71,7 @@ export default function CalendarPage() {
       return;
     }
 
-    const eventsRef = collection(db, 'users', user.uid, 'calendar');
+    const eventsRef = collection(db, 'users', user.id, 'calendar');
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
     const endOfWeek = new Date(startOfWeek);
@@ -116,12 +116,12 @@ export default function CalendarPage() {
     if (!user || !newEvent.title || !newEvent.startTime || !newEvent.endTime) return;
 
     try {
-      const eventRef = doc(collection(db, 'users', user.uid, 'calendar'));
+      const eventRef = doc(collection(db, 'users', user.id, 'calendar'));
       await setDoc(eventRef, {
         ...newEvent,
         startTime: Timestamp.fromDate(new Date(newEvent.startTime)),
         endTime: Timestamp.fromDate(new Date(newEvent.endTime)),
-        createdBy: user.uid,
+        createdBy: user.id,
         createdAt: serverTimestamp(),
         campusId: 'ub-buffalo'
       });
@@ -146,7 +146,7 @@ export default function CalendarPage() {
     if (!user) return;
 
     try {
-      await deleteDoc(doc(db, 'users', user.uid, 'calendar', eventId));
+      await deleteDoc(doc(db, 'users', user.id, 'calendar', eventId));
     } catch (error) {
       console.error('Failed to delete event:', error);
     }
@@ -239,12 +239,12 @@ export default function CalendarPage() {
               <Input
                 placeholder="Event title"
                 value={newEvent.title}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, title: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, title: (e.target as any).value })}
                 className="bg-black border-white/20"
               />
               <select
                 value={newEvent.type}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, type: (e.target as HTMLInputElement).value as CalendarEvent['type'] })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, type: (e.target as any).value as CalendarEvent['type'] })}
                 className="px-3 py-2 bg-black border border-white/20 rounded-lg"
               >
                 <option value="personal">Personal</option>
@@ -257,20 +257,20 @@ export default function CalendarPage() {
                 type="datetime-local"
                 placeholder="Start time"
                 value={newEvent.startTime}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, startTime: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, startTime: (e.target as any).value })}
                 className="bg-black border-white/20"
               />
               <Input
                 type="datetime-local"
                 placeholder="End time"
                 value={newEvent.endTime}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, endTime: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, endTime: (e.target as any).value })}
                 className="bg-black border-white/20"
               />
               <Input
                 placeholder="Location (optional)"
                 value={newEvent.location}
-                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, location: (e.target as HTMLInputElement).value })}
+                onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, location: (e.target as any).value })}
                 className="bg-black border-white/20"
               />
               <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function CalendarPage() {
             <Textarea
               placeholder="Description (optional)"
               value={newEvent.description}
-              onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, description: (e.target as HTMLInputElement).value })}
+              onChange={(e: React.ChangeEvent) => setNewEvent({ ...newEvent, description: (e.target as any).value })}
               className="mt-4 bg-black border-white/20"
               rows={3}
             />
@@ -347,7 +347,7 @@ export default function CalendarPage() {
               variant={viewMode === 'day' ? 'default' : 'outline'}
               onClick={() => setViewMode('day')}
               className={viewMode === 'day' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              size="sm"
+              className="max-w-sm"
             >
               Day
             </Button>
@@ -355,7 +355,7 @@ export default function CalendarPage() {
               variant={viewMode === 'week' ? 'default' : 'outline'}
               onClick={() => setViewMode('week')}
               className={viewMode === 'week' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              size="sm"
+              className="max-w-sm"
             >
               Week
             </Button>
@@ -363,7 +363,7 @@ export default function CalendarPage() {
               variant={viewMode === 'month' ? 'default' : 'outline'}
               onClick={() => setViewMode('month')}
               className={viewMode === 'month' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              size="sm"
+              className="max-w-sm"
             >
               Month
             </Button>

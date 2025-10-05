@@ -50,7 +50,7 @@ export async function validateSecureSpaceAccess(
 
     return { isValid: true, space: spaceData };
   } catch (error) {
-    logger.error('Error validating secure space access', { spaceId, userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error validating secure space access', { spaceId, userId, error: error instanceof Error ? error.message : String(error) });
     return { isValid: false, error: 'Validation failed' };
   }
 }
@@ -123,7 +123,7 @@ export async function getSecureSpacesWithCursor({
       hasMore
     };
   } catch (error) {
-    logger.error('Error in getSecureSpacesWithCursor:', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error in getSecureSpacesWithCursor:', { error: error instanceof Error ? error.message : String(error) });
     return {
       spaces: [],
       nextCursor: undefined,
@@ -181,7 +181,7 @@ export async function validateSecureSpaceMembership(
       space: spaceValidation.space
     };
   } catch (error) {
-    logger.error('Error validating secure space membership', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error validating secure space membership', { userId, spaceId, error: error instanceof Error ? error.message : String(error) });
     return { isValid: false, error: 'Validation failed' };
   }
 }
@@ -224,7 +224,7 @@ export async function validateSpaceJoinability(
     }
 
     // Greek life exclusive check
-    if (space.type === 'greek_life') {
+    if (space.spaceType === 'greek_life') {
       const greekMemberQuery = dbAdmin.collection('spaceMembers')
         .where('userId', '==', userId)
         .where('isActive', '==', true);
@@ -246,7 +246,7 @@ export async function validateSpaceJoinability(
 
     return { canJoin: true, space };
   } catch (error) {
-    logger.error('Error validating space joinability', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error validating space joinability', { userId, spaceId, error: error instanceof Error ? error.message : String(error) });
     return { canJoin: false, error: 'Validation failed' };
   }
 }
@@ -267,11 +267,12 @@ export function addSecureCampusMetadata(data: Record<string, any>): Record<strin
  * Audit security violations
  */
 export function auditSecurityViolation(
-  operation: string,
+  action: string,
   details: Record<string, any>
 ): void {
   logger.error('SECURITY_VIOLATION', {
-    operation,
+    action,
+    operation: action,
     timestamp: new Date().toISOString(),
     currentCampusId: CURRENT_CAMPUS_ID,
     ...details
@@ -312,7 +313,7 @@ export async function getSecureUserData(userId: string): Promise<{
 
     return { isValid: true, user: userData };
   } catch (error) {
-    logger.error('Error getting secure user data', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting secure user data', { userId, error: error instanceof Error ? error.message : String(error) });
     return { isValid: false, error: 'User validation failed' };
   }
 }

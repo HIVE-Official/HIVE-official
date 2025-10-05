@@ -77,7 +77,7 @@ export interface ValidationMiddlewareResult {
 export interface ValidationMiddlewareOptions {
   schema?: z.ZodSchema<any>;
   securityLevel: keyof typeof ENDPOINT_SECURITY_LEVELS;
-  operation: string;
+  action: string;
   validateBody?: boolean;
   validateQuery?: boolean;
   requireAuth?: boolean;
@@ -94,7 +94,7 @@ export async function validateRequest(
   const {
     schema,
     securityLevel: securityLevelKey,
-    operation,
+    action,
     validateBody = true,
     validateQuery = false,
     requireAuth = false,
@@ -121,7 +121,7 @@ export async function validateRequest(
       const headerValidation = validateSecureHeaders(request);
       if (!headerValidation.valid) {
         await logSecurityEvent('invalid_token', {
-          operation: `${operation}_header_validation_failed`,
+          action: `${action}_header_validation_failed`,
           tags: {
             clientId,
             missingHeaders: headerValidation.missing.join(','),
@@ -147,7 +147,7 @@ export async function validateRequest(
         
         if (schema) {
           const bodyValidation = await validateWithSecurity(body, schema, {
-            operation: `${operation}_body`,
+            action: `${action}_body`,
             ip: clientId
           });
 
@@ -163,7 +163,7 @@ export async function validateRequest(
           // Block dangerous inputs if configured
           if (securityConfig.blockDangerous && bodyValidation.securityLevel === 'dangerous') {
             await logSecurityEvent('invalid_token', {
-              operation: `${operation}_dangerous_input_blocked`,
+              action: `${action}_dangerous_input_blocked`,
               tags: {
                 clientId,
                 securityLevel: bodyValidation.securityLevel,
@@ -182,7 +182,7 @@ export async function validateRequest(
           // Log suspicious inputs if configured
           if (securityConfig.logSuspicious && bodyValidation.securityLevel === 'suspicious') {
             await logSecurityEvent('invalid_token', {
-              operation: `${operation}_suspicious_input`,
+              action: `${action}_suspicious_input`,
               tags: {
                 clientId,
                 securityLevel: bodyValidation.securityLevel,
@@ -199,7 +199,7 @@ export async function validateRequest(
           
           if (securityConfig.blockDangerous && securityScan.level === 'dangerous') {
             await logSecurityEvent('invalid_token', {
-              operation: `${operation}_dangerous_content_blocked`,
+              action: `${action}_dangerous_content_blocked`,
               tags: {
                 clientId,
                 threats: securityScan.threats.join(','),
@@ -241,8 +241,8 @@ export async function validateRequest(
         const securityScan = SecurityScanner.scanInput(value, `query_${key}`);
         
         if (securityConfig.blockDangerous && securityScan.level === 'dangerous') {
-          await logSecurityEvent('invalid_token', {
-            operation: `${operation}_dangerous_query_blocked`,
+            await logSecurityEvent('invalid_token', {
+              action: `${action}_dangerous_query_blocked`,
             tags: {
               clientId,
               parameter: key,
@@ -296,10 +296,10 @@ export async function validateRequest(
     console.error('Validation middleware error:', error);
     
     await logSecurityEvent('invalid_token', {
-      operation: `${operation}_validation_error`,
+      action: `${action}_validation_error`,
       tags: {
         clientId,
-        error: error instanceof Error ? error.message : 'unknown',
+        error: error instanceof Error ? error.message : String(error),
         environment: currentEnvironment
       }
     });
@@ -422,11 +422,11 @@ export const ValidationHelpers = {
   /**
    * Authentication endpoint validation
    */
-  auth: (schema: z.ZodSchema<any>, operation: string) => 
+  auth: (schema: z.ZodSchema<any>, action: string) => 
     withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'AUTHENTICATION',
-      operation,
+      action,
       validateBody: true,
       requireAuth: false
     }),
@@ -434,11 +434,11 @@ export const ValidationHelpers = {
   /**
    * User data endpoint validation
    */
-  userData: (schema: z.ZodSchema<any>, operation: string) =>
+  userData: (schema: z.ZodSchema<any>, action: string) =>
     withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'USER_DATA',
-      operation,
+      action,
       validateBody: true,
       requireAuth: true
     }),
@@ -446,11 +446,11 @@ export const ValidationHelpers = {
   /**
    * Content creation endpoint validation
    */
-  content: (schema: z.ZodSchema<any>, operation: string) =>
+  content: (schema: z.ZodSchema<any>, action: string) =>
     withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'CONTENT_CREATION',
-      operation,
+      action,
       validateBody: true,
       requireAuth: true
     }),
@@ -458,10 +458,10 @@ export const ValidationHelpers = {
   /**
    * Public read endpoint validation
    */
-  publicRead: (operation: string) =>
+  publicRead: (action: string) =>
     withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       securityLevel: 'PUBLIC_READ',
-      operation,
+      action,
       validateBody: false,
       validateQuery: true,
       requireAuth: false
@@ -470,11 +470,11 @@ export const ValidationHelpers = {
   /**
    * Admin endpoint validation
    */
-  admin: (schema: z.ZodSchema<any>, operation: string) =>
+  admin: (schema: z.ZodSchema<any>, action: string) =>
     withValidation((_req, _data) => Promise.resolve(NextResponse.json({})), {
       schema,
       securityLevel: 'ADMIN',
-      operation,
+      action,
       validateBody: true,
       requireAuth: true
     })

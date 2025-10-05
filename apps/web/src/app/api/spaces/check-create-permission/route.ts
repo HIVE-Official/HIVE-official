@@ -1,4 +1,4 @@
-import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 
@@ -7,7 +7,7 @@ import { logger } from "@/lib/logger";
  * Implements multiple locks and restrictions
  */
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = request.user.uid;
+  const userId = request.user.id;
   const userEmail = request.user.email || '';
 
   try {
@@ -102,7 +102,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     });
 
   } catch (error) {
-    logger.error('Error checking space creation permission', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error checking space creation permission', { error: error instanceof Error ? error.message : String(error), userId });
     return respond.error("Failed to check permissions", "INTERNAL_ERROR", { status: 500 });
   }
 });

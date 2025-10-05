@@ -158,7 +158,7 @@ export default function SpacesBrowsePage() {
                 <Input
                   placeholder="Search by name, description, or tags..."
                   value={searchQuery}
-                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as HTMLInputElement).value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10 bg-gray-900 border-gray-700"
                 />
@@ -193,10 +193,9 @@ export default function SpacesBrowsePage() {
                 <h3 className="font-semibold text-white">Filters</h3>
                 {activeFilterCount > 0 && (
                   <Button
-                    size="sm"
-                    variant="ghost"
+                    className="max-w-sm text-red-400 hover:text-red-300"
+                    variant="outline"
                     onClick={clearFilters}
-                    className="text-red-400 hover:text-red-300"
                   >
                     Clear all
                   </Button>
@@ -209,7 +208,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Category</label>
                   <select
                     value={filters.category || ''}
-                    onChange={(e: React.ChangeEvent) => handleFilterChange('category', (e.target as HTMLInputElement).value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('category', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">All Categories</option>
@@ -227,14 +226,14 @@ export default function SpacesBrowsePage() {
                       type="number"
                       placeholder="Min"
                       value={filters.memberCountMin || ''}
-                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMin', (e.target as HTMLInputElement).value ? parseInt((e.target as HTMLInputElement).value) : undefined)}
+                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMin', (e.target as any).value ? parseInt((e.target as any).value) : undefined)}
                       className="w-1/2 bg-gray-800 border border-gray-700 rounded px-2 py-2 text-white text-sm"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={filters.memberCountMax || ''}
-                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMax', (e.target as HTMLInputElement).value ? parseInt((e.target as HTMLInputElement).value) : undefined)}
+                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMax', (e.target as any).value ? parseInt((e.target as any).value) : undefined)}
                       className="w-1/2 bg-gray-800 border border-gray-700 rounded px-2 py-2 text-white text-sm"
                     />
                   </div>
@@ -245,7 +244,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Activity Level</label>
                   <select
                     value={filters.activityLevel || ''}
-                    onChange={(e: React.ChangeEvent) => handleFilterChange('activityLevel', (e.target as HTMLInputElement).value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('activityLevel', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">Any Activity</option>
@@ -260,7 +259,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Join Policy</label>
                   <select
                     value={filters.joinPolicy || ''}
-                    onChange={(e: React.ChangeEvent) => handleFilterChange('joinPolicy', (e.target as HTMLInputElement).value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('joinPolicy', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">Any Policy</option>
@@ -421,8 +420,7 @@ function SpaceSearchCard({
         {/* Join Button */}
         <div className="flex-shrink-0">
           <Button
-            size="sm"
-            className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
+            className="max-w-sm bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               // Handle join

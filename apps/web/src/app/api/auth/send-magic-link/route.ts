@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== 'production') {
   validateDevSchool = devAuthHelper.validateDevSchool;
   createDevSession = devAuthHelper.createDevSession;
 }
-import { withValidation } from "@/lib/middleware";
+import { withValidation } from "@/lib/middleware/index";
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 
 /**
@@ -102,7 +102,7 @@ export const POST = withValidation(
 
       // SECURITY: Additional threat detection (schema validation already done by middleware)
       const validationResult = await validateWithSecurity({ email, schoolId: schoolId || '' }, sendMagicLinkSchema, {
-        operation: 'send_magic_link',
+        action: 'send_magic_link',
         ip: request.headers.get('x-forwarded-for') || undefined
       });
 
@@ -330,7 +330,7 @@ export const POST = withValidation(
     } catch (error) {
       await auditAuthEvent('failure', request, {
         operation: 'send_magic_link',
-        error: error instanceof Error ? error.message : 'unknown'
+        error: error instanceof Error ? error.message : String(error)
       });
 
       throw error; // Let middleware handle the error

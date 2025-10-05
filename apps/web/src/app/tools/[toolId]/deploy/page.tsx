@@ -65,7 +65,7 @@ export default function ToolDeployPage() {
   
   const [deploymentConfig, setDeploymentConfig] = useState<DeploymentConfig>({
     targetType: 'profile',
-    targetId: user?.uid || 'test-user-id',
+    targetId: user?.id || 'test-user-id',
     permissions: {
       canInteract: true,
       canView: true,
@@ -82,7 +82,7 @@ export default function ToolDeployPage() {
   // Mock data for available targets
   const availableTargets: DeploymentTarget[] = [
     {
-      id: user?.uid || 'test-user-id',
+      id: user?.id || 'test-user-id',
       name: 'My Profile',
       type: 'profile',
       icon: <User className="h-5 w-5" />,
@@ -264,7 +264,7 @@ export default function ToolDeployPage() {
                   name="surface"
                   value={surface.id}
                   checked={deploymentConfig.surface === surface.id}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({ surface: (e.target as HTMLInputElement).value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfigUpdate({ surface: (e.target as any).value })}
                   className="text-[var(--hive-brand-primary)]"
                 />
                 <div>
@@ -538,7 +538,7 @@ export default function ToolDeployPage() {
       <div className="border-b border-[var(--hive-border-primary)] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={() => ToolNavigation.goBack('marketplace')}
             className="p-2"
           >

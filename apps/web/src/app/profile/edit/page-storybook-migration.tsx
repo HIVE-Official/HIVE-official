@@ -121,14 +121,14 @@ export default function ProfileEditPageStorybook() {
   useEffect(() => {
     if (profile) {
       setFormData({
-        fullName: profile.identity.fullName || '',
+        fullName: profile.identity.displayName || '',
         handle: profile.identity.handle || '',
         bio: profile.personal.bio || '',
-        pronouns: profile.academic.pronouns || '',
-        major: profile.academic.major || '',
-        academicYear: profile.academic.academicYear || '',
-        graduationYear: String(profile.academic.graduationYear || ''),
-        housing: profile.academic.housing || '',
+        pronouns: profile.metadata?.academic.pronouns || '',
+        major: profile.metadata?.academic.major || '',
+        academicYear: profile.metadata?.academic.academicYear || '',
+        graduationYear: String(profile.metadata?.academic.graduationYear || ''),
+        housing: profile.metadata?.academic.housing || '',
         interests: profile.personal.interests || []
       });
     }
@@ -138,8 +138,8 @@ export default function ProfileEditPageStorybook() {
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
     
-    if (!formData.fullName.trim()) {
-      errors.fullName = 'Full name is required';
+    if (!formData.displayName.trim()) {
+      errors.displayName = 'Full name is required';
     }
     
     if (!formData.handle.trim()) {
@@ -182,7 +182,7 @@ export default function ProfileEditPageStorybook() {
 
       const updateData = {
         identity: {
-          fullName: formData.fullName,
+          fullName: formData.displayName,
           handle: formData.handle
         },
         personal: {
@@ -223,14 +223,14 @@ export default function ProfileEditPageStorybook() {
     if (!profile) return null;
     return {
       id: profile.identity.id,
-      name: profile.identity.fullName || '',
+      name: profile.identity.displayName || '',
       handle: profile.identity.handle || '',
       avatar: profile.identity.avatarUrl,
       role: profile.builder?.isBuilder ? 'builder' : 'member',
       campus: 'ub-buffalo',
-      major: profile.academic.major,
-      year: profile.academic.academicYear,
-      housing: profile.academic.housing
+      major: profile.metadata?.academic.major,
+      year: profile.metadata?.academic.academicYear,
+      housing: profile.metadata?.academic.housing
     };
   }, [profile]);
 
@@ -293,12 +293,11 @@ export default function ProfileEditPageStorybook() {
                     size="2xl"
                     className="mx-auto"
                   >
-                    <AvatarImage src={profile.identity.avatarUrl} alt={profile.identity.fullName || 'Profile'} />
-                    <AvatarFallback>{profile.identity.fullName?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarImage src={profile.identity.avatarUrl} alt={profile.identity.displayName || 'Profile'} />
+                    <AvatarFallback>{profile.identity.displayName?.charAt(0) || 'U'}</AvatarFallback>
                   </Avatar>
                   <Button
-                    size="sm"
-                    className="absolute bottom-0 right-0 rounded-full w-8 h-8 p-0 bg-[var(--hive-brand-primary)] text-hive-obsidian"
+                    className="max-w-sm absolute bottom-0 right-0 rounded-full w-8 h-8 p-0 bg-[var(--hive-brand-primary)] text-hive-obsidian"
                     onClick={() => setShowAvatarModal(true)}
                   >
                     <Camera className="h-4 w-4" />
@@ -340,14 +339,14 @@ export default function ProfileEditPageStorybook() {
                   <FormLabel>Full Name *</FormLabel>
                   <FormControl>
                     <Input
-                      value={formData.fullName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('fullName', (e.target as HTMLInputElement).value)}
+                      value={formData.displayName}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('fullName', (e.target as any).value)}
                       placeholder="Enter your full name"
-                      error={validationErrors.fullName}
+                      error={validationErrors.displayName}
                     />
                   </FormControl>
-                  {validationErrors.fullName && (
-                    <FormMessage>{validationErrors.fullName}</FormMessage>
+                  {validationErrors.displayName && (
+                    <FormMessage>{validationErrors.displayName}</FormMessage>
                   )}
                 </FormField>
                 
@@ -356,7 +355,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.pronouns}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('pronouns', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('pronouns', (e.target as any).value)}
                       placeholder="Select or type pronouns"
                       list="pronouns-list"
                     />
@@ -372,7 +371,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.handle}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('handle', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('handle', (e.target as any).value)}
                       placeholder="your-handle"
                       leftIcon={<Hash className="h-4 w-4" />}
                       error={validationErrors.handle}
@@ -392,7 +391,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Textarea
                       value={formData.bio}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('bio', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('bio', (e.target as any).value)}
                       placeholder="Tell your campus community about yourself..."
                       rows={3}
                       maxLength={500}
@@ -421,7 +420,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.major}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('major', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('major', (e.target as any).value)}
                       placeholder="Computer Science"
                       list="majors-list"
                     />
@@ -433,7 +432,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.academicYear}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('academicYear', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('academicYear', (e.target as any).value)}
                       placeholder="Select year"
                       list="years-list"
                     />
@@ -448,7 +447,7 @@ export default function ProfileEditPageStorybook() {
                   <Input
                     type="number"
                     value={formData.graduationYear}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('graduationYear', (e.target as HTMLInputElement).value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('graduationYear', (e.target as any).value)}
                     min="2024"
                     max="2035"
                     placeholder="2027"
@@ -471,7 +470,7 @@ export default function ProfileEditPageStorybook() {
                   <FormControl>
                     <Input
                       value={formData.housing}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('housing', (e.target as HTMLInputElement).value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('housing', (e.target as any).value)}
                       placeholder="Hadley Village 123A"
                       list="housing-list"
                     />

@@ -27,59 +27,59 @@ import { EventDetailsModal } from "../../components/events/event-details-modal";
 
 // Event interfaces
 interface RawEventData {
-  id?: unknown;
-  title?: unknown;
-  description?: unknown;
-  type?: unknown;
+  id?: any;
+  title?: any;
+  description?: any;
+  type?: any;
   organizer?: {
-    id?: unknown;
-    name?: unknown;
-    handle?: unknown;
-    verified?: unknown;
+    id?: any;
+    name?: any;
+    handle?: any;
+    verified?: any;
   };
-  organizerId?: unknown;
-  organizerName?: unknown;
-  organizerHandle?: unknown;
-  startTime?: unknown;
-  endTime?: unknown;
-  timezone?: unknown;
+  organizerId?: any;
+  organizerName?: any;
+  organizerHandle?: any;
+  startTime?: any;
+  endTime?: any;
+  timezone?: any;
   datetime?: {
-    start?: unknown;
-    end?: unknown;
-    timezone?: unknown;
+    start?: any;
+    end?: any;
+    timezone?: any;
   };
-  locationType?: unknown;
-  locationName?: unknown;
-  locationAddress?: unknown;
-  virtualLink?: unknown;
+  locationType?: any;
+  locationName?: any;
+  locationAddress?: any;
+  virtualLink?: any;
   location?: {
-    name?: unknown;
+    name?: any;
   };
-  maxCapacity?: unknown;
-  currentCapacity?: unknown;
-  waitlistCount?: unknown;
+  maxCapacity?: any;
+  currentCapacity?: any;
+  waitlistCount?: any;
   capacity?: {
-    max?: unknown;
-    current?: unknown;
-    waitlist?: unknown;
+    max?: any;
+    current?: any;
+    waitlist?: any;
   };
-  tools?: unknown[];
-  tags?: unknown[];
-  visibility?: unknown;
-  rsvpStatus?: unknown;
-  isBookmarked?: unknown;
-  goingCount?: unknown;
-  interestedCount?: unknown;
-  commentsCount?: unknown;
-  sharesCount?: unknown;
+  tools?: any[];
+  tags?: any[];
+  visibility?: any;
+  rsvpStatus?: any;
+  isBookmarked?: any;
+  goingCount?: any;
+  interestedCount?: any;
+  commentsCount?: any;
+  sharesCount?: any;
   engagement?: {
-    going?: unknown;
-    interested?: unknown;
-    comments?: unknown;
-    shares?: unknown;
+    going?: any;
+    interested?: any;
+    comments?: any;
+    shares?: any;
   };
-  createdAt?: unknown;
-  updatedAt?: unknown;
+  createdAt?: any;
+  updatedAt?: any;
 }
 
 interface EventData {
@@ -160,17 +160,17 @@ export default function EventsPage() {
         const spacesResponse = await fetch('/api/spaces/my');
         if (!spacesResponse.ok) throw new Error('Failed to fetch user spaces');
 
-        const spacesData = await spacesResponse.json() as { spaces?: unknown[] };
+        const spacesData = await spacesResponse.json() as { spaces?: any[] };
         const userSpaces = spacesData.spaces || [];
 
         // Fetch events from all user spaces
-        const eventPromises = userSpaces.map(async (space: unknown) => {
+        const eventPromises = userSpaces.map(async (space: any) => {
           const spaceData = space as Record<string, unknown>;
           try {
             const eventsResponse = await fetch(`/api/spaces/${String(spaceData.id)}/events`);
             if (eventsResponse.ok) {
-              const eventsData = await eventsResponse.json() as { events?: unknown[] };
-              return eventsData.events?.map((event: unknown): EventData => {
+              const eventsData = await eventsResponse.json() as { events?: any[] };
+              return eventsData.events?.map((event: any): EventData => {
                 const eventData = event as Record<string, unknown>;
                 
                 // Map raw event data to EventData format
@@ -409,7 +409,7 @@ export default function EventsPage() {
                 type="text"
                 placeholder="Search events..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as HTMLInputElement).value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as any).value)}
                 className="pl-10 pr-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none w-64"
               />
             </div>
@@ -418,33 +418,29 @@ export default function EventsPage() {
             <div className="flex items-center bg-zinc-800 rounded-lg p-1">
               <Button
                 variant={filter === 'all' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm text-xs"
                 onClick={() => setFilter('all')}
-                className="text-xs"
               >
                 All
               </Button>
               <Button
                 variant={filter === 'today' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm text-xs"
                 onClick={() => setFilter('today')}
-                className="text-xs"
               >
                 Today
               </Button>
               <Button
                 variant={filter === 'week' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm text-xs"
                 onClick={() => setFilter('week')}
-                className="text-xs"
               >
                 This Week
               </Button>
               <Button
                 variant={filter === 'my_events' ? 'primary' : 'ghost'}
-                size="sm"
+                className="max-w-sm text-xs"
                 onClick={() => setFilter('my_events')}
-                className="text-xs"
               >
                 My Events
               </Button>
@@ -466,7 +462,7 @@ export default function EventsPage() {
         <div className="flex flex-wrap gap-2 mb-6">
           <Button
             variant={eventType === 'all' ? 'primary' : 'outline'}
-            size="sm"
+            className="max-w-sm"
             onClick={() => setEventType('all')}
           >
             All Types
@@ -475,9 +471,8 @@ export default function EventsPage() {
             <Button
               key={type}
               variant={eventType === type ? 'primary' : 'outline'}
-              size="sm"
+              className="max-w-sm capitalize"
               onClick={() => setEventType(type)}
-              className="capitalize"
             >
               {getEventTypeIcon(type)} {type}
             </Button>
@@ -518,13 +513,12 @@ export default function EventsPage() {
                 </div>
                 
                 <Button
-                  variant="ghost"
-                  size="sm"
+                  variant="outline"
+                  className={`max-w-sm ${event.isBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}`}
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleBookmark(event.id);
                   }}
-                  className={event.isBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}
                 >
                   <Heart className={`h-4 w-4 ${event.isBookmarked ? 'fill-current' : ''}`} />
                 </Button>
@@ -582,24 +576,22 @@ export default function EventsPage() {
                 <div className="flex items-center space-x-4">
                   <Button
                     variant={event.rsvpStatus === 'going' ? 'primary' : 'ghost'}
-                    size="sm"
+                    className="max-w-sm text-xs"
                     onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'going' ? 'not_going' : 'going');
                     }}
-                    className="text-xs"
                   >
                     <Users className="h-3 w-3 mr-1" />
                     Going ({event.engagement.going})
                   </Button>
                   <Button
                     variant={event.rsvpStatus === 'interested' ? 'primary' : 'ghost'}
-                    size="sm"
+                    className="max-w-sm text-xs"
                     onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       handleRSVP(event.id, event.rsvpStatus === 'interested' ? 'not_going' : 'interested');
                     }}
-                    className="text-xs"
                   >
                     <Star className="h-3 w-3 mr-1" />
                     Interested ({event.engagement.interested})
@@ -607,14 +599,13 @@ export default function EventsPage() {
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm" className="text-xs text-zinc-400">
+                  <Button variant="outline" className="max-w-sm text-xs text-zinc-400">
                     <MessageCircle className="h-3 w-3 mr-1" />
                     {event.engagement.comments}
                   </Button>
                   <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-xs text-zinc-400"
+                    variant="outline" 
+                    className="max-w-sm text-xs text-zinc-400"
                     onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
                       navigator.clipboard.writeText(`${window.location.origin}/events/${event.id}`);
@@ -661,7 +652,7 @@ export default function EventsPage() {
               type: eventData.type,
               organizer: {
                 id: user?.id || 'current-user',
-                name: user?.fullName || 'You',
+                name: user?.displayName || 'You',
                 handle: user?.handle || 'you',
                 verified: false
               },

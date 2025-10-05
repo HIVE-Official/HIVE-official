@@ -37,7 +37,7 @@ export async function GET(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -83,7 +83,7 @@ export async function GET(
         authorId: data.authorId,
         author: authorData ? {
           id: authorData.id || data.authorId,
-          fullName: authorData.fullName || "Unknown User",
+          fullName: authorData.displayName || "Unknown User",
           handle: authorData.handle || "unknown",
           photoURL: authorData.photoURL
         } : {
@@ -152,7 +152,7 @@ export async function POST(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -188,13 +188,13 @@ export async function POST(
     }
 
     // Get user info
-    const userDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
+    const userDoc = await dbAdmin.collection("users").doc(decodedToken.id).get();
     const userData = userDoc.exists ? userDoc.data() : null;
 
     // Create comment
     const commentData = {
       content,
-      authorId: decodedToken.uid,
+      authorId: decodedToken.id,
       spaceId,
       postId,
       parentCommentId: parentCommentId || null,
@@ -230,19 +230,19 @@ export async function POST(
       id: commentRef.id,
       ...commentData,
       author: userData ? {
-        id: userData.id || decodedToken.uid,
-        fullName: userData.fullName || "Unknown User",
+        id: userData.id || decodedToken.id,
+        fullName: userData.displayName || "Unknown User",
         handle: userData.handle || "unknown",
         photoURL: userData.photoURL
       } : {
-        id: decodedToken.uid,
+        id: decodedToken.id,
         fullName: "Unknown User",
         handle: "unknown"
       },
       replies: []
     };
 
-    logger.info(`Comment created: ${commentRef.id} in post ${postId} by user ${decodedToken.uid}`);
+    logger.info(`Comment created: ${commentRef.id} in post ${postId} by user ${decodedToken.id}`);
 
     return NextResponse.json(ApiResponseHelper.success(comment), { status: HttpStatus.CREATED });
 

@@ -32,7 +32,7 @@ export interface BatchOperation {
 export interface TransactionResult<T = any> {
   success: boolean;
   data?: T;
-  error?: Error;
+  error?: any;
   operationsCompleted: string[];
   operationsFailed: string[];
   duration: number;
@@ -81,7 +81,7 @@ export class TransactionManager {
     
     if (this.config.logOperations) {
       await logger.info('Starting transaction', {
-        operation: context?.operation || 'unknown',
+        action: context?.operation || 'unknown',
         userId: context?.userId,
         requestId: context?.requestId,
         operationCount: operations.length,
@@ -105,7 +105,7 @@ export class TransactionManager {
         
         if (this.config.logOperations) {
           await logger.info('Transaction completed successfully', {
-            operation: context?.operation || 'unknown',
+            action: context?.operation || 'unknown',
             userId: context?.userId,
             requestId: context?.requestId,
             duration,
@@ -128,7 +128,7 @@ export class TransactionManager {
         
         if (this.config.logOperations) {
           await logger.warn('Transaction attempt failed', {
-            operation: context?.operation || 'unknown',
+            action: context?.operation || 'unknown',
             userId: context?.userId,
             requestId: context?.requestId,
             attempt,
@@ -145,7 +145,7 @@ export class TransactionManager {
           
           if (this.config.logOperations) {
             await logger.error('Transaction failed permanently', {
-              operation: context?.operation || 'unknown',
+              action: context?.operation || 'unknown',
               userId: context?.userId,
               requestId: context?.requestId,
               duration,
@@ -157,7 +157,7 @@ export class TransactionManager {
           
           return {
             success: false,
-            error: error instanceof Error ? error : new Error(String(error)),
+            error: error instanceof Error ? error.message : String(error),
             operationsCompleted,
             operationsFailed,
             duration
@@ -202,7 +202,7 @@ export class TransactionManager {
           try {
             if (this.config.logOperations) {
               await logger.debug('Executing transaction operation', {
-                operation: context?.operation || 'unknown',
+                action: context?.operation || 'unknown',
                 userId: context?.userId,
                 requestId: context?.requestId,
                 operationId: operation.id,
@@ -230,7 +230,7 @@ export class TransactionManager {
             
             if (this.config.logOperations) {
               await logger.error('Transaction operation failed', {
-                operation: context?.operation || 'unknown',
+                action: context?.operation || 'unknown',
                 userId: context?.userId,
                 requestId: context?.requestId,
                 operationId: operation.id,
@@ -262,7 +262,7 @@ export class TransactionManager {
     
     if (this.config.logOperations) {
       await logger.info('Starting batch operation', {
-        operation: context?.operation || 'unknown',
+        action: context?.operation || 'unknown',
         userId: context?.userId,
         requestId: context?.requestId,
         operationCount: operations.length,
@@ -289,7 +289,7 @@ export class TransactionManager {
       
       if (this.config.logOperations) {
         await logger.info('Batch operation completed successfully', {
-          operation: context?.operation || 'unknown',
+          action: context?.operation || 'unknown',
           userId: context?.userId,
           requestId: context?.requestId,
           duration,
@@ -309,7 +309,7 @@ export class TransactionManager {
       
       if (this.config.logOperations) {
         await logger.error('Batch operation failed', {
-          operation: context?.operation || 'unknown',
+          action: context?.operation || 'unknown',
           userId: context?.userId,
           requestId: context?.requestId,
           duration,
@@ -320,7 +320,7 @@ export class TransactionManager {
       
       return {
         success: false,
-        error: error instanceof Error ? error : new Error(String(error)),
+        error: error instanceof Error ? error.message : String(error),
         operationsCompleted,
         operationsFailed,
         duration
@@ -503,7 +503,7 @@ export async function executeOnboardingTransaction(
   return strictTransactionManager.executeTransaction(operations, {
     userId,
     requestId: context?.requestId,
-    operation: 'complete_onboarding'
+    action: 'complete_onboarding'
   });
 }
 
@@ -557,7 +557,7 @@ export async function executeBuilderRequestCreation(
   return transactionManager.executeBatch(operations, {
     userId,
     requestId: context?.requestId,
-    operation: 'create_builder_requests'
+    action: 'create_builder_requests'
   });
 }
 
@@ -567,8 +567,8 @@ export async function executeBuilderRequestCreation(
 export class TransactionError extends Error {
   constructor(
     message: string,
-    public readonly _operation: string,
-    public readonly _cause?: Error
+    public readonly _action: string,
+    public readonly _cause?: any
   ) {
     super(message);
     this.name = 'TransactionError';
@@ -576,15 +576,15 @@ export class TransactionError extends Error {
 }
 
 export class TransactionTimeoutError extends TransactionError {
-  constructor(operation: string, timeoutMs: number) {
-    super(`Transaction timed out after ${timeoutMs}ms`, operation);
+  constructor(action: string, timeoutMs: number) {
+    super(`Transaction timed out after ${timeoutMs}ms`, action);
     this.name = 'TransactionTimeoutError';
   }
 }
 
 export class TransactionRetryError extends TransactionError {
-  constructor(operation: string, attempts: number, cause?: Error) {
-    super(`Transaction failed after ${attempts} attempts`, operation, cause);
+  constructor(action: string, attempts: number, cause?: any) {
+    super(`Transaction failed after ${attempts} attempts`, action, cause);
     this.name = 'TransactionRetryError';
   }
 }

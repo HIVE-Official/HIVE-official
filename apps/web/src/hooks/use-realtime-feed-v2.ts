@@ -4,9 +4,9 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { feedListener, FeedUpdate, FeedListenerOptions } from '@hive/core/infrastructure/realtime/feed-listener';
-import { GetFeedQuery, GetFeedQueryHandler } from '@hive/core/application/feed/queries/get-feed.query';
-import { FirebaseUnitOfWork } from '@hive/core/infrastructure/repositories/firebase/unit-of-work';
+import { feedListener, FeedUpdate, FeedListenerOptions } from '@hive/core';
+import { GetFeedQuery, GetFeedQueryHandler } from '@hive/core';
+import { FirebaseUnitOfWork } from '@hive/core';
 import { useAuth } from '@hive/auth-logic';
 import { useToast } from './use-toast';
 
@@ -21,7 +21,7 @@ interface UseRealtimeFeedOptions {
 interface UseRealtimeFeedReturn {
   feed: FeedUpdate[];
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   refresh: () => Promise<void>;
   loadMore: () => Promise<void>;
   hasMore: boolean;
@@ -43,7 +43,7 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
 
   // Get campus ID from user profile or default to UB
   const campusId = user?.campusId || 'ub-buffalo';
-  const userId = user?.uid;
+  const userId = user?.id;
 
   // Initial load using CQRS query
   const loadInitialFeed = useCallback(async () => {

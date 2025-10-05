@@ -67,7 +67,7 @@ const SpaceCategoryAccordion = React.forwardRef<HTMLDivElement, SpaceCategoryAcc
           className={cn(
             "px-6 py-6 hover:no-underline",
             "[&[data-state=open]]:border-b",
-            "transition-all duration-[400ms]"
+            "transition-all duration-smooth"
           )}
         >
           <div className="flex items-center gap-4 flex-1 text-left">

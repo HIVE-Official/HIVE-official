@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Get user's space contexts
-    const userSpaceContexts = await getUserSpaceContexts(user.uid);
+    const userSpaceContexts = await getUserSpaceContexts(user.id);
     
     if (userSpaceContexts.length === 0 && !includePreview) {
       return NextResponse.json({
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 
     // Apply space-aware filtering
     const filteredResults = await applySpaceAwareFiltering({
-      userId: user.uid,
+      userId: user.id,
       userSpaceContexts,
       visibilityRules,
       contentTypes,
@@ -146,13 +146,13 @@ export async function GET(request: NextRequest) {
 
     if (spaceId) {
       // Get specific space access info
-      const spaceAccess = await getSpaceAccessInfo(user.uid, spaceId, includePreview);
+      const spaceAccess = await getSpaceAccessInfo(user.id, spaceId, includePreview);
       return NextResponse.json(spaceAccess);
     } else {
       // Get all accessible spaces
-      const userSpaceContexts = await getUserSpaceContexts(user.uid);
+      const userSpaceContexts = await getUserSpaceContexts(user.id);
       const accessibleSpaces = await Promise.all(
-        userSpaceContexts.map(ctx => getSpaceAccessInfo(user.uid, ctx.spaceId, includePreview))
+        userSpaceContexts.map(ctx => getSpaceAccessInfo(user.id, ctx.spaceId, includePreview))
       );
 
       return NextResponse.json({

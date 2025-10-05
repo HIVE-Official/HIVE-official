@@ -29,8 +29,8 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
   const [isHovered, setIsHovered] = useState(false);
   
   const displayPhoto = profile.profilePhoto || profile.avatarUrl;
-  const initials = profile.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
-  const displayName = profile.preferredName || profile.fullName?.split(' ')[0] || profile.fullName;
+  const initials = profile.displayName?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+  const displayName = profile.preferredName || profile.displayName?.split(' ')[0] || profile.displayName;
   
   
   return (
@@ -59,7 +59,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
             // Photo Display
             <div className="relative h-full">
               <Image src={displayPhoto}
-                alt={`${profile.fullName}'s profile`}
+                alt={`${profile.displayName}'s profile`}
                 fill
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 loading="lazy"
@@ -138,7 +138,7 @@ export function HiveAvatarCard({ profile, onEditProfile, className = "" }: HiveA
 
                 {/* Academic Info */}
                 <p className="text-sm text-hive-text-secondary font-sans capitalize mb-1 truncate">
-                  {profile.academicYear} • {profile.major}
+                  {profile.metadata?.academicYear} • {profile.major}
                 </p>
 
                 {/* Housing Info (smaller) */}

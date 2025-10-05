@@ -256,7 +256,7 @@ export function SpaceTransferInterface({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {getSpaceTypeIcon(space.type)}
+                    {getSpaceTypeIcon(space.spaceType)}
                     <div>
                       <h4 className="font-medium text-white">{space.name}</h4>
                       <p className="text-sm text-neutral-400">
@@ -285,7 +285,7 @@ export function SpaceTransferInterface({
           <h3 className="text-lg font-semibold text-white mb-4">Transfer Reason</h3>
           <textarea
             value={transferReason}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTransferReason((e.target as HTMLInputElement).value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTransferReason((e.target as any).value)}
             placeholder="Why are you transferring? (optional)"
             className="w-full h-24 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-white placeholder-neutral-400 resize-none focus:outline-none focus:border-[var(--hive-brand-primary)]/30"
             maxLength={200}

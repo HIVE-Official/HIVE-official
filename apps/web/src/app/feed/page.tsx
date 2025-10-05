@@ -94,7 +94,7 @@ export default function FeedPage() {
     const profileCompleteness = (() => {
       let complete = 0;
       const fields = [
-        user.fullName,
+        user.displayName,
         user.handle,
         (user as any).bio,
         user.avatarUrl,
@@ -137,7 +137,7 @@ export default function FeedPage() {
 
   // Fetch rituals data (only if enabled in config)
   const { data: ritualsData } = useQuery({
-    queryKey: ['rituals', user?.uid],
+    queryKey: ['rituals', user?.id],
     queryFn: () => fetchRituals(user, getAuthToken || (() => Promise.resolve(null))),
     staleTime: 300000, // 5 minutes
     enabled: isAuthenticated && !!user && feedConfig?.features?.ritualsEnabled !== false,
@@ -196,13 +196,13 @@ export default function FeedPage() {
   // Feed is READ-ONLY - posts can only be created within spaces, then promoted to feed
 
   const likePost = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to like posts', variant: 'error' });
       return;
     }
 
     try {
-      const isLiked = await toggleLikePost(user.uid, postId);
+      const isLiked = await toggleLikePost(user.id, postId);
       // Optimistically update UI can be handled by the PostCard component
     } catch (error) {
       toast({ title: 'Failed to update like', variant: 'error' });
@@ -210,13 +210,13 @@ export default function FeedPage() {
   }, [user, toast]);
 
   const commentOnPost = useCallback(async (postId: string, content: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to comment', variant: 'error' });
       return;
     }
 
     try {
-      const comment = await addComment(user.uid, postId, content);
+      const comment = await addComment(user.id, postId, content);
       toast({ title: 'Comment added!', variant: 'success' });
       return comment;
     } catch (error) {
@@ -226,13 +226,13 @@ export default function FeedPage() {
   }, [user, toast]);
 
   const sharePost = useCallback(async (postId: string, message?: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to share posts', variant: 'error' });
       return;
     }
 
     try {
-      const share = await sharePostAction(user.uid, postId, undefined, message);
+      const share = await sharePostAction(user.id, postId, undefined, message);
       toast({ title: 'Post shared!', variant: 'success' });
       refresh(); // Refresh feed to show shared post
       return share;
@@ -478,7 +478,7 @@ export default function FeedPage() {
               {/* Sort By */}
               <select
                 value={sortBy}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy((e.target as HTMLInputElement).value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy((e.target as any).value as any)}
                 className="text-sm bg-hive-background-tertiary border border-hive-border-default rounded px-3 py-1"
               >
                 <option value="recent">Recent</option>
@@ -490,7 +490,7 @@ export default function FeedPage() {
               <div className="flex items-center bg-hive-background-overlay rounded-lg p-1">
                 <Button
                   variant={feedFilter === 'all' ? 'primary' : 'ghost'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setFeedFilter('all')}
                   className="text-xs"
                 >
@@ -499,7 +499,7 @@ export default function FeedPage() {
                 </Button>
                 <Button
                   variant={feedFilter === 'following' ? 'primary' : 'ghost'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setFeedFilter('following')}
                   className="text-xs"
                 >
@@ -508,7 +508,7 @@ export default function FeedPage() {
                 </Button>
                 <Button
                   variant={feedFilter === 'spaces' ? 'primary' : 'ghost'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setFeedFilter('spaces')}
                   className="text-xs"
                 >
@@ -517,7 +517,7 @@ export default function FeedPage() {
                 </Button>
                 <Button
                   variant={feedFilter === 'academic' ? 'primary' : 'ghost'}
-                  size="sm"
+                  className="max-w-sm"
                   onClick={() => setFeedFilter('academic')}
                   className="text-xs"
                 >
@@ -527,13 +527,13 @@ export default function FeedPage() {
               </div>
               
               {/* Feed Settings */}
-              <Button variant="outline" size="sm">
+              <Button variant="outline" className="max-w-sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               
               {/* Notifications */}
-              <Button variant="outline" size="sm" className="relative">
+              <Button variant="outline" className="max-w-sm" className="relative">
                 <Bell className="h-4 w-4" />
                 <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                   3
@@ -627,7 +627,7 @@ export default function FeedPage() {
                     handle: post.author.handle || 'unknown'
                   }
                 }}
-                currentUserId={(user as any)?.id || (user as any)?.uid || ''}
+                currentUserId={(user as any)?.id || (user as any)?.id || ''}
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}
@@ -666,7 +666,7 @@ export default function FeedPage() {
               <span className="text-red-400 text-sm">{error}</span>
               <Button 
                 variant="outline" 
-                size="sm" 
+                className="max-w-sm" 
                 onClick={refresh}
                 className="ml-auto"
               >
