@@ -5,7 +5,6 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleMemberRemoved = exports.handlePostCreated = exports.handleMemberJoined = exports.handleSpaceCreated = void 0;
-const factory_1 = require("../../infrastructure/repositories/factory");
 /**
  * When a space is created:
  * 1. Track analytics
@@ -28,8 +27,7 @@ exports.handleSpaceCreated = handleSpaceCreated;
 const handleMemberJoined = async (event) => {
     console.log(`[SpaceEventHandler] Member ${event.profileId} joined space ${event.aggregateId}`);
     try {
-        // Update user's feed configuration to include this space
-        const feedRepo = (0, factory_1.getFeedRepository)();
+        // Update user's feed configuration to include this space once service is wired up
         // TODO: Add space to user's feed sources
         // TODO: Send welcome notification to new member
         // TODO: Update space activity score

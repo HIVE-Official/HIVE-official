@@ -4,14 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Avatar, AvatarImage, AvatarFallback } from "@hive/ui";
 import { User, LogOut, Settings, ChevronDown } from "lucide-react";
+import type { SessionData as CoreSessionData } from "@hive/core";
 
-interface SessionData {
-  userId: string;
-  email: string;
+type SessionData = CoreSessionData & {
+  onboardingCompleted?: boolean;
   schoolId?: string;
   verifiedAt: string;
-  onboardingCompleted?: boolean;
-}
+};
 
 export function AuthStatusIndicator() {
   const router = useRouter();
@@ -83,9 +82,8 @@ export function AuthStatusIndicator() {
     return (
       <Button
         variant="outline"
-        className="max-w-sm"
+        className="max-w-sm flex items-center gap-2"
         onClick={() => router.push('/schools')}
-        className="flex items-center gap-2"
       >
         <User className="w-4 h-4" />
         Sign In

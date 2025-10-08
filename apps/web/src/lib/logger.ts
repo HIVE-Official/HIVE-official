@@ -51,7 +51,9 @@ interface LogContext {
   // Content-related data
   feedData?: Array<Partial<Post>>;
   eventData?: Partial<HiveEvent>;
-  notificationData?: Partial<Notification>;
+  notificationData?: Partial<Notification> & {
+    delivery?: Record<string, unknown>;
+  };
 
   // Analytics and monitoring
   analyticsData?: {
@@ -157,7 +159,14 @@ interface LogContext {
   friendshipId?: string;
   accept?: boolean;
   friendId?: string;
-  targetId?: string;
+  title?: string;
+  path?: string;
+  headerStart?: string;
+  userEmail?: string;
+  engagementCount?: number;
+  completionStage?: string | number;
+  allowedOrigins?: string | string[];
+  recoveryTimeSeconds?: number;
 
   // Privacy and security
   privacyData?: {
@@ -386,7 +395,7 @@ interface LogContext {
   spacesWithoutUB?: any;
   spaceType?: string;
   status?: string;
-  targetId?: string;
+  targetId?: string; // Combined from both occurrences
   targetTotal?: number;
   targetUserId?: string;
   timeRange?: string;
@@ -463,6 +472,7 @@ interface LogEntry {
   timestamp: string;
   context?: LogContext;
   error?: any;
+  [key: string]: unknown;
 }
 
 class Logger {

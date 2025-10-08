@@ -1,8 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
-import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Camera, Upload, X, CheckCircle, User, Crop } from "lucide-react";
 import { Button, Card } from "@hive/ui";
 import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -20,9 +19,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [cropPosition, setCropPosition] = useState({ x: 0, y: 0 });
   const [cropSize, setCropSize] = useState({ width: 200, height: 240 }); // 5:6 ratio to match card format
-  const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cropImageRef = useRef<HTMLImageElement>(null);
 
@@ -126,7 +123,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   const handleResize = useCallback((e: React.MouseEvent, handle: string) => {
     e.stopPropagation();
     setIsResizing(true);
-    setResizeHandle(handle);
     
     const rect = cropImageRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -210,7 +206,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
 
     const handleMouseUp = () => {
       setIsResizing(false);
-      setResizeHandle(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -263,7 +258,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 }}
                 onMouseDown={(e) => {
                   if (isResizing) return;
-                  setIsDragging(true);
                   const rect = cropImageRef.current?.getBoundingClientRect();
                   if (rect) {
                     const startX = e.clientX - rect.left - cropPosition.x;
@@ -278,7 +272,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     };
                     
                     const handleMouseUp = () => {
-                      setIsDragging(false);
                       document.removeEventListener('mousemove', handleMouseMove);
                       document.removeEventListener('mouseup', handleMouseUp);
                     };

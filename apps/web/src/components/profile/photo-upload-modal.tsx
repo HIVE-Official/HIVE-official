@@ -3,7 +3,8 @@
 import { useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Button, Progress } from "@hive/ui";
-import { Dialog, DialogContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert } from "@hive/ui";
+import { Dialog, DialogContent, Alert } from "@hive/ui";
+import { HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload,

@@ -352,7 +352,7 @@ export async function auditAuthEvent(
     userId: auditData.userId,
     ip: auditData.ip || undefined,
     userAgent: auditData.userAgent || undefined,
-    action: auditData.operation || 'auth_event',
+    operation: auditData.operation || 'auth_event',
     tags: {
       authEvent: event,
       environment: auditData.environment,

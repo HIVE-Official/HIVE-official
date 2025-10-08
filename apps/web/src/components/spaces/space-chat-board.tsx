@@ -92,7 +92,7 @@ export function SpaceChatBoard({
         ? `/api/spaces/${spaceId}/posts/${threadId}/replies`
         : `/api/spaces/${spaceId}/posts`;
 
-      const response = await api.get(endpoint, {
+      const response = await api.get<{ posts?: Post[] }>(endpoint, {
         params: { limit: 50 }
       });
 
@@ -148,7 +148,7 @@ export function SpaceChatBoard({
     if (!newPostContent.trim() || !membership) return;
 
     try {
-      const response = await api.post(`/api/spaces/${spaceId}/posts`, {
+      const response = await api.post<{ post?: Post }>(`/api/spaces/${spaceId}/posts`, {
         content: newPostContent,
         type: postType,
         threadId: replyingTo || undefined
@@ -316,9 +316,9 @@ export function SpaceChatBoard({
               <Sparkles className="w-4 h-4 text-[var(--hive-brand-primary)]" />
               <span className="text-sm text-[var(--hive-brand-primary)]">{enhancementSuggestion}</span>
               <Button
-                className="max-w-sm"
+                className="max-w-sm ml-auto text-[var(--hive-brand-primary)]"
                 variant="outline"
-                className="ml-auto text-[var(--hive-brand-primary)]"
+                
                 onClick={() => {
                   if (enhancementSuggestion.includes('poll')) setPostType('poll');
                   if (enhancementSuggestion.includes('event')) setPostType('event');

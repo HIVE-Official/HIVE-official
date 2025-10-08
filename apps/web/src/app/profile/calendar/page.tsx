@@ -346,24 +346,21 @@ export default function CalendarPage() {
             <Button
               variant={viewMode === 'day' ? 'default' : 'outline'}
               onClick={() => setViewMode('day')}
-              className={viewMode === 'day' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              className="max-w-sm"
+              className={`max-w-sm ${viewMode === 'day' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}`}
             >
               Day
             </Button>
             <Button
               variant={viewMode === 'week' ? 'default' : 'outline'}
               onClick={() => setViewMode('week')}
-              className={viewMode === 'week' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              className="max-w-sm"
+              className={`max-w-sm ${viewMode === 'week' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}`}
             >
               Week
             </Button>
             <Button
               variant={viewMode === 'month' ? 'default' : 'outline'}
               onClick={() => setViewMode('month')}
-              className={viewMode === 'month' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}
-              className="max-w-sm"
+              className={`max-w-sm ${viewMode === 'month' ? 'bg-[var(--hive-brand-primary)] text-black' : 'border-white/20'}`}
             >
               Month
             </Button>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, HiveModalHeader, HiveModalTitle, DialogContent, HiveModalFooter, Button, Input, Badge } from "@hive/ui";
+import { Dialog, DialogContent, Button, Input, Badge } from "@hive/ui";
+import { HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { 
   MapPin, 
   Users, 

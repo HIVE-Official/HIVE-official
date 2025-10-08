@@ -319,7 +319,7 @@ async function ensureSampleSpaces() {
         name: space.name,
         name_lowercase: space.name.toLowerCase(),
         description: space.description,
-        type: space.spaceType,
+        type: space.type,
         subType: null,
         status: 'active',
         isActive: true,

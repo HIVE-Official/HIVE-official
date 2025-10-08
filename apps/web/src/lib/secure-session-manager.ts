@@ -8,6 +8,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { logSecurityEvent } from './structured-logger';
 import { currentEnvironment, env } from './env';
 import { SecurityScanner } from './secure-input-validation';
+import type { SessionData, SessionMetadata, SessionSecurityLevel } from "@hive/core";
 
 /**
  * Session configuration with security-first design
@@ -39,29 +40,6 @@ const SESSION_CONFIG = {
     maxAge: 7 * 24 * 60 * 60 // 7 days
   }
 } as const;
-
-/**
- * Session data structure
- */
-export interface SessionData {
-  userId: string;
-  email: string;
-  handle: string;
-  schoolId: string;
-  issuedAt: number;
-  expiresAt: number;
-  sessionId: string;
-  fingerprint: string;
-  lastActivity: number;
-  rotationCount: number;
-  securityLevel: 'standard' | 'elevated' | 'restricted';
-  metadata: {
-    userAgent: string;
-    ip: string;
-    createdAt: number;
-    lastRotated: number;
-  };
-}
 
 /**
  * Refresh token data
@@ -168,7 +146,7 @@ export class SecureSessionManager {
       fingerprint,
       lastActivity: now,
       rotationCount: 0,
-      securityLevel: 'standard',
+      securityLevel: 'standard' as SessionSecurityLevel,
       metadata: {
         userAgent: request.headers.get('user-agent') || '',
         ip: request.headers.get('x-forwarded-for') || 'unknown',

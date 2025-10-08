@@ -7,14 +7,13 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@hive/auth-logic";
 // TEMPORARY: Using local implementation due to export resolution issue
 import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Button,
   Card,
-  Progress,
-  HiveLogo,
-  CompletionPsychologyEnhancer
+  HiveLogo
 } from "@hive/ui";
+// TODO: CompletionPsychologyEnhancer not yet created
 import {
   ArrowLeft,
   ArrowRight,
@@ -22,11 +21,8 @@ import {
   User,
   Users,
   GraduationCap,
-  AtSign,
   Camera,
   Heart,
-  Wrench,
-  Shield,
   CheckCircle,
   Loader2
 } from "lucide-react";
@@ -37,35 +33,16 @@ import { HiveUserTypeStep } from "./steps/hive-user-type-step";
 import { HiveNameStep } from "./steps/hive-name-step";
 import { HiveFacultyInfoStep } from "./steps/hive-faculty-info-step";
 import { HiveAcademicsStep } from "./steps/hive-academics-step";
-import { HiveHandleStep } from "./steps/hive-handle-step";
 import { HivePhotoStep } from "./steps/hive-photo-step";
 import { HiveInterestsStep } from "./steps/hive-interests-step";
-import { HiveBuilderStep } from "./steps/hive-builder-step";
 import { HiveCompletionStep } from "./steps/hive-completion-step";
-
-// HIVE Progress Component using design system
-function OnboardingProgress({ value, isComplete, className }: { 
-  value: number;
-  isComplete?: boolean;
-  className?: string;
-}) {
-  return (
-    <Progress
-      value={value}
-      variant={isComplete ? "success" : "default"}
-      className={cn("max-w-lg w-full", className)}
-    />
-  );
-}
 
 // HIVE Step Indicator using design system
 function StepIndicator({
   currentStep,
-  totalSteps,
   stepTitles
 }: {
   currentStep: number;
-  totalSteps: number;
   stepTitles: string[];
 }) {
   return (
@@ -125,6 +102,7 @@ function StepIndicator({
 // Types
 export interface HiveOnboardingData {
   fullName: string;
+  displayName?: string; // Alias for fullName
   userType?: 'student' | 'alumni' | 'faculty';
   firstName?: string;
   lastName?: string;
@@ -135,6 +113,8 @@ export interface HiveOnboardingData {
   handle: string;
   profilePhoto?: string;
   interests?: string[];
+  bio?: string;
+  livingSituation?: string;
   builderRequestSpaces?: string[];
   hasConsented: boolean;
   acceptedTerms: boolean;
@@ -354,7 +334,7 @@ export function HiveOnboardingWizard() {
       }
 
       // Auto-create spaces after onboarding
-      const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
+      const _spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
 
       // Show success animation
       setCurrentStep(TOTAL_STEPS);
@@ -537,7 +517,8 @@ export function HiveOnboardingWizard() {
                 {Math.round(progress)}% complete
               </div>
             </div>
-            <CompletionPsychologyEnhancer
+            {/* TODO: CompletionPsychologyEnhancer component */}
+            {/* <CompletionPsychologyEnhancer
               currentStep={currentStep + 1}
               totalSteps={TOTAL_STEPS}
               userType={data.userType}
@@ -545,7 +526,7 @@ export function HiveOnboardingWizard() {
                 // Track behavioral completion boosts for analytics
               }}
               className="mb-4"
-            />
+            /> */}
           </div>
 
           {/* Step Content */}
@@ -644,7 +625,6 @@ export function HiveOnboardingWizard() {
         <div className="sticky top-6 space-y-[var(--hive-spacing-6)]">
           <StepIndicator
             currentStep={data.userType === 'faculty' ? [0, 1, 2, 7, 8].indexOf(currentStep) : currentStep}
-            totalSteps={data.userType === 'faculty' ? 5 : TOTAL_STEPS}
             stepTitles={data.userType === 'faculty' ?
               ["Welcome to HIVE", "Your Role", "Faculty Information", "Request Management Access", "Terms & Privacy"] :
               steps.map(s => s.title)

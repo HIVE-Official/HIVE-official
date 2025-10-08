@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
@@ -120,9 +120,9 @@ async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]>
 }
 
 // GET - Fetch calendar events (personal + space events)
-export const GET = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     if (!userId) {
       return NextResponse.json(ApiResponseHelper.error("User not authenticated", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
@@ -292,9 +292,9 @@ export const GET = withAuthAndErrors(async (request: NextRequest, authContext, r
 });
 
 // POST - Create personal event
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     if (!userId) {
       return NextResponse.json(ApiResponseHelper.error("User not authenticated", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }

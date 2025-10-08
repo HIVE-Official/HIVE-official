@@ -127,7 +127,7 @@ export declare class Profile extends AggregateRoot<ProfileProps> {
     leaveSpace(spaceId: string): void;
     addAchievement(achievementId: string): void;
     addPhoto(photoUrl: string): Promise<Result<void>>;
-    completeOnboarding(academicInfo: AcademicInfo, interests: string[], selectedSpaces: string[]): Result<void>;
+    completeOnboarding(academicInfo: AcademicInfo | undefined, interests: string[], selectedSpaces: string[]): Result<void>;
     verify(): void;
     deactivate(): void;
     reactivate(): void;

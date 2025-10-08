@@ -103,7 +103,14 @@ export async function GET(request: NextRequest) {
             createdByName = userData?.displayName || userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Anonymous";
           }
         } catch (error) {
-          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/tools/browse'  });
+          const err = error instanceof Error ? error : new Error(String(error));
+          logger.warn('Failed to fetch tool owner information', {
+            error: err,
+            metadata: {
+              ownerId: toolData.ownerId,
+              endpoint: '/api/tools/browse'
+            },
+          });
         }
 
         // Apply search filter (done post-query for flexibility)
@@ -177,10 +184,17 @@ export async function GET(request: NextRequest) {
         const countSnapshot = await countQuery.count().get();
         total = countSnapshot.data().count;
       } catch (error) {
-        logger.warn(
-      `Failed to get total count at /api/tools/browse`,
-      error instanceof Error ? error : new Error(String(error))
-    );
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.warn('Failed to get total count at /api/tools/browse', {
+          error: err,
+          metadata: {
+            userId,
+            hasCurrentUser: Boolean(currentUser),
+            category,
+            type,
+            status,
+          },
+        });
         // Fallback to current batch size
         total = filteredTools.length;
       }

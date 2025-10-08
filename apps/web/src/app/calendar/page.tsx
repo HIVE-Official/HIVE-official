@@ -345,9 +345,8 @@ export default function CalendarPage() {
             {conflictEvents.length > 0 && (
               <Button
                 variant="outline"
-                className="max-w-sm"
+                className="max-w-sm border-red-500 text-red-400 hover:bg-red-500/10"
                 onClick={() => setShowConflicts(true)}
-                className="border-red-500 text-red-400 hover:bg-red-500/10"
               >
                 <AlertTriangle className="h-4 w-4 mr-2" />
                 {conflictEvents.length} Conflicts
@@ -359,10 +358,9 @@ export default function CalendarPage() {
               {['day', 'week', 'month'].map((mode) => (
                 <Button
                   key={mode}
-                  variant={viewMode === mode ? 'primary' : 'ghost'}
-                  className="max-w-sm"
+                  variant={viewMode === mode ? 'default' : 'ghost'}
+                  className="max-w-sm text-xs capitalize"
                   onClick={() => setViewMode(mode as 'month' | 'week' | 'day')}
-                  className="text-xs capitalize"
                 >
                   {mode}
                 </Button>

@@ -55,7 +55,7 @@ export async function validateApiAuth(
   // In production, never allow development bypasses for sensitive operations
   if (isProductionEnvironment() && !allowDevelopmentBypass) {
     const validation = await validateAuthToken(token, request, {
-      action: operation || '',
+      operation: operation || '',
       requireRealAuth: true
     });
 
@@ -64,7 +64,7 @@ export async function validateApiAuth(
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        action: operation || '',
+        operation: operation || '',
         tags: { reason: validation.reason || 'invalid_token' }
       });
 
@@ -81,7 +81,7 @@ export async function validateApiAuth(
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        action: operation || '',
+      operation: operation || '',
         tags: { userId: validation.userId || '', reason: 'insufficient_permissions' }
       });
 
@@ -229,10 +229,11 @@ export function withAuthAndErrors<T extends any[]>(
 
       // Handle various error types
       if (error && typeof error === 'object' && 'status' in error) {
+        const typedError = error as { status: number; message?: string; code?: string };
         return ApiResponse.error(
-          error.message || 'Operation failed',
-          error.code || 'UNKNOWN_ERROR',
-          error.status as number || 500
+          typedError.message || 'Operation failed',
+          typedError.code || 'UNKNOWN_ERROR',
+          typedError.status || 500
         );
       }
 

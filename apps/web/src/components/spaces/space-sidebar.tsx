@@ -76,25 +76,25 @@ export function SpaceSidebar({
   const loadSidebarData = async () => {
     try {
       // Load online members
-      const membersResponse = await api.get(`/api/spaces/${spaceId}/members`, {
+      const membersResponse = await api.get<{ members?: OnlineMember[] }>(`/api/spaces/${spaceId}/members`, {
         params: { online: true, limit: 10 }
       });
       setOnlineMembers(membersResponse.members || []);
 
       // Load upcoming events
-      const eventsResponse = await api.get(`/api/spaces/${spaceId}/events`, {
+      const eventsResponse = await api.get<{ events?: UpcomingEvent[] }>(`/api/spaces/${spaceId}/events`, {
         params: { upcoming: true, limit: 3 }
       });
       setUpcomingEvents(eventsResponse.events || []);
 
       // Load pinned resources
-      const resourcesResponse = await api.get(`/api/spaces/${spaceId}/resources`, {
+      const resourcesResponse = await api.get<{ resources?: Resource[] }>(`/api/spaces/${spaceId}/resources`, {
         params: { pinned: true, limit: 5 }
       });
       setPinnedResources(resourcesResponse.resources || []);
 
       // Load installed tools
-      const toolsResponse = await api.get(`/api/spaces/${spaceId}/tools`);
+      const toolsResponse = await api.get<{ tools?: any[] }>(`/api/spaces/${spaceId}/tools`);
       setInstalledTools(toolsResponse.tools || []);
     } catch (error) {
       console.error('Failed to load sidebar data:', error);
@@ -105,10 +105,10 @@ export function SpaceSidebar({
     return (
       <div className="p-2">
         <Button
-          className="max-w-sm"
+          className="max-w-sm mb-4"
           variant="outline"
           onClick={onToggleCollapse}
-          className="mb-4"
+          
         >
           <ChevronRight className="w-4 h-4" />
         </Button>
@@ -152,10 +152,10 @@ export function SpaceSidebar({
     <div className="p-4 space-y-4">
       {/* Collapse Button */}
       <Button
-        className="max-w-sm"
+        className="max-w-sm mb-2"
         variant="outline"
         onClick={onToggleCollapse}
-        className="mb-2"
+        
       >
         <ChevronLeft className="w-4 h-4 mr-2" />
         Collapse

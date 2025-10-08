@@ -395,7 +395,7 @@ export class Profile extends AggregateRoot<ProfileProps> {
   }
 
   public completeOnboarding(
-    academicInfo: AcademicInfo,
+    academicInfo: AcademicInfo | undefined,
     interests: string[],
     selectedSpaces: string[]
   ): Result<void> {
@@ -404,23 +404,30 @@ export class Profile extends AggregateRoot<ProfileProps> {
       return Result.fail<void>('Profile is already onboarded');
     }
 
-    // Validate required fields
-    if (!academicInfo) {
+    if (!interests || interests.length === 0) {
+      return Result.fail<void>('At least one interest must be selected during onboarding');
+    }
+
+    if (!selectedSpaces || selectedSpaces.length === 0) {
+      return Result.fail<void>('At least one space must be joined during onboarding');
+    }
+
+    // Validate required fields for students
+    if (this.props.userType.isStudent() && !academicInfo) {
       return Result.fail<void>('Academic information is required for students');
     }
 
     // Update academic info
-    this.props.academicInfo = academicInfo;
+    if (academicInfo) {
+      this.props.academicInfo = academicInfo;
+    }
 
     // Update interests if provided and non-empty
-    if (interests && interests.length > 0) {
-      this.props.socialInfo.interests = interests;
-    }
+    this.props.socialInfo.interests = interests;
 
     // Add spaces if provided and non-empty
-    if (selectedSpaces && selectedSpaces.length > 0) {
-      selectedSpaces.forEach(spaceId => this.joinSpace(spaceId));
-    }
+    this.props.spaces = [];
+    selectedSpaces.forEach(spaceId => this.joinSpace(spaceId));
 
     this.props.isOnboarded = true;
     this.props.updatedAt = new Date();

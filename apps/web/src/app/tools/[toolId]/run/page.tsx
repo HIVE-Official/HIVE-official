@@ -8,15 +8,11 @@ import { useParams, useRouter } from "next/navigation";
 import { Alert as _Alert } from "@/components/temp-stubs";
 // LiveToolRuntime not exported from @hive/ui yet
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
+import { Button, Card } from "@hive/ui";
 import { useFeatureFlags } from "@hive/hooks";
 import { useSession } from "../../../../hooks/use-session";
 import type { ElementInstance, Tool } from "@hive/core";
 import { logger } from "@/lib/logger";
-// Temp fix for chunk 2073 useRef errors
-const Button = ({ children, variant = 'default', size = 'default', className = '', ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
-const Card = ({ children, className = '', ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
-
-
 interface ToolWithInstances {
   tool: Tool;
   instances: ElementInstance[];
@@ -96,7 +92,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
     // id: 'button-v1',
     config: {
       text: 'Create Poll',
-      variant: 'primary',
+      variant: 'default',
       onClick: {
         type: 'submit',
         data: { action: 'createPoll' }

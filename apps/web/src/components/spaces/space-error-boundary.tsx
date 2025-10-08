@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Card, Button } from '@hive/ui';
-import { RefreshCw, AlertTriangle, Home } from 'lucide-react';
-import { logger } from '@/lib/logger';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Card, Button } from "@hive/ui";
+import { RefreshCw, AlertTriangle, Home } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
-  onError?: (error: any, errorInfo: anyInfo) => void;
+  onError?: (error: any, errorInfo: ErrorInfo) => void;
 }
 
 interface State {
@@ -27,27 +27,27 @@ export class SpaceErrorBoundary extends Component<Props, State> {
     return {
       hasError: true,
       error,
-      errorId: Math.random().toString(36).substring(7)
+      errorId: Math.random().toString(36).substring(7),
     };
   }
 
-  componentDidCatch(error: any, errorInfo: anyInfo) {
-    const errorId = this.state.errorId || 'unknown';
+  componentDidCatch(error: any, errorInfo: ErrorInfo) {
+    const errorId = this.state.errorId || "unknown";
 
     // Log error for monitoring
-    logger.error('Space component error caught by boundary', {
+    logger.error("Space component error caught by boundary", {
       errorId,
       error: error.message,
       stack: error.stack,
       componentStack: errorInfo.componentStack || undefined,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
 
     // In production, report to error tracking service
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       // TODO: Send to monitoring service (Sentry, etc.)
     }
   }
@@ -57,7 +57,7 @@ export class SpaceErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   render() {
@@ -81,7 +81,8 @@ export class SpaceErrorBoundary extends Component<Props, State> {
                   Something went wrong
                 </h3>
                 <p className="text-sm text-gray-400">
-                  We're having trouble loading this space. This usually fixes itself quickly.
+                  We're having trouble loading this space. This usually fixes
+                  itself quickly.
                 </p>
                 {this.state.errorId && (
                   <p className="text-xs text-gray-500 font-mono">
@@ -109,14 +110,14 @@ export class SpaceErrorBoundary extends Component<Props, State> {
                 </Button>
               </div>
 
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === "development" && this.state.error && (
                 <details className="w-full mt-4 text-left">
                   <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-400">
                     Debug Info
                   </summary>
                   <pre className="text-xs text-red-400 mt-2 p-2 bg-gray-800 rounded overflow-auto max-h-32">
                     {this.state.error.message}
-                    {'\n\n'}
+                    {"\n\n"}
                     {this.state.error.stack}
                   </pre>
                 </details>

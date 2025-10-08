@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import {
   Plus,
   Settings,
@@ -39,6 +39,7 @@ import {
   Button,
   Badge,
   Dialog,
+  DialogContent,
   Input
 } from '@hive/ui';
 import type { Space } from '@hive/core';
@@ -504,8 +505,15 @@ function AddToolModal({
   });
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-4xl max-h-[90vh]">
-      <div className="p-6">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-4xl max-h-[90vh]">
         <h2 className="text-2xl font-bold text-white mb-2">Add Tool to Space</h2>
         <p className="text-gray-400 mb-6">Choose from our collection of interactive tools</p>
 
@@ -514,7 +522,7 @@ function AddToolModal({
           <div className="flex-1">
             <Input
               value={searchQuery}
-              onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search tools..."
               className="w-full"
             />
@@ -581,7 +589,7 @@ function AddToolModal({
             <p className="text-gray-400">No tools found matching your criteria</p>
           </div>
         )}
-      </div>
+      </DialogContent>
     </Dialog>
   );
 }

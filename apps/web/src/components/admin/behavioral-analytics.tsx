@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -21,13 +21,9 @@ import {
   Zap,
   Timer,
   TrendingUp,
-  Users,
   ArrowUp,
-  ArrowDown,
-  Minus,
   AlertTriangle,
   CheckCircle,
-  Clock,
   Heart,
   Activity
 } from 'lucide-react';
@@ -89,11 +85,7 @@ export function BehavioralAnalytics() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('7d');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadBehavioralMetrics();
-  }, [timeRange]);
-
-  const loadBehavioralMetrics = async () => {
+  const loadBehavioralMetrics = useCallback(async () => {
     try {
       setLoading(true);
       const [metricsRes, funnelRes] = await Promise.all([
@@ -117,7 +109,11 @@ export function BehavioralAnalytics() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    loadBehavioralMetrics();
+  }, [loadBehavioralMetrics]);
 
   const getTrendIcon = (value: number, target: number) => {
     if (value >= target) return <CheckCircle className="w-4 h-4 text-green-500" />;

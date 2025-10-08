@@ -2,12 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap,
-  Search,
   ChevronDown,
   Check,
   BookOpen,
-  User,
-  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input, Card } from "@hive/ui";
@@ -30,7 +27,6 @@ export function HiveAcademicsStep({
 }: HiveAcademicsStepProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [academicLevel, setAcademicLevel] = useState<AcademicLevel | null>(
     null
   );
@@ -193,13 +189,11 @@ export function HiveAcademicsStep({
               setShowDropdown(value.length > 0);
             }}
             onFocus={() => {
-              setFocusedField("major");
               if (!data.major && searchQuery.length > 0) setShowDropdown(true);
             }}
             onBlur={() => {
-          setFocusedField(null);
-          setTimeout(() => setShowDropdown(false), 200);
-        }}
+              setTimeout(() => setShowDropdown(false), 200);
+            }}
         variant="default"
         className="max-w-lg w-full"
       />

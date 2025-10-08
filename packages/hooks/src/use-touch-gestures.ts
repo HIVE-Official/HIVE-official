@@ -196,7 +196,9 @@ export function useTouchGestures(
         oscillator.start(audioContext.currentTime)
         oscillator.stop(audioContext.currentTime + 0.1)
       } catch (error) {
-        // Haptic feedback not available
+        if (process.env.NODE_ENV !== 'production') {
+          console.debug('Haptic feedback not available', error)
+        }
       }
     }
   }, [])

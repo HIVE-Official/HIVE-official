@@ -6,3 +6,6 @@ export { RitualDetailView } from './ritual-detail-view';
 // HiveLab Templates
 export { HiveLabBuilderLayout } from './hivelab';
 export type { HiveLabBuilderLayoutProps } from './hivelab';
+
+// Profile Templates
+export { ProfileViewLayout, specProfileToUIProfile } from './profile-view-layout';

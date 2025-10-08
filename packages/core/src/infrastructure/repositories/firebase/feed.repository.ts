@@ -17,16 +17,15 @@ import {
   limit as firestoreLimit,
   Timestamp,
   addDoc,
-  onSnapshot
+  onSnapshot,
+  writeBatch
 } from 'firebase/firestore';
 import { db } from '@hive/firebase';
 import { IFeedRepository } from '../interfaces';
 import { Result } from '../../../domain/shared/base/Result';
 import { EnhancedFeed } from '../../../domain/feed/enhanced-feed';
 import { FeedId } from '../../../domain/feed/value-objects';
-import { FeedItem } from '../../../domain/feed/feed-item';
 import { ProfileId } from '../../../domain/profile/value-objects/profile-id.value';
-import { CampusId } from '../../../domain/profile/value-objects/campus-id.value';
 
 export class FirebaseFeedRepository implements IFeedRepository {
   private readonly collectionName = 'feeds';
@@ -274,8 +273,7 @@ export class FirebaseFeedRepository implements IFeedRepository {
       );
       const snapshot = await getDocs(q);
 
-      snapshot.docs.forEach(doc => {
-        const data = doc.data();
+      snapshot.docs.forEach(() => {
         // Add items to feed (would need to implement addItem method on EnhancedFeed)
         // For now, items are loaded separately
       });
@@ -286,9 +284,45 @@ export class FirebaseFeedRepository implements IFeedRepository {
 
   private async saveFeedItems(feed: EnhancedFeed): Promise<void> {
     try {
-      // This would save individual feed items
-      // Implementation depends on how items are stored in the EnhancedFeed aggregate
-      // For now, items are managed separately through addFeedItem/removeFeedItem
+      const items = feed.items;
+
+      if (items.length === 0) {
+        return;
+      }
+
+      const batch = writeBatch(db);
+
+      items.forEach(item => {
+        const itemRef = doc(
+          db,
+          this.feedItemsCollection,
+          `${feed.feedId.value}_${item.itemId.value}`
+        );
+
+        batch.set(itemRef, {
+          feedId: feed.feedId.value,
+          itemId: item.itemId.value,
+          content: item.content,
+          source: item.source,
+          relevanceScore: item.relevanceScore,
+          interactions: item.interactions.map(interaction => ({
+            type: interaction.type,
+            userId: interaction.userId.value,
+            timestamp: Timestamp.fromDate(interaction.timestamp)
+          })),
+          engagementCount: item.interactions.length,
+          createdAt: Timestamp.fromDate(item.createdAt),
+          isVisible: item.isVisible,
+          isTrending: item.isTrending,
+          isPinned: item.isPinned,
+          expiresAt: item.expiresAt
+            ? Timestamp.fromDate(item.expiresAt)
+            : undefined,
+          updatedAt: Timestamp.now()
+        });
+      });
+
+      await batch.commit();
     } catch (error) {
       console.error('Failed to save feed items:', error);
     }

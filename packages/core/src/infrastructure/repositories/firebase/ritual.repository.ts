@@ -24,7 +24,6 @@ import { Ritual } from '../../../domain/rituals/aggregates/ritual.aggregate';
 import { RitualId } from '../../../domain/rituals/value-objects/ritual-id.value';
 import { CampusId } from '../../../domain/profile/value-objects/campus-id.value';
 import { ProfileId } from '../../../domain/profile/value-objects/profile-id.value';
-import { Participation } from '../../../domain/rituals/entities/participation';
 
 export class FirebaseRitualRepository implements IRitualRepository {
   private readonly collectionName = 'rituals';
@@ -472,6 +471,12 @@ export class FirebaseRitualRepository implements IRitualRepository {
     // In production, this would use Firestore real-time listeners
     console.log(`Subscribing to ritual ${ritualId}`);
 
+    this.findById(ritualId).then((result) => {
+      if (result.isSuccess) {
+        callback(result.getValue());
+      }
+    });
+
     // Return unsubscribe function
     return () => {
       console.log(`Unsubscribed from ritual ${ritualId}`);
@@ -482,6 +487,12 @@ export class FirebaseRitualRepository implements IRitualRepository {
     // Simplified subscription implementation
     // In production, this would use Firestore real-time listeners
     console.log(`Subscribing to active rituals for campus ${campusId}`);
+
+    this.findActive(campusId).then((result) => {
+      if (result.isSuccess) {
+        callback(result.getValue());
+      }
+    });
 
     // Return unsubscribe function
     return () => {

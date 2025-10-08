@@ -444,11 +444,10 @@ export function VisualToolComposer({
                           <div className="mt-1">
                             <Button
                               variant="outline"
-                              className="max-w-sm"
+                              className={`max-w-sm ${selectedCanvasElement.config[key] ? 'bg-green-500/20 border-green-500' : ''}`}
                               onClick={() => handleElementConfigChange(selectedCanvasElement.id, {
                                 [key]: !selectedCanvasElement.config[key]
                               })}
-                              className={selectedCanvasElement.config[key] ? 'bg-green-500/20 border-green-500' : ''}
                             >
                               {selectedCanvasElement.config[key] ? 'True' : 'False'}
                             </Button>
@@ -471,9 +470,8 @@ export function VisualToolComposer({
                   <div className="pt-4 border-t border-hive-border-default">
                     <Button
                       variant="outline"
-                      className="max-w-sm"
+                      className="max-w-sm text-red-400 border-red-400 hover:bg-red-500/10"
                       onClick={() => handleElementDelete(selectedCanvasElement.id)}
-                      className="text-red-400 border-red-400 hover:bg-red-500/10"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Delete Element

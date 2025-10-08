@@ -6,8 +6,8 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils.js';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types.js';
 export function Port({ port, isHovered = false, isCompatible = false, isConnected = false, isConnecting = false, onMouseDown, onClick, onMouseEnter, onMouseLeave, className, showLabel = false, }) {
     // Get primary data type for color
     const primaryType = Array.isArray(port.type) ? port.type[0] : port.type;

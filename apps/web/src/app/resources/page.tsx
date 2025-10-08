@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 
 // Temp fix for chunk 2073 useRef errors
-const Button = ({ children, variant = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Button = ({ children, variant: _variant = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
 const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
 import { PageContainer } from "@/components/temp-stubs";
 import { BookOpen, ExternalLink, Video, FileText, Code, Users, Star, Download } from 'lucide-react';

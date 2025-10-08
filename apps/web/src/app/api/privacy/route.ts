@@ -4,87 +4,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-
-// Privacy settings interface
-interface PrivacySettings {
-  userId: string;
-  ghostMode: {
-    enabled: boolean;
-    level: 'invisible' | 'minimal' | 'selective' | 'normal';
-    hideFromDirectory: boolean;
-    hideActivity: boolean;
-    hideSpaceMemberships: boolean;
-    hideLastSeen: boolean;
-    hideOnlineStatus: boolean;
-  };
-  profileVisibility: {
-    showToSpaceMembers: boolean;
-    showToFollowers: boolean;
-    showToPublic: boolean;
-    hideProfilePhoto: boolean;
-    hideHandle: boolean;
-    hideInterests: boolean;
-  };
-  activitySharing: {
-    shareActivityData: boolean;
-    shareSpaceActivity: boolean;
-    shareToolUsage: boolean;
-    shareContentCreation: boolean;
-    allowAnalytics: boolean;
-  };
-  notifications: {
-    enableActivityNotifications: boolean;
-    enableSpaceNotifications: boolean;
-    enableToolNotifications: boolean;
-    enableRitualNotifications: boolean;
-  };
-  dataRetention: {
-    retainActivityData: boolean;
-    retentionPeriod: number; // in days
-    autoDeleteInactiveData: boolean;
-  };
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Default privacy settings
-const defaultPrivacySettings: Omit<PrivacySettings, 'userId' | 'createdAt' | 'updatedAt'> = {
-  ghostMode: {
-    enabled: false,
-    level: 'normal',
-    hideFromDirectory: false,
-    hideActivity: false,
-    hideSpaceMemberships: false,
-    hideLastSeen: false,
-    hideOnlineStatus: false,
-  },
-  profileVisibility: {
-    showToSpaceMembers: true,
-    showToFollowers: true,
-    showToPublic: false,
-    hideProfilePhoto: false,
-    hideHandle: false,
-    hideInterests: false,
-  },
-  activitySharing: {
-    shareActivityData: false,
-    shareSpaceActivity: true,
-    shareToolUsage: false,
-    shareContentCreation: true,
-    allowAnalytics: true,
-  },
-  notifications: {
-    enableActivityNotifications: true,
-    enableSpaceNotifications: true,
-    enableToolNotifications: true,
-    enableRitualNotifications: true,
-  },
-  dataRetention: {
-    retainActivityData: true,
-    retentionPeriod: 365, // 1 year
-    autoDeleteInactiveData: false,
-  },
-};
+import type { DetailedPrivacySettings } from "@hive/core";
+import { defaultDetailedPrivacySettings } from "@hive/core";
 
 // GET - Fetch user's privacy settings
 export async function GET(request: NextRequest) {
@@ -98,9 +19,9 @@ export async function GET(request: NextRequest) {
     
     if (!privacyDoc.exists) {
       // Create default settings if none exist
-      const newSettings: PrivacySettings = {
+      const newSettings: DetailedPrivacySettings = {
         userId: user.id,
-        ...defaultPrivacySettings,
+        ...defaultDetailedPrivacySettings,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -109,7 +30,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ settings: newSettings });
     }
 
-    const settings = privacyDoc.data() as PrivacySettings;
+    const settings = privacyDoc.data() as DetailedPrivacySettings;
     return NextResponse.json({ settings });
   } catch (error) {
     logger.error(
@@ -138,15 +59,15 @@ export async function PUT(request: NextRequest) {
 
     // Get existing settings
     const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
-    const existingSettings = privacyDoc.exists ? privacyDoc.data() as PrivacySettings : {
+    const existingSettings = privacyDoc.exists ? (privacyDoc.data() as DetailedPrivacySettings) : {
       userId: user.id,
-      ...defaultPrivacySettings,
+      ...defaultDetailedPrivacySettings,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
 
     // Update settings
-    const updatedSettings: PrivacySettings = {
+    const updatedSettings: DetailedPrivacySettings = {
       ...existingSettings,
       ghostMode: { ...existingSettings.ghostMode, ...ghostMode },
       profileVisibility: { ...existingSettings.profileVisibility, ...profileVisibility },
@@ -175,7 +96,7 @@ export async function PUT(request: NextRequest) {
 }
 
 // Helper function to apply privacy changes
-async function applyPrivacyChanges(userId: string, settings: PrivacySettings) {
+async function applyPrivacyChanges(userId: string, settings: DetailedPrivacySettings) {
   try {
     // Update user's visibility in spaces
     if (settings.ghostMode.enabled) {
@@ -199,7 +120,7 @@ async function applyPrivacyChanges(userId: string, settings: PrivacySettings) {
 }
 
 // Helper function to update space visibility
-async function updateSpaceVisibility(userId: string, settings: PrivacySettings) {
+async function updateSpaceVisibility(userId: string, settings: DetailedPrivacySettings) {
   try {
     const membershipsSnapshot = await dbAdmin.collection('members')
       .where('userId', '==', userId)
@@ -238,7 +159,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
 }
 
 // Helper function to update profile visibility
-async function updateProfileVisibility(userId: string, profileVisibility: PrivacySettings['profileVisibility']) {
+async function updateProfileVisibility(userId: string, profileVisibility: DetailedPrivacySettings["profileVisibility"]) {
   try {
     const userDocRef = dbAdmin.collection('users').doc(userId);
     const userDoc = await userDocRef.get();

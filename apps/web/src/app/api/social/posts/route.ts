@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
@@ -39,9 +39,9 @@ const CreatePostSchema = z.object({
  * Posts API
  * POST - Create new post
  */
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     const body = await request.json();
     const postData = CreatePostSchema.parse(body);
 

@@ -33,11 +33,11 @@ export interface ActivityItem {
 
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
 
   if (!spaceId) {
     return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });

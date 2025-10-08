@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Tag, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Heart, Tag, CheckCircle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Button } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -253,7 +253,6 @@ export function HiveInterestsStep({ data, updateData, onNext }: HiveInterestsSte
   const canContinue = selectedInterests.length >= 3 && selectedInterests.length <= 6;
 
   // Behavioral Psychology: Progress visualization to encourage 70% completion
-  const progressPercentage = Math.min((selectedInterests.length / 6) * 100, 100);
   const isOptimalRange = selectedInterests.length >= 3 && selectedInterests.length <= 6;
 
   return (

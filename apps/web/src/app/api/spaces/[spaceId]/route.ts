@@ -23,10 +23,10 @@ const UpdateSpaceSchema = z.object({
 
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
 
   if (!spaceId) {
     return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
@@ -53,11 +53,11 @@ export const PATCH = withAuthValidationAndErrors(
   UpdateSpaceSchema,
   async (
     request: AuthenticatedRequest,
-    { params }: { params: Promise<{ spaceId: string }> },
+    context,
     updates: UpdateSpaceData,
     respond
   ) => {
-    const { spaceId } = await params;
+    const spaceId = context.params.spaceId;
     const userId = getUserId(request);
 
     if (!spaceId) {

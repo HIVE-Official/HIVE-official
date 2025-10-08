@@ -1,5 +1,5 @@
 import { ToolSchema } from "@hive/core";
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import * as admin from 'firebase-admin';
 import { z } from "zod";
@@ -18,12 +18,15 @@ export const POST = withAuthValidationAndErrors(
   DeployToolSchema,
   async (
     request: AuthenticatedRequest,
-    { params }: { params: Promise<{ toolId: string }> },
+    context,
     { spaceId, configuration, permissions },
     respond
   ) => {
     const userId = getUserId(request);
-    const { toolId } = await params;
+    const toolId = context.params.toolId;
+    if (!toolId) {
+      return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+    }
     const db = dbAdmin;
 
     // Verify user has admin access to the space
@@ -181,16 +184,19 @@ export const POST = withAuthValidationAndErrors(
 
 export const DELETE = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
   const searchParams = request.nextUrl.searchParams;
   const spaceId = searchParams.get("spaceId");
 
   if (!spaceId) {
     return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
+  }
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
   }
 
   const db = dbAdmin;
@@ -283,16 +289,19 @@ export const DELETE = withAuthAndErrors(async (
 
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
   const searchParams = request.nextUrl.searchParams;
   const spaceId = searchParams.get("spaceId");
 
   if (!spaceId) {
     return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
+  }
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
   }
 
   const db = dbAdmin;

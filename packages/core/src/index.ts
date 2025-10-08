@@ -96,3 +96,6 @@ export type { SearchResultItem, SearchQuery, SearchQueryResult } from "./applica
 
 // Temporary backward compatibility (will be removed)
 export * from "./application/shared/temporary-types";
+export * from "./shared/profile";
+export * from "./shared/privacy";
+export * from "./shared/session";

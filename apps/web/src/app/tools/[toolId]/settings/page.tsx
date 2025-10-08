@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card, Grid } from "@hive/ui";
+import { Grid, Card, Button } from "@hive/ui";
 import { Alert as _Alert } from "@/components/temp-stubs";
 import { ArrowLeft, Settings as _Settings, Lock, Eye as _Eye, EyeOff as _EyeOff, Users, Globe, Shield as _Shield, Trash2, Copy, Download, Upload as _Upload, AlertTriangle, Save, Share2, Bell } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
@@ -162,10 +162,9 @@ export default function ToolSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                className="max-w-sm"
+                className="max-w-sm text-[#A1A1AA] hover:text-white"
                 variant="outline"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -182,9 +181,8 @@ export default function ToolSettingsPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                className="max-w-sm"
+                className="max-w-sm bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 onClick={handleSave}
-                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 disabled={!hasChanges}
               >
                 <Save className="h-4 w-4 mr-2" />

@@ -131,9 +131,8 @@ export function FilterSelectorElement({ config, onChange }: ElementProps) {
             <Button
               key={index}
               variant={isSelected ? "default" : "outline"}
-              className="max-w-sm"
+              className="max-w-sm h-8"
               onClick={() => handleFilterToggle(value)}
-              className="h-8"
             >
               {label}
               {config.showCounts && count && (

@@ -302,6 +302,8 @@ export class FeedAlgorithmService {
     user: User,
     userConnections: Connection[]
   ): SocialProofSignals {
+    void user;
+    void userConnections;
     // This would integrate with actual user data
     // For now, return mock implementation
     return {
@@ -322,6 +324,7 @@ export class FeedAlgorithmService {
     space: Space,
     user: User
   ): InsiderAccessSignals {
+    void user;
     return {
       spaceMemberCount: space.memberCount || 0,
       requiresInvite: !space.isPublic, // Use isPublic as proxy for invite requirement
@@ -372,8 +375,15 @@ export class FeedAlgorithmService {
   }
 
   private isHappeningSoon(timestamp: string): boolean {
-    // Would parse event time and check if within next 2 hours
-    return false
+    const eventTime = Date.parse(timestamp)
+
+    if (Number.isNaN(eventTime)) {
+      return false
+    }
+
+    const now = Date.now()
+    const twoHoursInMs = 2 * 60 * 60 * 1000
+    return eventTime >= now && eventTime - now <= twoHoursInMs
   }
 
   private isMealTime(): boolean {
@@ -390,7 +400,8 @@ export class FeedAlgorithmService {
   applyVariableRatio(posts: ScoredPost[]): ScoredPost[] {
     return posts.map((post, index) => {
       // Random perfect discoveries - creates addictive scrolling
-      const isGoldenPost = Math.random() < 0.15 // 15% chance
+      const diminishingFactor = Math.max(0.05, 0.15 - index * 0.01)
+      const isGoldenPost = Math.random() < diminishingFactor
 
       if (isGoldenPost) {
         return {

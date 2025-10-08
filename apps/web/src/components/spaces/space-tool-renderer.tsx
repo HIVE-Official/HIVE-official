@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { renderElement } from '../tools/element-renderers';
-import { Card, Button, Badge } from '@hive/ui';
-import { Settings, Maximize2, Minimize2, RefreshCw } from 'lucide-react';
-import type { SpaceTypeRules } from '@/lib/space-type-rules';
+import { useState, useEffect } from "react";
+import { renderElement } from "../tools/element-renderers";
+import { Card, Button, Badge } from "@hive/ui";
+import { Settings, Maximize2, Minimize2, RefreshCw } from "lucide-react";
+import type { SpaceTypeRules } from "@/lib/space-type-rules";
 import {
   canUseToolInSpace,
   getToolPermissions,
   type UserPermissions,
-  type ToolPermissions
-} from '@/lib/permission-system';
+  type ToolPermissions,
+} from "@/lib/permission-system";
 
 interface SpaceToolRendererProps {
   tool: {
@@ -21,7 +21,7 @@ interface SpaceToolRendererProps {
     category: string;
     status: string;
     icon?: string;
-    position: 'inline' | 'contextual' | 'both';
+    position: "inline" | "contextual" | "both";
     configuration?: any;
     permissions?: any;
     deployer?: any;
@@ -33,7 +33,7 @@ interface SpaceToolRendererProps {
   spaceType?: string; // Add spaceType prop
   userPermissions: UserPermissions;
   spaceRules: SpaceTypeRules | null;
-  position: 'inline' | 'contextual';
+  position: "inline" | "contextual";
 }
 
 export function SpaceToolRenderer({
@@ -42,11 +42,11 @@ export function SpaceToolRenderer({
   spaceType,
   userPermissions,
   spaceRules,
-  position
+  position,
 }: SpaceToolRendererProps) {
   const [toolState, setToolState] = useState<any>({});
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState(position === 'inline');
+  const [expanded, setExpanded] = useState(position === "inline");
   const [error, setError] = useState<string | null>(null);
 
   // Check if user has permission to use this tool using unified permission system
@@ -55,12 +55,13 @@ export function SpaceToolRenderer({
 
     const toolPermissions = getToolPermissions(tool.category, {
       toolId: tool.toolId,
-      requiredRole: tool.permissions?.isPublic === false ? 'moderator' : 'member'
+      requiredRole:
+        tool.permissions?.isPublic === false ? "moderator" : "member",
     });
 
     const permission = canUseToolInSpace(
       userPermissions,
-      (spaceType || 'student_organizations') as any, // Use spaceType prop or default
+      (spaceType || "student_organizations") as any, // Use spaceType prop or default
       spaceRules,
       toolPermissions
     );
@@ -91,38 +92,37 @@ export function SpaceToolRenderer({
         position,
         lastUsed: tool.lastUsed,
         usageCount: tool.usageCount || 0,
-        status: tool.status
+        status: tool.status,
       };
 
       setToolState(initialState);
     } catch (err) {
-      setError('Failed to initialize tool');
+      setError("Failed to initialize tool");
     } finally {
       setLoading(false);
     }
   };
 
   const handleToolAction = (action: string, data?: any) => {
-
     // Handle common tool actions
     switch (action) {
-      case 'refresh':
+      case "refresh":
         initializeTool();
         break;
-      case 'expand':
+      case "expand":
         setExpanded(true);
         break;
-      case 'collapse':
+      case "collapse":
         setExpanded(false);
         break;
-      case 'configure':
+      case "configure":
         // Open tool configuration modal
         break;
       default:
         // Handle tool-specific actions
         setToolState((prev: any) => ({
           ...prev,
-          lastAction: { action, data, timestamp: Date.now() }
+          lastAction: { action, data, timestamp: Date.now() },
         }));
     }
   };
@@ -132,8 +132,8 @@ export function SpaceToolRenderer({
       ...prev,
       elements: {
         ...prev.elements,
-        [elementId]: data
-      }
+        [elementId]: data,
+      },
     }));
   };
 
@@ -162,9 +162,8 @@ export function SpaceToolRenderer({
         <div className="text-sm">{error}</div>
         <Button
           variant="outline"
-          className="max-w-sm"
+          className="max-w-sm mt-2 border-red-500/30 text-red-400"
           onClick={() => initializeTool()}
-          className="mt-2 border-red-500/30 text-red-400"
         >
           Retry
         </Button>
@@ -173,27 +172,31 @@ export function SpaceToolRenderer({
   }
 
   // Render tool based on position
-  if (position === 'contextual') {
+  if (position === "contextual") {
     return (
       <div className="space-y-3">
         {/* Contextual Tool Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-lg">{tool.icon || '🔧'}</span>
+            <span className="text-lg">{tool.icon || "🔧"}</span>
             <div>
               <h4 className="font-semibold text-white text-sm">{tool.name}</h4>
-              <Badge variant="secondary" className="text-xs border-gray-600 text-gray-400">
+              <Badge
+                variant="secondary"
+                className="text-xs border-gray-600 text-gray-400"
+              >
                 {tool.category}
               </Badge>
             </div>
           </div>
 
           <div className="flex items-center gap-1">
-            {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
+            {(userPermissions.role === "admin" ||
+              userPermissions.role === "owner") && (
               <Button
                 variant="outline"
                 className="max-w-sm"
-                onClick={() => handleToolAction('configure')}
+                onClick={() => handleToolAction("configure")}
               >
                 <Settings className="w-3 h-3" />
               </Button>
@@ -203,7 +206,11 @@ export function SpaceToolRenderer({
               className="max-w-sm"
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+              {expanded ? (
+                <Minimize2 className="w-3 h-3" />
+              ) : (
+                <Maximize2 className="w-3 h-3" />
+              )}
             </Button>
           </div>
         </div>
@@ -212,12 +219,10 @@ export function SpaceToolRenderer({
         {expanded && (
           <div className="space-y-2">
             {/* Show tool description and status */}
-            <div className="text-xs text-gray-400">
-              {tool.description}
-            </div>
-            {tool.status === 'active' ? (
+            <div className="text-xs text-gray-400">{tool.description}</div>
+            {tool.status === "active" ? (
               <div className="p-3 bg-gray-800/30 rounded text-center text-gray-300">
-                <div className="text-2xl mb-2">{tool.icon || '🔧'}</div>
+                <div className="text-2xl mb-2">{tool.icon || "🔧"}</div>
                 <div className="text-sm">Tool ready for use</div>
                 {tool.lastUsed && (
                   <div className="text-xs text-gray-500 mt-1">
@@ -242,7 +247,7 @@ export function SpaceToolRenderer({
       {/* Inline Tool Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{tool.icon || '🔧'}</span>
+          <span className="text-2xl">{tool.icon || "🔧"}</span>
           <div>
             <h3 className="text-xl font-semibold text-white">{tool.name}</h3>
             <p className="text-sm text-gray-400">
@@ -256,12 +261,12 @@ export function SpaceToolRenderer({
             {tool.category}
           </Badge>
 
-          {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
+          {(userPermissions.role === "admin" ||
+            userPermissions.role === "owner") && (
             <Button
               variant="outline"
-              className="max-w-sm"
-              onClick={() => handleToolAction('configure')}
-              className="border-gray-700 text-gray-300"
+              className="max-w-sm border-gray-700 text-gray-300"
+              onClick={() => handleToolAction("configure")}
             >
               <Settings className="w-4 h-4 mr-2" />
               Configure
@@ -270,9 +275,8 @@ export function SpaceToolRenderer({
 
           <Button
             variant="outline"
-            className="max-w-sm"
-            onClick={() => handleToolAction('refresh')}
-            className="border-gray-700 text-gray-300"
+            className="max-w-sm border-gray-700 text-gray-300"
+            onClick={() => handleToolAction("refresh")}
           >
             <RefreshCw className="w-4 h-4" />
           </Button>
@@ -281,18 +285,20 @@ export function SpaceToolRenderer({
 
       {/* Inline Tool Content */}
       <div className="grid grid-cols-1 gap-4">
-        {tool.status === 'active' ? (
+        {tool.status === "active" ? (
           <div className="bg-gray-800/30 rounded-lg p-6 text-center">
-            <div className="text-4xl mb-4">{tool.icon || '🔧'}</div>
-            <div className="text-lg font-medium text-white mb-2">{tool.name}</div>
-            <div className="text-sm text-gray-400 mb-4">
-              {tool.description}
+            <div className="text-4xl mb-4">{tool.icon || "🔧"}</div>
+            <div className="text-lg font-medium text-white mb-2">
+              {tool.name}
             </div>
+            <div className="text-sm text-gray-400 mb-4">{tool.description}</div>
 
             {/* Tool Metrics */}
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-[var(--hive-brand-primary)]">{tool.usageCount || 0}</div>
+                <div className="text-xl font-bold text-[var(--hive-brand-primary)]">
+                  {tool.usageCount || 0}
+                </div>
                 <div className="text-xs text-gray-500">Uses</div>
               </div>
               <div className="text-center">
@@ -301,7 +307,7 @@ export function SpaceToolRenderer({
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-blue-400">
-                  {tool.deployer?.name?.split(' ')[0] || 'Admin'}
+                  {tool.deployer?.name?.split(" ")[0] || "Admin"}
                 </div>
                 <div className="text-xs text-gray-500">Deployed by</div>
               </div>
@@ -315,17 +321,19 @@ export function SpaceToolRenderer({
           </div>
         ) : (
           <div className="text-center py-8 text-gray-400">
-            <div className="text-4xl mb-3">{tool.icon || '🔧'}</div>
-            <div className="text-lg font-medium text-white mb-2">{tool.name}</div>
+            <div className="text-4xl mb-3">{tool.icon || "🔧"}</div>
+            <div className="text-lg font-medium text-white mb-2">
+              {tool.name}
+            </div>
             <div className="text-sm">
               This tool is being configured for your space.
             </div>
-            {(userPermissions.role === 'admin' || userPermissions.role === 'owner') && (
+            {(userPermissions.role === "admin" ||
+              userPermissions.role === "owner") && (
               <Button
                 variant="outline"
-                className="max-w-sm"
-                onClick={() => handleToolAction('configure')}
-                className="mt-4 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
+                className="max-w-sm mt-4 border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
+                onClick={() => handleToolAction("configure")}
               >
                 Configure Tool
               </Button>
@@ -335,27 +343,32 @@ export function SpaceToolRenderer({
       </div>
 
       {/* Tool Actions Bar */}
-      {tool.configuration?.elements && tool.configuration.elements.length > 0 && (
-        <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-          <div className="text-xs text-gray-400">
-            Last updated: {new Date(toolState.lastAction?.timestamp || Date.now()).toLocaleTimeString()}
-          </div>
+      {tool.configuration?.elements &&
+        tool.configuration.elements.length > 0 && (
+          <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+            <div className="text-xs text-gray-400">
+              Last updated:{" "}
+              {new Date(
+                toolState.lastAction?.timestamp || Date.now()
+              ).toLocaleTimeString()}
+            </div>
 
-          <div className="flex items-center gap-2">
-            {tool.configuration?.actions?.map((action: any, index: number) => (
-              <Button
-                key={index}
-                variant="outline"
-                className="max-w-sm"
-                onClick={() => handleToolAction(action.id, action.data)}
-                className="border-gray-700 text-gray-300 text-xs"
-              >
-                {action.label}
-              </Button>
-            ))}
+            <div className="flex items-center gap-2">
+              {tool.configuration?.actions?.map(
+                (action: any, index: number) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    className="max-w-sm border-gray-700 text-gray-300 text-xs"
+                    onClick={() => handleToolAction(action.id, action.data)}
+                  >
+                    {action.label}
+                  </Button>
+                )
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

@@ -9,6 +9,8 @@ import tseslint from "typescript-eslint";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const projectRoot = path.resolve(__dirname, "..", "..");
+
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
@@ -48,7 +50,7 @@ const config = [
       parser: tseslint.parser,
       parserOptions: {
         project: true,
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: projectRoot,
       },
     },
     rules: {
@@ -129,7 +131,7 @@ const config = [
       parser: tseslint.parser,
       parserOptions: {
         project: ["./functions/tsconfig.json", "./packages/firebase/tsconfig.json"],
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: projectRoot,
       },
     },
     rules: {
@@ -181,6 +183,9 @@ const config = [
       "src/components/**",
       "src/lib/**",
       "src/types/**",
+
+      // Generated declaration files that confuse the TS parser
+      "packages/core/src/types/**/*.d.ts",
 
       // Scripts and one-off tooling (not part of product code quality gate)
       "scripts/**",

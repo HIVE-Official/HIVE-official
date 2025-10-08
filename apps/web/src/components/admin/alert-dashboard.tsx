@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
 import { Button } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Alert, AlertDescription } from '@hive/ui';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@hive/ui';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@hive/ui';
 import { Input } from '@hive/ui';
 import { Textarea } from '@hive/ui';
 import { Switch } from '@hive/ui';
@@ -17,26 +17,14 @@ import {
   Eye,
   EyeOff,
   RefreshCw,
-  TrendingUp,
-  TrendingDown,
   Shield,
   Database,
   Zap,
   Users,
-  Bell,
-  BellOff,
-  Filter,
   Search,
   ArrowUp,
-  ArrowDown,
-  MoreVertical,
-  ExternalLink,
-  MessageSquare,
-  User,
-  Calendar,
   Activity,
-  AlertCircle,
-  XCircle
+  User
 } from 'lucide-react';
 import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
 
@@ -124,21 +112,8 @@ export function AlertDashboard() {
 
   const { token: csrfToken, getHeaders } = useCSRF();
 
-  useEffect(() => {
-    loadAlerts();
-  }, [filters]);
-
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const interval = setInterval(() => {
-      loadAlerts();
-    }, 30000); // Refresh every 30 seconds
-
-    return () => clearInterval(interval);
-  }, [autoRefresh, filters]);
-
-  const loadAlerts = async () => {
+  const loadAlerts = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams({
         range: '24h',
@@ -161,7 +136,21 @@ export function AlertDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [csrfToken, filters.component, filters.resolved, filters.search, filters.severity, getHeaders]);
+
+  useEffect(() => {
+    loadAlerts();
+  }, [loadAlerts]);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      loadAlerts();
+    }, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, loadAlerts]);
 
   const handleAlertAction = async (alertId: string, action: string, notes?: string) => {
     try {
@@ -181,46 +170,6 @@ export function AlertDashboard() {
     } catch (err) {
       console.error(`Error ${action} alert:`, err);
     }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical':
-        return 'text-red-400 bg-red-400/10 border-red-400/30';
-      case 'high':
-        return 'text-orange-400 bg-orange-400/10 border-orange-400/30';
-      case 'medium':
-        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30';
-      case 'low':
-        return 'text-blue-400 bg-blue-400/10 border-blue-400/30';
-      default:
-        return 'text-gray-400 bg-gray-400/10 border-gray-400/30';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'system':
-        return <Database className="w-4 h-4" />;
-      case 'performance':
-        return <Zap className="w-4 h-4" />;
-      case 'security':
-        return <Shield className="w-4 h-4" />;
-      case 'user_impact':
-        return <Users className="w-4 h-4" />;
-      default:
-        return <AlertCircle className="w-4 h-4" />;
-    }
-  };
-
-  const formatRelativeTime = (timestamp: string) => {
-    const now = new Date();
-    const time = new Date(timestamp);
-    const diffInMinutes = Math.floor((now.getTime() - time.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
   const filteredAlerts = (alerts: Alert[]) => {
@@ -557,7 +506,7 @@ export function AlertDashboard() {
                 </div>
                 <p className="text-xs text-gray-400">Total alerts (24h)</p>
                 <div className="mt-4 space-y-1">
-                  {trends.alertsPerHour.slice(-6).map((hour, index) => (
+                  {trends.alertsPerHour.slice(-6).map(hour => (
                     <div key={hour.hour} className="flex justify-between text-xs">
                       <span className="text-gray-400">
                         {new Date(hour.hour).toLocaleTimeString([], { hour: '2-digit' })}

@@ -347,5 +347,15 @@ export { HiveLogo } from './hive-logo';
 export { BulletinCard } from './bulletin-card';
 export { BulletinSection } from './bulletin-section';
 
+// Enhanced form components
+export { InputEnhanced } from './input-enhanced';
+export { TextareaEnhanced } from './textarea-enhanced';
+
+// Layout components
+export { Grid } from './grid';
+
+// Status components
+export { PresenceStatus } from './presence-status';
+
 // Note: Canvas elements (ConnectionWire, Port, DataTypeBadge) are internal-only
 // They're used within HiveLab organisms but not exported from the package

@@ -78,7 +78,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
   const loadMembers = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/spaces/${spaceId}/members`, {
+      const response = await api.get<{ members?: Member[] }>(`/api/spaces/${spaceId}/members`, {
         params: {
           tab: activeTab,
           sort: sortBy,
@@ -119,11 +119,10 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
 
   const exportMembers = async () => {
     try {
-      const response = await api.get(`/api/spaces/${spaceId}/members/export`, {
+      const blob = await api.get<Blob>(`/api/spaces/${spaceId}/members/export`, {
         responseType: 'blob'
       });
 
-      const blob = new Blob([response.data], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -194,7 +193,7 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
           {isLeader && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="max-w-sm" variant="outline" className="border-gray-700">
+ <Button className="max-w-sm border-gray-700" variant="outline">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -291,11 +290,11 @@ export function MembersPanel({ spaceId, userRole, isLeader }: MembersPanelProps)
               {selectedMembers.length} selected
             </span>
             <div className="flex gap-2">
-              <Button className="max-w-sm" variant="outline" className="border-red-600 text-red-400">
+ <Button className="max-w-sm border-red-600 text-red-400" variant="outline">
                 <UserMinus className="w-4 h-4 mr-1" />
                 Remove
               </Button>
-              <Button className="max-w-sm" variant="outline" className="border-blue-600 text-blue-400">
+ <Button className="max-w-sm border-blue-600 text-blue-400" variant="outline">
                 <MessageSquare className="w-4 h-4 mr-1" />
                 Message
               </Button>

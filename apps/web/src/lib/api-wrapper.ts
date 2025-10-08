@@ -146,7 +146,7 @@ export function createApiHandler(
 
     } catch (error) {
       errorOccurred = true;
-      const errorResponse = await handleApiError(error, request, authContext?.userId);
+      const errorResponse = await handleApiError(error, request);
       responseStatus = errorResponse.status;
       
       // Add request ID to error response
@@ -160,38 +160,32 @@ export function createApiHandler(
       
       try {
         // Structured logging
-        await logApiCall(
-          request.method,
-          url.pathname,
-          responseStatus,
+        await logApiCall(request.method, url.pathname, {
+          requestId,
+          userId: authContext?.userId,
+          statusCode: responseStatus,
           duration,
-          {
-            requestId,
-            userId: authContext?.userId,
+          metadata: {
             isTestUser: authContext?.isTestUser,
             ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
             userAgent: request.headers.get('user-agent') || undefined,
-            tags: {
-              rateLimit: config.rateLimit || 'none',
-              authenticated: authContext ? 'true' : 'false',
-              error: errorOccurred ? 'true' : 'false'
-            }
-          }
-        );
+            rateLimit: config.rateLimit || 'none',
+            authenticated: authContext ? 'true' : 'false',
+            error: errorOccurred ? 'true' : 'false',
+          },
+        });
 
         // Performance logging for slow requests
         if (duration > 1000) {
-          await logPerformance(
-            `${request.method} ${url.pathname}`,
-            duration,
-            {
-              requestId,
-              userId: authContext?.userId,
-              tags: {
-                slowRequest: 'true'
-              }
-            }
-          );
+        await logPerformance(`${request.method} ${url.pathname}`, {
+          duration,
+          success: !errorOccurred,
+          userId: authContext?.userId,
+          metadata: {
+            requestId,
+            slowRequest: true as const,
+          },
+        });
         }
 
         // Legacy monitoring (keep for now)

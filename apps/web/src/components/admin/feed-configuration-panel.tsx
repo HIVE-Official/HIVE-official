@@ -22,12 +22,9 @@ import {
   AlertCircle,
   CheckCircle,
   Zap,
-  Users,
   Trophy,
-  Clock,
   TrendingUp,
   Lock,
-  Unlock,
   Eye,
   EyeOff
 } from 'lucide-react';
@@ -285,7 +282,7 @@ export function FeedConfigurationPanel() {
               </div>
 
               <Button
-                variant={value ? 'primary' : 'secondary'}
+                variant={value ? 'default' : 'secondary'}
                 className="max-w-sm"
                 onClick={() => toggleFeature(key as keyof FeedConfiguration['features'])}
               >
@@ -424,7 +421,7 @@ export function FeedConfigurationPanel() {
           {(['stories', 'cards', 'both', 'none'] as const).map((mode) => (
             <Button
               key={mode}
-              variant={config.activeRitual.displayMode === mode ? 'primary' : 'secondary'}
+              variant={config.activeRitual.displayMode === mode ? 'default' : 'secondary'}
               onClick={() => updateRitualDisplay(mode)}
               className="capitalize"
             >

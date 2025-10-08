@@ -18,16 +18,30 @@ export interface AuthenticatedRequest extends NextRequest {
   };
 }
 
-export interface RouteParams {
-  params?: Record<string, string>;
-  // Additional properties for specific routes
-  isAdmin?: boolean;
-  userId?: string;
+export type RawRouteParams = Record<string, string | string[]>;
+
+export interface RouteParams extends Record<string, unknown> {
+  params?: RawRouteParams;
 }
 
-export type AuthenticatedHandler<T extends RouteParams = {}> = (
+export interface AuthenticatedRouteContext extends Record<string, unknown> {
+  /**
+   * Normalized route params with array values reduced to first entry.
+   */
+  params: Record<string, string>;
+  /**
+   * Original params object from Next.js with potential `string[]` values.
+   */
+  rawParams: RawRouteParams;
+  userId: string;
+  userEmail: string;
+  user: AuthenticatedRequest['user'];
+  isAdmin?: boolean;
+}
+
+export type AuthenticatedHandler<TContext extends AuthenticatedRouteContext = AuthenticatedRouteContext> = (
   request: AuthenticatedRequest,
-  context: T
+  context: TContext
 ) => Promise<Response>;
 
 export type NextRouteHandler = (
@@ -41,10 +55,47 @@ export type NextRouteHandler = (
  * Before: Each route has 15+ lines of duplicate auth validation
  * After: Single withAuth() wrapper handles all authentication
  */
-export function withAuth<T extends RouteParams>(
-  handler: AuthenticatedHandler<T>
+function normalizeParams(params?: RawRouteParams): { rawParams: RawRouteParams; params: Record<string, string> } {
+  const rawParams: RawRouteParams = params ? { ...params } : {};
+  const normalized: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(rawParams)) {
+    if (Array.isArray(value)) {
+      normalized[key] = value.length > 0 ? value[0] : '';
+    } else {
+      normalized[key] = value ?? '';
+    }
+  }
+
+  return { rawParams, params: normalized };
+}
+
+function buildAuthenticatedContext<TAdditional extends RouteParams>(
+  context: TAdditional,
+  request: AuthenticatedRequest
+): AuthenticatedRouteContext & TAdditional {
+  const { rawParams, params } = normalizeParams((context as RouteParams)?.params);
+  const decoded = request.user.decodedToken as Record<string, unknown>;
+  const isAdminClaim =
+    decoded?.admin === true ||
+    decoded?.role === 'admin' ||
+    decoded?.['custom:role'] === 'admin';
+
+  return {
+    ...(context as Record<string, unknown>),
+    rawParams,
+    params,
+    userId: request.user.id,
+    userEmail: request.user.email,
+    user: request.user,
+    isAdmin: Boolean(isAdminClaim),
+  } as AuthenticatedRouteContext & TAdditional;
+}
+
+export function withAuth<TAdditional extends RouteParams = RouteParams>(
+  handler: AuthenticatedHandler<AuthenticatedRouteContext & TAdditional>
 ): NextRouteHandler {
-  return async (request: NextRequest, context: T): Promise<Response> => {
+  return async (request: NextRequest, context: TAdditional): Promise<Response> => {
     try {
       // Check for development mode session cookie first
       const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.VERCEL;
@@ -102,7 +153,7 @@ export function withAuth<T extends RouteParams>(
           };
 
           // Call the handler with authenticated request
-          return await handler(authenticatedRequest, context);
+          return await handler(authenticatedRequest, buildAuthenticatedContext(context, authenticatedRequest));
         } catch (error) {
           logger.error('Invalid session cookie', {
             error: error,
@@ -151,7 +202,7 @@ export function withAuth<T extends RouteParams>(
         };
 
         // Call the handler with authenticated request
-        return await handler(authenticatedRequest, context);
+        return await handler(authenticatedRequest, buildAuthenticatedContext(context, authenticatedRequest));
       }
 
       // SECURITY: NO DEVELOPMENT BYPASSES IN PRODUCTION
@@ -193,7 +244,7 @@ export function withAuth<T extends RouteParams>(
       };
 
       // Call the actual handler with authenticated request
-      return await handler(authenticatedRequest, context);
+      return await handler(authenticatedRequest, buildAuthenticatedContext(context, authenticatedRequest));
 
     } catch (error) {
       logger.error('Auth middleware error', {
@@ -213,10 +264,10 @@ export function withAuth<T extends RouteParams>(
  * Optional: Admin-only auth wrapper for admin routes
  * Extends withAuth to verify admin privileges
  */
-export function withAdminAuth<T extends RouteParams>(
-  handler: AuthenticatedHandler<T>
+export function withAdminAuth<TAdditional extends RouteParams = RouteParams>(
+  handler: AuthenticatedHandler<AuthenticatedRouteContext & TAdditional>
 ): NextRouteHandler {
-  return withAuth(async (request: AuthenticatedRequest, context: T) => {
+  return withAuth<TAdditional>(async (request, context) => {
     try {
       // Check if user has admin claims
       const { customClaims } = request.user.decodedToken;

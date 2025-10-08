@@ -90,7 +90,7 @@ export abstract class BaseApplicationService {
    * Usage:
    * await this.saveAndDispatchEvents(profile, (p) => this.profileRepo.save(p));
    */
-  protected async saveAndDispatchEvents<T extends AggregateRoot<any>>(
+  protected async saveAndDispatchEvents<T extends AggregateRoot<unknown>>(
     aggregate: T,
     saveFn: (aggregate: T) => Promise<Result<void>>
   ): Promise<Result<void>> {
@@ -116,7 +116,7 @@ export abstract class BaseApplicationService {
   /**
    * Save multiple aggregates and dispatch all their events
    */
-  protected async saveAllAndDispatchEvents<T extends AggregateRoot<any>>(
+  protected async saveAllAndDispatchEvents<T extends AggregateRoot<unknown>>(
     aggregates: T[],
     saveFn: (aggregates: T[]) => Promise<Result<void>>
   ): Promise<Result<void>> {
@@ -167,7 +167,7 @@ export class ServiceError extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly context?: any
+    public readonly context?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'ServiceError';
@@ -181,7 +181,7 @@ export class ServiceError extends Error {
     return new ServiceError(`${resource} not found`, 'NOT_FOUND', { resource });
   }
 
-  static validationFailed(errors: any): ServiceError {
+  static validationFailed(errors: unknown): ServiceError {
     return new ServiceError('Validation failed', 'VALIDATION_FAILED', { errors });
   }
 

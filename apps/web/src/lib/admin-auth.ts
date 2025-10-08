@@ -124,7 +124,7 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
 
     // Use centralized security service for token validation
     const tokenValidation = await validateAuthToken(token, request, {
-      action: 'admin_access',
+      operation: 'admin_access',
       requireRealAuth: false
     });
 
@@ -141,7 +141,7 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
     try {
       const auth = getAuth();
       const decodedToken = await auth.verifyIdToken(token);
-      return await getAdminUser(decodedToken.id);
+      return await getAdminUser(decodedToken.uid);
     } catch (authError) {
       return null;
     }

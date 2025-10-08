@@ -1,14 +1,34 @@
-import type { BehavioralSpace } from "@hive/core";
+// BehavioralSpace defined below
 import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
-import type { Space } from "@hive/core";
 
 /**
  * SPEC.md Behavioral Psychology Algorithm:
  * Score = (AnxietyRelief × 0.4) + (SocialProof × 0.3) + (InsiderAccess × 0.3)
  */
-interface BehavioralSpace extends Space {
+interface BehavioralSpace {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  memberCount?: number;
+  postCount?: number;
+  isVerified?: boolean;
+  visibility?: string;
+  trendingScore?: number;
+  createdAt?: unknown;
+  lastActivityAt?: unknown;
+  tabs: Array<{
+    id: string;
+    title: string;
+    messageCount: number;
+    isActive: boolean;
+  }>;
+  widgets: Array<{
+    type: string;
+    config: Record<string, unknown>;
+  }>;
   anxietyReliefScore: number;
   socialProofScore: number;
   insiderAccessScore: number;
@@ -59,7 +79,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     // Calculate behavioral scores for each space
     for (const spaceDoc of spacesSnapshot.docs) {
-      const spaceData = spaceDoc.data() as Space;
+      const spaceData = spaceDoc.data() as Record<string, any>;
 
       // Get member data for social proof calculation
       const membersSnapshot = await dbAdmin
@@ -95,18 +115,47 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
         (insiderAccessScore * 0.3);
 
       // Calculate join-to-active rate
+      const tabs = Array.isArray(spaceData.tabs)
+        ? spaceData.tabs.map((tab: any) => ({
+            id: tab?.id ?? `${spaceDoc.id}_tab_${tab?.title ?? 'unknown'}`,
+            title: tab?.title ?? 'Untitled',
+            messageCount: tab?.messageCount ?? 0,
+            isActive: tab?.isArchived === undefined ? true : !tab.isArchived,
+          }))
+        : [];
+
+      const widgets = Array.isArray(spaceData.widgets)
+        ? spaceData.widgets
+            .filter((widget: any) => widget?.isEnabled !== false)
+            .map((widget: any) => ({
+              type: widget?.type ?? 'unknown',
+              config: (widget?.config as Record<string, unknown>) ?? {},
+            }))
+        : [];
+
       const joinToActiveRate = calculateJoinToActiveRate(spaceData, membersSnapshot.size);
 
       spaces.push({
-        ...spaceData,
         id: spaceDoc.id,
+        name: spaceData.name ?? 'Unknown Space',
+        description: spaceData.description,
+        category: spaceData.category,
+        memberCount: spaceData.memberCount,
+        postCount: spaceData.postCount,
+        isVerified: spaceData.isVerified,
+        visibility: spaceData.visibility,
+        trendingScore: spaceData.trendingScore,
+        createdAt: spaceData.createdAt,
+        lastActivityAt: spaceData.lastActivityAt,
+        tabs,
+        widgets,
         anxietyReliefScore,
         socialProofScore,
         insiderAccessScore,
         recommendationScore,
         joinToActiveRate,
         mutualConnections,
-        friendsInSpace
+        friendsInSpace,
       });
     }
 

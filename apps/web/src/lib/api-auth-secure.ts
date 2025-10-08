@@ -57,8 +57,8 @@ export function withSecureAuth(
       // 1. Validate request origin
       if (!validateOrigin(request)) {
         logger.warn('Invalid origin attempted API access', {
-          origin: request.headers.get('origin'),
-          referer: request.headers.get('referer'),
+          origin: request.headers.get('origin') || undefined,
+          referer: request.headers.get('referer') || undefined,
           url: request.url
         });
 
@@ -74,7 +74,7 @@ export function withSecureAuth(
 
         // IP-based rate limiting
         const ipLimitResult = await checkIpRateLimit(ip, rateLimit.type);
-        if (!ipLimitResult.allowed) {
+        if (!ipLimitResult.success) {
           return NextResponse.json(
             { error: 'Too many requests' },
             {
@@ -130,11 +130,11 @@ export function withSecureAuth(
       // 6. User-based rate limiting
       if (rateLimit) {
         const userLimitResult = await checkUserRateLimit(
-          decodedToken.id,
+          decodedToken.uid,
           rateLimit.type
         );
 
-        if (!userLimitResult.allowed) {
+        if (!userLimitResult.success) {
           return NextResponse.json(
             { error: 'Too many requests for user' },
             {
@@ -157,7 +157,7 @@ export function withSecureAuth(
 
         if (!adminEmails.includes(decodedToken.email || '')) {
           logger.warn('Non-admin attempted admin access', {
-            userId: decodedToken.id,
+            userId: decodedToken.uid,
             email: decodedToken.email,
             url: request.url
           });
@@ -170,24 +170,28 @@ export function withSecureAuth(
       }
 
       // 8. Campus isolation check
-      if (campusId && !enforceCampusIsolation(decodedToken, campusId)) {
-        logger.warn('Campus isolation violation', {
-          userId: decodedToken.id,
-          expectedCampus: campusId,
-          userEmail: decodedToken.email
-        });
+      if (campusId) {
+        const userCampusId = (decodedToken as Record<string, unknown>).campusId as string | undefined;
+        if (userCampusId && !enforceCampusIsolation(userCampusId, campusId)) {
+          logger.warn('Campus isolation violation', {
+            userId: decodedToken.uid,
+            expectedCampus: campusId,
+            userCampusId,
+            userEmail: decodedToken.email
+          });
 
-        return NextResponse.json(
-          { error: 'Access denied for this campus' },
-          { status: 403, headers: getSecurityHeaders() }
-        );
+          return NextResponse.json(
+            { error: 'Access denied for this campus' },
+            { status: 403, headers: getSecurityHeaders() }
+          );
+        }
       }
 
       // 9. Input sanitization if body exists
       if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH') {
         try {
           const body = await request.json();
-          const sanitized = sanitizeInput(body, allowedFields);
+          const sanitized = sanitizeInput(body, allowedFields ?? []);
 
           // Create a new request with sanitized body
           const sanitizedRequest = new NextRequest(request.url, {

@@ -140,6 +140,163 @@ export function HiveModalFooter({ children, className = "" }: { children: React.
   return <div className={`mt-6 flex gap-3 ${className}`}>{children}</div>;
 }
 
+export function CompleteHIVEToolsSystem({
+  tools = [],
+  onToolCreate,
+  showCreateButton,
+  showSearch,
+  showFilters,
+  className = "",
+}: {
+  tools?: Array<{
+    id: string;
+    name: string;
+    description?: string;
+    tags?: string[];
+    category?: string;
+    isFeatured?: boolean;
+  }>;
+  onToolCreate?: (mode?: "visual" | "template" | "wizard") => void;
+  showCreateButton?: boolean;
+  showSearch?: boolean;
+  showFilters?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`rounded-xl border border-white/10 bg-black/60 p-6 shadow-lg shadow-black/30 text-white ${className}`}
+    >
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold">HIVE Tools Library</h2>
+          <p className="text-sm text-white/60">
+            Browse featured tools while the full design system is being restored.
+          </p>
+        </div>
+        {showCreateButton && onToolCreate && (
+          <button
+            onClick={() => onToolCreate("visual")}
+            className="inline-flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-2 text-black transition hover:bg-yellow-300"
+          >
+            Launch Builder
+          </button>
+        )}
+      </div>
+
+      {(showSearch || showFilters) && (
+        <div className="mt-6 grid gap-3 md:grid-cols-2">
+          {showSearch && (
+            <input
+              className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none"
+              placeholder="Search tools..."
+              disabled
+            />
+          )}
+          {showFilters && (
+            <div className="flex flex-wrap gap-2">
+              {["All", "Academic", "Social", "Events", "Services"].map((filter) => (
+                <span
+                  key={filter}
+                  className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-wide text-white/60"
+                >
+                  {filter}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        {tools.slice(0, 6).map((tool) => (
+          <div
+            key={tool.id}
+            className="rounded-lg border border-white/10 bg-black/40 p-4 transition hover:border-yellow-400/70"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-lg font-semibold">{tool.name}</h3>
+                {tool.description && (
+                  <p className="mt-1 text-sm text-white/60 line-clamp-2">{tool.description}</p>
+                )}
+              </div>
+              {tool.isFeatured && (
+                <span className="rounded-full bg-yellow-400/20 px-2 py-1 text-xs font-medium text-yellow-300">
+                  Featured
+                </span>
+              )}
+            </div>
+            {tool.tags && tool.tags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {tool.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-white/10 px-2 py-0.5 text-xs text-white/60"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+        {tools.length === 0 && (
+          <div className="rounded-lg border border-dashed border-white/10 p-6 text-center text-white/60">
+            No tools available yet. Add templates in `campus-tools-templates.ts`.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function WelcomeMat({
+  onDismiss,
+  userName,
+}: {
+  onDismiss?: () => void;
+  userName?: string;
+}) {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0F0F10] p-6 text-white shadow-2xl shadow-black/30">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold">
+              Welcome back{userName ? `, ${userName}` : ""}!
+            </h2>
+            <p className="mt-2 text-sm text-white/60">
+              The guided onboarding experience is temporarily simplified while UI exports are restored.
+            </p>
+          </div>
+          {onDismiss && (
+            <button
+              aria-label="Dismiss welcome"
+              onClick={onDismiss}
+              className="rounded-full border border-white/10 p-2 text-white/60 transition hover:text-white"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        <div className="mt-6 space-y-3 text-sm text-white/70">
+          <p>• Discover new spaces and tools curated for your campus.</p>
+          <p>• Track progress in your Rituals and HiveLab creations.</p>
+          <p>• Stay tuned for the full Welcome Mat experience returning soon.</p>
+        </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={onDismiss}
+            className="rounded-lg bg-yellow-400 px-4 py-2 text-black transition hover:bg-yellow-300"
+          >
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Hook stubs
 export function useOnboardingBridge() {
   return {

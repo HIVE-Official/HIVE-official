@@ -5,7 +5,8 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CompleteHIVEToolsSystem, useToast } from "@hive/ui";
+import { useToast } from "@hive/ui";
+import { CompleteHIVEToolsSystem } from "@/components/temp-stubs";
 import { useSession } from "../../hooks/use-session";
 import { ErrorBoundary } from "../../components/error-boundary";
 import { ToolsLoadingSkeleton } from "../../components/tools/tools-loading-skeleton";

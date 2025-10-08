@@ -713,10 +713,30 @@ describe('Tool.updateVisibility()', () => {
       permissions: createValidPermissions()
     }).getValue();
 
+    tool.publish();
     const result = tool.updateVisibility('campus');
 
     expect(result.isSuccess).toBe(true);
     expect(tool.visibility).toBe('campus');
+  });
+
+  it('should prevent public visibility while draft', () => {
+    const tool = Tool.create({
+      name: 'Draft Tool',
+      description: 'Draft description',
+      createdBy: createValidProfileId(),
+      elements: [createValidElement()],
+      version: '1.0.0',
+      status: 'draft',
+      visibility: 'private',
+      permissions: createValidPermissions()
+    }).getValue();
+
+    const result = tool.updateVisibility('public');
+
+    expect(result.isFailure).toBe(true);
+    expect(result.error).toContain('published');
+    expect(tool.visibility).toBe('private');
   });
 });
 

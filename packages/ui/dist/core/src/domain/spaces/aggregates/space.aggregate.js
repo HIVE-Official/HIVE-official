@@ -78,6 +78,10 @@ export class Space extends AggregateRoot {
     get spaceType() {
         return this.props.category.value;
     }
+    // Alias for backward compatibility (many components use 'type' instead of 'spaceType')
+    get type() {
+        return this.props.category.value;
+    }
     get posts() {
         // Posts are managed separately - return empty array for interface compatibility
         return [];

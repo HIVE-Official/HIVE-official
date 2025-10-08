@@ -530,9 +530,8 @@ export function ToolBuilder({
                         <div className="col-span-1">
                           <Button
                             variant="outline"
-                            className="max-w-sm"
+                            className="max-w-sm text-red-400 border-red-400"
                             onClick={() => removeInputField(index)}
-                            className="text-red-400 border-red-400"
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
@@ -600,9 +599,8 @@ export function ToolBuilder({
                         <div className="col-span-1">
                           <Button
                             variant="outline"
-                            className="max-w-sm"
+                            className="max-w-sm text-red-400 border-red-400"
                             onClick={() => removeOutputField(index)}
-                            className="text-red-400 border-red-400"
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>

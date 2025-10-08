@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import {
   Calendar,
   BarChart3,
@@ -18,8 +18,9 @@ import {
   Button,
   Card,
   Input,
-  HiveTextarea,
+  Textarea,
   Dialog,
+  DialogContent,
   Badge,
   Tabs,
   TabsList,
@@ -212,6 +213,34 @@ function ToolModal({
   }
 }
 
+function ModalShell({
+  onClose,
+  title,
+  children,
+  maxWidth = 'max-w-2xl'
+}: {
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+  maxWidth?: string;
+}) {
+  return (
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className={maxWidth}>
+        <h2 className="text-2xl font-semibold text-white mb-4">{title}</h2>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function EventCreationModal({
   spaceId,
   onClose,
@@ -276,7 +305,7 @@ function EventCreationModal({
         maxAttendees: formData.maxAttendees ? parseInt(formData.maxAttendees) : undefined
       };
 
-      const response = await api.post(`/api/spaces/${spaceId}/events`, eventData);
+      const response = await api.post<{ event: any }>(`/api/spaces/${spaceId}/events`, eventData);
       onComplete('event', response.event);
     } catch (error) {
       console.error('Failed to create event:', error);
@@ -286,12 +315,7 @@ function EventCreationModal({
   };
 
   return (
-    <Dialog
-      isOpen={true}
-      onClose={onClose}
-      title="Create Event"
-      className="max-w-2xl"
-    >
+    <ModalShell onClose={onClose} title="Create Event">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Templates */}
         <div>
@@ -320,7 +344,8 @@ function EventCreationModal({
           </label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Enter event title"
             required
           />
@@ -331,9 +356,10 @@ function EventCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Description
           </label>
-          <HiveTextarea
+          <Textarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Event description..."
             rows={3}
           />
@@ -348,7 +374,8 @@ function EventCreationModal({
             <Input
               type="date"
               value={formData.startDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startDate: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, startDate: e.target.value }))}
               required
             />
           </div>
@@ -359,7 +386,8 @@ function EventCreationModal({
             <Input
               type="time"
               value={formData.startTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, startTime: e.target.value }))}
               required
             />
           </div>
@@ -374,7 +402,8 @@ function EventCreationModal({
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, endDate: e.target.value }))}
             />
           </div>
           <div>
@@ -384,7 +413,8 @@ function EventCreationModal({
             <Input
               type="time"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, endTime: e.target.value }))}
             />
           </div>
         </div>
@@ -396,7 +426,8 @@ function EventCreationModal({
           </label>
           <Input
             value={formData.location}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, location: e.target.value }))}
             placeholder="Event location or 'Online'"
           />
         </div>
@@ -410,7 +441,8 @@ function EventCreationModal({
             <Input
               type="number"
               value={formData.maxAttendees}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, maxAttendees: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, maxAttendees: e.target.value }))}
               placeholder="Leave empty for unlimited"
             />
           </div>
@@ -419,7 +451,8 @@ function EventCreationModal({
               type="checkbox"
               id="requireRsvp"
               checked={formData.requireRsvp}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, requireRsvp: e.target.checked }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, requireRsvp: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="requireRsvp" className="text-sm text-white">
@@ -447,7 +480,7 @@ function EventCreationModal({
           </Button>
         </div>
       </form>
-    </Dialog>
+    </ModalShell>
   );
 }
 
@@ -508,7 +541,7 @@ function PollCreationModal({
           : undefined
       };
 
-      const response = await api.post(`/api/spaces/${spaceId}/polls`, pollData);
+      const response = await api.post<{ poll: any }>(`/api/spaces/${spaceId}/polls`, pollData);
       onComplete('poll', response.poll);
     } catch (error) {
       console.error('Failed to create poll:', error);
@@ -521,12 +554,7 @@ function PollCreationModal({
     formData.options.filter(opt => opt.trim()).length >= 2;
 
   return (
-    <Dialog
-      isOpen={true}
-      onClose={onClose}
-      title="Create Poll"
-      className="max-w-lg"
-    >
+    <ModalShell onClose={onClose} title="Create Poll" maxWidth="max-w-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Question */}
         <div>
@@ -535,7 +563,8 @@ function PollCreationModal({
           </label>
           <Input
             value={formData.question}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, question: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, question: e.target.value }))}
             placeholder="What would you like to ask?"
             required
           />
@@ -551,7 +580,8 @@ function PollCreationModal({
               <div key={index} className="flex gap-2">
                 <Input
                   value={option}
-                  onChange={(e: React.ChangeEvent) => updateOption(index, (e.target as any).value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    updateOption(index, e.target.value)}
                   placeholder={`Option ${index + 1}`}
                   className="flex-1"
                 />
@@ -588,7 +618,8 @@ function PollCreationModal({
               type="checkbox"
               id="allowMultiple"
               checked={formData.allowMultiple}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, allowMultiple: e.target.checked }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, allowMultiple: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="allowMultiple" className="text-sm text-white">
@@ -600,7 +631,8 @@ function PollCreationModal({
               type="checkbox"
               id="anonymous"
               checked={formData.anonymous}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, anonymous: e.target.checked }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, anonymous: e.target.checked }))}
               className="rounded"
             />
             <label htmlFor="anonymous" className="text-sm text-white">
@@ -618,13 +650,15 @@ function PollCreationModal({
             <Input
               type="date"
               value={formData.endDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endDate: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, endDate: e.target.value }))}
               placeholder="End date"
             />
             <Input
               type="time"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, endTime: e.target.value }))}
               placeholder="End time"
             />
           </div>
@@ -649,7 +683,7 @@ function PollCreationModal({
           </Button>
         </div>
       </form>
-    </Dialog>
+    </ModalShell>
   );
 }
 
@@ -685,7 +719,7 @@ function TaskCreationModal({
           : undefined
       };
 
-      const response = await api.post(`/api/spaces/${spaceId}/tasks`, taskData);
+      const response = await api.post<{ task: any }>(`/api/spaces/${spaceId}/tasks`, taskData);
       onComplete('task', response.task);
     } catch (error) {
       console.error('Failed to create task:', error);
@@ -695,12 +729,7 @@ function TaskCreationModal({
   };
 
   return (
-    <Dialog
-      isOpen={true}
-      onClose={onClose}
-      title="Create Task"
-      className="max-w-lg"
-    >
+    <ModalShell onClose={onClose} title="Create Task" maxWidth="max-w-lg">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title */}
         <div>
@@ -709,7 +738,8 @@ function TaskCreationModal({
           </label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="What needs to be done?"
             required
           />
@@ -720,9 +750,10 @@ function TaskCreationModal({
           <label className="block text-sm font-medium text-white mb-1">
             Description
           </label>
-          <HiveTextarea
+          <Textarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Task details and requirements..."
             rows={3}
           />
@@ -737,7 +768,8 @@ function TaskCreationModal({
             <Input
               type="date"
               value={formData.dueDate}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueDate: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
             />
           </div>
           <div>
@@ -747,7 +779,8 @@ function TaskCreationModal({
             <Input
               type="time"
               value={formData.dueTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, dueTime: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, dueTime: e.target.value }))}
             />
           </div>
         </div>
@@ -828,7 +861,7 @@ function TaskCreationModal({
           </Button>
         </div>
       </form>
-    </Dialog>
+    </ModalShell>
   );
 }
 
@@ -874,7 +907,7 @@ function ResourceCreationModal({
         uploadFormData.append('description', formData.description);
         uploadFormData.append('tags', formData.tags);
 
-        const response = await api.post(`/api/spaces/${spaceId}/resources`, uploadFormData, {
+        const response = await api.post<{ resource: any }>(`/api/spaces/${spaceId}/resources`, uploadFormData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         onComplete('resource', response.resource);
@@ -887,7 +920,7 @@ function ResourceCreationModal({
           type: 'link'
         };
 
-        const response = await api.post(`/api/spaces/${spaceId}/resources`, linkData);
+        const response = await api.post<{ resource: any }>(`/api/spaces/${spaceId}/resources`, linkData);
         onComplete('resource', response.resource);
       }
     } catch (error) {
@@ -902,12 +935,7 @@ function ResourceCreationModal({
     : formData.url && formData.title;
 
   return (
-    <Dialog
-      isOpen={true}
-      onClose={onClose}
-      title="Add Resource"
-      className="max-w-lg"
-    >
+    <ModalShell onClose={onClose} title="Add Resource" maxWidth="max-w-lg">
       <div className="space-y-4">
         {/* Mode Selection */}
         <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
@@ -948,7 +976,8 @@ function ResourceCreationModal({
               <Input
                 type="url"
                 value={formData.url}
-                onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, url: (e.target as any).value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormData(prev => ({ ...prev, url: e.target.value }))}
                 placeholder="https://example.com/resource"
                 required
               />
@@ -962,7 +991,8 @@ function ResourceCreationModal({
             </label>
             <Input
               value={formData.title}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="Resource title"
               required
             />
@@ -973,9 +1003,10 @@ function ResourceCreationModal({
             <label className="block text-sm font-medium text-white mb-1">
               Description
             </label>
-            <HiveTextarea
+            <Textarea
               value={formData.description}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="What is this resource for?"
               rows={2}
             />
@@ -988,31 +1019,32 @@ function ResourceCreationModal({
             </label>
             <Input
               value={formData.tags}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, tags: (e.target as any).value }))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, tags: e.target.value }))}
               placeholder="study, notes, exam (comma separated)"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading || !isValid}
-              className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
-            >
-              {loading ? 'Adding...' : `Add ${mode === 'upload' ? 'File' : 'Link'}`}
-            </Button>
-          </div>
-        </form>
-      </div>
-    </Dialog>
+        <div className="flex gap-3 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading || !isValid}
+            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
+          >
+            {loading ? 'Adding...' : `Add ${mode === 'upload' ? 'File' : 'Link'}`}
+          </Button>
+        </div>
+      </form>
+    </div>
+    </ModalShell>
   );
 }

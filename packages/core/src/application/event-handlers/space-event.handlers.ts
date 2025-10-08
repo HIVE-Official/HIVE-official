@@ -8,7 +8,6 @@ import { SpaceCreatedEvent } from '../../domain/spaces/events/space-created.even
 import { MemberJoinedEvent } from '../../domain/spaces/events/member-joined.event';
 import { PostCreatedEvent } from '../../domain/spaces/events/post-created.event';
 import { MemberRemovedEvent } from '../../domain/spaces/events/member-removed.event';
-import { getProfileRepository, getFeedRepository } from '../../infrastructure/repositories/factory';
 
 /**
  * When a space is created:
@@ -34,8 +33,7 @@ export const handleMemberJoined: EventHandler<MemberJoinedEvent> = async (event)
   console.log(`[SpaceEventHandler] Member ${event.profileId} joined space ${event.aggregateId}`);
 
   try {
-    // Update user's feed configuration to include this space
-    const feedRepo = getFeedRepository();
+    // Update user's feed configuration to include this space once service is wired up
     // TODO: Add space to user's feed sources
 
     // TODO: Send welcome notification to new member

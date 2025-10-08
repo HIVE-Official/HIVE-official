@@ -216,7 +216,7 @@ export function ReportContentModal({
     }}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="outline" className="max-w-sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
+ <Button variant="outline" className="max-w-sm text-red-400 border-red-400/50 hover:bg-red-400/10">
             <Flag className="h-4 w-4 mr-2" />
             Report
           </Button>

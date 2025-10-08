@@ -154,62 +154,69 @@ export async function isGhostModeActive(userId: string): Promise<boolean> {
  * Filter profile data based on connection level and privacy settings
  */
 export async function filterProfileData(
-  profile: any,
+  profile: ProfileSystem,
   viewerId: string,
   targetId: string
-): Promise<any> {
-  // User viewing their own profile gets everything
+): Promise<FilteredProfile> {
   if (viewerId === targetId) {
-    return profile;
+    return profile as FilteredProfile;
   }
 
   const connectionType = await getConnectionType(viewerId, targetId);
   const isGhost = await isGhostModeActive(targetId);
 
-  const filtered: any = {};
+  const profileRecord = profile as unknown as Record<string, unknown>;
+  const filteredRecord: Record<string, unknown> = {};
 
-  // Apply field-level access control
   for (const control of PROFILE_FIELD_ACCESS) {
     const fieldPath = control.field.split('.');
-    let sourceValue = profile;
-    let canAccess = true;
+    const sourceValue = getNestedField(profileRecord, fieldPath);
 
-    // Navigate to the field value
-    for (const path of fieldPath) {
-      sourceValue = sourceValue?.[path];
-      if (sourceValue === undefined) {
-        canAccess = false;
-        break;
-      }
+    if (sourceValue === undefined) {
+      continue;
     }
 
-    // Check access permission
-    if (canAccess) {
-      // Check connection level
-      const hasConnectionLevel = connectionType >= control.requiredLevel;
+    const hasConnectionLevel = connectionType >= control.requiredLevel;
+    const ghostBlocked = isGhost && control.respectsGhostMode && connectionType !== ConnectionType.FRIEND;
 
-      // Check ghost mode
-      const ghostBlocked = isGhost && control.respectsGhostMode && connectionType !== ConnectionType.FRIEND;
-
-      if (hasConnectionLevel && !ghostBlocked) {
-        // Set the value in filtered object
-        let target = filtered;
-        for (let i = 0; i < fieldPath.length - 1; i++) {
-          if (!target[fieldPath[i]]) {
-            target[fieldPath[i]] = {};
-          }
-          target = target[fieldPath[i]];
-        }
-        target[fieldPath[fieldPath.length - 1]] = sourceValue;
-      }
+    if (hasConnectionLevel && !ghostBlocked) {
+      setNestedField(filteredRecord, fieldPath, sourceValue);
     }
   }
 
-  // Add connection context
-  filtered._connectionType = connectionType;
-  filtered._ghostModeActive = isGhost;
+  filteredRecord._connectionType = connectionType;
+  filteredRecord._ghostModeActive = isGhost;
 
-  return filtered;
+  return filteredRecord as FilteredProfile;
+}
+
+/**
+ * Rate limiting for profile operations
+ */
+function getNestedField(source: Record<string, unknown>, path: string[]): unknown {
+  return path.reduce<unknown>((current, key) => {
+    if (!current || typeof current !== 'object') {
+      return undefined;
+    }
+    return (current as Record<string, unknown>)[key];
+  }, source);
+}
+
+function setNestedField(target: Record<string, unknown>, path: string[], value: unknown): void {
+  let current: Record<string, unknown> = target;
+
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const key = path[index];
+    const existing = current[key];
+
+    if (!existing || typeof existing !== 'object') {
+      current[key] = {};
+    }
+
+    current = current[key] as Record<string, unknown>;
+  }
+
+  current[path[path.length - 1]] = value as unknown;
 }
 
 /**
@@ -250,7 +257,7 @@ export function checkRateLimit(
 export async function auditLog(
   userId: string,
   action: string,
-  details: any
+  details: Record<string, unknown>
 ): Promise<void> {
   try {
     await dbAdmin.collection('audit_logs').add({
@@ -278,7 +285,7 @@ export function withProfileSecurity(
     rateLimit?: { limit: number; window: number };
   } = {}
 ) {
-  return async (req: NextRequest | AuthenticatedRequest, context: any) => {
+  return async (req: NextRequest | AuthenticatedRequest, context: Record<string, unknown>) => {
     try {
       // Check authentication if required
       if (options.requireAuth) {
@@ -352,6 +359,11 @@ export interface PrivacySettings {
   discoveryParticipation: boolean;
   spaceActivityVisibility: Map<string, boolean>;
 }
+
+export type FilteredProfile = Partial<ProfileSystem> & {
+  _connectionType?: ConnectionType;
+  _ghostModeActive?: boolean;
+};
 
 export async function getPrivacySettings(userId: string): Promise<PrivacySettings> {
   try {

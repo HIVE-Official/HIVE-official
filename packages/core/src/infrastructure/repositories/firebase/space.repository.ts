@@ -468,6 +468,7 @@ export class FirebaseSpaceRepository implements ISpaceRepository {
       return Result.ok<Space[]>(spaces);
     } catch (error) {
       // If 'type' field doesn't exist, fallback to category
+      console.warn(`Falling back to category search for type ${type}`, error);
       return this.findByCategory(type, campusId);
     }
   }

@@ -235,12 +235,11 @@ export function EnhancedEventCard({
             <Button
               onClick={handleRSVP}
               disabled={actionLoading === 'rsvp'}
-              className={`${
+              className={`max-w-sm ${
                 event.isAttending
                   ? 'bg-green-500 hover:bg-green-600'
                   : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
               }`}
-              className="max-w-sm"
             >
               {event.isAttending ? 'Going' : 'RSVP'}
             </Button>
@@ -322,13 +321,12 @@ export function EnhancedEventCard({
                     e.stopPropagation();
                     handleRSVP();
                   }}
-                  className="max-w-sm"
-                  disabled={actionLoading === 'rsvp'}
-                  className={`${
+                  className={`max-w-sm ${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
+                  disabled={actionLoading === 'rsvp'}
                 >
                   {event.isAttending ? 'Going' : 'RSVP'}
                 </Button>
@@ -422,13 +420,12 @@ export function EnhancedEventCard({
                     e.stopPropagation();
                     handleRSVP();
                   }}
-                  className="max-w-sm"
-                  disabled={actionLoading === 'rsvp'}
-                  className={`${
+                  className={`max-w-sm ${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
+                  disabled={actionLoading === 'rsvp'}
                 >
                   {event.isAttending ? (
                     <>

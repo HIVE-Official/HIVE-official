@@ -17,7 +17,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
+import { api, HttpError } from '@/lib/api-client';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -102,7 +102,8 @@ export default function CreateSpacePage() {
     accountAge: 0,
     minAccountAge: 7,
     emailVerified: false,
-    isAdmin: false
+    isAdmin: false,
+    reason: ''
   });
 
   const {
@@ -136,20 +137,36 @@ export default function CreateSpacePage() {
     }
 
     try {
-      const response = await api.get('/api/spaces/check-create-permission');
-      setUserPermissions(response);
+      type PermissionPayload = {
+        canCreate: boolean;
+        reason?: string;
+        spacesCreatedToday: number;
+        maxSpacesPerDay: number;
+        accountAge: number;
+        minAccountAge: number;
+        emailVerified: boolean;
+        isAdmin: boolean;
+      };
+
+      const data = await api.get<PermissionPayload>('/api/spaces/check-create-permission');
+
+      setUserPermissions(prev => ({
+        ...prev,
+        ...data,
+        reason: data.reason || ''
+      }));
 
       // Apply locks based on permissions
-      if (!response.canCreate) {
+      if (!data.canCreate) {
         setGlobalLock(true);
-        setLockReason(response.reason || 'Space creation is currently restricted');
-      } else if (response.spacesCreatedToday >= response.maxSpacesPerDay) {
+        setLockReason(data.reason || 'Space creation is currently restricted');
+      } else if (data.spacesCreatedToday >= data.maxSpacesPerDay) {
         setGlobalLock(true);
-        setLockReason(`Daily limit reached (${response.maxSpacesPerDay} spaces per day)`);
-      } else if (response.accountAge < response.minAccountAge) {
+        setLockReason(`Daily limit reached (${data.maxSpacesPerDay} spaces per day)`);
+      } else if (data.accountAge < data.minAccountAge) {
         setGlobalLock(true);
-        setLockReason(`Account must be at least ${response.minAccountAge} days old`);
-      } else if (!response.emailVerified) {
+        setLockReason(`Account must be at least ${data.minAccountAge} days old`);
+      } else if (!data.emailVerified) {
         setGlobalLock(true);
         setLockReason('Please verify your email address first');
       }
@@ -192,7 +209,14 @@ export default function CreateSpacePage() {
     try {
       setLoading(true);
 
-      const response = await api.post('/api/spaces', {
+      type CreateSpaceResponse = {
+        space: {
+          id: string;
+          [key: string]: unknown;
+        };
+      };
+
+      const result = await api.post<CreateSpaceResponse>('/api/spaces', {
         ...data,
         campusId: 'ub-buffalo',
         visibility: 'public', // Default for now
@@ -202,28 +226,28 @@ export default function CreateSpacePage() {
         }
       });
 
-      if (response.space) {
+      if (result?.space) {
         // Track creation
         await api.post('/api/analytics/track', {
           event: 'space_created',
           properties: {
-            spaceId: response.space.id,
+            spaceId: result.space.id,
             category: data.category
           }
         });
 
-        router.push(`/spaces/${response.space.id}`);
+        router.push(`/spaces/${result.space.id}`);
       }
     } catch (error: any) {
       console.error('Failed to create space:', error);
 
-      if (error.response?.status === 403) {
+      if (error instanceof HttpError && error.status === 403) {
         setGlobalLock(true);
         setLockReason('You do not have permission to create spaces');
-      } else if (error.response?.status === 429) {
+      } else if (error instanceof HttpError && error.status === 429) {
         setGlobalLock(true);
         setLockReason('Too many spaces created. Try again tomorrow.');
-      } else if (error.response?.data?.message?.includes('exists')) {
+      } else if (error instanceof HttpError && typeof error.data === 'object' && error.data && 'message' in error.data && typeof (error.data as any).message === 'string' && (error.data as any).message.includes('exists')) {
         alert('A space with this name already exists');
       } else {
         alert('Failed to create space. Please try again.');

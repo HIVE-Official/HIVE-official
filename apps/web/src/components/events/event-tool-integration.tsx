@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, Badge, Dialog, HiveModalHeader, HiveModalTitle, DialogContent } from "@hive/ui";
+import { Button, Card, Badge, Dialog, DialogContent } from "@hive/ui";
+import { HiveModalHeader, HiveModalTitle } from "@/components/temp-stubs";
 import { 
   Zap, 
   Play, 

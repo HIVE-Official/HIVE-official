@@ -400,3 +400,24 @@ export const logPerformance = async (
     logger.debug(message, context);
   }
 };
+
+// Log authentication events in a consistent format
+export const logAuthEvent = async (
+  event: 'login' | 'logout' | 'register' | 'verify' | 'failed_login',
+  context: {
+    userId?: string;
+    requestId?: string;
+    isTestUser?: boolean;
+    ip?: string | null;
+    userAgent?: string | null;
+    action?: string;
+    tags?: Record<string, unknown>;
+    extra?: Record<string, unknown>;
+  }
+) => {
+  const { action = `auth_${event}`, ...rest } = context;
+  logger.info(`Auth Event: ${event}`, {
+    action,
+    ...rest,
+  });
+};

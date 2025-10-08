@@ -103,7 +103,11 @@ function validateToolEnhancedContent(post: Post): ContentValidationResult {
     'countdown', 'survey', 'form', 'tracker', 'builder', 'template'
   ];
 
-  const contentLower = post.content.toLowerCase();
+  const contentValue = typeof post.content === 'string'
+    ? post.content
+    : (post.content as { text?: string })?.text ?? '';
+
+  const contentLower = contentValue.toLowerCase();
   const matchedKeywords = toolKeywords.filter(keyword => 
     contentLower.includes(keyword)
   );
@@ -115,11 +119,10 @@ function validateToolEnhancedContent(post: Post): ContentValidationResult {
 
   // Check for @mentions of tool-related handles
   if (post.richContent?.mentions) {
-    const toolMentions = post.richContent.mentions.filter(mention =>
-      mention.handle.includes('tool') || 
-      mention.handle.includes('bot') ||
-      mention.handle.includes('hive')
-    );
+    const toolMentions = post.richContent.mentions.filter((mention: any) => {
+      const reference = (mention.handle || mention.displayText || '').toLowerCase();
+      return reference.includes('tool') || reference.includes('bot') || reference.includes('hive');
+    });
     
     if (toolMentions.length > 0) {
       confidence += toolMentions.length * 20;
@@ -168,7 +171,11 @@ function validateToolEnhancedContent(post: Post): ContentValidationResult {
  * Validate builder/admin announcements
  */
 function validateBuilderAnnouncement(post: Post): ContentValidationResult {
-  const contentLower = post.content.toLowerCase();
+  const contentValue = typeof post.content === 'string'
+    ? post.content
+    : (post.content as { text?: string })?.text ?? '';
+
+  const contentLower = contentValue.toLowerCase();
   
   // Check for announcement keywords
   const announcementKeywords = [

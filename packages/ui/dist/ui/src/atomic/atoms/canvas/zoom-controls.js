@@ -5,7 +5,7 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Button } from '@/atomic/atoms/button';
+import { Button } from '../button.js';
 import { cn } from '../../../lib/utils.js';
 import { ZoomIn, ZoomOut, Maximize2, RotateCcw, } from 'lucide-react';
 export function ZoomControls({ zoom, minZoom = 0.1, maxZoom = 4, onZoomIn, onZoomOut, onZoomReset, onZoomToFit, position = 'bottom-right', className, showPercentage = true, }) {

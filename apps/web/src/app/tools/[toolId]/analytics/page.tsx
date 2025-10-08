@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card, Grid } from "@hive/ui";
+import { Grid, Card, Button } from "@hive/ui";
 import { ArrowLeft, TrendingUp, Users, /* Eye as _Eye, */ Download, /* Calendar as _Calendar, BarChart3 as _BarChart3, PieChart as _PieChart, */ Activity, Star, Share, MessageSquare } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 
@@ -199,10 +199,9 @@ export default function ToolAnalyticsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                className="max-w-sm"
+                className="max-w-sm text-[#A1A1AA] hover:text-white"
                 variant="outline"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -228,9 +227,9 @@ export default function ToolAnalyticsPage() {
                 <option value="90d">Last 3 months</option>
               </select>
               <Button
-                className="max-w-sm"
+                className="max-w-sm border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
                 variant="outline"
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                
               >
                 <Share className="h-4 w-4 mr-2" />
                 Export

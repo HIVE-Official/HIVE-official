@@ -679,11 +679,12 @@ describe('Space.updateSettings()', () => {
       createdBy: createValidProfileId()
     }).getValue();
 
-    space.updateSettings({
+    const result = space.updateSettings({
       allowInvites: false,
       requireApproval: true
     });
 
+    expect(result.isSuccess).toBe(true);
     expect(space.settings.allowInvites).toBe(false);
     expect(space.settings.requireApproval).toBe(true);
   });
@@ -702,13 +703,41 @@ describe('Space.updateSettings()', () => {
       }
     }).getValue();
 
-    space.updateSettings({
+    const result = space.updateSettings({
       requireApproval: true
     });
 
+    expect(result.isSuccess).toBe(true);
     expect(space.settings.allowInvites).toBe(true); // Preserved
     expect(space.settings.requireApproval).toBe(true); // Updated
     expect(space.settings.maxMembers).toBe(100); // Preserved
+  });
+
+  it('should prevent reducing maxMembers below current member count', () => {
+    const creatorId = createValidProfileId('creator');
+    const space = Space.create({
+      spaceId: createValidSpaceId(),
+      name: createValidSpaceName(),
+      description: createValidSpaceDescription(),
+      category: createValidSpaceCategory(),
+      campusId: createValidCampusId(),
+      createdBy: creatorId,
+      settings: {
+        allowInvites: true,
+        requireApproval: false,
+        maxMembers: 20
+      }
+    }).getValue();
+
+    for (let i = 0; i < 5; i++) {
+      space.addMember(createValidProfileId(`member_${i}`));
+    }
+
+    const result = space.updateSettings({ maxMembers: 4 });
+
+    expect(result.isFailure).toBe(true);
+    expect(result.error).toContain('maxMembers');
+    expect(space.settings.maxMembers).toBe(20);
   });
 });
 

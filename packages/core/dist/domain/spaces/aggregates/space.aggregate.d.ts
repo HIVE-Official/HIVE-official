@@ -75,6 +75,7 @@ export declare class Space extends AggregateRoot<SpaceProps> {
     get visibility(): 'public' | 'private';
     get settings(): SpaceSettings;
     get spaceType(): string;
+    get type(): string;
     get posts(): any[];
     getMemberCount(): number;
     private constructor();
@@ -97,7 +98,7 @@ export declare class Space extends AggregateRoot<SpaceProps> {
     addTab(tab: Tab): Result<void>;
     addWidget(widget: Widget): Result<void>;
     incrementPostCount(postId?: string, authorId?: string): void;
-    updateSettings(settings: Partial<SpaceSettings>): void;
+    updateSettings(settings: Partial<SpaceSettings>): Result<void>;
     private getAdminCount;
     private updateLastActivity;
     private createDefaultTabs;

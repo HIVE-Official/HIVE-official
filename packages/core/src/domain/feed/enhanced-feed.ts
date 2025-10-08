@@ -9,6 +9,7 @@ import { FeedId } from './value-objects/feed-id.value';
 import { ProfileId } from '../profile/value-objects/profile-id.value';
 import { CampusId } from '../profile/value-objects/campus-id.value';
 import { FeedItem } from './feed-item';
+import { FeedItemsAddedEvent } from './events/feed-items-added.event';
 
 export type FeedFilterType = 'all' | 'spaces' | 'rituals' | 'events' | 'trending';
 
@@ -113,6 +114,14 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     this.sortItems();
     this.props.lastUpdated = new Date();
 
+    this.addDomainEvent(
+      new FeedItemsAddedEvent(
+        this.id,
+        this.props.campusId.value,
+        [item.itemId.value]
+      )
+    );
+
     return Result.ok<void>();
   }
 
@@ -136,6 +145,14 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     this.props.items.push(...newItems);
     this.sortItems();
     this.props.lastUpdated = new Date();
+
+    this.addDomainEvent(
+      new FeedItemsAddedEvent(
+        this.id,
+        this.props.campusId.value,
+        newItems.map(item => item.itemId.value)
+      )
+    );
 
     return Result.ok<void>();
   }
@@ -257,11 +274,13 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
 
   public updatePreferences(preferences: any): void {
     // Update feed preferences (algorithm weights, content types, etc.)
+    void preferences;
     this.props.lastUpdated = new Date();
   }
 
   public adjustAlgorithmWeights(adjustments: Record<string, number>): void {
     // Adjust algorithm weights based on user engagement
+    void adjustments;
     this.props.lastUpdated = new Date();
   }
 
@@ -430,13 +449,21 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     // Adjust algorithm weights based on feedback
     // This is a simplified version - production would use ML
     const adjustment = feedback === 'positive' ? 0.01 : -0.01;
+    const normalizedType = itemType.toLowerCase();
+    const typeTweaks: Record<string, number> = {
+      recency: normalizedType === 'event' ? 0.4 : 0.5,
+      engagement: normalizedType === 'space_post' ? 1.6 : 1.5,
+      socialProximity: normalizedType === 'connection_activity' ? 1.2 : 1.0,
+      spaceRelevance: normalizedType === 'space_post' ? 1.0 : 0.8,
+      trendingBoost: normalizedType === 'ritual' ? 0.5 : 0.3
+    };
 
     this.adjustAlgorithmWeights({
-      recency: adjustment * 0.5,
-      engagement: adjustment * 1.5,
-      socialProximity: adjustment * 1.0,
-      spaceRelevance: adjustment * 0.8,
-      trendingBoost: adjustment * 0.3
+      recency: adjustment * typeTweaks.recency,
+      engagement: adjustment * typeTweaks.engagement,
+      socialProximity: adjustment * typeTweaks.socialProximity,
+      spaceRelevance: adjustment * typeTweaks.spaceRelevance,
+      trendingBoost: adjustment * typeTweaks.trendingBoost
     });
   }
 

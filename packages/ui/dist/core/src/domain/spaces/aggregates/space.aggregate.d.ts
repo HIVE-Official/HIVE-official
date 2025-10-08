@@ -75,6 +75,7 @@ export declare class Space extends AggregateRoot<SpaceProps> {
     get visibility(): 'public' | 'private';
     get settings(): SpaceSettings;
     get spaceType(): string;
+    get type(): string;
     get posts(): any[];
     getMemberCount(): number;
     private constructor();

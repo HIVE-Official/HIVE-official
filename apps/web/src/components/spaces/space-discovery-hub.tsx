@@ -114,16 +114,12 @@ export function SpaceDiscoveryHub() {
   const loadSpaces = async () => {
     try {
       setLoading(true);
-      const response = await api.spaces.browse({
+      const result = await api.spaces.browse<{ spaces: SpaceWithActivity[] }>({
         category: selectedCategory,
         includeActivity: true,
         limit: 50
       });
-
-      const result = await response.json();
-      if (result.success) {
-        setSpaces(result.data);
-      }
+      setSpaces(result.spaces || []);
     } catch (error) {
       console.error('Error loading spaces:', error);
     } finally {
@@ -243,27 +239,24 @@ export function SpaceDiscoveryHub() {
               <div className="flex gap-2">
                 <Button
                   variant={activityView === 'trending' ? 'default' : 'outline'}
-                  className="max-w-sm"
+                  className={`max-w-sm ${activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('trending')}
-                  className={activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <TrendingUp className="w-4 h-4 mr-1" />
                   Trending
                 </Button>
                 <Button
                   variant={activityView === 'active' ? 'default' : 'outline'}
-                  className="max-w-sm"
+                  className={`max-w-sm ${activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('active')}
-                  className={activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Activity className="w-4 h-4 mr-1" />
                   Active Now
                 </Button>
                 <Button
                   variant={activityView === 'new' ? 'default' : 'outline'}
-                  className="max-w-sm"
+                  className={`max-w-sm ${activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('new')}
-                  className={activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Sparkles className="w-4 h-4 mr-1" />
                   New

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { api } from '@/lib/api-client';
-import type { Space } from '@hive/core';
+import { toSpaceViewModel, type SpaceViewModel } from '@/lib/mappers/space-mapper';
 
 interface UseApiSpacesOptions {
   filterType?: string;
@@ -10,7 +10,7 @@ interface UseApiSpacesOptions {
 
 export function useApiSpaces(options: UseApiSpacesOptions = {}) {
   const { filterType = 'all', searchQuery = '', limitCount = 50 } = options;
-  const [spaces, setSpaces] = useState<Space[]>([]);
+  const [spaces, setSpaces] = useState<SpaceViewModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -30,16 +30,13 @@ export function useApiSpaces(options: UseApiSpacesOptions = {}) {
         params.append('q', searchQuery);
       }
 
-      const response = await api.spaces.list(params);
-      const data = await response.json();
+      const result = await api.spaces.list<{ spaces: unknown[] }>(params);
 
-      if (data.success) {
-        setSpaces(data.data.spaces || []);
-      } else {
-        console.error('Spaces API error:', data);
-        setError(new Error(data.error || 'Failed to fetch spaces'));
-        setSpaces([]);
-      }
+      const mappedSpaces = (result?.spaces || [])
+        .map(space => toSpaceViewModel(space))
+        .filter((space): space is SpaceViewModel => Boolean(space));
+
+      setSpaces(mappedSpaces);
     } catch (err) {
       console.error('Failed to fetch spaces:', err);
       setError(err as Error);

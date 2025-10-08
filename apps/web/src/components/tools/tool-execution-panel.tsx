@@ -227,9 +227,8 @@ export function ToolExecutionPanel({
           <div className="mt-1">
             <Button
               variant="outline"
-              className="max-w-sm"
+              className={`max-w-sm ${value ? 'bg-green-500/20 border-green-500' : ''}`}
               onClick={() => handleInputChange(key, !value)}
-              className={value ? 'bg-green-500/20 border-green-500' : ''}
             >
               {value ? 'True' : 'False'}
             </Button>
@@ -313,9 +312,8 @@ export function ToolExecutionPanel({
             {isExecuting ? (
               <Button
                 variant="outline"
-                className="max-w-sm"
+                className="max-w-sm text-red-400 border-red-400"
                 onClick={handleCancel}
-                className="text-red-400 border-red-400"
               >
                 <Square className="h-4 w-4 mr-2" />
                 Cancel

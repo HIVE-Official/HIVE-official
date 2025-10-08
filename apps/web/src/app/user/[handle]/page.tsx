@@ -5,11 +5,11 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
-import { ProfileBentoGrid, Card, Button } from '@hive/ui';
-import { toUnifiedProfile, toProfileSystem } from '@/lib/profile-transformers';
+import { Card, Button } from "@hive/ui";
+import { toUnifiedProfile } from '@/lib/profile-transformers';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { useSession } from '@/hooks/use-session';
-import type { HiveProfile, UnifiedHiveProfile, ProfileSystem } from '@hive/core';
+import type { HiveProfile, UnifiedHiveProfile } from '@hive/core';
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -20,11 +20,6 @@ export default function UserProfilePage() {
   const [unifiedProfile, setUnifiedProfile] = useState<UnifiedHiveProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Transform UnifiedProfile to ProfileSystem for ProfileBentoGrid
-  const profileSystem: ProfileSystem | null = unifiedProfile
-    ? toProfileSystem(unifiedProfile)
-    : null;
 
   useEffect(() => {
     const loadPublicProfile = async () => {
@@ -97,11 +92,6 @@ export default function UserProfilePage() {
     );
   }
 
-  if (!profileSystem) {
-    notFound();
-    return null;
-  }
-
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-black">
@@ -117,12 +107,40 @@ export default function UserProfilePage() {
             </p>
           </div>
 
-          {/* Main Profile Content */}
-          <ProfileBentoGrid
-            profile={profileSystem}
-            editable={false}
-            onLayoutChange={() => {}} // No-op for public view
-          />
+          {unifiedProfile && (
+            <Card className="bg-gray-900/60 border border-gray-800 text-left text-gray-100">
+              <div className="grid gap-6 md:grid-cols-2 p-6">
+                <div>
+                  <h2 className="text-xl font-semibold text-white mb-2">About</h2>
+                  <p className="text-gray-400">
+                    {unifiedProfile.personal?.bio || 'This student has not added a bio yet.'}
+                  </p>
+                  <dl className="mt-4 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">Campus</dt>
+                      <dd className="text-gray-200">{unifiedProfile.campusId || 'UB Buffalo'}</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">Major</dt>
+                      <dd className="text-gray-200">{unifiedProfile.academic?.major || 'Undeclared'}</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-gray-500">Graduation</dt>
+                      <dd className="text-gray-200">{unifiedProfile.academic?.graduationYear || 'TBD'}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-white mb-2">Highlights</h2>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li>Spaces joined: {unifiedProfile.stats?.spacesJoined ?? 0}</li>
+                    <li>Connections: {unifiedProfile.stats?.connectionsCount ?? 0}</li>
+                    <li>Current streak: {unifiedProfile.stats?.currentStreak ?? 0} days</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          )}
 
           {/* Social Actions */}
           <div className="mt-8 flex justify-center gap-4">

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Card, Grid as _Grid } from "@hive/ui";
+import { Card, Button } from "@hive/ui";
 import { Save, Eye, Play, Settings as _Settings, Code2, Palette as _Palette, Layout, Database, Zap, ArrowLeft, MoreHorizontal, Copy as _Copy, Trash2 as _Trash2 } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 
@@ -78,7 +78,7 @@ const MOCK_TOOL: ToolConfig = {
       id: 'submit-button',
       type: 'button',
       label: 'Create Poll',
-      properties: { variant: 'primary', action: 'submit' },
+      properties: { variant: 'default', action: 'submit' },
       position: { x: 50, y: 120 },
       size: { width: 120, height: 40 }
     }
@@ -125,7 +125,7 @@ const ElementCard = ({ element, onSelect, isSelected }: {
             {element.type}
           </div>
         </div>
-        <Button className="max-w-sm" variant="outline" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
+ <Button className="max-w-sm h-6 w-6 p-0 opacity-0 group-hover:opacity-100" variant="outline">
           <MoreHorizontal className="h-3 w-3 text-[#A1A1AA]" />
         </Button>
       </div>
@@ -265,10 +265,9 @@ export default function ToolEditPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                className="max-w-sm"
+                className="max-w-sm text-[#A1A1AA] hover:text-white"
                 variant="outline"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -285,27 +284,27 @@ export default function ToolEditPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                className="max-w-sm"
+                className="max-w-sm border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
                 variant="outline"
                 onClick={handleTest}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                
               >
                 <Play className="h-4 w-4 mr-2" />
                 Test
               </Button>
               <Button
-                className="max-w-sm"
+                className="max-w-sm border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
                 variant="outline"
                 onClick={handlePreview}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
               </Button>
               <Button
-                className="max-w-sm"
+                className="max-w-sm bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
                 onClick={handleSave}
-                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
+                
                 disabled={!hasChanges}
               >
                 <Save className="h-4 w-4 mr-2" />
@@ -358,7 +357,7 @@ export default function ToolEditPage() {
             <Card className="p-4 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)] flex-1">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-semibold text-white">Elements</h3>
-                <Button className="max-w-sm" variant="outline" className="h-6 w-6 p-0">
+ <Button className="max-w-sm h-6 w-6 p-0" variant="outline">
                   <MoreHorizontal className="h-3 w-3 text-[#A1A1AA]" />
                 </Button>
               </div>
@@ -381,9 +380,9 @@ export default function ToolEditPage() {
                     return (
                       <Button
                         key={elementType.type}
-                        className="max-w-sm"
+                        className="max-w-sm border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[var(--hive-brand-primary)]/30 p-2 h-auto"
                         variant="outline"
-                        className="border-[rgba(255,255,255,0.1)] text-[#A1A1AA] hover:text-white hover:border-[var(--hive-brand-primary)]/30 p-2 h-auto"
+                        
                         onClick={() => {
                           const newElement: ToolElement = {
                             id: `element-${Date.now()}`,

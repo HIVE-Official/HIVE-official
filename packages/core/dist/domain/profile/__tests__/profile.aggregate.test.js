@@ -351,7 +351,7 @@ const ub_email_value_1 = require("../value-objects/ub-email.value");
             const academicInfo = createValidAcademicInfo();
             profile.clearEvents(); // Clear creation event
             // Act
-            profile.completeOnboarding(academicInfo, [], []);
+            profile.completeOnboarding(academicInfo, ['Coding'], ['space1']);
             // Assert
             const events = profile.domainEvents;
             (0, vitest_1.expect)(events).toHaveLength(1);
@@ -360,9 +360,9 @@ const ub_email_value_1 = require("../value-objects/ub-email.value");
         (0, vitest_1.it)('should fail if already onboarded', () => {
             // Arrange
             const academicInfo = createValidAcademicInfo();
-            profile.completeOnboarding(academicInfo, [], []); // First onboarding
+            profile.completeOnboarding(academicInfo, ['Interest1'], ['space1']); // First onboarding
             // Act
-            const result = profile.completeOnboarding(academicInfo, [], []); // Second attempt
+            const result = profile.completeOnboarding(academicInfo, ['Interest1'], ['space1']); // Second attempt
             // Assert
             (0, vitest_1.expect)(result.isFailure).toBe(true);
             (0, vitest_1.expect)(result.error).toContain('already onboarded');
@@ -384,6 +384,30 @@ const ub_email_value_1 = require("../value-objects/ub-email.value");
             // Assert - Based on code, at least 1 space required
             (0, vitest_1.expect)(result.isFailure).toBe(true);
             (0, vitest_1.expect)(result.error).toContain('space');
+        });
+        (0, vitest_1.it)('should onboard non-student profiles without academic info', () => {
+            // Arrange
+            const props = createValidProfileProps();
+            const nonStudentResult = user_type_value_1.UserType.create(user_type_value_1.UserTypeEnum.ALUMNI);
+            if (nonStudentResult.isFailure) {
+                throw new Error(`Failed to create non-student user type: ${nonStudentResult.error}`);
+            }
+            props.userType = nonStudentResult.getValue();
+            const profile = profile_aggregate_1.Profile.create(props).getValue();
+            profile.clearEvents();
+            const interests = ['Community Service'];
+            const selectedSpaces = ['space-transfer'];
+            // Act
+            const result = profile.completeOnboarding(undefined, interests, selectedSpaces);
+            // Assert
+            (0, vitest_1.expect)(result.isSuccess).toBe(true);
+            (0, vitest_1.expect)(profile.isOnboarded).toBe(true);
+            (0, vitest_1.expect)(profile.academicInfo).toBeUndefined();
+            (0, vitest_1.expect)(profile.socialInfo.interests).toEqual(interests);
+            (0, vitest_1.expect)(profile.spaces).toEqual(selectedSpaces);
+            const events = profile.domainEvents;
+            (0, vitest_1.expect)(events).toHaveLength(1);
+            (0, vitest_1.expect)(events[0].getEventName()).toBe('ProfileOnboarded');
         });
     });
     (0, vitest_1.describe)('Profile Verification', () => {

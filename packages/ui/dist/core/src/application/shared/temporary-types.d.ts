@@ -97,6 +97,7 @@ export declare class Space {
     lastActivityAt: Date;
     createdAt: Date;
     spaceType: string;
+    type: SpaceType;
     posts: any[];
     settings: any;
     members: Array<{
@@ -133,6 +134,7 @@ export declare class Space {
         lastActivityAt: Date;
         createdAt: Date;
         spaceType: string;
+        type: SpaceType;
         posts: any[];
         settings: any;
         members: {
@@ -162,6 +164,51 @@ export interface Post {
     isPinned?: boolean;
     visibility?: 'public' | 'members' | 'private';
     campusId: string;
+    type?: 'default' | 'toolshare' | 'event' | 'poll' | 'image';
+    reactions?: {
+        heart?: number;
+        thumbsUp?: number;
+        celebrate?: number;
+        [key: string]: number | undefined;
+    };
+    reactedUsers?: {
+        [userId: string]: string;
+    };
+    author?: {
+        id: string;
+        displayName?: string;
+        handle?: string;
+        photoURL?: string;
+        role?: 'student' | 'faculty' | 'builder' | 'admin';
+    };
+    richContent?: {
+        mentions?: Array<{
+            type: 'user' | 'tool' | 'space';
+            id: string;
+            displayText: string;
+        }>;
+        hashtags?: string[];
+        links?: string[];
+    };
+    toolShareMetadata?: {
+        toolId: string;
+        toolName: string;
+        shareType: 'created' | 'used' | 'recommended';
+    };
+    pollMetadata?: {
+        question: string;
+        options: string[];
+        votes: {
+            [option: string]: number;
+        };
+        endsAt?: Date;
+    };
+    imageMetadata?: {
+        url: string;
+        width?: number;
+        height?: number;
+        alt?: string;
+    };
 }
 export interface School {
     id: string;
@@ -200,6 +247,12 @@ export interface User {
         graduationYear?: number;
         interests?: string[];
     };
+}
+export interface AuthUser extends Omit<User, 'displayName' | 'photoURL'> {
+    uid: string;
+    displayName: string | null | undefined;
+    photoURL: string | null | undefined;
+    campusId: string;
 }
 export interface Tool {
     id: string;

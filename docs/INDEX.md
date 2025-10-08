@@ -29,6 +29,7 @@ Product requirements, vision, and features.
 - [Vision](./specs/product/vision.md) - Product vision and mission
 - [Social Utility Vision](./specs/product/social-utility-vision.md) - Social utility approach
 - [HIVE Overview](./specs/product/hive-overview.md) - Platform overview
+- [Student Autonomy & Convenience Focus](./specs/product/autonomy-convenience-focus.md) - Autonomy-first positioning and KPIs
 - [Features](./specs/product/features.md) - Feature specifications
 - [Event Club Platform](./specs/product/event-club-platform.md) - Events and clubs features
 - [Interests](./specs/product/interests.md) - Interest-based features
@@ -62,6 +63,7 @@ Production deployment and launch procedures.
 - [Launch Runbook](./operations/deployment/launch-runbook.md) - October 1st launch procedures
 - [Launch Readiness Report](./operations/deployment/launch-readiness-report.md) - Pre-launch checklist
 - [Launch Positioning Strategy](./operations/deployment/launch-positioning-strategy.md) - Market positioning
+- [Autonomy Errors & Mitigations](./operations/autonomy-errors-and-mitigations.md) - Focus-specific risks log
 
 ### Testing
 Testing strategies and procedures.
@@ -85,6 +87,7 @@ Developer guides and references.
 - [Notification System Summary](./development/notification-system-summary.md) - Notification implementation
 - [Firestore Indexes Summary](./development/firestore-indexes-summary.md) - Database index documentation
 - [Spaces Implementation Summary](./development/spaces-implementation-summary.md) - Spaces feature implementation
+- [Autonomy & Convenience Backlog](../docs/engineering/autonomy-backlog.md) - Focus-aligned TODOs
 
 ## 📦 Archive
 

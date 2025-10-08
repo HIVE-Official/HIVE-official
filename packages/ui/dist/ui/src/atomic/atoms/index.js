@@ -66,6 +66,13 @@ export { HiveLogo } from './hive-logo.js';
 // ───────────────────────────────────────────────────────────────
 export { BulletinCard } from './bulletin-card.js';
 export { BulletinSection } from './bulletin-section.js';
+// Enhanced form components
+export { InputEnhanced } from './input-enhanced.js';
+export { TextareaEnhanced } from './textarea-enhanced.js';
+// Layout components
+export { Grid } from './grid.js';
+// Status components
+export { PresenceStatus } from './presence-status.js';
 // Note: Canvas elements (ConnectionWire, Port, DataTypeBadge) are internal-only
 // They're used within HiveLab organisms but not exported from the package
 //# sourceMappingURL=index.js.map

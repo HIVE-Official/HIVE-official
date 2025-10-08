@@ -100,4 +100,7 @@ Object.defineProperty(exports, "SearchType", { enumerable: true, get: function (
 Object.defineProperty(exports, "SearchQueryHandler", { enumerable: true, get: function () { return search_query_1.SearchQueryHandler; } });
 // Temporary backward compatibility (will be removed)
 __exportStar(require("./application/shared/temporary-types"), exports);
+__exportStar(require("./shared/profile"), exports);
+__exportStar(require("./shared/privacy"), exports);
+__exportStar(require("./shared/session"), exports);
 //# sourceMappingURL=index.js.map

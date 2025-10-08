@@ -531,7 +531,7 @@ export default function SchoolsPage() {
             <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
               We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
-            <Button variant="default" className="max-w-lg" className="px-8 py-3">
+ <Button variant="default" className="max-w-lg px-8 py-3">
               Join General Waitlist
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
@@ -16,11 +16,15 @@ import { FieldValue } from 'firebase-admin/firestore';
 // POST /api/spaces/[spaceId]/promote-post - Promote a space post to campus feed
 export const POST = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "BAD_REQUEST", { status: 400 });
+  }
 
   try {
     const body = await request.json();
@@ -293,9 +297,13 @@ function calculateViralityScore(postData: any): number {
 /**
  * GET /api/spaces/[spaceId]/promote-post - Check promotion eligibility
  */
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context: { params: Promise<{ spaceId: string }> }, respond) => {
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = getUserId(request);
-  const { spaceId } = await context.params;
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "BAD_REQUEST", { status: 400 });
+  }
 
   try {
     const { searchParams } = new URL(request.url);

@@ -31,6 +31,8 @@ export { SpaceComposerWithTools } from './space-composer-with-tools';
 export { StatCard } from './stat-card';
 export { TemplateCard } from './panels/template-card';
 export { UserCard } from './user-card';
+export { PageContainer } from './page-container';
+export { HiveConfirmModal } from './hive-confirm-modal';
 export { EventCard } from './event-card';
 export type { FeedEventData, EventCardProps } from './event-card';
 export { RitualProgressCard } from './ritual-progress-card';

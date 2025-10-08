@@ -1,4 +1,3 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
@@ -240,14 +239,20 @@ const ParticipationActionSchema = z.object({
  */
 export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const { params } = context;
-    const { ritualId } = await params;
+    const ritualId = context.params.ritualId;
     const userId = context.userId;
+
+    if (!ritualId) {
+      return NextResponse.json(
+        ApiResponseHelper.error("Ritual ID is required", "MISSING_RITUAL_ID"),
+        { status: HttpStatus.BAD_REQUEST }
+      );
+    }
 
     const body = await request.json();
     const { action, actionId, metadata = {}, entryPoint = 'direct' } = ParticipationActionSchema.parse(body);
 
-    logger.info('🎭 Ritual participation: for ritualby user', {  ritualId, userId, endpoint: '/api/rituals/[ritualId]/participate'  });
+    logger.info('🎭 Ritual participation: for ritualby user', { ritualId, userId, endpoint: '/api/rituals/[ritualId]/participate' });
 
     switch (action) {
       case 'join': {

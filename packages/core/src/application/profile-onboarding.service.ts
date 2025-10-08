@@ -9,9 +9,6 @@ import { Profile } from '../domain/profile/aggregates/profile.aggregate';
 import { UBEmail } from '../domain/profile/value-objects/ub-email.value';
 import { ProfileHandle } from '../domain/profile/value-objects/profile-handle.value';
 import { ProfileId } from '../domain/profile/value-objects/profile-id.value';
-import { CampusId } from '../domain/profile/value-objects/campus-id.value';
-import { UserType } from '../domain/profile/value-objects/user-type.value';
-import { PersonalInfo } from '../domain/profile/value-objects/personal-info.value';
 import {
   getProfileRepository,
   getSpaceRepository,
@@ -148,15 +145,26 @@ export class ProfileOnboardingService extends BaseApplicationService {
       const onboardingStatus = profile.getOnboardingStatus();
       if (onboardingStatus.isComplete && !profile.isOnboarded) {
         // Note: completeOnboarding expects AcademicInfo, need to access academicInfo properly
-        if (profile.academicInfo) {
-          const completeResult = profile.completeOnboarding(
-            profile.academicInfo,
-            profile.interests,
-            [] // selectedSpaces - empty for now
-          );
-          if (completeResult.isSuccess) {
-            await this.profileRepo.save(profile);
-          }
+        const interests = profile.interests;
+        const spaces = profile.spaces;
+
+        if (interests.length === 0 || spaces.length === 0) {
+          return Result.ok<void>();
+        }
+
+        const requiresAcademicInfo = profile.userType.isStudent();
+        if (requiresAcademicInfo && !profile.academicInfo) {
+          return Result.ok<void>();
+        }
+
+        const completeResult = profile.completeOnboarding(
+          profile.academicInfo,
+          interests,
+          spaces
+        );
+
+        if (completeResult.isSuccess) {
+          await this.profileRepo.save(profile);
         }
       }
 
@@ -310,11 +318,37 @@ export class ProfileOnboardingService extends BaseApplicationService {
     }
 
     // Deduplicate
-    const uniqueSpaces = Array.from(
+    let uniqueSpaces = Array.from(
       new Map(suggestions.map(space => [(space as any).id?.id || (space as any).spaceId?.value, space])).values()
     );
 
+    if (interests.length > 0) {
+      const keywords = interests.map((interest) => interest.toLowerCase());
+      uniqueSpaces = uniqueSpaces.sort((a, b) => {
+        const aScore = this.scoreSpaceInterestMatch(a, keywords);
+        const bScore = this.scoreSpaceInterestMatch(b, keywords);
+        return bScore - aScore;
+      });
+    }
+
     return Result.ok(uniqueSpaces);
+  }
+
+  private scoreSpaceInterestMatch(space: unknown, keywords: string[]): number {
+    const candidate = space as any;
+    const name = (candidate?.name?.name ?? candidate?.name ?? '').toString().toLowerCase();
+    const description = (candidate?.description?.value ?? candidate?.description ?? '').toString().toLowerCase();
+
+    return keywords.reduce((score, keyword) => {
+      let currentScore = score;
+      if (name.includes(keyword)) {
+        currentScore += 2;
+      }
+      if (description.includes(keyword)) {
+        currentScore += 1;
+      }
+      return currentScore;
+    }, 0);
   }
 
   private async joinDefaultSpaces(profile: Profile): Promise<void> {

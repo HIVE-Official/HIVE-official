@@ -634,6 +634,30 @@ const createValidReward = (overrides) => {
         (0, vitest_1.expect)(result.isFailure).toBe(true);
         (0, vitest_1.expect)(result.error).toContain('already participating');
     });
+    (0, vitest_1.it)('should block participants before ritual is announced', () => {
+        const ritual = ritual_aggregate_1.Ritual.create({
+            name: 'Draft Ritual',
+            description: 'Draft description',
+            type: 'short',
+            category: 'social',
+            duration: '1 week',
+            startDate: new Date(),
+            goals: [createValidGoal()],
+            requirements: [createValidRequirement()],
+            rewards: [createValidReward()],
+            campusId: createValidCampusId(),
+            targetAudience: 'all',
+            createdBy: createValidProfileId(),
+            status: 'draft',
+            visibility: 'public'
+        }).getValue();
+        const result = ritual.addParticipant(createValidProfileId('late_joiner'));
+        (0, vitest_1.expect)(result.isFailure).toBe(true);
+        (0, vitest_1.expect)(result.error).toContain('not currently accepting');
+        (0, vitest_1.expect)(ritual.getParticipantCount()).toBe(0);
+        (0, vitest_1.expect)(ritual.participationStats.total).toBe(0);
+        (0, vitest_1.expect)(ritual.participationStats.active).toBe(0);
+    });
     (0, vitest_1.it)('should enforce maximum participant limit', () => {
         const ritual = ritual_aggregate_1.Ritual.create({
             name: 'Test Ritual',

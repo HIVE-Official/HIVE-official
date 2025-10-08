@@ -1,7 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { User, Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 

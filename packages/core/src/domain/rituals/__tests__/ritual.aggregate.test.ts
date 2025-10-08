@@ -707,6 +707,33 @@ describe('Ritual.addParticipant()', () => {
     expect(result.error).toContain('already participating');
   });
 
+  it('should block participants before ritual is announced', () => {
+    const ritual = Ritual.create({
+      name: 'Draft Ritual',
+      description: 'Draft description',
+      type: 'short',
+      category: 'social',
+      duration: '1 week',
+      startDate: new Date(),
+      goals: [createValidGoal()],
+      requirements: [createValidRequirement()],
+      rewards: [createValidReward()],
+      campusId: createValidCampusId(),
+      targetAudience: 'all',
+      createdBy: createValidProfileId(),
+      status: 'draft',
+      visibility: 'public'
+    }).getValue();
+
+    const result = ritual.addParticipant(createValidProfileId('late_joiner'));
+
+    expect(result.isFailure).toBe(true);
+    expect(result.error).toContain('not currently accepting');
+    expect(ritual.getParticipantCount()).toBe(0);
+    expect(ritual.participationStats.total).toBe(0);
+    expect(ritual.participationStats.active).toBe(0);
+  });
+
   it('should enforce maximum participant limit', () => {
     const ritual = Ritual.create({
       name: 'Test Ritual',

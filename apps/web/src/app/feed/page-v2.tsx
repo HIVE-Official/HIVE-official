@@ -5,7 +5,7 @@
  * Uses CQRS pattern and real-time updates
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Card, Badge } from '@hive/ui';
 import { useAuth } from "@hive/auth-logic";
 import {
@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Heart,
   Bell,
-  Settings,
   Globe,
   AlertTriangle,
   Loader2,
@@ -57,7 +56,7 @@ export default function FeedPageV2() {
   const [hasEngaged, setHasEngaged] = useState(false);
 
   // Handle post interactions
-  const handleLike = useCallback(async (postId: string) => {
+  const handleLike = useCallback(async (_postId: string) => {
     if (!user?.id) {
       toast({
         title: 'Authentication Required',
@@ -69,7 +68,7 @@ export default function FeedPageV2() {
 
     if (!hasEngaged) {
       setHasEngaged(true);
-      const engagementTime = Date.now() - engagementStartTime;
+      const _engagementTime = Date.now() - engagementStartTime;
     }
 
     // TODO: Implement like action with CQRS command
@@ -79,7 +78,7 @@ export default function FeedPageV2() {
     });
   }, [user, hasEngaged, engagementStartTime, toast]);
 
-  const handleComment = useCallback(async (postId: string, content: string) => {
+  const handleComment = useCallback(async (_postId: string, _content: string) => {
     if (!user?.id) {
       toast({
         title: 'Authentication Required',
@@ -96,7 +95,7 @@ export default function FeedPageV2() {
     });
   }, [user, toast]);
 
-  const handleShare = useCallback(async (postId: string) => {
+  const handleShare = useCallback(async (_postId: string) => {
     if (!user?.id) {
       toast({
         title: 'Authentication Required',
@@ -231,7 +230,7 @@ export default function FeedPageV2() {
             {/* Feed Filters */}
             <div className="flex items-center space-x-2 overflow-x-auto">
               <Button
-                variant={feedFilter === 'all' ? 'primary' : 'ghost'}
+                variant={feedFilter === 'all' ? 'default' : 'ghost'}
                 className="max-w-sm"
                 onClick={() => setFeedFilter('all')}
               >
@@ -239,7 +238,7 @@ export default function FeedPageV2() {
                 All
               </Button>
               <Button
-                variant={feedFilter === 'my_spaces' ? 'primary' : 'ghost'}
+                variant={feedFilter === 'my_spaces' ? 'default' : 'ghost'}
                 className="max-w-sm"
                 onClick={() => setFeedFilter('my_spaces')}
               >
@@ -247,7 +246,7 @@ export default function FeedPageV2() {
                 My Spaces
               </Button>
               <Button
-                variant={feedFilter === 'trending' ? 'primary' : 'ghost'}
+                variant={feedFilter === 'trending' ? 'default' : 'ghost'}
                 className="max-w-sm"
                 onClick={() => setFeedFilter('trending')}
               >
@@ -255,7 +254,7 @@ export default function FeedPageV2() {
                 Trending
               </Button>
               <Button
-                variant={feedFilter === 'events' ? 'primary' : 'ghost'}
+                variant={feedFilter === 'events' ? 'default' : 'ghost'}
                 className="max-w-sm"
                 onClick={() => setFeedFilter('events')}
               >
@@ -263,7 +262,7 @@ export default function FeedPageV2() {
                 Events
               </Button>
               <Button
-                variant={feedFilter === 'rituals' ? 'primary' : 'ghost'}
+                variant={feedFilter === 'rituals' ? 'default' : 'ghost'}
                 className="max-w-sm"
                 onClick={() => setFeedFilter('rituals')}
               >

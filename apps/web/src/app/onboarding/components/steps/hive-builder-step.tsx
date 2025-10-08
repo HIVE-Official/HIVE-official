@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Star, CheckCircle, Loader2, Search } from "lucide-react";
+import { motion } from 'framer-motion';
+import { Users, Star, CheckCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Card, Button, Input } from "@hive/ui";
+import { Card, Input } from "@hive/ui";
 import { useSession } from "@/hooks/use-session";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -29,7 +29,7 @@ interface Space {
 }
 
 export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
-  const { user } = useSession();
+  const { user: _user } = useSession();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       });
       
       if (!response.ok) {
-        const errorData = await response.text();
+        await response.text();
         throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
       }
 
@@ -81,7 +81,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       // Filter spaces based on user type
       const filteredSpaces = (result.spaces || []).filter((space: Space) => {
         // Always exclude campus living spaces
-        if (space.spaceType === 'campus_living') {
+        if (space.type === 'campus_living') {
           return false;
         }
         

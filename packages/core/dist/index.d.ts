@@ -49,4 +49,7 @@ export type { GetFeedQuery, GetFeedQueryResult } from "./application/feed/querie
 export { SearchType, SearchQueryHandler } from "./application/search/queries/search.query";
 export type { SearchResultItem, SearchQuery, SearchQueryResult } from "./application/search/queries/search.query";
 export * from "./application/shared/temporary-types";
+export * from "./shared/profile";
+export * from "./shared/privacy";
+export * from "./shared/session";
 //# sourceMappingURL=index.d.ts.map

@@ -16,6 +16,14 @@
 
 ---
 
+## 🔜 Immediate Next Steps
+
+- ✅ **Validate the TypeScript fix** – `pnpm typecheck` now runs cleanly after ensuring workspace dependencies are installed locally.
+- ⏭️ **Plan mobile validation** – schedule back-to-back iOS (Safari) and Android (Chrome) test sessions covering sign up, feed, spaces, and events.
+- ⏭️ **Stage performance + load checks** – prepare scripts or tooling for Core Web Vitals measurement and concurrent user simulations (100 → 1000 users).
+
+---
+
 ## 🚨 CRITICAL BLOCKER (Must Fix Immediately)
 
 ### Issue #1: TypeScript Error in use-auth.ts

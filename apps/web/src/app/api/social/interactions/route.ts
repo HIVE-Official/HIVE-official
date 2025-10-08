@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
@@ -17,9 +17,9 @@ const InteractionSchema = z.object({
  * Social Interactions API
  * POST - Like, comment, share, bookmark posts
  */
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     const body = await request.json();
     const { postId, action, content, metadata } = InteractionSchema.parse(body);
 

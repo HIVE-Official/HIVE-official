@@ -30,7 +30,7 @@ export function WaitlistForm() {
     register,
     handleSubmit,
     formState: { errors },
-    // reset,
+    reset,
   } = useForm<WaitlistFormData>({
     resolver: zodResolver(waitlistSchema),
   });
@@ -106,8 +106,8 @@ export function WaitlistForm() {
               <Button
                 type="submit"
                 variant="glow"
-                className="max-w-lg"
-                className="w-full"
+                className="max-w-lg w-full"
+                
                 disabled={submitStatus === "loading"}
               >
                 {submitStatus === "loading" ? "Joining..." : "Get early access"}

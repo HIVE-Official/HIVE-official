@@ -1,58 +1,59 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import {
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  isSameDay,
+  isToday,
+  startOfMonth,
+  subMonths
+} from 'date-fns';
+import {
+  AlertCircle,
   Calendar,
-  Plus,
-  Clock,
-  MapPin,
-  Users,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Clock,
   Filter,
-  List,
   Grid3X3,
-  Eye,
-  Edit,
-  Trash2,
-  Share,
-  Copy,
-  Bell,
-  BellOff,
-  Check,
-  X,
-  UserCheck,
-  UserX,
+  List,
+  MapPin,
   MoreHorizontal,
-  CalendarDays,
-  Video,
-  Navigation,
-  AlertCircle,
-  Star,
+  Plus,
   Repeat,
-  Globe
+  Users,
+  Video,
+  X
 } from 'lucide-react';
 import {
-  Card,
-  Button,
-  Badge,
   Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+  Button,
+  Card,
   Dialog,
+  DialogContent,
   Input
 } from '@hive/ui';
 import type { User } from '@hive/core';
+import type { SpaceTypeRules } from '@/lib/space-type-rules';
 
 // Define missing types that should be in @hive/core
 interface SpaceEvent {
   id: string;
   title: string;
   description: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: Date | string;
+  endTime: Date | string;
   location?: string;
   spaceId: string;
   organizerId: string;
-  createdAt: Date;
+  createdAt: Date | string;
   isRecurring?: boolean;
   isVirtual?: boolean;
 }
@@ -62,15 +63,14 @@ interface EventRSVP {
   eventId: string;
   userId: string;
   response: 'yes' | 'no' | 'maybe';
-  createdAt: Date;
+  createdAt: Date | string;
   user?: User;
 }
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
 
 interface SpaceEventCalendarProps {
   spaceId: string;
   canCreateEvents: boolean;
-  spaceRules?: import('@/lib/space-type-rules').SpaceTypeRules | null;
+  spaceRules?: SpaceTypeRules | null;
 }
 
 interface EventWithDetails extends SpaceEvent {
@@ -95,36 +95,12 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
   // Space rules-based event features
   const isGreekLife = spaceRules?.membership.joinMethod === 'invitation_only';
   const isResidential = spaceRules?.membership.maxSpaces === 1;
-  const eventsArePublic = spaceRules?.visibility.events === 'public_calendar';
-  const eventsAreCampusVisible = spaceRules?.visibility.events === 'campus_calendar';
 
-  // Customize event calendar based on space type
-  const getEventTypeLabels = () => {
-    if (isGreekLife) return {
-      social: 'Social Events',
-      rush: 'Recruitment',
-      philanthropy: 'Philanthropy',
-      meeting: 'Chapter Meetings'
-    };
-    if (isResidential) return {
-      social: 'Floor Events',
-      maintenance: 'Maintenance',
-      meeting: 'Resident Meetings',
-      community: 'Building Events'
-    };
-    return {
-      academic: 'Academic Events',
-      social: 'Social Events',
-      meeting: 'Meetings',
-      workshop: 'Workshops'
-    };
-  };
-
-  const getCreateEventButtonText = () => {
-    if (isGreekLife) return "Plan Chapter Event";
-    if (isResidential) return "Schedule Community Event";
-    return "Create Event";
-  };
+  const createEventButtonText = isGreekLife
+    ? 'Plan Chapter Event'
+    : isResidential
+    ? 'Schedule Community Event'
+    : 'Create Event';
 
   // Fetch events
   useEffect(() => {
@@ -257,7 +233,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create Event
+              {createEventButtonText}
             </Button>
           )}
         </div>
@@ -366,7 +342,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
                   className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Event
+                  {createEventButtonText}
                 </Button>
               )}
             </div>
@@ -401,6 +377,7 @@ export function SpaceEventCalendar({ spaceId, canCreateEvents, spaceRules }: Spa
           spaceId={spaceId}
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
+          createEventLabel={createEventButtonText}
           onEventCreated={(newEvent) => {
             setEvents(prev => [...prev, newEvent]);
             setShowCreateModal(false);
@@ -543,110 +520,123 @@ function EventDetailModal({
   const isPast = new Date(event.endTime) < new Date();
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-2xl">
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-2">{event.title}</h2>
-            <div className="flex items-center space-x-4 text-sm text-gray-400">
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4" />
-                <span>
-                  {format(new Date(event.startTime), 'EEEE, MMMM d, yyyy • HH:mm')} - {format(new Date(event.endTime), 'HH:mm')}
-                </span>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-2xl">
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">{event.title}</h2>
+              <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>
+                    {format(new Date(event.startTime), 'EEEE, MMMM d, yyyy • HH:mm')} - {format(new Date(event.endTime), 'HH:mm')}
+                  </span>
+                </div>
               </div>
             </div>
+
+            {canEdit && (
+              <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors">
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
-          {canEdit && (
-            <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors">
-              <MoreHorizontal className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+          {/* Event Info */}
+          <div className="space-y-4 mb-6">
+            {event.location && (
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-5 h-5 text-gray-400" />
+                <span className="text-white">{event.location}</span>
+              </div>
+            )}
 
-        {/* Event Info */}
-        <div className="space-y-4 mb-6">
-          {event.location && (
             <div className="flex items-center space-x-2">
-              <MapPin className="w-5 h-5 text-gray-400" />
-              <span className="text-white">{event.location}</span>
+              <Users className="w-5 h-5 text-gray-400" />
+              <span className="text-white">{event.attendeeCount} people attending</span>
             </div>
-          )}
 
-          <div className="flex items-center space-x-2">
-            <Users className="w-5 h-5 text-gray-400" />
-            <span className="text-white">{event.attendeeCount} people attending</span>
-          </div>
-
-          {event.description && (
-            <div>
-              <h4 className="font-medium text-white mb-2">Description</h4>
-              <p className="text-gray-300 whitespace-pre-wrap">{event.description}</p>
-            </div>
-          )}
-        </div>
-
-        {/* RSVP Section */}
-        {!isPast && (
-          <div className="mb-6">
-            <h4 className="font-medium text-white mb-3">Will you attend?</h4>
-            <div className="flex space-x-3">
-              <Button
-                variant={event.userRSVP === 'yes' ? 'default' : 'secondary'}
-                onClick={() => onRSVP(event.id, 'yes')}
-                className={event.userRSVP === 'yes' ? 'bg-green-500 hover:bg-green-600' : ''}
-              >
-                <Check className="w-4 h-4 mr-2" />
-                Going
-              </Button>
-              <Button
-                variant={event.userRSVP === 'maybe' ? 'default' : 'secondary'}
-                onClick={() => onRSVP(event.id, 'maybe')}
-                className={event.userRSVP === 'maybe' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
-              >
-                <AlertCircle className="w-4 h-4 mr-2" />
-                Maybe
-              </Button>
-              <Button
-                variant={event.userRSVP === 'no' ? 'default' : 'secondary'}
-                onClick={() => onRSVP(event.id, 'no')}
-                className={event.userRSVP === 'no' ? 'bg-red-500 hover:bg-red-600' : ''}
-              >
-                <X className="w-4 h-4 mr-2" />
-                Can't Go
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Attendees */}
-        <div>
-          <h4 className="font-medium text-white mb-3">Attendees ({event.attendeeCount})</h4>
-          <div className="flex flex-wrap gap-2">
-            {event.rsvps
-              .filter(rsvp => rsvp.response === 'yes')
-              .slice(0, 12)
-              .map((rsvp) => (
-                <div key={rsvp.id} className="flex items-center space-x-2 bg-gray-800 rounded-lg p-2">
-                  <Avatar
-                    src={rsvp.user?.avatarUrl}
-                    fallback={rsvp.user?.displayName?.[0]}
-                    className="w-6 h-6"
-                  />
-                  <span className="text-sm text-white">{rsvp.user?.displayName}</span>
-                </div>
-              ))}
-
-            {event.attendeeCount > 12 && (
-              <div className="flex items-center justify-center bg-gray-800 rounded-lg p-2 min-w-16">
-                <span className="text-sm text-gray-400">+{event.attendeeCount - 12}</span>
+            {event.description && (
+              <div>
+                <h4 className="font-medium text-white mb-2">Description</h4>
+                <p className="text-gray-300 whitespace-pre-wrap">{event.description}</p>
               </div>
             )}
           </div>
+
+          {/* RSVP Section */}
+          {!isPast && (
+            <div className="mb-6">
+              <h4 className="font-medium text-white mb-3">Will you attend?</h4>
+              <div className="flex space-x-3">
+                <Button
+                  variant={event.userRSVP === 'yes' ? 'default' : 'secondary'}
+                  onClick={() => onRSVP(event.id, 'yes')}
+                  className={event.userRSVP === 'yes' ? 'bg-green-500 hover:bg-green-600' : ''}
+                >
+                  <Check className="w-4 h-4 mr-2" />
+                  Going
+                </Button>
+                <Button
+                  variant={event.userRSVP === 'maybe' ? 'default' : 'secondary'}
+                  onClick={() => onRSVP(event.id, 'maybe')}
+                  className={event.userRSVP === 'maybe' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+                >
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Maybe
+                </Button>
+                <Button
+                  variant={event.userRSVP === 'no' ? 'default' : 'secondary'}
+                  onClick={() => onRSVP(event.id, 'no')}
+                  className={event.userRSVP === 'no' ? 'bg-red-500 hover:bg-red-600' : ''}
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Can't Go
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Attendees */}
+          <div>
+            <h4 className="font-medium text-white mb-3">Attendees ({event.attendeeCount})</h4>
+            <div className="flex flex-wrap gap-2">
+              {event.rsvps
+                .filter(rsvp => rsvp.response === 'yes')
+                .slice(0, 12)
+                .map((rsvp) => (
+                  <div key={rsvp.id} className="flex items-center space-x-2 bg-gray-800 rounded-lg p-2">
+                    <Avatar className="w-6 h-6">
+                      <AvatarImage
+                        src={rsvp.user?.avatarUrl ?? undefined}
+                        alt={rsvp.user?.displayName ?? 'Attendee'}
+                      />
+                      <AvatarFallback className="text-xs">
+                        {rsvp.user?.displayName?.[0] ?? 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm text-white">{rsvp.user?.displayName}</span>
+                  </div>
+                ))}
+
+              {event.attendeeCount > 12 && (
+                <div className="flex items-center justify-center bg-gray-800 rounded-lg p-2 min-w-16">
+                  <span className="text-sm text-gray-400">+{event.attendeeCount - 12}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      </DialogContent>
     </Dialog>
   );
 }
@@ -656,12 +646,14 @@ function CreateEventModal({
   spaceId,
   isOpen,
   onClose,
-  onEventCreated
+  onEventCreated,
+  createEventLabel
 }: {
   spaceId: string;
   isOpen: boolean;
   onClose: () => void;
   onEventCreated: (event: EventWithDetails) => void;
+  createEventLabel: string;
 }) {
   const [formData, setFormData] = useState({
     title: '',
@@ -672,7 +664,7 @@ function CreateEventModal({
     isVirtual: false
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
@@ -692,15 +684,24 @@ function CreateEventModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-lg">
-      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-lg">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <h2 className="text-2xl font-bold text-white mb-4">Create Event</h2>
 
         <div>
           <label className="block text-sm font-medium text-white mb-2">Event Title</label>
           <Input
             value={formData.title}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, title: (e.target as any).value }))}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="Enter event title"
             required
           />
@@ -710,7 +711,8 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Description</label>
           <textarea
             value={formData.description}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setFormData(prev => ({ ...prev, description: e.target.value }))}
             placeholder="Describe your event"
             rows={3}
             className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
@@ -723,7 +725,8 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.startTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, startTime: (e.target as any).value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, startTime: e.target.value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -734,7 +737,8 @@ function CreateEventModal({
             <input
               type="datetime-local"
               value={formData.endTime}
-              onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, endTime: (e.target as any).value }))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setFormData(prev => ({ ...prev, endTime: e.target.value }))}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               required
             />
@@ -745,20 +749,26 @@ function CreateEventModal({
           <label className="block text-sm font-medium text-white mb-2">Location</label>
           <Input
             value={formData.location}
-            onChange={(e: React.ChangeEvent) => setFormData(prev => ({ ...prev, location: (e.target as any).value }))}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setFormData(prev => ({ ...prev, location: e.target.value }))}
             placeholder="Event location or virtual link"
           />
         </div>
 
         <div className="flex justify-end space-x-3 pt-4">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button type="submit" className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400">
-            Create Event
+            {createEventLabel}
           </Button>
         </div>
       </form>
+      </DialogContent>
     </Dialog>
   );
 }

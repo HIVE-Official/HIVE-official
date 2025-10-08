@@ -1,4 +1,3 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import * as admin from 'firebase-admin';
@@ -211,13 +210,13 @@ const CreateRitualSchema = z.object({
  * GET - List rituals with filtering
  * POST - Create new ritual (admin only)
  */
-export const GET = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { status, type, university, limit, offset } = RitualQuerySchema.parse(queryParams);
 
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     logger.info('🎭 Rituals query', { queryParams: JSON.stringify({ status, type, university, limit, offset }), endpoint: '/api/rituals' });
 
@@ -478,9 +477,9 @@ export const GET = withAuthAndErrors(async (request: NextRequest, authContext, r
   }
 });
 
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     // TODO: Verify user has admin permissions
     // For now, allow any authenticated user to create rituals

@@ -181,6 +181,8 @@ class FeedAlgorithmService {
      * Extract social proof signals
      */
     extractSocialProofSignals(post, user, userConnections) {
+        void user;
+        void userConnections;
         // This would integrate with actual user data
         // For now, return mock implementation
         return {
@@ -196,6 +198,7 @@ class FeedAlgorithmService {
      * Extract insider access signals
      */
     extractInsiderAccessSignals(post, space, user) {
+        void user;
         return {
             spaceMemberCount: space.memberCount || 0,
             requiresInvite: !space.isPublic, // Use isPublic as proxy for invite requirement
@@ -240,8 +243,13 @@ class FeedAlgorithmService {
         return graduationYear - currentYear <= 1;
     }
     isHappeningSoon(timestamp) {
-        // Would parse event time and check if within next 2 hours
-        return false;
+        const eventTime = Date.parse(timestamp);
+        if (Number.isNaN(eventTime)) {
+            return false;
+        }
+        const now = Date.now();
+        const twoHoursInMs = 2 * 60 * 60 * 1000;
+        return eventTime >= now && eventTime - now <= twoHoursInMs;
     }
     isMealTime() {
         const hour = new Date().getHours();
@@ -256,7 +264,8 @@ class FeedAlgorithmService {
     applyVariableRatio(posts) {
         return posts.map((post, index) => {
             // Random perfect discoveries - creates addictive scrolling
-            const isGoldenPost = Math.random() < 0.15; // 15% chance
+            const diminishingFactor = Math.max(0.05, 0.15 - index * 0.01);
+            const isGoldenPost = Math.random() < diminishingFactor;
             if (isGoldenPost) {
                 return {
                     ...post,

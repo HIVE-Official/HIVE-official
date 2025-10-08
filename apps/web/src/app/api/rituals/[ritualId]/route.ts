@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
@@ -11,10 +11,9 @@ import { withAuthAndErrors } from '@/lib/middleware/index';
  * GET - Get detailed ritual information including user participation
  */
 export const GET = withAuthAndErrors(async (request, context, respond) => {
+  const ritualId = context.params.ritualId;
   try {
     const userId = context.userId;
-    const { params } = context;
-    const ritualId = params?.ritualId as string;
 
     if (!ritualId) {
       return NextResponse.json(
@@ -23,10 +22,10 @@ export const GET = withAuthAndErrors(async (request, context, respond) => {
       );
     }
 
-    logger.info('🎭 Fetching ritual detail', { 
-      userId, 
-      ritualId, 
-      endpoint: `/api/rituals/${ritualId}` 
+    logger.info('🎭 Fetching ritual detail', {
+      userId,
+      ritualId,
+      endpoint: `/api/rituals/${ritualId}`
     });
 
     // For development mode, return mock data
@@ -322,8 +321,8 @@ export const GET = withAuthAndErrors(async (request, context, respond) => {
   } catch (error: any) {
     logger.error('Get ritual detail error', {
       error: error instanceof Error ? error.message : String(error),
-      ritualId: params?.ritualId,
-      endpoint: `/api/rituals/${params?.ritualId}`
+      ritualId,
+      endpoint: `/api/rituals/${ritualId}`
     });
 
     return NextResponse.json(

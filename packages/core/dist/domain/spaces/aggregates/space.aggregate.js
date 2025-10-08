@@ -81,6 +81,10 @@ class Space extends AggregateRoot_base_1.AggregateRoot {
     get spaceType() {
         return this.props.category.value;
     }
+    // Alias for backward compatibility (many components use 'type' instead of 'spaceType')
+    get type() {
+        return this.props.category.value;
+    }
     get posts() {
         // Posts are managed separately - return empty array for interface compatibility
         return [];
@@ -211,8 +215,14 @@ class Space extends AggregateRoot_base_1.AggregateRoot {
         }
     }
     updateSettings(settings) {
+        if (typeof settings.maxMembers === 'number' &&
+            settings.maxMembers > 0 &&
+            settings.maxMembers < this.memberCount) {
+            return Result_1.Result.fail('Cannot set maxMembers below current member count');
+        }
         this.props.settings = { ...this.props.settings, ...settings };
         this.props.updatedAt = new Date();
+        return Result_1.Result.ok();
     }
     getAdminCount() {
         return this.props.members.filter(m => m.role === 'admin').length;

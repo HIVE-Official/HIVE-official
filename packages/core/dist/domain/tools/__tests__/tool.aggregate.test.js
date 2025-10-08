@@ -611,9 +611,26 @@ const createValidPermissions = (overrides) => {
             visibility: 'private',
             permissions: createValidPermissions()
         }).getValue();
+        tool.publish();
         const result = tool.updateVisibility('campus');
         (0, vitest_1.expect)(result.isSuccess).toBe(true);
         (0, vitest_1.expect)(tool.visibility).toBe('campus');
+    });
+    (0, vitest_1.it)('should prevent public visibility while draft', () => {
+        const tool = tool_aggregate_1.Tool.create({
+            name: 'Draft Tool',
+            description: 'Draft description',
+            createdBy: createValidProfileId(),
+            elements: [createValidElement()],
+            version: '1.0.0',
+            status: 'draft',
+            visibility: 'private',
+            permissions: createValidPermissions()
+        }).getValue();
+        const result = tool.updateVisibility('public');
+        (0, vitest_1.expect)(result.isFailure).toBe(true);
+        (0, vitest_1.expect)(result.error).toContain('published');
+        (0, vitest_1.expect)(tool.visibility).toBe('private');
     });
 });
 (0, vitest_1.describe)('Tool.grantEditAccess()', () => {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Card, Input, Badge, Grid } from '@hive/ui';
+import { Grid, Card, Button, Badge, Input } from "@hive/ui";
 import {
   Search,
   Filter,
@@ -87,7 +87,7 @@ export default function SpacesBrowsePage() {
   const loadInitialSpaces = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/spaces', {
+      const response = await api.get<{ spaces: SpaceSearchResult[] }>('/api/spaces', {
         params: { limit: 20 }
       });
       setResults(response.spaces || []);
@@ -109,7 +109,7 @@ export default function SpacesBrowsePage() {
       setHasSearched(true);
 
       // SPEC.md: Text search with fuzzy matching
-      const response = await api.get('/api/spaces/search', {
+      const response = await api.get<{ spaces: SpaceSearchResult[] }>('/api/spaces/search', {
         params: {
           q: searchQuery,
           ...filters,

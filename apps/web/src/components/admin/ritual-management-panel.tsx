@@ -494,7 +494,7 @@ export function RitualManagementPanel() {
           ].map((tab) => (
             <Button
               key={tab.id}
-              variant={activeTab === tab.id ? 'primary' : 'ghost'}
+              variant={activeTab === tab.id ? 'default' : 'ghost'}
               onClick={() => setActiveTab(tab.id as any)}
               className="flex items-center gap-2"
             >
@@ -988,9 +988,8 @@ function RitualCard({
           {ritual.status === 'draft' && (
             <Button
               variant="default"
-              className="max-w-sm"
+              className="max-w-sm bg-green-500 hover:bg-green-600"
               onClick={() => onLaunch(ritual.id)}
-              className="bg-green-500 hover:bg-green-600"
             >
               <Play className="h-4 w-4 mr-2" />
               Launch
@@ -1011,9 +1010,8 @@ function RitualCard({
           {ritual.status === 'paused' && (
             <Button
               variant="default"
-              className="max-w-sm"
+              className="max-w-sm bg-green-500 hover:bg-green-600"
               onClick={() => onLaunch(ritual.id)}
-              className="bg-green-500 hover:bg-green-600"
             >
               <Play className="h-4 w-4 mr-2" />
               Resume
@@ -1023,9 +1021,8 @@ function RitualCard({
           {(ritual.status === 'active' || ritual.status === 'paused') && (
             <Button
               variant="outline"
-              className="max-w-sm"
+              className="max-w-sm text-red-400 hover:text-red-500"
               onClick={() => onEnd(ritual.id)}
-              className="text-red-400 hover:text-red-500"
             >
               <StopCircle className="h-4 w-4 mr-2" />
               End

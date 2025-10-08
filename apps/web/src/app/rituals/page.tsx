@@ -8,7 +8,7 @@ import { useAuth } from "@hive/auth-logic";
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@hive/ui';
 // Temp fix for chunk 2073 useRef errors
-const Badge = ({ children, variant = "default", className = "", ...props }: any) => <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${className}`} {...props}>{children}</span>;
+const Badge = ({ children, variant: _variant = "default", className = "", ...props }: any) => <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${className}`} {...props}>{children}</span>;
 import { ErrorBoundary } from '../../components/error-boundary';
 import { RitualsLoadingSkeleton } from '../../components/rituals/rituals-loading-skeleton';
 import {

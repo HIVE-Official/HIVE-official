@@ -10,13 +10,30 @@ class GetFeedQueryHandler {
         this.feedService = feedService;
     }
     async execute(query) {
-        // Implementation would go here
-        // For now, return a mock result to satisfy type checking
+        const constraints = this.buildFeedQuery(query);
+        const limit = query.limit ?? 20;
+        const offset = query.offset ?? 0;
+        let rawItems = [];
+        if (this.feedService && typeof this.feedService.fetch === 'function') {
+            rawItems =
+                (await this.feedService.fetch({
+                    constraints,
+                    limit: limit + offset,
+                    offset,
+                    filters: query.filters,
+                    userId: query.userId,
+                    campusId: query.campusId
+                })) ?? [];
+        }
+        const sortedItems = this.applySorting([...rawItems], query.filters?.sortBy);
+        const paginatedItems = sortedItems.slice(offset, offset + limit);
+        const totalCount = sortedItems.length;
+        const nextOffset = offset + paginatedItems.length;
         return {
-            items: [],
-            hasMore: false,
-            nextOffset: 0,
-            totalCount: 0
+            items: paginatedItems,
+            hasMore: nextOffset < totalCount,
+            nextOffset,
+            totalCount
         };
     }
     // Helper method for building feed queries

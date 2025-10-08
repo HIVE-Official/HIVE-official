@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, User, Mail } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { motion } from 'framer-motion';
+import { BookOpen } from "lucide-react";
 import { Card, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 

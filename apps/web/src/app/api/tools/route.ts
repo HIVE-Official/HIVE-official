@@ -12,12 +12,43 @@ const CreateToolSchema = z.object({
   type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
   status: z.enum(['draft', 'preview', 'published']).default('draft'),
   config: z.any().optional(),
+  isSpaceTool: z.boolean().optional(),
+  spaceId: z.string().optional(),
 });
 
-const createToolDefaults = {
-  status: 'draft' as const,
-  type: 'visual' as const,
-  config: {},
+type CreateToolInput = z.infer<typeof EnhancedCreateToolSchema>;
+
+const createToolDefaults = (userId: string, input: CreateToolInput) => {
+  const now = new Date();
+  return {
+    ownerId: userId,
+    name: input.name,
+    description: input.description ?? '',
+    category: input.category ?? 'general',
+    type: input.type,
+    status: input.status ?? 'draft',
+    config: input.config ?? {},
+    tags: [] as string[],
+    collaborators: [] as string[],
+    metadata: {
+      version: '1.0.0',
+      difficulty: 'beginner',
+      featured: false,
+      toolType: input.type,
+    },
+    isPublic: false,
+    isSpaceTool: Boolean(input.isSpaceTool),
+    spaceId: input.spaceId ?? null,
+    stats: {
+      views: 0,
+      uses: 0,
+      likes: 0,
+      installs: 0,
+      shares: 0,
+    },
+    createdAt: now,
+    updatedAt: now,
+  };
 };
 
 // Rate limiting: 10 tool creations per hour per user
@@ -81,15 +112,13 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 // Enhanced schema to support template-based creation
 const EnhancedCreateToolSchema = CreateToolSchema.extend({
   templateId: z.string().optional(),
-  type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
-  config: z.any().optional(), // Allow any config for flexibility
   elements: z.array(z.any()).optional(), // Add elements support
 });
 
 // POST /api/tools - Create new tool (supports templates)
-export const POST = withAuthValidationAndErrors(
+export const POST = withAuthValidationAndErrors<CreateToolInput>(
   EnhancedCreateToolSchema,
-  async (request: AuthenticatedRequest, context, validatedData: any, respond) => {
+  async (request: AuthenticatedRequest, context, validatedData: CreateToolInput, respond) => {
     const userId = getUserId(request);
 
     // Rate limiting
@@ -120,8 +149,8 @@ export const POST = withAuthValidationAndErrors(
     }
 
     // Handle template-based creation
-    let templateElements = [];
-    let templateConfig = {};
+    let templateElements: unknown[] = [];
+    let templateConfig: Record<string, unknown> = {};
     if (validatedData.templateId) {
       try {
         const templateDoc = await adminDb
@@ -135,10 +164,14 @@ export const POST = withAuthValidationAndErrors(
           templateConfig = templateData?.config || {};
         }
       } catch (error) {
-        logger.warn(
-      `Failed to load template at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.warn('Failed to load tool template', {
+          error: err,
+          metadata: {
+            templateId: validatedData.templateId,
+            userId,
+          },
+        });
         // Continue without template
       }
     }
@@ -146,17 +179,18 @@ export const POST = withAuthValidationAndErrors(
     // Create tool document
     const toolData = createToolDefaults(userId, validatedData);
     const now = new Date();
+    const elements = validatedData.elements ?? templateElements;
 
     const tool = {
       ...toolData,
-      elements: templateElements, // Use template elements if available
-      config: { ...toolData.config, ...templateConfig, ...validatedData.config }, // Merge configs
+      elements,
+      config: { ...toolData.config, ...templateConfig, ...validatedData.config },
       metadata: {
         ...toolData.metadata,
         templateId: validatedData.templateId,
         toolType: validatedData.type,
       },
-      createdAt: now,
+      createdAt: toolData.createdAt ?? now,
       updatedAt: now,
     };
 
@@ -196,10 +230,14 @@ export const POST = withAuthValidationAndErrors(
           status: 'draft'
         });
       } catch (error) {
-        logger.warn(
-      `Failed to add tool to space collection at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.warn('Failed to add tool to space collection', {
+          error: err,
+          metadata: {
+            spaceId: validatedData.spaceId,
+            toolId: toolRef.id,
+          },
+        });
         // Don't fail the whole operation
       }
     }
@@ -215,10 +253,14 @@ export const POST = withAuthValidationAndErrors(
         updatedAt: now
       });
     } catch (error) {
-      logger.warn(
-      `Failed to update user stats at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.warn('Failed to update user tool stats', {
+        error: err,
+        metadata: {
+          userId,
+          toolId: toolRef.id,
+        },
+      });
     }
 
     // Track analytics event

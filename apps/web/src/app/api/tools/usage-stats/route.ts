@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import { withAuthAndErrors } from '@/lib/middleware/index';
@@ -47,14 +47,14 @@ const fetchUsageStats = async (userId: string): Promise<ToolUsageStats> => {
  * Get tool usage statistics for the authenticated user
  * GET /api/tools/usage-stats
  */
-export const GET = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const stats = await fetchUsageStats(authContext.userId);
+    const stats = await fetchUsageStats(context.userId);
     
     return NextResponse.json({
       success: true,
       stats,
-      userId: authContext.userId,
+      userId: context.userId,
       generatedAt: new Date().toISOString(),
       message: 'Usage statistics retrieved successfully'
     });
@@ -78,7 +78,7 @@ export const GET = withAuthAndErrors(async (request: NextRequest, authContext, r
  * Record a tool usage event
  * POST /api/tools/usage-stats
  */
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
     const body = await request.json();
     const { toolId, action, metadata } = body;
@@ -100,7 +100,7 @@ export const POST = withAuthAndErrors(async (request: NextRequest, authContext, 
       success: true,
       toolId,
       action,
-      userId: authContext.userId,
+      userId: context.userId,
       timestamp: new Date().toISOString(),
       message: `Usage event recorded successfully`
     });

@@ -16,6 +16,7 @@ Instead of traditional horizontal layers, HIVE is organized as vertical slices t
 2. **Spaces Slice**: Community creation and participation
 3. **Feed Slice**: Content discovery and browsing
 4. **Rituals Slice**: Campus-wide engagement campaigns
+5. **Tools Slice**: HiveLab builder and deployment tooling for spaces
 
 Each slice contains its own:
 - Domain models and business logic
@@ -59,17 +60,20 @@ Each slice contains its own:
 class Profile {
   private id: ProfileId
   private email: UBEmail        // @buffalo.edu only
-  private handle: Handle        // Unique username
+  private handle: ProfileHandle // Unique username
   private personalInfo: PersonalInfo
-  private photos: Photo[]       // Max 5
-  private connections: Connection[]
-  private interests: Interest[]
+  private socialInfo: SocialInfo
+  private academicInfo?: AcademicInfo
+  private connections: string[]
+  private spaces: string[]
 
   // Domain behavior
-  updateProfile(info: PersonalInfo): Result<void>
-  addPhoto(photo: Photo): Result<void>
-  connectWith(otherId: ProfileId): Result<void>
-  completeOnboarding(): Result<void>
+  updatePersonalInfo(info: Partial<PersonalInfo>): Result<void>
+  updateSocialInfo(info: Partial<SocialInfo>): Result<void>
+  addInterest(interest: string): Result<void>
+  addConnection(connectionId: string): void
+  joinSpace(spaceId: string): void
+  completeOnboarding(academicInfo: AcademicInfo, interests: string[], spaces: string[]): Result<void>
 }
 ```
 
@@ -86,17 +90,21 @@ class Profile {
 class Space {
   private id: SpaceId
   private name: SpaceName       // Unique per campus
-  private type: SpaceType       // dorm, interest, academic, etc.
-  private creator: ProfileId
-  private members: Member[]
-  private posts: Post[]
+  private category: SpaceCategory
+  private campusId: CampusId
+  private members: SpaceMember[]
+  private tabs: Tab[]
+  private widgets: Widget[]
   private settings: SpaceSettings
 
   // Domain behavior
-  addMember(profileId: ProfileId): Result<Member>
-  createPost(content: PostContent, authorId: ProfileId): Result<Post>
-  updateSettings(settings: SpaceSettings): Result<void>
-  promoteToModerator(profileId: ProfileId): Result<void>
+  addMember(profileId: ProfileId, role: MemberRole = 'member'): Result<void>
+  removeMember(profileId: ProfileId): Result<void>
+  updateMemberRole(profileId: ProfileId, role: MemberRole): Result<void>
+  addTab(tab: Tab): Result<void>
+  addWidget(widget: Widget): Result<void>
+  updateSettings(settings: Partial<SpaceSettings>): void
+  incrementPostCount(postId?: string, authorId?: string): void
 }
 ```
 
@@ -110,27 +118,23 @@ class Space {
 **Domain Layer**:
 ```typescript
 // Feed Aggregate
-class Feed {
+class EnhancedFeed {
+  private feedId: FeedId
+  private userId: ProfileId
+  private campusId: CampusId
   private items: FeedItem[]
   private filters: FeedFilter[]
-  private algorithm: FeedAlgorithm
+  private lastUpdated: Date
+  private lastRefresh: Date
 
   // Domain behavior
-  generateForUser(profileId: ProfileId): Promise<FeedItem[]>
-  applyFilter(filter: FeedFilter): FeedItem[]
-  markAsRead(itemId: FeedItemId): void
-  refreshRealTime(): Promise<FeedItem[]>
-}
-
-// Feed Algorithm
-class SimpleFeedAlgorithm {
-  calculate(posts: Post[], profile: Profile): FeedItem[] {
-    // Simple chronological + relevance scoring
-    return posts
-      .filter(post => isRelevantTo(post, profile))
-      .sort(byRecencyAndEngagement)
-      .slice(0, 50)
-  }
+  addItem(item: FeedItem): Result<void>
+  addItems(items: FeedItem[]): Result<void>
+  removeItem(itemId: string): Result<void>
+  applyFilter(filter: FeedFilter): void
+  clearFilters(): void
+  getFilteredItems(): FeedItem[]
+  needsRefresh(): boolean
 }
 ```
 
@@ -146,24 +150,68 @@ class SimpleFeedAlgorithm {
 // Ritual Aggregate
 class Ritual {
   private id: RitualId
-  private title: string
-  private description: string
-  private milestones: Milestone[]
-  private participants: Participation[]
-  private campusGoal: CampusGoal
-  private deadline: Date
+  private name: string
+  private type: RitualType
+  private status: RitualStatus
+  private campusId: CampusId
+  private goals: RitualGoal[]
+  private requirements: RitualRequirement[]
+  private rewards: RitualReward[]
+  private participants: ProfileId[]
 
   // Domain behavior
-  addParticipant(profileId: ProfileId): Result<Participation>
-  recordActivity(profileId: ProfileId, activity: Activity): Result<void>
-  checkMilestoneProgress(profileId: ProfileId): Milestone[]
-  calculateCampusProgress(): number
+  announce(): Result<void>
+  activate(): Result<void>
+  enterFinalPush(): Result<void>
+  complete(): Result<void>
+  pause(): Result<void>
+  addParticipant(profileId: ProfileId | string): Result<void>
+  removeParticipant(profileId: ProfileId | string): Result<void>
+  updateGoalProgress(goalId: string, progress: number): Result<void>
+  getParticipationWarnings(): string[]
 }
 ```
 
 **API Layer**: `/api/rituals/*`
 **UI Layer**: `/rituals/*` pages and components
 **Database**: `rituals` collection with `participations` subcollection
+
+### 5. Tools Slice
+**Complete User Journey**: Space leader assembles a tool in HiveLab → publishes when ready → deploys across spaces → tracks usage
+
+**Domain Layer**:
+```typescript
+// Tool Aggregate
+class Tool {
+  private id: ToolId
+  private name: string
+  private description: string
+  private createdBy: ProfileId
+  private spaceId?: SpaceId
+  private elements: ElementInstance[]
+  private status: ToolStatus
+  private visibility: ToolVisibility
+  private deployedTo: SpaceId[]
+  private permissions: ToolPermissions
+  private analytics: ToolAnalytics
+
+  // Domain behavior
+  publish(): Result<void>
+  archive(): Result<void>
+  fork(newName: string, creator: ProfileId, spaceId?: SpaceId): Result<Tool>
+  deployToSpaces(spaceIds: SpaceId[]): Result<void>
+  undeployFromSpace(spaceId: SpaceId): Result<void>
+  recordUse(profileId: ProfileId): Result<void>
+  updateElements(elements: ElementInstance[]): Result<void>
+  updateVisibility(visibility: ToolVisibility): Result<void>
+  grantEditAccess(profileId: ProfileId): Result<void>
+  revokeEditAccess(profileId: ProfileId): Result<void>
+}
+```
+
+**API Layer**: `/api/tools/*`
+**UI Layer**: HiveLab builder (`/tools/*`) and space-level tool surfaces
+**Database**: `tools` collection with per-space deployment metadata
 
 ## Domain Services
 

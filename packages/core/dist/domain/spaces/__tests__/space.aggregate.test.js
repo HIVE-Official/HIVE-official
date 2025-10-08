@@ -577,10 +577,11 @@ const createValidWidget = (title = 'Test Widget', type = 'calendar') => {
             campusId: createValidCampusId(),
             createdBy: createValidProfileId()
         }).getValue();
-        space.updateSettings({
+        const result = space.updateSettings({
             allowInvites: false,
             requireApproval: true
         });
+        (0, vitest_1.expect)(result.isSuccess).toBe(true);
         (0, vitest_1.expect)(space.settings.allowInvites).toBe(false);
         (0, vitest_1.expect)(space.settings.requireApproval).toBe(true);
     });
@@ -597,12 +598,36 @@ const createValidWidget = (title = 'Test Widget', type = 'calendar') => {
                 maxMembers: 100
             }
         }).getValue();
-        space.updateSettings({
+        const result = space.updateSettings({
             requireApproval: true
         });
+        (0, vitest_1.expect)(result.isSuccess).toBe(true);
         (0, vitest_1.expect)(space.settings.allowInvites).toBe(true); // Preserved
         (0, vitest_1.expect)(space.settings.requireApproval).toBe(true); // Updated
         (0, vitest_1.expect)(space.settings.maxMembers).toBe(100); // Preserved
+    });
+    (0, vitest_1.it)('should prevent reducing maxMembers below current member count', () => {
+        const creatorId = createValidProfileId('creator');
+        const space = space_aggregate_1.Space.create({
+            spaceId: createValidSpaceId(),
+            name: createValidSpaceName(),
+            description: createValidSpaceDescription(),
+            category: createValidSpaceCategory(),
+            campusId: createValidCampusId(),
+            createdBy: creatorId,
+            settings: {
+                allowInvites: true,
+                requireApproval: false,
+                maxMembers: 20
+            }
+        }).getValue();
+        for (let i = 0; i < 5; i++) {
+            space.addMember(createValidProfileId(`member_${i}`));
+        }
+        const result = space.updateSettings({ maxMembers: 4 });
+        (0, vitest_1.expect)(result.isFailure).toBe(true);
+        (0, vitest_1.expect)(result.error).toContain('maxMembers');
+        (0, vitest_1.expect)(space.settings.maxMembers).toBe(20);
     });
 });
 (0, vitest_1.describe)('Space.getWelcomeMessage()', () => {

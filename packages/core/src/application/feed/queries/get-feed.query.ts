@@ -28,13 +28,34 @@ export class GetFeedQueryHandler {
   constructor(private readonly feedService?: any) {}
 
   async execute(query: GetFeedQuery): Promise<GetFeedQueryResult> {
-    // Implementation would go here
-    // For now, return a mock result to satisfy type checking
+    const constraints = this.buildFeedQuery(query);
+    const limit = query.limit ?? 20;
+    const offset = query.offset ?? 0;
+
+    let rawItems: FeedItem[] = [];
+
+    if (this.feedService && typeof this.feedService.fetch === 'function') {
+      rawItems =
+        (await this.feedService.fetch({
+          constraints,
+          limit: limit + offset,
+          offset,
+          filters: query.filters,
+          userId: query.userId,
+          campusId: query.campusId
+        })) ?? [];
+    }
+
+    const sortedItems = this.applySorting([...rawItems], query.filters?.sortBy);
+    const paginatedItems = sortedItems.slice(offset, offset + limit);
+    const totalCount = sortedItems.length;
+    const nextOffset = offset + paginatedItems.length;
+
     return {
-      items: [],
-      hasMore: false,
-      nextOffset: 0,
-      totalCount: 0
+      items: paginatedItems,
+      hasMore: nextOffset < totalCount,
+      nextOffset,
+      totalCount
     };
   }
 

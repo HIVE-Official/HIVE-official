@@ -153,6 +153,11 @@ export class Space extends AggregateRoot<SpaceProps> {
     return this.props.category.value;
   }
 
+  // Alias for backward compatibility (many components use 'type' instead of 'spaceType')
+  get type(): string {
+    return this.props.category.value;
+  }
+
   get posts(): any[] {
     // Posts are managed separately - return empty array for interface compatibility
     return [];
@@ -352,9 +357,19 @@ export class Space extends AggregateRoot<SpaceProps> {
     }
   }
 
-  public updateSettings(settings: Partial<SpaceSettings>): void {
+  public updateSettings(settings: Partial<SpaceSettings>): Result<void> {
+    if (
+      typeof settings.maxMembers === 'number' &&
+      settings.maxMembers > 0 &&
+      settings.maxMembers < this.memberCount
+    ) {
+      return Result.fail<void>('Cannot set maxMembers below current member count');
+    }
+
     this.props.settings = { ...this.props.settings, ...settings };
     this.props.updatedAt = new Date();
+
+    return Result.ok<void>();
   }
 
   private getAdminCount(): number {

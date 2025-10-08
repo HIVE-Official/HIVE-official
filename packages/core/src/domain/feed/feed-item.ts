@@ -73,8 +73,16 @@ export class FeedItem extends Entity<FeedItemProps> {
     return this.props.isTrending;
   }
 
+  get isPinned(): boolean {
+    return this.props.isPinned;
+  }
+
   get createdAt(): Date {
     return this.props.createdAt;
+  }
+
+  get expiresAt(): Date | undefined {
+    return this.props.expiresAt;
   }
 
   private constructor(props: FeedItemProps, id?: string) {

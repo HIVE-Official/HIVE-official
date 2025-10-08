@@ -1,18 +1,16 @@
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { z } from "zod";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import {
   UpdateToolSchema,
   ToolSchema,
   canUserEditTool,
   canUserViewTool,
   getNextVersion,
-  determineChangeType,
   validateToolStructure,
   validateElementConfig,
 } from "@hive/core";
@@ -22,11 +20,15 @@ const db = getFirestore();
 // GET /api/tools/[toolId] - Get tool details
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
+
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+  }
   const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
   if (!toolDoc.exists) {
@@ -69,19 +71,35 @@ export const GET = withAuthAndErrors(async (
   });
 });
 
-// PUT /api/tools/[toolId] - Update tool
-type UpdateToolData = z.infer<typeof UpdateToolSchema>;
+type ToolElementUpdate = {
+  id: string;
+  elementId: string;
+  config: Record<string, unknown>;
+  type?: string;
+};
 
-export const PUT = withAuthValidationAndErrors(
-  UpdateToolSchema as any,
-  async (
-    request: AuthenticatedRequest,
-    context: { params: Promise<{ toolId: string }> },
-    updateData: UpdateToolData,
-    respond
-  ) => {
+type UpdateToolData = {
+  name?: string;
+  description?: string;
+  elements?: ToolElementUpdate[];
+  changelog?: string;
+  defaultConfiguration?: Record<string, unknown>;
+  settings?: Record<string, unknown>;
+  [key: string]: unknown;
+};
+
+export const PUT = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  context,
+  respond
+) => {
+  const updateData = UpdateToolSchema.parse(await request.json()) as UpdateToolData;
     const userId = getUserId(request);
-    const { toolId } = await context.params;
+    const toolId = context.params.toolId;
+
+    if (!toolId) {
+      return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+    }
     const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
     if (!toolDoc.exists) {
@@ -97,20 +115,19 @@ export const PUT = withAuthValidationAndErrors(
 
     // Validate tool structure if elements are being updated
     if (updateData.elements) {
-      const structureValidation = validateToolStructure(updateData.elements);
-      if (!structureValidation.isValid) {
+      const structureIsValid = validateToolStructure({
+        ...currentTool,
+        elements: updateData.elements,
+      });
+
+      if (!structureIsValid) {
         return respond.error("Invalid tool structure", "INVALID_INPUT", {
           status: 400,
-          details: structureValidation.errors
         });
       }
 
-      // Validate each element configuration
       const elementsSnapshot = await dbAdmin.collection("elements").get();
-      const elementsMap = new Map();
-      elementsSnapshot.docs.forEach((doc) => {
-        elementsMap.set(doc.id, doc.data());
-      });
+      const elementsMap = new Map(elementsSnapshot.docs.map((doc) => [doc.id, doc.data()]));
 
       for (const elementInstance of updateData.elements) {
         const elementDef = elementsMap.get(elementInstance.elementId);
@@ -122,7 +139,12 @@ export const PUT = withAuthValidationAndErrors(
           );
         }
 
-        if (!validateElementConfig(elementDef, elementInstance.config)) {
+        const elementIsValid = validateElementConfig({
+          type: elementDef.type ?? elementInstance.type ?? elementInstance.elementId,
+          config: elementInstance.config,
+        });
+
+        if (!elementIsValid) {
           return respond.error(
             `Invalid configuration for element: ${elementInstance.id}`,
             "INVALID_INPUT",
@@ -132,21 +154,13 @@ export const PUT = withAuthValidationAndErrors(
       }
     }
 
-    // Determine version change type if elements changed
-    let newVersion = currentTool.currentVersion;
-    if (
-      updateData.elements &&
-      updateData.elements.length !== currentTool.elements.length
-    ) {
-      const changeType = determineChangeType(
-        currentTool.elements,
-        updateData.elements
-      );
-      newVersion = getNextVersion(currentTool.currentVersion, changeType);
-    }
+    const now = new Date();
+    const changeType: 'major' | 'minor' | 'patch' = updateData.elements ? 'minor' : 'patch';
+    const newVersion = changeType !== 'patch'
+      ? getNextVersion(currentTool.currentVersion)
+      : currentTool.currentVersion;
 
     // Prepare update data
-    const now = new Date();
     const updatedTool = {
       ...updateData,
       currentVersion: newVersion,
@@ -164,6 +178,7 @@ export const PUT = withAuthValidationAndErrors(
         createdAt: now,
         createdBy: userId,
         isStable: false,
+        changeType,
       };
 
       await toolDoc.ref.collection("versions").doc(newVersion).set(versionData);
@@ -181,9 +196,7 @@ export const PUT = withAuthValidationAndErrors(
         newVersion: newVersion,
         elementsCount:
           updateData.elements?.length || currentTool.elements.length,
-        changeType: updateData.elements
-          ? determineChangeType(currentTool.elements, updateData.elements)
-          : "config",
+        changeType,
       } });
 
     // Fetch and return updated tool
@@ -197,11 +210,15 @@ export const PUT = withAuthValidationAndErrors(
 // DELETE /api/tools/[toolId] - Delete tool
 export const DELETE = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
+
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+  }
   const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
   if (!toolDoc.exists) {

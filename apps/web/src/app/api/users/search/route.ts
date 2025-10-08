@@ -238,7 +238,7 @@ export async function POST(request: NextRequest) {
           return bTime - aTime;
         }
         case 'alphabetical':
-          return (a.displayName || '').localeCompare(b.displayName || '');
+          return (a.fullName || '').localeCompare(b.fullName || '');
         case 'relevance':
         default:
           // Secondary sort by mutual spaces, then relevance

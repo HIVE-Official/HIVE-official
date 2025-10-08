@@ -1,4 +1,3 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
@@ -29,17 +28,17 @@ async function _isAdmin(userId: string): Promise<boolean> {
 /**
  * Get platform overview statistics
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuth(async (request, context) => {
   try {
     // This is an admin-only endpoint
-    if (!authContext.isAdmin) {
+    if (!context.isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
         { status: HttpStatus.FORBIDDEN }
       );
     }
 
-    const adminUserId = authContext.userId;
+    const adminUserId = context.userId;
     
     logger.info('👑 Admin dashboard accessed by', { adminUserId });
 

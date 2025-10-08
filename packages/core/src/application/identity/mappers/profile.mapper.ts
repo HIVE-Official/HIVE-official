@@ -3,8 +3,6 @@ import { Profile } from '../../../domain/profile/aggregates/profile.aggregate';
 import { ProfileDTO } from '../dtos/profile.dto';
 import { UBEmail } from '../../../domain/profile/value-objects/ub-email.value';
 import { ProfileHandle } from '../../../domain/profile/value-objects/profile-handle.value';
-import { PersonalInfo } from '../../../domain/profile/value-objects/personal-info.value';
-import { Result } from '../../../domain/shared/base/Result';
 import { ProfileId } from '../../shared/temporary-types';
 
 export class ProfileMapper extends Mapper<Profile, ProfileDTO> {

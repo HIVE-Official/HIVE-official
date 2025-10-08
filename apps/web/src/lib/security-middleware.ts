@@ -122,7 +122,7 @@ export function validateOrigin(request: NextRequest): boolean {
       'https://hive.college',
       'https://www.hive.college',
       'https://app.hive.college'
-    ].filter(Boolean);
+    ].filter(Boolean) as string[];
 
     if (origin && !allowedOrigins.includes(origin)) {
       logger.warn('Invalid origin detected', {

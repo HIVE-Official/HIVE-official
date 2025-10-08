@@ -57,6 +57,7 @@ export declare class ProfileOnboardingService extends BaseApplicationService {
     private createProfile;
     private initializeFeed;
     private getSuggestedSpaces;
+    private scoreSpaceInterestMatch;
     private joinDefaultSpaces;
 }
 //# sourceMappingURL=profile-onboarding.service.d.ts.map

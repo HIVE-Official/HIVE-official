@@ -48,8 +48,8 @@ interface SpaceData {
 
 interface SpaceMembership {
   role: 'owner' | 'leader' | 'moderator' | 'member';
-  joinedAt: Date;
-  notifications: {
+  joinedAt?: Date;
+  notifications?: {
     posts: boolean;
     events: boolean;
     announcements: boolean;
@@ -81,13 +81,13 @@ export default function SpaceDetailPage() {
     try {
       setLoading(true);
 
-      // Load space data and membership
-      const response = await api.get(`/api/spaces/${spaceId}`);
-      setSpace(response.space);
-      setMembership(response.membership);
+      const spaceData = await api.get<SpaceData>(`/api/spaces/${spaceId}`);
+      setSpace(spaceData);
 
-      // Load hot threads (posts with 10+ replies)
-      const threadsResponse = await api.get(`/api/spaces/${spaceId}/posts`, {
+      const membershipData = await api.spaces.membership.get<{ requestingUser?: SpaceMembership }>(spaceId);
+      setMembership(membershipData?.requestingUser ?? null);
+
+      const threadsResponse = await api.get<{ posts: any[] }>(`/api/spaces/${spaceId}/posts`, {
         params: {
           type: 'hot_threads',
           minReplies: 10,
@@ -106,8 +106,9 @@ export default function SpaceDetailPage() {
 
   const handleJoinSpace = async () => {
     try {
-      const response = await api.post(`/api/spaces/${spaceId}/join`);
-      setMembership(response.membership);
+      await api.post(`/api/spaces/${spaceId}/join`);
+      const membershipData = await api.spaces.membership.get<{ requestingUser?: SpaceMembership }>(spaceId);
+      setMembership(membershipData?.requestingUser ?? null);
     } catch (error) {
       console.error('Failed to join space:', error);
     }
@@ -185,35 +186,35 @@ export default function SpaceDetailPage() {
                 {membership ? (
                   <>
                     <Button
-                      className="max-w-sm"
+                      className="max-w-sm border-gray-700"
                       variant="outline"
-                      className="border-gray-700"
+                      
                       onClick={() => {}}
                     >
                       <Bell className="w-4 h-4" />
                     </Button>
                     <Button
-                      className="max-w-sm"
+                      className="max-w-sm border-gray-700"
                       variant="outline"
-                      className="border-gray-700"
+                      
                       onClick={() => {}}
                     >
                       <Share className="w-4 h-4" />
                     </Button>
                     {isLeader && (
                       <Button
-                        className="max-w-sm"
+                        className="max-w-sm border-gray-700"
                         variant="outline"
-                        className="border-gray-700"
+                        
                         onClick={() => router.push(`/spaces/${spaceId}/settings`)}
                       >
                         <Settings className="w-4 h-4" />
                       </Button>
                     )}
                     <Button
-                      className="max-w-sm"
+                      className="max-w-sm border-red-500 text-red-400 hover:bg-red-500/10"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/10"
+                      
                       onClick={handleLeaveSpace}
                     >
                       Leave

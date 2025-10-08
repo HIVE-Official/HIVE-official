@@ -4,7 +4,7 @@
  * Small badge showing data type with color-coding and optional icon.
  * Used in properties panels, port labels, and element configuration.
  */
-import type { DataType } from '@/types/hivelab.types';
+import type { DataType } from '../../../types/hivelab.types';
 export interface DataTypeBadgeProps {
     /** Data type */
     type: DataType | DataType[];

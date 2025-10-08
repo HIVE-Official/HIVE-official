@@ -18,7 +18,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
   
   const listenToAuthChanges = (callback: (user: FirebaseUser | null) => void): (() => void) => {
     return onAuthStateChanged(auth, (user) => {
-      logger.info('Firebase auth state changed', { userId: user?.id });
+      logger.info('Firebase auth state changed', { userId: user?.uid });
       callback(user);
     });
   };
@@ -35,7 +35,7 @@ export const createFirebaseAuthIntegration = (): FirebaseAuthIntegration => {
 
     try {
       const result = await signInWithEmailLink(auth, userEmail, window.location.href);
-      logger.info('Email link sign-in successful', { userId: result.user.id });
+      logger.info('Email link sign-in successful', { userId: result.user.uid });
       
       // Clean up stored email
       window.localStorage.removeItem('emailForSignIn');

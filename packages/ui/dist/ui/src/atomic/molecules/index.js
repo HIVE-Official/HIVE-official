@@ -31,6 +31,10 @@ export { SpaceComposerWithTools } from './space-composer-with-tools.js';
 export { StatCard } from './stat-card.js';
 export { TemplateCard } from './panels/template-card.js';
 export { UserCard } from './user-card.js';
+// Layout & Container components
+export { PageContainer } from './page-container.js';
+// Modal components
+export { HiveConfirmModal } from './hive-confirm-modal.js';
 // New behavioral psychology components
 export { EventCard } from './event-card.js';
 export { RitualProgressCard } from './ritual-progress-card.js';

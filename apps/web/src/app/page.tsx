@@ -40,7 +40,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <HiveLogo className="max-w-lg" variant="gradient" showText={true} className="mx-auto mb-8" />
+ <HiveLogo className="max-w-lg mx-auto mb-8" variant="gradient" showText={true} />
           <h1 className="text-5xl font-bold mb-6">
             Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
           </h1>
@@ -69,9 +69,9 @@ export default function HomePage() {
           {process.env.NODE_ENV === 'development' && (
             <div className="mt-4">
               <Button
-                className="max-w-sm"
+                className="max-w-sm border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-black"
                 variant="outline"
-                className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-black"
+                
                 onClick={() => router.push('/test-presence')}
               >
                 🧪 Test Presence System

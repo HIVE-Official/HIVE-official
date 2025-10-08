@@ -365,6 +365,11 @@ class FirebaseRitualRepository {
         // Simplified subscription implementation
         // In production, this would use Firestore real-time listeners
         console.log(`Subscribing to ritual ${ritualId}`);
+        this.findById(ritualId).then((result) => {
+            if (result.isSuccess) {
+                callback(result.getValue());
+            }
+        });
         // Return unsubscribe function
         return () => {
             console.log(`Unsubscribed from ritual ${ritualId}`);
@@ -374,6 +379,11 @@ class FirebaseRitualRepository {
         // Simplified subscription implementation
         // In production, this would use Firestore real-time listeners
         console.log(`Subscribing to active rituals for campus ${campusId}`);
+        this.findActive(campusId).then((result) => {
+            if (result.isSuccess) {
+                callback(result.getValue());
+            }
+        });
         // Return unsubscribe function
         return () => {
             console.log(`Unsubscribed from active rituals for campus ${campusId}`);

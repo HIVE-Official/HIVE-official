@@ -367,6 +367,7 @@ export interface Notification {
   title: string;
   body?: string;
   data?: Record<string, unknown>;
+  delivery?: Record<string, unknown>;
   read: boolean;
   createdAt: Timestamp | Date;
   expiresAt?: Timestamp | Date;
@@ -380,7 +381,13 @@ export type NotificationType =
   | 'post'
   | 'event'
   | 'announcement'
-  | 'system';
+  | 'system'
+  | 'space_event'
+  | 'tool_update'
+  | 'system_announcement'
+  | 'message_reaction'
+  | 'space_invitation'
+  | 'tool_deployment';
 
 // ============================================
 // Analytics Types

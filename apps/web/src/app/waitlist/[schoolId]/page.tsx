@@ -1,5 +1,3 @@
-'use client';
-
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -17,18 +15,20 @@ import { WaitlistForm } from "./components/waitlist-form";
 export const dynamic = 'force-dynamic';
 
 type WaitlistPageProps = {
-  params: Promise<{
-    schoolId: string;
-  }>;
+  params: Promise<{ schoolId: string }>;
 };
 
-async function getSchool(schoolId: string): Promise<School | null> {
+type WaitlistSchool = School & {
+  waitlistCount?: number;
+};
+
+async function getSchool(schoolId: string): Promise<WaitlistSchool | null> {
   try {
     const schoolDoc = await dbAdmin.collection("schools").doc(schoolId).get();
     if (!schoolDoc.exists) {
       return null;
     }
-    return { id: schoolDoc.id, ...schoolDoc.data() } as School;
+    return { id: schoolDoc.id, ...schoolDoc.data() } as WaitlistSchool;
   } catch (error) {
     return null;
   }
@@ -42,6 +42,8 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
     notFound();
   }
 
+  const waitlistCount = school.waitlistCount ?? 0;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-24">
       <Card className="w-full max-w-md">
@@ -52,7 +54,7 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex w-full flex-col items-center gap-4">
-          <WaitlistProgress currentCount={school.waitlistCount} />
+          <WaitlistProgress currentCount={waitlistCount} />
           <WaitlistForm
             schoolDomain={school.domain}
             schoolId={school.id}

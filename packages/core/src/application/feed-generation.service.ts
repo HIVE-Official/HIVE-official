@@ -5,12 +5,8 @@
 
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedFeed } from '../domain/feed/enhanced-feed';
 import { FeedItem } from '../domain/feed/feed-item';
 import { ProfileId } from '../domain/profile/value-objects/profile-id.value';
-import { SpaceId } from '../domain/spaces/value-objects/space-id.value';
-import { Profile } from '../domain/profile/aggregates/profile.aggregate';
-import { Space } from '../domain/spaces/aggregates/space.aggregate';
 import {
   getFeedRepository,
   getProfileRepository,

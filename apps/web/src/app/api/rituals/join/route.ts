@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { ritualFramework } from '@/lib/rituals-framework';
@@ -17,9 +17,9 @@ const JoinRitualSchema = z.object({
  * 
  * POST - Join a ritual
  */
-export const POST = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     const body = await request.json();
     const { ritualId, entryPoint } = JoinRitualSchema.parse(body);
 

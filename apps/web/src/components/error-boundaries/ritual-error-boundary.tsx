@@ -139,9 +139,9 @@ export class RitualErrorBoundary extends Component<Props, State> {
               {this.state.retryCount < this.maxRetries && (
                 <Button
                   onClick={this.handleRetry}
-                  className="max-w-sm"
+                  className="max-w-sm border-orange-500/30 text-orange-400 hover:bg-orange-500/20"
                   variant="outline"
-                  className="border-orange-500/30 text-orange-400 hover:bg-orange-500/20"
+                  
                 >
                   <RefreshCw className="h-3 w-3" />
                 </Button>
@@ -149,9 +149,9 @@ export class RitualErrorBoundary extends Component<Props, State> {
 
               <Button
                 onClick={this.handleHideRitual}
-                className="max-w-sm"
+                className="max-w-sm text-orange-400/70 hover:text-orange-400"
                 variant="outline"
-                className="text-orange-400/70 hover:text-orange-400"
+                
               >
                 <span className="text-xs">Skip</span>
               </Button>

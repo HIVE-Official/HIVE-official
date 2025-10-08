@@ -49,6 +49,12 @@ export { StatCard } from './stat-card';
 export { TemplateCard } from './panels/template-card';
 export { UserCard } from './user-card';
 
+// Layout & Container components
+export { PageContainer } from './page-container';
+
+// Modal components
+export { HiveConfirmModal } from './hive-confirm-modal';
+
 // New behavioral psychology components
 export { EventCard } from './event-card';
 export type { FeedEventData, EventCardProps } from './event-card';

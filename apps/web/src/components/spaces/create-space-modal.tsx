@@ -572,9 +572,8 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                       <span className="text-sm text-white">{rule}</span>
                       <Button
                         variant="outline"
-                        className="max-w-sm"
+                        className="max-w-sm text-red-400 hover:text-red-300"
                         onClick={() => removeRule(index)}
-                        className="text-red-400 hover:text-red-300"
                       >
                         <X className="h-4 w-4" />
                       </Button>

@@ -124,7 +124,14 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
         userName = userData?.displayName || userData?.handle || userName;
       }
     } catch (error) {
-      logger.warn('Could not fetch user data for', { userId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/request-to-lead' });
+      const details = error instanceof Error
+        ? { message: error.message, stack: error.stack }
+        : { error: String(error) };
+      logger.warn('Could not fetch user data for builder request', {
+        userId,
+        metadata: details,
+        endpoint: '/api/spaces/request-to-lead'
+      });
     }
 
     // Create builder request

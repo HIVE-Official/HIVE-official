@@ -114,7 +114,7 @@ export async function handleApiError(
   
   return handleSecureError(error, request, {
     userId,
-    action: 'api_call'
+    operation: 'api_call'
   }) as unknown as Promise<NextResponse<ApiErrorResponse>>;
 }
 

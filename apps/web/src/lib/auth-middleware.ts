@@ -24,6 +24,7 @@ export interface AuthConfig {
   allowTestTokens?: boolean;
   allowAnonymous?: boolean;
   operation?: string;
+  action?: string;
 }
 
 /**
@@ -99,7 +100,7 @@ export async function authenticateRequest(
     const decodedToken = await auth.verifyIdToken(token);
     
     return {
-      userId: decodedToken.id,
+      userId: decodedToken.uid,
       email: decodedToken.email,
       isTestUser: false,
       isDevelopmentMode: false

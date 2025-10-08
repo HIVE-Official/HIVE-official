@@ -150,7 +150,7 @@ export async function checkRedisRateLimit(
       success,
       limit,
       remaining,
-      // reset,
+      reset,
       retryAfter: success ? undefined : Math.ceil((reset - Date.now()) / 1000),
     };
   } catch (error) {
@@ -243,10 +243,15 @@ export async function isAccountLockedRedis(identifier: string): Promise<boolean>
 export async function checkIpRateLimit(
   ip: string,
   endpoint: string
-): Promise<boolean> {
+): Promise<{
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+  retryAfter?: number;
+}> {
   const identifier = `${ip}:${endpoint}`;
-  const result = await checkRedisRateLimit('api', identifier);
-  return result.success;
+  return checkRedisRateLimit('api', identifier);
 }
 
 /**
@@ -255,11 +260,16 @@ export async function checkIpRateLimit(
 export async function checkUserRateLimit(
   userId: string,
   action: string
-): Promise<boolean> {
+): Promise<{
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+  retryAfter?: number;
+}> {
   const identifier = `user:${userId}:${action}`;
   const limitType = getLimitTypeForAction(action);
-  const result = await checkRedisRateLimit(limitType, identifier);
-  return result.success;
+  return checkRedisRateLimit(limitType, identifier);
 }
 
 /**

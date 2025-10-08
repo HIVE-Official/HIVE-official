@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { GraduationCap, Users, ArrowRight, Mail, CheckCircle, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, Button, Input } from "@hive/ui";

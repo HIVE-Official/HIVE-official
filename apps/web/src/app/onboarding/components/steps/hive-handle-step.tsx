@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
+import { motion } from 'framer-motion';
+import { AtSign, Check, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
@@ -139,20 +139,6 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
     setSuggestions([]);
   };
 
-  const getValidationIcon = () => {
-    switch (validationState) {
-      case "checking":
-        return <Loader2 className="w-4 h-4 animate-spin text-[var(--hive-brand-primary)]" />;
-      case "available":
-        return <Check className="w-4 h-4 text-[var(--hive-status-success)]" />;
-      case "taken":
-      case "invalid":
-        return <X className="w-4 h-4 text-[var(--hive-status-error)]" />;
-      default:
-        return null;
-    }
-  };
-
   const getValidationMessage = () => {
     switch (validationState) {
       case "checking":
@@ -165,20 +151,6 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         return "Handle must be 3+ characters and contain only letters, numbers, dots, underscores, and hyphens.";
       default:
         return null;
-    }
-  };
-
-  const getValidationColor = () => {
-    switch (validationState) {
-      case "checking":
-        return "text-[var(--hive-brand-primary)]";
-      case "available":
-        return "text-[var(--hive-status-success)]";
-      case "taken":
-      case "invalid":
-        return "text-[var(--hive-status-error)]";
-      default:
-        return "text-[var(--hive-text-tertiary)]";
     }
   };
 

@@ -6,7 +6,7 @@
 import { EventHandler } from '../../infrastructure/events';
 import { ProfileCreatedEvent } from '../../domain/profile/events/profile-created.event';
 import { ProfileOnboardedEvent } from '../../domain/profile/events/profile-onboarded.event';
-import { getFeedRepository, getSpaceRepository } from '../../infrastructure/repositories/factory';
+import { getFeedRepository } from '../../infrastructure/repositories/factory';
 import { ProfileId } from '../../domain/profile/value-objects/profile-id.value';
 import { CampusId } from '../../domain/profile/value-objects/campus-id.value';
 import { EnhancedFeed } from '../../domain/feed/enhanced-feed';
@@ -51,8 +51,6 @@ export const handleProfileOnboarded: EventHandler<ProfileOnboardedEvent> = async
 
   try {
     // Get recommended spaces based on interests
-    const spaceRepo = getSpaceRepository();
-    const campusId = CampusId.createUBBuffalo();
     // TODO: Find spaces matching user interests
 
     // TODO: Suggest connections based on major/dorm

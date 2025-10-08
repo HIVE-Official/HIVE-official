@@ -7,7 +7,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils.js';
 export function ConnectionWire({ path, color = 'hsl(var(--muted-foreground))', isSelected = false, isHovered = false, animated = false, strokeWidth = 2, onClick, onMouseEnter, onMouseLeave, className, }) {
     const wireId = React.useId();
     // Adjust stroke width based on state

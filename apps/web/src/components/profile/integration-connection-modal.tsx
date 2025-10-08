@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { Button, Card, Switch, Badge, Progress } from "@hive/ui";
-import { Dialog, DialogContent, HiveModalHeader, HiveModalTitle, HiveModalFooter, Alert, AlertDescription } from "@hive/ui";
+import { Dialog, DialogContent, Alert, AlertDescription } from "@hive/ui";
+import { HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { 
   Link, 
   Shield, 

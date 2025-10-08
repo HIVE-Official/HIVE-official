@@ -25,8 +25,10 @@ import {
 } from 'lucide-react';
 import {
   Dialog,
+  DialogContent,
   Button,
   Input,
+  Textarea,
   Card,
   Badge,
   Tabs,
@@ -58,10 +60,27 @@ interface SpaceSettings {
 }
 
 export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModalProps) {
+  const resolveString = (value: unknown): string => {
+    if (typeof value === 'string') return value;
+    if (
+      value &&
+      typeof value === 'object' &&
+      'value' in value &&
+      typeof (value as Record<string, unknown>).value === 'string'
+    ) {
+      return (value as Record<string, string>).value;
+    }
+    return '';
+  };
+
+  const spaceName = resolveString(space.name);
+  const spaceDescription = resolveString((space as unknown as { description?: unknown }).description);
+  const spaceBannerUrl = (space as unknown as { bannerUrl?: string }).bannerUrl;
+
   const [activeTab, setActiveTab] = useState('general');
   const [settings, setSettings] = useState<SpaceSettings>({
-    name: space.name,
-    description: space.description,
+    name: spaceName,
+    description: spaceDescription,
     isPrivate: false, // Default to public
     allowInvites: true,
     requireApproval: false,
@@ -69,7 +88,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
     slowMode: 0,
     defaultNotifications: true,
     customEmojis: false,
-    bannerUrl: space.bannerUrl,
+    bannerUrl: spaceBannerUrl,
     primaryColor: '#F59E0B', // hive-gold
     welcomeMessage: ''
   });
@@ -99,7 +118,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
   };
 
   const handleDeleteSpace = async () => {
-    if (deleteConfirm !== space.name) return;
+    if (deleteConfirm !== spaceName) return;
 
     try {
       const response = await fetch(`/api/spaces/${space.id}`, {
@@ -119,8 +138,16 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} className="max-w-4xl max-h-[90vh]">
-      <div className="flex flex-col h-full">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
+        <div className="flex flex-col h-full">
         {/* Header */}
         <div className="p-6 border-b border-gray-800">
           <div className="flex items-center justify-between">
@@ -128,7 +155,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
               <Settings className="w-6 h-6 text-[var(--hive-brand-primary)]" />
               <div>
                 <h2 className="text-2xl font-bold text-white">Space Settings</h2>
-                <p className="text-gray-400">Manage {space.name}</p>
+                <p className="text-gray-400">Manage {spaceName}</p>
               </div>
             </div>
             <button
@@ -202,7 +229,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <label className="block text-sm font-medium text-white mb-2">Space Name</label>
                       <Input
                         value={settings.name}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ name: (e.target as any).value })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ name: e.target.value })}
                         placeholder="Enter space name"
                         maxLength={50}
                       />
@@ -211,9 +239,10 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
 
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">Description</label>
-                      <textarea
+                      <Textarea
                         value={settings.description}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ description: (e.target as any).value })}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                          updateSettings({ description: e.target.value })}
                         placeholder="Describe your space"
                         maxLength={500}
                         rows={4}
@@ -224,9 +253,10 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
 
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">Welcome Message</label>
-                      <textarea
+                      <Textarea
                         value={settings.welcomeMessage}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ welcomeMessage: (e.target as any).value })}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                          updateSettings({ welcomeMessage: e.target.value })}
                         placeholder="Message shown to new members (optional)"
                         maxLength={200}
                         rows={3}
@@ -278,7 +308,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.isPrivate}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ isPrivate: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ isPrivate: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -291,7 +322,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.requireApproval}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ requireApproval: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ requireApproval: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -304,7 +336,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.allowInvites}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ allowInvites: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ allowInvites: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -324,7 +357,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       </div>
                       <select
                         value={settings.slowMode}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ slowMode: Number((e.target as any).value) })}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                          updateSettings({ slowMode: Number(e.target.value) })}
                         className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white"
                       >
                         <option value={0}>Off</option>
@@ -344,7 +378,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.allowGuestPosts}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ allowGuestPosts: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ allowGuestPosts: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -377,7 +412,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                         <Input
                           type="color"
                           value={settings.primaryColor}
-                          onChange={(e: React.ChangeEvent) => updateSettings({ primaryColor: (e.target as any).value })}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            updateSettings({ primaryColor: e.target.value })}
                           className="w-20"
                         />
                         <span className="text-gray-400">{settings.primaryColor}</span>
@@ -392,7 +428,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.customEmojis}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ customEmojis: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ customEmojis: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -413,7 +450,8 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                       <input
                         type="checkbox"
                         checked={settings.defaultNotifications}
-                        onChange={(e: React.ChangeEvent) => updateSettings({ defaultNotifications: e.target.checked })}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          updateSettings({ defaultNotifications: e.target.checked })}
                         className="w-4 h-4 text-[var(--hive-brand-primary)] bg-gray-700 border-gray-600 rounded focus:ring-[var(--hive-brand-primary)]"
                       />
                     </div>
@@ -465,22 +503,22 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
                                 <div>
                                   <p className="text-sm font-medium text-red-400">This action is irreversible!</p>
                                   <p className="text-sm text-red-300">
-                                    Type <strong>{space.name}</strong> to confirm deletion.
+                                    Type <strong>{spaceName}</strong> to confirm deletion.
                                   </p>
                                 </div>
                               </div>
 
                               <Input
                                 value={deleteConfirm}
-                                onChange={(e: React.ChangeEvent) => setDeleteConfirm((e.target as any).value)}
-                                placeholder={`Type "${space.name}" to confirm`}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDeleteConfirm(e.target.value)}
+                                placeholder={`Type "${spaceName}" to confirm`}
                                 className="border-red-500/50"
                               />
 
                               <div className="flex space-x-2">
                                 <Button
                                   onClick={handleDeleteSpace}
-                                  disabled={deleteConfirm !== space.name}
+                                  disabled={deleteConfirm !== spaceName}
                                   className="bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
                                 >
                                   Delete Forever
@@ -533,6 +571,7 @@ export function SpaceSettingsModal({ space, isOpen, onClose }: SpaceSettingsModa
           </div>
         </div>
       </div>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -584,7 +584,7 @@ function ProfileSettingsContent() {
                   <FormLabel>Theme</FormLabel>
                   <FormControl>
                     <div className="flex items-center gap-2">
-                      <Badge variant={accountSettings.theme === 'dark' ? 'primary' : 'secondary'}>
+                      <Badge variant={accountSettings.theme === 'dark' ? 'default' : 'secondary'}>
                         Dark
                       </Badge>
                       <span className="text-sm text-gray-400">(Currently locked to dark theme for vBETA)</span>
@@ -600,7 +600,7 @@ function ProfileSettingsContent() {
                       {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
                         <Badge
                           key={freq}
-                          variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}
+                          variant={accountSettings.emailFrequency === freq ? 'default' : 'secondary'}
                           className="cursor-pointer"
                           onClick={() => handleAccountChange('emailFrequency', freq)}
                         >

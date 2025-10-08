@@ -8,7 +8,7 @@ import { Profile, PersonalInfo, AcademicInfo, SocialInfo } from '../aggregates/p
 import { ProfileId } from '../value-objects/profile-id.value';
 import { CampusId } from '../value-objects/campus-id.value';
 import { ProfileHandle } from '../value-objects/profile-handle.value';
-import { UserType } from '../value-objects/user-type.value';
+import { UserType, UserTypeEnum } from '../value-objects/user-type.value';
 import { ProfilePrivacy } from '../value-objects/profile-privacy.value';
 import { UBEmail } from '../value-objects/ub-email.value';
 import { Result } from '../../shared/base/Result';
@@ -439,7 +439,7 @@ describe('Profile Aggregate', () => {
       profile.clearEvents(); // Clear creation event
 
       // Act
-      profile.completeOnboarding(academicInfo, [], []);
+      profile.completeOnboarding(academicInfo, ['Coding'], ['space1']);
 
       // Assert
       const events = profile.domainEvents;
@@ -450,10 +450,10 @@ describe('Profile Aggregate', () => {
     it('should fail if already onboarded', () => {
       // Arrange
       const academicInfo = createValidAcademicInfo();
-      profile.completeOnboarding(academicInfo, [], []); // First onboarding
+      profile.completeOnboarding(academicInfo, ['Interest1'], ['space1']); // First onboarding
 
       // Act
-      const result = profile.completeOnboarding(academicInfo, [], []); // Second attempt
+      const result = profile.completeOnboarding(academicInfo, ['Interest1'], ['space1']); // Second attempt
 
       // Assert
       expect(result.isFailure).toBe(true);
@@ -482,6 +482,36 @@ describe('Profile Aggregate', () => {
       // Assert - Based on code, at least 1 space required
       expect(result.isFailure).toBe(true);
       expect(result.error).toContain('space');
+    });
+
+    it('should onboard non-student profiles without academic info', () => {
+      // Arrange
+      const props = createValidProfileProps();
+      const nonStudentResult = UserType.create(UserTypeEnum.ALUMNI);
+      if (nonStudentResult.isFailure) {
+        throw new Error(`Failed to create non-student user type: ${nonStudentResult.error}`);
+      }
+
+      props.userType = nonStudentResult.getValue();
+      const profile = Profile.create(props).getValue();
+      profile.clearEvents();
+
+      const interests = ['Community Service'];
+      const selectedSpaces = ['space-transfer'];
+
+      // Act
+      const result = profile.completeOnboarding(undefined, interests, selectedSpaces);
+
+      // Assert
+      expect(result.isSuccess).toBe(true);
+      expect(profile.isOnboarded).toBe(true);
+      expect(profile.academicInfo).toBeUndefined();
+      expect(profile.socialInfo.interests).toEqual(interests);
+      expect(profile.spaces).toEqual(selectedSpaces);
+
+      const events = profile.domainEvents;
+      expect(events).toHaveLength(1);
+      expect(events[0].getEventName()).toBe('ProfileOnboarded');
     });
   });
 

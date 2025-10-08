@@ -366,9 +366,8 @@ export function PostComposer({
                     {poll.options.length > 2 && (
                       <Button
                         variant="outline"
-                        className="max-w-sm"
+                        className="max-w-sm text-red-400 border-red-400"
                         onClick={() => removePollOption(index)}
-                        className="text-red-400 border-red-400"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -460,9 +459,8 @@ export function PostComposer({
                   </div>
                   <Button
                     variant="outline"
-                    className="max-w-sm"
+                    className="max-w-sm text-red-400 border-red-400"
                     onClick={() => removeAttachment(attachment.id)}
-                    className="text-red-400 border-red-400"
                   >
                     <X className="h-3 w-3" />
                   </Button>
@@ -491,9 +489,8 @@ export function PostComposer({
                 <Button
                   key={type}
                   variant="outline"
-                  className="max-w-sm"
+                  className={`max-w-sm ${postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
                   onClick={() => setPostType(type)}
-                  className={postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                   title={`Create ${type} post`}
                 >
                   {type === 'text' && <span className="h-4 w-4 flex items-center justify-center text-xs">📄</span>}
@@ -530,9 +527,8 @@ export function PostComposer({
             {/* Additional Tools */}
             <Button
               variant="outline"
-              className="max-w-sm"
+              className={`max-w-sm ${showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -559,9 +555,8 @@ export function PostComposer({
                   <Button
                     key={vis}
                     variant="outline"
-                    className="max-w-sm"
+                    className={`max-w-sm ${visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
                     onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
-                    className={visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                     disabled={vis === 'space' && !spaceId}
                   >
                     {vis === 'public' && <Globe className="h-4 w-4" />}
@@ -577,4 +572,3 @@ export function PostComposer({
     </Card>
   );
 }
-

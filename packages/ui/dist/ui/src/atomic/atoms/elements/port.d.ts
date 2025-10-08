@@ -5,7 +5,7 @@
  * Handles hover states, connection creation, and type compatibility indication.
  */
 import React from 'react';
-import type { Port as PortType } from '@/types/hivelab.types';
+import type { Port as PortType } from '../../../types/hivelab.types';
 export interface PortProps {
     /** Port data */
     port: PortType;

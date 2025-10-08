@@ -148,8 +148,7 @@ export function SpaceCreationPanel() {
       }
 
       // Check handle uniqueness
-      const handleCheck = await api.spaces.checkHandle(formData.handle);
-      const handleResult = await handleCheck.json();
+      const handleResult = await api.spaces.checkHandle<{ available: boolean }>(formData.handle);
       if (!handleResult.available) {
         throw new Error('This handle is already taken');
       }

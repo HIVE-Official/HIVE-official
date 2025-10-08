@@ -230,9 +230,9 @@ export function SearchInterface({
             <Button
               type="button"
               variant="outline"
-              className="max-w-sm"
+              className="max-w-sm absolute right-2 top-1/2 transform -translate-y-1/2"
               onClick={clearSearch}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              
             >
               <X className="h-4 w-4" />
             </Button>

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
-import { ProfileViewLayout, specProfileToUIProfile } from '@hive/ui';
-import type { PresenceStatus } from '@hive/ui';
+import { ProfileViewLayout, specProfileToUIProfile } from "@hive/ui";
+import { PresenceStatus } from "@hive/ui";
 import { ErrorBoundary } from '@/components/error-boundary';
 import { useSession } from '@/hooks/use-session';
 import { useProfileContext } from '@/components/profile/ProfileContextProvider';

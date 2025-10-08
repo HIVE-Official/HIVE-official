@@ -417,28 +417,28 @@ export default function EventsPage() {
             {/* Filters */}
             <div className="flex items-center bg-zinc-800 rounded-lg p-1">
               <Button
-                variant={filter === 'all' ? 'primary' : 'ghost'}
+                variant={filter === 'all' ? 'default' : 'ghost'}
                 className="max-w-sm text-xs"
                 onClick={() => setFilter('all')}
               >
                 All
               </Button>
               <Button
-                variant={filter === 'today' ? 'primary' : 'ghost'}
+                variant={filter === 'today' ? 'default' : 'ghost'}
                 className="max-w-sm text-xs"
                 onClick={() => setFilter('today')}
               >
                 Today
               </Button>
               <Button
-                variant={filter === 'week' ? 'primary' : 'ghost'}
+                variant={filter === 'week' ? 'default' : 'ghost'}
                 className="max-w-sm text-xs"
                 onClick={() => setFilter('week')}
               >
                 This Week
               </Button>
               <Button
-                variant={filter === 'my_events' ? 'primary' : 'ghost'}
+                variant={filter === 'my_events' ? 'default' : 'ghost'}
                 className="max-w-sm text-xs"
                 onClick={() => setFilter('my_events')}
               >
@@ -461,7 +461,7 @@ export default function EventsPage() {
         {/* Event Type Filter */}
         <div className="flex flex-wrap gap-2 mb-6">
           <Button
-            variant={eventType === 'all' ? 'primary' : 'outline'}
+            variant={eventType === 'all' ? 'default' : 'outline'}
             className="max-w-sm"
             onClick={() => setEventType('all')}
           >
@@ -470,7 +470,7 @@ export default function EventsPage() {
           {(['academic', 'social', 'professional', 'recreational', 'official'] as const).map((type) => (
             <Button
               key={type}
-              variant={eventType === type ? 'primary' : 'outline'}
+              variant={eventType === type ? 'default' : 'outline'}
               className="max-w-sm capitalize"
               onClick={() => setEventType(type)}
             >
@@ -575,7 +575,7 @@ export default function EventsPage() {
               <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
                 <div className="flex items-center space-x-4">
                   <Button
-                    variant={event.rsvpStatus === 'going' ? 'primary' : 'ghost'}
+                    variant={event.rsvpStatus === 'going' ? 'default' : 'ghost'}
                     className="max-w-sm text-xs"
                     onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();
@@ -586,7 +586,7 @@ export default function EventsPage() {
                     Going ({event.engagement.going})
                   </Button>
                   <Button
-                    variant={event.rsvpStatus === 'interested' ? 'primary' : 'ghost'}
+                    variant={event.rsvpStatus === 'interested' ? 'default' : 'ghost'}
                     className="max-w-sm text-xs"
                     onClick={(e: React.MouseEvent) => {
                       e.stopPropagation();

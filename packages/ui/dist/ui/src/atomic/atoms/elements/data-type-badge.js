@@ -6,8 +6,8 @@
  */
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from '@/lib/utils';
-import { DATA_TYPE_COLORS } from '@/types/hivelab.types';
+import { cn } from '../../../lib/utils.js';
+import { DATA_TYPE_COLORS } from '../../../types/hivelab.types.js';
 import { Type, Hash, ToggleLeft, Calendar, User, List, Box, Zap, File, CheckCircle2, Circle, } from 'lucide-react';
 // Icon mapping for each data type
 const DATA_TYPE_ICONS = {

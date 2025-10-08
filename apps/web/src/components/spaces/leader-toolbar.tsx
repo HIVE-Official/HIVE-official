@@ -184,7 +184,7 @@ export function LeaderToolbar({
                 <span className="text-white font-medium text-sm">
                   {LEADER_MODES[currentMode].label} Mode
                 </span>
-                <Badge variant="leadership" className="text-xs px-2 py-0.5 bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
+                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
                   Active
                 </Badge>
               </div>
@@ -233,11 +233,11 @@ export function LeaderToolbar({
         >
           {currentMode === 'moderate' && (
             <>
-              <Button className="max-w-sm" variant="outline" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
+ <Button className="max-w-sm border-red-400/30 text-red-400 hover:bg-red-400/10" variant="outline">
                 <Pin className="w-3 h-3 mr-1" />
                 Pin
               </Button>
-              <Button className="max-w-sm" variant="outline" className="border-red-400/30 text-red-400 hover:bg-red-400/10">
+ <Button className="max-w-sm border-red-400/30 text-red-400 hover:bg-red-400/10" variant="outline">
                 <Lock className="w-3 h-3 mr-1" />
                 Lock
               </Button>
@@ -246,11 +246,11 @@ export function LeaderToolbar({
           
           {currentMode === 'manage' && (
             <>
-              <Button className="max-w-sm" variant="outline" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
+ <Button className="max-w-sm border-blue-400/30 text-blue-400 hover:bg-blue-400/10" variant="outline">
                 <UserCog className="w-3 h-3 mr-1" />
                 Roles
               </Button>
-              <Button className="max-w-sm" variant="outline" className="border-blue-400/30 text-blue-400 hover:bg-blue-400/10">
+ <Button className="max-w-sm border-blue-400/30 text-blue-400 hover:bg-blue-400/10" variant="outline">
                 <Users className="w-3 h-3 mr-1" />
                 Members
               </Button>
@@ -258,7 +258,7 @@ export function LeaderToolbar({
           )}
           
           {currentMode === 'insights' && (
-            <Button className="max-w-sm" variant="outline" className="border-purple-400/30 text-purple-400 hover:bg-purple-400/10">
+ <Button className="max-w-sm border-purple-400/30 text-purple-400 hover:bg-purple-400/10" variant="outline">
               <Eye className="w-3 h-3 mr-1" />
               Analytics
             </Button>

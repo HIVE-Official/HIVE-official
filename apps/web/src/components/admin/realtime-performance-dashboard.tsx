@@ -492,9 +492,9 @@ export function RealtimePerformanceDashboard() {
                   {!alert.acknowledged && (
                     <Button
                       onClick={() => performanceActions.acknowledgeAlert(alert.id)}
-                      className="max-w-sm"
+                      className="max-w-sm text-xs"
                       variant="outline"
-                      className="text-xs"
+                      
                     >
                       Ack
                     </Button>

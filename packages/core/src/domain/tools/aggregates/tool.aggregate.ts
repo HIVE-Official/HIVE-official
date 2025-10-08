@@ -445,6 +445,12 @@ export class Tool extends AggregateRoot<ToolProps> {
    * Update Visibility
    */
   public updateVisibility(visibility: ToolVisibility): Result<void> {
+    const restrictedVisibilities: ToolVisibility[] = ['public', 'campus'];
+
+    if (restrictedVisibilities.includes(visibility) && this.props.status !== 'published') {
+      return Result.fail<void>('Only published tools can use campus or public visibility');
+    }
+
     this.props.visibility = visibility;
     this.props.updatedAt = new Date();
     return Result.ok<void>();

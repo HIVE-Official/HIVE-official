@@ -45,8 +45,6 @@ const handleProfileOnboarded = async (event) => {
     console.log(`[ProfileEventHandler] Profile onboarded: ${event.aggregateId}`);
     try {
         // Get recommended spaces based on interests
-        const spaceRepo = (0, factory_1.getSpaceRepository)();
-        const campusId = campus_id_value_1.CampusId.createUBBuffalo();
         // TODO: Find spaces matching user interests
         // TODO: Suggest connections based on major/dorm
         // TODO: Send welcome notification with personalized next steps

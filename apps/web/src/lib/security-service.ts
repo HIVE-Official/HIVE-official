@@ -323,7 +323,7 @@ export async function validateAuthToken(
 }> {
   // First check for dev bypass attempts
   const bypassValidation = await validateDevBypass(token, request, {
-    action: context?.operation,
+    operation: context?.operation,
     path: new URL(request.url).pathname
   });
 
@@ -359,12 +359,12 @@ export async function validateAuthToken(
   try {
     const { validateProductionToken } = await import('./production-auth');
     const result = await validateProductionToken(token, request, {
-      action: context?.operation
+      operation: context?.operation
     });
     
     return {
       valid: true,
-      userId: result.id,
+      userId: result.uid,
       reason: 'Valid Firebase token'
     };
     

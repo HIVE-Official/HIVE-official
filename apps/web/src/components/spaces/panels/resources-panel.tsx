@@ -116,7 +116,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
   const loadResources = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/spaces/${spaceId}/resources`, {
+      const response = await api.get<{ resources?: Resource[] }>(`/api/spaces/${spaceId}/resources`, {
         params: {
           type: typeFilter !== 'all' ? typeFilter : undefined,
           sort: sortBy,
@@ -245,10 +245,9 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <h3 className="text-lg font-semibold text-white">Resources</h3>
           {canUpload && (
             <Button
-              className="max-w-sm"
+              className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               onClick={() => document.getElementById('file-upload')?.click()}
               disabled={uploading}
-              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add
@@ -373,9 +372,9 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
                 </p>
                 {canUpload && !searchQuery && (
                   <Button
-                    className="max-w-sm"
+                    className="max-w-sm mt-3"
                     variant="outline"
-                    className="mt-3"
+                    
                     onClick={() => document.getElementById('file-upload')?.click()}
                   >
                     Add First Resource
@@ -405,8 +404,7 @@ function ResourceCard({
 }) {
   const handleDownload = async () => {
     try {
-      const response = await api.get(resource.url, { responseType: 'blob' });
-      const blob = new Blob([response.data]);
+      const blob = await api.get<Blob>(resource.url, { responseType: 'blob' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

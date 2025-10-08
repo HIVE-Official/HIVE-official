@@ -9,6 +9,7 @@ const AggregateRoot_base_1 = require("../shared/base/AggregateRoot.base");
 const Result_1 = require("../shared/base/Result");
 const feed_id_value_1 = require("./value-objects/feed-id.value");
 const campus_id_value_1 = require("../profile/value-objects/campus-id.value");
+const feed_items_added_event_1 = require("./events/feed-items-added.event");
 class EnhancedFeed extends AggregateRoot_base_1.AggregateRoot {
     get feedId() {
         return this.props.feedId;
@@ -67,6 +68,7 @@ class EnhancedFeed extends AggregateRoot_base_1.AggregateRoot {
         this.props.items.push(item);
         this.sortItems();
         this.props.lastUpdated = new Date();
+        this.addDomainEvent(new feed_items_added_event_1.FeedItemsAddedEvent(this.id, this.props.campusId.value, [item.itemId.value]));
         return Result_1.Result.ok();
     }
     addItems(items) {
@@ -84,6 +86,7 @@ class EnhancedFeed extends AggregateRoot_base_1.AggregateRoot {
         this.props.items.push(...newItems);
         this.sortItems();
         this.props.lastUpdated = new Date();
+        this.addDomainEvent(new feed_items_added_event_1.FeedItemsAddedEvent(this.id, this.props.campusId.value, newItems.map(item => item.itemId.value)));
         return Result_1.Result.ok();
     }
     removeItem(itemId) {
@@ -184,10 +187,12 @@ class EnhancedFeed extends AggregateRoot_base_1.AggregateRoot {
     }
     updatePreferences(preferences) {
         // Update feed preferences (algorithm weights, content types, etc.)
+        void preferences;
         this.props.lastUpdated = new Date();
     }
     adjustAlgorithmWeights(adjustments) {
         // Adjust algorithm weights based on user engagement
+        void adjustments;
         this.props.lastUpdated = new Date();
     }
     /**
@@ -305,12 +310,20 @@ class EnhancedFeed extends AggregateRoot_base_1.AggregateRoot {
         // Adjust algorithm weights based on feedback
         // This is a simplified version - production would use ML
         const adjustment = feedback === 'positive' ? 0.01 : -0.01;
+        const normalizedType = itemType.toLowerCase();
+        const typeTweaks = {
+            recency: normalizedType === 'event' ? 0.4 : 0.5,
+            engagement: normalizedType === 'space_post' ? 1.6 : 1.5,
+            socialProximity: normalizedType === 'connection_activity' ? 1.2 : 1.0,
+            spaceRelevance: normalizedType === 'space_post' ? 1.0 : 0.8,
+            trendingBoost: normalizedType === 'ritual' ? 0.5 : 0.3
+        };
         this.adjustAlgorithmWeights({
-            recency: adjustment * 0.5,
-            engagement: adjustment * 1.5,
-            socialProximity: adjustment * 1.0,
-            spaceRelevance: adjustment * 0.8,
-            trendingBoost: adjustment * 0.3
+            recency: adjustment * typeTweaks.recency,
+            engagement: adjustment * typeTweaks.engagement,
+            socialProximity: adjustment * typeTweaks.socialProximity,
+            spaceRelevance: adjustment * typeTweaks.spaceRelevance,
+            trendingBoost: adjustment * typeTweaks.trendingBoost
         });
     }
     toData() {

@@ -4,9 +4,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { SecureSessionManager, type SessionData } from './secure-session-manager';
+import { SecureSessionManager } from './secure-session-manager';
 import { logSecurityEvent } from './structured-logger';
 import { currentEnvironment } from './env';
+import type { SessionData, SessionSecurityLevel } from "@hive/core";
 
 /**
  * Session middleware options
@@ -14,7 +15,7 @@ import { currentEnvironment } from './env';
 export interface SessionMiddlewareOptions {
   required?: boolean;
   allowRefresh?: boolean;
-  securityLevel?: 'standard' | 'elevated' | 'restricted';
+  securityLevel?: SessionSecurityLevel;
   requireElevated?: boolean;
 }
 
@@ -30,7 +31,7 @@ export interface SessionContext {
     schoolId: string;
   };
   session?: SessionData;
-  securityLevel: 'standard' | 'elevated' | 'restricted';
+  securityLevel: SessionSecurityLevel;
   rotated: boolean;
 }
 

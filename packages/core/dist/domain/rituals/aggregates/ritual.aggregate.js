@@ -202,6 +202,10 @@ class Ritual extends AggregateRoot_base_1.AggregateRoot {
      * Add Participant
      */
     addParticipant(profileId) {
+        const joinableStatuses = ['announced', 'active', 'final_push'];
+        if (!joinableStatuses.includes(this.props.status)) {
+            return Result_1.Result.fail('Ritual is not currently accepting new participants');
+        }
         const id = typeof profileId === 'string' ? profileId : profileId.value;
         const participantId = typeof profileId === 'string'
             ? profile_id_value_1.ProfileId.create(profileId).getValue()

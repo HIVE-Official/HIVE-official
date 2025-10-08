@@ -164,6 +164,7 @@ export class Space {
   public lastActivityAt: Date = new Date();
   public createdAt: Date = new Date();
   public spaceType: string = 'general';
+  public type: SpaceType = SpaceType.GENERAL; // Add type property
   public posts: any[] = [];
   public settings: any = {};
   public members: Array<{ profileId: any; role: string }> = [];
@@ -196,6 +197,7 @@ export class Space {
         space.lastActivityAt = data.lastActivityAt || new Date();
         space.createdAt = data.createdAt || new Date();
         space.spaceType = data.spaceType || 'general';
+        space.type = data.type || SpaceType.GENERAL;
         space.posts = data.posts || [];
         space.settings = data.settings || {};
         space.members = data.members || [];
@@ -257,6 +259,7 @@ export class Space {
       lastActivityAt: this.lastActivityAt,
       createdAt: this.createdAt,
       spaceType: this.spaceType,
+      type: this.type,
       posts: this.posts,
       settings: this.settings,
       members: this.members
@@ -286,6 +289,51 @@ export interface Post {
   isPinned?: boolean;
   visibility?: 'public' | 'members' | 'private';
   campusId: string;
+
+  // Additional properties for content validation and special post types
+  type?: 'default' | 'toolshare' | 'event' | 'poll' | 'image';
+  reactions?: {
+    heart?: number;
+    thumbsUp?: number;
+    celebrate?: number;
+    [key: string]: number | undefined;
+  };
+  reactedUsers?: {
+    [userId: string]: string; // userId -> reactionType
+  };
+  author?: {
+    id: string;
+    displayName?: string;
+    handle?: string;
+    photoURL?: string;
+    role?: 'student' | 'faculty' | 'builder' | 'admin';
+  };
+  richContent?: {
+    mentions?: Array<{
+      type: 'user' | 'tool' | 'space';
+      id: string;
+      displayText: string;
+    }>;
+    hashtags?: string[];
+    links?: string[];
+  };
+  toolShareMetadata?: {
+    toolId: string;
+    toolName: string;
+    shareType: 'created' | 'used' | 'recommended';
+  };
+  pollMetadata?: {
+    question: string;
+    options: string[];
+    votes: { [option: string]: number };
+    endsAt?: Date;
+  };
+  imageMetadata?: {
+    url: string;
+    width?: number;
+    height?: number;
+    alt?: string;
+  };
 }
 
 // School type definition
@@ -328,6 +376,14 @@ export interface User {
     graduationYear?: number;
     interests?: string[];
   };
+}
+
+// AuthUser type for Firebase User compatibility
+export interface AuthUser extends Omit<User, 'displayName' | 'photoURL'> {
+  uid: string;
+  displayName: string | null | undefined;
+  photoURL: string | null | undefined;
+  campusId: string;
 }
 
 // Tool type definitions

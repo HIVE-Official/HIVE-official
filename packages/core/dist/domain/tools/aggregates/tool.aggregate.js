@@ -271,6 +271,10 @@ class Tool extends AggregateRoot_base_1.AggregateRoot {
      * Update Visibility
      */
     updateVisibility(visibility) {
+        const restrictedVisibilities = ['public', 'campus'];
+        if (restrictedVisibilities.includes(visibility) && this.props.status !== 'published') {
+            return Result_1.Result.fail('Only published tools can use campus or public visibility');
+        }
         this.props.visibility = visibility;
         this.props.updatedAt = new Date();
         return Result_1.Result.ok();

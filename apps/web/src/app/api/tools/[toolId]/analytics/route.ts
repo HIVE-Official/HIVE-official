@@ -81,11 +81,14 @@ interface ToolAnalytics {
 // GET - Get tool analytics
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+  }
   const { searchParams } = new URL(request.url);
 
   // Get tool details and check ownership

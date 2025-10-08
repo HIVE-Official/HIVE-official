@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
@@ -14,13 +14,13 @@ const mySpacesQuerySchema = z.object({
  * Get current user's spaces - joined, owned, favorited
  * Updated to use flat collection structure
  */
-export const GET = withAuthAndErrors(async (request: NextRequest, authContext, respond) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { includeInactive, limit } = mySpacesQuerySchema.parse(queryParams);
     
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     // Get user's space memberships using collectionGroup query for nested structure
     let membershipQuery = dbAdmin.collectionGroup('members')

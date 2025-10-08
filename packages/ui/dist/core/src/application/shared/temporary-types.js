@@ -136,6 +136,7 @@ export class Space {
         this.lastActivityAt = new Date();
         this.createdAt = new Date();
         this.spaceType = 'general';
+        this.type = SpaceType.GENERAL; // Add type property
         this.posts = [];
         this.settings = {};
         this.members = [];
@@ -152,6 +153,7 @@ export class Space {
                 space.lastActivityAt = data.lastActivityAt || new Date();
                 space.createdAt = data.createdAt || new Date();
                 space.spaceType = data.spaceType || 'general';
+                space.type = data.type || SpaceType.GENERAL;
                 space.posts = data.posts || [];
                 space.settings = data.settings || {};
                 space.members = data.members || [];
@@ -207,6 +209,7 @@ export class Space {
             lastActivityAt: this.lastActivityAt,
             createdAt: this.createdAt,
             spaceType: this.spaceType,
+            type: this.type,
             posts: this.posts,
             settings: this.settings,
             members: this.members

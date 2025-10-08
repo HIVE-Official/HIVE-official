@@ -217,45 +217,37 @@ export default function FeedPageStoryBookMigration() {
             {/* 🎛️ **SOPHISTICATED FILTER CONTROLS** */}
             <div className="flex items-center bg-hive-background-overlay rounded-lg p-1">
               <Button
-                variant={feedFilter === "all" ? "primary" : "ghost"}
-                className="max-w-sm"
+                variant={feedFilter === "all" ? "default" : "ghost"}
                 onClick={() => setFeedFilter("all")}
-                className="text-xs"
-              >
+                className="max-w-sm text-xs">
                 <Globe className="h-3 w-3 mr-1" />
                 All
               </Button>
               <Button
-                variant={feedFilter === "following" ? "primary" : "ghost"}
-                className="max-w-sm"
+                variant={feedFilter === "following" ? "default" : "ghost"}
                 onClick={() => setFeedFilter("following")}
-                className="text-xs"
-              >
+                className="max-w-sm text-xs">
                 <Heart className="h-3 w-3 mr-1" />
                 Following
               </Button>
               <Button
-                variant={feedFilter === "spaces" ? "primary" : "ghost"}
-                className="max-w-sm"
+                variant={feedFilter === "spaces" ? "default" : "ghost"}
                 onClick={() => setFeedFilter("spaces")}
-                className="text-xs"
-              >
+                className="max-w-sm text-xs">
                 <Users className="h-3 w-3 mr-1" />
                 Spaces
               </Button>
               <Button
-                variant={feedFilter === "academic" ? "primary" : "ghost"}
-                className="max-w-sm"
+                variant={feedFilter === "academic" ? "default" : "ghost"}
                 onClick={() => setFeedFilter("academic")}
-                className="text-xs"
-              >
+                className="max-w-sm text-xs">
                 <TrendingUp className="h-3 w-3 mr-1" />
                 Academic
               </Button>
             </div>
 
             {/* 🔔 **CAMPUS NOTIFICATIONS** */}
-            <Button variant="outline" className="max-w-sm" className="relative">
+ <Button variant="outline" className="max-w-sm relative">
               <Bell className="h-4 w-4" />
               <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                 3

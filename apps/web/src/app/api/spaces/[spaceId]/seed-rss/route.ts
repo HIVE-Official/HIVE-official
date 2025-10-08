@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
@@ -36,11 +36,15 @@ const RSS_FEEDS = {
 
 export const POST = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
+  }
 
   try {
     // Get space data to determine category
@@ -139,7 +143,9 @@ export const POST = withAuthAndErrors(async (
         }
       } catch (feedError) {
         logger.warn('Failed to process RSS feed', {
-          feedUrl,
+          metadata: {
+            feedUrl
+          },
           error: feedError instanceof Error ? feedError : new Error(String(feedError))
         });
       }

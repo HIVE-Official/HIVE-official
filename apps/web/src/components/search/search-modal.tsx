@@ -170,14 +170,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {/* Search Type Filter */}
         <div className="flex gap-2 mt-4">
           <Button
-            variant={selectedType === 'all' ? 'primary' : 'ghost'}
+            variant={selectedType === 'all' ? 'default' : 'ghost'}
             className="max-w-sm"
             onClick={() => setSelectedType('all')}
           >
             All
           </Button>
           <Button
-            variant={selectedType === 'profiles' ? 'primary' : 'ghost'}
+            variant={selectedType === 'profiles' ? 'default' : 'ghost'}
             className="max-w-sm"
             onClick={() => setSelectedType('profiles')}
           >
@@ -185,7 +185,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             People
           </Button>
           <Button
-            variant={selectedType === 'spaces' ? 'primary' : 'ghost'}
+            variant={selectedType === 'spaces' ? 'default' : 'ghost'}
             className="max-w-sm"
             onClick={() => setSelectedType('spaces')}
           >
@@ -193,7 +193,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             Spaces
           </Button>
           <Button
-            variant={selectedType === 'posts' ? 'primary' : 'ghost'}
+            variant={selectedType === 'posts' ? 'default' : 'ghost'}
             className="max-w-sm"
             onClick={() => setSelectedType('posts')}
           >
@@ -291,9 +291,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <Button
                     key={suggestion}
                     variant="outline"
-                    className="max-w-sm"
+                    className="max-w-sm text-xs"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-xs"
                   >
                     <TrendingUp className="h-3 w-3 mr-1" />
                     {suggestion}
@@ -312,9 +311,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </h3>
                 <Button
                   variant="outline"
-                  className="max-w-sm"
+                  className="max-w-sm text-xs"
                   onClick={clearRecentSearches}
-                  className="text-xs"
                 >
                   Clear
                 </Button>
@@ -324,9 +322,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <Button
                     key={recent}
                     variant="outline"
-                    className="max-w-sm"
+                    className="max-w-sm w-full justify-start text-left"
                     onClick={() => handleRecentSearchClick(recent)}
-                    className="w-full justify-start text-left"
                   >
                     <Clock className="h-3 w-3 mr-2" />
                     {recent}

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from 'framer-motion';
 import { CheckCircle, Sparkles, ArrowRight, Heart, Users, GraduationCap } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Card, Button, Input } from "@hive/ui";
+import { Card, Button } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveCompletionStepProps {

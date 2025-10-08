@@ -40,16 +40,7 @@ const nextConfig = {
   
   // Performance optimizations
   experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-      '@hive/ui',
-      'firebase',
-      'firebase-admin',
-      '@tanstack/react-query',
-      'react-hook-form',
-      'date-fns'
-    ],
-    // Reduce cache size
+    // optimizePackageImports causes react-hook-form barrel rewrites in production builds; keep disabled
     webpackMemoryOptimizations: true,
   },
 

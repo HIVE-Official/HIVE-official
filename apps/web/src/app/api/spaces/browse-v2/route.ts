@@ -3,9 +3,9 @@
  * Uses CQRS pattern for space discovery
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { FirebaseUnitOfWork } from '@hive/core';
-import { withAuthAndErrors, getUserId } from '@/lib/middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 import { logger } from '@/lib/logger';
 
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context) => {
@@ -80,13 +80,13 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       trendingScore: space.trendingScore,
       createdAt: space.createdAt,
       lastActivityAt: space.lastActivityAt,
-      tabs: space.tabs.map(tab => ({
+      tabs: space.tabs.map((tab: any) => ({
         id: tab.id.id,
         title: tab.title,
         messageCount: tab.messageCount,
         isActive: !tab.isArchived
       })),
-      widgets: space.widgets.filter(w => w.isEnabled).map(widget => ({
+      widgets: space.widgets.filter((w: any) => w.isEnabled).map((widget: any) => ({
         type: widget.type,
         config: widget.config
       }))

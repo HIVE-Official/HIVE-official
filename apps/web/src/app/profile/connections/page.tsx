@@ -309,17 +309,15 @@ export default function ConnectionsPage() {
                       </div>
                       <div className="flex gap-2">
                         <Button
-                          className="max-w-sm"
+                          className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
                           onClick={() => acceptFriendRequest(request.id, request.fromUserId)}
-                          className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
                         >
                           Accept
                         </Button>
                         <Button
-                          className="max-w-sm"
+                          className="max-w-sm border-white/20"
                           variant="outline"
                           onClick={() => rejectFriendRequest(request.id)}
-                          className="border-white/20"
                         >
                           Decline
                         </Button>
@@ -432,18 +430,16 @@ function ConnectionCard({
       {/* Actions */}
       <div className="flex gap-2">
         <Button
-          className="max-w-sm"
+          className="max-w-sm flex-1 border-white/20"
           variant="outline"
           onClick={() => router.push(`/profile/${connection.id}`)}
-          className="flex-1 border-white/20"
         >
           View Profile
         </Button>
         {!connection.isFriend && (
           <Button
-            className="max-w-sm"
+            className="max-w-sm flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
             onClick={() => onSendFriendRequest(connection.id)}
-            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
           >
             Add Friend
           </Button>

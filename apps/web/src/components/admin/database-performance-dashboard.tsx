@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
 import { Button } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Alert, AlertDescription } from '@hive/ui';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@hive/ui';
-import { Input } from '@hive/ui';
-import { Textarea } from '@hive/ui';
 import { Switch } from '@hive/ui';
 import { Progress } from '@hive/ui';
 import {
@@ -16,27 +13,15 @@ import {
   TrendingUp,
   TrendingDown,
   Zap,
-  Target,
   AlertTriangle,
-  CheckCircle,
   Clock,
   BarChart3,
   Settings,
   RefreshCw,
-  Search,
-  Filter,
-  Download,
   Play,
-  Pause,
   ArrowUp,
-  ArrowDown,
   ArrowRight,
-  Info,
-  FileText,
-  Code,
   Activity,
-  PieChart,
-  LineChart,
   Hash,
   Eye,
   Trash2,
@@ -101,21 +86,8 @@ export function DatabasePerformanceDashboard() {
 
   const { token: csrfToken, getHeaders } = useCSRF();
 
-  useEffect(() => {
-    loadOptimizationData();
-  }, [selectedCollection]);
-
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const interval = setInterval(() => {
-      loadOptimizationData();
-    }, 60000); // Refresh every minute
-
-    return () => clearInterval(interval);
-  }, [autoRefresh, selectedCollection]);
-
-  const loadOptimizationData = async () => {
+  const loadOptimizationData = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams({
         analysis: 'full',
@@ -137,7 +109,21 @@ export function DatabasePerformanceDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [csrfToken, getHeaders, selectedCollection]);
+
+  useEffect(() => {
+    loadOptimizationData();
+  }, [loadOptimizationData]);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      loadOptimizationData();
+    }, 60000); // Refresh every minute
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, loadOptimizationData]);
 
   const handleOptimizationAction = async (action: string, params: any = {}) => {
     try {

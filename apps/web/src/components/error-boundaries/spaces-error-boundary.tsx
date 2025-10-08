@@ -70,18 +70,16 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
           <div className="flex gap-2 justify-center flex-wrap">
             <Button
               variant="outline"
-              className="max-w-sm"
+              className="max-w-sm border-hive-border text-hive-text-tertiary"
               onClick={() => window.location.href = '/spaces/search'}
-              className="border-hive-border text-hive-text-tertiary"
             >
               <Search className="w-3 h-3 mr-1" />
               Search Spaces
             </Button>
             <Button
               variant="outline"
-              className="max-w-sm"
+              className="max-w-sm border-hive-border text-hive-text-tertiary"
               onClick={() => window.location.href = '/spaces/browse'}
-              className="border-hive-border text-hive-text-tertiary"
             >
               <Users className="w-3 h-3 mr-1" />
               Browse All

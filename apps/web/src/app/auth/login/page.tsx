@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Loader2, Mail, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -24,8 +24,6 @@ interface School {
 
 function LoginPageContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-
   // Check for direct school params from URL or use multi-step flow
   const urlSchoolId = searchParams?.get('schoolId');
   const urlSchoolName = searchParams?.get('schoolName');

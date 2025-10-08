@@ -91,12 +91,18 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             const onboardingStatus = profile.getOnboardingStatus();
             if (onboardingStatus.isComplete && !profile.isOnboarded) {
                 // Note: completeOnboarding expects AcademicInfo, need to access academicInfo properly
-                if (profile.academicInfo) {
-                    const completeResult = profile.completeOnboarding(profile.academicInfo, profile.interests, [] // selectedSpaces - empty for now
-                    );
-                    if (completeResult.isSuccess) {
-                        await this.profileRepo.save(profile);
-                    }
+                const interests = profile.interests;
+                const spaces = profile.spaces;
+                if (interests.length === 0 || spaces.length === 0) {
+                    return Result_1.Result.ok();
+                }
+                const requiresAcademicInfo = profile.userType.isStudent();
+                if (requiresAcademicInfo && !profile.academicInfo) {
+                    return Result_1.Result.ok();
+                }
+                const completeResult = profile.completeOnboarding(profile.academicInfo, interests, spaces);
+                if (completeResult.isSuccess) {
+                    await this.profileRepo.save(profile);
                 }
             }
             return Result_1.Result.ok();
@@ -212,8 +218,31 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             suggestions.push(...trendingSpaces.getValue());
         }
         // Deduplicate
-        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values());
+        let uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values());
+        if (interests.length > 0) {
+            const keywords = interests.map((interest) => interest.toLowerCase());
+            uniqueSpaces = uniqueSpaces.sort((a, b) => {
+                const aScore = this.scoreSpaceInterestMatch(a, keywords);
+                const bScore = this.scoreSpaceInterestMatch(b, keywords);
+                return bScore - aScore;
+            });
+        }
         return Result_1.Result.ok(uniqueSpaces);
+    }
+    scoreSpaceInterestMatch(space, keywords) {
+        const candidate = space;
+        const name = (candidate?.name?.name ?? candidate?.name ?? '').toString().toLowerCase();
+        const description = (candidate?.description?.value ?? candidate?.description ?? '').toString().toLowerCase();
+        return keywords.reduce((score, keyword) => {
+            let currentScore = score;
+            if (name.includes(keyword)) {
+                currentScore += 2;
+            }
+            if (description.includes(keyword)) {
+                currentScore += 1;
+            }
+            return currentScore;
+        }, 0);
     }
     async joinDefaultSpaces(profile) {
         // Auto-join campus-wide default spaces

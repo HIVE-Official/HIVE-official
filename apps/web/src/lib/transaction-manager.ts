@@ -503,7 +503,7 @@ export async function executeOnboardingTransaction(
   return strictTransactionManager.executeTransaction(operations, {
     userId,
     requestId: context?.requestId,
-    action: 'complete_onboarding'
+    operation: 'complete_onboarding'
   });
 }
 
@@ -557,7 +557,7 @@ export async function executeBuilderRequestCreation(
   return transactionManager.executeBatch(operations, {
     userId,
     requestId: context?.requestId,
-    action: 'create_builder_requests'
+    operation: 'create_builder_requests'
   });
 }
 

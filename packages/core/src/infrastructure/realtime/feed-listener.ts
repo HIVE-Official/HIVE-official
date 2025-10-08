@@ -303,7 +303,6 @@ export class FeedListener {
   private async fetchAndMapPromotedPost(promotedData: DocumentData): Promise<FeedUpdate | null> {
     try {
       // Fetch the actual post data from the space
-      const postRef = collection(db, 'spaces', promotedData.spaceId, 'posts');
       // Implementation would fetch the actual post
       // For now, return mapped promoted data
       return this.mapToFeedUpdate(promotedData.postId, promotedData);
