@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Hexagon } from "lucide-react";
-import { HiveButton } from "@hive/ui";
+import { Button } from "@hive/ui";
 
 export function FeedbackToast() {
   const [isOpen, setIsOpen] = useState(false);
@@ -166,7 +166,7 @@ export function FeedbackToast() {
                     <textarea
                       placeholder="Tell us what's on your mind..."
                       value={feedback}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback((e.target as any).value)}
                       rows={4}
                       maxLength={500}
                       className="w-full px-4 py-3 bg-[var(--hive-background-secondary)] 
@@ -191,19 +191,18 @@ export function FeedbackToast() {
                       Maybe later
                     </button>
                     
-                    <HiveButton
+                    <Button
                       onClick={handleSubmit}
                       disabled={!feedback.trim() || isSubmitting}
                       variant="default"
                       size="default"
-                      leftIcon={isSubmitting ? (
+                    >
+                      {isSubmitting ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Send className="w-4 h-4" />
-                      )}
-                    >
-                      {isSubmitting ? "Sending..." : "Send"}
-                    </HiveButton>
+                      )} {isSubmitting ? "Sending..." : "Send"}
+                    </Button>
                   </div>
                 </div>
               )}

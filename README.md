@@ -59,12 +59,22 @@ The application follows modern React and Next.js patterns with a monorepo struct
 ├── packages/
 │   ├── ui/                  # Shared UI components (Storybook)
 │   ├── hooks/               # Shared React hooks
-│   ├── core/                # Business logic and types
+│   ├── core/                # Business logic and types (DDD architecture)
 │   ├── api-client/          # API client logic
 │   ├── auth-logic/          # Authentication logic
 │   ├── firebase/            # Firebase configuration
 │   └── tokens/              # Design tokens
-└── storybook/               # Storybook configuration
+├── docs/                    # 📚 All documentation
+│   ├── architecture/        # System design, DDD, routing
+│   ├── specs/               # Product, design, and technical specs
+│   ├── operations/          # Deployment, testing, security
+│   ├── development/         # API reference, dependency guides
+│   └── archive/             # Completed phases and audits
+├── config/                  # ⚙️ Configuration files
+│   ├── eslint/              # ESLint configuration
+│   ├── firebase/            # Firebase configuration
+│   └── vercel/              # Vercel deployment config
+└── .playwright-mcp/         # Playwright test artifacts
 ```
 
 ## UI Components
@@ -250,6 +260,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Radix UI](https://www.radix-ui.com/)
 - [Firebase](https://firebase.google.com/)
+
+## Documentation
+
+All project documentation is organized in the `/docs` directory:
+
+- **Architecture**: System design, DDD patterns, database schema
+- **Specifications**: Product PRDs, design specs, technical BDD specs
+- **Operations**: Deployment guides, testing procedures, security checklists
+- **Development**: API references, dependency strategies, implementation guides
+- **Archive**: Completed phase reports and platform audits
+
+For AI development assistance, see [CLAUDE.md](./CLAUDE.md) for comprehensive development guidelines.
 
 ## Contributing
 

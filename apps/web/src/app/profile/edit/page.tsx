@@ -12,10 +12,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ProfileViewLayout, specProfileToUIProfile } from '@hive/ui';
+import { ProfileViewLayout, specProfileToUIProfile } from "@hive/ui";
 import { useSession } from '@/hooks/use-session';
 import { useToast } from '@/hooks/use-toast';
-import type { SpecCompliantProfile } from '@hive/core/domain/profile/spec-compliant-profile';
+import type { SpecCompliantProfile } from '@hive/core';
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -90,7 +90,8 @@ export default function EditProfilePage() {
     // TODO: Implement photo upload modal
     toast({
       title: 'Coming Soon',
-      description: 'Photo upload will be available soon'
+      description: 'Photo upload will be available soon',
+      type: 'info'
     });
   };
 
@@ -100,16 +101,24 @@ export default function EditProfilePage() {
     try {
       setIsSaving(true);
 
+      // Map widget and level to privacy settings
+      const privacyUpdate: any = {};
+      if (widget === 'email') {
+        privacyUpdate.showEmail = level !== 'private';
+      } else if (widget === 'schedule') {
+        privacyUpdate.showSchedule = level !== 'private';
+      } else if (widget === 'profile') {
+        privacyUpdate.profileVisibility = level === 'public' ? 'public' : level === 'connections' ? 'connections' : 'private';
+      }
+
       const response = await fetch('/api/profile-v2', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           privacy: {
-            widgets: {
-              ...profile.privacy.widgets,
-              [widget]: level
-            }
+            ...profile.privacy,
+            ...privacyUpdate
           }
         })
       });
@@ -123,7 +132,8 @@ export default function EditProfilePage() {
 
       toast({
         title: 'Privacy Updated',
-        description: `${widget} visibility set to ${level}`
+        description: `${widget} visibility set to ${level}`,
+        type: 'success'
       });
 
     } catch (err) {

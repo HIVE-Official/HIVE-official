@@ -283,7 +283,7 @@ export class RealtimeOptimizationManager {
       });
     } catch (error) {
       logger.error('Batch processing failed', {
-        error,
+        error: error instanceof Error ? error.message : String(error),
         metadata: {
           batchId: batch.id,
           messageCount: batch.messages.length
@@ -418,7 +418,7 @@ export class RealtimeOptimizationManager {
       
       logger.info('Health check completed', { metadata: { sseHealthy, firebaseHealthy } });
     } catch (error) {
-      logger.error('Health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Health check failed', { error: error instanceof Error ? error.message : String(error) });
     }
   }
 
@@ -441,7 +441,7 @@ export class RealtimeOptimizationManager {
       await sseRealtimeService.sendMessage(testMessage);
       return true;
     } catch (error) {
-      logger.error('SSE health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('SSE health check failed', { error: error instanceof Error ? error.message : String(error) });
       return false;
     }
   }
@@ -468,7 +468,7 @@ export class RealtimeOptimizationManager {
       
       return true;
     } catch (error) {
-      logger.error('Firebase health check failed', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Firebase health check failed', { error: error instanceof Error ? error.message : String(error) });
       return false;
     }
   }
@@ -501,8 +501,8 @@ export class RealtimeOptimizationManager {
    */
   private async handleMessageFailure(message: RealtimeMessage, error: any): Promise<void> {
     logger.error('Message delivery failed', {
-      messageId: message.id,
-      error,
+      id: message.id,
+      error: error instanceof Error ? error.message : String(error),
       metadata: {
         retryCount: message.metadata.retryCount
       }
@@ -538,12 +538,12 @@ export class RealtimeOptimizationManager {
     try {
       if (this.fallbackConfig.enableFirebaseRealtime) {
         await firebaseRealtimeService.sendMessage(message);
-        logger.info('Message delivered via Firebase fallback', { messageId: message.id });
+        logger.info('Message delivered via Firebase fallback', { id: message.id });
       } else {
-        logger.error('Message delivery completely failed', { messageId: message.id });
+        logger.error('Message delivery completely failed', { id: message.id });
       }
     } catch (error) {
-      logger.error('Fallback delivery also failed', { messageId: message.id, error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Fallback delivery also failed', { id: message.id, error: error instanceof Error ? error.message : String(error) });
     }
   }
 

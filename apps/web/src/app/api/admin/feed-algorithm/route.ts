@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { isAdmin } from '@/lib/admin-auth';
 
 const AlgorithmConfigSchema = z.object({

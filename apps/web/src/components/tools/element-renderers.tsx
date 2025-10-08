@@ -64,7 +64,7 @@ export function SearchInputElement({ config, onChange }: ElementProps) {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={query}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery((e.target as any).value)}
           placeholder={config.placeholder || 'Search...'}
           className="pl-10"
         />
@@ -131,13 +131,12 @@ export function FilterSelectorElement({ config, onChange }: ElementProps) {
             <Button
               key={index}
               variant={isSelected ? "default" : "outline"}
-              size="sm"
+              className="max-w-sm h-8"
               onClick={() => handleFilterToggle(value)}
-              className="h-8"
             >
               {label}
               {config.showCounts && count && (
-                <Badge variant="sophomore" className="ml-2 h-4 text-xs">
+                <Badge variant="secondary" className="ml-2 h-4 text-xs">
                   {count}
                 </Badge>
               )}
@@ -192,7 +191,7 @@ export function ResultListElement({ config, data }: ElementProps) {
                     <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
                   )}
                   <div className="flex items-center space-x-2 mt-2">
-                    {item.type && <Badge variant="freshman">{item.type}</Badge>}
+                    {item.type && <Badge variant="secondary">{item.type}</Badge>}
                     {item.date && (
                       <span className="text-xs text-muted-foreground">{item.date}</span>
                     )}
@@ -211,8 +210,8 @@ export function ResultListElement({ config, data }: ElementProps) {
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
@@ -222,8 +221,8 @@ export function ResultListElement({ config, data }: ElementProps) {
               {currentPage} of {totalPages}
             </span>
             <Button
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
@@ -279,7 +278,7 @@ export function DatePickerElement({ config, onChange }: ElementProps) {
         <Input
           type="date"
           value={selectedDate}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDateChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDateChange((e.target as any).value)}
           min={config.minDate}
           max={config.maxDate}
         />
@@ -288,7 +287,7 @@ export function DatePickerElement({ config, onChange }: ElementProps) {
           <Input
             type="time"
             value={selectedTime}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTimeChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTimeChange((e.target as any).value)}
           />
         )}
         
@@ -358,7 +357,7 @@ export function UserSelectorElement({ config, onChange }: ElementProps) {
       <Input
         placeholder="Search users..."
         value={searchQuery}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as any).value)}
       />
       
       <div className="max-h-40 overflow-y-auto space-y-1">
@@ -511,7 +510,7 @@ export function FormBuilderElement({ config, onChange }: ElementProps) {
                 className="w-full p-2 border border-border rounded-lg resize-none"
                 rows={3}
                 value={formData[field.name] || ''}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleFieldChange(field.name, e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleFieldChange(field.name, (e.target as any).value)}
                 placeholder={field.placeholder}
               />
             ) : field.type === 'select' ? (
@@ -534,7 +533,7 @@ export function FormBuilderElement({ config, onChange }: ElementProps) {
               <Input
                 type={field.type || 'text'}
                 value={formData[field.name] || ''}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange(field.name, e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFieldChange(field.name, (e.target as any).value)}
                 placeholder={field.placeholder}
               />
             )}
@@ -568,7 +567,7 @@ export const ELEMENT_RENDERERS = {
 // Generic element renderer
 export function renderElement(elementId: string, props: ElementProps): JSX.Element {
   const Renderer = ELEMENT_RENDERERS[elementId as keyof typeof ELEMENT_RENDERERS];
-  
+
   if (!Renderer) {
     return (
       <div className="p-4 border border-dashed border-muted-foreground rounded-lg text-center text-muted-foreground">

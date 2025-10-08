@@ -11,6 +11,6 @@ export { UserType } from './user-type.value';
 export { ProfilePrivacy } from './profile-privacy.value';
 
 // Re-export existing value objects
-export { UBEmail } from '../../identity/value-objects/ub-email.value';
-export { Handle } from '../../identity/value-objects/handle.value';
-export { PersonalInfo } from '../../identity/value-objects/personal-info.value';
+export { UBEmail } from './ub-email.value';
+export { Handle } from './handle.value';
+export { PersonalInfo } from './personal-info.value';

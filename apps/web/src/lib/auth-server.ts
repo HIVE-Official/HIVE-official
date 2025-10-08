@@ -3,6 +3,7 @@ import { authAdmin as adminAuth } from '@/lib/firebase-admin';
 
 export interface AuthenticatedUser {
   uid: string;
+  id: string; // Alias for uid for backwards compatibility
   email?: string;
   email_verified?: boolean;
   displayName?: string;
@@ -14,30 +15,35 @@ export interface AuthenticatedUser {
 const DEBUG_USERS = {
   'debug-user': {
     uid: 'debug-user',
+    id: 'debug-user',
     email: 'debug@test.edu',
     email_verified: true,
     displayName: 'Debug User'
   },
   'dev-user-1': {
     uid: 'dev-user-1',
+    id: 'dev-user-1',
     email: 'student@test.edu',
     email_verified: true,
     displayName: 'Test Student'
   },
   'dev-user-2': {
     uid: 'dev-user-2',
+    id: 'dev-user-2',
     email: 'faculty@test.edu',
     email_verified: true,
     displayName: 'Test Faculty'
   },
   'dev-user-3': {
     uid: 'dev-user-3',
+    id: 'dev-user-3',
     email: 'admin@test.edu',
     email_verified: true,
     displayName: 'Test Admin'
   },
   'dev-user-jacob': {
     uid: 'dev-user-jacob',
+    id: 'dev-user-jacob',
     email: 'jacob@test.edu',
     email_verified: true,
     displayName: 'Jacob Founder'
@@ -111,6 +117,7 @@ export async function getCurrentUser(request: NextRequest): Promise<Authenticate
       if (token === 'test-token') {
         return {
           uid: 'test-user-id',
+          id: 'test-user-id',
           email: 'test@example.com',
           email_verified: true,
           displayName: 'Test User'
@@ -130,6 +137,7 @@ export async function getCurrentUser(request: NextRequest): Promise<Authenticate
     const decodedToken = await adminAuth.verifyIdToken(token);
     return {
       uid: decodedToken.uid,
+      id: decodedToken.uid,
       email: decodedToken.email,
       email_verified: decodedToken.email_verified,
       displayName: decodedToken.name

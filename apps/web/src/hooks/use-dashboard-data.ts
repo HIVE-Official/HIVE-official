@@ -205,7 +205,7 @@ export function useDashboardData(): DashboardState & {
   const generateMockData = useCallback((userData: any): ComprehensiveDashboardData => {
     const now = new Date();
     const userId = userData?.id || 'user-1';
-    const userName = userData?.fullName || 'Student User';
+    const userName = userData?.displayName || 'Student User';
     const userHandle = userData?.handle || 'student_user';
 
     // Mock spaces data

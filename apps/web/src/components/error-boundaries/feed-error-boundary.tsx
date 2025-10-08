@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ErrorBoundary } from '../error-boundary';
 
 interface FeedErrorFallbackProps {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
 }
@@ -45,7 +45,7 @@ function FeedErrorFallback({ error, retry, errorId }: FeedErrorFallbackProps) {
             Retry Feed
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/spaces'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -53,7 +53,7 @@ function FeedErrorFallback({ error, retry, errorId }: FeedErrorFallbackProps) {
             Check Spaces
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/rituals'}
             className="border-hive-border text-hive-text-secondary"
           >

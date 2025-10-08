@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     // Generate cache key
     const cacheKey = generateCacheKey({
-      userId: user.uid,
+      userId: user.id,
       feedType,
       spaceIds,
       contentTypes,
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     // Try to get cached feed if not forcing refresh
     if (!forceRefresh && enableCaching) {
-      const cachedFeed = await getCachedFeed(cacheKey, user.uid);
+      const cachedFeed = await getCachedFeed(cacheKey, user.id);
       if (cachedFeed) {
         // Update access stats
         await updateCacheAccess(cachedFeed.id);
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
 
     // Generate new feed content (this would call the aggregation and algorithm APIs)
     const feedContent = await generateFeedContent({
-      userId: user.uid,
+      userId: user.id,
       feedType,
       spaceIds,
       contentTypes,
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
     // Cache the result if caching is enabled
     if (enableCaching) {
       await cacheFeedContent({
-        userId: user.uid,
+        userId: user.id,
         cacheKey,
         feedType,
         content: feedContent.items,
@@ -168,12 +168,12 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'stats': {
-        const stats = await getCacheStats(user.uid);
+        const stats = await getCacheStats(user.id);
         return NextResponse.json({ stats });
       }
 
       case 'list': {
-        const userCaches = await getUserCaches(user.uid);
+        const userCaches = await getUserCaches(user.id);
         return NextResponse.json({ caches: userCaches });
       }
 
@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
         if (!cacheKey) {
           return NextResponse.json(ApiResponseHelper.error("Cache key required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
         }
-        const cache = await getCachedFeed(cacheKey, user.uid);
+        const cache = await getCachedFeed(cacheKey, user.id);
         return NextResponse.json({ cache });
       }
 
@@ -211,14 +211,14 @@ export async function DELETE(request: NextRequest) {
 
     if (clearAll) {
       // Clear all caches for user
-      const cleared = await clearUserCaches(user.uid);
+      const cleared = await clearUserCaches(user.id);
       return NextResponse.json({ 
         success: true, 
         message: `Cleared ${cleared} cache entries`
       });
     } else if (cacheKey) {
       // Clear specific cache
-      const success = await clearSpecificCache(cacheKey, user.uid);
+      const success = await clearSpecificCache(cacheKey, user.id);
       return NextResponse.json({ 
         success, 
         message: success ? 'Cache cleared' : 'Cache not found or not owned by user'

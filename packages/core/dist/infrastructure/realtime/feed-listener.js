@@ -194,7 +194,6 @@ class FeedListener {
     async fetchAndMapPromotedPost(promotedData) {
         try {
             // Fetch the actual post data from the space
-            const postRef = (0, firestore_1.collection)(firebase_1.db, 'spaces', promotedData.spaceId, 'posts');
             // Implementation would fetch the actual post
             // For now, return mapped promoted data
             return this.mapToFeedUpdate(promotedData.postId, promotedData);

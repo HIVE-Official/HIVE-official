@@ -1,24 +1,10 @@
 import * as React from "react";
-import { type VariantProps } from "class-variance-authority";
-declare const hiveLogoVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl" | "2xl";
-    variant?: "default" | "gradient" | "white" | "dark" | "monochrome";
-    animated?: "none" | "glow" | "pulse" | "bounce";
-} & import("class-variance-authority/types").ClassProp) => string;
-export interface HiveLogoProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof hiveLogoVariants> {
-    showIcon?: boolean;
-    showText?: boolean;
-    href?: string;
-    target?: string;
+export interface HiveLogoProps extends React.SVGAttributes<SVGSVGElement> {
+    /** Logo color variant */
+    variant?: "white" | "gold" | "black" | "currentColor";
+    /** Size in pixels (width and height) */
+    size?: number;
 }
-declare const HiveLogo: React.ForwardRefExoticComponent<HiveLogoProps & React.RefAttributes<HTMLDivElement>>;
-export declare const HiveLogos: {
-    standard: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-    icon: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-    text: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-    white: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-    gradient: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-    glowing: (props: Partial<HiveLogoProps>) => import("react/jsx-runtime").JSX.Element;
-};
-export { HiveLogo, hiveLogoVariants };
+declare const HiveLogo: React.ForwardRefExoticComponent<HiveLogoProps & React.RefAttributes<SVGSVGElement>>;
+export { HiveLogo };
 //# sourceMappingURL=hive-logo.d.ts.map

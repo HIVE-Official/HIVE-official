@@ -230,7 +230,7 @@ export function SocialFeed({
         setFeedState(prev => ({
           ...prev,
           isLoading: false,
-          error: error instanceof Error ? error.message : 'Failed to load posts'
+          error: error instanceof Error ? error.message : String(error)
         }));
       }
     };
@@ -370,8 +370,8 @@ export function SocialFeed({
         </h2>
         <div className="flex items-center space-x-2">
           <Button
-            variant="secondary"
-            size="sm"
+            variant="outline"
+            className="max-w-sm"
             onClick={() => setShowComposerModal(true)}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -415,7 +415,7 @@ export function SocialFeed({
                     </p>
                   </div>
                 </div>
-                <Button variant="secondary" size="sm">
+                <Button variant="outline" className="max-w-sm">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </div>
@@ -427,9 +427,8 @@ export function SocialFeed({
                 </p>
                 {shouldTruncate && (
                   <Button
-                    variant="secondary"
-                    size="sm"
-                    className="mt-2"
+                    variant="outline"
+                    className="max-w-sm mt-2"
                     onClick={() => toggleExpanded(post.id)}
                   >
                     {isExpanded ? 'Show less' : 'Show more'}
@@ -456,21 +455,20 @@ export function SocialFeed({
               <div className="flex items-center justify-between pt-4 border-t border-hive-border-subtle">
                 <div className="flex items-center space-x-6">
                   <Button
-                    variant="secondary"
-                    size="sm"
+                    variant="outline"
+                    className={`max-w-sm ${post.engagement.hasLiked ? '!text-red-400 !border-red-400' : ''}`}
                     onClick={() => handleLike(post.id)}
-                    className={post.engagement.hasLiked ? '!text-red-400 !border-red-400' : ''}
                   >
                     <Heart className={`h-4 w-4 mr-2 ${post.engagement.hasLiked ? 'fill-current' : ''}`} />
                     {post.engagement.likes}
                   </Button>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" className="max-w-sm">
                     <MessageCircle className="h-4 w-4 mr-2" />
                     {post.engagement.comments}
                   </Button>
                   <Button
-                    variant="secondary"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm"
                     onClick={() => handleShare(post.id)}
                   >
                     <Share className="h-4 w-4 mr-2" />
@@ -478,10 +476,9 @@ export function SocialFeed({
                   </Button>
                 </div>
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className={`max-w-sm ${post.engagement.hasBookmarked ? '!text-[var(--hive-brand-primary)] !border-[var(--hive-brand-primary)]' : ''}`}
                   onClick={() => handleBookmark(post.id)}
-                  className={post.engagement.hasBookmarked ? '!text-[var(--hive-brand-primary)] !border-[var(--hive-brand-primary)]' : ''}
                 >
                   <Bookmark className={`h-4 w-4 ${post.engagement.hasBookmarked ? 'fill-current' : ''}`} />
                 </Button>
@@ -502,10 +499,9 @@ export function SocialFeed({
               <div className="text-center py-8">
                 <p className="text-hive-text-secondary">You&apos;ve reached the end!</p>
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm mt-2"
                   onClick={refreshFeed}
-                  className="mt-2"
                 >
                   <ArrowUp className="h-4 w-4 mr-2" />
                   Back to Top

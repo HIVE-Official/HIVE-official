@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge } from '@hive/ui';
+import { Button, Card, Input, Badge } from '@hive/ui';
 import {
   ArrowLeft,
   Shield,
@@ -17,7 +17,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
+import { api, HttpError } from '@/lib/api-client';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -102,7 +102,8 @@ export default function CreateSpacePage() {
     accountAge: 0,
     minAccountAge: 7,
     emailVerified: false,
-    isAdmin: false
+    isAdmin: false,
+    reason: ''
   });
 
   const {
@@ -136,20 +137,36 @@ export default function CreateSpacePage() {
     }
 
     try {
-      const response = await api.get('/api/spaces/check-create-permission');
-      setUserPermissions(response);
+      type PermissionPayload = {
+        canCreate: boolean;
+        reason?: string;
+        spacesCreatedToday: number;
+        maxSpacesPerDay: number;
+        accountAge: number;
+        minAccountAge: number;
+        emailVerified: boolean;
+        isAdmin: boolean;
+      };
+
+      const data = await api.get<PermissionPayload>('/api/spaces/check-create-permission');
+
+      setUserPermissions(prev => ({
+        ...prev,
+        ...data,
+        reason: data.reason || ''
+      }));
 
       // Apply locks based on permissions
-      if (!response.canCreate) {
+      if (!data.canCreate) {
         setGlobalLock(true);
-        setLockReason(response.reason || 'Space creation is currently restricted');
-      } else if (response.spacesCreatedToday >= response.maxSpacesPerDay) {
+        setLockReason(data.reason || 'Space creation is currently restricted');
+      } else if (data.spacesCreatedToday >= data.maxSpacesPerDay) {
         setGlobalLock(true);
-        setLockReason(`Daily limit reached (${response.maxSpacesPerDay} spaces per day)`);
-      } else if (response.accountAge < response.minAccountAge) {
+        setLockReason(`Daily limit reached (${data.maxSpacesPerDay} spaces per day)`);
+      } else if (data.accountAge < data.minAccountAge) {
         setGlobalLock(true);
-        setLockReason(`Account must be at least ${response.minAccountAge} days old`);
-      } else if (!response.emailVerified) {
+        setLockReason(`Account must be at least ${data.minAccountAge} days old`);
+      } else if (!data.emailVerified) {
         setGlobalLock(true);
         setLockReason('Please verify your email address first');
       }
@@ -192,7 +209,14 @@ export default function CreateSpacePage() {
     try {
       setLoading(true);
 
-      const response = await api.post('/api/spaces', {
+      type CreateSpaceResponse = {
+        space: {
+          id: string;
+          [key: string]: unknown;
+        };
+      };
+
+      const result = await api.post<CreateSpaceResponse>('/api/spaces', {
         ...data,
         campusId: 'ub-buffalo',
         visibility: 'public', // Default for now
@@ -202,28 +226,28 @@ export default function CreateSpacePage() {
         }
       });
 
-      if (response.space) {
+      if (result?.space) {
         // Track creation
         await api.post('/api/analytics/track', {
           event: 'space_created',
           properties: {
-            spaceId: response.space.id,
+            spaceId: result.space.id,
             category: data.category
           }
         });
 
-        router.push(`/spaces/${response.space.id}`);
+        router.push(`/spaces/${result.space.id}`);
       }
     } catch (error: any) {
       console.error('Failed to create space:', error);
 
-      if (error.response?.status === 403) {
+      if (error instanceof HttpError && error.status === 403) {
         setGlobalLock(true);
         setLockReason('You do not have permission to create spaces');
-      } else if (error.response?.status === 429) {
+      } else if (error instanceof HttpError && error.status === 429) {
         setGlobalLock(true);
         setLockReason('Too many spaces created. Try again tomorrow.');
-      } else if (error.response?.data?.message?.includes('exists')) {
+      } else if (error instanceof HttpError && typeof error.data === 'object' && error.data && 'message' in error.data && typeof (error.data as any).message === 'string' && (error.data as any).message.includes('exists')) {
         alert('A space with this name already exists');
       } else {
         alert('Failed to create space. Please try again.');
@@ -237,7 +261,7 @@ export default function CreateSpacePage() {
   if (globalLock) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <HiveCard className="bg-gray-900/50 border-red-500/30 max-w-md w-full p-8 text-center">
+        <Card className="bg-gray-900/50 border-red-500/30 max-w-md w-full p-8 text-center">
           <Lock className="w-20 h-20 text-red-400 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white mb-2">Space Creation Locked</h1>
           <p className="text-gray-400 mb-6">{lockReason}</p>
@@ -258,14 +282,14 @@ export default function CreateSpacePage() {
             </ul>
           </div>
 
-          <HiveButton
+          <Button
             onClick={() => router.push('/spaces')}
             variant="outline"
             className="border-gray-700 w-full"
           >
             Browse Existing Spaces
-          </HiveButton>
-        </HiveCard>
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -275,15 +299,14 @@ export default function CreateSpacePage() {
       {/* Header */}
       <div className="bg-gray-900 border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <HiveButton
+          <Button
             onClick={() => router.back()}
-            variant="ghost"
-            size="sm"
-            className="mb-4"
+            variant="outline"
+            className="max-w-sm mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </HiveButton>
+          </Button>
 
           <div className="flex items-center justify-between">
             <div>
@@ -321,7 +344,7 @@ export default function CreateSpacePage() {
 
             <div className="grid gap-4">
               {Object.entries(SPACE_CATEGORIES).map(([key, cat]) => (
-                <HiveCard
+                <Card
                   key={key}
                   className={`p-4 cursor-pointer transition-all ${
                     cat.locked
@@ -348,7 +371,7 @@ export default function CreateSpacePage() {
                     </div>
                     {!cat.locked && <ChevronRight className="w-5 h-5 text-gray-400" />}
                   </div>
-                </HiveCard>
+                </Card>
               ))}
             </div>
           </div>
@@ -363,7 +386,7 @@ export default function CreateSpacePage() {
               {/* Name */}
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Space Name</label>
-                <HiveInput
+                <Input
                   {...register('name')}
                   placeholder="e.g., CS Study Group"
                   className="bg-gray-900 border-gray-700"
@@ -391,9 +414,9 @@ export default function CreateSpacePage() {
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Tags</label>
                 <div className="flex gap-2 mb-2">
-                  <HiveInput
+                  <Input
                     value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
+                    onChange={(e: React.ChangeEvent) => setTagInput((e.target as any).value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -403,9 +426,9 @@ export default function CreateSpacePage() {
                     placeholder="Add tag"
                     className="bg-gray-900 border-gray-700"
                   />
-                  <HiveButton type="button" onClick={handleAddTag} variant="outline">
+                  <Button type="button" onClick={handleAddTag} variant="outline">
                     Add
-                  </HiveButton>
+                  </Button>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {tags.map(tag => (
@@ -423,9 +446,9 @@ export default function CreateSpacePage() {
                 )}
               </div>
 
-              <HiveButton type="button" onClick={() => setCurrentStep(3)}>
+              <Button type="button" onClick={() => setCurrentStep(3)}>
                 Continue
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}
@@ -461,7 +484,7 @@ export default function CreateSpacePage() {
             </div>
 
             {/* Guidelines Agreement */}
-            <HiveCard className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
+            <Card className="bg-yellow-500/10 border-yellow-500/30 p-4 mb-6">
               <div className="flex gap-3">
                 <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-1" />
                 <div className="flex-1">
@@ -489,25 +512,25 @@ export default function CreateSpacePage() {
                   )}
                 </div>
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Actions */}
             <div className="flex gap-3">
-              <HiveButton
+              <Button
                 type="button"
                 onClick={() => setCurrentStep(2)}
                 variant="outline"
                 className="border-gray-700"
               >
                 Back
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 type="submit"
                 disabled={loading}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 flex-1"
               >
                 {loading ? 'Creating...' : 'Create Space'}
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}

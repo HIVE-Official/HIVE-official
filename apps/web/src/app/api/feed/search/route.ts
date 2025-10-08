@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Get user's spaces for filtering relevant content
     const userSpacesSnapshot = await db
       .collectionGroup('members')
-      .where('userId', '==', decodedToken.uid)
+      .where('userId', '==', decodedToken.id)
       .get();
     
     const userSpaceIds = userSpacesSnapshot.docs
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
               const authorData = authorDoc.data();
               author = {
                 id: authorDoc.id,
-                name: authorData?.fullName || 'Unknown',
+                name: authorData?.displayName || 'Unknown',
                 avatar: authorData?.photoURL || null,
                 handle: authorData?.handle || 'unknown',
               };
@@ -201,7 +201,7 @@ export async function POST(request: NextRequest) {
                 const organizerData = organizerDoc.data();
                 organizer = {
                   id: organizerDoc.id,
-                  name: organizerData?.fullName || 'Unknown',
+                  name: organizerData?.displayName || 'Unknown',
                   avatar: organizerData?.photoURL || null,
                 };
               }
@@ -279,7 +279,7 @@ export async function POST(request: NextRequest) {
         const toolData = doc.data();
         
         // Skip private tools unless they belong to the user
-        if (toolData.isPrivate && toolData.creatorId !== decodedToken.uid) continue;
+        if (toolData.isPrivate && toolData.creatorId !== decodedToken.id) continue;
         
         // Text matching
         const name = (toolData.name || '').toLowerCase();
@@ -299,7 +299,7 @@ export async function POST(request: NextRequest) {
               const creatorData = creatorDoc.data();
               creator = {
                 id: creatorDoc.id,
-                name: creatorData?.fullName || 'Unknown',
+                name: creatorData?.displayName || 'Unknown',
                 avatar: creatorData?.photoURL || null,
               };
             }

@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin/reviewer
-    const userDoc = await adminDb.collection('users').doc(user.uid).get();
+    const userDoc = await adminDb.collection('users').doc(user.id).get();
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const updatedRequest = {
       status: validatedData.action === 'approve' ? 'approved' : 
               validatedData.action === 'reject' ? 'rejected' : 'changes_requested',
-      reviewedBy: user.uid,
+      reviewedBy: user.id,
       reviewedAt: now.toISOString(),
       reviewNotes: validatedData.notes,
       requestedChanges: validatedData.changes
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     // Log activity
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_review_completed',
-      userId: user.uid,
+      userId: user.id,
       toolId: requestData?.toolId,
       reviewAction: validatedData.action,
       timestamp: now.toISOString(),
@@ -204,7 +204,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin/reviewer
-    const userDoc = await adminDb.collection('users').doc(user.uid).get();
+    const userDoc = await adminDb.collection('users').doc(user.id).get();
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {

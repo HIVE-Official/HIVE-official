@@ -4,7 +4,7 @@
  */
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedSpace } from '../domain/spaces/aggregates/enhanced-space';
+import { Space } from '../domain/spaces/aggregates/space.aggregate';
 import { ISpaceRepository, IProfileRepository, IFeedRepository } from '../infrastructure/repositories/interfaces';
 export interface SpaceCreationData {
     name: string;
@@ -26,7 +26,7 @@ export interface SpaceDiscoveryFilters {
     limit?: number;
 }
 export interface SpaceJoinResult {
-    space: EnhancedSpace;
+    space: Space;
     role: 'member' | 'moderator' | 'admin';
     welcomeMessage?: string;
     suggestedActions: Array<{
@@ -54,19 +54,19 @@ export declare class SpaceDiscoveryService extends BaseApplicationService {
     /**
      * Discover spaces based on user preferences and filters
      */
-    discoverSpaces(filters?: SpaceDiscoveryFilters): Promise<Result<ServiceResult<EnhancedSpace[]>>>;
+    discoverSpaces(filters?: SpaceDiscoveryFilters): Promise<Result<ServiceResult<Space[]>>>;
     /**
      * Get personalized space recommendations for a user
      */
-    getRecommendedSpaces(userId: string): Promise<Result<ServiceResult<EnhancedSpace[]>>>;
+    getRecommendedSpaces(userId: string): Promise<Result<ServiceResult<Space[]>>>;
     /**
      * Create a new space
      */
-    createEnhancedSpace(creatorId: string, data: SpaceCreationData): Promise<Result<EnhancedSpace>>;
+    createSpace(creatorId: string, data: SpaceCreationData): Promise<Result<Space>>;
     /**
      * Join a space
      */
-    joinEnhancedSpace(userId: string, spaceId: string): Promise<Result<ServiceResult<SpaceJoinResult>>>;
+    joinSpace(userId: string, spaceId: string): Promise<Result<ServiceResult<SpaceJoinResult>>>;
     /**
      * Leave a space
      */
@@ -75,9 +75,7 @@ export declare class SpaceDiscoveryService extends BaseApplicationService {
      * Get space activity summary
      */
     getSpaceActivity(spaceId: string): Promise<Result<ServiceResult<SpaceActivityData>>>;
-    private sortEnhancedSpaces;
-    private generateWelcomeMessage;
-    private generateSuggestedActions;
+    private sortSpaces;
     private extractTrendingTopics;
     private scheduleRSSFetch;
 }

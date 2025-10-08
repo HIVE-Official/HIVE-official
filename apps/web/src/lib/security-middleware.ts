@@ -97,7 +97,7 @@ export function enforceRateLimit(
       identifier: rateLimitKey,
       ip,
       maxRequests,
-      windowMs
+      window: `${windowMs}ms`
     });
   }
 
@@ -122,12 +122,12 @@ export function validateOrigin(request: NextRequest): boolean {
       'https://hive.college',
       'https://www.hive.college',
       'https://app.hive.college'
-    ].filter(Boolean);
+    ].filter(Boolean) as string[];
 
     if (origin && !allowedOrigins.includes(origin)) {
       logger.warn('Invalid origin detected', {
         origin,
-        referer,
+        referer: referer || undefined,
         allowedOrigins
       });
       return false;
@@ -232,7 +232,7 @@ export function verifySecureToken(token: string, secret: string): { valid: boole
 
     return { valid: true, data: payload };
   } catch (error) {
-    logger.error('Token verification failed', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Token verification failed', { error: error instanceof Error ? error.message : String(error) });
     return { valid: false };
   }
 }
@@ -240,7 +240,7 @@ export function verifySecureToken(token: string, secret: string): { valid: boole
 /**
  * Security headers for API responses
  */
-export function getSecurityHeaders(): HeadersInit {
+export function getSecurityHeaders(): Record<string, string> {
   return {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
@@ -300,7 +300,7 @@ export async function withSecurity(
 
     return response;
   } catch (error) {
-    logger.error('Security middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Security middleware error', { error: error instanceof Error ? error.message : String(error) });
 
     return NextResponse.json(
       { error: 'Security check failed' },

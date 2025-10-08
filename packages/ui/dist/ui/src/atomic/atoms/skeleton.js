@@ -1,9 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import * as React from "react";
 import { cn } from "../../lib/utils.js";
-const Skeleton = React.forwardRef(({ className, ...props }, ref) => {
-    return (_jsx("div", { ref: ref, className: cn("animate-pulse rounded-md bg-[var(--hive-background-tertiary)]", className), ...props }));
-});
-Skeleton.displayName = "Skeleton";
+function Skeleton({ className, ...props }) {
+    return (_jsx("div", { className: cn("animate-pulse rounded-md bg-white/10", className), ...props }));
+}
 export { Skeleton };
 //# sourceMappingURL=skeleton.js.map

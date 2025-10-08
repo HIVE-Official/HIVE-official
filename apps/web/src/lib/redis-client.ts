@@ -227,16 +227,12 @@ export class RedisService {
    * Execute a Lua script for atomic operations
    */
   async eval(script: string, keys: string[], args: string[]): Promise<any> {
-    try {
-      if (this.client && isConnected) {
-        return await this.client.eval(script, keys.length, ...keys, ...args);
-      } else {
-        // For memory fallback, we can't execute Lua scripts
-        // This is a limitation - complex atomic operations won't work
-        throw new Error('Lua scripts not supported in memory fallback mode');
-      }
-    } catch (error) {
-      throw error;
+    if (this.client && isConnected) {
+      return await this.client.eval(script, keys.length, ...keys, ...args);
+    } else {
+      // For memory fallback, we can't execute Lua scripts
+      // This is a limitation - complex atomic operations won't work
+      throw new Error('Lua scripts not supported in memory fallback mode');
     }
   }
 

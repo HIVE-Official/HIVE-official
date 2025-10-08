@@ -1,11 +1,11 @@
 /**
- * EnhancedRitual Participation Service
+ * Ritual Participation Service
  * Orchestrates ritual participation, progress tracking, and rewards
  */
 
 import { BaseApplicationService, ApplicationServiceContext, ServiceResult } from './base.service';
 import { Result } from '../domain/shared/base/Result';
-import { EnhancedRitual } from '../domain/rituals/aggregates/enhanced-ritual';
+import { Ritual } from '../domain/rituals/aggregates/ritual.aggregate';
 import { RitualId } from '../domain/rituals/value-objects/ritual-id.value';
 import { Participation } from '../domain/rituals/entities/participation';
 import { ProfileId } from '../domain/profile/value-objects/profile-id.value';
@@ -34,21 +34,29 @@ import {
   IFeedRepository
 } from '../infrastructure/repositories/interfaces';
 
-export interface EnhancedRitualCreationData {
+export interface RitualCreationData {
   name: string;
   description: string;
-  ritualType: 'daily-challenge' | 'weekly-goal' | 'study-challenge' | 'social-mission' | 'campus-event';
+  ritualType: 'short' | 'anticipatory' | 'yearbook';  // FIXED: Use correct types from SPEC.md
+  category: 'social' | 'academic' | 'wellness' | 'community';
+  duration: string;  // "1 week", "2 weeks", "3 weeks", "variable"
   startDate: Date;
-  endDate: Date;
-  milestones: Array<{
+  endDate?: Date;
+  goals: Array<{
+    description: string;
+    type: 'individual' | 'space' | 'campus' | 'stretch';
+    targetValue: number;
+  }>;
+  requirements: Array<{
+    action: string;
+    target: number;
+    validation: 'manual' | 'automatic' | 'peer';
+  }>;
+  rewards: Array<{
+    type: 'badge' | 'feature_unlock' | 'special_access' | 'recognition' | 'points';
     name: string;
     description: string;
-    targetValue: number;
-    rewards: Array<{
-      type: 'points' | 'badge' | 'achievement';
-      value: string;
-      description: string;
-    }>;
+    value?: string | number;
   }>;
   settings?: {
     maxParticipants?: number;
@@ -58,8 +66,8 @@ export interface EnhancedRitualCreationData {
   };
 }
 
-export interface EnhancedRitualProgress {
-  ritual: EnhancedRitual;
+export interface RitualProgress {
+  ritual: Ritual;
   participation: Participation;
   completionPercentage: number;
   currentStreak: number;
@@ -81,7 +89,7 @@ export interface LeaderboardEntry {
   streak: number;
 }
 
-export class EnhancedRitualParticipationService extends BaseApplicationService {
+export class RitualParticipationService extends BaseApplicationService {
   private ritualRepo: IRitualRepository;
   private profileRepo: IProfileRepository;
   private feedRepo: IFeedRepository;
@@ -102,17 +110,17 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
   /**
    * Create a new ritual campaign
    */
-  async createEnhancedRitual(
+  async createRitual(
     creatorId: string,
-    data: EnhancedRitualCreationData
-  ): Promise<Result<EnhancedRitual>> {
+    data: RitualCreationData
+  ): Promise<Result<Ritual>> {
     return this.execute(async () => {
       // Validate creator
       const creatorProfileId = ProfileId.create(creatorId).getValue();
       const creatorResult = await this.profileRepo.findById(creatorProfileId);
 
       if (creatorResult.isFailure) {
-        return Result.fail<EnhancedRitual>('Creator profile not found');
+        return Result.fail<Ritual>('Creator profile not found');
       }
 
       // Generate ritual ID
@@ -120,41 +128,50 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
         `ritual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       ).getValue();
 
-      // Create ritual
-      const ritualResult = EnhancedRitual.create({
+      // Validate ritual type and duration
+      if (data.ritualType === 'short' && data.duration !== '1 week') {
+        return Result.fail<Ritual>('Short rituals must be 1 week duration');
+      }
+      if (data.ritualType === 'yearbook' && data.duration !== '3 weeks') {
+        return Result.fail<Ritual>('Yearbook rituals must be 3 weeks duration');
+      }
+
+      // Create ritual using correct types from SPEC.md
+      const ritualResult = Ritual.create({
         ritualId: ritualId,
         name: data.name,
         description: data.description,
-        type: this.mapRitualType(data.ritualType),
+        type: data.ritualType,  // FIXED: No mapping needed - use correct type directly
+        category: data.category,
+        duration: data.duration,
         campusId: CampusId.createUBBuffalo().getValue(),
         startDate: data.startDate,
         endDate: data.endDate,
         createdBy: creatorProfileId,
-        milestones: data.milestones.map((m, index) => ({
-          id: `milestone_${index}`,
-          title: m.name,
-          name: m.name,
-          description: m.description,
-          targetValue: m.targetValue,
+        targetAudience: 'all',
+        visibility: data.settings?.isVisible ? 'public' : 'hidden',
+        goals: data.goals.map((g, index) => ({
+          id: `goal_${index}`,
+          description: g.description,
+          type: g.type,
+          targetValue: g.targetValue,
           currentValue: 0,
-          isCompleted: false,
-          completedAt: undefined,
-          participantCompletions: [],
-          rewards: m.rewards,
-          threshold: m.targetValue,
-          isReached: false,
-          reachedAt: undefined
+          isCompleted: false
         })),
-        settings: {
-          maxParticipants: data.settings?.maxParticipants || undefined,
-          requiresApproval: data.settings?.requireApproval || false,
-          allowLateJoin: data.settings?.allowLateJoin || true,
-          isVisible: data.settings?.isVisible || true
-        }
+        requirements: data.requirements,
+        rewards: data.rewards.map((r, index) => ({
+          id: `reward_${index}`,
+          type: r.type,
+          name: r.name,
+          description: r.description,
+          value: r.value
+        })),
+        targetParticipation: data.settings?.maxParticipants,
+        status: 'draft'
       });
 
       if (ritualResult.isFailure) {
-        return Result.fail<EnhancedRitual>(ritualResult.error!);
+        return Result.fail<Ritual>(ritualResult.error!);
       }
 
       const ritual = ritualResult.getValue();
@@ -162,20 +179,20 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       // Save ritual
       const saveResult = await this.ritualRepo.save(ritual);
       if (saveResult.isFailure) {
-        return Result.fail<EnhancedRitual>(saveResult.error!);
+        return Result.fail<Ritual>(saveResult.error!);
       }
 
       // Creator automatically participates
-      await this.joinEnhancedRitual(creatorId, ritual.ritualId.value);
+      await this.joinRitual(creatorId, ritual.ritualId.value);
 
-      return Result.ok<EnhancedRitual>(ritual);
-    }, 'EnhancedRitualParticipation.createEnhancedRitual');
+      return Result.ok<Ritual>(ritual);
+    }, 'RitualParticipation.createRitual');
   }
 
   /**
    * Join a ritual
    */
-  async joinEnhancedRitual(
+  async joinRitual(
     userId: string,
     ritualId: string
   ): Promise<Result<ServiceResult<Participation>>> {
@@ -186,7 +203,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       // Get ritual
       const ritualResult = await this.ritualRepo.findById(ritualIdVO);
       if (ritualResult.isFailure) {
-        return Result.fail<ServiceResult<Participation>>('EnhancedRitual not found');
+        return Result.fail<ServiceResult<Participation>>('Ritual not found');
       }
 
       const ritual = ritualResult.getValue();
@@ -227,11 +244,11 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
 
       const result: ServiceResult<Participation> = {
         data: participation,
-        warnings: this.generateParticipationWarnings(ritual)
+        warnings: ritual.getParticipationWarnings()  // Use domain logic
       };
 
       return Result.ok<ServiceResult<Participation>>(result);
-    }, 'EnhancedRitualParticipation.joinEnhancedRitual');
+    }, 'RitualParticipation.joinRitual');
   }
 
   /**
@@ -242,7 +259,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
     ritualId: string,
     milestoneId: string,
     progress: number
-  ): Promise<Result<EnhancedRitualProgress>> {
+  ): Promise<Result<RitualProgress>> {
     return this.execute(async () => {
       const userProfileId = ProfileId.create(userId).getValue();
       const ritualIdVO = RitualId.create(ritualId).getValue();
@@ -254,7 +271,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       );
 
       if (participationResult.isFailure) {
-        return Result.fail<EnhancedRitualProgress>('Not participating in this ritual');
+        return Result.fail<RitualProgress>('Not participating in this ritual');
       }
 
       const participation = participationResult.getValue();
@@ -262,7 +279,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       // Get ritual
       const ritualResult = await this.ritualRepo.findById(ritualIdVO);
       if (ritualResult.isFailure) {
-        return Result.fail<EnhancedRitualProgress>('EnhancedRitual not found');
+        return Result.fail<RitualProgress>('Ritual not found');
       }
 
       const ritual = ritualResult.getValue();
@@ -276,17 +293,15 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
         // Complete milestone
         participation.completeMilestone(milestoneId);
 
-        // Award points
-        const points = this.calculateMilestonePoints(milestone);
+        // Award points (use domain logic)
+        const points = ritual.calculateGoalPoints(milestoneId);
         participation.addPoints(points);
 
         // Add achievement
         participation.addAchievement(`Completed: ${milestone.name}`);
 
-        // Update ritual milestone completion (if method exists)
-        if (ritual.updateMilestoneProgress) {
-          ritual.updateMilestoneProgress(milestoneId, progress);
-        }
+        // Note: updateMilestoneProgress method not available on Ritual aggregate
+        // Milestone progress is tracked through participation records
       }
 
       // Update streak
@@ -299,22 +314,22 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       await this.ritualRepo.save(ritual);
 
       // Get current progress
-      const progressData = await this.calculateEnhancedRitualProgress(
+      const progressData = await this.calculateRitualProgress(
         ritual,
         participation
       );
 
-      return Result.ok<EnhancedRitualProgress>(progressData);
-    }, 'EnhancedRitualParticipation.recordProgress');
+      return Result.ok<RitualProgress>(progressData);
+    }, 'RitualParticipation.recordProgress');
   }
 
   /**
    * Get user's ritual progress
    */
-  async getEnhancedRitualProgress(
+  async getRitualProgress(
     userId: string,
     ritualId: string
-  ): Promise<Result<EnhancedRitualProgress>> {
+  ): Promise<Result<RitualProgress>> {
     return this.execute(async () => {
       const userProfileId = ProfileId.create(userId).getValue();
       const ritualIdVO = RitualId.create(ritualId).getValue();
@@ -326,7 +341,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       );
 
       if (participationResult.isFailure) {
-        return Result.fail<EnhancedRitualProgress>('Not participating in this ritual');
+        return Result.fail<RitualProgress>('Not participating in this ritual');
       }
 
       const participation = participationResult.getValue();
@@ -334,15 +349,15 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       // Get ritual
       const ritualResult = await this.ritualRepo.findById(ritualIdVO);
       if (ritualResult.isFailure) {
-        return Result.fail<EnhancedRitualProgress>('EnhancedRitual not found');
+        return Result.fail<RitualProgress>('Ritual not found');
       }
 
       const ritual = ritualResult.getValue();
 
-      const progress = await this.calculateEnhancedRitualProgress(ritual, participation);
+      const progress = await this.calculateRitualProgress(ritual, participation);
 
-      return Result.ok<EnhancedRitualProgress>(progress);
-    }, 'EnhancedRitualParticipation.getEnhancedRitualProgress');
+      return Result.ok<RitualProgress>(progress);
+    }, 'RitualParticipation.getRitualProgress');
   }
 
   /**
@@ -358,7 +373,7 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       // Get ritual
       const ritualResult = await this.ritualRepo.findById(ritualIdVO);
       if (ritualResult.isFailure) {
-        return Result.fail<ServiceResult<LeaderboardEntry[]>>('EnhancedRitual not found');
+        return Result.fail<ServiceResult<LeaderboardEntry[]>>('Ritual not found');
       }
 
       // Get leaderboard participations
@@ -406,71 +421,71 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
       };
 
       return Result.ok<ServiceResult<LeaderboardEntry[]>>(result);
-    }, 'EnhancedRitualParticipation.getLeaderboard');
+    }, 'RitualParticipation.getLeaderboard');
   }
 
   /**
    * Get user's active rituals
    */
-  async getUserEnhancedRituals(
+  async getUserRituals(
     userId: string
-  ): Promise<Result<ServiceResult<EnhancedRitual[]>>> {
+  ): Promise<Result<ServiceResult<Ritual[]>>> {
     return this.execute(async () => {
       const userProfileId = ProfileId.create(userId).getValue();
 
       const ritualsResult = await this.ritualRepo.findByParticipant(userProfileId);
 
       if (ritualsResult.isFailure) {
-        return Result.fail<ServiceResult<EnhancedRitual[]>>(ritualsResult.error!);
+        return Result.fail<ServiceResult<Ritual[]>>(ritualsResult.error!);
       }
 
       const rituals = ritualsResult.getValue();
 
       // Filter to active rituals
-      const activeEnhancedRituals = rituals.filter((r: any) => r.toData().status === 'active');
+      const activeRituals = rituals.filter((r: any) => r.toData().status === 'active');
 
-      const result: ServiceResult<EnhancedRitual[]> = {
-        data: activeEnhancedRituals,
+      const result: ServiceResult<Ritual[]> = {
+        data: activeRituals,
         metadata: {
-          totalCount: activeEnhancedRituals.length
+          totalCount: activeRituals.length
         }
       };
 
-      return Result.ok<ServiceResult<EnhancedRitual[]>>(result);
-    }, 'EnhancedRitualParticipation.getUserEnhancedRituals');
+      return Result.ok<ServiceResult<Ritual[]>>(result);
+    }, 'RitualParticipation.getUserRituals');
   }
 
   /**
    * Get available rituals to join
    */
-  async getAvailableEnhancedRituals(): Promise<Result<ServiceResult<EnhancedRitual[]>>> {
+  async getAvailableRituals(): Promise<Result<ServiceResult<Ritual[]>>> {
     return this.execute(async () => {
       const activeResult = await this.ritualRepo.findActive(this.context.campusId);
 
       if (activeResult.isFailure) {
-        return Result.fail<ServiceResult<EnhancedRitual[]>>(activeResult.error!);
+        return Result.fail<ServiceResult<Ritual[]>>(activeResult.error!);
       }
 
       const rituals = activeResult.getValue()
         .filter((r: any) => r.toData().settings.isVisible);
 
-      const result: ServiceResult<EnhancedRitual[]> = {
+      const result: ServiceResult<Ritual[]> = {
         data: rituals,
         metadata: {
           totalCount: rituals.length
         }
       };
 
-      return Result.ok<ServiceResult<EnhancedRitual[]>>(result);
-    }, 'EnhancedRitualParticipation.getAvailableEnhancedRituals');
+      return Result.ok<ServiceResult<Ritual[]>>(result);
+    }, 'RitualParticipation.getAvailableRituals');
   }
 
   /**
    * Subscribe to ritual updates
    */
-  subscribeToEnhancedRitual(
+  subscribeToRitual(
     ritualId: string,
-    callback: (ritual: EnhancedRitual | null) => void
+    callback: (ritual: Ritual | null) => void
   ): () => void {
     const ritualIdVO = RitualId.create(ritualId).getValue();
     return this.ritualRepo.subscribeToRitual(ritualIdVO, callback);
@@ -479,18 +494,18 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
   /**
    * Subscribe to active rituals feed
    */
-  subscribeToActiveEnhancedRituals(
-    callback: (rituals: EnhancedRitual[]) => void
+  subscribeToActiveRituals(
+    callback: (rituals: Ritual[]) => void
   ): () => void {
     return this.ritualRepo.subscribeToActiveRituals(this.context.campusId, callback);
   }
 
   // Private helper methods
 
-  private async calculateEnhancedRitualProgress(
-    ritual: EnhancedRitual,
+  private async calculateRitualProgress(
+    ritual: Ritual,
     participation: Participation
-  ): Promise<EnhancedRitualProgress> {
+  ): Promise<RitualProgress> {
     const ritualData = ritual.toData();
     const participationData = participation.toData();
 
@@ -523,61 +538,8 @@ export class EnhancedRitualParticipationService extends BaseApplicationService {
     };
   }
 
-  private calculateMilestonePoints(milestone: Milestone): number {
-    // Base points based on target value
-    let points = milestone.targetValue * 10;
-
-    // Bonus for rewards
-    milestone.rewards.forEach((reward: any) => {
-      if (reward.type === 'points') {
-        points += parseInt(reward.value) || 0;
-      }
-    });
-
-    return points;
-  }
-
-  private generateParticipationWarnings(ritual: EnhancedRitual): string[] {
-    const warnings: string[] = [];
-    const ritualData = ritual.toData();
-
-    const now = new Date();
-    const daysUntilEnd = Math.ceil(
-      (ritualData.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    if (daysUntilEnd <= 7) {
-      warnings.push(`This ritual ends in ${daysUntilEnd} days`);
-    }
-
-    if (ritualData.settings.maxParticipants) {
-      const spotsLeft = ritualData.settings.maxParticipants - ritualData.participants.length;
-      if (spotsLeft <= 10) {
-        warnings.push(`Only ${spotsLeft} spots remaining`);
-      }
-    }
-
-    if (!ritualData.settings.allowLateJoin && now > ritualData.startDate) {
-      warnings.push('This ritual has already started and doesn\'t allow late joins');
-    }
-
-    return warnings;
-  }
-
-  private mapRitualType(ritualType: string): 'daily' | 'weekly' | 'monthly' | 'seasonal' | 'one-time' {
-    switch (ritualType) {
-      case 'daily-challenge':
-        return 'daily';
-      case 'weekly-goal':
-        return 'weekly';
-      case 'study-challenge':
-        return 'monthly';
-      case 'social-mission':
-        return 'seasonal';
-      case 'campus-event':
-        return 'one-time';
-      default:
-        return 'one-time';
-    }
-  }
+  // Business logic methods removed - now in Ritual aggregate:
+  // - calculateMilestonePoints() -> Ritual.calculateGoalPoints()
+  // - generateParticipationWarnings() -> Ritual.getParticipationWarnings()
+  // - mapRitualType() -> REMOVED (type bug fixed - using correct types directly)
 }

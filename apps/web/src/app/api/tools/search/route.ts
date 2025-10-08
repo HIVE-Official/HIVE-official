@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
             const creatorData = creatorDoc.data();
             creator = {
               id: creatorDoc.id,
-              name: creatorData?.fullName || 'Unknown',
+              name: creatorData?.displayName || 'Unknown',
               avatar: creatorData?.photoURL || null,
             };
           }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
         const deploymentSnapshot = await db
           .collection('deployments')
           .where('toolId', '==', doc.id)
-          .where('userId', '==', decodedToken.uid)
+          .where('userId', '==', decodedToken.id)
           .where('status', '==', 'active')
           .limit(1)
           .get();

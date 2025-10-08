@@ -10,6 +10,7 @@ const connection_repository_1 = require("./connection.repository");
 const space_repository_1 = require("./space.repository");
 const feed_repository_1 = require("./feed.repository");
 const ritual_repository_1 = require("./ritual.repository");
+const tool_repository_1 = require("./tool.repository");
 class FirebaseUnitOfWork {
     constructor() {
         this.transactionStarted = false;
@@ -20,6 +21,7 @@ class FirebaseUnitOfWork {
         this._spaces = new space_repository_1.FirebaseSpaceRepository();
         this._feeds = new feed_repository_1.FirebaseFeedRepository();
         this._rituals = new ritual_repository_1.FirebaseRitualRepository();
+        this._tools = new tool_repository_1.FirebaseToolRepository();
     }
     get profiles() {
         return this._profiles;
@@ -35,6 +37,9 @@ class FirebaseUnitOfWork {
     }
     get rituals() {
         return this._rituals;
+    }
+    get tools() {
+        return this._tools;
     }
     async begin() {
         if (this.transactionStarted) {

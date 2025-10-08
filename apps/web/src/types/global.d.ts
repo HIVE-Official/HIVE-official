@@ -223,7 +223,7 @@ export interface PaginationParams {
 }
 
 export interface PaginationResponse {
-  items: unknown[];
+  items: any[];
   nextCursor?: string;
   hasMore: boolean;
   total?: number;
@@ -269,14 +269,14 @@ export interface FirebaseQuery {
   where?: Array<{
     field: string;
     operator: WhereFilterOp;
-    value: unknown;
+    value: any;
   }>;
   orderBy?: {
     field: string;
     direction: 'asc' | 'desc';
   };
   limit?: number;
-  startAfter?: unknown;
+  startAfter?: any;
 }
 
 export type WhereFilterOp =
@@ -367,6 +367,7 @@ export interface Notification {
   title: string;
   body?: string;
   data?: Record<string, unknown>;
+  delivery?: Record<string, unknown>;
   read: boolean;
   createdAt: Timestamp | Date;
   expiresAt?: Timestamp | Date;
@@ -380,7 +381,13 @@ export type NotificationType =
   | 'post'
   | 'event'
   | 'announcement'
-  | 'system';
+  | 'system'
+  | 'space_event'
+  | 'tool_update'
+  | 'system_announcement'
+  | 'message_reaction'
+  | 'space_invitation'
+  | 'tool_deployment';
 
 // ============================================
 // Analytics Types
@@ -414,7 +421,7 @@ export interface AppError extends Error {
   code: string;
   statusCode: number;
   context?: Record<string, unknown>;
-  cause?: Error;
+  cause?: any;
   toJSON(): object;
 }
 
@@ -422,7 +429,7 @@ export interface ValidationError {
   field: string;
   message: string;
   code?: string;
-  value?: unknown;
+  value?: any;
 }
 
 // ============================================
@@ -495,7 +502,7 @@ export interface InputProps extends BaseComponentProps {
 export interface UseAuthReturn {
   user: HiveUser | null;
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthenticated: boolean;
@@ -504,7 +511,7 @@ export interface UseAuthReturn {
 export interface UseFeedReturn {
   posts: Post[];
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   hasMore: boolean;
   loadMore: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -513,7 +520,7 @@ export interface UseFeedReturn {
 export interface UseSpaceReturn {
   space: Space | null;
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   members: HiveUser[];
   posts: Post[];
   joinSpace: () => Promise<void>;
@@ -537,7 +544,7 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   loading: boolean;
-  error: Error | null;
+  error: any | null;
 }
 
 export interface UIState {
@@ -550,7 +557,7 @@ export interface UIState {
 export interface FeedState {
   posts: Post[];
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   cursor?: string;
   hasMore: boolean;
 }
@@ -560,14 +567,14 @@ export interface SpacesState {
   userSpaces: Space[];
   recommendedSpaces: Space[];
   loading: boolean;
-  error: Error | null;
+  error: any | null;
 }
 
 export interface NotificationsState {
   items: Notification[];
   unreadCount: number;
   loading: boolean;
-  error: Error | null;
+  error: any | null;
 }
 
 export interface Toast {
@@ -587,7 +594,7 @@ export interface LogEntry {
   message: string;
   timestamp: string;
   context?: Record<string, unknown>;
-  error?: Error;
+  error?: any;
   userId?: string;
   requestId?: string;
 }

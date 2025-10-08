@@ -187,6 +187,129 @@ export class EnhancedFeed extends AggregateRoot {
         // Adjust algorithm weights based on user engagement
         this.props.lastUpdated = new Date();
     }
+    /**
+     * Business Logic: Apply content filtering based on user options
+     * Moved from FeedGenerationService
+     */
+    applyContentFilters(items, options) {
+        return items.filter(item => {
+            const itemData = item.toData ? item.toData() : item;
+            if (options.includeSpacePosts === false && itemData.type === 'space_post') {
+                return false;
+            }
+            if (options.includeRSSPosts === false && itemData.type === 'rss_post') {
+                return false;
+            }
+            if (options.includeConnectionActivity === false && itemData.type === 'connection_activity') {
+                return false;
+            }
+            if (options.includeEvents === false && itemData.type === 'event') {
+                return false;
+            }
+            if (options.includeRituals === false && itemData.type === 'ritual') {
+                return false;
+            }
+            return true;
+        });
+    }
+    /**
+     * Business Logic: Generate feed insights from current items
+     * Moved from FeedGenerationService
+     */
+    generateInsights(items) {
+        if (items.length === 0) {
+            return {
+                primaryContentType: 'none',
+                engagementRate: 0,
+                averageScore: 0,
+                topSpaces: [],
+                suggestedAdjustments: ['Follow more spaces to see content']
+            };
+        }
+        // Analyze content types
+        const typeCounts = new Map();
+        let totalEngagement = 0;
+        let totalScore = 0;
+        const spaceCounts = new Map();
+        items.forEach(item => {
+            const data = item.toData ? item.toData() : item;
+            typeCounts.set(data.type, (typeCounts.get(data.type) || 0) + 1);
+            totalEngagement += data.engagementCount;
+            totalScore += data.score;
+            if (data.spaceId) {
+                spaceCounts.set(data.spaceId.id, (spaceCounts.get(data.spaceId.id) || 0) + 1);
+            }
+        });
+        // Find primary content type
+        const primaryContentType = Array.from(typeCounts.entries())
+            .sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
+        // Calculate engagement rate
+        const engagementRate = items.length > 0
+            ? totalEngagement / items.length
+            : 0;
+        // Calculate average score
+        const averageScore = items.length > 0
+            ? totalScore / items.length
+            : 0;
+        // Get top spaces
+        const topSpaces = Array.from(spaceCounts.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([spaceId]) => spaceId);
+        // Generate suggestions based on analysis
+        const suggestedAdjustments = this.getSuggestedAdjustments(primaryContentType, engagementRate, averageScore);
+        return {
+            primaryContentType,
+            engagementRate,
+            averageScore,
+            topSpaces,
+            suggestedAdjustments
+        };
+    }
+    /**
+     * Business Logic: Generate algorithm adjustment suggestions
+     * Moved from FeedGenerationService
+     */
+    getSuggestedAdjustments(primaryContentType, engagementRate, averageScore) {
+        const suggestions = [];
+        const feedData = this.toData();
+        // Low engagement suggestions
+        if (engagementRate < 1) {
+            suggestions.push('Your feed has low engagement. Try following more active spaces.');
+        }
+        // Content diversity suggestions
+        if (primaryContentType === 'space_post' && feedData.algorithm?.spaceRelevance > 0.5) {
+            suggestions.push('Your feed is heavily focused on space posts. Consider adjusting to see more diverse content.');
+        }
+        // Score optimization suggestions
+        if (averageScore < 0.5) {
+            suggestions.push('Feed content scores are low. The algorithm is learning your preferences.');
+        }
+        // Algorithm weight suggestions
+        if (feedData.algorithm?.recency > 0.5) {
+            suggestions.push('Your feed prioritizes recent content. Consider balancing with engagement metrics.');
+        }
+        if (suggestions.length === 0) {
+            suggestions.push('Your feed is well-balanced!');
+        }
+        return suggestions;
+    }
+    /**
+     * Business Logic: Adjust algorithm weights based on user feedback
+     * Moved from FeedGenerationService
+     */
+    adjustWeightsFromFeedback(feedback, itemType) {
+        // Adjust algorithm weights based on feedback
+        // This is a simplified version - production would use ML
+        const adjustment = feedback === 'positive' ? 0.01 : -0.01;
+        this.adjustAlgorithmWeights({
+            recency: adjustment * 0.5,
+            engagement: adjustment * 1.5,
+            socialProximity: adjustment * 1.0,
+            spaceRelevance: adjustment * 0.8,
+            trendingBoost: adjustment * 0.3
+        });
+    }
     toData() {
         return {
             id: this.id,

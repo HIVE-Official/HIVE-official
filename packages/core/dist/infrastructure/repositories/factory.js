@@ -9,6 +9,7 @@ exports.getSpaceRepository = getSpaceRepository;
 exports.getFeedRepository = getFeedRepository;
 exports.getRitualRepository = getRitualRepository;
 exports.getConnectionRepository = getConnectionRepository;
+exports.getToolRepository = getToolRepository;
 exports.initializeRepositories = initializeRepositories;
 exports.resetRepositories = resetRepositories;
 // Import real Firebase implementations
@@ -17,12 +18,14 @@ const space_repository_1 = require("./firebase/space.repository");
 const feed_repository_1 = require("./firebase/feed.repository");
 const ritual_repository_1 = require("./firebase/ritual.repository");
 const connection_repository_1 = require("./firebase/connection.repository");
+const tool_repository_1 = require("./firebase/tool.repository");
 // Singleton instances
 let profileRepo = null;
 let spaceRepo = null;
 let feedRepo = null;
 let ritualRepo = null;
 let connectionRepo = null;
+let toolRepo = null;
 /**
  * Get or create ProfileRepository instance
  */
@@ -69,6 +72,15 @@ function getConnectionRepository() {
     return connectionRepo;
 }
 /**
+ * Get or create ToolRepository instance
+ */
+function getToolRepository() {
+    if (!toolRepo) {
+        toolRepo = new tool_repository_1.FirebaseToolRepository();
+    }
+    return toolRepo;
+}
+/**
  * Initialize repositories with custom implementations (for testing)
  */
 function initializeRepositories(config) {
@@ -82,6 +94,8 @@ function initializeRepositories(config) {
         ritualRepo = config.ritual;
     if (config.connection)
         connectionRepo = config.connection;
+    if (config.tool)
+        toolRepo = config.tool;
 }
 /**
  * Reset all repository instances (for testing)
@@ -92,5 +106,6 @@ function resetRepositories() {
     feedRepo = null;
     ritualRepo = null;
     connectionRepo = null;
+    toolRepo = null;
 }
 //# sourceMappingURL=factory.js.map

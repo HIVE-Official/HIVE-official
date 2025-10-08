@@ -28,7 +28,7 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <HiveLogo size="lg" variant="gradient" showText={true} />
+          <HiveLogo className="max-w-lg" variant="gradient" showText={true} />
           <p className="text-white/70 mt-4">Loading HIVE...</p>
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <HiveLogo size="xl" variant="gradient" showText={true} className="mx-auto mb-8" />
+ <HiveLogo className="max-w-lg mx-auto mb-8" variant="gradient" showText={true} />
           <h1 className="text-5xl font-bold mb-6">
             Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
           </h1>
@@ -50,14 +50,14 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              size="lg"
-              variant="primary"
+              className="max-w-lg"
+              variant="default"
               onClick={() => router.push('/auth/login')}
             >
               Join HIVE
             </Button>
             <Button
-              size="lg"
+              className="max-w-lg"
               variant="outline"
               onClick={() => router.push('/spaces')}
             >
@@ -69,9 +69,9 @@ export default function HomePage() {
           {process.env.NODE_ENV === 'development' && (
             <div className="mt-4">
               <Button
-                size="sm"
+                className="max-w-sm border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-black"
                 variant="outline"
-                className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-black"
+                
                 onClick={() => router.push('/test-presence')}
               >
                 🧪 Test Presence System

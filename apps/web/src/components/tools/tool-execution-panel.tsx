@@ -146,7 +146,7 @@ export function ToolExecutionPanel({
     } catch (error) {
       const errorResult: ExecutionResult = {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : String(error),
         executionTime: 0,
         memoryUsed: 0,
         logs: ['Error: Failed to execute tool']
@@ -196,7 +196,7 @@ export function ToolExecutionPanel({
           return (
             <Textarea
               value={value || ''}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, (e.target as any).value)}
               placeholder={definition.placeholder}
               rows={3}
               className="mt-1"
@@ -206,7 +206,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, (e.target as any).value)}
             placeholder={definition.placeholder}
             className="mt-1"
           />
@@ -217,7 +217,7 @@ export function ToolExecutionPanel({
           <Input
             type="number"
             value={value || 0}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, parseFloat(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, parseFloat((e.target as any).value))}
             className="mt-1"
           />
         );
@@ -226,10 +226,9 @@ export function ToolExecutionPanel({
         return (
           <div className="mt-1">
             <Button
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className={`max-w-sm ${value ? 'bg-green-500/20 border-green-500' : ''}`}
               onClick={() => handleInputChange(key, !value)}
-              className={value ? 'bg-green-500/20 border-green-500' : ''}
             >
               {value ? 'True' : 'False'}
             </Button>
@@ -241,7 +240,7 @@ export function ToolExecutionPanel({
         return (
           <Textarea
             value={typeof value === 'string' ? value : JSON.stringify(value, null, 2)}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, parseInputValue(e.target.value, definition.type))}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange(key, parseInputValue((e.target as any).value, definition.type))}
             placeholder={definition.type === 'array' ? '["item1", "item2"]' : '{"key": "value"}'}
             rows={3}
             className="mt-1 font-mono text-sm"
@@ -252,7 +251,7 @@ export function ToolExecutionPanel({
         return (
           <Input
             value={value || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(key, (e.target as any).value)}
             className="mt-1"
           />
         );
@@ -295,15 +294,15 @@ export function ToolExecutionPanel({
             {result && (
               <>
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm"
                   onClick={copyResult}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm"
                   onClick={exportResult}
                 >
                   <Download className="h-4 w-4" />
@@ -312,10 +311,9 @@ export function ToolExecutionPanel({
             )}
             {isExecuting ? (
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                className="max-w-sm text-red-400 border-red-400"
                 onClick={handleCancel}
-                className="text-red-400 border-red-400"
               >
                 <Square className="h-4 w-4 mr-2" />
                 Cancel
@@ -382,7 +380,7 @@ export function ToolExecutionPanel({
                     <Label className="text-white flex items-center space-x-2">
                       <span>{key}</span>
                       {definition.required && (
-                        <Badge variant="sophomore" className="text-xs">Required</Badge>
+                        <Badge variant="secondary" className="text-xs">Required</Badge>
                       )}
                     </Label>
                     {definition.description && (

@@ -30,7 +30,7 @@ export function usePlatformIntegration() {
 
         // Set search context
         searchEngine.setContext({
-          userId: user.uid,
+          userId: user.id,
           currentSlice: 'feed',
           recentSearches: [],
           preferences: {
@@ -98,7 +98,7 @@ export function useUnifiedFeed(options: {
 
     try {
       const integration = getPlatformIntegration();
-      return await integration.getUnifiedFeedData(user.uid, {
+      return await integration.getUnifiedFeedData(user.id, {
         limit,
         sources,
         ...customOptions
@@ -418,7 +418,7 @@ export function useNotificationIntegration() {
 
     try {
       const manager = getNotificationManager();
-      await manager.updateUserPreferences(user.uid, preferences);
+      await manager.updateUserPreferences(user.id, preferences);
     } catch (error) {
       console.error('Error updating notification preferences:', error);
     }
@@ -480,7 +480,7 @@ async function getAuthToken(): Promise<string> {
     if (sessionJson) {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
-        ? `dev_token_${session.uid}` 
+        ? `dev_token_${session.id}` 
         : session.token;
     }
   } catch (error) {

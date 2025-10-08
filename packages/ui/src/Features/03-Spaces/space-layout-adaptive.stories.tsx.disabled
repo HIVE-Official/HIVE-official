@@ -1,0 +1,522 @@
+/**
+ * @deprecated DEPRECATED - DO NOT USE
+ *
+ * This story demonstrates a 20/50/30 three-zone layout that does NOT match SPEC.md.
+ *
+ * REASON FOR DEPRECATION:
+ * - SPEC requires 60/40 split (Chat Board + Widgets Sidebar)
+ * - SPEC requires side panels with hash URLs, not view switching
+ * - SPEC requires inline tools, not a separate "Tools View"
+ *
+ * USE INSTEAD: space-layout.stories.tsx
+ *
+ * This file is disabled and kept for reference only.
+ *
+ * ========== ORIGINAL DESCRIPTION (ARCHIVED) ==========
+ *
+ * Space Layout Adaptive - Three-Zone Architecture Demo
+ *
+ * This is HIVE's unique Space IA - NOT copying Discord or Notion patterns.
+ *
+ * Key Innovation: Workspace-First Design
+ * - Entering a space feels like entering an "environment"
+ * - Tools are first-class citizens (equal to posts)
+ * - Ambient presence awareness (always see who's online)
+ * - Launcher-style navigation (not rigid tabs)
+ * - Adaptive canvas that transforms based on context
+ *
+ * Three Zones:
+ * 1. Quick Access Panel (Left 20%) - Launcher buttons to switch views
+ * 2. Adaptive Canvas (Center 50%) - Transforms based on activeView
+ * 3. Ambient Context (Right 30%) - Live presence, stats, leaders
+ *
+ * @see SPEC.md - 60/40 split requirement
+ */
+
+import type { Meta, StoryObj } from "@storybook/react"
+import { SpaceLayoutAdaptive } from "../../atomic/templates/space-layout-adaptive"
+import type { SpaceData, SpacePost } from "../../types/space.types"
+import type { SpaceTool } from "../../atomic/templates/space-layout-adaptive"
+
+const meta = {
+  title: "Features/03-Spaces/Space Layout (Adaptive Three-Zone)",
+  component: SpaceLayoutAdaptive,
+  parameters: {
+    layout: "fullscreen",
+    backgrounds: {
+      default: "dark",
+      values: [{ name: "dark", value: "#000000" }],
+    },
+    docs: {
+      description: {
+        component: `
+# Space Layout Adaptive - HIVE's Unique IA
+
+## Why This Architecture Exists
+
+**Problem:** Previous implementations copied Discord (channel list + chat) and Notion (page tree + document).
+This didn't feel like entering an "environment" and hid tools as secondary features.
+
+**Solution:** Three-zone adaptive architecture designed from first principles for student workspaces.
+
+## Three Zones Explained
+
+### 1. Quick Access Panel (Left 20%)
+- **Launcher-style navigation** (not tabs)
+- Stream, Pinned, Tools, Events, Files, Members
+- "New Post" button always visible
+- Count badges show activity at a glance
+- Active state highlighting
+
+### 2. Adaptive Canvas (Center 50%)
+- **Transforms based on what you click**
+- Stream view: Discord-style post feed
+- Tools view: Grid of interactive tool cards
+- Events view: Calendar component
+- Members view: Grid with live presence
+- Not fixed - adapts to user focus
+
+### 3. Ambient Context Sidebar (Right 30%)
+- **Always shows "who's here NOW"**
+- Live presence indicators (green dots)
+- Quick actions (contextual to role)
+- Space stats (activity metrics)
+- Leaders section (founder, moderators)
+
+## Key Principles
+
+✅ **Workspace-First**: Spaces are work environments, not just feeds
+✅ **Tools as First-Class**: Equal to posts, not hidden
+✅ **Ambient Presence**: Always see who's online
+✅ **Contextual UI**: Right sidebar adapts to view
+✅ **Fluid Navigation**: Launcher buttons, not rigid tabs
+✅ **Student-Centric**: Built for campus life patterns
+
+## What Makes This Unique
+
+| Pattern | Discord | Notion | HIVE |
+|---------|---------|--------|------|
+| Navigation | Channel list | Page tree | Launcher panel |
+| Content | Fixed chat | Fixed document | Adaptive canvas |
+| Tools | Bots (hidden) | Embeds (hidden) | First-class view |
+| Presence | Voice rooms | Comments | Ambient sidebar |
+| Layout | 20% + 80% | 30% + 70% | 20% + 50% + 30% |
+        `,
+      },
+    },
+  },
+  tags: ["autodocs"],
+  argTypes: {
+    initialView: {
+      control: "select",
+      options: ["stream", "pinned", "tools", "events", "files", "members"],
+      description: "Which view to show on initial load",
+    },
+  },
+} satisfies Meta<typeof SpaceLayoutAdaptive>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+// Mock Space Data
+const mockSpace: SpaceData = {
+  id: "ub-robotics",
+  name: "UB Robotics Club",
+  description:
+    "Build, program, and compete with robots! We're working on autonomous navigation, computer vision, and building competition bots. All skill levels welcome - from Arduino beginners to experienced engineers.",
+  coverPhoto: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200",
+  category: "student_org",
+  spaceType: "interest",
+  privacy: "public",
+  tags: ["robotics", "engineering", "programming", "competition"],
+  stats: {
+    memberCount: 247,
+    postCount: 834,
+    eventCount: 12,
+    activeToday: 34,
+  },
+  campus: {
+    friendsInSpace: [
+      { id: "1", name: "Sarah Chen", handle: "@sarahchen" },
+      { id: "2", name: "Mike Johnson", handle: "@mikej" },
+    ],
+    isTrending: true,
+    trendingCategory: "Top 10 This Week",
+    primaryMajor: "Computer Engineering",
+  },
+  userContext: {
+    isJoined: true,
+    isLeader: true,
+    unreadCount: 5,
+    lastActivity: new Date(),
+  },
+  creator: {
+    id: "founder-1",
+    name: "Alex Rodriguez",
+    handle: "@alexr",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+  },
+}
+
+// Mock Posts
+const mockPosts: SpacePost[] = [
+  {
+    id: "post-1",
+    author: {
+      userId: "user-1",
+      name: "Sarah Chen",
+      handle: "@sarahchen",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    },
+    content:
+      "Just finished the autonomous navigation algorithm! The bot can now detect obstacles and reroute in real-time. Check out the demo video 🤖",
+    images: ["https://images.unsplash.com/photo-1518314916381-77a37c2a49ae?w=800"],
+    contentType: "announcement",
+    isPinned: false,
+    likeCount: 23,
+    commentCount: 8,
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+  },
+  {
+    id: "post-2",
+    author: {
+      userId: "user-2",
+      name: "Mike Johnson",
+      handle: "@mikej",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mike",
+    },
+    content:
+      "Quick question - anyone have experience with OpenCV for object recognition? Need help tuning the camera calibration.",
+    contentType: "text",
+    isPinned: false,
+    likeCount: 5,
+    commentCount: 12,
+    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+  },
+  {
+    id: "post-3",
+    author: {
+      userId: "founder-1",
+      name: "Alex Rodriguez",
+      handle: "@alexr",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+    },
+    content:
+      "🎉 We just got approved for competition funding! $5,000 to build our competition bot for regionals. Team meeting this Friday to plan the build.",
+    contentType: "announcement",
+    isPinned: true,
+    likeCount: 67,
+    commentCount: 24,
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+  },
+  {
+    id: "post-4",
+    author: {
+      userId: "user-3",
+      name: "Emma Davis",
+      handle: "@emmad",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
+    },
+    content: "New to robotics - what Arduino kit should I buy to get started? Budget is around $100.",
+    contentType: "text",
+    isPinned: false,
+    likeCount: 8,
+    commentCount: 15,
+    createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+  },
+]
+
+// Mock Tools
+const mockTools: SpaceTool[] = [
+  {
+    id: "tool-1",
+    name: "Parts Inventory Tracker",
+    icon: "📦",
+    description: "Track motors, sensors, and components. Know what's in stock before starting a build.",
+    usageCount: 124,
+  },
+  {
+    id: "tool-2",
+    name: "Competition Schedule",
+    icon: "🏆",
+    description: "Upcoming robotics competitions with registration deadlines and prize info.",
+    usageCount: 89,
+  },
+  {
+    id: "tool-3",
+    name: "Build Budget Calculator",
+    icon: "💰",
+    description: "Track costs for parts, tools, and materials. Stay within team budget.",
+    usageCount: 56,
+  },
+  {
+    id: "tool-4",
+    name: "Code Snippet Library",
+    icon: "💻",
+    description: "Reusable Arduino/Python code for common tasks (motor control, sensors, etc).",
+    usageCount: 203,
+  },
+]
+
+// Mock Events
+const mockEvents = [
+  {
+    id: "event-1",
+    title: "Weekly Build Session",
+    description: "Hands-on work on competition bot. Bring your laptop!",
+    startTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+    endTime: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 3 * 60 * 60 * 1000),
+    location: "Davis Hall Lab 101",
+    attendeeCount: 34,
+    isAttending: true,
+  },
+  {
+    id: "event-2",
+    title: "OpenCV Workshop",
+    description: "Learn computer vision basics for robot navigation",
+    startTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+    endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
+    location: "NSC 225",
+    attendeeCount: 28,
+    isAttending: false,
+  },
+  {
+    id: "event-3",
+    title: "Beginner Arduino Night",
+    description: "New to robotics? We'll help you build your first circuit!",
+    startTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000),
+    location: "Student Union 302",
+    attendeeCount: 45,
+    isAttending: true,
+  },
+]
+
+// Mock Members
+const mockMembers = [
+  {
+    userId: "user-1",
+    name: "Sarah Chen",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    isOnline: true,
+  },
+  {
+    userId: "user-2",
+    name: "Mike Johnson",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mike",
+    isOnline: true,
+  },
+  {
+    userId: "user-3",
+    name: "Emma Davis",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma",
+    isOnline: true,
+  },
+  {
+    userId: "user-4",
+    name: "Alex Kim",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexK",
+    isOnline: true,
+  },
+  {
+    userId: "user-5",
+    name: "Jordan Lee",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan",
+    isOnline: true,
+  },
+  {
+    userId: "user-6",
+    name: "Taylor Swift",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Taylor",
+    isOnline: true,
+  },
+  {
+    userId: "user-7",
+    name: "Chris Brown",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Chris",
+    isOnline: false,
+  },
+  {
+    userId: "user-8",
+    name: "Pat Wilson",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pat",
+    isOnline: false,
+  },
+]
+
+/**
+ * Default View - Stream
+ *
+ * This is what students see when they first enter the space.
+ * Shows the post feed in the center with live presence on the right.
+ */
+export const DefaultStreamView: Story = {
+  args: {
+    space: mockSpace,
+    posts: mockPosts,
+    pinnedPosts: mockPosts.filter((p) => p.isPinned),
+    tools: mockTools,
+    events: mockEvents,
+    members: mockMembers,
+    onlineCount: 6,
+    filesCount: 23,
+    initialView: "stream",
+    onAction: (action) => console.log("Action:", action),
+  },
+}
+
+/**
+ * Tools View - First-Class Citizen
+ *
+ * Tools are NOT hidden or secondary - they're equal to posts.
+ * This view shows interactive tool cards that space leaders created.
+ */
+export const ToolsViewActive: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    initialView: "tools",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Tools view demonstrates HIVE's key innovation - making space tools first-class citizens. Leaders can create no-code tools (inventory tracker, budget calculator, etc) that members use directly in the space.",
+      },
+    },
+  },
+}
+
+/**
+ * Events View - Calendar Component
+ *
+ * Full calendar view with upcoming events. Shows date picker and event details.
+ */
+export const EventsCalendarView: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    initialView: "events",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Events view with full calendar component. Shows upcoming robotics workshops, build sessions, and competitions.",
+      },
+    },
+  },
+}
+
+/**
+ * Members View - Live Presence Grid
+ *
+ * Grid of all members with real-time online status indicators.
+ */
+export const MembersGridView: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    initialView: "members",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Members view shows everyone in the space with live presence indicators. Green dots show who's online right now.",
+      },
+    },
+  },
+}
+
+/**
+ * Pinned Posts View
+ *
+ * Shows only pinned announcements/important posts.
+ */
+export const PinnedPostsView: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    initialView: "pinned",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Pinned view filters to show only important announcements. "Back to stream" button returns to full feed.',
+      },
+    },
+  },
+}
+
+/**
+ * Member Perspective (Not Leader)
+ *
+ * Shows the space as a regular member (not leader).
+ * Quick Actions section hidden, can't see leader tools.
+ */
+export const MemberPerspective: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    space: {
+      ...mockSpace,
+      userContext: {
+        ...mockSpace.userContext,
+        isLeader: false,
+      },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Member perspective - Quick Actions section is hidden, no access to leader tools. Can post, view content, and use member features.",
+      },
+    },
+  },
+}
+
+/**
+ * Visitor Perspective (Not Joined)
+ *
+ * Shows the space for someone who hasn't joined yet.
+ * "New Post" button replaced with "Join Space" button.
+ */
+export const VisitorPerspective: Story = {
+  args: {
+    ...DefaultStreamView.args,
+    space: {
+      ...mockSpace,
+      userContext: {
+        isJoined: false,
+        isLeader: false,
+        unreadCount: 0,
+      },
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Visitor perspective - Not yet a member. "New Post" button replaced with "Join Space" CTA. Can browse content but not interact.',
+      },
+    },
+  },
+}
+
+/**
+ * Interactive Demo - All Views
+ *
+ * Use Storybook controls to switch between all views and see
+ * how the adaptive canvas transforms.
+ */
+export const InteractiveDemo: Story = {
+  args: {
+    ...DefaultStreamView.args,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Use the `initialView` control above to switch between Stream, Pinned, Tools, Events, Files, and Members. Watch how the center canvas adapts while Quick Access and Ambient Context remain consistent.",
+      },
+    },
+  },
+}
+

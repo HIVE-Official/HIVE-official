@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import {
-  HiveModal,
+  Dialog,
   HiveModalHeader,
   HiveModalTitle,
   HiveModalDescription,
-  HiveModalContent,
+  DialogContent,
   Button,
   Card,
   Switch,
@@ -147,7 +147,7 @@ export function ToolConfigModal({
   const optionalPermissions = tool.permissions.filter(p => !p.required);
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={onClose}
     >
@@ -155,7 +155,7 @@ export function ToolConfigModal({
         <HiveModalTitle>Configure {tool.name}</HiveModalTitle>
         <HiveModalDescription>Version {tool.version} • {tool.isCustom ? 'Custom Tool' : 'Marketplace Tool'}</HiveModalDescription>
       </HiveModalHeader>
-      <HiveModalContent>
+      <DialogContent>
         <div className="p-6">
           <Tabs defaultValue="permissions" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
@@ -192,7 +192,7 @@ export function ToolConfigModal({
                           <div className="font-medium text-white">{permission.name}</div>
                           <div className="text-sm text-hive-text-mutedLight">{permission.description}</div>
                         </div>
-                        <Badge variant="sophomore" className="text-xs">
+                        <Badge variant="secondary" className="text-xs">
                           Required
                         </Badge>
                       </div>
@@ -349,7 +349,7 @@ export function ToolConfigModal({
           <div>
             {onUninstall && !tool.isCustom && (
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={onUninstall}
                 className="border-red-500 text-red-400 hover:bg-red-500/10"
                 disabled={isSaving}
@@ -361,7 +361,7 @@ export function ToolConfigModal({
           </div>
           <div className="flex items-center space-x-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={onClose}
               disabled={isSaving}
             >
@@ -386,7 +386,7 @@ export function ToolConfigModal({
             </Button>
           </div>
         </div>
-      </HiveModalContent>
-    </HiveModal>
+      </DialogContent>
+    </Dialog>
   );
 }

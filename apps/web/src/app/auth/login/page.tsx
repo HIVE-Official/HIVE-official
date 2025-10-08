@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Loader2, Mail, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { HiveButton, HiveInput, HiveCard, HiveLogo } from '@hive/ui';
-import { HiveModal, HiveModalContent } from '@hive/ui';
+import { Button, Input, Card, HiveLogo } from '@hive/ui';
+import { Dialog, DialogContent } from '@hive/ui';
 
 // Force dynamic rendering to avoid SSG issues with auth
 export const dynamic = 'force-dynamic';
@@ -24,8 +24,6 @@ interface School {
 
 function LoginPageContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-
   // Check for direct school params from URL or use multi-step flow
   const urlSchoolId = searchParams?.get('schoolId');
   const urlSchoolName = searchParams?.get('schoolName');
@@ -223,7 +221,7 @@ function LoginPageContent() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value;
+    const email = (e.target as any).value;
     setFormData({ email });
 
     // Clear previous errors
@@ -298,11 +296,11 @@ function LoginPageContent() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="mb-8"
             >
-              <HiveCard className="text-center p-4 bg-[var(--hive-brand-primary)]/[0.08] border-[var(--hive-brand-primary)]/30 backdrop-blur-xl">
+              <Card className="text-center p-4 bg-[var(--hive-brand-primary)]/[0.08] border-[var(--hive-brand-primary)]/30 backdrop-blur-xl">
                 <p className="text-sm text-[var(--hive-brand-primary)] font-medium">
                   🛠️ Development Mode Active
                 </p>
-              </HiveCard>
+              </Card>
             </motion.div>
           )}
 
@@ -325,7 +323,7 @@ function LoginPageContent() {
                   </p>
                 </div>
 
-                <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+                <Card className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
                   {schoolsLoading ? (
                     <div className="space-y-4">
                       <div className="flex items-center justify-center py-8">
@@ -357,7 +355,7 @@ function LoginPageContent() {
                       ))}
                     </div>
                   )}
-                </HiveCard>
+                </Card>
               </motion.div>
             )}
 
@@ -379,14 +377,14 @@ function LoginPageContent() {
                   </p>
                 </div>
 
-                <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+                <Card className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                       <div>
                         <label htmlFor="email" className="block text-sm font-medium text-white mb-3">
                           School email address
                         </label>
-                        <HiveInput
+                        <Input
                           id="email"
                           type="email"
                           value={formData.email}
@@ -397,8 +395,7 @@ function LoginPageContent() {
                           autoComplete="email"
                           autoFocus
                           variant={error ? 'destructive' : 'default'}
-                          size="lg"
-                          className="w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50 focus:ring-[var(--hive-brand-primary)]/20 text-white placeholder-white/40"
+                          className="max-w-lg w-full bg-white/[0.03] border-white/[0.15] focus:border-[var(--hive-brand-primary)]/50 focus:ring-[var(--hive-brand-primary)]/20 text-white placeholder-white/40"
                           data-testid="email-input"
                         />
                       </div>
@@ -426,12 +423,11 @@ function LoginPageContent() {
                       )}
                     </AnimatePresence>
 
-                    <HiveButton
+                    <Button
                       type="submit"
                       disabled={isLoading || !formData.email || !!error}
-                      variant="primary"
-                      size="lg"
-                      className="w-full"
+                      variant="default"
+                      className="max-w-lg w-full"
                       data-testid="send-magic-link-button"
                     >
                       {isLoading ? (
@@ -442,9 +438,9 @@ function LoginPageContent() {
                       ) : (
                         'Send magic link'
                       )}
-                    </HiveButton>
+                    </Button>
                   </form>
-                </HiveCard>
+                </Card>
               </motion.div>
             )}
           </AnimatePresence>
@@ -452,12 +448,12 @@ function LoginPageContent() {
       </div>
 
       {/* Success Modal with Recovery Options */}
-      <HiveModal
+      <Dialog
         open={success}
         onOpenChange={() => setSuccess(false)}
-        size="sm"
+        className="max-w-sm"
       >
-        <HiveModalContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
+        <DialogContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
           <motion.div
             className="text-center space-y-6"
             initial={{ opacity: 0, y: 20 }}
@@ -484,7 +480,7 @@ function LoginPageContent() {
 
               {/* Development mode - show the magic link */}
               {devMagicLink && selectedSchool?.domain === 'test.edu' && (
-                <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
+                <Card className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
                   <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                     🛠️ Development Mode - Magic Link:
                   </p>
@@ -494,33 +490,31 @@ function LoginPageContent() {
                   >
                     {devMagicLink}
                   </a>
-                </HiveCard>
+                </Card>
               )}
             </div>
 
             <div className="space-y-3 pt-2">
               {devMagicLink && selectedSchool?.domain === 'test.edu' && (
-                <HiveButton
-                  variant="primary"
-                  size="lg"
-                  className="w-full"
+                <Button
+                  variant="default"
+                  className="max-w-lg w-full"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
-                </HiveButton>
+                </Button>
               )}
 
-              <HiveButton
-                variant="primary"
-                size="lg"
-                className="w-full"
+              <Button
+                variant="default"
+                className="max-w-lg w-full"
                 onClick={() => {
                   setSuccess(false);
                   setDevMagicLink(null);
                 }}
               >
                 Close
-              </HiveButton>
+              </Button>
 
               <div className="pt-2 border-t border-white/[0.08]">
                 <p className="text-xs text-white/50 mb-2">
@@ -536,8 +530,8 @@ function LoginPageContent() {
               </div>
             </div>
           </motion.div>
-        </HiveModalContent>
-      </HiveModal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

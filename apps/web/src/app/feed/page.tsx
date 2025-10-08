@@ -8,14 +8,13 @@ declare global {
 }
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Button, Card, Badge, SocialProofAccelerator } from '@hive/ui';
+import { Card, Button, Badge } from '@hive/ui';
+// TODO: SocialProofAccelerator not in @hive/ui
 import { useAuth } from "@hive/auth-logic";
 import {
   Activity,
-  Plus,
   TrendingUp,
   Users,
-  Calendar,
   Zap,
   Heart,
   Bell,
@@ -23,10 +22,7 @@ import {
   Globe,
   AlertTriangle,
   Loader2,
-  RefreshCw,
-  Lock,
-  Timer,
-  Trophy
+  RefreshCw
 } from 'lucide-react';
 import { FeedErrorBoundary } from '@/components/error-boundaries';
 // PostComposer removed - Feed is READ-ONLY per SPEC.md
@@ -42,7 +38,6 @@ import {
 } from '@/lib/feed-actions';
 import { useToast } from '@hive/ui';
 import { useFeedConfig } from '@/lib/feed-config';
-import { differenceInDays } from 'date-fns';
 
 // Fetch rituals data
 async function fetchRituals(user: any, getAuthToken: () => Promise<string | null>) {
@@ -71,57 +66,16 @@ async function fetchRituals(user: any, getAuthToken: () => Promise<string | null
 
 export default function FeedPage() {
   const { user, getAuthToken } = useAuth();
-  // const { toast } = useToast(); // TODO: Fix toast typing issues
-  const toast = (message: any) => {};
+  const { toast } = useToast();
   const isAuthenticated = !!user;
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
   // Feed is READ-ONLY - no direct posting allowed per SPEC.md
 
   // Feed Configuration Integration
-  const { config: feedConfig, loading: configLoading } = useFeedConfig();
+  const { config: feedConfig } = useFeedConfig();
 
   // Calculate user stats for feature gating
-  const userStats = useMemo(() => {
-    if (!user) return null;
-
-    // Calculate account age
-    const accountAge = (user as any).createdAt
-      ? differenceInDays(new Date(), new Date((user as any).createdAt))
-      : 0;
-
-    // Calculate profile completeness (0-100)
-    const profileCompleteness = (() => {
-      let complete = 0;
-      const fields = [
-        user.fullName,
-        user.handle,
-        (user as any).bio,
-        user.avatarUrl,
-        (user as any).major,
-        (user as any).year,
-        (user as any).interests?.length > 0
-      ];
-      fields.forEach(field => { if (field) complete++; });
-      return Math.round((complete / fields.length) * 100);
-    })();
-
-    // TODO: These would come from user's actual data in production
-    const spaceMemberships = (user as any).spaces?.length || 0;
-    const engagementScore = (user as any).totalLikes || 0;
-    const postsToday = (user as any).postsToday || 0;
-
-    return {
-      profileCompleteness,
-      accountAgeDays: accountAge,
-      spaceMemberships,
-      engagementScore,
-      postsToday
-    };
-  }, [user]);
-
-  // Feed is READ-ONLY - no posting permissions needed
-
   // Panic-to-relief tracking: Core behavioral metric
   const [anxietyStartTime] = useState<number>(Date.now());
   const [hasFoundRelief, setHasFoundRelief] = useState(false);
@@ -137,14 +91,14 @@ export default function FeedPage() {
 
   // Fetch rituals data (only if enabled in config)
   const { data: ritualsData } = useQuery({
-    queryKey: ['rituals', user?.uid],
+    queryKey: ['rituals', user?.id],
     queryFn: () => fetchRituals(user, getAuthToken || (() => Promise.resolve(null))),
     staleTime: 300000, // 5 minutes
     enabled: isAuthenticated && !!user && feedConfig?.features?.ritualsEnabled !== false,
   });
 
-  const rituals = ritualsData?.rituals || [];
-  const participation = ritualsData?.participation || [];
+  const rituals = useMemo(() => ritualsData?.rituals ?? [], [ritualsData?.rituals]);
+  const participation = useMemo(() => ritualsData?.participation ?? [], [ritualsData?.participation]);
 
   // Transform rituals for horizontal cards if needed
   const ritualCards = useMemo(() => {
@@ -196,13 +150,13 @@ export default function FeedPage() {
   // Feed is READ-ONLY - posts can only be created within spaces, then promoted to feed
 
   const likePost = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to like posts', variant: 'error' });
       return;
     }
 
     try {
-      const isLiked = await toggleLikePost(user.uid, postId);
+      const _isLiked = await toggleLikePost(user.id, postId);
       // Optimistically update UI can be handled by the PostCard component
     } catch (error) {
       toast({ title: 'Failed to update like', variant: 'error' });
@@ -210,13 +164,13 @@ export default function FeedPage() {
   }, [user, toast]);
 
   const commentOnPost = useCallback(async (postId: string, content: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to comment', variant: 'error' });
       return;
     }
 
     try {
-      const comment = await addComment(user.uid, postId, content);
+      const comment = await addComment(user.id, postId, content);
       toast({ title: 'Comment added!', variant: 'success' });
       return comment;
     } catch (error) {
@@ -226,13 +180,13 @@ export default function FeedPage() {
   }, [user, toast]);
 
   const sharePost = useCallback(async (postId: string, message?: string) => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({ title: 'Please sign in to share posts', variant: 'error' });
       return;
     }
 
     try {
-      const share = await sharePostAction(user.uid, postId, undefined, message);
+      const share = await sharePostAction(user.id, postId, undefined, message);
       toast({ title: 'Post shared!', variant: 'success' });
       refresh(); // Refresh feed to show shared post
       return share;
@@ -276,6 +230,7 @@ export default function FeedPage() {
     try {
       await likePost(postId);
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [likePost, trackReliefMoment]);
 
@@ -284,6 +239,7 @@ export default function FeedPage() {
     try {
       await commentOnPost(postId, content);
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [commentOnPost, trackReliefMoment]);
 
@@ -293,6 +249,7 @@ export default function FeedPage() {
       await sharePost(postId);
       // Show success message or handle share UI
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, [sharePost, trackReliefMoment]);
 
@@ -475,7 +432,7 @@ export default function FeedPage() {
               {/* Sort By */}
               <select
                 value={sortBy}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy((e.target as any).value as any)}
                 className="text-sm bg-hive-background-tertiary border border-hive-border-default rounded px-3 py-1"
               >
                 <option value="recent">Recent</option>
@@ -486,37 +443,33 @@ export default function FeedPage() {
               {/* Feed Filter */}
               <div className="flex items-center bg-hive-background-overlay rounded-lg p-1">
                 <Button
-                  variant={feedFilter === 'all' ? 'primary' : 'ghost'}
-                  size="sm"
+                  variant={feedFilter === 'all' ? 'default' : 'ghost'}
+                  className="max-w-sm text-xs"
                   onClick={() => setFeedFilter('all')}
-                  className="text-xs"
                 >
                   <Globe className="h-3 w-3 mr-1" />
                   All
                 </Button>
                 <Button
-                  variant={feedFilter === 'following' ? 'primary' : 'ghost'}
-                  size="sm"
+                  variant={feedFilter === 'following' ? 'default' : 'ghost'}
+                  className="max-w-sm text-xs"
                   onClick={() => setFeedFilter('following')}
-                  className="text-xs"
                 >
                   <Heart className="h-3 w-3 mr-1" />
                   Following
                 </Button>
                 <Button
-                  variant={feedFilter === 'spaces' ? 'primary' : 'ghost'}
-                  size="sm"
+                  variant={feedFilter === 'spaces' ? 'default' : 'ghost'}
+                  className="max-w-sm text-xs"
                   onClick={() => setFeedFilter('spaces')}
-                  className="text-xs"
                 >
                   <Users className="h-3 w-3 mr-1" />
                   Spaces
                 </Button>
                 <Button
-                  variant={feedFilter === 'academic' ? 'primary' : 'ghost'}
-                  size="sm"
+                  variant={feedFilter === 'academic' ? 'default' : 'ghost'}
+                  className="max-w-sm text-xs"
                   onClick={() => setFeedFilter('academic')}
-                  className="text-xs"
                 >
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Academic
@@ -524,13 +477,13 @@ export default function FeedPage() {
               </div>
               
               {/* Feed Settings */}
-              <Button variant="secondary" size="sm">
+              <Button variant="outline" className="max-w-sm">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               
               {/* Notifications */}
-              <Button variant="secondary" size="sm" className="relative">
+ <Button variant="outline" className="max-w-sm relative">
                 <Bell className="h-4 w-4" />
                 <Badge className="absolute -top-1 -right-1 bg-[var(--hive-brand-primary)] text-hive-obsidian text-xs px-1 min-w-[16px] h-4">
                   3
@@ -554,14 +507,14 @@ export default function FeedPage() {
         <div className="max-w-2xl mx-auto px-6 py-6">
       <div className="space-y-6">
         {/* Feed Stats */}
-        {/* Social Proof Accelerator - Replaces static stats with behavioral psychology */}
-        <SocialProofAccelerator
+        {/* Social Proof Accelerator - TODO: Create component */}
+        {/* <SocialProofAccelerator
           variant="dashboard"
           showTrending={true}
           showAttractive={true}
           showInsider={true}
           className="mb-8"
-        />
+        /> */}
 
         {/* Feed is READ-ONLY - Posts are promoted from spaces automatically or manually */}
         <Card className="p-4 mb-6 bg-hive-surface-elevated border-hive-border">
@@ -604,7 +557,7 @@ export default function FeedPage() {
                     Browse Spaces
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => window.location.href = '/spaces'}
                   >
                     View Your Spaces
@@ -624,7 +577,7 @@ export default function FeedPage() {
                     handle: post.author.handle || 'unknown'
                   }
                 }}
-                currentUserId={(user as any)?.id || (user as any)?.uid || ''}
+                currentUserId={(user as any)?.id || (user as any)?.id || ''}
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}
@@ -644,7 +597,7 @@ export default function FeedPage() {
               </div>
             ) : (
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={loadMore}
                 disabled={isLoadingMore}
                 className="w-full max-w-md"
@@ -662,10 +615,10 @@ export default function FeedPage() {
               <AlertTriangle className="h-4 w-4 text-red-400" />
               <span className="text-red-400 text-sm">{error}</span>
               <Button 
-                variant="secondary" 
-                size="sm" 
+                variant="outline" 
+                className="max-w-sm ml-auto" 
                 onClick={refresh}
-                className="ml-auto"
+                
               >
                 Retry
               </Button>

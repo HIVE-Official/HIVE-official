@@ -2,7 +2,6 @@
   "files": [],
   "references": [
     { "path": "./apps/web/tsconfig.json" },
-    { "path": "./apps/admin/tsconfig.json" },
     { "path": "./packages/ui/tsconfig.json" },
     { "path": "./packages/core/tsconfig.json" },
     { "path": "./packages/auth-logic/tsconfig.json" },
@@ -19,6 +18,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
+      "@hive/ui": ["packages/ui/index.ts"],
       "@hive/auth-logic/*": ["packages/auth-logic/src/*"],
       "@hive/core/*": ["packages/core/src/*"],
       "@hive/hooks/*": ["packages/hooks/src/*"],
@@ -32,4 +32,4 @@
       "@hive/i18n/*": ["packages/i18n/src/*"]
     }
   }
-} 
+}

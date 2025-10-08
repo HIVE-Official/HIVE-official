@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         logger.info('✅ Granted builder rights for space', {  requestData: requestData.spaceId  });
 
       } catch (error) {
-        logger.error('Error granting builder rights', { error: error instanceof Error ? error : new Error(String(error))});
+        logger.error('Error granting builder rights', { error });
         // Revert request status if granting rights failed
         await requestRef.update({
           status: 'pending',
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error: any) {
-    logger.error('Review builder request error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Review builder request error', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
+        adminUserId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -289,7 +289,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Get builder requests error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Get builder requests error', { error });
     return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

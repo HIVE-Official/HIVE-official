@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalContent, HiveModalFooter, Button, HiveInput, Badge } from "@hive/ui";
+import { Dialog, DialogContent, Button, Input, Badge } from "@hive/ui";
+import { HiveModalHeader, HiveModalTitle, HiveModalFooter } from "@/components/temp-stubs";
 import { 
   MapPin, 
   Users, 
@@ -210,14 +211,14 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
   };
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={onClose}
     >
       <HiveModalHeader>
         <HiveModalTitle>Create Event - {getStepTitle(step)}</HiveModalTitle>
       </HiveModalHeader>
-      <HiveModalContent>
+      <DialogContent>
         <div className="space-y-6">
         {/* Progress Indicator */}
         <div className="flex items-center justify-between mb-6">
@@ -245,9 +246,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <Type className="inline h-4 w-4 mr-1" />
                 Event Title
               </label>
-              <HiveInput
+              <Input
                 value={formData.title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('title', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('title', (e.target as any).value)}
                 placeholder="Enter event title..."
                 className="w-full"
                 maxLength={100}
@@ -261,7 +262,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('description', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleInputChange('description', (e.target as any).value)}
                 placeholder="Describe your event, what to expect, and any important details..."
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none resize-none"
                 rows={4}
@@ -308,7 +309,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.start}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'start', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'start', (e.target as any).value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   min={new Date().toISOString().slice(0, 16)}
                 />
@@ -322,7 +323,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <input
                   type="datetime-local"
                   value={formData.datetime.end}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'end', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('datetime', 'end', (e.target as any).value)}
                   className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   min={formData.datetime.start || new Date().toISOString().slice(0, 16)}
                 />
@@ -333,7 +334,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
               <label className="block text-sm font-medium text-white mb-2">Timezone</label>
               <select
                 value={formData.datetime.timezone}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleNestedInputChange('datetime', 'timezone', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleNestedInputChange('datetime', 'timezone', (e.target as any).value)}
                 className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-[var(--hive-brand-primary)] focus:outline-none"
               >
                 <option value="America/New_York">Eastern Time (ET)</option>
@@ -379,9 +380,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 <MapPin className="inline h-4 w-4 mr-1" />
                 Location Name
               </label>
-              <HiveInput
+              <Input
                 value={formData.location.name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'name', e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'name', (e.target as any).value)}
                 placeholder={
                   formData.location.type === 'virtual' 
                     ? 'e.g., Zoom Meeting, Discord Channel'
@@ -394,9 +395,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             {formData.location.type === 'physical' && (
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Full Address</label>
-                <HiveInput
+                <Input
                   value={formData.location.address || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'address', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'address', (e.target as any).value)}
                   placeholder="Enter full address with building and room number..."
                   className="w-full"
                 />
@@ -406,9 +407,9 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             {(formData.location.type === 'virtual' || formData.location.type === 'hybrid') && (
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Virtual Link</label>
-                <HiveInput
+                <Input
                   value={formData.location.virtualLink || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'virtualLink', e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleNestedInputChange('location', 'virtualLink', (e.target as any).value)}
                   placeholder="https://zoom.us/j/... or Discord invite link"
                   className="w-full"
                 />
@@ -426,10 +427,10 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 Event Capacity
               </label>
               <div className="flex items-center space-x-4">
-                <HiveInput
+                <Input
                   type="number"
                   value={formData.capacity.toString()}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('capacity', parseInt(e.target.value) || 0)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('capacity', parseInt((e.target as any).value) || 0)}
                   placeholder="50"
                   className="w-32"
                   min="1"
@@ -463,7 +464,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                       name="visibility"
                       value={vis.id}
                       checked={formData.visibility === vis.id}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('visibility', e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('visibility', (e.target as any).value)}
                       className="mt-1"
                     />
                     <div>
@@ -521,20 +522,20 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
                 Tags
               </label>
               <div className="flex items-center space-x-2 mb-3">
-                <HiveInput
+                <Input
                   value={newTag}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTag(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTag((e.target as any).value)}
                   placeholder="Add a tag..."
                   className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && addTag()}
                 />
-                <Button onClick={addTag} size="sm">
+                <Button onClick={addTag} className="max-w-sm">
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {formData.tags.map((tag) => (
-                  <Badge key={tag} variant="skill-tag" className="flex items-center space-x-1">
+                  <Badge key={tag} variant="secondary" className="flex items-center space-x-1">
                     <span>#{tag}</span>
                     <button onClick={() => removeTag(tag)} className="ml-1">
                       <X className="h-3 w-3" />
@@ -547,14 +548,14 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
             <div>
               <label className="block text-sm font-medium text-white mb-2">Requirements</label>
               <div className="flex items-center space-x-2 mb-3">
-                <HiveInput
+                <Input
                   value={newRequirement}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRequirement(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRequirement((e.target as any).value)}
                   placeholder="e.g., Laptop, Professional attire..."
                   className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && addRequirement()}
                 />
-                <Button onClick={addRequirement} size="sm">
+                <Button onClick={addRequirement} className="max-w-sm">
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -616,7 +617,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
         {/* Navigation Buttons */}
         <div className="flex items-center justify-between pt-6 border-t border-zinc-800">
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => step > 1 ? setStep(step - 1) : onClose()}
           >
             {step > 1 ? 'Previous' : 'Cancel'}
@@ -642,7 +643,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent, defaultSpaceI
           </div>
         </div>
       </div>
-      </HiveModalContent>
-    </HiveModal>
+      </DialogContent>
+    </Dialog>
   );
 }

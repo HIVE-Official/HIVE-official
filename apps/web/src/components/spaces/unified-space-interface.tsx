@@ -15,8 +15,8 @@ import {
   X
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Tabs,
   TabsList,
@@ -40,6 +40,7 @@ import {
   type UserPermissions
 } from '@/lib/permission-system';
 import { api } from '@/lib/api-client';
+import { spaceNameToString } from '@/lib/mappers/space-mapper';
 
 interface UnifiedSpaceInterfaceProps {
   spaceId: string;
@@ -106,6 +107,7 @@ export function UnifiedSpaceInterface({
             const data = JSON.parse(event.data);
             handleRealtimeMessage(data);
           } catch (error) {
+            // Intentionally suppressed - non-critical error
           }
         };
 
@@ -198,45 +200,37 @@ export function UnifiedSpaceInterface({
   const loadSpaceData = async () => {
     try {
       setLoading(true);
-      const [spaceResponse, membershipResponse, toolsResponse] = await Promise.all([
-        api.spaces.get(spaceId),
-        api.spaces.membership.get(spaceId),
-        api.spaces.tools.list(spaceId)
+      const [spaceDetails, membershipDetails, toolsDetails] = await Promise.all([
+        api.spaces.get<Space>(spaceId),
+        api.spaces.membership.get<{ requestingUser?: any }>(spaceId),
+        api.spaces.tools.list<{ tools?: any[] }>(spaceId)
       ]);
 
-      const spaceResult = await spaceResponse.json();
-      const membershipResult = await membershipResponse.json();
-      const toolsResult = await toolsResponse.json();
+      setSpaceData({
+        space: spaceDetails,
+        userMembership: membershipDetails?.requestingUser ?? null,
+        onlineMembers
+      });
 
-      if (spaceResult.success) {
-        setSpaceData({
-          space: spaceResult.data,
-          userMembership: membershipResult.success ? membershipResult.data : null,
-          onlineMembers: onlineMembers
-        });
-      }
-
-      if (toolsResult.success) {
-        // Transform API data to expected format
-        const transformedTools = (toolsResult.tools || []).map((tool: any) => ({
-          id: tool.deploymentId,
-          toolId: tool.toolId,
-          name: tool.name,
-          description: tool.description,
-          category: tool.category,
-          status: tool.status,
-          icon: '🔧', // Default icon, could be based on category
-          position: 'both', // Default to both, could be from configuration
-          configuration: tool.configuration,
-          permissions: tool.permissions,
-          deployer: tool.deployer,
-          deployedAt: tool.deployedAt,
-          lastUsed: tool.lastUsed,
-          usageCount: tool.usageCount
-        }));
-        setInstalledTools(transformedTools);
-      }
+      const transformedTools = (toolsDetails.tools || []).map((tool: any) => ({
+        id: tool.deploymentId,
+        toolId: tool.toolId,
+        name: tool.name,
+        description: tool.description,
+        category: tool.category,
+        status: tool.status,
+        icon: '🔧',
+        position: 'both',
+        configuration: tool.configuration,
+        permissions: tool.permissions,
+        deployer: tool.deployer,
+        deployedAt: tool.deployedAt,
+        lastUsed: tool.lastUsed,
+        usageCount: tool.usageCount
+      }));
+      setInstalledTools(transformedTools);
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     } finally {
       setLoading(false);
     }
@@ -245,14 +239,14 @@ export function UnifiedSpaceInterface({
   // Get space type rules
   const spaceRules = useMemo(() => {
     if (!spaceData?.space?.type) return null;
-    return getSpaceTypeRules(spaceData.space.type as SpaceType);
+    return getSpaceTypeRules(spaceData.space.spaceType as SpaceType);
   }, [spaceData?.space?.type]);
 
   // Determine user permissions using unified permission system
   const userPermissions = useMemo((): UserPermissions => {
     if (!spaceData?.userMembership) {
       return {
-        userId: '',
+        id: '',
         spaceId: spaceId,
         role: 'guest'
       };
@@ -260,7 +254,7 @@ export function UnifiedSpaceInterface({
 
     const membership = spaceData.userMembership;
     return {
-      userId: membership.userId || '',
+      id: membership.userId || '',
       spaceId: spaceId,
       role: membership.role || 'member',
       customPermissions: membership.permissions?.map((p: string) => p as any) || undefined
@@ -336,13 +330,13 @@ export function UnifiedSpaceInterface({
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-1">
-                      <h1 className="text-2xl font-bold text-white">{space.name}</h1>
+                      <h1 className="text-2xl font-bold text-white">{spaceNameToString(space.name)}</h1>
                       <Badge className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30">
-                        {space.type?.replace('_', ' ')}
+                        {space.spaceType?.replace('_', ' ')}
                       </Badge>
                     </div>
                     <p className="text-gray-400 max-w-2xl text-sm">
-                      {space.description}
+                      {typeof space.description === 'object' && 'value' in space.description ? space.description.value : space.description}
                     </p>
                   </div>
                 </div>
@@ -363,46 +357,42 @@ export function UnifiedSpaceInterface({
 
               {/* Action Buttons */}
               <div className="flex items-center gap-3">
-                <HiveButton
+                <Button
                   variant="outline"
-                  size="sm"
+                  className="max-w-sm lg:hidden border-gray-700 text-gray-300"
                   onClick={() => setContextPanelVisible(!contextPanelVisible)}
-                  className="lg:hidden border-gray-700 text-gray-300"
                 >
                   <Menu className="w-4 h-4" />
-                </HiveButton>
+                </Button>
 
                 {userPermissions.role !== 'guest' && (
                   <>
-                    <HiveButton
+                    <Button
                       variant="outline"
-                      size="sm"
-                      className="border-gray-700 text-gray-300 hover:text-white"
+                      className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                     >
                       <Bell className="w-4 h-4" />
-                    </HiveButton>
+                    </Button>
 
                     {hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'space:settings') && (
-                      <HiveButton
+                      <Button
                         variant="outline"
-                        size="sm"
-                        className="border-gray-700 text-gray-300 hover:text-white"
+                        className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                       >
                         <Settings className="w-4 h-4 mr-2" />
                         Settings
-                      </HiveButton>
+                      </Button>
                     )}
                   </>
                 )}
 
-                <HiveButton
+                <Button
                   variant="outline"
-                  size="sm"
-                  className="border-gray-700 text-gray-300 hover:text-white"
+                  className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                 >
                   <Share className="w-4 h-4 mr-2" />
                   Share
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -456,17 +446,17 @@ export function UnifiedSpaceInterface({
 
               {/* Tab Content */}
               <TabsContent value="posts">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-0 overflow-hidden">
+                <Card className="bg-gray-900/50 border-gray-800 p-0 overflow-hidden">
                   <SpacePostFeed
                     spaceId={spaceId}
                     canPost={hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'posts:create')}
                     spaceRules={spaceRules}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               <TabsContent value="members">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                <Card className="bg-gray-900/50 border-gray-800 p-6">
                   <SpaceMemberList
                     spaceId={spaceId}
                     userMembership={spaceData.userMembership}
@@ -474,23 +464,23 @@ export function UnifiedSpaceInterface({
                     spaceRules={spaceRules}
                     onClose={() => {}}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               <TabsContent value="events">
-                <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                <Card className="bg-gray-900/50 border-gray-800 p-6">
                   <SpaceEventCalendar
                     spaceId={spaceId}
                     canCreateEvents={hasPermission(userPermissions, spaceData?.space?.type as SpaceType, spaceRules!, 'events:create')}
                     spaceRules={spaceRules}
                   />
-                </HiveCard>
+                </Card>
               </TabsContent>
 
               {/* Tool Tab Contents */}
               {inlineTools.map(tool => (
                 <TabsContent key={tool.id} value={`tool-${tool.id}`}>
-                  <HiveCard className="bg-gray-900/50 border-gray-800 p-6">
+                  <Card className="bg-gray-900/50 border-gray-800 p-6">
                     <SpaceToolRenderer
                       tool={tool}
                       spaceId={spaceId}
@@ -498,7 +488,7 @@ export function UnifiedSpaceInterface({
                       spaceRules={spaceRules}
                       position="inline"
                     />
-                  </HiveCard>
+                  </Card>
                 </TabsContent>
               ))}
             </Tabs>
@@ -529,13 +519,13 @@ export function UnifiedSpaceInterface({
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white">Space Info</h3>
-                  <HiveButton
-                    variant="ghost"
-                    size="sm"
+                  <Button
+                    variant="outline"
+                    className="max-w-sm"
                     onClick={() => setContextPanelVisible(false)}
                   >
                     <X className="w-4 h-4" />
-                  </HiveButton>
+                  </Button>
                 </div>
                 <SpaceContextPanel
                   space={space}

@@ -6,6 +6,7 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { nanoid } from 'nanoid';
 import type { NextRequest, NextResponse } from 'next/server';
+import type { SessionData } from "@hive/core";
 
 // Session configuration
 const SESSION_SECRET = process.env.SESSION_SECRET || 'hive-session-secret-2025-buffalo';
@@ -15,16 +16,6 @@ const ADMIN_SESSION_MAX_AGE = 4 * 60 * 60; // 4 hours for admin sessions
 
 // Convert secret to key
 const secret = new TextEncoder().encode(SESSION_SECRET);
-
-export interface SessionData {
-  userId: string;
-  email: string;
-  campusId: string;
-  isAdmin?: boolean;
-  verifiedAt: string;
-  sessionId: string;
-  csrf?: string; // CSRF token for admin sessions
-}
 
 /**
  * Create a signed JWT session token
@@ -37,7 +28,7 @@ export async function createSession(data: Omit<SessionData, 'sessionId' | 'verif
     csrf: data.isAdmin ? nanoid() : undefined, // Add CSRF token for admins
   };
 
-  const token = await new SignJWT(sessionData as any)
+  const token = await new SignJWT(sessionData as Record<string, unknown>)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(data.isAdmin ? ADMIN_SESSION_MAX_AGE + 's' : SESSION_MAX_AGE + 's')

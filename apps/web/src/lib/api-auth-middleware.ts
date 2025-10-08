@@ -40,7 +40,7 @@ export async function validateApiAuth(
       ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
       userAgent: request.headers.get('user-agent') || undefined,
       path: new URL(request.url).pathname,
-      operation: operation || '',
+      action: operation || '',
       tags: { reason: 'missing_auth_header' }
     });
 
@@ -81,7 +81,7 @@ export async function validateApiAuth(
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         path: new URL(request.url).pathname,
-        operation: operation || '',
+      operation: operation || '',
         tags: { userId: validation.userId || '', reason: 'insufficient_permissions' }
       });
 
@@ -118,7 +118,7 @@ export async function validateApiAuth(
           }
         };
       } else {
-        console.warn(`⚠️ Development bypass denied for sensitive operation: ${operation}`);
+        console.warn(`⚠️ Development bypass denied for sensitive action: ${operation}`);
         throw new Response(
           JSON.stringify({ error: 'Real authentication required for this operation' }),
           { status: 401, headers: { 'content-type': 'application/json' } }
@@ -229,10 +229,11 @@ export function withAuthAndErrors<T extends any[]>(
 
       // Handle various error types
       if (error && typeof error === 'object' && 'status' in error) {
+        const typedError = error as { status: number; message?: string; code?: string };
         return ApiResponse.error(
-          error.message || 'Operation failed',
-          error.code || 'UNKNOWN_ERROR',
-          error.status as number || 500
+          typedError.message || 'Operation failed',
+          typedError.code || 'UNKNOWN_ERROR',
+          typedError.status || 500
         );
       }
 

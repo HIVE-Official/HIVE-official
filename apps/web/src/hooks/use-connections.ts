@@ -28,7 +28,7 @@ interface ConnectionsState {
     averageStrength: number;
   };
   isLoading: boolean;
-  error: Error | null;
+  error: any | null;
 }
 
 interface UseConnectionsReturn extends ConnectionsState {
@@ -129,124 +129,104 @@ export function useConnections(): UseConnectionsReturn {
   const detectConnections = useCallback(async () => {
     if (!user) return;
 
-    try {
-      const response = await fetch('/api/connections', {
-        method: 'POST',
-        credentials: 'include'
-      });
+    const response = await fetch('/api/connections', {
+      method: 'POST',
+      credentials: 'include'
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to detect connections');
-      }
-
-      const result = await response.json();
-
-      // Refresh connections list
-      await fetchConnections();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to detect connections');
     }
+
+    const result = await response.json();
+
+    // Refresh connections list
+    await fetchConnections();
   }, [user, fetchConnections]);
 
   // Send friend request
   const sendFriendRequest = useCallback(async (toUserId: string, message?: string) => {
     if (!user) throw new Error('Not authenticated');
 
-    try {
-      const response = await fetch('/api/friends', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ toUserId, message })
-      });
+    const response = await fetch('/api/friends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ toUserId, message })
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to send friend request');
-      }
-
-      // Refresh friends list
-      await fetchConnections();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to send friend request');
     }
+
+    // Refresh friends list
+    await fetchConnections();
   }, [user, fetchConnections]);
 
   // Accept friend request
   const acceptFriendRequest = useCallback(async (requestId: string) => {
     if (!user) throw new Error('Not authenticated');
 
-    try {
-      const response = await fetch('/api/friends', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ requestId, action: 'accept' })
-      });
+    const response = await fetch('/api/friends', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ requestId, action: 'accept' })
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to accept friend request');
-      }
-
-      // Refresh friends list
-      await fetchConnections();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to accept friend request');
     }
+
+    // Refresh friends list
+    await fetchConnections();
   }, [user, fetchConnections]);
 
   // Reject friend request
   const rejectFriendRequest = useCallback(async (requestId: string) => {
     if (!user) throw new Error('Not authenticated');
 
-    try {
-      const response = await fetch('/api/friends', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({ requestId, action: 'reject' })
-      });
+    const response = await fetch('/api/friends', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ requestId, action: 'reject' })
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to reject friend request');
-      }
-
-      // Refresh friends list
-      await fetchConnections();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to reject friend request');
     }
+
+    // Refresh friends list
+    await fetchConnections();
   }, [user, fetchConnections]);
 
   // Unfriend
   const unfriend = useCallback(async (friendId: string) => {
     if (!user) throw new Error('Not authenticated');
 
-    try {
-      const response = await fetch(`/api/friends/${friendId}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
+    const response = await fetch(`/api/friends/${friendId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to unfriend');
-      }
-
-      // Refresh friends list
-      await fetchConnections();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to unfriend');
     }
+
+    // Refresh friends list
+    await fetchConnections();
   }, [user, fetchConnections]);
 
   // Utility functions

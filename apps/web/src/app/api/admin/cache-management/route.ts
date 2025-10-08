@@ -2,7 +2,7 @@
 // Provides comprehensive cache monitoring, analytics, and management capabilities
 
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 import { requireAdminRole } from '@/lib/admin-auth';
 import { cacheService } from '@/lib/cache/cache-service';
 import { redisCache } from '@/lib/cache/redis-client';
@@ -29,7 +29,7 @@ interface CacheManagementData {
     };
     memoryBreakdown: Record<string, any>;
     slowQueries: Array<{
-      operation: string;
+      action: string;
       key: string;
       responseTime: number;
       timestamp: number;
@@ -82,7 +82,7 @@ export const GET = withAuthAndErrors(async (request, context) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  await requireAdminRole(context.userId);
+  await requireAdminRole(Array.isArray(context.userId) ? context.userId[0] : context.userId);
 
   try {
     const url = new URL(request.url);
@@ -114,13 +114,13 @@ export const GET = withAuthAndErrors(async (request, context) => {
     // Mock additional performance data (would come from Redis monitoring in production)
     const slowQueries = [
       {
-        operation: 'GET',
+        action: 'GET',
         key: 'spaces:ub-buffalo:large-space-data',
         responseTime: 850,
         timestamp: Date.now() - 300000
       },
       {
-        operation: 'MGET',
+        action: 'MGET',
         key: 'users:ub-buffalo:bulk-lookup',
         responseTime: 720,
         timestamp: Date.now() - 600000
@@ -332,7 +332,7 @@ export const GET = withAuthAndErrors(async (request, context) => {
     return NextResponse.json(cacheManagementData);
 
   } catch (error) {
-    logger.error('Cache management API error:', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Cache management API error:', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch cache management data' },
       { status: 500 }
@@ -345,7 +345,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  await requireAdminRole(context.userId);
+  await requireAdminRole(Array.isArray(context.userId) ? context.userId[0] : context.userId);
 
   try {
     const body = await request.json();
@@ -467,7 +467,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
     return NextResponse.json({ success: true, result });
 
   } catch (error) {
-    logger.error('Cache management action error:', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Cache management action error:', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to execute cache management action' },
       { status: 500 }

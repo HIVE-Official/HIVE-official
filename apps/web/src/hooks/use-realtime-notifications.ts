@@ -81,7 +81,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
 
   // Real-time Firebase listener
   useEffect(() => {
-    if (!user?.uid) {
+    if (!user?.id) {
       setState(prev => ({ ...prev, loading: false, notifications: [], unreadCount: 0 }));
       return;
     }
@@ -91,7 +91,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
     // Query for user's notifications (campus-isolated)
     const notificationsQuery = query(
       collection(db, 'notifications'),
-      where('userId', '==', user.uid),
+      where('userId', '==', user.id),
       where('campusId', '==', 'ub-buffalo'), // Campus isolation for vBETA
       orderBy('timestamp', 'desc'),
       limit(50) // Recent notifications only
@@ -126,11 +126,11 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
           logger.info('Notifications updated', {
             count: notifications.length,
             unreadCount,
-            userId: user.uid
+            userId: user.id
           });
 
         } catch (error) {
-          logger.error('Error processing notifications', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
+          logger.error('Error processing notifications', { error: error instanceof Error ? error.message : String(error), userId: user.id });
           setState(prev => ({
             ...prev,
             loading: false,
@@ -139,7 +139,7 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         }
       },
       (error) => {
-        logger.error('Notifications listener error', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
+        logger.error('Notifications listener error', { error: error instanceof Error ? error.message : String(error), userId: user.id });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -151,11 +151,11 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
     return () => {
       unsubscribe();
     };
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Mark single notification as read
   const markAsRead = useCallback(async (notificationId: string) => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     try {
       const notificationRef = doc(db, 'notifications', notificationId);
@@ -164,16 +164,16 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         readAt: Timestamp.now(),
       });
 
-      logger.info('Notification marked as read', { notificationId, userId: user.uid });
+      logger.info('Notification marked as read', { notificationId, userId: user.id });
     } catch (error) {
-      logger.error('Error marking notification as read', { error: error instanceof Error ? error : new Error(String(error)), notificationId, userId: user.uid });
+      logger.error('Error marking notification as read', { error: error instanceof Error ? error.message : String(error), notificationId, userId: user.id });
       throw error;
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Mark all notifications as read
   const markAllAsRead = useCallback(async () => {
-    if (!user?.uid || state.unreadCount === 0) return;
+    if (!user?.id || state.unreadCount === 0) return;
 
     try {
       const batch = writeBatch(db);
@@ -191,17 +191,17 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
 
       logger.info('All notifications marked as read', {
         count: unreadNotifications.length,
-        userId: user.uid
+        userId: user.id
       });
     } catch (error) {
-      logger.error('Error marking all notifications as read', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
+      logger.error('Error marking all notifications as read', { error: error instanceof Error ? error.message : String(error), userId: user.id });
       throw error;
     }
-  }, [user?.uid, state.notifications, state.unreadCount]);
+  }, [user?.id, state.notifications, state.unreadCount]);
 
   // Delete single notification
   const deleteNotification = useCallback(async (notificationId: string) => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     try {
       const notificationRef = doc(db, 'notifications', notificationId);
@@ -210,16 +210,16 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
         deletedAt: Timestamp.now(),
       });
 
-      logger.info('Notification deleted', { notificationId, userId: user.uid });
+      logger.info('Notification deleted', { notificationId, userId: user.id });
     } catch (error) {
-      logger.error('Error deleting notification', { error: error instanceof Error ? error : new Error(String(error)), notificationId, userId: user.uid });
+      logger.error('Error deleting notification', { error: error instanceof Error ? error.message : String(error), notificationId, userId: user.id });
       throw error;
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Clear all notifications
   const clearAll = useCallback(async () => {
-    if (!user?.uid || state.notifications.length === 0) return;
+    if (!user?.id || state.notifications.length === 0) return;
 
     try {
       const batch = writeBatch(db);
@@ -236,13 +236,13 @@ export const useRealtimeNotifications = (): NotificationState & NotificationActi
 
       logger.info('All notifications cleared', {
         count: state.notifications.length,
-        userId: user.uid
+        userId: user.id
       });
     } catch (error) {
-      logger.error('Error clearing all notifications', { error: error instanceof Error ? error : new Error(String(error)), userId: user.uid });
+      logger.error('Error clearing all notifications', { error: error instanceof Error ? error.message : String(error), userId: user.id });
       throw error;
     }
-  }, [user?.uid, state.notifications]);
+  }, [user?.id, state.notifications]);
 
   // Force refresh notifications
   const refreshNotifications = useCallback(() => {

@@ -256,8 +256,8 @@ export function ModerationQueue() {
 
         <Button
           onClick={fetchModerationQueue}
-          variant="secondary"
-          size="sm"
+          variant="outline"
+          className="max-w-sm"
           disabled={isLoading}
         >
           <RefreshCw
@@ -417,10 +417,10 @@ export function ModerationQueue() {
                           report.severity
                         )}`}
                       />
-                      <Badge variant="freshman" className="text-xs">
+                      <Badge variant="secondary" className="text-xs">
                         {report.contentType}
                       </Badge>
-                      <Badge variant="freshman" className="text-xs capitalize">
+                      <Badge variant="secondary" className="text-xs capitalize">
                         {report.category.replace("_", " ")}
                       </Badge>
                       <div className="flex items-center space-x-1">
@@ -474,8 +474,8 @@ export function ModerationQueue() {
                   {/* Actions */}
                   <div className="flex items-center space-x-2 ml-4">
                     <Button
-                      variant="secondary"
-                      size="sm"
+                      variant="outline"
+                      className="max-w-sm"
                       onClick={() => {
                         setSelectedReport(report);
                         setIsReviewDialogOpen(true);
@@ -518,8 +518,7 @@ export function ModerationQueue() {
                             })
                           }
                           variant="outline"
-                          size="sm"
-                          className="text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/10"
+                          className="max-w-sm text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/10"
                         >
                           {getActionIcon("warn_user")}
                         </Button>
@@ -532,8 +531,7 @@ export function ModerationQueue() {
                             })
                           }
                           variant="outline"
-                          size="sm"
-                          className="text-orange-400 border-orange-400/50 hover:bg-orange-400/10"
+                          className="max-w-sm text-orange-400 border-orange-400/50 hover:bg-orange-400/10"
                         >
                           {getActionIcon("hide_content")}
                         </Button>
@@ -546,8 +544,7 @@ export function ModerationQueue() {
                             })
                           }
                           variant="outline"
-                          size="sm"
-                          className="text-red-400 border-red-400/50 hover:bg-red-400/10"
+                          className="max-w-sm text-red-400 border-red-400/50 hover:bg-red-400/10"
                         >
                           {getActionIcon("remove_content")}
                         </Button>
@@ -593,7 +590,7 @@ export function ModerationQueue() {
               <Textarea
                 value={actionReason}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setActionReason(e.target.value)
+                  setActionReason((e.target as any).value)
                 }
                 placeholder="Provide a detailed reason for this action..."
                 className="min-h-[80px]"
@@ -607,7 +604,7 @@ export function ModerationQueue() {
               <Textarea
                 value={actionNotes}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setActionNotes(e.target.value)
+                  setActionNotes((e.target as any).value)
                 }
                 placeholder="Any additional context or notes..."
                 className="min-h-[60px]"
@@ -616,7 +613,7 @@ export function ModerationQueue() {
 
             <div className="flex justify-end space-x-3 pt-4">
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() =>
                   setActionDialog({ isOpen: false, report: null, action: "" })
                 }
@@ -683,7 +680,7 @@ function ReportDetailsPanel({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
-                  <Badge variant="freshman">{report.category}</Badge>
+                  <Badge variant="secondary">{report.category}</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Severity:</span>
@@ -788,7 +785,7 @@ function ReportDetailsPanel({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Suggested Action:</span>
-                    <Badge variant="freshman">
+                    <Badge variant="secondary">
                       {report.aiAnalysis.suggestedAction}
                     </Badge>
                   </div>
@@ -830,32 +827,29 @@ function ReportDetailsPanel({
           <Button
             onClick={() => onAction("no_action")}
             variant="outline"
-            size="sm"
+            className="max-w-sm"
           >
             Dismiss
           </Button>
-          <Button
-            onClick={() => onAction("warn_user")}
-            variant="outline"
-            size="sm"
-            className="text-yellow-400"
-          >
+      <Button
+        onClick={() => onAction("warn_user")}
+        variant="outline"
+        className="max-w-sm text-yellow-400"
+      >
             Warn User
           </Button>
-          <Button
-            onClick={() => onAction("hide_content")}
-            variant="outline"
-            size="sm"
-            className="text-orange-400"
-          >
+      <Button
+        onClick={() => onAction("hide_content")}
+        variant="outline"
+        className="max-w-sm text-orange-400"
+      >
             Hide Content
           </Button>
-          <Button
-            onClick={() => onAction("remove_content")}
-            variant="outline"
-            size="sm"
-            className="text-red-400"
-          >
+      <Button
+        onClick={() => onAction("remove_content")}
+        variant="outline"
+        className="max-w-sm text-red-400"
+      >
             Remove Content
           </Button>
         </div>

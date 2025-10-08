@@ -14,14 +14,15 @@ export { ConnectionId } from '../../domain/profile/value-objects/connection-id.v
 
 // Re-export aggregates
 export { EnhancedFeed } from '../../domain/feed/enhanced-feed';
-export { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual';
-export { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
-export { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profile';
+export { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
+// export { Space } from '../../domain/spaces/aggregates/space.aggregate'; // Commented out - using local stub class below
+export { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 export { Connection } from '../../domain/profile/aggregates/connection';
 
 // Re-export entities and types
 export { FeedItem } from '../../domain/feed/feed-item';
-export type { Milestone, Reward } from '../../domain/rituals/aggregates/enhanced-ritual';
+// export type { Milestone, Reward } from '../../domain/rituals/aggregates/ritual.aggregate'; // These types don't exist - use RitualGoal and RitualReward instead
+export type { RitualReward as Reward } from '../../domain/rituals/aggregates/ritual.aggregate';
 
 // Profile utility functions
 export function getProfileCompleteness(profile: any): number {
@@ -84,60 +85,8 @@ export class FeedFilter {
   }
 }
 
-export class Ritual {
-  public participants: number = 0;
-  public isActive: boolean = true;
-  public settings: { isVisible: boolean } = { isVisible: true };
-  public startDate?: Date;
-  public endDate?: Date;
-
-  constructor(
-    public id: string,
-    public name: string,
-    public description: string,
-    public milestones: any[]
-  ) {}
-
-  static create(data: any) {
-    return {
-      isSuccess: true,
-      isFailure: false,
-      getValue: () => {
-        const ritual = new Ritual(data.id, data.name, data.description, data.milestones || []);
-        ritual.participants = data.participants || 0;
-        ritual.isActive = data.isActive !== undefined ? data.isActive : true;
-        ritual.settings = data.settings || { isVisible: true };
-        ritual.startDate = data.startDate;
-        ritual.endDate = data.endDate;
-        return ritual;
-      },
-      error: null
-    };
-  }
-
-  addParticipant(profileId: string) {
-    this.participants++;
-    return { isSuccess: true, isFailure: false };
-  }
-
-  updateMilestoneProgress(milestoneId: string, progress: number) {
-    return { isSuccess: true, isFailure: false };
-  }
-
-  toData() {
-    return {
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      milestones: this.milestones,
-      participants: this.participants,
-      isActive: this.isActive,
-      settings: this.settings,
-      startDate: this.startDate,
-      endDate: this.endDate
-    };
-  }
-}
+// NOTE: Ritual is now exported from domain/rituals/aggregates/ritual.aggregate
+// Legacy wrapper removed - use proper domain model instead
 
 export class Participation {
   public streak: number = 0;
@@ -215,6 +164,7 @@ export class Space {
   public lastActivityAt: Date = new Date();
   public createdAt: Date = new Date();
   public spaceType: string = 'general';
+  public type: SpaceType = SpaceType.GENERAL; // Add type property
   public posts: any[] = [];
   public settings: any = {};
   public members: Array<{ profileId: any; role: string }> = [];
@@ -247,6 +197,7 @@ export class Space {
         space.lastActivityAt = data.lastActivityAt || new Date();
         space.createdAt = data.createdAt || new Date();
         space.spaceType = data.spaceType || 'general';
+        space.type = data.type || SpaceType.GENERAL;
         space.posts = data.posts || [];
         space.settings = data.settings || {};
         space.members = data.members || [];
@@ -308,6 +259,7 @@ export class Space {
       lastActivityAt: this.lastActivityAt,
       createdAt: this.createdAt,
       spaceType: this.spaceType,
+      type: this.type,
       posts: this.posts,
       settings: this.settings,
       members: this.members
@@ -337,6 +289,51 @@ export interface Post {
   isPinned?: boolean;
   visibility?: 'public' | 'members' | 'private';
   campusId: string;
+
+  // Additional properties for content validation and special post types
+  type?: 'default' | 'toolshare' | 'event' | 'poll' | 'image';
+  reactions?: {
+    heart?: number;
+    thumbsUp?: number;
+    celebrate?: number;
+    [key: string]: number | undefined;
+  };
+  reactedUsers?: {
+    [userId: string]: string; // userId -> reactionType
+  };
+  author?: {
+    id: string;
+    displayName?: string;
+    handle?: string;
+    photoURL?: string;
+    role?: 'student' | 'faculty' | 'builder' | 'admin';
+  };
+  richContent?: {
+    mentions?: Array<{
+      type: 'user' | 'tool' | 'space';
+      id: string;
+      displayText: string;
+    }>;
+    hashtags?: string[];
+    links?: string[];
+  };
+  toolShareMetadata?: {
+    toolId: string;
+    toolName: string;
+    shareType: 'created' | 'used' | 'recommended';
+  };
+  pollMetadata?: {
+    question: string;
+    options: string[];
+    votes: { [option: string]: number };
+    endsAt?: Date;
+  };
+  imageMetadata?: {
+    url: string;
+    width?: number;
+    height?: number;
+    alt?: string;
+  };
 }
 
 // School type definition
@@ -381,7 +378,18 @@ export interface User {
   };
 }
 
+// AuthUser type for Firebase User compatibility
+export interface AuthUser extends Omit<User, 'displayName' | 'photoURL'> {
+  uid: string;
+  displayName: string | null | undefined;
+  photoURL: string | null | undefined;
+  campusId: string;
+}
+
 // Tool type definitions
+// NOTE: Tool is now exported from domain/tools/aggregates/tool.aggregate
+// These are kept for backward compatibility during migration
+// TODO: Migrate all usages to domain model
 export interface Tool {
   id: string;
   name: string;

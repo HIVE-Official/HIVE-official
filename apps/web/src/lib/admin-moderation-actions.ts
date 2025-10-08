@@ -210,7 +210,7 @@ export async function moderateContent(
         reportId,
         action
       },
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : String(error)
     } as any);
     throw error;
   }
@@ -236,7 +236,7 @@ export async function getPendingReports(limit = 50) {
     }));
   } catch (error) {
     logger.error('Failed to fetch pending reports', {
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : String(error)
     } as any);
     return [];
   }
@@ -281,7 +281,7 @@ export async function getModerationStats() {
     };
   } catch (error) {
     logger.error('Failed to get moderation stats', {
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : String(error)
     } as any);
     return {
       pending: 0,

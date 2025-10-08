@@ -15,8 +15,8 @@ import {
   Zap
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Avatar,
   AvatarFallback,
@@ -74,17 +74,17 @@ export function SpaceContextPanel({
     <div className="space-y-4">
 
       {/* Quick Space Info */}
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-white">Space Info</h3>
           {userPermissions.isAdmin && (
-            <HiveButton
-              variant="ghost"
-              size="sm"
+            <Button
+              variant="outline"
+              className="max-w-sm"
               onClick={() => onToolInteraction('space-settings', 'open')}
             >
               <Settings className="w-4 h-4" />
-            </HiveButton>
+            </Button>
           )}
         </div>
 
@@ -103,8 +103,8 @@ export function SpaceContextPanel({
 
           {/* Space Type Info */}
           <div className="flex items-center gap-2 text-sm">
-            <Badge variant="outline" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
-              {space.type?.replace('_', ' ') || 'Community'}
+            <Badge variant="secondary" className="border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]">
+              {space.spaceType?.replace('_', ' ') || 'Community'}
             </Badge>
             {space.status === 'activated' && (
               <div className="flex items-center gap-1">
@@ -116,28 +116,28 @@ export function SpaceContextPanel({
 
           {/* Join/Leave Button */}
           {!userPermissions.isMember ? (
-            <HiveButton
+            <Button
               className="w-full bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               onClick={() => onToolInteraction('space-membership', 'join')}
             >
               Join Space
-            </HiveButton>
+            </Button>
           ) : userPermissions.isAdmin ? (
-            <HiveButton
+            <Button
               variant="outline"
               className="w-full border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)]"
               onClick={() => onToolInteraction('space-management', 'open')}
             >
               <Settings className="w-4 h-4 mr-2" />
               Manage Space
-            </HiveButton>
+            </Button>
           ) : null}
         </div>
-      </HiveCard>
+      </Card>
 
       {/* Online Members */}
       {onlineMembers.length > 0 && (
-        <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+        <Card className="bg-gray-900/50 border-gray-800 p-4">
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-semibold text-white flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -171,18 +171,18 @@ export function SpaceContextPanel({
               </div>
             )}
           </div>
-        </HiveCard>
+        </Card>
       )}
 
       {/* Contextual Tools */}
       {contextualTools.length > 0 && (
         <div className="space-y-3">
           {contextualTools.map(tool => (
-            <HiveCard key={tool.id} className="bg-gray-900/50 border-gray-800 p-4">
+            <Card key={tool.id} className="bg-gray-900/50 border-gray-800 p-4">
               <SpaceToolRenderer
                 tool={tool}
                 spaceId={space.id}
-                spaceType={space.type as string}
+                spaceType={space.spaceType as string}
                 userPermissions={{
                   userId: userMembership?.userId || '',
                   spaceId: space.id,
@@ -191,75 +191,71 @@ export function SpaceContextPanel({
                 spaceRules={spaceRules}
                 position="contextual"
               />
-            </HiveCard>
+            </Card>
           ))}
         </div>
       )}
 
       {/* Quick Actions */}
       {userPermissions.isMember && (
-        <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+        <Card className="bg-gray-900/50 border-gray-800 p-4">
           <h4 className="font-semibold text-white mb-3">Quick Actions</h4>
           <div className="grid grid-cols-2 gap-2">
-            <HiveButton
+            <Button
               variant="outline"
-              size="sm"
-              className="border-gray-700 text-gray-300 hover:text-white"
+              className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
               onClick={() => onToolInteraction('create-post', 'open')}
             >
               <Plus className="w-4 h-4 mr-1" />
               Post
-            </HiveButton>
-            <HiveButton
+            </Button>
+            <Button
               variant="outline"
-              size="sm"
-              className="border-gray-700 text-gray-300 hover:text-white"
+              className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
               onClick={() => onToolInteraction('create-event', 'open')}
             >
               <Calendar className="w-4 h-4 mr-1" />
               Event
-            </HiveButton>
+            </Button>
             {userPermissions.isAdmin && (
               <>
-                <HiveButton
+                <Button
                   variant="outline"
-                  size="sm"
-                  className="border-gray-700 text-gray-300 hover:text-white"
+                  className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                   onClick={() => onToolInteraction('invite-members', 'open')}
                 >
                   <Users className="w-4 h-4 mr-1" />
                   Invite
-                </HiveButton>
-                <HiveButton
+                </Button>
+                <Button
                   variant="outline"
-                  size="sm"
-                  className="border-gray-700 text-gray-300 hover:text-white"
+                  className="max-w-sm border-gray-700 text-gray-300 hover:text-white"
                   onClick={() => onToolInteraction('space-analytics', 'open')}
                 >
                   <TrendingUp className="w-4 h-4 mr-1" />
                   Stats
-                </HiveButton>
+                </Button>
               </>
             )}
           </div>
-        </HiveCard>
+        </Card>
       )}
 
       {/* Upcoming Events */}
       {upcomingEvents.length > 0 && (
-        <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+        <Card className="bg-gray-900/50 border-gray-800 p-4">
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-semibold text-white flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               Upcoming
             </h4>
-            <HiveButton
-              variant="ghost"
-              size="sm"
+            <Button
+              variant="outline"
+              className="max-w-sm"
               onClick={() => onToolInteraction('view-calendar', 'open')}
             >
               <span className="text-xs text-[var(--hive-brand-primary)]">View All</span>
-            </HiveButton>
+            </Button>
           </div>
           <div className="space-y-3">
             {upcomingEvents.slice(0, 2).map(event => (
@@ -284,11 +280,11 @@ export function SpaceContextPanel({
               </div>
             ))}
           </div>
-        </HiveCard>
+        </Card>
       )}
 
       {/* Recent Activity */}
-      <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      <Card className="bg-gray-900/50 border-gray-800 p-4">
         <div className="flex items-center justify-between mb-3">
           <h4 className="font-semibold text-white flex items-center gap-2">
             <Activity className="w-4 h-4" />
@@ -313,29 +309,29 @@ export function SpaceContextPanel({
             </div>
           ))}
         </div>
-      </HiveCard>
+      </Card>
 
       {/* Space Rules/Guidelines (for Greek Life and Residential) */}
-      {((space.type as string) === 'greek_life_spaces' || (space.type as string) === 'residential_spaces') && (
-        <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+      {((space.spaceType as string) === 'greek_life_spaces' || (space.spaceType as string) === 'residential_spaces') && (
+        <Card className="bg-gray-900/50 border-gray-800 p-4">
           <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
             <Star className="w-4 h-4 text-[var(--hive-brand-primary)]" />
-            {(space.type as string) === 'greek_life_spaces' ? 'Chapter Guidelines' : 'Community Guidelines'}
+            {(space.spaceType as string) === 'greek_life_spaces' ? 'Chapter Guidelines' : 'Community Guidelines'}
           </h4>
           <div className="space-y-2 text-sm text-gray-300">
             <div className="p-2 bg-gray-800/30 rounded">
               <div className="text-[var(--hive-brand-primary)] font-medium mb-1">
-                {(space.type as string) === 'greek_life_spaces' ? 'Brotherhood/Sisterhood Values' : 'Respectful Living'}
+                {(space.spaceType as string) === 'greek_life_spaces' ? 'Brotherhood/Sisterhood Values' : 'Respectful Living'}
               </div>
               <div className="text-xs text-gray-400">
-                {(space.type as string) === 'greek_life_spaces'
+                {(space.spaceType as string) === 'greek_life_spaces'
                   ? 'Honor our traditions and support each other'
                   : 'Be considerate of your neighbors and shared spaces'
                 }
               </div>
             </div>
           </div>
-        </HiveCard>
+        </Card>
       )}
 
     </div>

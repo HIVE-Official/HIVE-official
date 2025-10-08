@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { ritualFramework } from '@/lib/rituals-framework';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Join ritual schema
 const JoinRitualSchema = z.object({
@@ -17,9 +17,9 @@ const JoinRitualSchema = z.object({
  * 
  * POST - Join a ritual
  */
-export const POST = withAuth(async (request: NextRequest, authContext) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     const body = await request.json();
     const { ritualId, entryPoint } = JoinRitualSchema.parse(body);
 
@@ -150,7 +150,4 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: false, // Joining rituals requires authentication
-  operation: 'join_ritual' 
 });

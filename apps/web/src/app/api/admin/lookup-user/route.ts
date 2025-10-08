@@ -2,7 +2,7 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 // Validation schema
 const lookupUserSchema = z.object({
@@ -66,7 +66,7 @@ export const POST = withAdminAuthAndErrors(
                 lastSignInTime: userRecord.metadata.lastSignInTime,
               },
             };
-          } catch (authError: unknown) {
+          } catch (authError: any) {
             const error = authError as { code?: string };
             if (error.code !== "auth/user-not-found") {
               throw authError;
@@ -88,7 +88,7 @@ export const POST = withAdminAuthAndErrors(
                 lastSignInTime: userRecord.metadata.lastSignInTime,
               },
             };
-          } catch (authError: unknown) {
+          } catch (authError: any) {
             const error = authError as { code?: string };
             if (error.code !== "auth/user-not-found") {
               throw authError;
@@ -102,7 +102,7 @@ export const POST = withAdminAuthAndErrors(
           if (userDoc.exists) {
             const docData = userDoc.data();
             firestoreData = {
-              fullName: docData?.fullName,
+              fullName: docData?.displayName,
               handle: docData?.handle,
               schoolId: docData?.schoolId,
               role: docData?.role,
@@ -125,7 +125,7 @@ export const POST = withAdminAuthAndErrors(
             const docData = doc.data();
 
             firestoreData = {
-              fullName: docData?.fullName,
+              fullName: docData?.displayName,
               handle: docData?.handle,
               schoolId: docData?.schoolId,
               role: docData?.role,

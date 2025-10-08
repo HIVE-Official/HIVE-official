@@ -4,10 +4,10 @@ import { useEffect, useState, Suspense } from "react";
 
 // Force dynamic rendering to avoid SSG issues with auth
 export const dynamic = "force-dynamic";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@hive/auth-logic";
-import { HiveButton } from "@hive/ui";
+import { Button } from "@hive/ui";
 import { AuthLayout } from "../../../components/auth/auth-layout";
 import { AuthStatus } from "../../../components/auth/auth-status";
 
@@ -165,10 +165,9 @@ function VerifyPageContent() {
             <div className="space-y-3">
               {error?.includes("expired") || error?.includes("used") ? (
                 <>
-                  <HiveButton
+                  <Button
                     variant="default"
-                    size="lg"
-                    className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
+                    className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
                     onClick={() => {
                       const email = localStorage.getItem('emailForSignIn');
                       const schoolId = new URLSearchParams(window.location.search).get('schoolId');
@@ -176,25 +175,23 @@ function VerifyPageContent() {
                     }}
                   >
                     Get a new magic link
-                  </HiveButton>
-                  <HiveButton
-                    variant="ghost"
-                    size="lg"
-                    className="w-full text-white/60 hover:text-white"
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="max-w-lg w-full text-white/60 hover:text-white"
                     onClick={() => router.push("/auth/login")}
                   >
                     Start over
-                  </HiveButton>
+                  </Button>
                 </>
               ) : (
-                <HiveButton
-                  variant="secondary"
-                  size="lg"
-                  className="w-full"
+                <Button
+                  variant="outline"
+                  className="max-w-lg w-full"
                   onClick={() => router.push("/auth/login")}
                 >
                   Try again
-                </HiveButton>
+                </Button>
               )}
             </div>
           }

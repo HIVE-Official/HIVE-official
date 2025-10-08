@@ -24,9 +24,9 @@ import {
   Folder
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
-  HiveInput,
+  Button,
+  Card,
+  Input,
   Badge,
   Tabs,
   TabsList,
@@ -74,6 +74,31 @@ interface ResourcesPanelProps {
   isLeader: boolean;
 }
 
+// Helper functions (moved outside components for reusability)
+const formatFileSize = (bytes?: number) => {
+  if (!bytes) return '';
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+};
+
+const getFileIcon = (type: string, fileType?: string) => {
+  switch (type) {
+    case 'document':
+      return <FileText className="w-5 h-5 text-blue-400" />;
+    case 'link':
+      return <Link2 className="w-5 h-5 text-green-400" />;
+    case 'media':
+      return fileType?.startsWith('video/')
+        ? <Video className="w-5 h-5 text-purple-400" />
+        : <Image className="w-5 h-5 text-pink-400" />;
+    case 'form':
+      return <File className="w-5 h-5 text-orange-400" />;
+    default:
+      return <File className="w-5 h-5 text-gray-400" />;
+  }
+};
+
 export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: ResourcesPanelProps) {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +116,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
   const loadResources = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/spaces/${spaceId}/resources`, {
+      const response = await api.get<{ resources?: Resource[] }>(`/api/spaces/${spaceId}/resources`, {
         params: {
           type: typeFilter !== 'all' ? typeFilter : undefined,
           sort: sortBy,
@@ -194,30 +219,6 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
   const pinnedResources = filteredResources.filter(r => r.isPinned && !r.isArchived);
   const regularResources = filteredResources.filter(r => !r.isPinned);
 
-  const formatFileSize = (bytes?: number) => {
-    if (!bytes) return '';
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
-  };
-
-  const getFileIcon = (type: string, fileType?: string) => {
-    switch (type) {
-      case 'document':
-        return <FileText className="w-5 h-5 text-blue-400" />;
-      case 'link':
-        return <Link2 className="w-5 h-5 text-green-400" />;
-      case 'media':
-        return fileType?.startsWith('video/')
-          ? <Video className="w-5 h-5 text-purple-400" />
-          : <Image className="w-5 h-5 text-pink-400" />;
-      case 'form':
-        return <File className="w-5 h-5 text-orange-400" />;
-      default:
-        return <File className="w-5 h-5 text-gray-400" />;
-    }
-  };
-
   if (loading) {
     return (
       <div className="p-4">
@@ -243,15 +244,14 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Resources</h3>
           {canUpload && (
-            <HiveButton
-              size="sm"
+            <Button
+              className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               onClick={() => document.getElementById('file-upload')?.click()}
               disabled={uploading}
-              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-1" />
               Add
-            </HiveButton>
+            </Button>
           )}
         </div>
 
@@ -269,10 +269,10 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
         {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <HiveInput
+          <Input
             placeholder="Search resources..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
             className="pl-10 bg-gray-800 border-gray-700"
           />
         </div>
@@ -290,7 +290,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e: React.ChangeEvent) => setSortBy((e.target as any).value as any)}
             className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white"
           >
             <option value="recent">Recent</option>
@@ -305,7 +305,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           <input
             type="checkbox"
             checked={showArchived}
-            onChange={(e) => setShowArchived(e.target.checked)}
+            onChange={(e: React.ChangeEvent) => setShowArchived(e.target.checked)}
             className="rounded"
           />
           Show archived
@@ -317,7 +317,7 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
           type="file"
           multiple
           className="hidden"
-          onChange={(e) => e.target.files && handleFileUpload(e.target.files)}
+          onChange={(e: React.ChangeEvent) => e.target.files && handleFileUpload(e.target.files)}
           accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.png,.gif,.mp4,.mp3"
         />
       </div>
@@ -371,14 +371,14 @@ export function ResourcesPanel({ spaceId, userRole, canUpload, isLeader }: Resou
                   {searchQuery ? `No resources found for "${searchQuery}"` : 'No resources yet'}
                 </p>
                 {canUpload && !searchQuery && (
-                  <HiveButton
-                    size="sm"
+                  <Button
+                    className="max-w-sm mt-3"
                     variant="outline"
-                    className="mt-3"
+                    
                     onClick={() => document.getElementById('file-upload')?.click()}
                   >
                     Add First Resource
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             )}
@@ -404,8 +404,7 @@ function ResourceCard({
 }) {
   const handleDownload = async () => {
     try {
-      const response = await api.get(resource.url, { responseType: 'blob' });
-      const blob = new Blob([response.data]);
+      const blob = await api.get<Blob>(resource.url, { responseType: 'blob' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -420,7 +419,7 @@ function ResourceCard({
   const isOwnResource = resource.createdBy === 'current-user-id'; // TODO: get from auth context
 
   return (
-    <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
+    <Card className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
       resource.isPinned ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     } ${resource.isArchived ? 'opacity-60' : ''}`}>
       <div className="flex items-start gap-3">
@@ -457,9 +456,9 @@ function ResourceCard({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <HiveButton size="sm" variant="ghost">
+                <Button className="max-w-sm" variant="outline">
                   <MoreVertical className="w-4 h-4" />
-                </HiveButton>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-gray-900 border-gray-700">
                 {resource.type === 'link' ? (
@@ -545,6 +544,6 @@ function ResourceCard({
           </div>
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

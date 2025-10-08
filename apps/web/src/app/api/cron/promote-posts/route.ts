@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Critical error in auto-promotion cron job', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Critical error in auto-promotion cron job', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       {
         success: false,
@@ -193,7 +193,7 @@ async function promotePostToFeed(
       authorId: postData.authorId,
       author: authorData ? {
         id: postData.authorId,
-        fullName: authorData.fullName,
+        fullName: authorData.displayName,
         handle: authorData.handle,
         photoURL: authorData.photoURL,
         verified: authorData.verified || false

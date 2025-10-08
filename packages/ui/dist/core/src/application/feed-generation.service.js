@@ -52,8 +52,14 @@ export class FeedGenerationService extends BaseApplicationService {
                 return Result.fail(contentResult.error);
             }
             let items = contentResult.getValue();
-            // Apply additional filtering based on options
-            items = this.applyContentFilters(items, options);
+            // Apply additional filtering based on options (use domain logic)
+            items = feed.applyContentFilters(items, {
+                includeSpacePosts: options.includeSpacePosts,
+                includeRSSPosts: options.includeRSSPosts,
+                includeConnectionActivity: options.includeConnectionActivity,
+                includeEvents: options.includeEvents,
+                includeRituals: options.includeRituals
+            });
             // Sort based on preference
             if (options.sortBy === 'recent') {
                 items = items.sort((a, b) => b.toData().createdAt.getTime() - a.toData().createdAt.getTime());
@@ -62,8 +68,8 @@ export class FeedGenerationService extends BaseApplicationService {
                 items = items.sort((a, b) => b.toData().engagementCount - a.toData().engagementCount);
             }
             // Default is 'algorithm' which is already applied
-            // Generate insights
-            const insights = this.generateFeedInsights(items, feed);
+            // Generate insights (use domain logic)
+            const insights = feed.generateInsights(items);
             // Apply pagination
             const offset = options.offset || 0;
             const paginatedItems = items.slice(offset, offset + (options.limit || 20));
@@ -153,12 +159,24 @@ export class FeedGenerationService extends BaseApplicationService {
             if (recordResult.isFailure) {
                 return Result.fail(recordResult.error);
             }
-            // Update algorithm weights based on interaction
+            // Update algorithm weights based on interaction (use domain logic)
             if (interactionType === 'like' || interactionType === 'comment') {
-                await this.updateAlgorithmWeights(userId, itemId, 'positive');
+                const userProfileId = ProfileId.create(userId).getValue();
+                const feedResult = await this.feedRepo.findByUserId(userProfileId);
+                if (feedResult.isSuccess) {
+                    const feed = feedResult.getValue();
+                    feed.adjustWeightsFromFeedback('positive', 'engagement');
+                    await this.feedRepo.saveFeed(feed);
+                }
             }
             else if (interactionType === 'hide') {
-                await this.updateAlgorithmWeights(userId, itemId, 'negative');
+                const userProfileId = ProfileId.create(userId).getValue();
+                const feedResult = await this.feedRepo.findByUserId(userProfileId);
+                if (feedResult.isSuccess) {
+                    const feed = feedResult.getValue();
+                    feed.adjustWeightsFromFeedback('negative', 'hide');
+                    await this.feedRepo.saveFeed(feed);
+                }
             }
             return Result.ok();
         }, 'FeedGeneration.recordInteraction');
@@ -191,125 +209,6 @@ export class FeedGenerationService extends BaseApplicationService {
     subscribeToFeedUpdates(userId, callback) {
         const userProfileId = ProfileId.create(userId).getValue();
         return this.feedRepo.subscribeToFeed(userProfileId.id, callback);
-    }
-    // Private helper methods
-    applyContentFilters(items, options) {
-        return items.filter(item => {
-            const itemData = item.toData ? item.toData() : item;
-            if (options.includeSpacePosts === false && itemData.type === 'space_post') {
-                return false;
-            }
-            if (options.includeRSSPosts === false && itemData.type === 'rss_post') {
-                return false;
-            }
-            if (options.includeConnectionActivity === false && itemData.type === 'connection_activity') {
-                return false;
-            }
-            if (options.includeEvents === false && itemData.type === 'event') {
-                return false;
-            }
-            if (options.includeRituals === false && itemData.type === 'ritual') {
-                return false;
-            }
-            return true;
-        });
-    }
-    generateFeedInsights(items, feed) {
-        if (items.length === 0) {
-            return {
-                primaryContentType: 'none',
-                engagementRate: 0,
-                averageScore: 0,
-                topSpaces: [],
-                suggestedAdjustments: ['Follow more spaces to see content']
-            };
-        }
-        // Analyze content types
-        const typeCounts = new Map();
-        let totalEngagement = 0;
-        let totalScore = 0;
-        const spaceCounts = new Map();
-        items.forEach(item => {
-            const data = item.toData ? item.toData() : item;
-            typeCounts.set(data.type, (typeCounts.get(data.type) || 0) + 1);
-            totalEngagement += data.engagementCount;
-            totalScore += data.score;
-            if (data.spaceId) {
-                spaceCounts.set(data.spaceId.id, (spaceCounts.get(data.spaceId.id) || 0) + 1);
-            }
-        });
-        // Find primary content type
-        const primaryContentType = Array.from(typeCounts.entries())
-            .sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
-        // Calculate engagement rate
-        const engagementRate = items.length > 0
-            ? totalEngagement / items.length
-            : 0;
-        // Calculate average score
-        const averageScore = items.length > 0
-            ? totalScore / items.length
-            : 0;
-        // Get top spaces
-        const topSpaces = Array.from(spaceCounts.entries())
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(([spaceId]) => spaceId);
-        // Generate suggestions based on analysis
-        const suggestedAdjustments = this.generateAdjustmentSuggestions(feed, primaryContentType, engagementRate, averageScore);
-        return {
-            primaryContentType,
-            engagementRate,
-            averageScore,
-            topSpaces,
-            suggestedAdjustments
-        };
-    }
-    generateAdjustmentSuggestions(feed, primaryContentType, engagementRate, averageScore) {
-        const suggestions = [];
-        const feedData = feed.toData?.() || feed;
-        // Low engagement suggestions
-        if (engagementRate < 1) {
-            suggestions.push('Your feed has low engagement. Try following more active spaces.');
-        }
-        // Content diversity suggestions
-        if (primaryContentType === 'space_post' && feedData.algorithm.spaceRelevance > 0.5) {
-            suggestions.push('Your feed is heavily focused on space posts. Consider adjusting to see more diverse content.');
-        }
-        // Score optimization suggestions
-        if (averageScore < 0.5) {
-            suggestions.push('Feed content scores are low. The algorithm is learning your preferences.');
-        }
-        // Algorithm weight suggestions
-        if (feedData.algorithm.recency > 0.5) {
-            suggestions.push('Your feed prioritizes recent content. Consider balancing with engagement metrics.');
-        }
-        if (suggestions.length === 0) {
-            suggestions.push('Your feed is well-balanced!');
-        }
-        return suggestions;
-    }
-    async updateAlgorithmWeights(userId, itemId, feedback) {
-        try {
-            const userProfileId = ProfileId.create(userId).getValue();
-            const feedResult = await this.feedRepo.findByUserId(userProfileId);
-            if (feedResult.isSuccess) {
-                const feed = feedResult.getValue();
-                // Adjust algorithm weights based on feedback
-                // This is a simplified version - production would use ML
-                const adjustment = feedback === 'positive' ? 0.01 : -0.01;
-                feed.adjustAlgorithmWeights({
-                    recency: adjustment * 0.5,
-                    engagement: adjustment * 1.5,
-                    socialProximity: adjustment * 1.0,
-                    spaceRelevance: adjustment * 0.8,
-                    trendingBoost: adjustment * 0.3
-                });
-                await this.feedRepo.saveFeed(feed);
-            }
-        }
-        catch (error) {
-            console.error('Failed to update algorithm weights:', error);
-        }
     }
 }
 //# sourceMappingURL=feed-generation.service.js.map

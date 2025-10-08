@@ -68,7 +68,7 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
         try {
           const devUser = JSON.parse(devUserData);
           setUser({
-            userId: devUser.uid || devUser.id,
+            userId: devUser.id || devUser.id,
             email: devUser.email,
             schoolId: devUser.schoolId,
             onboardingCompleted: devUser.onboardingCompleted
@@ -76,7 +76,8 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
           setIsLoading(false);
           return;
         } catch (error) {
-        }
+      // Intentionally suppressed - non-critical error
+    }
       }
 
       // No valid session found

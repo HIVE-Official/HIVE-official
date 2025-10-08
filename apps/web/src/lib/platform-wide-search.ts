@@ -399,7 +399,7 @@ export class HivePlatformSearchEngine {
           avatar: space.creator.avatar
         } : undefined,
         tags: space.tags || [],
-        category: space.type || 'general',
+        category: space.spaceType || 'general',
         isVerified: space.isVerified || false,
         memberCount: space.memberCount || 0
       },
@@ -483,7 +483,7 @@ export class HivePlatformSearchEngine {
     return {
       id: `user_${user.id}`,
       type: 'user',
-      title: user.fullName || user.displayName || 'Unknown User',
+      title: user.displayName || user.displayName || 'Unknown User',
       description: user.bio || 'No bio available',
       url: `/profile/${user.id}`,
       score: this.calculateRelevanceScore(user, query, 'user'),
@@ -833,10 +833,11 @@ export class HivePlatformSearchEngine {
       if (sessionJson) {
         const session = JSON.parse(sessionJson);
         return process.env.NODE_ENV === 'development' 
-          ? `dev_token_${session.uid}` 
+          ? `dev_token_${session.id}` 
           : session.token;
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
     
     return '';

@@ -9,6 +9,7 @@ import { FeedId } from './value-objects/feed-id.value';
 import { ProfileId } from '../profile/value-objects/profile-id.value';
 import { CampusId } from '../profile/value-objects/campus-id.value';
 import { FeedItem } from './feed-item';
+import { FeedItemsAddedEvent } from './events/feed-items-added.event';
 
 export type FeedFilterType = 'all' | 'spaces' | 'rituals' | 'events' | 'trending';
 
@@ -113,6 +114,14 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     this.sortItems();
     this.props.lastUpdated = new Date();
 
+    this.addDomainEvent(
+      new FeedItemsAddedEvent(
+        this.id,
+        this.props.campusId.value,
+        [item.itemId.value]
+      )
+    );
+
     return Result.ok<void>();
   }
 
@@ -136,6 +145,14 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     this.props.items.push(...newItems);
     this.sortItems();
     this.props.lastUpdated = new Date();
+
+    this.addDomainEvent(
+      new FeedItemsAddedEvent(
+        this.id,
+        this.props.campusId.value,
+        newItems.map(item => item.itemId.value)
+      )
+    );
 
     return Result.ok<void>();
   }
@@ -257,12 +274,197 @@ export class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
 
   public updatePreferences(preferences: any): void {
     // Update feed preferences (algorithm weights, content types, etc.)
+    void preferences;
     this.props.lastUpdated = new Date();
   }
 
   public adjustAlgorithmWeights(adjustments: Record<string, number>): void {
     // Adjust algorithm weights based on user engagement
+    void adjustments;
     this.props.lastUpdated = new Date();
+  }
+
+  /**
+   * Business Logic: Apply content filtering based on user options
+   * Moved from FeedGenerationService
+   */
+  public applyContentFilters(
+    items: FeedItem[],
+    options: {
+      includeSpacePosts?: boolean;
+      includeRSSPosts?: boolean;
+      includeConnectionActivity?: boolean;
+      includeEvents?: boolean;
+      includeRituals?: boolean;
+    }
+  ): FeedItem[] {
+    return items.filter(item => {
+      const itemData = item.toData ? item.toData() : item;
+
+      if (options.includeSpacePosts === false && itemData.type === 'space_post') {
+        return false;
+      }
+
+      if (options.includeRSSPosts === false && itemData.type === 'rss_post') {
+        return false;
+      }
+
+      if (options.includeConnectionActivity === false && itemData.type === 'connection_activity') {
+        return false;
+      }
+
+      if (options.includeEvents === false && itemData.type === 'event') {
+        return false;
+      }
+
+      if (options.includeRituals === false && itemData.type === 'ritual') {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  /**
+   * Business Logic: Generate feed insights from current items
+   * Moved from FeedGenerationService
+   */
+  public generateInsights(items: FeedItem[]): {
+    primaryContentType: string;
+    engagementRate: number;
+    averageScore: number;
+    topSpaces: string[];
+    suggestedAdjustments: string[];
+  } {
+    if (items.length === 0) {
+      return {
+        primaryContentType: 'none',
+        engagementRate: 0,
+        averageScore: 0,
+        topSpaces: [],
+        suggestedAdjustments: ['Follow more spaces to see content']
+      };
+    }
+
+    // Analyze content types
+    const typeCounts = new Map<string, number>();
+    let totalEngagement = 0;
+    let totalScore = 0;
+    const spaceCounts = new Map<string, number>();
+
+    items.forEach(item => {
+      const data = item.toData ? item.toData() : item;
+      typeCounts.set(data.type, (typeCounts.get(data.type) || 0) + 1);
+      totalEngagement += data.engagementCount;
+      totalScore += data.score;
+
+      if (data.spaceId) {
+        spaceCounts.set(data.spaceId.id, (spaceCounts.get(data.spaceId.id) || 0) + 1);
+      }
+    });
+
+    // Find primary content type
+    const primaryContentType = Array.from(typeCounts.entries())
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'mixed';
+
+    // Calculate engagement rate
+    const engagementRate = items.length > 0
+      ? totalEngagement / items.length
+      : 0;
+
+    // Calculate average score
+    const averageScore = items.length > 0
+      ? totalScore / items.length
+      : 0;
+
+    // Get top spaces
+    const topSpaces = Array.from(spaceCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([spaceId]) => spaceId);
+
+    // Generate suggestions based on analysis
+    const suggestedAdjustments = this.getSuggestedAdjustments(
+      primaryContentType,
+      engagementRate,
+      averageScore
+    );
+
+    return {
+      primaryContentType,
+      engagementRate,
+      averageScore,
+      topSpaces,
+      suggestedAdjustments
+    };
+  }
+
+  /**
+   * Business Logic: Generate algorithm adjustment suggestions
+   * Moved from FeedGenerationService
+   */
+  public getSuggestedAdjustments(
+    primaryContentType: string,
+    engagementRate: number,
+    averageScore: number
+  ): string[] {
+    const suggestions: string[] = [];
+    const feedData = this.toData();
+
+    // Low engagement suggestions
+    if (engagementRate < 1) {
+      suggestions.push('Your feed has low engagement. Try following more active spaces.');
+    }
+
+    // Content diversity suggestions
+    if (primaryContentType === 'space_post' && feedData.algorithm?.spaceRelevance > 0.5) {
+      suggestions.push('Your feed is heavily focused on space posts. Consider adjusting to see more diverse content.');
+    }
+
+    // Score optimization suggestions
+    if (averageScore < 0.5) {
+      suggestions.push('Feed content scores are low. The algorithm is learning your preferences.');
+    }
+
+    // Algorithm weight suggestions
+    if (feedData.algorithm?.recency > 0.5) {
+      suggestions.push('Your feed prioritizes recent content. Consider balancing with engagement metrics.');
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push('Your feed is well-balanced!');
+    }
+
+    return suggestions;
+  }
+
+  /**
+   * Business Logic: Adjust algorithm weights based on user feedback
+   * Moved from FeedGenerationService
+   */
+  public adjustWeightsFromFeedback(
+    feedback: 'positive' | 'negative',
+    itemType: string
+  ): void {
+    // Adjust algorithm weights based on feedback
+    // This is a simplified version - production would use ML
+    const adjustment = feedback === 'positive' ? 0.01 : -0.01;
+    const normalizedType = itemType.toLowerCase();
+    const typeTweaks: Record<string, number> = {
+      recency: normalizedType === 'event' ? 0.4 : 0.5,
+      engagement: normalizedType === 'space_post' ? 1.6 : 1.5,
+      socialProximity: normalizedType === 'connection_activity' ? 1.2 : 1.0,
+      spaceRelevance: normalizedType === 'space_post' ? 1.0 : 0.8,
+      trendingBoost: normalizedType === 'ritual' ? 0.5 : 0.3
+    };
+
+    this.adjustAlgorithmWeights({
+      recency: adjustment * typeTweaks.recency,
+      engagement: adjustment * typeTweaks.engagement,
+      socialProximity: adjustment * typeTweaks.socialProximity,
+      spaceRelevance: adjustment * typeTweaks.spaceRelevance,
+      trendingBoost: adjustment * typeTweaks.trendingBoost
+    });
   }
 
   public toData(): any {

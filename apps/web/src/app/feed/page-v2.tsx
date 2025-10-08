@@ -5,7 +5,7 @@
  * Uses CQRS pattern and real-time updates
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Card, Badge } from '@hive/ui';
 import { useAuth } from "@hive/auth-logic";
 import {
@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Heart,
   Bell,
-  Settings,
   Globe,
   AlertTriangle,
   Loader2,
@@ -57,8 +56,8 @@ export default function FeedPageV2() {
   const [hasEngaged, setHasEngaged] = useState(false);
 
   // Handle post interactions
-  const handleLike = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+  const handleLike = useCallback(async (_postId: string) => {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to like posts',
@@ -69,7 +68,7 @@ export default function FeedPageV2() {
 
     if (!hasEngaged) {
       setHasEngaged(true);
-      const engagementTime = Date.now() - engagementStartTime;
+      const _engagementTime = Date.now() - engagementStartTime;
     }
 
     // TODO: Implement like action with CQRS command
@@ -79,8 +78,8 @@ export default function FeedPageV2() {
     });
   }, [user, hasEngaged, engagementStartTime, toast]);
 
-  const handleComment = useCallback(async (postId: string, content: string) => {
-    if (!user?.uid) {
+  const handleComment = useCallback(async (_postId: string, _content: string) => {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to comment',
@@ -96,8 +95,8 @@ export default function FeedPageV2() {
     });
   }, [user, toast]);
 
-  const handleShare = useCallback(async (postId: string) => {
-    if (!user?.uid) {
+  const handleShare = useCallback(async (_postId: string) => {
+    if (!user?.id) {
       toast({
         title: 'Authentication Required',
         description: 'Please sign in to share posts',
@@ -220,8 +219,8 @@ export default function FeedPageV2() {
               </div>
               <Button
                 onClick={refresh}
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                className="max-w-sm"
                 disabled={loading}
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -231,40 +230,40 @@ export default function FeedPageV2() {
             {/* Feed Filters */}
             <div className="flex items-center space-x-2 overflow-x-auto">
               <Button
-                variant={feedFilter === 'all' ? 'primary' : 'ghost'}
-                size="sm"
+                variant={feedFilter === 'all' ? 'default' : 'ghost'}
+                className="max-w-sm"
                 onClick={() => setFeedFilter('all')}
               >
                 <Globe className="h-3 w-3 mr-1" />
                 All
               </Button>
               <Button
-                variant={feedFilter === 'my_spaces' ? 'primary' : 'ghost'}
-                size="sm"
+                variant={feedFilter === 'my_spaces' ? 'default' : 'ghost'}
+                className="max-w-sm"
                 onClick={() => setFeedFilter('my_spaces')}
               >
                 <Users className="h-3 w-3 mr-1" />
                 My Spaces
               </Button>
               <Button
-                variant={feedFilter === 'trending' ? 'primary' : 'ghost'}
-                size="sm"
+                variant={feedFilter === 'trending' ? 'default' : 'ghost'}
+                className="max-w-sm"
                 onClick={() => setFeedFilter('trending')}
               >
                 <TrendingUp className="h-3 w-3 mr-1" />
                 Trending
               </Button>
               <Button
-                variant={feedFilter === 'events' ? 'primary' : 'ghost'}
-                size="sm"
+                variant={feedFilter === 'events' ? 'default' : 'ghost'}
+                className="max-w-sm"
                 onClick={() => setFeedFilter('events')}
               >
                 <Heart className="h-3 w-3 mr-1" />
                 Events
               </Button>
               <Button
-                variant={feedFilter === 'rituals' ? 'primary' : 'ghost'}
-                size="sm"
+                variant={feedFilter === 'rituals' ? 'default' : 'ghost'}
+                className="max-w-sm"
                 onClick={() => setFeedFilter('rituals')}
               >
                 <Bell className="h-3 w-3 mr-1" />
@@ -328,7 +327,7 @@ export default function FeedPageV2() {
                       spaceName: item.spaceName,
                       mediaUrls: item.content.mediaUrls
                     }}
-                    currentUserId={user.uid}
+                    currentUserId={user.id}
                     onLike={handleLike}
                     onComment={handleComment}
                     onShare={handleShare}
@@ -340,7 +339,7 @@ export default function FeedPageV2() {
                 {hasMore && (
                   <div className="text-center py-4">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       onClick={loadMore}
                       disabled={loading}
                       className="w-full max-w-xs"

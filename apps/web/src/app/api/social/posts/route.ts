@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Post creation schema
 const CreatePostSchema = z.object({
@@ -39,9 +39,9 @@ const CreatePostSchema = z.object({
  * Posts API
  * POST - Create new post
  */
-export const POST = withAuth(async (request: NextRequest, authContext) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
     const body = await request.json();
     const postData = CreatePostSchema.parse(body);
 
@@ -123,10 +123,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       }
     });
 
-  } catch (error: unknown) {
+  } catch (error: any) {
     logger.error(
       `Create post error at /api/social/posts`,
-      error instanceof Error ? error.message : String(error)
+      error instanceof Error ? error : new Error(String(error))
     );
 
     if (error instanceof z.ZodError) {
@@ -141,7 +141,4 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: false, // Post creation requires authentication
-  operation: 'create_post' 
 });

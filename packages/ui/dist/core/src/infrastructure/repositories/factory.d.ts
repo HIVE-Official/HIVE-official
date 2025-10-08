@@ -2,7 +2,7 @@
  * Repository Factory
  * Creates and manages repository instances with real Firebase implementations
  */
-import { IProfileRepository, ISpaceRepository, IFeedRepository, IRitualRepository, IConnectionRepository } from './interfaces';
+import { IProfileRepository, ISpaceRepository, IFeedRepository, IRitualRepository, IConnectionRepository, IToolRepository } from './interfaces';
 /**
  * Get or create ProfileRepository instance
  */
@@ -24,6 +24,10 @@ export declare function getRitualRepository(): IRitualRepository;
  */
 export declare function getConnectionRepository(): IConnectionRepository;
 /**
+ * Get or create ToolRepository instance
+ */
+export declare function getToolRepository(): IToolRepository;
+/**
  * Initialize repositories with custom implementations (for testing)
  */
 export declare function initializeRepositories(config: {
@@ -32,6 +36,7 @@ export declare function initializeRepositories(config: {
     feed?: IFeedRepository;
     ritual?: IRitualRepository;
     connection?: IConnectionRepository;
+    tool?: IToolRepository;
 }): void;
 /**
  * Reset all repository instances (for testing)

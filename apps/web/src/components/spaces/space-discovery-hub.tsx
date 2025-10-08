@@ -20,8 +20,8 @@ import {
   MessageSquare
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
   Input,
   Tabs,
@@ -114,16 +114,12 @@ export function SpaceDiscoveryHub() {
   const loadSpaces = async () => {
     try {
       setLoading(true);
-      const response = await api.spaces.browse({
+      const result = await api.spaces.browse<{ spaces: SpaceWithActivity[] }>({
         category: selectedCategory,
         includeActivity: true,
         limit: 50
       });
-
-      const result = await response.json();
-      if (result.success) {
-        setSpaces(result.data);
-      }
+      setSpaces(result.spaces || []);
     } catch (error) {
       console.error('Error loading spaces:', error);
     } finally {
@@ -233,7 +229,7 @@ export function SpaceDiscoveryHub() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
                   placeholder={currentCategory.searchPlaceholder}
                   className="pl-10 bg-gray-800 border-gray-700 text-white"
                 />
@@ -241,33 +237,30 @@ export function SpaceDiscoveryHub() {
 
               {/* Activity View Toggle */}
               <div className="flex gap-2">
-                <HiveButton
+                <Button
                   variant={activityView === 'trending' ? 'default' : 'outline'}
-                  size="sm"
+                  className={`max-w-sm ${activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('trending')}
-                  className={activityView === 'trending' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <TrendingUp className="w-4 h-4 mr-1" />
                   Trending
-                </HiveButton>
-                <HiveButton
+                </Button>
+                <Button
                   variant={activityView === 'active' ? 'default' : 'outline'}
-                  size="sm"
+                  className={`max-w-sm ${activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('active')}
-                  className={activityView === 'active' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Activity className="w-4 h-4 mr-1" />
                   Active Now
-                </HiveButton>
-                <HiveButton
+                </Button>
+                <Button
                   variant={activityView === 'new' ? 'default' : 'outline'}
-                  size="sm"
+                  className={`max-w-sm ${activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}`}
                   onClick={() => setActivityView('new')}
-                  className={activityView === 'new' ? 'bg-[var(--hive-brand-primary)] text-black' : ''}
                 >
                   <Sparkles className="w-4 h-4 mr-1" />
                   New
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -327,7 +320,7 @@ export function SpaceDiscoveryHub() {
               const activeCount = realtimeActivity.get(space.id) || space.activeNow;
 
               return (
-                <HiveCard
+                <Card
                   key={space.id}
                   className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)]/50 transition-all cursor-pointer group"
                   onClick={() => handleSpaceClick(space.id)}
@@ -412,7 +405,7 @@ export function SpaceDiscoveryHub() {
                       </div>
                     )}
                   </div>
-                </HiveCard>
+                </Card>
               );
             })}
           </div>

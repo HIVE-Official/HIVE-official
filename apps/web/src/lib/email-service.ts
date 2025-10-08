@@ -48,7 +48,7 @@ export async function getEmailConfig(): Promise<EmailConfig> {
       };
     }
   } catch (error) {
-    logger.warn('Firebase Email Auth check failed', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.warn('Firebase Email Auth check failed', { error: error instanceof Error ? error.message : String(error) });
   }
 
   // No email provider configured

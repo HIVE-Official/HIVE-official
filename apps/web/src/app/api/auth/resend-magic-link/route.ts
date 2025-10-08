@@ -8,7 +8,7 @@ import { currentEnvironment } from "@/lib/env";
 import { validateWithSecurity, ApiSchemas } from "@/lib/secure-input-validation";
 import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { logger } from "@/lib/logger";
-import { withValidation } from "@/lib/middleware";
+import { withValidation } from "@/lib/middleware/index";
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 import { getDefaultActionCodeSettings } from "@hive/core";
 
@@ -259,7 +259,7 @@ export const POST = withValidation(
     } catch (error) {
       await auditAuthEvent('failure', request, {
         operation: 'resend_magic_link',
-        error: error instanceof Error ? error.message : 'unknown'
+        error: error instanceof Error ? error.message : String(error)
       });
 
       throw error;

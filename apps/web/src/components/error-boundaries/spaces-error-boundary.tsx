@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ErrorBoundary } from '../error-boundary';
 
 interface SpacesErrorFallbackProps {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
 }
@@ -45,7 +45,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
             Retry Spaces
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/feed'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -53,7 +53,7 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
             Check Feed
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/spaces/create'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -70,18 +70,16 @@ function SpacesErrorFallback({ error, retry, errorId }: SpacesErrorFallbackProps
           <div className="flex gap-2 justify-center flex-wrap">
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm border-hive-border text-hive-text-tertiary"
               onClick={() => window.location.href = '/spaces/search'}
-              className="border-hive-border text-hive-text-tertiary"
             >
               <Search className="w-3 h-3 mr-1" />
               Search Spaces
             </Button>
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm border-hive-border text-hive-text-tertiary"
               onClick={() => window.location.href = '/spaces/browse'}
-              className="border-hive-border text-hive-text-tertiary"
             >
               <Users className="w-3 h-3 mr-1" />
               Browse All

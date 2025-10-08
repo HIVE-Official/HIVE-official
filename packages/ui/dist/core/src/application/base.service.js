@@ -1,8 +1,10 @@
 /**
  * Base Application Service
  * Foundation for all application services with common patterns
+ * Extended to include automatic event dispatching
  */
 import { Result } from '../domain';
+import { EventDispatcher } from '../infrastructure/events/event-dispatcher';
 export class BaseApplicationService {
     constructor(context) {
         this.context = {
@@ -56,6 +58,49 @@ export class BaseApplicationService {
     validateUserContext() {
         if (!this.context.userId) {
             return Result.fail('User context is required for this operation');
+        }
+        return Result.ok();
+    }
+    /**
+     * Save aggregate and automatically dispatch its domain events
+     * This ensures events are published after successful persistence
+     *
+     * Usage:
+     * await this.saveAndDispatchEvents(profile, (p) => this.profileRepo.save(p));
+     */
+    async saveAndDispatchEvents(aggregate, saveFn) {
+        // First, save the aggregate
+        const saveResult = await saveFn(aggregate);
+        if (saveResult.isFailure) {
+            return saveResult;
+        }
+        // If save successful, dispatch domain events
+        try {
+            await EventDispatcher.dispatchEventsForAggregate(aggregate);
+        }
+        catch (error) {
+            console.error('[BaseService] Failed to dispatch events:', error);
+            // Don't fail the operation - event dispatch failure should not rollback the save
+            // Events can be reprocessed via event sourcing if needed
+        }
+        return Result.ok();
+    }
+    /**
+     * Save multiple aggregates and dispatch all their events
+     */
+    async saveAllAndDispatchEvents(aggregates, saveFn) {
+        // First, save all aggregates
+        const saveResult = await saveFn(aggregates);
+        if (saveResult.isFailure) {
+            return saveResult;
+        }
+        // If save successful, dispatch all domain events
+        try {
+            await EventDispatcher.dispatchEventsForAggregates(aggregates);
+        }
+        catch (error) {
+            console.error('[BaseService] Failed to dispatch events:', error);
+            // Don't fail the operation
         }
         return Result.ok();
     }

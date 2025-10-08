@@ -1,41 +1,53 @@
 #!/bin/bash
 
-# Fix logger.error patterns in all API routes
-echo "Fixing logger.error patterns in API routes..."
+# Script to fix logger error property issues in apps/web
+# This fixes the most common error: "Object literal may only specify known properties, and 'error' does not exist in type 'Error'"
 
-# Find all files with the problematic pattern
-find apps/web/src/app/api -name "*.ts" -type f | while read file; do
-  # Check if file contains the pattern
-  if grep -q "logger\.error.*{[[:space:]]*error:" "$file" 2>/dev/null; then
-    echo "Fixing: $file"
+echo "🔧 Fixing logger error property issues..."
 
-    # Create a temporary file
-    temp_file=$(mktemp)
+# Function to fix logger calls with error property
+fix_logger_errors() {
+    local file="$1"
 
-    # Process the file with perl for multiline replacements
-    perl -0pe 's/logger\.error\(['\''"]([^'\''"]*)['\''"]\s*,\s*\{\s*error:\s*([^}]+)\s*,([^}]*)\}\s*\)/logger.error(
-      '"'"'$1'"'"',
-      $2 instanceof Error ? $2 : new Error(String($2)),
-      {$3}
-    )/gms' "$file" > "$temp_file"
-
-    # Check if changes were made
-    if ! diff -q "$file" "$temp_file" > /dev/null; then
-      mv "$temp_file" "$file"
-      echo "  ✓ Fixed logger.error calls"
-    else
-      rm "$temp_file"
+    # Skip if file doesn't exist
+    if [[ ! -f "$file" ]]; then
+        return
     fi
-  fi
+
+    # Pattern 1: Fix logger calls with incorrect error property assignment
+    # Change: error: error instanceof Error ? error.message : String(error)
+    # To: error: error instanceof Error ? error : new Error(String(error))
+    sed -i.bak 's/error: error instanceof Error ? error\.message : String(error)/error: error instanceof Error ? error : new Error(String(error))/g' "$file"
+
+    # Pattern 2: Fix logger calls with string error assignments
+    # Change: error: error instanceof Error ? error : 'Unknown error'
+    # To: error: error instanceof Error ? error : new Error('Unknown error')
+    sed -i.bak "s/error: error instanceof Error ? error : 'Unknown error'/error: error instanceof Error ? error : new Error('Unknown error')/g" "$file"
+    sed -i.bak 's/error: error instanceof Error ? error : "Unknown error"/error: error instanceof Error ? error : new Error("Unknown error")/g' "$file"
+
+    # Pattern 3: Fix logger calls with generic string fallbacks
+    sed -i.bak 's/error: error instanceof Error ? error\.message : [^,}]*/error: error instanceof Error ? error : new Error(String(error))/g' "$file"
+
+    # Pattern 4: Fix direct error.message assignments
+    sed -i.bak 's/{ error: error\.message,/{ error: error instanceof Error ? error : new Error(String(error)),/g' "$file"
+
+    # Pattern 5: Fix logger calls where we have just 'error,' as property
+    sed -i.bak 's/{ error,/{ error: error instanceof Error ? error : new Error(String(error)),/g' "$file"
+
+    # Remove backup file if changes were made
+    if [[ -f "$file.bak" ]]; then
+        if diff -q "$file" "$file.bak" > /dev/null; then
+            rm "$file.bak"
+        else
+            echo "Fixed: $file"
+            rm "$file.bak"
+        fi
+    fi
+}
+
+# Find all TypeScript files in apps/web and fix them
+find apps/web/src -name "*.ts" -o -name "*.tsx" | while read -r file; do
+    fix_logger_errors "$file"
 done
 
-echo "Fixing logger.warn patterns with error in data field..."
-find apps/web/src/app/api -name "*.ts" -type f | while read file; do
-  if grep -q "logger\.warn.*data:.*error" "$file" 2>/dev/null; then
-    echo "Fixing: $file"
-    sed -i.bak 's/data: error instanceof Error ? error : new Error(String(error))/errorMessage: error instanceof Error ? error.message : String(error)/g' "$file"
-    rm "${file}.bak"
-  fi
-done
-
-echo "Done!"
+echo "✅ Completed fixing logger error properties"

@@ -39,7 +39,7 @@ import {
   Moon,
   Sun,
 } from 'lucide-react';
-import { NotificationSystem } from '../atomic/organisms/notification-system';
+// NotificationSystem was deleted - use shadcn/ui Sonner toast instead
 
 // HIVE Easing Curves from Design System
 const HIVE_EASING = {
@@ -380,16 +380,15 @@ const GlobalHeader: React.FC = () => {
             </MotionButton>
           )}
 
-          <NotificationSystem
+          {/* NotificationSystem was deleted - use shadcn/ui Sonner toast instead */}
+          {/* <NotificationSystem
             onNavigate={(url) => {
-              // In the shell context, we can't use useRouter directly
-              // This would need to be passed down from the app level
               console.log('Navigate to:', url);
               if (typeof window !== 'undefined') {
                 window.location.href = url;
               }
             }}
-          />
+          /> */}
           <UserMenu />
         </div>
       </div>
@@ -830,7 +829,7 @@ const GlobalSearch: React.FC<{ onFocusChange: (focused: boolean) => void }> = ({
           type="search"
           placeholder="Search spaces, people, events..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent) => setQuery((e.target as HTMLInputElement).value)}
           onFocus={() => onFocusChange(true)}
           onBlur={() => onFocusChange(false)}
           className="w-full px-5 py-2.5 pl-11 pr-10 bg-hive-background-tertiary/40 backdrop-blur-xl border border-hive-border-default/50 rounded-xl text-hive-text-primary placeholder-hive-text-tertiary/70 focus:bg-hive-background-tertiary/60 focus:border-hive-brand-primary/50 focus:outline-none focus:ring-2 focus:ring-hive-brand-primary/20 focus:shadow-hive-gold-glow/20 transition-all duration-300 ease-out font-sans text-sm"

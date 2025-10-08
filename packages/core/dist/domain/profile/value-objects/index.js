@@ -18,10 +18,10 @@ Object.defineProperty(exports, "UserType", { enumerable: true, get: function () 
 var profile_privacy_value_1 = require("./profile-privacy.value");
 Object.defineProperty(exports, "ProfilePrivacy", { enumerable: true, get: function () { return profile_privacy_value_1.ProfilePrivacy; } });
 // Re-export existing value objects
-var ub_email_value_1 = require("../../identity/value-objects/ub-email.value");
+var ub_email_value_1 = require("./ub-email.value");
 Object.defineProperty(exports, "UBEmail", { enumerable: true, get: function () { return ub_email_value_1.UBEmail; } });
-var handle_value_1 = require("../../identity/value-objects/handle.value");
+var handle_value_1 = require("./handle.value");
 Object.defineProperty(exports, "Handle", { enumerable: true, get: function () { return handle_value_1.Handle; } });
-var personal_info_value_1 = require("../../identity/value-objects/personal-info.value");
+var personal_info_value_1 = require("./personal-info.value");
 Object.defineProperty(exports, "PersonalInfo", { enumerable: true, get: function () { return personal_info_value_1.PersonalInfo; } });
 //# sourceMappingURL=index.js.map

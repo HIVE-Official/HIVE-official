@@ -1,4 +1,4 @@
-import { Skeleton, HiveCard } from '@hive/ui';
+import { Skeleton, Card } from '@hive/ui';
 
 export function RitualsLoadingSkeleton() {
   return (
@@ -69,7 +69,7 @@ export function RitualsLoadingSkeleton() {
 
 function RitualCardSkeleton({ variant = 'active' }: { variant?: 'active' | 'upcoming' }) {
   return (
-    <HiveCard className="p-6 space-y-4">
+    <Card className="p-6 space-y-4">
       {/* Header with icon and badge */}
       <div className="flex items-start justify-between">
         <Skeleton className="h-12 w-12 rounded-full" />
@@ -103,13 +103,13 @@ function RitualCardSkeleton({ variant = 'active' }: { variant?: 'active' | 'upco
 
       {/* Action Button */}
       <Skeleton className="h-10 w-full rounded-lg" />
-    </HiveCard>
+    </Card>
   );
 }
 
 function CompletedRitualSkeleton() {
   return (
-    <HiveCard className="p-4">
+    <Card className="p-4">
       <div className="flex items-center gap-4">
         {/* Icon */}
         <Skeleton className="h-14 w-14 rounded-full flex-shrink-0" />
@@ -131,6 +131,6 @@ function CompletedRitualSkeleton() {
         {/* View Button */}
         <Skeleton className="h-9 w-24 rounded-lg flex-shrink-0" />
       </div>
-    </HiveCard>
+    </Card>
   );
 }

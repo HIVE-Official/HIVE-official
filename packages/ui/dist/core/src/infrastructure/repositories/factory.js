@@ -8,12 +8,14 @@ import { FirebaseSpaceRepository } from './firebase/space.repository';
 import { FirebaseFeedRepository } from './firebase/feed.repository';
 import { FirebaseRitualRepository } from './firebase/ritual.repository';
 import { FirebaseConnectionRepository } from './firebase/connection.repository';
+import { FirebaseToolRepository } from './firebase/tool.repository';
 // Singleton instances
 let profileRepo = null;
 let spaceRepo = null;
 let feedRepo = null;
 let ritualRepo = null;
 let connectionRepo = null;
+let toolRepo = null;
 /**
  * Get or create ProfileRepository instance
  */
@@ -60,6 +62,15 @@ export function getConnectionRepository() {
     return connectionRepo;
 }
 /**
+ * Get or create ToolRepository instance
+ */
+export function getToolRepository() {
+    if (!toolRepo) {
+        toolRepo = new FirebaseToolRepository();
+    }
+    return toolRepo;
+}
+/**
  * Initialize repositories with custom implementations (for testing)
  */
 export function initializeRepositories(config) {
@@ -73,6 +84,8 @@ export function initializeRepositories(config) {
         ritualRepo = config.ritual;
     if (config.connection)
         connectionRepo = config.connection;
+    if (config.tool)
+        toolRepo = config.tool;
 }
 /**
  * Reset all repository instances (for testing)
@@ -83,5 +96,6 @@ export function resetRepositories() {
     feedRepo = null;
     ritualRepo = null;
     connectionRepo = null;
+    toolRepo = null;
 }
 //# sourceMappingURL=factory.js.map

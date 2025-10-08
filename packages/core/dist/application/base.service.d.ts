@@ -1,8 +1,10 @@
 /**
  * Base Application Service
  * Foundation for all application services with common patterns
+ * Extended to include automatic event dispatching
  */
 import { Result } from '../domain';
+import { AggregateRoot } from '../domain/shared/base/AggregateRoot.base';
 export interface ApplicationServiceContext {
     userId?: string;
     campusId: string;
@@ -20,6 +22,18 @@ export declare abstract class BaseApplicationService {
      * Validate user context is present
      */
     protected validateUserContext(): Result<void>;
+    /**
+     * Save aggregate and automatically dispatch its domain events
+     * This ensures events are published after successful persistence
+     *
+     * Usage:
+     * await this.saveAndDispatchEvents(profile, (p) => this.profileRepo.save(p));
+     */
+    protected saveAndDispatchEvents<T extends AggregateRoot<any>>(aggregate: T, saveFn: (aggregate: T) => Promise<Result<void>>): Promise<Result<void>>;
+    /**
+     * Save multiple aggregates and dispatch all their events
+     */
+    protected saveAllAndDispatchEvents<T extends AggregateRoot<any>>(aggregates: T[], saveFn: (aggregates: T[]) => Promise<Result<void>>): Promise<Result<void>>;
     /**
      * Generate unique request ID for tracking
      */

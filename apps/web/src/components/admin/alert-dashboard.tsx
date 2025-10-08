@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
 import { Button } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Alert, AlertDescription } from '@hive/ui';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@hive/ui';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@hive/ui';
 import { Input } from '@hive/ui';
 import { Textarea } from '@hive/ui';
 import { Switch } from '@hive/ui';
@@ -17,26 +17,14 @@ import {
   Eye,
   EyeOff,
   RefreshCw,
-  TrendingUp,
-  TrendingDown,
   Shield,
   Database,
   Zap,
   Users,
-  Bell,
-  BellOff,
-  Filter,
   Search,
   ArrowUp,
-  ArrowDown,
-  MoreVertical,
-  ExternalLink,
-  MessageSquare,
-  User,
-  Calendar,
   Activity,
-  AlertCircle,
-  XCircle
+  User
 } from 'lucide-react';
 import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
 
@@ -124,21 +112,8 @@ export function AlertDashboard() {
 
   const { token: csrfToken, getHeaders } = useCSRF();
 
-  useEffect(() => {
-    loadAlerts();
-  }, [filters]);
-
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const interval = setInterval(() => {
-      loadAlerts();
-    }, 30000); // Refresh every 30 seconds
-
-    return () => clearInterval(interval);
-  }, [autoRefresh, filters]);
-
-  const loadAlerts = async () => {
+  const loadAlerts = useCallback(async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams({
         range: '24h',
@@ -161,7 +136,21 @@ export function AlertDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [csrfToken, filters.component, filters.resolved, filters.search, filters.severity, getHeaders]);
+
+  useEffect(() => {
+    loadAlerts();
+  }, [loadAlerts]);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      loadAlerts();
+    }, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, loadAlerts]);
 
   const handleAlertAction = async (alertId: string, action: string, notes?: string) => {
     try {
@@ -181,46 +170,6 @@ export function AlertDashboard() {
     } catch (err) {
       console.error(`Error ${action} alert:`, err);
     }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical':
-        return 'text-red-400 bg-red-400/10 border-red-400/30';
-      case 'high':
-        return 'text-orange-400 bg-orange-400/10 border-orange-400/30';
-      case 'medium':
-        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30';
-      case 'low':
-        return 'text-blue-400 bg-blue-400/10 border-blue-400/30';
-      default:
-        return 'text-gray-400 bg-gray-400/10 border-gray-400/30';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'system':
-        return <Database className="w-4 h-4" />;
-      case 'performance':
-        return <Zap className="w-4 h-4" />;
-      case 'security':
-        return <Shield className="w-4 h-4" />;
-      case 'user_impact':
-        return <Users className="w-4 h-4" />;
-      default:
-        return <AlertCircle className="w-4 h-4" />;
-    }
-  };
-
-  const formatRelativeTime = (timestamp: string) => {
-    const now = new Date();
-    const time = new Date(timestamp);
-    const diffInMinutes = Math.floor((now.getTime() - time.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
   const filteredAlerts = (alerts: Alert[]) => {
@@ -273,7 +222,7 @@ export function AlertDashboard() {
               Auto-refresh
             </label>
           </div>
-          <Button onClick={loadAlerts} variant="outline" size="sm">
+          <Button onClick={loadAlerts} variant="outline" className="max-w-sm">
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
@@ -375,13 +324,13 @@ export function AlertDashboard() {
                 placeholder="Search alerts..."
                 className="pl-10"
                 value={filters.search}
-                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, search: (e.target as any).value }))}
               />
             </div>
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.severity}
-              onChange={(e) => setFilters(prev => ({ ...prev, severity: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, severity: (e.target as any).value }))}
             >
               <option value="">All Severities</option>
               <option value="critical">Critical</option>
@@ -392,7 +341,7 @@ export function AlertDashboard() {
             <select
               className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white"
               value={filters.component}
-              onChange={(e) => setFilters(prev => ({ ...prev, component: e.target.value }))}
+              onChange={(e: React.ChangeEvent) => setFilters(prev => ({ ...prev, component: (e.target as any).value }))}
             >
               <option value="">All Components</option>
               <option value="database">Database</option>
@@ -557,7 +506,7 @@ export function AlertDashboard() {
                 </div>
                 <p className="text-xs text-gray-400">Total alerts (24h)</p>
                 <div className="mt-4 space-y-1">
-                  {trends.alertsPerHour.slice(-6).map((hour, index) => (
+                  {trends.alertsPerHour.slice(-6).map(hour => (
                     <div key={hour.hour} className="flex justify-between text-xs">
                       <span className="text-gray-400">
                         {new Date(hour.hour).toLocaleTimeString([], { hour: '2-digit' })}
@@ -734,7 +683,7 @@ function AlertCard({
             {alert.tags.length > 0 && (
               <div className="flex gap-1">
                 {alert.tags.slice(0, 3).map(tag => (
-                  <Badge key={tag} variant="outline" className="text-xs py-0">
+                  <Badge key={tag} variant="secondary" className="text-xs py-0">
                     {tag}
                   </Badge>
                 ))}
@@ -745,9 +694,9 @@ function AlertCard({
         <div className="flex items-center gap-2 ml-4">
           {!alert.acknowledged && (
             <Button
-              size="sm"
+              className="max-w-sm"
               variant="outline"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 onAction(alert.id, 'acknowledge');
               }}
@@ -757,9 +706,9 @@ function AlertCard({
           )}
           {!alert.resolved && (
             <Button
-              size="sm"
+              className="max-w-sm"
               variant="outline"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 onAction(alert.id, 'resolve');
               }}
@@ -935,7 +884,7 @@ function AlertDetailModal({
               <h4 className="font-medium mb-2">Tags</h4>
               <div className="flex gap-2 flex-wrap">
                 {alert.tags.map(tag => (
-                  <Badge key={tag} variant="outline">
+                  <Badge key={tag} variant="secondary">
                     {tag}
                   </Badge>
                 ))}
@@ -948,7 +897,7 @@ function AlertDetailModal({
             <Textarea
               placeholder="Add notes (optional)..."
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setNotes((e.target as any).value)}
               className="mb-3"
             />
             <div className="flex gap-2">

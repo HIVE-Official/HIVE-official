@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch activity summaries
     const summariesQuery = dbAdmin.collection('activitySummaries')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('date', '>=', startDateStr)
       .where('date', '<=', endDateStr)
       .orderBy('date', 'desc');
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch detailed events for pattern analysis
     const eventsQuery = dbAdmin.collection('activityEvents')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('date', '>=', startDateStr)
       .where('date', '<=', endDateStr)
       .orderBy('timestamp', 'desc');
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
     const events: ActivityEvent[] = eventsSnapshot.docs.map(doc => {
       const data = doc.data();
       return {
-        userId: data.userId || user.uid,
+        userId: data.userId || user.id,
         type: data.type || 'unknown',
         details: data.details || {},
         timestamp: data.timestamp || data.createdAt || new Date().toISOString()

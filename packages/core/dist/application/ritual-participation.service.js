@@ -1,18 +1,18 @@
 "use strict";
 /**
- * EnhancedRitual Participation Service
+ * Ritual Participation Service
  * Orchestrates ritual participation, progress tracking, and rewards
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EnhancedRitualParticipationService = void 0;
+exports.RitualParticipationService = void 0;
 const base_service_1 = require("./base.service");
 const Result_1 = require("../domain/shared/base/Result");
-const enhanced_ritual_1 = require("../domain/rituals/aggregates/enhanced-ritual");
+const ritual_aggregate_1 = require("../domain/rituals/aggregates/ritual.aggregate");
 const ritual_id_value_1 = require("../domain/rituals/value-objects/ritual-id.value");
 const participation_1 = require("../domain/rituals/entities/participation");
 const profile_id_value_1 = require("../domain/profile/value-objects/profile-id.value");
 const campus_id_value_1 = require("../domain/profile/value-objects/campus-id.value");
-class EnhancedRitualParticipationService extends base_service_1.BaseApplicationService {
+class RitualParticipationService extends base_service_1.BaseApplicationService {
     constructor(context, ritualRepo, profileRepo, feedRepo) {
         super(context);
         // Mock repositories for now - would be injected in production
@@ -23,7 +23,7 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
     /**
      * Create a new ritual campaign
      */
-    async createEnhancedRitual(creatorId, data) {
+    async createRitual(creatorId, data) {
         return this.execute(async () => {
             // Validate creator
             const creatorProfileId = profile_id_value_1.ProfileId.create(creatorId).getValue();
@@ -33,37 +33,45 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             }
             // Generate ritual ID
             const ritualId = ritual_id_value_1.RitualId.create(`ritual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`).getValue();
-            // Create ritual
-            const ritualResult = enhanced_ritual_1.EnhancedRitual.create({
+            // Validate ritual type and duration
+            if (data.ritualType === 'short' && data.duration !== '1 week') {
+                return Result_1.Result.fail('Short rituals must be 1 week duration');
+            }
+            if (data.ritualType === 'yearbook' && data.duration !== '3 weeks') {
+                return Result_1.Result.fail('Yearbook rituals must be 3 weeks duration');
+            }
+            // Create ritual using correct types from SPEC.md
+            const ritualResult = ritual_aggregate_1.Ritual.create({
                 ritualId: ritualId,
                 name: data.name,
                 description: data.description,
-                type: this.mapRitualType(data.ritualType),
+                type: data.ritualType, // FIXED: No mapping needed - use correct type directly
+                category: data.category,
+                duration: data.duration,
                 campusId: campus_id_value_1.CampusId.createUBBuffalo().getValue(),
                 startDate: data.startDate,
                 endDate: data.endDate,
                 createdBy: creatorProfileId,
-                milestones: data.milestones.map((m, index) => ({
-                    id: `milestone_${index}`,
-                    title: m.name,
-                    name: m.name,
-                    description: m.description,
-                    targetValue: m.targetValue,
+                targetAudience: 'all',
+                visibility: data.settings?.isVisible ? 'public' : 'hidden',
+                goals: data.goals.map((g, index) => ({
+                    id: `goal_${index}`,
+                    description: g.description,
+                    type: g.type,
+                    targetValue: g.targetValue,
                     currentValue: 0,
-                    isCompleted: false,
-                    completedAt: undefined,
-                    participantCompletions: [],
-                    rewards: m.rewards,
-                    threshold: m.targetValue,
-                    isReached: false,
-                    reachedAt: undefined
+                    isCompleted: false
                 })),
-                settings: {
-                    maxParticipants: data.settings?.maxParticipants || undefined,
-                    requiresApproval: data.settings?.requireApproval || false,
-                    allowLateJoin: data.settings?.allowLateJoin || true,
-                    isVisible: data.settings?.isVisible || true
-                }
+                requirements: data.requirements,
+                rewards: data.rewards.map((r, index) => ({
+                    id: `reward_${index}`,
+                    type: r.type,
+                    name: r.name,
+                    description: r.description,
+                    value: r.value
+                })),
+                targetParticipation: data.settings?.maxParticipants,
+                status: 'draft'
             });
             if (ritualResult.isFailure) {
                 return Result_1.Result.fail(ritualResult.error);
@@ -75,21 +83,21 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
                 return Result_1.Result.fail(saveResult.error);
             }
             // Creator automatically participates
-            await this.joinEnhancedRitual(creatorId, ritual.ritualId.value);
+            await this.joinRitual(creatorId, ritual.ritualId.value);
             return Result_1.Result.ok(ritual);
-        }, 'EnhancedRitualParticipation.createEnhancedRitual');
+        }, 'RitualParticipation.createRitual');
     }
     /**
      * Join a ritual
      */
-    async joinEnhancedRitual(userId, ritualId) {
+    async joinRitual(userId, ritualId) {
         return this.execute(async () => {
             const userProfileId = profile_id_value_1.ProfileId.create(userId).getValue();
             const ritualIdVO = ritual_id_value_1.RitualId.create(ritualId).getValue();
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result_1.Result.fail('EnhancedRitual not found');
+                return Result_1.Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
             // Check if already participating
@@ -117,10 +125,10 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             await this.ritualRepo.save(ritual);
             const result = {
                 data: participation,
-                warnings: this.generateParticipationWarnings(ritual)
+                warnings: ritual.getParticipationWarnings() // Use domain logic
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedRitualParticipation.joinEnhancedRitual');
+        }, 'RitualParticipation.joinRitual');
     }
     /**
      * Record progress on a ritual milestone
@@ -138,7 +146,7 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result_1.Result.fail('EnhancedRitual not found');
+                return Result_1.Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
             // Update milestone progress
@@ -148,15 +156,13 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             if (milestone && progress >= milestone.targetValue) {
                 // Complete milestone
                 participation.completeMilestone(milestoneId);
-                // Award points
-                const points = this.calculateMilestonePoints(milestone);
+                // Award points (use domain logic)
+                const points = ritual.calculateGoalPoints(milestoneId);
                 participation.addPoints(points);
                 // Add achievement
                 participation.addAchievement(`Completed: ${milestone.name}`);
-                // Update ritual milestone completion (if method exists)
-                if (ritual.updateMilestoneProgress) {
-                    ritual.updateMilestoneProgress(milestoneId, progress);
-                }
+                // Note: updateMilestoneProgress method not available on Ritual aggregate
+                // Milestone progress is tracked through participation records
             }
             // Update streak
             participation.updateStreak(participation.streakCount + 1);
@@ -165,14 +171,14 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             // Save ritual if modified
             await this.ritualRepo.save(ritual);
             // Get current progress
-            const progressData = await this.calculateEnhancedRitualProgress(ritual, participation);
+            const progressData = await this.calculateRitualProgress(ritual, participation);
             return Result_1.Result.ok(progressData);
-        }, 'EnhancedRitualParticipation.recordProgress');
+        }, 'RitualParticipation.recordProgress');
     }
     /**
      * Get user's ritual progress
      */
-    async getEnhancedRitualProgress(userId, ritualId) {
+    async getRitualProgress(userId, ritualId) {
         return this.execute(async () => {
             const userProfileId = profile_id_value_1.ProfileId.create(userId).getValue();
             const ritualIdVO = ritual_id_value_1.RitualId.create(ritualId).getValue();
@@ -185,12 +191,12 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result_1.Result.fail('EnhancedRitual not found');
+                return Result_1.Result.fail('Ritual not found');
             }
             const ritual = ritualResult.getValue();
-            const progress = await this.calculateEnhancedRitualProgress(ritual, participation);
+            const progress = await this.calculateRitualProgress(ritual, participation);
             return Result_1.Result.ok(progress);
-        }, 'EnhancedRitualParticipation.getEnhancedRitualProgress');
+        }, 'RitualParticipation.getRitualProgress');
     }
     /**
      * Get ritual leaderboard
@@ -201,7 +207,7 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             // Get ritual
             const ritualResult = await this.ritualRepo.findById(ritualIdVO);
             if (ritualResult.isFailure) {
-                return Result_1.Result.fail('EnhancedRitual not found');
+                return Result_1.Result.fail('Ritual not found');
             }
             // Get leaderboard participations
             const leaderboardResult = await this.ritualRepo.findLeaderboard(ritualIdVO, limit);
@@ -237,12 +243,12 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedRitualParticipation.getLeaderboard');
+        }, 'RitualParticipation.getLeaderboard');
     }
     /**
      * Get user's active rituals
      */
-    async getUserEnhancedRituals(userId) {
+    async getUserRituals(userId) {
         return this.execute(async () => {
             const userProfileId = profile_id_value_1.ProfileId.create(userId).getValue();
             const ritualsResult = await this.ritualRepo.findByParticipant(userProfileId);
@@ -251,20 +257,20 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             }
             const rituals = ritualsResult.getValue();
             // Filter to active rituals
-            const activeEnhancedRituals = rituals.filter((r) => r.toData().status === 'active');
+            const activeRituals = rituals.filter((r) => r.toData().status === 'active');
             const result = {
-                data: activeEnhancedRituals,
+                data: activeRituals,
                 metadata: {
-                    totalCount: activeEnhancedRituals.length
+                    totalCount: activeRituals.length
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedRitualParticipation.getUserEnhancedRituals');
+        }, 'RitualParticipation.getUserRituals');
     }
     /**
      * Get available rituals to join
      */
-    async getAvailableEnhancedRituals() {
+    async getAvailableRituals() {
         return this.execute(async () => {
             const activeResult = await this.ritualRepo.findActive(this.context.campusId);
             if (activeResult.isFailure) {
@@ -279,23 +285,23 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedRitualParticipation.getAvailableEnhancedRituals');
+        }, 'RitualParticipation.getAvailableRituals');
     }
     /**
      * Subscribe to ritual updates
      */
-    subscribeToEnhancedRitual(ritualId, callback) {
+    subscribeToRitual(ritualId, callback) {
         const ritualIdVO = ritual_id_value_1.RitualId.create(ritualId).getValue();
         return this.ritualRepo.subscribeToRitual(ritualIdVO, callback);
     }
     /**
      * Subscribe to active rituals feed
      */
-    subscribeToActiveEnhancedRituals(callback) {
+    subscribeToActiveRituals(callback) {
         return this.ritualRepo.subscribeToActiveRituals(this.context.campusId, callback);
     }
     // Private helper methods
-    async calculateEnhancedRitualProgress(ritual, participation) {
+    async calculateRitualProgress(ritual, participation) {
         const ritualData = ritual.toData();
         const participationData = participation.toData();
         // Calculate completion percentage
@@ -321,52 +327,6 @@ class EnhancedRitualParticipationService extends base_service_1.BaseApplicationS
             recentAchievements: participationData.achievements.slice(-3)
         };
     }
-    calculateMilestonePoints(milestone) {
-        // Base points based on target value
-        let points = milestone.targetValue * 10;
-        // Bonus for rewards
-        milestone.rewards.forEach((reward) => {
-            if (reward.type === 'points') {
-                points += parseInt(reward.value) || 0;
-            }
-        });
-        return points;
-    }
-    generateParticipationWarnings(ritual) {
-        const warnings = [];
-        const ritualData = ritual.toData();
-        const now = new Date();
-        const daysUntilEnd = Math.ceil((ritualData.endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilEnd <= 7) {
-            warnings.push(`This ritual ends in ${daysUntilEnd} days`);
-        }
-        if (ritualData.settings.maxParticipants) {
-            const spotsLeft = ritualData.settings.maxParticipants - ritualData.participants.length;
-            if (spotsLeft <= 10) {
-                warnings.push(`Only ${spotsLeft} spots remaining`);
-            }
-        }
-        if (!ritualData.settings.allowLateJoin && now > ritualData.startDate) {
-            warnings.push('This ritual has already started and doesn\'t allow late joins');
-        }
-        return warnings;
-    }
-    mapRitualType(ritualType) {
-        switch (ritualType) {
-            case 'daily-challenge':
-                return 'daily';
-            case 'weekly-goal':
-                return 'weekly';
-            case 'study-challenge':
-                return 'monthly';
-            case 'social-mission':
-                return 'seasonal';
-            case 'campus-event':
-                return 'one-time';
-            default:
-                return 'one-time';
-        }
-    }
 }
-exports.EnhancedRitualParticipationService = EnhancedRitualParticipationService;
+exports.RitualParticipationService = RitualParticipationService;
 //# sourceMappingURL=ritual-participation.service.js.map

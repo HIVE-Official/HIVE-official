@@ -2,16 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HiveButton, Avatar, AvatarImage, AvatarFallback } from "@hive/ui";
+import { Button, Avatar, AvatarImage, AvatarFallback } from "@hive/ui";
 import { User, LogOut, Settings, ChevronDown } from "lucide-react";
+import type { SessionData as CoreSessionData } from "@hive/core";
 
-interface SessionData {
-  userId: string;
-  email: string;
+type SessionData = CoreSessionData & {
+  onboardingCompleted?: boolean;
   schoolId?: string;
   verifiedAt: string;
-  onboardingCompleted?: boolean;
-}
+};
 
 export function AuthStatusIndicator() {
   const router = useRouter();
@@ -81,15 +80,14 @@ export function AuthStatusIndicator() {
   // Not logged in - show Sign In button
   if (!session) {
     return (
-      <HiveButton
-        variant="secondary"
-        size="sm"
+      <Button
+        variant="outline"
+        className="max-w-sm flex items-center gap-2"
         onClick={() => router.push('/schools')}
-        className="flex items-center gap-2"
       >
         <User className="w-4 h-4" />
         Sign In
-      </HiveButton>
+      </Button>
     );
   }
 
@@ -100,7 +98,7 @@ export function AuthStatusIndicator() {
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[var(--hive-background-secondary)] transition-colors duration-200"
       >
-        <Avatar size="sm">
+        <Avatar className="max-w-sm">
           <AvatarImage src="" alt={session.email} />
           <AvatarFallback>{session.email[0]?.toUpperCase()}</AvatarFallback>
         </Avatar>

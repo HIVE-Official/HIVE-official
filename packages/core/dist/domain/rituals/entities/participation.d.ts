@@ -15,6 +15,8 @@ interface ParticipationProps {
     streakCount: number;
     totalPoints: number;
     achievements: string[];
+    completedMilestones?: string[];
+    longestStreak?: number;
     isActive: boolean;
     metadata?: Record<string, any>;
 }

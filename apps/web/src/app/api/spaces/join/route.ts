@@ -3,7 +3,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { validateSpaceJoinability, addSecureCampusMetadata, CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 const joinSpaceSchema = z.object({
@@ -89,7 +89,7 @@ export const POST = withAuthValidationAndErrors(
       date: new Date().toISOString().split('T')[0],
       metadata: {
         spaceName: space.name,
-        spaceType: space.type,
+        spaceType: space.spaceType,
         joinMethod: 'manual'
       }
     }));
@@ -108,7 +108,7 @@ export const POST = withAuthValidationAndErrors(
       space: {
         id: spaceId,
         name: space.name,
-        type: space.type,
+        type: space.spaceType,
         description: space.description
       }
     }, {

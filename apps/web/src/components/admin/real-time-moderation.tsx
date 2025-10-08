@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Alert,
   AlertDescription,
   Select,
@@ -260,9 +260,9 @@ export function RealTimeModeration() {
               <Badge className="bg-green-500/20 text-green-400">
                 {autoModRules.filter(r => r.enabled).length} Active
               </Badge>
-              <HiveButton size="sm" variant="outline">
+              <Button className="max-w-sm" variant="outline">
                 Configure Rules
-              </HiveButton>
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -348,8 +348,8 @@ export function RealTimeModeration() {
                         <Badge className={`${getStatusColor(report.status)} text-white`}>
                           {report.status}
                         </Badge>
-                        <Badge variant="outline">{report.type}</Badge>
-                        <Badge variant="outline">{report.reason}</Badge>
+                        <Badge variant="secondary">{report.type}</Badge>
+                        <Badge variant="secondary">{report.reason}</Badge>
                         <span className="text-xs text-gray-400">
                           {formatDistanceToNow(new Date(report.createdAt), { addSuffix: true })}
                         </span>
@@ -379,36 +379,36 @@ export function RealTimeModeration() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <HiveButton
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
+                      <Button
+                        className="max-w-sm"
+                        variant="outline"
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleReportAction(report.id, 'dismissed');
                         }}
                       >
                         <XCircle className="w-4 h-4" />
-                      </HiveButton>
-                      <HiveButton
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
+                      </Button>
+                      <Button
+                        className="max-w-sm"
+                        variant="outline"
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           handleReportAction(report.id, 'content_removed');
                         }}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </HiveButton>
-                      <HiveButton
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
+                      </Button>
+                      <Button
+                        className="max-w-sm"
+                        variant="outline"
+                        onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();
                           setSelectedReport(report);
                         }}
                       >
                         <MoreHorizontal className="w-4 h-4" />
-                      </HiveButton>
+                      </Button>
                     </div>
                   </div>
                 </div>

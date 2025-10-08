@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
 
 // Schema for tool installation requests
 const ToolActionSchema = z.object({

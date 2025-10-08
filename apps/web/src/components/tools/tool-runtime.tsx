@@ -17,7 +17,7 @@ interface ToolRuntimeProps {
 
 interface ElementInstance {
   id: string;
-  elementId: string;
+  // id: string;
   instanceId: string;
   config: Record<string, any>;
   position: { x: number; y: number };
@@ -102,6 +102,7 @@ export function ToolRuntime({
         setGlobalState(result.result.state);
       }
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 
@@ -122,6 +123,7 @@ export function ToolRuntime({
       try {
         await syncWithBackend(instanceId, data);
       } catch (err) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }, [composition.connections, deploymentId, mode]);
@@ -173,7 +175,7 @@ export function ToolRuntime({
         body: JSON.stringify({
           deploymentId,
           action: 'element_update',
-          elementId: instanceId,
+          // id: instanceId,
           data,
           context: { userId, timestamp: Date.now() }
         })
@@ -195,6 +197,7 @@ export function ToolRuntime({
         }
       }
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 
@@ -207,7 +210,7 @@ export function ToolRuntime({
           body: JSON.stringify({
             deploymentId,
             action,
-            elementId: instanceId,
+            // id: instanceId,
             data: payload,
             context: { userId, timestamp: Date.now() }
           })
@@ -331,8 +334,8 @@ export function ToolRuntime({
           {mode === 'preview' && (
             <>
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                className="max-w-sm"
                 onClick={resetTool}
                 disabled={isRunning}
               >
@@ -341,7 +344,7 @@ export function ToolRuntime({
               </Button>
               
               <Button
-                size="sm"
+                className="max-w-sm"
                 onClick={isRunning ? stopTool : startTool}
                 variant={isRunning ? "destructive" : "default"}
               >
@@ -366,7 +369,7 @@ export function ToolRuntime({
                 <div className="w-2 h-2 rounded-full bg-green-500" />
                 <span>Live</span>
               </div>
-              <Button variant="secondary" size="sm">
+              <Button variant="outline" className="max-w-sm">
                 <Settings className="h-4 w-4" />
               </Button>
             </div>

@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 
 // Temp fix for chunk 2073 useRef errors
-const Button = ({ children, variant = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Button = ({ children, variant: _variant = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
 const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
 import { PageContainer } from "@/components/temp-stubs";
 import { BookOpen, ExternalLink, Video, FileText, Code, Users, Star, Download } from 'lucide-react';
@@ -243,9 +243,8 @@ export default function ResourcesPage() {
                   <Download className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 </div>
                 <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 px-3 text-xs hover:bg-[var(--hive-brand-primary)] hover:text-[#0A0A0A]"
+                  variant="outline" 
+                  className="max-w-sm h-8 px-3 text-xs hover:bg-[var(--hive-brand-primary)] hover:text-[#0A0A0A]"
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     window.location.href = `/build?template=${template.name.toLowerCase().replace(/\s+/g, '-')}`;
@@ -280,7 +279,7 @@ export default function ResourcesPage() {
               Join Discord
             </Button>
             <Button 
-              variant="secondary" 
+              variant="outline" 
               className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
               onClick={() => window.open('https://calendly.com/hive-university/office-hours', '_blank')}
             >

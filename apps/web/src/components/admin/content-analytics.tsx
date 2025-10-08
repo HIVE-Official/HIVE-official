@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
-  Progress,
+  Button,
   Tabs,
   TabsContent,
   TabsList,
@@ -17,12 +16,9 @@ import {
 } from '@hive/ui';
 import {
   TrendingUp,
-  TrendingDown,
   Users,
   MessageCircle,
   Heart,
-  Share2,
-  Clock,
   Calendar,
   BarChart3,
   Activity,
@@ -33,7 +29,6 @@ import {
   ArrowDown,
   Minus
 } from 'lucide-react';
-import { formatDistanceToNow, format, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
 
 interface ContentMetrics {
   posts: {
@@ -100,14 +95,10 @@ export function ContentAnalytics() {
   const [metrics, setMetrics] = useState<ContentMetrics | null>(null);
   const [spaceAnalytics, setSpaceAnalytics] = useState<SpaceAnalytics[]>([]);
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
-  const [contentType, setContentType] = useState<'all' | 'posts' | 'comments' | 'tools'>('all');
+  const contentType: 'all' = 'all';
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadAnalytics();
-  }, [timeRange, contentType]);
-
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       const [metricsRes, spacesRes] = await Promise.all([
@@ -129,7 +120,11 @@ export function ContentAnalytics() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [contentType, timeRange]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
 
   const getHealthColor = (health: string) => {
     switch (health) {
@@ -181,10 +176,10 @@ export function ContentAnalytics() {
               <TabsTrigger value="90d">90 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <HiveButton variant="outline" size="sm">
+          <Button variant="outline" className="max-w-sm">
             <Calendar className="w-4 h-4 mr-2" />
             Export Report
-          </HiveButton>
+          </Button>
         </div>
       </div>
 
@@ -384,10 +379,10 @@ export function ContentAnalytics() {
               <CardTitle>Space Health Monitor</CardTitle>
               <CardDescription>Track community space vitality and growth</CardDescription>
             </div>
-            <HiveButton variant="outline" size="sm">
+            <Button variant="outline" className="max-w-sm">
               <BarChart3 className="w-4 h-4 mr-2" />
               Detailed Report
-            </HiveButton>
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -398,7 +393,7 @@ export function ContentAnalytics() {
                   <div>
                     <h4 className="font-medium text-white">{space.name}</h4>
                     <div className="flex items-center gap-3 mt-1">
-                      <Badge variant="outline" className="text-xs">{space.type}</Badge>
+                      <Badge variant="secondary" className="text-xs">{space.type}</Badge>
                       <span className="text-xs text-gray-400">
                         {space.metrics.members} members
                       </span>

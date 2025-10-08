@@ -1,4 +1,4 @@
-import { Skeleton, HiveCard } from '@hive/ui';
+import { Skeleton, Card } from '@hive/ui';
 
 export function CalendarLoadingSkeleton() {
   return (
@@ -41,7 +41,7 @@ export function CalendarLoadingSkeleton() {
             </div>
 
             {/* Calendar Grid */}
-            <HiveCard className="p-6">
+            <Card className="p-6">
               {/* Day Headers */}
               <div className="grid grid-cols-7 gap-2 mb-2">
                 {Array.from({ length: 7 }).map((_, i) => (
@@ -55,7 +55,7 @@ export function CalendarLoadingSkeleton() {
                   <CalendarDaySkeleton key={i} hasEvents={i % 3 === 0} />
                 ))}
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Upcoming Events List */}
             <div className="space-y-4">
@@ -69,17 +69,17 @@ export function CalendarLoadingSkeleton() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Mini Calendar */}
-            <HiveCard className="p-4">
+            <Card className="p-4">
               <Skeleton className="h-6 w-32 mb-4" />
               <div className="grid grid-cols-7 gap-1">
                 {Array.from({ length: 35 }).map((_, i) => (
                   <Skeleton key={i} className="h-8 w-8 rounded" />
                 ))}
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Integrations */}
-            <HiveCard className="p-4">
+            <Card className="p-4">
               <Skeleton className="h-6 w-36 mb-4" />
               <div className="space-y-3">
                 {Array.from({ length: 3 }).map((_, i) => (
@@ -93,10 +93,10 @@ export function CalendarLoadingSkeleton() {
                   </div>
                 ))}
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Event Types Filter */}
-            <HiveCard className="p-4">
+            <Card className="p-4">
               <Skeleton className="h-6 w-28 mb-4" />
               <div className="space-y-2">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -106,7 +106,7 @@ export function CalendarLoadingSkeleton() {
                   </div>
                 ))}
               </div>
-            </HiveCard>
+            </Card>
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ function CalendarDaySkeleton({ hasEvents }: { hasEvents: boolean }) {
 
 function EventItemSkeleton() {
   return (
-    <HiveCard className="p-4">
+    <Card className="p-4">
       <div className="flex gap-4">
         {/* Time indicator */}
         <div className="flex-shrink-0">
@@ -156,6 +156,6 @@ function EventItemSkeleton() {
           <Skeleton className="h-8 w-8 rounded" />
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

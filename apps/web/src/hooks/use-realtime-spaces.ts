@@ -72,8 +72,11 @@ export function useRealtimeSpaces(options: UseRealtimeSpacesOptions = {}) {
             const changes = snapshot.docChanges();
             changes.forEach(change => {
               if (change.type === 'added') {
+                // Space added - updates already handled above
               } else if (change.type === 'modified') {
+                // Space modified - updates already handled above
               } else if (change.type === 'removed') {
+                // Space removed - updates already handled above
               }
             });
           }

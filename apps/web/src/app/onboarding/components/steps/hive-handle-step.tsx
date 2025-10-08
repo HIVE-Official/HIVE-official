@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
+import { motion } from 'framer-motion';
+import { AtSign, Check, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveHandleStepProps {
@@ -93,13 +93,13 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         setSuggestions([]);
       } else {
         setValidationState("taken");
-        setSuggestions(generateSuggestions(data.fullName, handle));
+        setSuggestions(generateSuggestions(data.displayName, handle));
       }
     } catch (error) {
       console.error("Handle validation error:", error);
       setValidationState("invalid");
     }
-  }, [data.fullName]);
+  }, [data.displayName]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -119,7 +119,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.toLowerCase();
+    let value = (e.target as any).value.toLowerCase();
     
     // Remove any characters that aren't allowed
     value = value.replace(/[^a-z0-9._-]/g, "");
@@ -139,20 +139,6 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
     setSuggestions([]);
   };
 
-  const getValidationIcon = () => {
-    switch (validationState) {
-      case "checking":
-        return <Loader2 className="w-4 h-4 animate-spin text-[var(--hive-brand-primary)]" />;
-      case "available":
-        return <Check className="w-4 h-4 text-[var(--hive-status-success)]" />;
-      case "taken":
-      case "invalid":
-        return <X className="w-4 h-4 text-[var(--hive-status-error)]" />;
-      default:
-        return null;
-    }
-  };
-
   const getValidationMessage = () => {
     switch (validationState) {
       case "checking":
@@ -165,20 +151,6 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         return "Handle must be 3+ characters and contain only letters, numbers, dots, underscores, and hyphens.";
       default:
         return null;
-    }
-  };
-
-  const getValidationColor = () => {
-    switch (validationState) {
-      case "checking":
-        return "text-[var(--hive-brand-primary)]";
-      case "available":
-        return "text-[var(--hive-status-success)]";
-      case "taken":
-      case "invalid":
-        return "text-[var(--hive-status-error)]";
-      default:
-        return "text-[var(--hive-text-tertiary)]";
     }
   };
 
@@ -222,24 +194,23 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         transition={{ delay: 0.3 }}
       >
         <div className="space-y-3">
-          <HiveInput
+          <Input
             id="handle"
             type="text"
             label="Handle"
             placeholder="yourhandle"
             value={data.handle}
             onChange={handleChange}
-            variant={
-              validationState === "available" ? "success" :
-              validationState === "taken" || validationState === "invalid" ? "destructive" :
-              "default"
-            }
-            size="lg"
-            helperText={validationState === "available" ? getValidationMessage() ?? undefined : undefined}
-            error={validationState === "taken" || validationState === "invalid" ? getValidationMessage() ?? undefined : undefined}
-            autoFocus
-            className="w-full"
-          />
+          variant={
+            validationState === "available" ? "success" :
+            validationState === "taken" || validationState === "invalid" ? "destructive" :
+            "default"
+          }
+          className="max-w-lg w-full"
+          helperText={validationState === "available" ? getValidationMessage() ?? undefined : undefined}
+          error={validationState === "taken" || validationState === "invalid" ? getValidationMessage() ?? undefined : undefined}
+          autoFocus
+        />
         </div>
 
         {/* Suggestions */}

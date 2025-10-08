@@ -1,4 +1,4 @@
-import { Skeleton, HiveCard, Grid } from '@hive/ui';
+import { Grid, Skeleton, Card } from "@hive/ui";
 
 export function SpacesLoadingSkeleton() {
   return (
@@ -19,7 +19,10 @@ export function SpacesLoadingSkeleton() {
           {/* Category Filter Skeleton */}
           <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-32 rounded-lg flex-shrink-0" />
+              <Skeleton
+                key={i}
+                className="h-10 w-32 rounded-lg flex-shrink-0"
+              />
             ))}
           </div>
         </div>
@@ -81,7 +84,7 @@ export function SpacesLoadingSkeleton() {
 
 function SpaceCardSkeleton() {
   return (
-    <HiveCard className="bg-gray-900/50 border-gray-800 overflow-hidden">
+    <Card className="bg-gray-900/50 border-gray-800 overflow-hidden">
       {/* Banner */}
       <Skeleton className="h-24 w-full rounded-none" />
 
@@ -110,6 +113,6 @@ function SpaceCardSkeleton() {
           <Skeleton className="h-9 w-16 rounded-md" />
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

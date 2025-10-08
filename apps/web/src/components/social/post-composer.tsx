@@ -308,8 +308,8 @@ export function PostComposer({
           </div>
           {onCancel && (
             <Button
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               onClick={onCancel}
             >
               <X className="h-4 w-4" />
@@ -322,7 +322,7 @@ export function PostComposer({
           <Textarea
             ref={textareaRef}
             value={content}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleContentChange((e.target as any).value)}
             placeholder={placeholder}
             className={`min-h-[80px] resize-none border-none bg-transparent text-white placeholder:text-hive-text-mutedLight focus:outline-none ${
               isOverLimit ? 'text-red-400' : ''
@@ -347,7 +347,7 @@ export function PostComposer({
               <input
                 type="text"
                 value={poll.question}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoll(prev => ({ ...prev, question: (e.target as any).value }))}
                 placeholder="Ask a question..."
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
               />
@@ -359,16 +359,15 @@ export function PostComposer({
                     <input
                       type="text"
                       value={option}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => updatePollOption(index, (e.target as any).value)}
                       placeholder={`Option ${index + 1}`}
                       className="flex-1 bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none"
                     />
                     {poll.options.length > 2 && (
                       <Button
-                        variant="secondary"
-                        size="sm"
+                        variant="outline"
+                        className="max-w-sm text-red-400 border-red-400"
                         onClick={() => removePollOption(index)}
-                        className="text-red-400 border-red-400"
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -379,8 +378,8 @@ export function PostComposer({
               
               <div className="flex items-center justify-between">
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm"
                   onClick={addPollOption}
                   disabled={poll.options.length >= 4}
                 >
@@ -406,14 +405,14 @@ export function PostComposer({
               <input
                 type="text"
                 value={event.title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, title: (e.target as any).value }))}
                 placeholder="Event title"
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none font-medium"
               />
               
               <textarea
                 value={event.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEvent(prev => ({ ...prev, description: (e.target as any).value }))}
                 placeholder="Event description"
                 rows={2}
                 className="w-full bg-transparent text-white placeholder:text-hive-text-mutedLight border-none outline-none resize-none"
@@ -425,7 +424,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.startTime}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, startTime: (e.target as any).value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -434,7 +433,7 @@ export function PostComposer({
                   <input
                     type="datetime-local"
                     value={event.endTime || ''}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEvent(prev => ({ ...prev, endTime: (e.target as any).value }))}
                     className="w-full mt-1 bg-transparent text-white border border-hive-border-default rounded px-2 py-1"
                   />
                 </div>
@@ -459,10 +458,9 @@ export function PostComposer({
                     )}
                   </div>
                   <Button
-                    variant="secondary"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm text-red-400 border-red-400"
                     onClick={() => removeAttachment(attachment.id)}
-                    className="text-red-400 border-red-400"
                   >
                     <X className="h-3 w-3" />
                   </Button>
@@ -490,10 +488,9 @@ export function PostComposer({
               {allowedTypes.map(type => (
                 <Button
                   key={type}
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className={`max-w-sm ${postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
                   onClick={() => setPostType(type)}
-                  className={postType === type ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                   title={`Create ${type} post`}
                 >
                   {type === 'text' && <span className="h-4 w-4 flex items-center justify-center text-xs">📄</span>}
@@ -510,8 +507,8 @@ export function PostComposer({
             {allowedTypes.includes('image') && (
               <>
                 <Button
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Paperclip className="h-4 w-4" />
@@ -529,10 +526,9 @@ export function PostComposer({
 
             {/* Additional Tools */}
             <Button
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className={`max-w-sm ${showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={showAdvanced ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -558,10 +554,9 @@ export function PostComposer({
                 {['public', 'space', 'private'].map(vis => (
                   <Button
                     key={vis}
-                    variant="secondary"
-                    size="sm"
+                    variant="outline"
+                    className={`max-w-sm ${visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}`}
                     onClick={() => setVisibility(vis as 'public' | 'space' | 'private')}
-                    className={visibility === vis ? 'bg-[var(--hive-brand-primary)]/20 border-[var(--hive-brand-primary)]' : ''}
                     disabled={vis === 'space' && !spaceId}
                   >
                     {vis === 'public' && <Globe className="h-4 w-4" />}
@@ -577,4 +572,3 @@ export function PostComposer({
     </Card>
   );
 }
-

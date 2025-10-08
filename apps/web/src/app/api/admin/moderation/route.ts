@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin/moderator
-    const hasModeratorAccess = await checkModeratorPermissions(user.uid);
+    const hasModeratorAccess = await checkModeratorPermissions(user.id);
     if (!hasModeratorAccess) {
       return NextResponse.json(
         ApiResponseHelper.error('Moderator access required', 'FORBIDDEN'),
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     // Get moderation queue
     let reports = await contentModerationService.getModerationQueue(
       queueId || undefined,
-      assignedTo === 'me' ? user.uid : assignedTo || undefined,
+      assignedTo === 'me' ? user.id : assignedTo || undefined,
       limit
     );
 
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting moderation queue', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting moderation queue', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get moderation queue', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin/moderator
-    const hasModeratorAccess = await checkModeratorPermissions(user.uid);
+    const hasModeratorAccess = await checkModeratorPermissions(user.id);
     if (!hasModeratorAccess) {
       return NextResponse.json(
         ApiResponseHelper.error('Moderator access required', 'FORBIDDEN'),
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
     // Process the moderation action
     await contentModerationService.processModerationAction(
       reportId,
-      user.uid,
+      user.id,
       action,
       reason,
       notes
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
     // Log moderator action
     logger.info('Moderation action processed', {
       reportId,
-      moderatorId: user.uid,
+      moderatorId: user.id,
       action,
       reason: reason.substring(0, 100) // Log first 100 chars of reason
     });
@@ -175,12 +175,12 @@ export async function POST(request: NextRequest) {
         reportId,
         action,
         processedAt: new Date().toISOString(),
-        processedBy: user.uid
+        processedBy: user.id
       }
     });
 
   } catch (error) {
-    logger.error('Error processing moderation action', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error processing moderation action', { error: error instanceof Error ? error.message : String(error) });
     
     if (error instanceof Error && error.message.includes('Report not found')) {
       return NextResponse.json(
@@ -208,7 +208,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -229,7 +229,7 @@ export async function PUT(request: NextRequest) {
         );
       }
 
-      await updateModerationRule(ruleId, validation.data, user.uid);
+      await updateModerationRule(ruleId, validation.data, user.id);
       
       return NextResponse.json({
         success: true,
@@ -246,7 +246,7 @@ export async function PUT(request: NextRequest) {
         );
       }
 
-      const newRuleId = await createModerationRule(validation.data, user.uid);
+      const newRuleId = await createModerationRule(validation.data, user.id);
       
       return NextResponse.json({
         success: true,
@@ -256,7 +256,7 @@ export async function PUT(request: NextRequest) {
     }
 
   } catch (error) {
-    logger.error('Error updating moderation rules', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error updating moderation rules', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update moderation rules', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -276,7 +276,7 @@ async function checkModeratorPermissions(userId: string): Promise<boolean> {
            userData?.role === 'moderator' || 
            userData?.permissions?.includes('moderate_content');
   } catch (error) {
-    logger.error('Error checking moderator permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error checking moderator permissions', { error: error instanceof Error ? error.message : String(error), userId });
     return false;
   }
 }
@@ -291,7 +291,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
-    logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error checking admin permissions', { error: error instanceof Error ? error.message : String(error), userId });
     return false;
   }
 }
@@ -323,7 +323,7 @@ async function getQueueStatistics() {
       lastUpdated: new Date().toISOString()
     };
   } catch (error) {
-    logger.error('Error getting queue statistics', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting queue statistics', { error: error instanceof Error ? error.message : String(error) });
     return {
       pendingReports: 0,
       todayReports: 0,

@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     // Filter by user if specified
     if (userId && currentUser) {
       // If requesting own tools, show all. If requesting other's tools, show only public
-      if (userId === currentUser.uid) {
+      if (userId === currentUser.id) {
         query = query.where("ownerId", "==", userId);
       } else {
         query = query
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     // Apply additional filters
     if (status && ["draft", "published", "archived"].includes(status)) {
       // Only allow status filtering for user's own tools
-      if (userId && currentUser && userId === currentUser.uid) {
+      if (userId && currentUser && userId === currentUser.id) {
         query = query.where("status", "==", status);
       }
     }
@@ -103,7 +103,14 @@ export async function GET(request: NextRequest) {
             createdByName = userData?.displayName || userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Anonymous";
           }
         } catch (error) {
-          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/tools/browse'  });
+          const err = error instanceof Error ? error : new Error(String(error));
+          logger.warn('Failed to fetch tool owner information', {
+            error: err,
+            metadata: {
+              ownerId: toolData.ownerId,
+              endpoint: '/api/tools/browse'
+            },
+          });
         }
 
         // Apply search filter (done post-query for flexibility)
@@ -160,7 +167,7 @@ export async function GET(request: NextRequest) {
         let countQuery: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
         
         if (userId && currentUser) {
-          if (userId === currentUser.uid) {
+          if (userId === currentUser.id) {
             countQuery = countQuery.where("ownerId", "==", userId);
           } else {
             countQuery = countQuery
@@ -177,10 +184,17 @@ export async function GET(request: NextRequest) {
         const countSnapshot = await countQuery.count().get();
         total = countSnapshot.data().count;
       } catch (error) {
-        logger.warn(
-      `Failed to get total count at /api/tools/browse`,
-      error instanceof Error ? error : new Error(String(error))
-    );
+        const err = error instanceof Error ? error : new Error(String(error));
+        logger.warn('Failed to get total count at /api/tools/browse', {
+          error: err,
+          metadata: {
+            userId,
+            hasCurrentUser: Boolean(currentUser),
+            category,
+            type,
+            status,
+          },
+        });
         // Fallback to current batch size
         total = filteredTools.length;
       }

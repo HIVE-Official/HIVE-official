@@ -20,8 +20,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Shared DDD Base Classes
 __exportStar(require("./shared/base"), exports);
-// Identity Domain (Student Identity and Authentication)
-__exportStar(require("./identity"), exports);
+// Profile Domain (Student Identity and Authentication)
+__exportStar(require("./profile"), exports);
 // Analytics Domain (Event Tracking and Metrics)
 __exportStar(require("./analytics"), exports);
 //# sourceMappingURL=index.js.map

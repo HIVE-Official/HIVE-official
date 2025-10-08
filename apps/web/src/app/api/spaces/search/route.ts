@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
             const creatorData = creatorDoc.data();
             creator = {
               id: creatorDoc.id,
-              name: creatorData?.fullName || 'Unknown',
+              name: creatorData?.displayName || 'Unknown',
               avatar: creatorData?.photoURL || null,
             };
           }
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
           .collection('spaces')
           .doc(doc.id)
           .collection('members')
-          .doc(decodedToken.uid)
+          .doc(decodedToken.id)
           .get();
         isMember = memberDoc.exists;
       } catch (error) {

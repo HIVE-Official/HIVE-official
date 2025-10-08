@@ -7,11 +7,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileOnboardingService = void 0;
 const base_service_1 = require("./base.service");
 const Result_1 = require("../domain/shared/base/Result");
-const enhanced_profile_1 = require("../domain/profile/aggregates/enhanced-profile");
-const ub_email_value_1 = require("../domain/identity/value-objects/ub-email.value");
+const profile_aggregate_1 = require("../domain/profile/aggregates/profile.aggregate");
+const ub_email_value_1 = require("../domain/profile/value-objects/ub-email.value");
 const profile_handle_value_1 = require("../domain/profile/value-objects/profile-handle.value");
 const profile_id_value_1 = require("../domain/profile/value-objects/profile-id.value");
-const personal_info_value_1 = require("../domain/identity/value-objects/personal-info.value");
 const factory_1 = require("../infrastructure/repositories/factory");
 class ProfileOnboardingService extends base_service_1.BaseApplicationService {
     constructor(context) {
@@ -48,8 +47,18 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             const suggestedSpaces = await this.getSuggestedSpaces(data.major, data.interests || []);
             // Step 6: Auto-join default spaces for new users
             await this.joinDefaultSpaces(profile);
-            // Step 7: Generate next steps for user
-            const nextSteps = this.generateNextSteps(profile, suggestedSpaces.getValue());
+            // Step 7: Generate next steps for user (using domain logic)
+            const spacesForNextSteps = suggestedSpaces.getValue().slice(0, 5).map(space => ({
+                id: space.id.id,
+                name: space.name.name
+            }));
+            const domainNextSteps = profile.getOnboardingNextSteps(spacesForNextSteps);
+            // Map domain next steps to expected format
+            const nextSteps = domainNextSteps.map((step, index) => ({
+                action: step.title || step.action,
+                description: step.description,
+                priority: index + 1
+            }));
             const result = {
                 data: {
                     profile,
@@ -60,7 +69,7 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
                     })),
                     nextSteps
                 },
-                warnings: this.generateOnboardingWarnings(data)
+                warnings: profile.getOnboardingWarnings()
             };
             return Result_1.Result.ok(result);
         }, 'ProfileOnboarding.completeOnboarding');
@@ -78,28 +87,29 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             const profile = profileResult.getValue();
             // Track onboarding progress (would be stored in metadata)
             console.log(`Onboarding progress for ${profileId}: ${step} = ${completed}`);
-            // Check if onboarding is complete
-            if (this.isOnboardingComplete(profile)) {
-                const personalInfoResult = personal_info_value_1.PersonalInfo.create({
-                    firstName: profile.personalInfo.firstName || '',
-                    lastName: profile.personalInfo.lastName || '',
-                    bio: profile.personalInfo.bio || '',
-                    major: profile.personalInfo.major || '',
-                    graduationYear: profile.personalInfo.graduationYear || null,
-                    dorm: profile.personalInfo.dorm || ''
-                });
-                if (personalInfoResult.isSuccess) {
-                    const completeResult = profile.completeOnboarding(profile.personalInfo, profile.interests);
-                    if (completeResult.isSuccess) {
-                        await this.profileRepo.save(profile);
-                    }
+            // Check if onboarding is complete (using domain logic)
+            const onboardingStatus = profile.getOnboardingStatus();
+            if (onboardingStatus.isComplete && !profile.isOnboarded) {
+                // Note: completeOnboarding expects AcademicInfo, need to access academicInfo properly
+                const interests = profile.interests;
+                const spaces = profile.spaces;
+                if (interests.length === 0 || spaces.length === 0) {
+                    return Result_1.Result.ok();
+                }
+                const requiresAcademicInfo = profile.userType.isStudent();
+                if (requiresAcademicInfo && !profile.academicInfo) {
+                    return Result_1.Result.ok();
+                }
+                const completeResult = profile.completeOnboarding(profile.academicInfo, interests, spaces);
+                if (completeResult.isSuccess) {
+                    await this.profileRepo.save(profile);
                 }
             }
             return Result_1.Result.ok();
         }, 'ProfileOnboarding.updateOnboardingProgress');
     }
     /**
-     * Get onboarding status
+     * Get onboarding status (delegates to domain logic)
      */
     async getOnboardingStatus(profileId) {
         return this.execute(async () => {
@@ -109,35 +119,16 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
                 return Result_1.Result.fail('Profile not found');
             }
             const profile = profileResult.getValue();
-            const profileData = profile.toData();
-            const requiredSteps = [
-                'email_verified',
-                'handle_set',
-                'basic_info',
-                'interests_selected',
-                'profile_photo',
-                'first_space_joined'
-            ];
-            const completedSteps = [];
-            if (profileData.email)
-                completedSteps.push('email_verified');
-            if (profileData.handle)
-                completedSteps.push('handle_set');
-            if (profileData.personalInfo.firstName)
-                completedSteps.push('basic_info');
-            if (profileData.interests.length > 0)
-                completedSteps.push('interests_selected');
-            if (profileData.photos.length > 0)
-                completedSteps.push('profile_photo');
-            // Would check space membership for 'first_space_joined'
-            const remainingSteps = requiredSteps.filter(step => !completedSteps.includes(step));
-            const percentComplete = Math.round((completedSteps.length / requiredSteps.length) * 100);
-            return Result_1.Result.ok({
-                isComplete: profileData.isOnboarded,
-                completedSteps,
-                remainingSteps,
-                percentComplete
-            });
+            // Use domain logic
+            const domainStatus = profile.getOnboardingStatus();
+            // Map to service response format
+            const status = {
+                isComplete: domainStatus.isComplete,
+                completedSteps: domainStatus.completedSteps,
+                remainingSteps: domainStatus.remainingSteps,
+                percentComplete: domainStatus.completionPercentage
+            };
+            return Result_1.Result.ok(status);
         }, 'ProfileOnboarding.getOnboardingStatus');
     }
     // Private helper methods
@@ -172,7 +163,7 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
         // Generate profile ID
         const profileId = profile_id_value_1.ProfileId.create(`profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`).getValue();
         // Create profile
-        const profileResult = enhanced_profile_1.EnhancedProfile.create({
+        const profileResult = profile_aggregate_1.Profile.create({
             profileId: profileId,
             email: emailResult.getValue(),
             handle: handleResult.getValue(),
@@ -227,8 +218,31 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
             suggestions.push(...trendingSpaces.getValue());
         }
         // Deduplicate
-        const uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.spaceId.value, space])).values());
+        let uniqueSpaces = Array.from(new Map(suggestions.map(space => [space.id?.id || space.spaceId?.value, space])).values());
+        if (interests.length > 0) {
+            const keywords = interests.map((interest) => interest.toLowerCase());
+            uniqueSpaces = uniqueSpaces.sort((a, b) => {
+                const aScore = this.scoreSpaceInterestMatch(a, keywords);
+                const bScore = this.scoreSpaceInterestMatch(b, keywords);
+                return bScore - aScore;
+            });
+        }
         return Result_1.Result.ok(uniqueSpaces);
+    }
+    scoreSpaceInterestMatch(space, keywords) {
+        const candidate = space;
+        const name = (candidate?.name?.name ?? candidate?.name ?? '').toString().toLowerCase();
+        const description = (candidate?.description?.value ?? candidate?.description ?? '').toString().toLowerCase();
+        return keywords.reduce((score, keyword) => {
+            let currentScore = score;
+            if (name.includes(keyword)) {
+                currentScore += 2;
+            }
+            if (description.includes(keyword)) {
+                currentScore += 1;
+            }
+            return currentScore;
+        }, 0);
     }
     async joinDefaultSpaces(profile) {
         // Auto-join campus-wide default spaces
@@ -242,62 +256,6 @@ class ProfileOnboardingService extends base_service_1.BaseApplicationService {
                 console.error(`Failed to auto-join ${spaceName}:`, error);
             }
         }
-    }
-    generateNextSteps(profile, suggestedSpaces) {
-        const steps = [];
-        const profileData = profile.toDTO();
-        if (!profileData.personalInfo.profilePhoto) {
-            steps.push({
-                action: 'add_profile_photo',
-                description: 'Add a profile photo to help others recognize you',
-                priority: 1
-            });
-        }
-        if (profileData.interests.length < 3) {
-            steps.push({
-                action: 'add_interests',
-                description: 'Add more interests to get better space recommendations',
-                priority: 2
-            });
-        }
-        if (suggestedSpaces.length > 0) {
-            steps.push({
-                action: 'join_spaces',
-                description: `Join spaces like "${suggestedSpaces[0].name.name}" to connect with others`,
-                priority: 3
-            });
-        }
-        steps.push({
-            action: 'explore_feed',
-            description: 'Check out your personalized feed to see what\'s happening on campus',
-            priority: 4
-        });
-        steps.push({
-            action: 'connect_with_others',
-            description: 'Find and connect with classmates in your major',
-            priority: 5
-        });
-        return steps.sort((a, b) => a.priority - b.priority);
-    }
-    generateOnboardingWarnings(data) {
-        const warnings = [];
-        if (!data.bio) {
-            warnings.push('Adding a bio helps others learn more about you');
-        }
-        if (!data.major) {
-            warnings.push('Adding your major helps you find relevant study groups');
-        }
-        if (!data.interests || data.interests.length === 0) {
-            warnings.push('Adding interests improves your feed and space recommendations');
-        }
-        return warnings;
-    }
-    isOnboardingComplete(profile) {
-        const data = profile.toDTO();
-        return !!(data.handle &&
-            data.personalInfo.firstName &&
-            data.personalInfo.lastName &&
-            data.interests.length > 0);
     }
 }
 exports.ProfileOnboardingService = ProfileOnboardingService;

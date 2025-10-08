@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
+import { Button, Card, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
 import {
   Hash,
   Users,
@@ -48,8 +48,8 @@ interface SpaceData {
 
 interface SpaceMembership {
   role: 'owner' | 'leader' | 'moderator' | 'member';
-  joinedAt: Date;
-  notifications: {
+  joinedAt?: Date;
+  notifications?: {
     posts: boolean;
     events: boolean;
     announcements: boolean;
@@ -81,13 +81,13 @@ export default function SpaceDetailPage() {
     try {
       setLoading(true);
 
-      // Load space data and membership
-      const response = await api.get(`/api/spaces/${spaceId}`);
-      setSpace(response.space);
-      setMembership(response.membership);
+      const spaceData = await api.get<SpaceData>(`/api/spaces/${spaceId}`);
+      setSpace(spaceData);
 
-      // Load hot threads (posts with 10+ replies)
-      const threadsResponse = await api.get(`/api/spaces/${spaceId}/posts`, {
+      const membershipData = await api.spaces.membership.get<{ requestingUser?: SpaceMembership }>(spaceId);
+      setMembership(membershipData?.requestingUser ?? null);
+
+      const threadsResponse = await api.get<{ posts: any[] }>(`/api/spaces/${spaceId}/posts`, {
         params: {
           type: 'hot_threads',
           minReplies: 10,
@@ -106,8 +106,9 @@ export default function SpaceDetailPage() {
 
   const handleJoinSpace = async () => {
     try {
-      const response = await api.post(`/api/spaces/${spaceId}/join`);
-      setMembership(response.membership);
+      await api.post(`/api/spaces/${spaceId}/join`);
+      const membershipData = await api.spaces.membership.get<{ requestingUser?: SpaceMembership }>(spaceId);
+      setMembership(membershipData?.requestingUser ?? null);
     } catch (error) {
       console.error('Failed to join space:', error);
     }
@@ -184,48 +185,48 @@ export default function SpaceDetailPage() {
               <div className="flex items-center gap-2">
                 {membership ? (
                   <>
-                    <HiveButton
-                      size="sm"
+                    <Button
+                      className="max-w-sm border-gray-700"
                       variant="outline"
-                      className="border-gray-700"
+                      
                       onClick={() => {}}
                     >
                       <Bell className="w-4 h-4" />
-                    </HiveButton>
-                    <HiveButton
-                      size="sm"
+                    </Button>
+                    <Button
+                      className="max-w-sm border-gray-700"
                       variant="outline"
-                      className="border-gray-700"
+                      
                       onClick={() => {}}
                     >
                       <Share className="w-4 h-4" />
-                    </HiveButton>
+                    </Button>
                     {isLeader && (
-                      <HiveButton
-                        size="sm"
+                      <Button
+                        className="max-w-sm border-gray-700"
                         variant="outline"
-                        className="border-gray-700"
+                        
                         onClick={() => router.push(`/spaces/${spaceId}/settings`)}
                       >
                         <Settings className="w-4 h-4" />
-                      </HiveButton>
+                      </Button>
                     )}
-                    <HiveButton
-                      size="sm"
+                    <Button
+                      className="max-w-sm border-red-500 text-red-400 hover:bg-red-500/10"
                       variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/10"
+                      
                       onClick={handleLeaveSpace}
                     >
                       Leave
-                    </HiveButton>
+                    </Button>
                   </>
                 ) : (
-                  <HiveButton
+                  <Button
                     className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
                     onClick={handleJoinSpace}
                   >
                     Join Space
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
             </div>
@@ -308,13 +309,13 @@ export default function SpaceDetailPage() {
           <div className={`${contextWidth} bg-gray-900 border-l border-gray-800 animate-slide-in-right`}>
             <div className="p-4 border-b border-gray-800 flex items-center justify-between">
               <h3 className="font-bold text-white capitalize">{contextPanel}</h3>
-              <HiveButton
-                size="sm"
-                variant="ghost"
+              <Button
+                className="max-w-sm"
+                variant="outline"
                 onClick={() => setContextPanel(null)}
               >
                 <X className="w-4 h-4" />
-              </HiveButton>
+              </Button>
             </div>
 
             {/* Context Panel Content */}

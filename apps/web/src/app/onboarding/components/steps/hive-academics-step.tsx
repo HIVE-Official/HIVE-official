@@ -2,15 +2,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   GraduationCap,
-  Search,
   ChevronDown,
   Check,
   BookOpen,
-  User,
-  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput, HiveCard } from "@hive/ui";
+import { Input, Card } from "@hive/ui";
 import { UB_MAJORS } from "@hive/core";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -30,7 +27,6 @@ export function HiveAcademicsStep({
 }: HiveAcademicsStepProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [academicLevel, setAcademicLevel] = useState<AcademicLevel | null>(
     null
   );
@@ -175,14 +171,14 @@ export function HiveAcademicsStep({
           </AnimatePresence>
         </div>
 
-        {/* Major Selection using HiveInput */}
+        {/* Major Selection using Input */}
         <div className="space-y-[var(--hive-spacing-3)]">
-          <HiveInput
+          <Input
             label="Major *"
             placeholder="Search for your major..."
             value={data.major || searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = e.target.value;
+              const value = (e.target as any).value;
               if (data.major) {
                 // If they start typing, clear the selected major
                 updateData({ major: "" });
@@ -193,17 +189,14 @@ export function HiveAcademicsStep({
               setShowDropdown(value.length > 0);
             }}
             onFocus={() => {
-              setFocusedField("major");
               if (!data.major && searchQuery.length > 0) setShowDropdown(true);
             }}
             onBlur={() => {
-              setFocusedField(null);
               setTimeout(() => setShowDropdown(false), 200);
             }}
-            variant="default"
-            size="lg"
-            className="w-full"
-          />
+        variant="default"
+        className="max-w-lg w-full"
+      />
 
           {/* Dropdown */}
           <AnimatePresence>
@@ -272,7 +265,7 @@ export function HiveAcademicsStep({
                   : ""
               }
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const year = e.target.value.replace("'", "");
+                const year = (e.target as any).value.replace("'", "");
                 const fullYear = parseInt(`20${year}`);
                 updateData({ graduationYear: fullYear });
               }}
@@ -307,8 +300,8 @@ export function HiveAcademicsStep({
           <div className="relative">
             <textarea
               value={bio}
-              onChange={(e) => {
-                const value = e.target.value.slice(0, 200);
+              onChange={(e: React.ChangeEvent) => {
+                const value = (e.target as any).value.slice(0, 200);
                 setBio(value);
                 updateData({ bio: value });
               }}
@@ -374,7 +367,7 @@ export function HiveAcademicsStep({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <HiveCard className="p-[var(--hive-spacing-4)]">
+            <Card className="p-[var(--hive-spacing-4)]">
               <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
                 <BookOpen className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
                 Your Academic Journey
@@ -393,7 +386,7 @@ export function HiveAcademicsStep({
                   <span>Discover career-focused communities</span>
                 </div>
               </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         )}
       </motion.form>

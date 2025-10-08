@@ -383,7 +383,7 @@ export function CardCustomizationModal({
                   )}
                 </div>
                 {config.appearance.showBadges && (
-                  <Badge variant="freshman" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {config.isVisible ? 'Visible' : 'Hidden'}
                   </Badge>
                 )}
@@ -395,7 +395,7 @@ export function CardCustomizationModal({
         <HiveModalFooter>
           <div className="flex items-center justify-between w-full">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => {
                 setConfig({
                   size: card.currentSize,
@@ -420,7 +420,7 @@ export function CardCustomizationModal({
               Reset
             </Button>
             <div className="flex items-center space-x-3">
-              <Button variant="secondary" onClick={onClose}>
+              <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
               <Button

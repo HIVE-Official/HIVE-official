@@ -216,7 +216,7 @@ export function ReportContentModal({
     }}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="secondary" size="sm" className="text-red-400 border-red-400/50 hover:bg-red-400/10">
+ <Button variant="outline" className="max-w-sm text-red-400 border-red-400/50 hover:bg-red-400/10">
             <Flag className="h-4 w-4 mr-2" />
             Report
           </Button>
@@ -247,7 +247,7 @@ export function ReportContentModal({
           {contentPreview && currentStep !== 'complete' && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
-                <Badge variant="freshman" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   {contentType}
                 </Badge>
                 <span className="text-sm text-gray-400">Content being reported:</span>
@@ -330,7 +330,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, description: (e.target as any).value }))}
                   placeholder="Describe specifically what you think violates our community guidelines..."
                   className="min-h-[100px]"
                   maxLength={1000}
@@ -370,14 +370,14 @@ export function ReportContentModal({
                 <div className="flex space-x-2 mb-2">
                   <Input
                     value={newUrl}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUrl((e.target as any).value)}
                     placeholder="https://example.com/related-content"
                     className="flex-1"
                   />
                   <Button
                     onClick={addEvidenceUrl}
-                    variant="secondary"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm"
                     disabled={!newUrl.trim()}
                   >
                     <LinkIcon className="h-4 w-4 mr-1" />
@@ -392,8 +392,8 @@ export function ReportContentModal({
                         <span className="text-sm text-gray-300 truncate flex-1 mr-2">{url}</span>
                         <Button
                           onClick={() => removeEvidenceUrl(url)}
-                          variant="ghost"
-                          size="sm"
+                          variant="outline"
+                          className="max-w-sm"
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -410,7 +410,7 @@ export function ReportContentModal({
                 </label>
                 <Textarea
                   value={formData.additionalContext}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, additionalContext: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, additionalContext: (e.target as any).value }))}
                   placeholder="Any additional information that might help us review this report..."
                   className="min-h-[80px]"
                   maxLength={500}
@@ -514,7 +514,7 @@ export function ReportContentModal({
             <div className="flex justify-between pt-4 border-t border-gray-800">
               <Button
                 onClick={handleBack}
-                variant="secondary"
+                variant="outline"
                 disabled={currentStep === 'category'}
               >
                 Back
@@ -523,7 +523,7 @@ export function ReportContentModal({
               <div className="space-x-2">
                 <Button
                   onClick={() => setIsOpen(false)}
-                  variant="ghost"
+                  variant="outline"
                 >
                   Cancel
                 </Button>

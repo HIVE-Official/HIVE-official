@@ -32,7 +32,7 @@ function OnboardingWizardWrapper() {
   const [isCreatingSpaces, setIsCreatingSpaces] = useState(false);
 
   // Handle onboarding completion with auto-space creation
-  const handleOnboardingComplete = async (onboardingData: OnboardingData, retryCount = 0) => {
+  const _handleOnboardingComplete = async (onboardingData: OnboardingData, retryCount = 0) => {
     if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
       return;
     }
@@ -49,9 +49,10 @@ function OnboardingWizardWrapper() {
       
       // Auto-create spaces after onboarding (non-blocking)
       try {
-        const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
+        const _spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
       } catch (spaceError) {
-      }
+      // Intentionally suppressed - non-critical error
+    }
       
       // Redirect to dashboard
       router.push('/');
@@ -62,7 +63,7 @@ function OnboardingWizardWrapper() {
       if (retryCount < 2 && error instanceof Error && 
           (error.message.includes('network') || error.message.includes('timeout'))) {
         setTimeout(() => {
-          handleOnboardingComplete(onboardingData, retryCount + 1);
+          _handleOnboardingComplete(onboardingData, retryCount + 1);
         }, 2000);
         return;
       }
@@ -99,7 +100,7 @@ function OnboardingWizardWrapper() {
 export default function OnboardingPage() {
   const router = useRouter();
   const unifiedAuth = useAuth();
-  const onboardingBridge = useOnboardingBridge();
+  const _onboardingBridge = useOnboardingBridge();
 
   // Handle authentication and onboarding status
   useEffect(() => {

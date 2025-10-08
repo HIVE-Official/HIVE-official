@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if viewing own profile
-    if (targetUserId === user.uid) {
+    if (targetUserId === user.id) {
       return NextResponse.json({
         visibility: {
           canSeeProfile: true,
@@ -53,12 +53,12 @@ export async function POST(request: NextRequest) {
     const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
     // Get viewer's privacy settings (for mutual visibility checks)
-    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
+    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Determine relationship and shared spaces
-    const relationship = await determineRelationship(user.uid, targetUserId);
-    const sharedSpaces = await getSharedSpaces(user.uid, targetUserId);
+    const relationship = await determineRelationship(user.id, targetUserId);
+    const sharedSpaces = await getSharedSpaces(user.id, targetUserId);
 
     // Calculate visibility permissions
     const visibility = calculateVisibility(
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get viewer's privacy settings
-    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
+    const viewerPrivacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
     const viewerPrivacy = viewerPrivacyDoc.exists ? viewerPrivacyDoc.data() : null;
 
     // Process each user
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
       userIds.map(async (targetUserId) => {
         try {
           // Skip self
-          if (targetUserId === user.uid) {
+          if (targetUserId === user.id) {
             return {
               userId: targetUserId,
               visibility: {
@@ -135,8 +135,8 @@ export async function GET(request: NextRequest) {
           const targetPrivacy = targetPrivacyDoc.exists ? targetPrivacyDoc.data() : null;
 
           // Determine relationship and shared spaces
-          const relationship = await determineRelationship(user.uid, targetUserId);
-          const sharedSpaces = await getSharedSpaces(user.uid, targetUserId);
+          const relationship = await determineRelationship(user.id, targetUserId);
+          const sharedSpaces = await getSharedSpaces(user.id, targetUserId);
 
           // Calculate visibility
           const visibility = calculateVisibility(
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
             }
           };
         } catch (error) {
-          logger.error('Error checking visibility for user', { targetUserId, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/privacy/visibility' });
+          logger.error('Error checking visibility for user', { targetUserId, error: error instanceof Error ? error.message : String(error), endpoint: '/api/privacy/visibility' });
           return {
             userId: targetUserId,
             visibility: {

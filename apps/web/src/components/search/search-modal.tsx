@@ -50,7 +50,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   // Handle search input
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
+    const query = (e.target as any).value;
     setSearchQuery(query);
 
     if (query.trim().length >= 2) {
@@ -170,31 +170,31 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {/* Search Type Filter */}
         <div className="flex gap-2 mt-4">
           <Button
-            variant={selectedType === 'all' ? 'primary' : 'ghost'}
-            size="sm"
+            variant={selectedType === 'all' ? 'default' : 'ghost'}
+            className="max-w-sm"
             onClick={() => setSelectedType('all')}
           >
             All
           </Button>
           <Button
-            variant={selectedType === 'profiles' ? 'primary' : 'ghost'}
-            size="sm"
+            variant={selectedType === 'profiles' ? 'default' : 'ghost'}
+            className="max-w-sm"
             onClick={() => setSelectedType('profiles')}
           >
             <Users className="h-3 w-3 mr-1" />
             People
           </Button>
           <Button
-            variant={selectedType === 'spaces' ? 'primary' : 'ghost'}
-            size="sm"
+            variant={selectedType === 'spaces' ? 'default' : 'ghost'}
+            className="max-w-sm"
             onClick={() => setSelectedType('spaces')}
           >
             <Hash className="h-3 w-3 mr-1" />
             Spaces
           </Button>
           <Button
-            variant={selectedType === 'posts' ? 'primary' : 'ghost'}
-            size="sm"
+            variant={selectedType === 'posts' ? 'default' : 'ghost'}
+            className="max-w-sm"
             onClick={() => setSelectedType('posts')}
           >
             <FileText className="h-3 w-3 mr-1" />
@@ -290,10 +290,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 {suggestions.map((suggestion) => (
                   <Button
                     key={suggestion}
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm text-xs"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-xs"
                   >
                     <TrendingUp className="h-3 w-3 mr-1" />
                     {suggestion}
@@ -311,10 +310,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   Recent Searches
                 </h3>
                 <Button
-                  variant="ghost"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm text-xs"
                   onClick={clearRecentSearches}
-                  className="text-xs"
                 >
                   Clear
                 </Button>
@@ -323,10 +321,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 {recentSearches.map((recent) => (
                   <Button
                     key={recent}
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm w-full justify-start text-left"
                     onClick={() => handleRecentSearchClick(recent)}
-                    className="w-full justify-start text-left"
                   >
                     <Clock className="h-3 w-3 mr-2" />
                     {recent}

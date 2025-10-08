@@ -11,24 +11,26 @@ import { NextRequest } from 'next/server';
 
 export interface AuthUser {
   uid: string;
+  id: string; // Alias for uid for backwards compatibility
   email: string;
   emailVerified: boolean;
   displayName?: string;
   photoURL?: string;
-  
+
   // HIVE-specific properties
   handle?: string;
   schoolId?: string;
   userType?: 'student' | 'faculty' | 'staff' | 'alumni';
   isOnboarded?: boolean;
   isBuilder?: boolean;
-  
+
   // Firebase properties
   customClaims?: Record<string, any>;
 }
 
 export interface SessionUser {
   uid: string;
+  id: string; // Alias for uid for backwards compatibility
   email: string;
   emailVerified: boolean;
   displayName?: string;
@@ -51,6 +53,7 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
       if (devBypass === 'true') {
         return {
           uid: 'dev-user-id',
+          id: 'dev-user-id',
           email: 'dev@example.com',
           emailVerified: true,
           displayName: 'Dev User',
@@ -74,6 +77,7 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
     
     return {
       uid: decodedToken.uid,
+      id: decodedToken.uid, // Alias for backwards compatibility
       email: decodedToken.email || '',
       emailVerified: decodedToken.email_verified || false,
       displayName: decodedToken.name,
@@ -96,12 +100,13 @@ export async function getCurrentUser(request?: NextRequest): Promise<AuthUser | 
  * Get user from session data (for non-request contexts)
  */
 export async function getUserFromSession(sessionData: any): Promise<SessionUser | null> {
-  if (!sessionData?.uid) {
+  if (!sessionData?.id) {
     return null;
   }
 
   return {
-    uid: sessionData.uid,
+    uid: sessionData.id,
+    id: sessionData.id, // Alias for backwards compatibility
     email: sessionData.email || '',
     emailVerified: sessionData.emailVerified || false,
     displayName: sessionData.displayName,

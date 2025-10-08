@@ -3,12 +3,13 @@
  * Manages transactions across repositories
  */
 
-import { IUnitOfWork, IProfileRepository, IConnectionRepository, ISpaceRepository, IFeedRepository, IRitualRepository } from '../interfaces';
+import { IUnitOfWork, IProfileRepository, IConnectionRepository, ISpaceRepository, IFeedRepository, IRitualRepository, IToolRepository } from '../interfaces';
 import { FirebaseProfileRepository } from './profile.repository';
 import { FirebaseConnectionRepository } from './connection.repository';
 import { FirebaseSpaceRepository } from './space.repository';
 import { FirebaseFeedRepository } from './feed.repository';
 import { FirebaseRitualRepository } from './ritual.repository';
+import { FirebaseToolRepository } from './tool.repository';
 
 export class FirebaseUnitOfWork implements IUnitOfWork {
   private _profiles: IProfileRepository;
@@ -16,6 +17,7 @@ export class FirebaseUnitOfWork implements IUnitOfWork {
   private _spaces: ISpaceRepository;
   private _feeds: IFeedRepository;
   private _rituals: IRitualRepository;
+  private _tools: IToolRepository;
 
   private transactionStarted: boolean = false;
   private transactionData: Map<string, any> = new Map();
@@ -27,6 +29,7 @@ export class FirebaseUnitOfWork implements IUnitOfWork {
     this._spaces = new FirebaseSpaceRepository();
     this._feeds = new FirebaseFeedRepository();
     this._rituals = new FirebaseRitualRepository();
+    this._tools = new FirebaseToolRepository();
   }
 
   get profiles(): IProfileRepository {
@@ -47,6 +50,10 @@ export class FirebaseUnitOfWork implements IUnitOfWork {
 
   get rituals(): IRitualRepository {
     return this._rituals;
+  }
+
+  get tools(): IToolRepository {
+    return this._tools;
   }
 
   async begin(): Promise<void> {

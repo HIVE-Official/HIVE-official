@@ -10,4 +10,5 @@ export * from './motion';
 export * from './effects';
 export * from './css-generator';
 export * from './tailwind-config';
+export * from './hive-theme';
 //# sourceMappingURL=index.d.ts.map

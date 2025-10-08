@@ -271,12 +271,12 @@ export class HivePerformanceCollector {
     });
   }
 
-  recordCacheMetrics(operation: 'hit' | 'miss', cacheType: string): void {
+  recordCacheMetrics(action: 'hit' | 'miss', cacheType: string): void {
     this.record({
       type: MetricType._CACHE_HIT_RATE,
-      value: operation === 'hit' ? 1 : 0,
+      value: action === 'hit' ? 1 : 0,
       unit: 'ratio',
-      labels: { operation, cache_type: cacheType }
+      labels: { operation: action, cache_type: cacheType }
     });
   }
 
@@ -306,6 +306,7 @@ export class HivePerformanceCollector {
         const metrics = collector();
         collectedMetrics.push(...metrics);
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
 
@@ -361,6 +362,7 @@ export class HivePerformanceCollector {
         const truncated = queue.slice(-500);
         localStorage.setItem('hive_metrics_queue', JSON.stringify(truncated));
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }
@@ -606,6 +608,7 @@ class PerformanceMonitor {
     } catch (error) {
       // Silently fail in production
       if (process.env.NODE_ENV === 'development') {
+        console.error('Performance monitoring error:', error);
       }
     }
   }

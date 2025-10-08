@@ -1,4 +1,4 @@
-import { Skeleton, HiveCard } from '@hive/ui';
+import { Skeleton, Card } from '@hive/ui';
 
 export function EventsLoadingSkeleton() {
   return (
@@ -59,7 +59,7 @@ export function EventsLoadingSkeleton() {
 
 function FeaturedEventSkeleton() {
   return (
-    <HiveCard className="overflow-hidden">
+    <Card className="overflow-hidden">
       {/* Event Image/Banner */}
       <Skeleton className="h-48 w-full rounded-none" />
 
@@ -101,13 +101,13 @@ function FeaturedEventSkeleton() {
         {/* Action Button */}
         <Skeleton className="h-11 w-full rounded-lg" />
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
 function EventCardSkeleton() {
   return (
-    <HiveCard className="p-4">
+    <Card className="p-4">
       <div className="flex gap-4">
         {/* Date Box */}
         <div className="flex-shrink-0">
@@ -144,6 +144,6 @@ function EventCardSkeleton() {
           <Skeleton className="h-9 w-24 rounded-lg" />
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

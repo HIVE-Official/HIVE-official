@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, Badge, Card } from "@hive/ui";
+import { Dialog, Button, Badge, Card } from "@hive/ui";
 import { Alert } from "@/components/temp-stubs";
 import { 
   Calendar, 
@@ -158,6 +158,7 @@ export function EventDetailsModal({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (err) {
+      // Intentionally suppressed - non-critical error
     }
   };
 
@@ -168,7 +169,7 @@ export function EventDetailsModal({
   };
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={onClose}
      
@@ -190,18 +191,17 @@ export function EventDetailsModal({
                 </h2>
                 <div className="flex items-center space-x-2 flex-shrink-0">
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    className={`max-w-sm ${event.isBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}`}
                     onClick={() => onBookmark(event.id)}
-                    className={event.isBookmarked ? 'text-[var(--hive-brand-primary)]' : 'text-zinc-400'}
                   >
                     <Heart className={`h-5 w-5 ${event.isBookmarked ? 'fill-current' : ''}`} />
                   </Button>
                   <Button
-                    variant="ghost"
-                    size="sm"
+                    variant="outline"
+                    className="max-w-sm text-zinc-400 hover:text-white"
                     onClick={handleCopyLink}
-                    className="text-zinc-400 hover:text-white"
+                    
                   >
                     {copiedLink ? (
                       <CheckCircle className="h-5 w-5 text-green-400" />
@@ -226,7 +226,7 @@ export function EventDetailsModal({
                   </>
                 )}
                 <span>•</span>
-                <Badge variant="skill-tag" className="text-xs capitalize">
+                <Badge variant="secondary" className="text-xs capitalize">
                   {event.type}
                 </Badge>
               </div>
@@ -274,7 +274,7 @@ export function EventDetailsModal({
               {!isEventPast && (
                 <>
                   <Button
-                    variant={event.rsvpStatus === 'going' ? 'primary' : 'outline'}
+                    variant={event.rsvpStatus === 'going' ? 'default' : 'outline'}
                     onClick={() => onRSVP(event.id, event.rsvpStatus === 'going' ? 'not_going' : 'going')}
                     disabled={isEventFull && event.rsvpStatus !== 'going'}
                     className="flex items-center space-x-2"
@@ -284,7 +284,7 @@ export function EventDetailsModal({
                   </Button>
                   
                   <Button
-                    variant={event.rsvpStatus === 'interested' ? 'primary' : 'outline'}
+                    variant={event.rsvpStatus === 'interested' ? 'default' : 'outline'}
                     onClick={() => onRSVP(event.id, event.rsvpStatus === 'interested' ? 'not_going' : 'interested')}
                   >
                     <Star className="h-4 w-4" />
@@ -301,7 +301,7 @@ export function EventDetailsModal({
               )}
               
               {isEventPast && (
-                <Badge variant="skill-tag" className="flex items-center space-x-1">
+                <Badge variant="secondary" className="flex items-center space-x-1">
                   <Clock className="h-3 w-3" />
                   <span>Event Ended</span>
                 </Badge>
@@ -309,7 +309,7 @@ export function EventDetailsModal({
             </div>
 
             {isEventSoon && event.rsvpStatus === 'going' && (
-              <Badge variant="building-tools" className="animate-pulse">
+              <Badge variant="secondary" className="animate-pulse">
                 Starting Soon!
               </Badge>
             )}
@@ -339,7 +339,7 @@ export function EventDetailsModal({
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
                   <Badge 
-                    variant="skill-tag" 
+                    variant="secondary" 
                     className={`text-xs ${activeTab === tab.id ? 'bg-hive-obsidian text-[var(--hive-brand-primary)]' : ''}`}
                   >
                     {tab.count}
@@ -375,10 +375,9 @@ export function EventDetailsModal({
                       {event.location.virtualLink && (
                         <div className="mt-2">
                           <Button
-                            variant="secondary"
-                            size="sm"
+                            variant="outline"
+                            className="max-w-sm flex items-center space-x-2"
                             onClick={() => window.open(event.location.virtualLink, '_blank')}
-                            className="flex items-center space-x-2"
                           >
                             <ExternalLink className="h-4 w-4" />
                             <span>Join Virtual Event</span>
@@ -411,7 +410,7 @@ export function EventDetailsModal({
                   <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {event.tags.map((tag) => (
-                      <Badge key={tag} variant="skill-tag">
+                      <Badge key={tag} variant="secondary">
                         #{tag}
                       </Badge>
                     ))}
@@ -440,11 +439,11 @@ export function EventDetailsModal({
                   Attendees ({event.capacity.current})
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="skill-tag" className="text-xs">
+                  <Badge variant="secondary" className="text-xs">
                     {event.capacity.max - event.capacity.current} spots left
                   </Badge>
                   {event.organizer.id === currentUserId && (
-                    <Button variant="secondary" size="sm">
+                    <Button variant="outline" className="max-w-sm">
                       <UserPlus className="h-4 w-4 mr-1" />
                       Invite
                     </Button>
@@ -473,7 +472,7 @@ export function EventDetailsModal({
                           {event.organizer.verified && (
                             <Star className="h-3 w-3 text-[var(--hive-brand-primary)] fill-current" />
                           )}
-                          <Badge variant="building-tools" className="text-xs">
+                          <Badge variant="secondary" className="text-xs">
                             Organizer
                           </Badge>
                         </div>
@@ -498,7 +497,7 @@ export function EventDetailsModal({
                           </div>
                         </div>
                         {currentUserId === event.organizer.id && (
-                          <Button variant="ghost" size="sm" className="text-zinc-400">
+ <Button variant="outline" className="max-w-sm text-zinc-400">
                             <MessageCircle className="h-4 w-4" />
                           </Button>
                         )}
@@ -575,7 +574,7 @@ export function EventDetailsModal({
                   Discussion ({event.engagement.comments})
                 </h3>
                 {event.organizer.id === currentUserId && (
-                  <Button variant="secondary" size="sm">
+                  <Button variant="outline" className="max-w-sm">
                     <Settings className="h-4 w-4 mr-1" />
                     Moderate
                   </Button>
@@ -597,7 +596,7 @@ export function EventDetailsModal({
                     <div className="flex items-center space-x-2 text-xs text-zinc-400">
                       <span>💡 Ask about logistics, requirements, or coordination</span>
                     </div>
-                    <Button size="sm" className="bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne">
+ <Button className="max-w-sm bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne">
                       Comment
                     </Button>
                   </div>
@@ -623,11 +622,11 @@ export function EventDetailsModal({
                             Should I bring my own laptop or will there be computers available? Also, is there a specific IDE we should use for the coding exercises?
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               3
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               Reply
                             </Button>
                           </div>
@@ -642,7 +641,7 @@ export function EventDetailsModal({
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
                             <span className="font-medium text-white">{event.organizer.name}</span>
-                            <Badge variant="building-tools" className="text-xs">
+                            <Badge variant="secondary" className="text-xs">
                               Organizer
                             </Badge>
                             <span className="text-xs text-zinc-400">1 hour ago</span>
@@ -651,11 +650,11 @@ export function EventDetailsModal({
                             Great question! Please bring your own laptop with your preferred IDE installed. We'll be using various languages so having your familiar setup will help. I've also added "Laptop" to the requirements list above.
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               5
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               Reply
                             </Button>
                           </div>
@@ -675,11 +674,11 @@ export function EventDetailsModal({
                             Looking forward to this! I've been working through CLRS chapters 15-16. Are we focusing on any specific algorithms or should I review everything?
                           </p>
                           <div className="flex items-center space-x-4 mt-2">
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               <Heart className="h-3 w-3 mr-1" />
                               2
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white text-xs">
+ <Button variant="outline" className="max-w-sm text-zinc-400 hover:text-white text-xs">
                               Reply
                             </Button>
                           </div>
@@ -689,7 +688,7 @@ export function EventDetailsModal({
                     
                     {event.engagement.comments > 3 && (
                       <div className="text-center">
-                        <Button variant="secondary" size="sm">
+                        <Button variant="outline" className="max-w-sm">
                           Load {event.engagement.comments - 3} more comments
                         </Button>
                       </div>
@@ -709,6 +708,6 @@ export function EventDetailsModal({
           )}
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

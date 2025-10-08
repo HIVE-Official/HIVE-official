@@ -1,1 +1,1 @@
-{"version":3,"file":"skeleton.d.ts","sourceRoot":"","sources":["../../../../../src/atomic/atoms/skeleton.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAG9B,MAAM,WAAW,aAAc,SAAQ,KAAK,CAAC,cAAc,CAAC,cAAc,CAAC;CAAG;AAE9E,QAAA,MAAM,QAAQ,sFAab,CAAA;AAGD,OAAO,EAAE,QAAQ,EAAE,CAAA"}
+{"version":3,"file":"skeleton.d.ts","sourceRoot":"","sources":["../../../../../src/atomic/atoms/skeleton.tsx"],"names":[],"mappings":"AAEA,iBAAS,QAAQ,CAAC,EAChB,SAAS,EACT,GAAG,KAAK,EACT,EAAE,KAAK,CAAC,cAAc,CAAC,cAAc,CAAC,2CAOtC;AAED,OAAO,EAAE,QAAQ,EAAE,CAAA"}

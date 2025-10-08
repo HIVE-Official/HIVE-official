@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     const now = new Date();
     const activityEvent: ActivityEvent = {
-      userId: user.uid,
+      userId: user.id,
       type,
       spaceId: spaceId || undefined,
       toolId: toolId || undefined,
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     const docRef = await dbAdmin.collection('activityEvents').add(activityEvent);
 
     // Update daily summary asynchronously
-    updateDailySummary(user.uid, activityEvent);
+    updateDailySummary(user.id, activityEvent);
 
     return NextResponse.json({ 
       success: true, 
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch daily summaries
     const summariesQuery = dbAdmin.collection('activitySummaries')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('date', '>=', startDateStr)
       .where('date', '<=', endDateStr)
       .orderBy('date', 'desc');
@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
     if (includeDetails) {
       // Fetch recent activity events for details
       const eventsQuery = dbAdmin.collection('activityEvents')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('date', '>=', startDateStr)
         .where('date', '<=', endDateStr)
         .orderBy('timestamp', 'desc')

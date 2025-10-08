@@ -3,18 +3,20 @@
  * Domain-Driven Design architecture with proper bounded contexts
  */
 // Domain Models - Specific exports to avoid conflicts
-export { EnhancedProfile } from "./domain/profile/aggregates/enhanced-profile";
+export { Profile } from "./domain/profile/aggregates/profile.aggregate";
 export { isProfileComplete, getProfileCompletionPercentage, createDefaultProfile } from "./domain/profile/spec-compliant-profile";
 export { Connection, ConnectionType, ConnectionSource } from "./domain/profile/aggregates/connection";
+export { Space } from "./domain/spaces/aggregates/space.aggregate";
 export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
 export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
 export { SpaceDescription } from "./domain/spaces/value-objects/space-description.value";
-export { SpaceCategory } from "./domain/spaces/value-objects/space-category.value";
-export { EnhancedSpace } from "./domain/spaces/aggregates/enhanced-space";
+export { SpaceCategory, SpaceCategoryEnum } from "./domain/spaces/value-objects/space-category.value";
 export { Tab } from "./domain/spaces/entities/tab";
 export { Widget } from "./domain/spaces/entities/widget";
+export { Ritual } from "./domain/rituals/aggregates/ritual.aggregate";
 export { RitualId } from "./domain/rituals/value-objects/ritual-id.value";
-export { EnhancedRitual } from "./domain/rituals/aggregates/enhanced-ritual";
+export { Tool } from "./domain/tools/aggregates/tool.aggregate";
+export { ToolId } from "./domain/tools/value-objects/tool-id.value";
 export { FeedItem } from "./domain/feed/feed-item";
 export { EnhancedFeed } from "./domain/feed/enhanced-feed";
 // Application Services - Use Case Orchestration

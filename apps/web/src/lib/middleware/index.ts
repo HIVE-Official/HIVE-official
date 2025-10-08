@@ -33,6 +33,8 @@ export {
   getUserEmail,
   type AuthenticatedRequest,
   type AuthenticatedHandler,
+  type AuthenticatedRouteContext,
+  type RouteParams,
   type NextRouteHandler
 } from './auth';
 
@@ -55,28 +57,27 @@ export {
 } from './response';
 
 // Combined middleware wrappers
-import { withAuth, withAdminAuth, type AuthenticatedHandler } from './auth';
+import { withAuth, withAdminAuth, type AuthenticatedHandler, type AuthenticatedRouteContext, type AuthenticatedRequest, type RouteParams } from './auth';
 import { withErrorHandling, type ApiHandler } from './error-handler';
 import { withResponse, type ResponseFormatter } from './response';
 import { z } from 'zod';
-
-// Define RouteParams type for dynamic route parameters
-type RouteParams = Record<string, string | string[]>;
 
 /**
  * Most common pattern: Auth + Error Handling + Response Formatting
  * Replaces 15+ lines of boilerplate in most protected routes
  */
-export function withAuthAndErrors<T = RouteParams>(
+export function withAuthAndErrors<TAdditional extends RouteParams = RouteParams>(
   handler: (
-    request: any,
-    context: T,
+    request: AuthenticatedRequest,
+    context: AuthenticatedRouteContext & TAdditional,
     respond: typeof ResponseFormatter
   ) => Promise<Response>
 ): ApiHandler {
   return withErrorHandling(
-    withAuth(
-      withResponse(handler as any)
+    withAuth<TAdditional>(
+      withResponse<AuthenticatedRouteContext & TAdditional, AuthenticatedRequest>(
+        async (request, context, respond) => handler(request, context, respond)
+      )
     )
   );
 }
@@ -84,22 +85,24 @@ export function withAuthAndErrors<T = RouteParams>(
 /**
  * Admin routes pattern: Admin Auth + Error Handling + Response Formatting
  */
-export function withAdminAuthAndErrors<T = RouteParams>(
+export function withAdminAuthAndErrors<TAdditional extends RouteParams = RouteParams>(
   handler: (
-    request: any,
-    context: T,
+    request: AuthenticatedRequest,
+    context: AuthenticatedRouteContext & TAdditional,
     respond: typeof ResponseFormatter
   ) => Promise<Response>
 ): ApiHandler {
   return withErrorHandling(
-    withAdminAuth(
-      withResponse(handler as any)
+    withAdminAuth<TAdditional>(
+      withResponse<AuthenticatedRouteContext & TAdditional, AuthenticatedRequest>(
+        async (request, context, respond) => handler(request, context, respond)
+      )
     )
   );
 }
 
 /**
- * Public routes pattern: Error Handling + Response Formatting only
+ * Public routes pattern: any Handling + Response Formatting only
  */
 export function withErrors<T extends any>(
   handler: (
@@ -139,18 +142,18 @@ export function withValidation<TSchema, TContext extends any>(
  * Full stack middleware: Auth + Validation + Error Handling + Response
  * For protected routes that need request validation
  */
-export function withAuthValidationAndErrors<TSchema, TContext extends any>(
+export function withAuthValidationAndErrors<TSchema, TAdditional extends RouteParams = RouteParams>(
   schema: z.ZodSchema<TSchema>,
   handler: (
-    request: any,
-    context: TContext,
+    request: AuthenticatedRequest,
+    context: AuthenticatedRouteContext & TAdditional,
     body: TSchema,
     respond: typeof ResponseFormatter
   ) => Promise<Response>
 ): ApiHandler {
-  return withAuthAndErrors(async (request, context, respond) => {
+  return withAuthAndErrors<TAdditional>(async (request, context, respond) => {
     const { validateRequestBody } = await import('./error-handler');
     const body = await validateRequestBody(request, schema);
-    return handler(request, context as TContext, body, respond);
+    return handler(request, context, body, respond);
   });
 }

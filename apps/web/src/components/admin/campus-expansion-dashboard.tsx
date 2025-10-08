@@ -317,20 +317,18 @@ export default function CampusExpansionDashboard() {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      className="max-w-sm border-gray-600 text-gray-300 hover:bg-gray-700"
                       variant="outline"
                       onClick={() => handleAction('updateCampusStage', { campusId: campus.campusId, stage: 'planning' })}
                       disabled={activeAction === 'updateCampusStage'}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700"
                     >
                       Advance Stage
                     </Button>
                     <Button
-                      size="sm"
+                      className="max-w-sm border-gray-600 text-gray-300 hover:bg-gray-700"
                       variant="outline"
                       onClick={() => handleAction('generateCampusReport', { campusId: campus.campusId })}
                       disabled={activeAction === 'generateCampusReport'}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700"
                     >
                       Generate Report
                     </Button>
@@ -487,11 +485,10 @@ export default function CampusExpansionDashboard() {
                   </div>
                   <div>
                     <Button
-                      size="sm"
+                      className="max-w-sm border-gray-600 text-gray-300 hover:bg-gray-700"
                       variant="outline"
                       onClick={() => handleAction('analyzeMarket', { region: market.region })}
                       disabled={activeAction === 'analyzeMarket'}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700"
                     >
                       Deep Analysis
                     </Button>

@@ -3,6 +3,8 @@ const logger = {
   error: (msg: string, meta?: any) => console.error(`[ProfileAPI] ${msg}`, meta)
 };
 
+import type { ProfilePrivacySettings } from "@hive/core";
+
 // Profile data interfaces
 export interface ProfileData {
   id: string;
@@ -144,38 +146,6 @@ export interface ProfileDashboardData {
       activityVisible: boolean;
       onlineStatus: boolean;
     };
-  };
-}
-
-export interface PrivacySettings {
-  // Profile visibility
-  isPublic: boolean;
-  showEmail: boolean;
-  showSchool: boolean;
-  showMajor: boolean;
-  showGraduationYear: boolean;
-  
-  // Activity visibility
-  showActivity: boolean;
-  showSpaces: boolean;
-  showOnlineStatus: boolean;
-  
-  // Contact preferences
-  allowDirectMessages: boolean;
-  allowSpaceInvites: boolean;
-  allowEventInvites: boolean;
-  
-  // Analytics and data
-  allowAnalytics: boolean;
-  allowPersonalization: boolean;
-  
-  // Ghost mode
-  ghostMode: {
-    enabled: boolean;
-    level: 'minimal' | 'moderate' | 'maximum';
-    hideActivity: boolean;
-    hideOnlineStatus: boolean;
-    hideMemberships: boolean;
   };
 }
 
@@ -326,8 +296,8 @@ class ProfileAPIClient {
   }
 
   // Get privacy settings
-  async getPrivacySettings(): Promise<PrivacySettings> {
-    const response = await this.makeRequest<PrivacySettings>('/profile/privacy');
+  async getPrivacySettings(): Promise<ProfilePrivacySettings> {
+    const response = await this.makeRequest<ProfilePrivacySettings>('/profile/privacy');
     
     if (!response.success || !response.privacy) {
       throw new Error(response.error || 'Failed to fetch privacy settings');
@@ -337,7 +307,7 @@ class ProfileAPIClient {
   }
 
   // Update privacy settings
-  async updatePrivacySettings(settings: Partial<PrivacySettings>): Promise<{ success: boolean; message: string }> {
+  async updatePrivacySettings(settings: Partial<ProfilePrivacySettings>): Promise<{ success: boolean; message: string }> {
     const response = await this.makeRequest('/profile/privacy', {
       method: 'PATCH',
       body: JSON.stringify(settings),
@@ -390,3 +360,4 @@ class ProfileAPIClient {
 // Export singleton instance
 export const profileAPI = new ProfileAPIClient();
 export default profileAPI;
+export type { ProfilePrivacySettings as PrivacySettings } from "@hive/core";

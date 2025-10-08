@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Button } from '@hive/ui';
 import { Alert, AlertDescription } from '@hive/ui';
-import { Progress } from '@hive/ui';
 
 interface CacheManagementData {
   overview: {
@@ -29,7 +28,7 @@ interface CacheManagementData {
     };
     memoryBreakdown: Record<string, any>;
     slowQueries: Array<{
-      operation: string;
+      action: string;
       key: string;
       responseTime: number;
       timestamp: number;
@@ -455,11 +454,10 @@ export default function CacheManagementDashboard() {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
+                      className="max-w-sm border-red-600 text-red-400 hover:bg-red-600/10"
                       variant="outline"
                       onClick={() => handleAction('flushNamespace', { namespace: namespace.namespace })}
                       disabled={activeAction === 'flushNamespace'}
-                      className="border-red-600 text-red-400 hover:bg-red-600/10"
                     >
                       Flush Namespace
                     </Button>

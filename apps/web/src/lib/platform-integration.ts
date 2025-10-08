@@ -251,6 +251,7 @@ export class PlatformIntegration {
             }
           }
         } catch (error) {
+          console.error('Error processing space data:', error);
         }
       }
 
@@ -361,6 +362,7 @@ export class PlatformIntegration {
           const message = JSON.parse(event.data);
           this.handleWebSocketMessage(message);
         } catch (error) {
+          console.error('WebSocket message parse error:', error);
         }
       };
 
@@ -371,6 +373,7 @@ export class PlatformIntegration {
       this.websocket.onerror = (error) => {
       };
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }
 
@@ -487,6 +490,7 @@ export class PlatformIntegration {
         try {
           callback(data);
         } catch (error) {
+          // Intentionally suppressed - non-critical error
         }
       });
     }
@@ -536,6 +540,7 @@ export class PlatformIntegration {
           expires: Date.now() + ttl
         }));
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }
@@ -561,6 +566,7 @@ export class PlatformIntegration {
           }
         }
       } catch (error) {
+        // Intentionally suppressed - non-critical error
       }
     }
   }
@@ -576,10 +582,11 @@ export class PlatformIntegration {
       if (sessionJson) {
         const session = JSON.parse(sessionJson);
         return process.env.NODE_ENV === 'development' 
-          ? `dev_token_${session.uid}` 
+          ? `dev_token_${session.id}` 
           : session.token;
       }
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
     
     return '';
@@ -607,6 +614,7 @@ export class PlatformIntegration {
         this.initializeWebSocket();
       }, delay);
     } else {
+      // Max reconnect attempts reached - stop trying
     }
   }
 

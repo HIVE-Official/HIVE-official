@@ -7,6 +7,7 @@ import { FirebaseConnectionRepository } from './connection.repository';
 import { FirebaseSpaceRepository } from './space.repository';
 import { FirebaseFeedRepository } from './feed.repository';
 import { FirebaseRitualRepository } from './ritual.repository';
+import { FirebaseToolRepository } from './tool.repository';
 export class FirebaseUnitOfWork {
     constructor() {
         this.transactionStarted = false;
@@ -17,6 +18,7 @@ export class FirebaseUnitOfWork {
         this._spaces = new FirebaseSpaceRepository();
         this._feeds = new FirebaseFeedRepository();
         this._rituals = new FirebaseRitualRepository();
+        this._tools = new FirebaseToolRepository();
     }
     get profiles() {
         return this._profiles;
@@ -32,6 +34,9 @@ export class FirebaseUnitOfWork {
     }
     get rituals() {
         return this._rituals;
+    }
+    get tools() {
+        return this._tools;
     }
     async begin() {
         if (this.transactionStarted) {

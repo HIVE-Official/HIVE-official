@@ -11,7 +11,7 @@ const config: Config = {
   ],
   darkMode: masterConfig.darkMode as 'class' | 'media',
   theme: masterConfig.theme,
-  plugins: masterConfig.plugins,
+  plugins: masterConfig.plugins as Config['plugins'],
   // Production optimizations
   ...(process.env.NODE_ENV === 'production' && {
     // Remove unused CSS in production

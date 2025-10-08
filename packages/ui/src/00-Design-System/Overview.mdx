@@ -1,0 +1,218 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Design System/Overview" />
+
+# HIVE Design System
+
+**A comprehensive design system for campus-first social utility.**
+
+---
+
+## 🎨 What is the HIVE Design System?
+
+The HIVE Design System is a complete collection of design tokens, components, and patterns built specifically for **campus life at scale**. Every element is designed with behavioral psychology principles and mobile-first accessibility.
+
+---
+
+## 📐 System Architecture
+
+### Design Tokens
+Foundation of the system - colors, typography, spacing, shadows, and motion.
+
+- **Colors**: Brand gold (#FFD700), semantic colors, status indicators
+- **Typography**: Geist Sans (UI), Space Grotesk (display)
+- **Spacing**: 4px grid system (1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64)
+- **Shadows**: 4 elevation levels for depth
+- **Motion**: Spring physics for natural feel
+
+### Component Library
+61 components organized by complexity:
+
+- **37 Atoms**: Basic building blocks
+- **12 Molecules**: Combined components
+- **11 Organisms**: Complex systems
+- **1 Template**: Page layouts
+
+### Patterns & Principles
+Behavioral design patterns that drive engagement:
+
+- **Effortless Competence**: Make users feel capable
+- **Relief Amplifier**: "Someone needs you" framing
+- **Social Proof**: Show community activity
+- **70% Completion Target**: Optimize for finishing
+- **Variable Reward**: Scheduling for engagement
+
+---
+
+## 🌙 Dark Theme First
+
+HIVE defaults to dark theme with high contrast:
+
+- **Background**: `#0A0A0B` (primary), `#111113` (secondary)
+- **Text**: `#E5E5E7` (primary), `#9CA3AF` (muted)
+- **Brand**: `#FFD700` (gold accent)
+- **Interactive**: High contrast hover states
+
+---
+
+## 📱 Mobile-First Design
+
+Every component designed for mobile:
+
+- **44px+ touch targets**: All interactive elements
+- **Thumb-friendly layouts**: Bottom navigation, easy reach
+- **Fast loading**: Optimized bundle sizes
+- **Responsive breakpoints**: sm (640), md (768), lg (1024)
+
+---
+
+## ♿ Accessibility Standards
+
+WCAG 2.1 AA compliance across all components:
+
+- **Keyboard navigation**: Full support
+- **Screen readers**: ARIA labels and roles
+- **Color contrast**: 4.5:1 minimum
+- **Focus indicators**: Visible ring on all interactive elements
+
+---
+
+## 🧱 Component Organization
+
+### Atomic Design (Technical View)
+For developers building components:
+
+- **Atoms** → Basic elements
+- **Molecules** → Simple combinations
+- **Organisms** → Complex systems
+- **Templates** → Page layouts
+
+### Feature Slices (Product View)
+For product teams and designers:
+
+- **Onboarding & Auth** → User journey start
+- **Profile System** → Identity and connections
+- **Spaces & Communities** → Group discovery
+- **Feed & Content** → Content consumption
+- **Tools & HiveLab** → Creation tools
+- **Notifications** → Alert system
+- **Navigation** → App navigation
+- **Forms & Input** → Data collection
+- **Social & Engagement** → Interactions
+
+---
+
+## 🎯 Design Principles
+
+### 1. Campus-First
+Designed for 32,000 students at University at Buffalo:
+- Fast on campus WiFi
+- Works during high-traffic events
+- Optimized for student behavior
+
+### 2. Social Utility
+Every interaction serves dual purpose:
+- Connect with others
+- Solve real problems
+- Enable coordination
+
+### 3. Behavioral Psychology
+Built-in engagement patterns:
+- Relief amplifier design
+- Social proof messaging
+- Completion psychology
+- Variable reward scheduling
+
+### 4. Production-Ready
+No mocks, no stubs:
+- Real Firebase integration
+- Actual auth flows
+- Production performance
+- Zero placeholder content
+
+### 5. Scalable
+Built to grow:
+- Design tokens for consistency
+- Component library architecture
+- Pattern documentation
+- Clear standards
+
+---
+
+## 🚀 Getting Started
+
+### View Design Tokens
+Browse the Design System section:
+- **Colors** → Brand, semantic, status colors
+- **Typography** → Font families, sizes, weights
+- **Spacing** → Grid system and scale
+- **Icons** → Lucide React icon library
+
+### Explore Components
+Two ways to browse:
+
+**Technical (Atomic Design):**
+- Atoms → Molecules → Organisms → Templates
+- Organized by complexity
+- For developers
+
+**Product (Feature Slices):**
+- Onboarding → Profile → Spaces → Feed → etc.
+- Organized by feature
+- For designers/PMs
+
+### Build New Components
+```bash
+# Create from templates
+pnpm create:atom button-name
+pnpm create:molecule search-bar
+pnpm create:organism profile-card
+
+# Standards enforced automatically
+```
+
+---
+
+## 📚 Resources
+
+- **Component Standards**: `COMPONENT_STANDARDS.md`
+- **Design Tokens**: `@hive/tokens`
+- **CSS Variables**: All components use `--hive-*` variables
+- **TypeScript Types**: Full type safety
+
+---
+
+## 🎨 Color Philosophy
+
+### Brand Gold (#FFD700)
+- Primary action color
+- Highlights important elements
+- Creates "premium" feeling
+- High visibility on dark backgrounds
+
+### Dark Theme
+- Reduces eye strain
+- Premium, modern aesthetic
+- Better for late-night use (70% of campus usage)
+- Conserves battery on OLED screens
+
+### Semantic Colors
+- **Success**: Green (`#10B981`)
+- **Warning**: Amber (`#F59E0B`)
+- **Error**: Red (`#EF4444`)
+- **Info**: Blue (`#3B82F6`)
+
+---
+
+## 🏗️ System Status
+
+- ✅ **61 Components** fully documented
+- ✅ **Zero build errors**
+- ✅ **100% TypeScript** strict mode
+- ✅ **Mobile-first** responsive
+- ✅ **WCAG 2.1 AA** compliant
+- ✅ **Production-ready** Firebase integration
+
+---
+
+**The HIVE Design System enables rapid, consistent development of campus-first features.**

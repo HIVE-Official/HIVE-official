@@ -24,6 +24,7 @@ export interface AuthConfig {
   allowTestTokens?: boolean;
   allowAnonymous?: boolean;
   operation?: string;
+  action?: string;
 }
 
 /**
@@ -173,7 +174,7 @@ export async function requireAdminAuth(
   request: NextRequest,
   config?: AuthConfig
 ): Promise<AuthContext> {
-  const authContext = await requireAuth(request, { ...config, operation: 'admin_access' });
+  const authContext = await requireAuth(request, { ...config, action: 'admin_access' });
   
   // For test users in development, allow admin access
   if (authContext.isTestUser && authContext.isDevelopmentMode) {
@@ -210,7 +211,7 @@ export async function logAuthEvent(
         request.headers.get('x-real-ip') || 
         request.headers.get('cf-connecting-ip') || undefined,
     userAgent: request.headers.get('user-agent') || undefined,
-    operation: `auth_${event}`,
+    action: `auth_${event}`,
     tags: {
       authEvent: event,
       path: new URL(request.url).pathname

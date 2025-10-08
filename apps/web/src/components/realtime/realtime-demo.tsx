@@ -57,7 +57,7 @@ export function RealtimeDemo() {
                 </>
               )}
             </div>
-            <Badge variant="outline" className="gap-1">
+            <Badge variant="secondary" className="gap-1">
               <Activity className="h-3 w-3" />
               {connectionStatus}
             </Badge>
@@ -91,9 +91,8 @@ export function RealtimeDemo() {
 
             {/* Notifications */}
             <Button
-              variant="ghost"
-              size="sm"
-              className="relative"
+              variant="outline"
+              className="max-w-sm relative"
               onClick={markAllAsRead}
             >
               <Bell className="h-5 w-5" />
@@ -111,9 +110,8 @@ export function RealtimeDemo() {
           <div className="mt-4">
             <Button
               variant="outline"
-              size="sm"
+              className="max-w-sm w-full"
               onClick={mergeRealtimeItems}
-              className="w-full"
             >
               <Activity className="h-4 w-4 mr-2" />
               {liveUpdatesCount} new updates - Click to load
@@ -142,7 +140,7 @@ export function RealtimeDemo() {
                       </p>
                     </div>
                     <Badge variant="secondary" className="text-xs">
-                      {space.type}
+                      {space.spaceType}
                     </Badge>
                   </div>
                 </div>
@@ -235,14 +233,14 @@ export function RealtimeDemo() {
                           <Input
                             placeholder="Add a comment..."
                             value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
+                            onChange={(e: React.ChangeEvent) => setCommentText((e.target as any).value)}
                             onKeyPress={(e) => {
                               if (e.key === 'Enter') {
                                 handleAddComment();
                               }
                             }}
                           />
-                          <Button size="sm" onClick={handleAddComment}>
+                          <Button className="max-w-sm" onClick={handleAddComment}>
                             Post
                           </Button>
                         </div>

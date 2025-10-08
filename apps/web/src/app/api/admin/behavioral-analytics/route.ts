@@ -61,7 +61,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching behavioral analytics', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching behavioral analytics', { error: error instanceof Error ? error.message : String(error), userId: auth.userId });
 
     // Return mock data for development
     return NextResponse.json({
@@ -118,7 +118,7 @@ async function getCompletionRates(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error calculating completion rates', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating completion rates', { error: error instanceof Error ? error.message : String(error) });
     return {
       overall: 73.2,
       feedDiscovery: 89.1,
@@ -191,7 +191,7 @@ async function getPanicToReliefMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error calculating panic-to-relief metrics', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating panic-to-relief metrics', { error: error instanceof Error ? error.message : String(error) });
     return {
       averageTime: 8420,
       under10Seconds: 74.3,
@@ -255,7 +255,7 @@ async function getHookCycleMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error calculating hook cycle metrics', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating hook cycle metrics', { error: error instanceof Error ? error.message : String(error) });
     return {
       triggerActivation: 87.2,
       actionCompletion: 76.8,
@@ -309,7 +309,7 @@ async function getAnxietyReliefMetrics(since: Date) {
     return result;
 
   } catch (error) {
-    logger.error('Error calculating anxiety relief metrics', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating anxiety relief metrics', { error: error instanceof Error ? error.message : String(error) });
     return {
       morningAnxiety: { triggered: 234, relieved: 189, avgTime: 7200 },
       socialIsolation: { triggered: 189, relieved: 145, avgTime: 9100 },
@@ -334,7 +334,7 @@ async function getStudentPsychologyMetrics(since: Date) {
     };
 
   } catch (error) {
-    logger.error('Error calculating student psychology metrics', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error calculating student psychology metrics', { error: error instanceof Error ? error.message : String(error) });
     return {
       sexualRomanticCapital: { interactions: 456, connections: 123, success: 27 },
       socialProof: { postsShared: 789, statusGained: 234, fearReduced: 43 },

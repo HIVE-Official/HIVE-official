@@ -72,7 +72,7 @@ export class IntegrationTester {
         success: false,
         testName,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : String(error)
       });
 
     }
@@ -116,7 +116,7 @@ export class IntegrationTester {
         success: false,
         testName,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : String(error)
       });
 
     }
@@ -171,7 +171,7 @@ export class IntegrationTester {
         duration: Date.now() - startTime,
         result: {
           chatEnabled: chatEnabled.enabled,
-          messageId: messageResult,
+          id: messageResult,
           reason: chatEnabled.reason
         }
       });
@@ -181,7 +181,7 @@ export class IntegrationTester {
         success: false,
         testName,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : String(error)
       });
 
     }
@@ -264,7 +264,7 @@ export class IntegrationTester {
         success: false,
         testName,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : String(error)
       });
 
     }
@@ -315,7 +315,7 @@ export class IntegrationTester {
         success: false,
         testName,
         duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : String(error)
       };
 
       return result;

@@ -37,10 +37,10 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
     }
 
     // Enforce campus isolation
-    const campusId = await enforceCompusIsolation(user.uid);
+    const campusId = await enforceCompusIsolation(user.id);
 
     // Check if user has opted out of discovery
-    const privacySettings = await getPrivacySettings(user.uid);
+    const privacySettings = await getPrivacySettings(user.id);
     if (!privacySettings.discoveryParticipation) {
       return NextResponse.json({
         recommendations: [],
@@ -57,14 +57,14 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
 
     // Get user's current memberships
     const currentMembershipsQuery = dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('status', '==', 'active');
 
     const currentMembershipsSnapshot = await currentMembershipsQuery.get();
     const currentSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get user profile for interest matching
-    const userDoc = await dbAdmin.collection('users').doc(user.uid).get();
+    const userDoc = await dbAdmin.collection('users').doc(user.id).get();
     const userData = userDoc.exists ? userDoc.data() : null;
 
     // Get all available spaces (excluding current memberships) with campus isolation
@@ -113,7 +113,7 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
     // Add friend activity recommendations
     const friendActivityRecommendations = await generateFriendActivityRecommendations(
       availableSpaces,
-      user.uid,
+      user.id,
       currentSpaceIds
     );
     recommendations.push(...friendActivityRecommendations);
@@ -197,7 +197,7 @@ async function generateInterestBasedRecommendations(
           spaceId: space.id,
           spaceName: space.name,
           spaceDescription: space.description,
-          spaceType: space.type || 'general',
+          spaceType: space.spaceType || 'general',
           memberCount: space.memberCount || 0,
           isActive: space.status === 'active',
           matchScore: Math.min(100, matchScore * 10),
@@ -227,7 +227,7 @@ async function generateTrendingRecommendations(
       spaceId: space.id,
       spaceName: space.name,
       spaceDescription: space.description,
-      spaceType: space.type || 'general',
+      spaceType: space.spaceType || 'general',
       memberCount: space.memberCount || 0,
       isActive: space.status === 'active',
       matchScore: Math.min(100, (space.recentActivity || 0) / 10),
@@ -258,7 +258,7 @@ async function generateNewSpaceRecommendations(
       spaceId: space.id,
       spaceName: space.name,
       spaceDescription: space.description,
-      spaceType: space.type || 'general',
+      spaceType: space.spaceType || 'general',
       memberCount: space.memberCount || 0,
       isActive: space.status === 'active',
       matchScore: 60,
@@ -331,7 +331,7 @@ async function generateFriendActivityRecommendations(
         spaceId: space.id,
         spaceName: space.name,
         spaceDescription: space.description,
-        spaceType: space.type || 'general',
+        spaceType: space.spaceType || 'general',
         memberCount: space.memberCount || 0,
         isActive: space.status === 'active',
         matchScore: Math.min(100, spaceFriendCounts[space.id] * 15),
@@ -369,7 +369,7 @@ async function generateAcademicRecommendations(
     .filter(space => {
       const spaceName = space.name.toLowerCase();
       const spaceDescription = space.description.toLowerCase();
-      const spaceType = space.type?.toLowerCase();
+      const spaceType = space.spaceType?.toLowerCase();
       
       // Check for academic relevance
       const isMajorMatch = userMajor && (
@@ -400,7 +400,7 @@ async function generateAcademicRecommendations(
         matchReasons.push(`Relevant to ${userYear}s`);
       }
       
-      if (space.type === 'academic' || space.type === 'study') {
+      if (space.spaceType === 'academic' || space.spaceType === 'study') {
         matchReasons.push('Academic focus');
       }
       
@@ -408,7 +408,7 @@ async function generateAcademicRecommendations(
         spaceId: space.id,
         spaceName: space.name,
         spaceDescription: space.description,
-        spaceType: space.type || 'general',
+        spaceType: space.spaceType || 'general',
         memberCount: space.memberCount || 0,
         isActive: space.status === 'active',
         matchScore: matchReasons.length * 25,

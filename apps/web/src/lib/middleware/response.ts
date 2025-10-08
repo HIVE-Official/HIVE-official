@@ -150,14 +150,14 @@ export class ResponseFormatter {
  * Response middleware wrapper
  * Provides response formatting utilities to handlers
  */
-export function withResponse<T extends any>(
+export function withResponse<TContext, TRequest = unknown>(
   handler: (
-    request: any,
-    context: T,
+    request: TRequest,
+    context: TContext,
     respond: typeof ResponseFormatter
   ) => Promise<Response>
-): (request: any, context: T) => Promise<Response> {
-  return async (request: any, context: T): Promise<Response> => {
+): (request: TRequest, context: TContext) => Promise<Response> {
+  return async (request: TRequest, context: TContext): Promise<Response> => {
     return await handler(request, context, ResponseFormatter);
   };
 }

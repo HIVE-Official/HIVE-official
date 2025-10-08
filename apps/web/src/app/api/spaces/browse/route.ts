@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 const browseSpacesSchema = z.object({
   schoolId: z.string().optional(),
@@ -227,7 +227,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       id: space.id,
       name: space.name,
       description: space.description,
-      type: space.type,
+      type: space.spaceType,
       tags: space.tags,
       status: space.status,
       memberCount: space.memberCount,
@@ -240,7 +240,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     // Group spaces by type for better organization
     const spacesByType = spacesWithMembership.reduce((acc: any, space: any) => {
-      const spaceType = space.type;
+      const spaceType = space.spaceType;
       if (!acc[spaceType]) {
         acc[spaceType] = [];
       }

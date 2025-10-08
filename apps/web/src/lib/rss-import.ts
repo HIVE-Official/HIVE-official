@@ -201,8 +201,9 @@ export class RSSImportManager {
         
         items.push(item);
       }
-      
+
     } catch (error) {
+      // Intentionally suppressed - RSS parsing failures should not break import
     }
     
     return items;
@@ -359,6 +360,7 @@ export class RSSImportManager {
         updatedAt: new Date()
       });
     } catch (error) {
+      // Intentionally suppressed - timestamp update failure is non-critical
     }
   }
 
@@ -459,16 +461,11 @@ export const rssImportManager = new RSSImportManager();
  * Background job to run RSS imports
  */
 export async function runScheduledRSSImports(): Promise<ImportResult[]> {
-  
-  try {
-    const results = await rssImportManager.importFromAllFeeds();
-    
-    const totalImported = results.reduce((sum, r) => sum + r.itemsImported, 0);
-    const successfulFeeds = results.filter(r => r.success).length;
-    
-    
-    return results;
-  } catch (error) {
-    throw error;
-  }
+  const results = await rssImportManager.importFromAllFeeds();
+
+  const totalImported = results.reduce((sum, r) => sum + r.itemsImported, 0);
+  const successfulFeeds = results.filter(r => r.success).length;
+
+
+  return results;
 }

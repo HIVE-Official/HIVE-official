@@ -118,7 +118,7 @@ interface ApiProfileData {
   accountStatus?: string;
   userType?: string;
   onboardingCompleted?: boolean;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export interface UseHiveProfileReturn extends HiveProfileState, HiveProfileActions {}
@@ -212,7 +212,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to load profile:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to load profile',
+        error: error instanceof Error ? error.message : String(error),
         isLoading: false
       }));
     }
@@ -270,7 +270,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to update profile:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to update profile',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return false;
@@ -315,7 +315,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to upload avatar:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to upload avatar',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return null;
@@ -348,7 +348,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       if (data.success && data.dashboard) {
         const dashboard: HiveProfileDashboard = {
           profile: state.profile!, // Will be set by loadProfile
-          recentSpaces: data.dashboard.quickActions?.favoriteSpaces?.map((space: { id: string; name: string; color: string; memberCount: number; [key: string]: unknown }) => ({
+          recentSpaces: data.dashboard.quickActions?.favoriteSpaces?.map((space: { id: string; name: string; color: string; memberCount: number; [key: string]: any }) => ({
             id: space.id,
             name: space.name,
             type: 'favorite',
@@ -357,14 +357,14 @@ export function useHiveProfile(): UseHiveProfileReturn {
             role: 'member'
           })) || [],
           recentTools: [], // Would need to fetch from tools API
-          recentActivity: data.dashboard.recentActivity?.spaces?.map((activity: { spaceId: string; action: string; timestamp: string; [key: string]: unknown }, index: number) => ({
+          recentActivity: data.dashboard.recentActivity?.spaces?.map((activity: { spaceId: string; action: string; timestamp: string; [key: string]: any }, index: number) => ({
             id: `activity-${index}`,
             type: 'space' as const,
             action: activity.action,
             title: activity.spaceName,
             timestamp: activity.timestamp
           })) || [],
-          upcomingEvents: data.dashboard.upcomingEvents?.map((event: { id: string; title: string; date: string; type: string; [key: string]: unknown }) => ({
+          upcomingEvents: data.dashboard.upcomingEvents?.map((event: { id: string; title: string; date: string; type: string; [key: string]: any }) => ({
             id: event.id,
             title: event.title,
             startDate: event.startDate,
@@ -413,7 +413,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to create event:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to create event',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return null;
@@ -446,7 +446,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to update event:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to update event',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return false;
@@ -478,7 +478,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to delete event:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to delete event',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return false;
@@ -508,7 +508,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to fetch calendar events:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to fetch calendar events'
+        error: error instanceof Error ? error.message : String(error)
       }));
       return [];
     }
@@ -539,7 +539,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to detect conflicts:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to detect conflicts'
+        error: error instanceof Error ? error.message : String(error)
       }));
       return [];
     }
@@ -576,7 +576,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
       console.error('Failed to resolve conflict:', error);
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : 'Failed to resolve conflict',
+        error: error instanceof Error ? error.message : String(error),
         isUpdating: false
       }));
       return false;
@@ -597,7 +597,7 @@ export function useHiveProfile(): UseHiveProfileReturn {
         completeness: 0
       });
     }
-  }, [isAuthenticated, user?.uid]); // Remove loadProfile to prevent infinite loop
+  }, [isAuthenticated, user?.id]); // Remove loadProfile to prevent infinite loop
 
   // Load dashboard after profile is loaded
   useEffect(() => {

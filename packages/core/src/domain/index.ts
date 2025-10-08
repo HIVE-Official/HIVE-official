@@ -6,8 +6,8 @@
 // Shared DDD Base Classes
 export * from './shared/base';
 
-// Identity Domain (Student Identity and Authentication)
-export * from './identity';
+// Profile Domain (Student Identity and Authentication)
+export * from './profile';
 
 // Analytics Domain (Event Tracking and Metrics)
 export * from './analytics';

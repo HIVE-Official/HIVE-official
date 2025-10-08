@@ -111,9 +111,11 @@ jspm_packages/
 
 # Build outputs
 .next/
-/dist
-/out
-/build
+# Ignore dist in any package/module directories
+dist/
+**/dist/
+out/
+build/
 
 # Turbo
 .turbo/

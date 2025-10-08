@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { HiveButton, HiveCard, Badge, HiveInput } from '@hive/ui';
+import { Button, Card, Badge, Input } from '@hive/ui';
 import {
   Send,
   Pin,
@@ -92,7 +92,7 @@ export function SpaceChatBoard({
         ? `/api/spaces/${spaceId}/posts/${threadId}/replies`
         : `/api/spaces/${spaceId}/posts`;
 
-      const response = await api.get(endpoint, {
+      const response = await api.get<{ posts?: Post[] }>(endpoint, {
         params: { limit: 50 }
       });
 
@@ -148,7 +148,7 @@ export function SpaceChatBoard({
     if (!newPostContent.trim() || !membership) return;
 
     try {
-      const response = await api.post(`/api/spaces/${spaceId}/posts`, {
+      const response = await api.post<{ post?: Post }>(`/api/spaces/${spaceId}/posts`, {
         content: newPostContent,
         type: postType,
         threadId: replyingTo || undefined
@@ -315,10 +315,10 @@ export function SpaceChatBoard({
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[var(--hive-brand-primary)]" />
               <span className="text-sm text-[var(--hive-brand-primary)]">{enhancementSuggestion}</span>
-              <HiveButton
-                size="sm"
-                variant="ghost"
-                className="ml-auto text-[var(--hive-brand-primary)]"
+              <Button
+                className="max-w-sm ml-auto text-[var(--hive-brand-primary)]"
+                variant="outline"
+                
                 onClick={() => {
                   if (enhancementSuggestion.includes('poll')) setPostType('poll');
                   if (enhancementSuggestion.includes('event')) setPostType('event');
@@ -326,7 +326,7 @@ export function SpaceChatBoard({
                 }}
               >
                 Apply
-              </HiveButton>
+              </Button>
             </div>
           </div>
         )}
@@ -350,9 +350,9 @@ export function SpaceChatBoard({
 
         {/* Input Field */}
         <div className="flex gap-2">
-          <HiveInput
+          <Input
             value={newPostContent}
-            onChange={(e) => setNewPostContent(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setNewPostContent((e.target as any).value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -367,13 +367,13 @@ export function SpaceChatBoard({
             disabled={!membership}
             className="flex-1 bg-gray-900 border-gray-700"
           />
-          <HiveButton
+          <Button
             onClick={handleSendPost}
             disabled={!membership || !newPostContent.trim()}
             className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             <Send className="w-4 h-4" />
-          </HiveButton>
+          </Button>
         </div>
       </div>
     </div>

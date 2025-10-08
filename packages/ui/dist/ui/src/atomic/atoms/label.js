@@ -1,28 +1,11 @@
+"use client";
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
 import { cva } from "class-variance-authority";
 import { cn } from "../../lib/utils.js";
-const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", {
-    variants: {
-        variant: {
-            default: "text-[var(--hive-text-primary)]",
-            secondary: "text-[var(--hive-text-secondary)]",
-            destructive: "text-[var(--hive-status-error)]",
-            success: "text-[var(--hive-status-success)]",
-            warning: "text-[var(--hive-status-warning)]",
-        },
-        size: {
-            default: "text-sm",
-            sm: "text-xs",
-            lg: "text-base",
-        },
-    },
-    defaultVariants: {
-        variant: "default",
-        size: "default",
-    },
-});
-const Label = React.forwardRef(({ className, variant, size, ...props }, ref) => (_jsx("label", { ref: ref, className: cn(labelVariants({ variant, size }), className), ...props })));
-Label.displayName = "Label";
-export { Label, labelVariants };
+const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
+const Label = React.forwardRef(({ className, ...props }, ref) => (_jsx(LabelPrimitive.Root, { ref: ref, className: cn(labelVariants(), className), ...props })));
+Label.displayName = LabelPrimitive.Root.displayName;
+export { Label };
 //# sourceMappingURL=label.js.map

@@ -3,7 +3,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
 
 // In-memory store for development mode profile data (shared with profile route)
 const devProfileStore: Record<string, any> = {};
@@ -34,7 +34,10 @@ export const POST = withAuthAndErrors(async (
         profilePhoto: avatarUrl,
       };
       
-      logger.info('Development mode: Photo upload simulated for file', { data: file.name, endpoint: '/api/profile/upload-photo' });
+      logger.info('Development mode: Photo upload simulated for file', {
+        fileData: { filename: file.name, action: 'upload' as const },
+        endpoint: '/api/profile/upload-photo'
+      });
       
       return respond.success({
         message: 'Photo uploaded successfully (development mode)',

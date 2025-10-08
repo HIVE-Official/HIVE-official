@@ -203,8 +203,7 @@ class FirebaseFeedRepository {
             // Load recent feed items
             const q = (0, firestore_1.query)((0, firestore_1.collection)(firebase_1.db, this.feedItemsCollection), (0, firestore_1.where)('feedId', '==', feed.feedId.value), (0, firestore_1.orderBy)('createdAt', 'desc'), (0, firestore_1.limit)(100));
             const snapshot = await (0, firestore_1.getDocs)(q);
-            snapshot.docs.forEach(doc => {
-                const data = doc.data();
+            snapshot.docs.forEach(() => {
                 // Add items to feed (would need to implement addItem method on EnhancedFeed)
                 // For now, items are loaded separately
             });
@@ -213,7 +212,7 @@ class FirebaseFeedRepository {
             console.error('Failed to load feed items:', error);
         }
     }
-    async saveFeedItems(feed) {
+    async saveFeedItems(_feed) {
         try {
             // This would save individual feed items
             // Implementation depends on how items are stored in the EnhancedFeed aggregate

@@ -1,66 +1,28 @@
 "use strict";
+/**
+ * Firebase Repository Implementations
+ * Exports all Firebase repository implementations
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFeedRepository = getFeedRepository;
-exports.getProfileRepository = getProfileRepository;
-exports.getSpaceRepository = getSpaceRepository;
-exports.getRitualRepository = getRitualRepository;
-// Temporary mock implementations (to be replaced with actual Firebase repos)
-function getFeedRepository() {
-    return {
-        findByUserId: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        saveFeed: async () => ({ isSuccess: true }),
-        getFeedContent: async () => ({ isSuccess: true, getValue: () => [] }),
-        getTrendingContent: async () => ({ isSuccess: true, getValue: () => [] }),
-        getEventContent: async () => ({ isSuccess: true, getValue: () => [] }),
-        getRitualContent: async () => ({ isSuccess: true, getValue: () => [] }),
-        recordInteraction: async () => ({ isSuccess: true }),
-        subscribeToFeed: () => () => { }
-    };
-}
-function getProfileRepository() {
-    return {
-        findById: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        findByEmail: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        findByHandle: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        save: async () => ({ isSuccess: true }),
-        delete: async () => ({ isSuccess: true }),
-        findOnboardedProfiles: async () => ({ isSuccess: true, getValue: () => [] }),
-        findByInterest: async () => ({ isSuccess: true, getValue: () => [] }),
-        findByMajor: async () => ({ isSuccess: true, getValue: () => [] }),
-        findConnectionsOf: async () => ({ isSuccess: true, getValue: () => [] }),
-        getTotalCampusUsers: async () => ({ isSuccess: true, getValue: () => 0 }),
-        exists: async () => false,
-        searchByName: async () => ({ isSuccess: true, getValue: () => [] }),
-        findByCampus: async () => ({ isSuccess: true, getValue: () => [] })
-    };
-}
-function getSpaceRepository() {
-    return {
-        findById: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        findByMember: async () => ({ isSuccess: true, getValue: () => [] }),
-        save: async () => ({ isSuccess: true }),
-        delete: async () => ({ isSuccess: true }),
-        findByName: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        findByCampus: async () => ({ isSuccess: true, getValue: () => [] }),
-        findByCategory: async () => ({ isSuccess: true, getValue: () => [] }),
-        findUserSpaces: async () => ({ isSuccess: true, getValue: () => [] }),
-        findTrending: async () => ({ isSuccess: true, getValue: () => [] }),
-        findRecommended: async () => ({ isSuccess: true, getValue: () => [] }),
-        searchSpaces: async () => ({ isSuccess: true, getValue: () => [] })
-    };
-}
-function getRitualRepository() {
-    return {
-        findById: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        save: async () => ({ isSuccess: true }),
-        delete: async () => ({ isSuccess: true }),
-        findByCampus: async () => ({ isSuccess: true, getValue: () => [] }),
-        findActive: async () => ({ isSuccess: true, getValue: () => [] }),
-        findByType: async () => ({ isSuccess: true, getValue: () => [] }),
-        findActiveByType: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        findUserRituals: async () => ({ isSuccess: true, getValue: () => [] }),
-        findParticipation: async () => ({ isSuccess: false, error: 'Not implemented' }),
-        saveParticipation: async () => ({ isSuccess: true })
-    };
-}
+__exportStar(require("./profile.repository"), exports);
+__exportStar(require("./space.repository"), exports);
+__exportStar(require("./feed.repository"), exports);
+__exportStar(require("./ritual.repository"), exports);
+__exportStar(require("./connection.repository"), exports);
+__exportStar(require("./tool.repository"), exports);
+__exportStar(require("./unit-of-work"), exports);
 //# sourceMappingURL=index.js.map

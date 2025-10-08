@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const checkUserId = searchParams.get('userId');
 
-    let targetUserId = user.uid;
+    let targetUserId = user.id;
     
     // If checking another user's ghost mode status (for visibility checks)
-    if (checkUserId && checkUserId !== user.uid) {
+    if (checkUserId && checkUserId !== user.id) {
       targetUserId = checkUserId;
     }
 
@@ -59,12 +59,12 @@ export async function GET(request: NextRequest) {
     const ghostMode = settings.ghostMode;
     
     // Determine visibility based on ghost mode settings
-    const isVisible = await checkUserVisibility(targetUserId, user.uid, ghostMode);
+    const isVisible = await checkUserVisibility(targetUserId, user.id, ghostMode);
 
     return NextResponse.json({ 
       ghostMode,
       isVisible,
-      canView: targetUserId === user.uid ? true : isVisible
+      canView: targetUserId === user.id ? true : isVisible
     });
   } catch (error) {
     logger.error(
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Invalid ghost mode level", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
 
-    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.uid).get();
+    const privacyDoc = await dbAdmin.collection('privacySettings').doc(user.id).get();
     
     if (!privacyDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("Privacy settings not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -157,14 +157,14 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    await dbAdmin.collection('privacySettings').doc(user.uid).update(updatedSettings);
+    await dbAdmin.collection('privacySettings').doc(user.id).update(updatedSettings);
 
     // Apply changes immediately
-    await applyGhostModeChanges(user.uid, updatedGhostMode);
+    await applyGhostModeChanges(user.id, updatedGhostMode);
 
     // Schedule automatic disable if temporary
     if (ghostModeExpiry) {
-      scheduleGhostModeDisable(user.uid, duration);
+      scheduleGhostModeDisable(user.id, duration);
     }
 
     return NextResponse.json({ 

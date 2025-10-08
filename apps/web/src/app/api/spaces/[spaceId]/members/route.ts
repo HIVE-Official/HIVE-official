@@ -44,7 +44,7 @@ export async function GET(
       .collection('spaces')
       .doc(spaceId)
       .collection('members')
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!requesterMemberDoc.exists || !requesterMemberDoc.data()?.isActive) {
@@ -99,7 +99,7 @@ export async function GET(
 
       const member = {
         id: userId,
-        name: userData.fullName || userData.displayName || 'Unknown User',
+        name: userData.displayName || userData.displayName || 'Unknown User',
         username: userData.handle || userData.email?.split('@')[0] || 'unknown',
         avatar: userData.photoURL,
         bio: userData.bio || userData.about,
@@ -227,7 +227,7 @@ export async function POST(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!requesterMemberDoc.exists) {
@@ -270,7 +270,7 @@ export async function POST(
       role,
       joinedAt: new Date(),
       lastActive: new Date(),
-      invitedBy: decodedToken.uid,
+      invitedBy: decodedToken.id,
       isOnline: false,
     };
 
@@ -327,7 +327,7 @@ export async function PATCH(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!requesterMemberDoc.exists) {
@@ -382,7 +382,7 @@ export async function PATCH(
     // Handle different actions
     const updates: any = {
       updatedAt: new Date(),
-      updatedBy: decodedToken.uid
+      updatedBy: decodedToken.id
     };
 
     if (role) {
@@ -393,12 +393,12 @@ export async function PATCH(
     if (action === 'suspend') {
       updates.isSuspended = true;
       updates.suspendedAt = new Date();
-      updates.suspendedBy = decodedToken.uid;
+      updates.suspendedBy = decodedToken.id;
       if (reason) updates.suspensionReason = reason;
     } else if (action === 'unsuspend') {
       updates.isSuspended = false;
       updates.unsuspendedAt = new Date();
-      updates.unsuspendedBy = decodedToken.uid;
+      updates.unsuspendedBy = decodedToken.id;
     }
 
     // Update member
@@ -416,7 +416,7 @@ export async function PATCH(
       .collection("activity")
       .add({
         type: 'member_role_changed',
-        performedBy: decodedToken.uid,
+        performedBy: decodedToken.id,
         targetUserId: userId,
         details: {
           oldRole: targetRole,
@@ -427,7 +427,7 @@ export async function PATCH(
         timestamp: new Date()
       });
 
-    logger.info(`Member ${action || 'role changed'}: ${userId} in space ${spaceId} by ${decodedToken.uid}`);
+    logger.info(`Member ${action || 'role changed'}: ${userId} in space ${spaceId} by ${decodedToken.id}`);
 
     return NextResponse.json(ApiResponseHelper.success({
       message: `Member ${action || 'updated'} successfully`,
@@ -471,7 +471,7 @@ export async function DELETE(
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!requesterMemberDoc.exists) {
@@ -536,7 +536,7 @@ export async function DELETE(
       .collection("activity")
       .add({
         type: 'member_removed',
-        performedBy: decodedToken.uid,
+        performedBy: decodedToken.id,
         targetUserId: userId,
         details: {
           removedRole: targetRole,
@@ -545,7 +545,7 @@ export async function DELETE(
         timestamp: new Date()
       });
 
-    logger.info(`Member removed: ${userId} from space ${spaceId} by ${decodedToken.uid}`);
+    logger.info(`Member removed: ${userId} from space ${spaceId} by ${decodedToken.id}`);
 
     return NextResponse.json(ApiResponseHelper.success({
       message: "Member removed successfully"

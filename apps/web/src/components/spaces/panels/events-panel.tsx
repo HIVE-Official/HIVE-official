@@ -1,29 +1,24 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Calendar,
   Clock,
   Users,
   MapPin,
   Plus,
-  Filter,
   Grid,
   List,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink,
   Star
 } from 'lucide-react';
 import {
-  HiveButton,
-  HiveCard,
+  Button,
+  Card,
   Badge,
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent,
-  HiveInput
+  Input
 } from '@hive/ui';
 import { api } from '@/lib/api-client';
 
@@ -54,17 +49,14 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'list' | 'week' | 'month'>('list');
   const [filter, setFilter] = useState<'all' | 'events' | 'deadlines'>('all');
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    loadEvents();
-  }, [spaceId, filter]);
+  const canManageEvents = canCreateEvents || ['owner', 'leader', 'moderator'].includes(userRole);
 
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/spaces/${spaceId}/events`, {
+      const response = await api.get<{ events?: Event[] }>(`/api/spaces/${spaceId}/events`, {
         params: {
           filter,
           startDate: new Date().toISOString(),
@@ -78,19 +70,33 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, spaceId]);
 
-  const handleRsvp = async (eventId: string, rsvp: 'going' | 'maybe' | 'not_going') => {
+  useEffect(() => {
+    loadEvents();
+  }, [loadEvents]);
+
+  const handleRsvp = useCallback(async (eventId: string, rsvp: 'going' | 'maybe' | 'not_going') => {
     try {
       await api.post(`/api/spaces/${spaceId}/events/${eventId}/rsvp`, { rsvp });
       // Update local state
-      setEvents(events.map(event =>
-        event.id === eventId ? { ...event, userRsvp: rsvp } : event
-      ));
+      setEvents(prevEvents =>
+        prevEvents.map(event =>
+          event.id === eventId ? { ...event, userRsvp: rsvp } : event
+        )
+      );
     } catch (error) {
       console.error('Failed to RSVP:', error);
     }
-  };
+  }, [spaceId]);
+
+  const handleOpenCreate = useCallback(() => {
+    setShowCreateModal(true);
+  }, []);
+
+  const handleCloseCreate = useCallback(() => {
+    setShowCreateModal(false);
+  }, []);
 
   const upcomingEvents = events.filter(event => event.startTime > new Date()).slice(0, 10);
   const todayEvents = events.filter(event => {
@@ -116,17 +122,25 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Events & Schedule</h3>
-          {canCreateEvents && (
-            <HiveButton
-              size="sm"
-              onClick={() => setShowCreateModal(true)}
-              className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
+          {canManageEvents && (
+            <Button
+              className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
+              onClick={handleOpenCreate}
             >
               <Plus className="w-4 h-4 mr-1" />
               Create
-            </HiveButton>
+            </Button>
           )}
         </div>
+
+        {showCreateModal && (
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-100">
+            <span>Event creation is coming soon. Ping #product-events if you want to help pilot the workflow.</span>
+            <Button variant="ghost" className="h-6 px-2 text-yellow-100 hover:text-yellow-200" onClick={handleCloseCreate}>
+              Dismiss
+            </Button>
+          </div>
+        )}
 
         {/* View Controls */}
         <div className="flex items-center gap-2">
@@ -199,15 +213,14 @@ export function EventsPanel({ spaceId, userRole, canCreateEvents }: EventsPanelP
                   <div className="text-center py-8">
                     <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                     <p className="text-gray-400 text-sm">No upcoming events</p>
-                    {canCreateEvents && (
-                      <HiveButton
-                        size="sm"
+                    {canManageEvents && (
+                      <Button
+                        className="max-w-sm mt-3"
                         variant="outline"
-                        className="mt-3"
-                        onClick={() => setShowCreateModal(true)}
+                        onClick={handleOpenCreate}
                       >
                         Create First Event
-                      </HiveButton>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -279,7 +292,7 @@ function EventCard({
   };
 
   return (
-    <HiveCard className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
+    <Card className={`p-3 border-gray-800 hover:border-gray-700 transition-colors ${
       isToday ? 'border-[var(--hive-brand-primary)]/30 bg-[var(--hive-brand-primary)]/5' : 'bg-gray-900/50'
     }`}>
       <div className="flex items-start justify-between mb-2">
@@ -328,33 +341,31 @@ function EventCard({
 
         {event.isRsvpRequired && (
           <div className="flex gap-1">
-            <HiveButton
-              size="sm"
-              variant={event.userRsvp === 'going' ? 'default' : 'outline'}
-              className={`text-xs h-6 px-2 ${
+            <Button
+              className={`max-w-sm text-xs h-6 px-2 ${
                 event.userRsvp === 'going'
                   ? 'bg-green-600 hover:bg-green-700'
                   : 'border-green-600 text-green-400 hover:bg-green-600/10'
               }`}
+              variant={event.userRsvp === 'going' ? 'default' : 'outline'}
               onClick={() => onRsvp(event.id, 'going')}
             >
               Going
-            </HiveButton>
-            <HiveButton
-              size="sm"
-              variant={event.userRsvp === 'maybe' ? 'default' : 'outline'}
-              className={`text-xs h-6 px-2 ${
+            </Button>
+            <Button
+              className={`max-w-sm text-xs h-6 px-2 ${
                 event.userRsvp === 'maybe'
                   ? 'bg-yellow-600 hover:bg-yellow-700'
                   : 'border-yellow-600 text-yellow-400 hover:bg-yellow-600/10'
               }`}
+              variant={event.userRsvp === 'maybe' ? 'default' : 'outline'}
               onClick={() => onRsvp(event.id, 'maybe')}
             >
               Maybe
-            </HiveButton>
+            </Button>
           </div>
         )}
       </div>
-    </HiveCard>
+    </Card>
   );
 }

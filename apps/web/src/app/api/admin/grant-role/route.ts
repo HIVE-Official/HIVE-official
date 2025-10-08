@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const db = getFirestore();
     const currentUserDoc = await db
       .collection("users")
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
     const currentUserData = currentUserDoc.data() as
       | { role?: string }
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     await db.collection("users").doc(userId).update({
       role,
       updatedAt: new Date(),
-      updatedBy: decodedToken.uid });
+      updatedBy: decodedToken.id });
 
     // Set custom claims for Firebase Auth
     await getAuth().setCustomUserClaims(userId, { role });
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     // Log admin action
     await db.collection("admin_logs").add({
       action: "grant_role",
-      performedBy: decodedToken.uid,
+      performedBy: decodedToken.id,
       targetUser: userId,
       newRole: role,
       timestamp: new Date(),
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Role ${role} granted to user ${userId}` });
   } catch (error) {
-    logger.error('Error granting role', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error granting role', { error });
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

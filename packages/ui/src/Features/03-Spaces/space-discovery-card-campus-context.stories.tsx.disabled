@@ -1,0 +1,304 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { DiscoverableSpaceCard } from "../../atomic/molecules/discoverable-space-card";
+
+/**
+ * # Space Discovery Card - Campus Context
+ *
+ * **Demonstrating HIVE-native vs generic social presentation**
+ *
+ * The key to avoiding "generic social" is in the **details**:
+ * - Not "5 mutual friends" → "5 connections in CS Study Group"
+ * - Not "Trending" → "Trending with CS students"
+ * - Not "234 members" → "87 CS majors · 23 active today"
+ *
+ * ## Visual Hierarchy
+ * 1. **Primary Signal** (top-right): Friends OR trending (one, not both)
+ * 2. **Title + Type** (center): Space name + campus badge (CS, Ellicott, Greek Life)
+ * 3. **Description** (2 lines max)
+ * 4. **Friend Activity** (if applicable): "Sarah and Jake are here"
+ * 5. **Public Metrics** (bottom): Members, posts, activity
+ *
+ * ## Campus-Native Language
+ * - ✅ "3 connections" (not "mutual friends")
+ * - ✅ "Trending with CS students" (not just "Trending")
+ * - ✅ "CS" badge (academic cohort, not generic category)
+ * - ✅ "23 active today" (campus-specific activity metric)
+ */
+const meta = {
+  title: "03-Spaces/DiscoverableSpaceCard/Campus Context",
+  component: DiscoverableSpaceCard,
+  parameters: {
+    layout: "padded",
+  },
+  tags: ["autodocs"],
+} satisfies Meta<typeof DiscoverableSpaceCard>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/**
+ * **Generic Social** (what NOT to do)
+ *
+ * Shows generic social proof without campus context:
+ * - Just "5 mutual friends" (could be any platform)
+ * - Generic "234 members"
+ * - No campus-specific signals
+ */
+export const GenericSocial: Story = {
+  args: {
+    title: "CS Study Group",
+    description: "Weekly study sessions for Computer Science students. Join us to collaborate on assignments and prepare for exams.",
+    memberCount: 87,
+    postCount: 234,
+    // NO campus context - looks generic
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **HIVE Campus-Native** (correct approach)
+ *
+ * Shows campus-specific context:
+ * - "3 connections" (HIVE language)
+ * - "CS" badge (academic cohort)
+ * - "Sarah, Jake +1 are here" (friend names, not just count)
+ * - "23 active today" (campus activity metric)
+ */
+export const HiveCampusNative: Story = {
+  args: {
+    title: "CS Study Group",
+    description: "Weekly study sessions for Computer Science students. Join us to collaborate on assignments and prepare for exams.",
+    memberCount: 87,
+    postCount: 234,
+    campusContext: {
+      // PRIMARY: Friends in space (shown with avatars + names)
+      friendsInSpace: [
+        { id: "1", name: "Sarah", avatar: "https://github.com/shadcn.png" },
+        { id: "2", name: "Jake", avatar: "https://github.com/vercel.png" },
+        { id: "3", name: "Morgan" },
+      ],
+      // SECONDARY: Space type (academic cohort)
+      spaceType: "academic",
+      primaryMajor: "CS",
+      // TERTIARY: Activity metrics
+      activeToday: 23,
+    },
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Trending (Campus-Specific)**
+ *
+ * Shows trending with campus context:
+ * - "Trending with CS students" (not just "Trending")
+ * - Academic badge shows it's CS-specific
+ * - Activity metrics show why it's trending
+ */
+export const TrendingCampusSpecific: Story = {
+  args: {
+    title: "CSE 220 Midterm Study Session",
+    description: "Final study session before the CSE 220 midterm on Friday. Covering data structures, algorithms, and practice problems.",
+    memberCount: 42,
+    postCount: 89,
+    campusContext: {
+      // PRIMARY: Trending (campus-specific category)
+      isTrending: true,
+      trendingCategory: "CS students",
+      // Type badge
+      spaceType: "academic",
+      primaryMajor: "CS",
+      // High activity
+      activeToday: 38,
+      recentPostCount: 67,
+    },
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Residential Space** (Building-Specific)
+ *
+ * Campus context for residential spaces:
+ * - "Ellicott" badge (not generic "Residential")
+ * - Friends from the dorm shown
+ * - Building-specific language
+ */
+export const ResidentialBuilding: Story = {
+  args: {
+    title: "Ellicott Complex Events",
+    description: "Community events, floor activities, and hangouts for Ellicott residents. Stay connected with your neighbors!",
+    memberCount: 156,
+    postCount: 423,
+    campusContext: {
+      friendsInSpace: [
+        { id: "1", name: "Alex", avatar: "https://github.com/shadcn.png" },
+        { id: "2", name: "Taylor" },
+      ],
+      spaceType: "residential",
+      building: "Ellicott",
+      activeToday: 47,
+    },
+    coverImage: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=200&fit=crop",
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Greek Life** (Rush Week Context)
+ *
+ * Campus-specific for Greek organizations:
+ * - "Greek Life" badge
+ * - Trending during rush week
+ * - High engagement metrics
+ */
+export const GreekLifeRush: Story = {
+  args: {
+    title: "Alpha Epsilon Pi - Spring Rush",
+    description: "Join us for Spring Rush 2025! Meet the brothers, attend events, and see if AEPi is the right fit for you.",
+    memberCount: 68,
+    postCount: 145,
+    campusContext: {
+      isTrending: true,
+      trendingCategory: "campus", // Campus-wide during rush week
+      spaceType: "greek",
+      activeToday: 52,
+    },
+    coverImage: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=200&fit=crop",
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Official University Space**
+ *
+ * Campus authority signals:
+ * - "Official" badge
+ * - High member count (campus-wide)
+ * - No friends shown (official announcements)
+ */
+export const OfficialUniversity: Story = {
+  args: {
+    title: "UB Housing & Residential Life",
+    description: "Official announcements and resources from UB Housing. Stay informed about housing updates, maintenance, and community events.",
+    memberCount: 1847,
+    postCount: 423,
+    campusContext: {
+      spaceType: "official",
+      activeToday: 234,
+    },
+    coverImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=200&fit=crop",
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **High Friend Activity**
+ *
+ * Demonstrates maximum social proof:
+ * - 5 connections shown (avatar stack)
+ * - Friend names listed
+ * - High activity indicator
+ */
+export const HighFriendActivity: Story = {
+  args: {
+    title: "UB E-Sports",
+    description: "Competitive and casual gaming community. Join us for tournaments, LAN parties, and gaming sessions across all platforms.",
+    memberCount: 234,
+    postCount: 567,
+    campusContext: {
+      friendsInSpace: [
+        { id: "1", name: "Alex", avatar: "https://github.com/shadcn.png" },
+        { id: "2", name: "Jordan", avatar: "https://github.com/vercel.png" },
+        { id: "3", name: "Casey", avatar: "https://github.com/shadcn.png" },
+        { id: "4", name: "Morgan", avatar: "https://github.com/vercel.png" },
+        { id: "5", name: "Riley" },
+      ],
+      spaceType: "interest",
+      activeToday: 89,
+    },
+    coverImage: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=200&fit=crop",
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Low Activity** (still shows value)
+ *
+ * Even with low activity, campus context matters:
+ * - 1 connection shown
+ * - Academic badge (cohort signal)
+ * - Small but active community
+ */
+export const LowActivity: Story = {
+  args: {
+    title: "Philosophy Discussion Group",
+    description: "Weekly philosophical discussions and debates. Exploring ethics, metaphysics, epistemology, and contemporary philosophy.",
+    memberCount: 12,
+    postCount: 34,
+    campusContext: {
+      friendsInSpace: [
+        { id: "1", name: "Taylor", avatar: "https://github.com/shadcn.png" },
+      ],
+      spaceType: "academic",
+      primaryMajor: "Philosophy",
+      activeToday: 3,
+    },
+    onJoin: () => console.log("Join clicked"),
+    onClick: () => console.log("Card clicked"),
+  },
+};
+
+/**
+ * **Comparison: Side by Side**
+ *
+ * Direct comparison of generic vs HIVE-native
+ */
+export const Comparison: Story = {
+  render: () => (
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+          ❌ Generic Social (Instagram/Facebook style)
+        </h3>
+        <DiscoverableSpaceCard
+          title="CS Study Group"
+          description="Study sessions for CS students"
+          memberCount={87}
+          postCount={234}
+          onJoin={() => console.log("Join")}
+        />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3">
+          ✅ HIVE Campus-Native (cohort + proximity + spaces)
+        </h3>
+        <DiscoverableSpaceCard
+          title="CS Study Group"
+          description="Study sessions for CS students"
+          memberCount={87}
+          postCount={234}
+          campusContext={{
+            friendsInSpace: [
+              { id: "1", name: "Sarah", avatar: "https://github.com/shadcn.png" },
+              { id: "2", name: "Jake", avatar: "https://github.com/vercel.png" },
+              { id: "3", name: "Morgan" },
+            ],
+            spaceType: "academic",
+            primaryMajor: "CS",
+            activeToday: 23,
+          }}
+          onJoin={() => console.log("Join")}
+        />
+      </div>
+    </div>
+  ),
+};

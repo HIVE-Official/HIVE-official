@@ -8,15 +8,11 @@ import { useParams, useRouter } from "next/navigation";
 import { Alert as _Alert } from "@/components/temp-stubs";
 // LiveToolRuntime not exported from @hive/ui yet
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
+import { Button, Card } from "@hive/ui";
 import { useFeatureFlags } from "@hive/hooks";
 import { useSession } from "../../../../hooks/use-session";
 import type { ElementInstance, Tool } from "@hive/core";
 import { logger } from "@/lib/logger";
-// Temp fix for chunk 2073 useRef errors
-const Button = ({ children, variant = 'default', size = 'default', className = '', ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
-const Card = ({ children, className = '', ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
-
-
 interface ToolWithInstances {
   tool: Tool;
   instances: ElementInstance[];
@@ -33,7 +29,7 @@ interface ToolWithInstances {
 const SAMPLE_INSTANCES: ElementInstance[] = [
   {
     id: 'title-input',
-    elementId: 'textInput-v1',
+    // id: 'textInput-v1',
     config: {
       label: 'Poll Question',
       placeholder: 'What should we order for lunch?',
@@ -48,7 +44,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'option1-input',
-    elementId: 'textInput-v1',
+    // id: 'textInput-v1',
     config: {
       label: 'Option 1',
       placeholder: 'Pizza',
@@ -62,7 +58,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'option2-input',
-    elementId: 'textInput-v1',
+    // id: 'textInput-v1',
     config: {
       label: 'Option 2',
       placeholder: 'Sandwiches',
@@ -76,7 +72,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'anonymous-toggle',
-    elementId: 'choiceSelect-v1',
+    // id: 'choiceSelect-v1',
     config: {
       label: 'Poll Settings',
       options: [
@@ -93,10 +89,10 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'create-button',
-    elementId: 'button-v1',
+    // id: 'button-v1',
     config: {
       text: 'Create Poll',
-      variant: 'primary',
+      variant: 'default',
       onClick: {
         type: 'submit',
         data: { action: 'createPoll' }
@@ -110,7 +106,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'countdown-timer',
-    elementId: 'countdownTimer-v1',
+    // id: 'countdownTimer-v1',
     config: {
       label: 'Poll Deadline',
       targetDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
@@ -128,7 +124,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'progress-bar',
-    elementId: 'progressBar-v1',
+    // id: 'progressBar-v1',
     config: {
       label: 'Poll Completion',
       value: 65,
@@ -144,7 +140,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
   },
   {
     id: 'rating-stars',
-    elementId: 'ratingStars-v1',
+    // id: 'ratingStars-v1',
     config: {
       label: 'Rate This Poll Tool',
       maxRating: 5,
@@ -321,10 +317,9 @@ export default function ToolRunPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
-                size="sm"
-                variant="ghost"
+                className="max-w-sm text-[#A1A1AA] hover:text-white"
+                variant="outline"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -341,19 +336,17 @@ export default function ToolRunPage() {
             
             <div className="flex items-center gap-3">
               <Button
-                size="sm"
-                variant="secondary"
+                className="max-w-sm border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                variant="outline"
                 onClick={() => router.push(`/tools/${tool.id}/settings`)}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
               
               <Button
-                size="sm"
-                variant="secondary"
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="max-w-sm border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                variant="outline"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
@@ -470,25 +463,22 @@ export default function ToolRunPage() {
               <h3 className="font-semibold text-white mb-3">Actions</h3>
               <div className="space-y-2">
                 <Button
-                  size="sm"
+                  className="max-w-sm w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                   onClick={() => router.push(`/tools/${tool.id}/edit`)}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Edit Tool
                 </Button>
                 <Button
-                  size="sm"
+                  className="max-w-sm w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                   onClick={() => router.push(`/tools/${tool.id}/analytics`)}
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                   disabled={!permissions.canViewAnalytics}
                 >
                   <Activity className="h-4 w-4 mr-2" />
                   View Analytics
                 </Button>
                 <Button
-                  size="sm"
-                  className="w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
+                  className="max-w-sm w-full bg-[rgba(255,255,255,0.05)] text-white hover:bg-[rgba(255,255,255,0.1)] justify-start"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export Data
@@ -521,9 +511,8 @@ export default function ToolRunPage() {
                 </div>
               </div>
               <Button
-                size="sm"
-                variant="secondary"
-                className="w-full border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10"
+                className="max-w-sm w-full border-[var(--hive-brand-primary)]/30 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/10"
+                variant="outline"
                 onClick={() => router.push(`/tools/${tool.id}/preview`)}
               >
                 <Clock className="h-4 w-4 mr-1" />

@@ -1,0 +1,209 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="02-Profile/Overview" />
+
+# Profile System
+
+**Student identity and coordination hub**
+
+## Architecture
+
+Profile pages follow the same design system as Spaces:
+- **shadcn/ui components** - No custom styling
+- **Framer Motion** - Smooth interactions (`whileHover`, `layout`)
+- **HIVE motion tokens** - `transition-smooth`, `ease-liquid`
+- **Mobile-first** - Responsive grid that stacks on mobile
+
+## Layout Structure
+
+### Desktop (lg+)
+```
+┌─────────────┬──────────────────────────────────┐
+│   Carousel  │  Identity Card                   │
+│   (340px)   │  ──────────────────────────────  │
+│   Sticky    │  Stats Grid (2x2 or 4 cols)     │
+│             │  ──────────────────────────────  │
+│             │  Schedule Preview                │
+│             │  ──────────────────────────────  │
+│             │  My Spaces (2x3 grid)            │
+│             │  ──────────────────────────────  │
+│             │  HiveLab Widget                  │
+└─────────────┴──────────────────────────────────┘
+```
+
+### Mobile (< lg)
+- Carousel (full width)
+- Identity Card
+- Stats (2x2 grid)
+- Schedule Preview
+- Spaces (2 col grid)
+- HiveLab
+
+## Components
+
+### Page-Level
+- **ProfilePage** - Complete profile page with 3 variants:
+  - `OwnProfile` - Full access to all widgets
+  - `ConnectedView` - Viewing a connection's profile
+  - `NotConnected` - Limited view for non-connections
+
+### Atomic Components (Reusable)
+- **ProfileHeader** - Identity section (name, bio, badges)
+- **ProfileStats** - Metrics grid (connections, spaces, posts, events)
+- **PhotoCarousel** - Portrait carousel (3:4 ratio, max 5 photos)
+- **ProfileCard** - Compact profile card for lists
+- **ProfileCompletion** - Progress toward 100% completion
+- **ActivityTimeline** - Recent activity feed
+- **ConnectionList** - Connections display with avatars
+
+## Key Features
+
+### 1. Portrait Carousel
+- Tinder-style swipeable photos
+- 3:4 aspect ratio (portrait)
+- Max 5 photos
+- Dot indicators + photo counter
+- Sticky on desktop scroll
+
+### 2. Schedule Preview Widget
+- Shows today's 3 upcoming events
+- "View All →" button links to `/schedule` page
+- Compact event cards with emoji, time, location
+- RSVP button for quick actions
+
+### 3. Spaces Grid
+- Shows user's joined spaces
+- Leader badge (Star icon) for spaces they lead
+- Matches `space-card.tsx` hover patterns
+- Links to individual space pages
+
+### 4. HiveLab Access
+- Only visible for Space Leaders
+- Shows active tools with usage stats
+- "+ New Tool" CTA for creating tools
+- Locked state for non-leaders
+
+## Privacy Model
+
+Profile widgets respect privacy levels:
+- **Visible** (🌍) - Everyone can see
+- **Private** (🔒) - Only connections can see
+- **Ghost** (👻) - Only you can see
+
+### View States
+1. **Own Profile** - See everything, edit buttons visible
+2. **Connected** - See visible + private widgets
+3. **Not Connected** - See only visible widgets + basic info
+4. **Campus Visitor** - See only visible widgets (no connection request)
+
+## Data Flow
+
+### Profile Data (`@hive/core`)
+```typescript
+import type { Profile, UIProfile } from '@hive/core';
+import { profileToUIProfile, canViewWidget } from '@hive/core';
+
+// Convert domain model to UI model
+const uiProfile = profileToUIProfile(domainProfile, {
+  isOwnProfile: true,
+  isConnected: false,
+  mutualConnections: 5,
+  mutualSpaces: 2
+});
+
+// Check widget privacy
+const canView = canViewWidget(
+  profile.privacy.widgets.mySpaces,
+  { isOwnProfile: false, isConnected: true }
+);
+```
+
+### Real-Time Updates
+- Firebase listeners for profile changes
+- Optimistic UI for all interactions
+- SSE for connection requests/acceptances
+
+## Motion Patterns
+
+### Card Lift
+```tsx
+<motion.div
+  whileHover={{ y: -4 }}
+  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+>
+  <Card>...</Card>
+</motion.div>
+```
+
+### Image Scale
+```tsx
+<img className="transition-smooth ease-liquid group-hover:scale-105" />
+```
+
+### Layout Animations
+```tsx
+<motion.div layout>
+  <Card>...</Card>
+</motion.div>
+```
+
+### Inline Hover
+```tsx
+<motion.div
+  whileHover={{ x: 4 }}
+  transition={{ duration: 0.15 }}
+>
+  <EventCard>...</EventCard>
+</motion.div>
+```
+
+## Usage Example
+
+```tsx
+import { ProfilePage } from '@hive/ui/Features/02-Profile';
+
+// Own profile
+<ProfilePage
+  profile={currentUserProfile}
+  isOwnProfile={true}
+  onEditProfile={() => router.push('/profile/edit')}
+/>
+
+// Viewing another user
+<ProfilePage
+  profile={otherUserProfile}
+  isOwnProfile={false}
+  isConnected={true}
+  onMessage={() => openMessageDialog()}
+  onConnect={() => sendConnectionRequest()}
+/>
+```
+
+## Routes
+
+- `/profile/[handle]` - View profile
+- `/profile/edit` - Edit own profile
+- `/profile/settings` - Privacy & settings
+- `/schedule` - Full calendar/events page (linked from preview)
+
+## Accessibility
+
+- ARIA labels on all interactive elements
+- Keyboard navigation for carousel
+- Focus states on all buttons
+- Screen reader friendly stats grid
+- Alt text on all images
+
+## Performance
+
+- Lazy load photos (after first)
+- Virtual scrolling for connections list (>100)
+- Optimistic UI for likes/follows
+- Cached profile data (5 min TTL)
+- SSE connection for real-time updates
+
+## Related Documentation
+
+- [Spaces System](/docs/03-spaces-overview) - Similar layout patterns
+- [MONOCHROME_DESIGN_SYSTEM.md](/packages/ui/MONOCHROME_DESIGN_SYSTEM.md) - Design tokens
+- [spec.md](/spec.md) - Profile schema (lines 2115-2249)

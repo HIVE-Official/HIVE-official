@@ -143,8 +143,8 @@ class ErrorReportingService {
    */
   private sanitizeStackTrace(stack: string): string {
     return stack
-      .replace(/\/Users\/[^\/]+/g, '/Users/[USER]') // Remove usernames
-      .replace(/\/home\/[^\/]+/g, '/home/[USER]')   // Remove usernames
+      .replace(/\/Users\/[^/]+/g, '/Users/[USER]') // Remove usernames
+      .replace(/\/home\/[^/]+/g, '/home/[USER]')   // Remove usernames
       .replace(/access_token=[^&\s]+/g, 'access_token=[REDACTED]') // Remove tokens
       .replace(/password=[^&\s]+/g, 'password=[REDACTED]') // Remove passwords
       .replace(/apikey=[^&\s]+/g, 'apikey=[REDACTED]'); // Remove API keys
@@ -188,7 +188,7 @@ class ErrorReportingService {
         });
       }
     } catch (error) {
-      logger.error('Failed to report recovery', { errorId, error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to report recovery', { errorId, error: error instanceof Error ? error.message : String(error) });
     }
   }
 
@@ -201,7 +201,7 @@ class ErrorReportingService {
       if (!response.ok) return null;
       return await response.json();
     } catch (error) {
-      logger.error('Failed to fetch error metrics', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to fetch error metrics', { error: error instanceof Error ? error.message : String(error) });
       return null;
     }
   }
@@ -226,7 +226,7 @@ export const errorReporting = new ErrorReportingService();
 
 // Convenience function for quick error reporting
 export async function reportError(
-  error: Error,
+  error: any,
   context: string,
   additionalData?: Partial<ErrorReport>
 ): Promise<boolean> {

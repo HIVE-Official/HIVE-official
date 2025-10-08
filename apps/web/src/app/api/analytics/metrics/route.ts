@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
+        userId = decodedToken.id;
       } catch (error) {
         // Continue without user ID if token is invalid
         logger.warn(
@@ -128,13 +128,13 @@ export async function GET(request: NextRequest) {
 
     if (userId) {
       // Users can only access their own metrics unless they're admin
-      if (userId !== decodedToken.uid && !isAdmin(decodedToken)) {
+      if (userId !== decodedToken.id && !isAdmin(decodedToken)) {
         return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
       query = query.where('userId', '==', userId);
     } else if (!isAdmin(decodedToken)) {
       // Non-admin users can only see their own metrics
-      query = query.where('userId', '==', decodedToken.uid);
+      query = query.where('userId', '==', decodedToken.id);
     }
 
     if (spaceId) {

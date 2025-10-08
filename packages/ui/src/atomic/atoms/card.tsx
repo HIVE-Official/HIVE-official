@@ -1,4 +1,5 @@
 import * as React from "react"
+
 import { cn } from "../../lib/utils"
 
 const Card = React.forwardRef<
@@ -8,7 +9,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)] shadow-sm",
+      "rounded-lg bg-[#0c0c0c] border border-white/8 text-white",
       className
     )}
     {...props}
@@ -29,27 +30,24 @@ const CardHeader = React.forwardRef<
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <h3
+  <div
     ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight text-[var(--hive-text-primary)]",
-      className
-    )}
+    className={cn("text-lg font-semibold leading-none tracking-tight text-white", className)}
     {...props}
   />
 ))
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <p
+  <div
     ref={ref}
-    className={cn("text-sm text-[var(--hive-text-muted)]", className)}
+    className={cn("text-sm text-white/70", className)}
     {...props}
   />
 ))

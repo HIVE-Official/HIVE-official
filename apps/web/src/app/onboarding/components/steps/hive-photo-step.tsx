@@ -1,9 +1,8 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
-import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { HiveButton, HiveCard } from "@hive/ui";
+import { Camera, Upload, X, CheckCircle, User, Crop } from "lucide-react";
+import { Button, Card } from "@hive/ui";
 import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -20,9 +19,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [cropPosition, setCropPosition] = useState({ x: 0, y: 0 });
   const [cropSize, setCropSize] = useState({ width: 200, height: 240 }); // 5:6 ratio to match card format
-  const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
-  const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cropImageRef = useRef<HTMLImageElement>(null);
 
@@ -126,7 +123,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   const handleResize = useCallback((e: React.MouseEvent, handle: string) => {
     e.stopPropagation();
     setIsResizing(true);
-    setResizeHandle(handle);
     
     const rect = cropImageRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -210,7 +206,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
 
     const handleMouseUp = () => {
       setIsResizing(false);
-      setResizeHandle(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -220,7 +215,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
   }, [cropPosition, cropSize]);
 
   // Generate default avatar options based on user data
-  const avatarOptions = getDefaultAvatarOptions(data.handle || data.fullName || 'user');
+  const avatarOptions = getDefaultAvatarOptions(data.handle || data.displayName || 'user');
 
   // Show cropper modal
   if (showCropper && originalImage) {
@@ -263,7 +258,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 }}
                 onMouseDown={(e) => {
                   if (isResizing) return;
-                  setIsDragging(true);
                   const rect = cropImageRef.current?.getBoundingClientRect();
                   if (rect) {
                     const startX = e.clientX - rect.left - cropPosition.x;
@@ -278,7 +272,6 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     };
                     
                     const handleMouseUp = () => {
-                      setIsDragging(false);
                       document.removeEventListener('mousemove', handleMouseMove);
                       document.removeEventListener('mouseup', handleMouseUp);
                     };
@@ -342,23 +335,21 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               </div>
               
               <div className="flex gap-3">
-                <HiveButton
-                  variant="secondary"
-                  size="sm"
+                <Button
+                  variant="outline"
+                  className="max-w-sm"
                   onClick={cancelCrop}
-                  leftIcon={<X className="w-4 h-4" />}
                 >
-                  Cancel
-                </HiveButton>
+                  <X className="w-4 h-4" /> Cancel
+                </Button>
                 
-                <HiveButton
+                <Button
                   variant="default"
-                  size="sm"
+                  className="max-w-sm"
                   onClick={cropImage}
-                  leftIcon={<CheckCircle className="w-4 h-4" />}
                 >
-                  Apply Crop
-                </HiveButton>
+                  <CheckCircle className="w-4 h-4" /> Apply Crop
+                </Button>
               </div>
             </div>
           </div>
@@ -414,7 +405,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           >
             {/* Selected Photo Card - Larger for Main Display */}
             <div className="relative group">
-              <HiveCard
+              <Card
                 className="w-40 h-48 p-0 overflow-hidden border-2 border-[var(--hive-brand-primary)]/30 shadow-xl"
               >
                 <Image
@@ -424,7 +415,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                   height={192}
                   className="w-full h-full object-cover"
                 />
-              </HiveCard>
+              </Card>
               
               {/* Success Badge */}
               <motion.div
@@ -445,19 +436,18 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             </div>
 
             {/* Change Photo Button */}
-            <HiveButton
+            <Button
               onClick={openFileDialog}
-              variant="secondary"
-              size="sm"
-              leftIcon={<Upload className="w-4 h-4" />}
+              variant="outline"
+              className="max-w-sm"
             >
-              Change Photo
-            </HiveButton>
+              <Upload className="w-4 h-4" /> Change Photo
+            </Button>
           </motion.div>
         ) : (
           <div className="space-y-[var(--hive-spacing-6)]">
             {/* Upload Area */}
-            <HiveCard
+            <Card
               className="p-[var(--hive-spacing-8)] border-2 border-dashed border-[var(--hive-border-primary)]/30 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-300 cursor-pointer group"
               onClick={openFileDialog}
             >
@@ -489,7 +479,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                   </p>
                 </div>
               </div>
-            </HiveCard>
+            </Card>
 
             {/* Error Message */}
             <AnimatePresence>
@@ -531,7 +521,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                     transition={{ delay: 0.4 + index * 0.1 }}
                     // Removed whileHover and whileTap - using CSS hover/active states
                   >
-                    <HiveCard
+                    <Card
                       className="relative h-32 overflow-hidden border-2 border-[var(--hive-border-primary)]/20 hover:border-[var(--hive-brand-primary)]/50 transition-all duration-200 group cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
                       onClick={() => selectAvatar(avatar)}
                     >
@@ -547,7 +537,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                       <div className="absolute inset-0 bg-[var(--hive-brand-primary)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                         <User className="w-6 h-6 text-white" />
                       </div>
-                    </HiveCard>
+                    </Card>
                   </motion.div>
                 ))}
               </div>
@@ -576,7 +566,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <HiveCard
+          <Card
             className="p-[var(--hive-spacing-4)]"
           >
             <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
@@ -597,7 +587,7 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
                 <span>Maximum 5MB file size</span>
               </div>
             </div>
-          </HiveCard>
+          </Card>
         </motion.div>
       </motion.div>
 

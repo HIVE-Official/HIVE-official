@@ -42,7 +42,7 @@ async function getUserNotifications(
 
     return { notifications, unreadCount };
   } catch (error) {
-    logger.error('Error fetching user notifications', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error fetching user notifications', { error: error instanceof Error ? error.message : String(error), userId });
     return { notifications: [], unreadCount: 0 };
   }
 }
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category') || undefined;
 
     const { notifications, unreadCount } = await getUserNotifications(
-      user.uid,
+      user.id,
       limit,
       unreadOnly,
       category
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       }
       await batch.commit();
 
-      logger.info('Marked notifications as read', { notificationId: notificationIds.join(','), userId: user.uid });
+      logger.info('Marked notifications as read', { notificationId: notificationIds.join(','), userId: user.id });
 
       return NextResponse.json({
         success: true,
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
     if (body.action === 'mark_all_read') {
       // Update all unread notifications for user
       const unreadNotifications = await dbAdmin.collection('notifications')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('isRead', '==', false)
         .get();
 
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
       });
       await batch.commit();
 
-      logger.info('Marked all notifications as read', { userId: user.uid, count: unreadNotifications.size });
+      logger.info('Marked all notifications as read', { userId: user.id, count: unreadNotifications.size });
 
       return NextResponse.json({
         success: true,
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
       }
       await batch.commit();
 
-      logger.info('Deleted notifications', { notificationId: notificationIds.join(','), userId: user.uid });
+      logger.info('Deleted notifications', { notificationId: notificationIds.join(','), userId: user.id });
 
       return NextResponse.json({
         success: true,
@@ -194,7 +194,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const notificationData = notificationDoc.data();
-    if (notificationData?.userId !== user.uid) {
+    if (notificationData?.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized access to notification", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -206,7 +206,7 @@ export async function PUT(request: NextRequest) {
     
     await notificationRef.update(updates);
 
-    logger.info('Updated notification read status', { notificationId, userId: user.uid });
+    logger.info('Updated notification read status', { notificationId, userId: user.id });
 
     return NextResponse.json({
       success: true,

@@ -93,12 +93,12 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Generate connection ID
-    const connectionId = `conn_${user.uid}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const connectionId = `conn_${user.id}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     // Create connection record
     const connection: WebSocketConnection = {
       id: connectionId,
-      userId: user.uid,
+      userId: user.id,
       socketId: connectionId, // In real implementation, this would be the actual WebSocket ID
       spaceId,
       connectionType,
@@ -118,11 +118,11 @@ export async function POST(request: NextRequest) {
     await dbAdmin.collection('realtimeConnections').doc(connectionId).set(connection);
 
     // Subscribe to default channels based on connection type
-    const defaultChannels = await getDefaultChannels(user.uid, connectionType, spaceId);
-    await subscribeToChannels(connectionId, user.uid, defaultChannels);
+    const defaultChannels = await getDefaultChannels(user.id, connectionType, spaceId);
+    await subscribeToChannels(connectionId, user.id, defaultChannels);
 
     // Update user presence in Firebase Realtime Database
-    await realtimeService.updatePresence(user.uid, {
+    await realtimeService.updatePresence(user.id, {
       status: 'online',
       lastSeen: serverTimestamp(),
       connectionId,
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Update user presence in Firestore (for persistence)
-    await updateUserPresence(user.uid, 'online', connectionId);
+    await updateUserPresence(user.id, 'online', connectionId);
 
     // Start connection monitoring
     startConnectionMonitoring(connectionId);
@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
     if (connectionId) {
       // Get specific connection
       const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
-      if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.uid) {
+      if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.id) {
         return NextResponse.json(ApiResponseHelper.error("Connection not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
       }
 
@@ -189,7 +189,7 @@ export async function GET(request: NextRequest) {
       
       let channels = [];
       if (includeChannels) {
-        channels = await getUserChannelSubscriptions(user.uid);
+        channels = await getUserChannelSubscriptions(user.id);
       }
 
       return NextResponse.json({
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
     } else {
       // Get all user connections
       const connectionsQuery = dbAdmin.collection('realtimeConnections')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('status', '==', 'connected');
 
       const connectionsSnapshot = await connectionsQuery.get();
@@ -209,7 +209,7 @@ export async function GET(request: NextRequest) {
         ...doc.data()
       }));
 
-      const channels = includeChannels ? await getUserChannelSubscriptions(user.uid) : [];
+      const channels = includeChannels ? await getUserChannelSubscriptions(user.id) : [];
 
       return NextResponse.json({
         connections,
@@ -244,7 +244,7 @@ export async function PUT(request: NextRequest) {
 
     // Verify connection ownership
     const connectionDoc = await dbAdmin.collection('realtimeConnections').doc(connectionId).get();
-    if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.uid) {
+    if (!connectionDoc.exists || connectionDoc.data()?.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Connection not found or not owned", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
@@ -259,13 +259,13 @@ export async function PUT(request: NextRequest) {
     if (channels) {
       switch (action) {
         case 'subscribe':
-          await subscribeToChannels(connectionId, user.uid, channels);
+          await subscribeToChannels(connectionId, user.id, channels);
           break;
         case 'unsubscribe':
-          await unsubscribeFromChannels(connectionId, user.uid, channels);
+          await unsubscribeFromChannels(connectionId, user.id, channels);
           break;
         case 'replace':
-          await replaceChannelSubscriptions(connectionId, user.uid, channels);
+          await replaceChannelSubscriptions(connectionId, user.id, channels);
           break;
       }
     }
@@ -303,18 +303,18 @@ export async function DELETE(request: NextRequest) {
     if (closeAll) {
       // Close all connections for user
       const connectionsQuery = dbAdmin.collection('realtimeConnections')
-        .where('userId', '==', user.uid);
+        .where('userId', '==', user.id);
 
       const connectionsSnapshot = await connectionsQuery.get();
       let closedCount = 0;
 
       for (const connectionDoc of connectionsSnapshot.docs) {
-        await closeConnection(connectionDoc.id, user.uid);
+        await closeConnection(connectionDoc.id, user.id);
         closedCount++;
       }
 
       // Update user presence to offline
-      await updateUserPresence(user.uid, 'offline');
+      await updateUserPresence(user.id, 'offline');
 
       return NextResponse.json({
         success: true,
@@ -323,7 +323,7 @@ export async function DELETE(request: NextRequest) {
       });
     } else if (connectionId) {
       // Close specific connection
-      const success = await closeConnection(connectionId, user.uid);
+      const success = await closeConnection(connectionId, user.id);
       
       if (!success) {
         return NextResponse.json(ApiResponseHelper.error("Connection not found or not owned", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -331,13 +331,13 @@ export async function DELETE(request: NextRequest) {
 
       // Check if user has other active connections
       const remainingConnectionsQuery = dbAdmin.collection('realtimeConnections')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('status', '==', 'connected');
 
       const remainingSnapshot = await remainingConnectionsQuery.get();
       
       if (remainingSnapshot.empty) {
-        await updateUserPresence(user.uid, 'offline');
+        await updateUserPresence(user.id, 'offline');
       }
 
       return NextResponse.json({

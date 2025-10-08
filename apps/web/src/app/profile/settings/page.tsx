@@ -242,7 +242,7 @@ function ProfileSettingsContent() {
       }
     } catch (error) {
       logger.error('Failed to save settings', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined
       });
     }
@@ -258,7 +258,7 @@ function ProfileSettingsContent() {
       });
     } catch (error) {
       logger.error('Failed to toggle ghost mode', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined
       });
     }
@@ -269,7 +269,7 @@ function ProfileSettingsContent() {
     if (!profile) return null;
     return {
       id: profile.identity.id,
-      name: profile.identity.fullName || '',
+      name: profile.identity.displayName || '',
       handle: profile.identity.handle || '',
       email: profile.identity.email || '',
       role: profile.builder?.isBuilder ? 'builder' : 'member',
@@ -304,7 +304,7 @@ function ProfileSettingsContent() {
         actions={
           <div className="flex items-center gap-3">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={() => router.push('/profile')}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -538,7 +538,7 @@ function ProfileSettingsContent() {
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
-                <Badge variant="sophomore" className="text-xs">UB Exclusive</Badge>
+                <Badge variant="secondary" className="text-xs">UB Exclusive</Badge>
               </h3>
               
               <div className="space-y-4">
@@ -555,7 +555,7 @@ function ProfileSettingsContent() {
                         onCheckedChange={() => setShowGhostModeModal(true)}
                       />
                       {privacySettings.ghostMode.enabled && (
-                        <Badge variant="sophomore" className="text-xs bg-purple-500/20 text-purple-300">
+                        <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">
                           Active - {privacySettings.ghostMode.level}
                         </Badge>
                       )}
@@ -584,7 +584,7 @@ function ProfileSettingsContent() {
                   <FormLabel>Theme</FormLabel>
                   <FormControl>
                     <div className="flex items-center gap-2">
-                      <Badge variant={accountSettings.theme === 'dark' ? 'primary' : 'secondary'}>
+                      <Badge variant={accountSettings.theme === 'dark' ? 'default' : 'secondary'}>
                         Dark
                       </Badge>
                       <span className="text-sm text-gray-400">(Currently locked to dark theme for vBETA)</span>
@@ -600,7 +600,7 @@ function ProfileSettingsContent() {
                       {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
                         <Badge
                           key={freq}
-                          variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}
+                          variant={accountSettings.emailFrequency === freq ? 'default' : 'secondary'}
                           className="cursor-pointer"
                           onClick={() => handleAccountChange('emailFrequency', freq)}
                         >
@@ -627,7 +627,7 @@ function ProfileSettingsContent() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-white">{_currentUser?.email}</span>
                     {_currentUser?.isVerified && (
-                      <Badge variant="senior" className="text-xs">Verified</Badge>
+                      <Badge variant="gold" className="text-xs">Verified</Badge>
                     )}
                   </div>
                 </div>
@@ -639,7 +639,7 @@ function ProfileSettingsContent() {
                 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Student Status</span>
-                  <Badge variant="senior" className="text-xs">Active</Badge>
+                  <Badge variant="gold" className="text-xs">Active</Badge>
                 </div>
               </div>
             </Card>
@@ -681,7 +681,7 @@ function ProfileSettingsContent() {
                   </p>
                   <Button
                     variant="destructive"
-                    size="sm"
+                    className="max-w-sm"
                     onClick={() => setShowDeleteModal(true)}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />

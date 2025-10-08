@@ -62,7 +62,7 @@ describe('Spaces Components', () => {
 
       const SpaceSearch = ({ onSearch }: { onSearch: (query: string) => void }) => {
         const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-          onSearch(e.target.value);
+          onSearch((e.target as any).value);
         };
 
         return (
@@ -198,7 +198,7 @@ describe('Spaces Components', () => {
           <form>
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e: React.ChangeEvent) => setName((e.target as any).value)}
               placeholder="Space name"
             />
             {errors.map((error, i) => (
@@ -345,7 +345,7 @@ describe('Spaces Components', () => {
             <input
               type="checkbox"
               checked={settings.joinApprovalRequired}
-              onChange={(e) => onUpdate({ joinApprovalRequired: e.target.checked })}
+              onChange={(e: React.ChangeEvent) => onUpdate({ joinApprovalRequired: e.target.checked })}
             />
             Require join approval
           </label>

@@ -1,12 +1,11 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+"use server";
+
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { withAuth, type AuthenticatedRequest } from "@/lib/middleware/auth";
+import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware";
 import { postCreationRateLimit } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { HttpStatus } from "@/lib/api-response-types";
 import { sseRealtimeService } from "@/lib/sse-realtime-service";
 
 const CreatePostSchema = z.object({
@@ -14,9 +13,8 @@ const CreatePostSchema = z.object({
   type: z.enum(["text", "image", "link", "tool"]).default("text"),
   imageUrl: z.string().url().optional(),
   linkUrl: z.string().url().optional(),
-  toolId: z.string().optional() });
-
-// Using dbAdmin directly for consistency
+  toolId: z.string().optional(),
+});
 
 // Simple profanity check - in production, use a proper service
 const checkProfanity = (text: string): boolean => {
@@ -24,69 +22,60 @@ const checkProfanity = (text: string): boolean => {
   return profanityWords.some((word) => text.toLowerCase().includes(word));
 };
 
-// GET /api/spaces/[spaceId]/posts - Get posts for a space
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
+async function buildPostResponse(doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>) {
+  const data = doc.data();
+  const authorDoc = await dbAdmin.collection("users").doc(data.authorId).get();
+  const author = authorDoc.exists ? authorDoc.data() : null;
+
+  return {
+    id: doc.id,
+    ...data,
+    author: author
+      ? {
+          id: authorDoc.id,
+          fullName: author.displayName ?? "Unknown User",
+          handle: author.handle ?? "unknown",
+          photoURL: author.photoURL ?? null,
+        }
+      : null,
+  };
+}
+
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "INVALID_INPUT", { status: HttpStatus.BAD_REQUEST });
+  }
+
+  const userId = request.user.id;
+
   try {
-    // Get and validate auth token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-
-    let decodedToken;
-    let userId;
-
-    // Handle dev tokens in development mode
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
-      userId = token.replace('dev_token_', '');
-      // Handle session token format
-      if (userId.includes('_')) {
-        userId = userId.split('_')[0];
-      }
-      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
-    } else {
-      const auth = getAuth();
-      decodedToken = await auth.verifyIdToken(token);
-      userId = decodedToken.uid;
-    }
-
-    const { spaceId } = await params;
-
-    const { searchParams } = new URL(request.url);
-    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
+    const searchParams = request.nextUrl.searchParams;
+    const limit = Math.min(parseInt(searchParams.get("limit") ?? "20", 10), 50);
     const lastPostId = searchParams.get("lastPostId");
     const type = searchParams.get("type");
-    const minReplies = parseInt(searchParams.get("minReplies") || "0");
+    const minReplies = parseInt(searchParams.get("minReplies") ?? "0", 10);
 
-    // Check if user is member of the space using nested collection structure
-    const memberDoc = await dbAdmin
+    // Membership check
+    const membershipSnapshot = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
       .doc(userId)
       .get();
 
-    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (!membershipSnapshot.exists || !membershipSnapshot.data()?.isActive) {
+      return respond.error("Not a member of this space", "FORBIDDEN", { status: HttpStatus.FORBIDDEN });
     }
 
-    // Build query for posts
-    let query = dbAdmin
+    let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts");
 
-    // Handle hot threads request
-    if (type === 'hot_threads') {
-      query = query
-        .where("commentCount", ">=", minReplies)
-        .orderBy("commentCount", "desc")
-        .orderBy("lastActivity", "desc");
+    if (type === "hot_threads") {
+      query = query.where("commentCount", ">=", minReplies).orderBy("commentCount", "desc").orderBy("lastActivity", "desc");
     } else {
       query = query.orderBy("createdAt", "desc");
     }
@@ -106,264 +95,175 @@ export async function GET(
       }
     }
 
-    const postsSnapshot = await query.get();
+    const [postsSnapshot, pinnedSnapshot] = await Promise.all([
+      query.get(),
+      dbAdmin
+        .collection("spaces")
+        .doc(spaceId)
+        .collection("posts")
+        .where("isPinned", "==", true)
+        .get(),
+    ]);
 
-    // Get pinned posts separately (always show at top)
-    // TODO: Create composite index for production: isPinned + pinnedAt
-    // For now, we'll fetch pinned posts without ordering by pinnedAt
-    const pinnedQuery = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .where("isPinned", "==", true)
-      .get();
+    const pinnedPosts = await Promise.all(pinnedSnapshot.docs.map(buildPostResponse));
+    const pinnedIds = new Set(pinnedPosts.map((post) => post.id));
 
-    const posts = [];
-    const pinnedPosts = [];
+    const posts = (
+      await Promise.all(
+        postsSnapshot.docs.map(async (doc) => {
+          if (pinnedIds.has(doc.id)) {
+            return null;
+          }
+          return buildPostResponse(doc);
+        })
+      )
+    ).filter(Boolean) as Array<Awaited<ReturnType<typeof buildPostResponse>>>;
 
-    // Process pinned posts
-    for (const doc of pinnedQuery.docs) {
-      const postData = doc.data();
+    const combined = [...pinnedPosts, ...posts];
+    const lastDoc = postsSnapshot.docs[postsSnapshot.docs.length - 1];
 
-      // Get author info
-      const authorDoc = await dbAdmin
-        .collection("users")
-        .doc(postData.authorId)
-        .get();
-      const author = authorDoc.exists ? authorDoc.data() : null;
-
-      pinnedPosts.push({
-        id: doc.id,
-        ...postData,
-        author: author
-          ? {
-              id: authorDoc.id,
-              fullName: author.fullName,
-              handle: author.handle,
-              photoURL: author.photoURL,
-            }
-          : null });
-    }
-
-    // Process regular posts
-    for (const doc of postsSnapshot.docs) {
-      const postData = doc.data();
-
-      // Skip if already in pinned posts
-      if (postData.isPinned) continue;
-
-      // Get author info
-      const authorDoc = await dbAdmin
-        .collection("users")
-        .doc(postData.authorId)
-        .get();
-      const author = authorDoc.exists ? authorDoc.data() : null;
-
-      posts.push({
-        id: doc.id,
-        ...postData,
-        author: author
-          ? {
-              id: authorDoc.id,
-              fullName: author.fullName,
-              handle: author.handle,
-              photoURL: author.photoURL,
-            }
-          : null });
-    }
-
-    return NextResponse.json({
-      posts: [...pinnedPosts, ...posts],
-      hasMore: postsSnapshot.docs.length === limit,
-      lastPostId:
-        postsSnapshot.docs.length > 0
-          ? postsSnapshot.docs[postsSnapshot.docs.length - 1].id
-          : null });
+    return respond.success({
+      posts: combined,
+      pagination: {
+        hasMore: postsSnapshot.docs.length === limit,
+        lastPostId: lastDoc ? lastDoc.id : null,
+      },
+    });
   } catch (error) {
-    logger.error(
-      `Error fetching posts at /api/spaces/[spaceId]/posts`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch posts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+    const err = error instanceof Error ? error : new Error(String(error));
+    logger.error("Error fetching posts for space", err, {
+      spaceId,
+      userId,
+      endpoint: "/api/spaces/[spaceId]/posts",
+    });
 
-// POST /api/spaces/[spaceId]/posts - Create a new post
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
-  // Declare variables outside try block for error logging
-  let spaceId: string = '';
-  let userId: string = '';
+    return respond.error("Failed to fetch posts", "INTERNAL_ERROR", { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  }
+});
+
+export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "INVALID_INPUT", { status: HttpStatus.BAD_REQUEST });
+  }
+
+  const userId = request.user.id;
 
   try {
-    const resolvedParams = await params;
-    spaceId = resolvedParams.spaceId;
-
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-
-    let decodedToken;
-
-    // Handle dev tokens in development mode
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
-      userId = token.replace('dev_token_', '');
-      // Handle session token format
-      if (userId.includes('_')) {
-        userId = userId.split('_')[0];
-      }
-      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
-    } else {
-      const auth = getAuth();
-      decodedToken = await auth.verifyIdToken(token);
-      userId = decodedToken.uid;
-    }
-
-    // Check rate limiting
-    const rateLimitResult = postCreationRateLimit.check(decodedToken.uid);
+    const rateLimitResult = postCreationRateLimit.check(userId);
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        {
-          error: "Rate limit exceeded. Please wait before posting again.",
-        },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": rateLimitResult.limit.toString(),
-            "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
-            "X-RateLimit-Reset": new Date(
-              rateLimitResult.resetTime
-            ).toISOString(),
-          },
-        }
+      const rateLimitedResponse = respond.error(
+        "Rate limit exceeded. Please wait before posting again.",
+        "RATE_LIMITED",
+        { status: HttpStatus.TOO_MANY_REQUESTS }
       );
+      rateLimitedResponse.headers.set("X-RateLimit-Limit", rateLimitResult.limit.toString());
+      rateLimitedResponse.headers.set("X-RateLimit-Remaining", rateLimitResult.remaining.toString());
+      rateLimitedResponse.headers.set("X-RateLimit-Reset", new Date(rateLimitResult.resetTime).toISOString());
+      return rateLimitedResponse;
     }
 
-    // Check if user is member of the space using nested collection structure
-    const memberDoc = await dbAdmin
+    const membershipSnapshot = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("members")
       .doc(userId)
       .get();
 
-    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (!membershipSnapshot.exists || !membershipSnapshot.data()?.isActive) {
+      return respond.error("Not a member of this space", "FORBIDDEN", { status: HttpStatus.FORBIDDEN });
     }
 
-    const body = (await request.json()) as unknown;
-    const validatedData = CreatePostSchema.parse(body);
+    const parsedBody = CreatePostSchema.parse(await request.json());
 
-    // Check for profanity
-    if (checkProfanity(validatedData.content)) {
-      return NextResponse.json(
-        {
-          error:
-            "Post contains inappropriate content. Please revise and try again.",
-        },
+    if (checkProfanity(parsedBody.content)) {
+      return respond.error(
+        "Post contains inappropriate content. Please revise and try again.",
+        "INVALID_CONTENT",
         { status: HttpStatus.BAD_REQUEST }
       );
     }
 
-    // Create post document
+    const now = new Date();
     const postData = {
-      ...validatedData,
+      ...parsedBody,
       authorId: userId,
-      spaceId: spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastActivity: new Date(), // For hot threads sorting
-      commentCount: 0, // For hot threads filtering
-      reactions: {
-        heart: 0,
-      },
-      reactedUsers: {
-        heart: [],
-      },
+      spaceId,
+      createdAt: now,
+      updatedAt: now,
+      lastActivity: now,
+      commentCount: 0,
+      reactions: { heart: 0 },
+      reactedUsers: { heart: [] as string[] },
       isPinned: false,
       isEdited: false,
       isDeleted: false,
     };
 
-    const postRef = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .add(postData);
+    const postsCollection = dbAdmin.collection("spaces").doc(spaceId).collection("posts");
+    const postRef = await postsCollection.add(postData);
 
-    // Get the created post with author info
-    const authorDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
+    const authorDoc = await dbAdmin.collection("users").doc(userId).get();
     const author = authorDoc.data();
 
     const createdPost = {
       id: postRef.id,
       ...postData,
       author: {
-        id: decodedToken.uid,
-        fullName: author?.fullName || "Unknown User",
-        handle: author?.handle || "unknown",
-        photoURL: author?.photoURL || null,
+        id: userId,
+        fullName: author?.displayName ?? "Unknown User",
+        handle: author?.handle ?? "unknown",
+        photoURL: author?.photoURL ?? null,
       },
     };
 
-    // Broadcast new post to space members via SSE
     try {
       await sseRealtimeService.sendMessage({
-        type: 'chat',
+        type: "chat",
         channel: `space:${spaceId}:posts`,
         senderId: userId,
         content: {
-          type: 'new_post',
+          type: "new_post",
           post: createdPost,
-          spaceId: spaceId
+          spaceId,
         },
         metadata: {
-          timestamp: new Date().toISOString(),
-          priority: 'normal',
+          timestamp: now.toISOString(),
+          priority: "normal",
           requiresAck: false,
-          retryCount: 0
-        }
+          retryCount: 0,
+        },
       });
     } catch (sseError) {
-      // Don't fail the request if SSE fails
-      logger.warn('Failed to broadcast new post via SSE', { sseError, postId: postRef.id });
+      const err = sseError instanceof Error ? sseError : new Error(String(sseError));
+      logger.warn("Failed to broadcast new post via SSE", {
+        postId: postRef.id,
+        metadata: {
+          message: err.message,
+        },
+      });
     }
 
-    return NextResponse.json({ post: createdPost }, { status: HttpStatus.CREATED });
+    return respond.success(
+      { post: createdPost },
+      { status: HttpStatus.CREATED, message: "Post created successfully" }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid post data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
+      return respond.error("Invalid post data", "INVALID_INPUT", {
+        status: HttpStatus.BAD_REQUEST,
+        details: error.errors,
+      });
     }
 
-    // Enhanced error logging to debug the issue
-    console.error('🔴 Post creation error details:', {
-      error: error instanceof Error ? {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      } : error,
+    const err = error instanceof Error ? error : new Error(String(error));
+    logger.error("Failed to create space post", err, {
       spaceId,
       userId,
-      endpoint: '/api/spaces/[spaceId]/posts'
+      endpoint: "/api/spaces/[spaceId]/posts",
     });
 
-    logger.error(
-      `Error creating post at /api/spaces/[spaceId]/posts`,
-      error instanceof Error ? error.message : String(error)
-    );
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to create post", "INTERNAL_ERROR", { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+});

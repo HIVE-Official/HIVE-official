@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     // Query for Event System installations
     let installationsQuery = adminDb
       .collection("event_system_installations")
-      .where("userId", "==", user.uid);
+      .where("userId", "==", user.id);
 
     if (spaceId) {
       installationsQuery = installationsQuery.where("spaceId", "==", spaceId);
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     if (includeEvents && installations.length > 0) {
       const eventsQuery = adminDb
         .collection("events")
-        .where("organizerId", "==", user.uid)
+        .where("organizerId", "==", user.id)
         .where("createdVia", "==", "event-system")
         .orderBy("createdAt", "desc")
         .limit(50);
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
       // Get analytics data
       const analyticsQuery = adminDb
         .collection("event_analytics")
-        .where("organizerId", "==", user.uid)
+        .where("organizerId", "==", user.id)
         .orderBy("date", "desc")
         .limit(30);
 
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
       // Check if already installed
       let existingQuery = adminDb
         .collection("event_system_installations")
-        .where("userId", "==", user.uid)
+        .where("userId", "==", user.id)
         .where("isPersonal", "==", validatedData.isPersonal);
 
       if (validatedData.spaceId) {
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
         }
 
         const spaceData = spaceDoc.data();
-        const userRole = spaceData?.members?.[user.uid]?.role;
+        const userRole = spaceData?.members?.[user.id]?.role;
 
         if (!["admin", "moderator", "builder"].includes(userRole)) {
           return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to install Event System in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
 
       const now = new Date();
       const installation = {
-        userId: user.uid,
+        userId: user.id,
         spaceId: validatedData.spaceId || null,
         isPersonal: validatedData.isPersonal,
         configuration: validatedData.configuration,
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
       // Initialize analytics tracking
       await adminDb.collection("event_analytics").add({
         installationId: installationRef.id,
-        userId: user.uid,
+        userId: user.id,
         spaceId: validatedData.spaceId || null,
         date: now,
         eventsCreated: 0,
@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
       // Track installation event
       await adminDb.collection("analytics_events").add({
         eventType: "event_system_installed",
-        userId: user.uid,
+        userId: user.id,
         installationId: installationRef.id,
         spaceId: validatedData.spaceId || null,
         isPersonal: validatedData.isPersonal,
@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
       }
 
       const installation = installationDoc.data();
-      if (installation?.userId !== user.uid) {
+      if (installation?.userId !== user.id) {
         return NextResponse.json(ApiResponseHelper.error("Access denied to this Event System installation", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
       }
 
@@ -267,7 +267,7 @@ export async function POST(request: NextRequest) {
       const event = {
         ...eventData,
         id: adminDb.collection("events").doc().id,
-        organizerId: user.uid,
+        organizerId: user.id,
         installationId,
         spaceId: installation?.spaceId || null,
         createdVia: "event-system",
@@ -317,7 +317,7 @@ export async function POST(request: NextRequest) {
       // Track event creation
       await adminDb.collection("analytics_events").add({
         eventType: "event_created",
-        userId: user.uid,
+        userId: user.id,
         eventId: event.id,
         installationId,
         spaceId: installation?.spaceId || null,
@@ -381,7 +381,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const installation = installationDoc.data();
-    if (installation?.userId !== user.uid) {
+    if (installation?.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -396,7 +396,7 @@ export async function PUT(request: NextRequest) {
     // Track configuration update
     await adminDb.collection("analytics_events").add({
       eventType: "event_system_configured",
-      userId: user.uid,
+      userId: user.id,
       installationId,
       timestamp: new Date(),
       metadata: {
@@ -455,7 +455,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const installation = installationDoc.data();
-    if (installation?.userId !== user.uid) {
+    if (installation?.userId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -486,7 +486,7 @@ export async function DELETE(request: NextRequest) {
     // Track uninstallation
     await adminDb.collection("analytics_events").add({
       eventType: "event_system_uninstalled",
-      userId: user.uid,
+      userId: user.id,
       installationId,
       timestamp: new Date(),
       metadata: {

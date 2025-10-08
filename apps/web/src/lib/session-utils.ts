@@ -7,14 +7,11 @@
  */
 
 import { CookieUtils } from './cookie-utils';
+import type { SessionData } from "@hive/core";
 
-interface SessionData {
-  userId: string;
-  email: string;
-  schoolId: string;
+type ExtendedSessionData = SessionData & {
   needsOnboarding?: boolean;
   onboardingCompleted?: boolean;
-  verifiedAt: string;
   token?: string;
   developmentMode?: boolean;
   profileData?: {
@@ -24,20 +21,20 @@ interface SessionData {
     avatarUrl: string;
     builderOptIn: boolean;
   };
-}
+};
 
 export const SessionUtils = {
   /**
    * Safely get session data from localStorage
    */
-  getSession(): SessionData | null {
+  getSession(): ExtendedSessionData | null {
     if (typeof window === 'undefined') return null;
     
     try {
       const sessionJson = window.localStorage.getItem('hive_session');
       if (!sessionJson) return null;
       
-      return JSON.parse(sessionJson) as SessionData;
+      return JSON.parse(sessionJson) as ExtendedSessionData;
     } catch (error) {
       console.error('Failed to parse session data:', error);
       // Clear corrupted session
@@ -49,7 +46,7 @@ export const SessionUtils = {
   /**
    * Safely set session data to localStorage and cookies
    */
-  setSession(sessionData: SessionData): void {
+  setSession(sessionData: ExtendedSessionData): void {
     if (typeof window === 'undefined') return;
     
     try {

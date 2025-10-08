@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     // Verify user is a member of the space
     const membershipQuery = dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('spaceId', '==', spaceId);
 
     const membershipSnapshot = await membershipQuery.get();
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // Perform the action
     const result = await performSpaceAction(
-      user.uid,
+      user.id,
       spaceId,
       type as SpaceQuickAction['type'],
       value,
@@ -257,7 +257,7 @@ export async function GET(request: NextRequest) {
 
     // Get membership data
     const membershipQuery = dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('spaceId', '==', spaceId);
 
     const membershipSnapshot = await membershipQuery.get();

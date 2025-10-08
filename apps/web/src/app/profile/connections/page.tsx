@@ -60,7 +60,7 @@ export default function ConnectionsPage() {
       return;
     }
 
-    const connectionsRef = collection(db, 'users', user.uid, 'connections');
+    const connectionsRef = collection(db, 'users', user.id, 'connections');
     const q = query(
       connectionsRef,
       where('campusId', '==', 'ub-buffalo'),
@@ -97,7 +97,7 @@ export default function ConnectionsPage() {
   useEffect(() => {
     if (!user) return;
 
-    const requestsRef = collection(db, 'users', user.uid, 'friendRequests');
+    const requestsRef = collection(db, 'users', user.id, 'friendRequests');
     const q = query(
       requestsRef,
       where('status', '==', 'pending'),
@@ -131,7 +131,7 @@ export default function ConnectionsPage() {
       // Create friend request in recipient's collection
       const requestRef = doc(collection(db, 'users', connectionId, 'friendRequests'));
       await setDoc(requestRef, {
-        fromUserId: user.uid,
+        fromUserId: user.id,
         fromUserName: user.displayName || 'HIVE User',
         fromUserAvatar: user.photoURL,
         message: 'Would like to be friends on HIVE',
@@ -143,7 +143,7 @@ export default function ConnectionsPage() {
       // Update local connection to show pending request
       setConnections(prev =>
         prev.map(conn =>
-          conn.uid === connectionId
+          conn.id === connectionId
             ? { ...conn, friendRequestPending: true }
             : conn
         )
@@ -158,12 +158,12 @@ export default function ConnectionsPage() {
 
     try {
       // Update request status
-      const requestRef = doc(db, 'users', user.uid, 'friendRequests', requestId);
+      const requestRef = doc(db, 'users', user.id, 'friendRequests', requestId);
       await setDoc(requestRef, { status: 'accepted' }, { merge: true });
 
       // Update both users' connections to mark as friends
-      const myConnRef = doc(db, 'users', user.uid, 'connections', fromUserId);
-      const theirConnRef = doc(db, 'users', fromUserId, 'connections', user.uid);
+      const myConnRef = doc(db, 'users', user.id, 'connections', fromUserId);
+      const theirConnRef = doc(db, 'users', fromUserId, 'connections', user.id);
 
       await setDoc(myConnRef, { isFriend: true }, { merge: true });
       await setDoc(theirConnRef, { isFriend: true }, { merge: true });
@@ -179,7 +179,7 @@ export default function ConnectionsPage() {
     if (!user) return;
 
     try {
-      const requestRef = doc(db, 'users', user.uid, 'friendRequests', requestId);
+      const requestRef = doc(db, 'users', user.id, 'friendRequests', requestId);
       await deleteDoc(requestRef);
       setFriendRequests(prev => prev.filter(req => req.id !== requestId));
     } catch (error) {
@@ -191,9 +191,9 @@ export default function ConnectionsPage() {
     if (!user) return;
 
     try {
-      const connRef = doc(db, 'users', user.uid, 'connections', connectionId);
+      const connRef = doc(db, 'users', user.id, 'connections', connectionId);
       await deleteDoc(connRef);
-      setConnections(prev => prev.filter(conn => conn.uid !== connectionId));
+      setConnections(prev => prev.filter(conn => conn.id !== connectionId));
     } catch (error) {
       console.error('Failed to remove connection:', error);
     }
@@ -263,7 +263,7 @@ export default function ConnectionsPage() {
           <Input
             placeholder="Search connections..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
             className="mb-4 bg-gray-900 border-white/8"
           />
 
@@ -309,17 +309,15 @@ export default function ConnectionsPage() {
                       </div>
                       <div className="flex gap-2">
                         <Button
-                          size="sm"
+                          className="max-w-sm bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
                           onClick={() => acceptFriendRequest(request.id, request.fromUserId)}
-                          className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
                         >
                           Accept
                         </Button>
                         <Button
-                          size="sm"
+                          className="max-w-sm border-white/20"
                           variant="outline"
                           onClick={() => rejectFriendRequest(request.id)}
-                          className="border-white/20"
                         >
                           Decline
                         </Button>
@@ -334,7 +332,7 @@ export default function ConnectionsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredConnections.map((connection) => (
                   <ConnectionCard
-                    key={connection.uid}
+                    key={connection.id}
                     connection={connection}
                     onSendFriendRequest={sendFriendRequest}
                     onRemoveConnection={removeConnection}
@@ -348,7 +346,7 @@ export default function ConnectionsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredConnections.filter(c => c.isFriend).map((connection) => (
                   <ConnectionCard
-                    key={connection.uid}
+                    key={connection.id}
                     connection={connection}
                     onSendFriendRequest={sendFriendRequest}
                     onRemoveConnection={removeConnection}
@@ -432,18 +430,16 @@ function ConnectionCard({
       {/* Actions */}
       <div className="flex gap-2">
         <Button
-          size="sm"
+          className="max-w-sm flex-1 border-white/20"
           variant="outline"
-          onClick={() => router.push(`/profile/${connection.uid}`)}
-          className="flex-1 border-white/20"
+          onClick={() => router.push(`/profile/${connection.id}`)}
         >
           View Profile
         </Button>
         {!connection.isFriend && (
           <Button
-            size="sm"
-            onClick={() => onSendFriendRequest(connection.uid)}
-            className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
+            className="max-w-sm flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
+            onClick={() => onSendFriendRequest(connection.id)}
           >
             Add Friend
           </Button>

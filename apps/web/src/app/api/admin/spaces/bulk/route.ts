@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 /**
  * Admin Bulk Space Operations API
@@ -78,7 +78,7 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
         };
       }
     } catch (error) {
-      logger.error('Error checking space in type', { spaceId, type, error: error instanceof Error ? error : new Error(String(error))});
+      logger.error('Error checking space in type', { spaceId, type, error: error instanceof Error ? error.message : String(error)});
     }
   }
   
@@ -256,11 +256,11 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
         await logBulkAction(adminUserId, action, spaceId, spaceType, params?.reason || 'Bulk operation');
 
       } catch (error) {
-        logger.error('Error processing space', { spaceId, error: error instanceof Error ? error : new Error(String(error))});
+        logger.error('Error processing space', { spaceId, error: error instanceof Error ? error.message : String(error)});
         result.errors.push({
           spaceId,
           spaceType: 'unknown',
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : String(error)
         });
         result.failedOperations++;
 
@@ -305,7 +305,7 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
     });
 
   } catch (error: any) {
-    logger.error('Bulk operation error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Bulk operation error', { error });
 
     if (error instanceof z.ZodError) {
       return respond.error(
@@ -352,7 +352,7 @@ async function logBulkAction(
       isBulkOperation: true
     });
   } catch (error) {
-    logger.error('Error logging bulk action', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error logging bulk action', { error });
   }
 }
 
@@ -388,6 +388,6 @@ async function logBulkOperationSummary(
       }))
     });
   } catch (error) {
-    logger.error('Error logging bulk operation summary', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error logging bulk operation summary', { error });
   }
 }

@@ -63,12 +63,12 @@ export function useNotifications() {
   });
 
   useEffect(() => {
-    if (!user?.uid) {
+    if (!user?.id) {
       setState(prev => ({ ...prev, loading: false }));
       return;
     }
 
-    const notificationsRef = collection(db, 'notifications', user.uid, 'userNotifications');
+    const notificationsRef = collection(db, 'notifications', user.id, 'userNotifications');
     const q = query(
       notificationsRef,
       orderBy('createdAt', 'desc'),
@@ -114,7 +114,7 @@ export function useNotifications() {
         }
       },
       (error) => {
-        logger.error('Notification subscription error', { error: error instanceof Error ? error : new Error(String(error)) });
+        logger.error('Notification subscription error', { error: error instanceof Error ? error.message : String(error) });
         setState(prev => ({
           ...prev,
           loading: false,
@@ -124,33 +124,33 @@ export function useNotifications() {
     );
 
     return () => unsubscribe();
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Mark notification as read
   const markAsRead = useCallback(async (notificationId: string) => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     try {
-      const notificationRef = doc(db, 'notifications', user.uid, 'userNotifications', notificationId);
+      const notificationRef = doc(db, 'notifications', user.id, 'userNotifications', notificationId);
       await updateDoc(notificationRef, {
         read: true,
         readAt: serverTimestamp()
       });
     } catch (error) {
-      logger.error('Failed to mark notification as read', { error: error instanceof Error ? error : new Error(String(error)), notificationId });
+      logger.error('Failed to mark notification as read', { error: error instanceof Error ? error.message : String(error), notificationId });
     }
-  }, [user?.uid]);
+  }, [user?.id]);
 
   // Mark all as read
   const markAllAsRead = useCallback(async () => {
-    if (!user?.uid || state.unreadCount === 0) return;
+    if (!user?.id || state.unreadCount === 0) return;
 
     try {
       const batch = writeBatch(db);
       state.notifications
         .filter(n => !n.read)
         .forEach(notification => {
-          const ref = doc(db, 'notifications', user.uid, 'userNotifications', notification.id);
+          const ref = doc(db, 'notifications', user.id, 'userNotifications', notification.id);
           batch.update(ref, {
             read: true,
             readAt: serverTimestamp()
@@ -159,26 +159,26 @@ export function useNotifications() {
 
       await batch.commit();
     } catch (error) {
-      logger.error('Failed to mark all notifications as read', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to mark all notifications as read', { error: error instanceof Error ? error.message : String(error) });
     }
-  }, [user?.uid, state.notifications, state.unreadCount]);
+  }, [user?.id, state.notifications, state.unreadCount]);
 
   // Clear all notifications
   const clearAll = useCallback(async () => {
-    if (!user?.uid) return;
+    if (!user?.id) return;
 
     try {
       const batch = writeBatch(db);
       state.notifications.forEach(notification => {
-        const ref = doc(db, 'notifications', user.uid, 'userNotifications', notification.id);
+        const ref = doc(db, 'notifications', user.id, 'userNotifications', notification.id);
         batch.delete(ref);
       });
 
       await batch.commit();
     } catch (error) {
-      logger.error('Failed to clear notifications', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Failed to clear notifications', { error: error instanceof Error ? error.message : String(error) });
     }
-  }, [user?.uid, state.notifications]);
+  }, [user?.id, state.notifications]);
 
   return {
     notifications: state.notifications,
@@ -224,7 +224,7 @@ export async function sendNotification({
 
     logger.info('Notification sent', { toUserId, type, title });
   } catch (error) {
-    logger.error('Failed to send notification', { error: error instanceof Error ? error : new Error(String(error)), toUserId, type });
+    logger.error('Failed to send notification', { error: error instanceof Error ? error.message : String(error), toUserId, type });
     throw error;
   }
 }
@@ -271,7 +271,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 /**
  * Show browser notification
  */
-export function showBrowserNotification(title: string, options?: NotificationOptions) {
+export function showBrowserNotification(title: string, options?: { body?: string; icon?: string; tag?: string }) {
   if (!('Notification' in window) || Notification.permission !== 'granted') {
     return;
   }
@@ -292,6 +292,6 @@ export function showBrowserNotification(title: string, options?: NotificationOpt
       notification.close();
     };
   } catch (error) {
-    logger.error('Failed to show browser notification', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to show browser notification', { error: error instanceof Error ? error.message : String(error) });
   }
 }

@@ -4,11 +4,13 @@
  */
 
 import { FirebaseApp } from 'firebase/app';
-import { getPerformance, Performance, trace } from 'firebase/performance';
+import { getPerformance, trace } from 'firebase/performance';
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import type { Analytics } from 'firebase/analytics';
 
-let performance: Performance | null = null;
-let analytics: any = null;
+let performance: ReturnType<typeof getPerformance> | null = null;
+let analytics: Analytics | null = null;
+type FirebasePerformanceTrace = ReturnType<typeof trace>;
 
 /**
  * Initialize Firebase Performance Monitoring
@@ -80,10 +82,15 @@ export const PerformanceTraces = {
   FIRST_POST_CREATE: 'first_post_creation',
 } as const;
 
+type PerformanceMonitor = {
+  startMeasure: (measureName: string) => Promise<FirebasePerformanceTrace | null>;
+  endMeasure: (traceInstance: FirebasePerformanceTrace | null) => void;
+};
+
 /**
  * Start a custom performance trace
  */
-export async function startTrace(traceName: string): Promise<any> {
+export async function startTrace(traceName: string): Promise<FirebasePerformanceTrace | null> {
   if (!performance) return null;
 
   try {
@@ -99,7 +106,7 @@ export async function startTrace(traceName: string): Promise<any> {
 /**
  * Stop a custom performance trace
  */
-export function stopTrace(traceInstance: any): void {
+export function stopTrace(traceInstance: FirebasePerformanceTrace | null): void {
   if (!traceInstance) return;
 
   try {
@@ -113,7 +120,7 @@ export function stopTrace(traceInstance: any): void {
  * Track custom metrics
  */
 export function trackMetric(
-  traceInstance: any,
+  traceInstance: FirebasePerformanceTrace | null,
   metricName: string,
   value: number
 ): void {
@@ -130,7 +137,7 @@ export function trackMetric(
  * Track custom attributes
  */
 export function trackAttribute(
-  traceInstance: any,
+  traceInstance: FirebasePerformanceTrace | null,
   attributeName: string,
   value: string
 ): void {
@@ -181,7 +188,7 @@ export const AnalyticsEvents = {
  */
 export function logAnalyticsEvent(
   eventName: string,
-  parameters?: Record<string, any>
+  parameters?: Record<string, unknown>
 ): void {
   if (!analytics) return;
 
@@ -202,19 +209,21 @@ export function logAnalyticsEvent(
 /**
  * Performance monitoring hooks for React components
  */
-export function usePerformanceMonitoring(componentName: string) {
+export function usePerformanceMonitoring(componentName: string): PerformanceMonitor {
+  const noopMonitor: PerformanceMonitor = {
+    startMeasure: async () => null,
+    endMeasure: () => null,
+  };
+
   if (typeof window === 'undefined' || !performance) {
-    return {
-      startMeasure: () => null,
-      endMeasure: () => null,
-    };
+    return noopMonitor;
   }
 
   return {
     startMeasure: (measureName: string) => {
       return startTrace(`${componentName}_${measureName}`);
     },
-    endMeasure: (traceInstance: any) => {
+    endMeasure: (traceInstance: FirebasePerformanceTrace | null) => {
       stopTrace(traceInstance);
     },
   };
@@ -256,19 +265,20 @@ export async function trackAPICall<T>(
   apiName: string,
   apiCall: () => Promise<T>
 ): Promise<T> {
-  const trace = await startTrace(`api_${apiName}`);
-  const startTime = performance?.now() || 0;
+  const apiTrace = await startTrace(`api_${apiName}`);
+  const getNow = () => (typeof window !== 'undefined' ? window.performance.now() : Date.now());
+  const startTime = getNow();
 
   try {
     const result = await apiCall();
 
-    if (trace) {
-      const endTime = performance?.now() || 0;
+    if (apiTrace) {
+      const endTime = getNow();
       const duration = endTime - startTime;
 
-      trackMetric(trace, 'duration_ms', duration);
-      trackAttribute(trace, 'api_name', apiName);
-      trackAttribute(trace, 'success', 'true');
+      trackMetric(apiTrace, 'duration_ms', duration);
+      trackAttribute(apiTrace, 'api_name', apiName);
+      trackAttribute(apiTrace, 'success', 'true');
 
       // Log warning if API call exceeds threshold
       const maxApiTime = parseInt(process.env.NEXT_PUBLIC_MAX_API_RESPONSE || '1000');
@@ -279,13 +289,13 @@ export async function trackAPICall<T>(
 
     return result;
   } catch (error) {
-    if (trace) {
-      trackAttribute(trace, 'success', 'false');
-      trackAttribute(trace, 'error', String(error));
+    if (apiTrace) {
+      trackAttribute(apiTrace, 'success', 'false');
+      trackAttribute(apiTrace, 'error', String(error));
     }
     throw error;
   } finally {
-    stopTrace(trace);
+    stopTrace(apiTrace);
   }
 }
 

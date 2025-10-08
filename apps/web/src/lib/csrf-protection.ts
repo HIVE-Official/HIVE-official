@@ -126,7 +126,7 @@ export class CSRFProtection {
 
     // Log token creation
     await logSecurityEvent('invalid_token', {
-      operation: 'token_created',
+      action: 'token_created',
       tags: {
         sessionId,
         clientId,
@@ -163,7 +163,7 @@ export class CSRFProtection {
       const tokenData = this.tokenStore.get(token);
       if (!tokenData) {
         await logSecurityEvent('invalid_token', {
-          operation: 'invalid_token_used',
+          action: 'invalid_token_used',
           tags: {
             sessionId,
             token: token.substring(0, 8), // Log only prefix for security
@@ -192,7 +192,7 @@ export class CSRFProtection {
       // Validate session binding
       if (tokenData.sessionId !== sessionId) {
         await logSecurityEvent('invalid_token', {
-          operation: 'session_mismatch',
+          action: 'session_mismatch',
           tags: {
             expectedSession: sessionId,
             tokenSession: tokenData.sessionId,
@@ -211,7 +211,7 @@ export class CSRFProtection {
       const currentClientId = getSecureClientId(request);
       if (tokenData.clientId !== currentClientId) {
         await logSecurityEvent('invalid_token', {
-          operation: 'client_mismatch',
+          action: 'client_mismatch',
           tags: {
             sessionId,
             expectedClient: tokenData.clientId,
@@ -231,7 +231,7 @@ export class CSRFProtection {
       const currentFingerprint = this.createFingerprint(request);
       if (tokenData.fingerprint !== currentFingerprint) {
         await logSecurityEvent('invalid_token', {
-          operation: 'fingerprint_mismatch',
+          action: 'fingerprint_mismatch',
           tags: {
             sessionId,
             token: token.substring(0, 8),
@@ -268,7 +268,7 @@ export class CSRFProtection {
       }
 
       await logSecurityEvent('invalid_token', {
-        operation: 'token_validated',
+        action: 'token_validated',
         tags: {
           sessionId,
           usageCount: tokenData.usageCount.toString(),
@@ -285,10 +285,10 @@ export class CSRFProtection {
     } catch (error) {
       
       await logSecurityEvent('invalid_token', {
-        operation: 'validation_error',
+        action: 'validation_error',
         tags: {
           sessionId,
-          error: error instanceof Error ? error.message : 'unknown',
+          error: error instanceof Error ? error.message : String(error),
           environment: currentEnvironment
         }
       });
@@ -342,7 +342,7 @@ export class CSRFProtection {
     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
       if (!origin && !referer) {
         await logSecurityEvent('invalid_token', {
-          operation: 'missing_origin_referer',
+          action: 'missing_origin_referer',
           tags: {
             method: request.method,
             host: host || 'unknown',
@@ -361,7 +361,7 @@ export class CSRFProtection {
         const isValidOrigin = this.isValidOrigin(origin, host);
         if (!isValidOrigin) {
           await logSecurityEvent('invalid_token', {
-            operation: 'invalid_origin',
+            action: 'invalid_origin',
             tags: {
               origin,
               host: host || 'unknown',
@@ -381,7 +381,7 @@ export class CSRFProtection {
         const isValidReferer = this.isValidReferer(referer, host);
         if (!isValidReferer) {
           await logSecurityEvent('invalid_token', {
-            operation: 'invalid_referer',
+            action: 'invalid_referer',
             tags: {
               referer,
               host: host || 'unknown',
@@ -538,6 +538,7 @@ export class CSRFProtection {
     }
 
     if (cleanedCount > 0) {
+      console.log(`Cleaned up ${cleanedCount} expired CSRF tokens`);
     }
   }
 

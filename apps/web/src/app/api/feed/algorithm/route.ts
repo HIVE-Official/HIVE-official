@@ -81,10 +81,10 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Get user's algorithm configuration
-    const algorithmConfig = await getUserAlgorithmConfig(user.uid);
+    const algorithmConfig = await getUserAlgorithmConfig(user.id);
     
     // Get user's space memberships with engagement data
-    const userMemberships = await getUserSpaceMemberships(user.uid);
+    const userMemberships = await getUserSpaceMemberships(user.id);
     
     if (userMemberships.length === 0) {
       return NextResponse.json({
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     // Get feed content using enhanced algorithm
     const feedItems = await getEnhancedFeedContent({
-      userId: user.uid,
+      userId: user.id,
       memberships: userMemberships,
       config: algorithmConfig,
       limit,
@@ -113,10 +113,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Apply final ranking and filtering
-    const rankedItems = await applyFinalRanking(feedItems, algorithmConfig, user.uid);
+    const rankedItems = await applyFinalRanking(feedItems, algorithmConfig, user.id);
     
     // Log algorithm metrics for optimization
-    await logAlgorithmMetrics(user.uid, {
+    await logAlgorithmMetrics(user.id, {
       feedType,
       totalCandidates: feedItems.length,
       finalItems: rankedItems.length,
@@ -158,11 +158,11 @@ export async function GET(request: NextRequest) {
     const includeMetrics = searchParams.get('includeMetrics') === 'true';
 
     // Get user's algorithm configuration
-    const config = await getUserAlgorithmConfig(user.uid);
+    const config = await getUserAlgorithmConfig(user.id);
     
     let metrics = null;
     if (includeMetrics) {
-      metrics = await getAlgorithmMetrics(user.uid);
+      metrics = await getAlgorithmMetrics(user.id);
     }
 
     return NextResponse.json({

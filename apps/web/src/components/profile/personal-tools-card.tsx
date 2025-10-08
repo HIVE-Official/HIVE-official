@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { HiveCard, HiveButton } from "@hive/ui";
+import { Card, Button } from "@hive/ui";
 
 // Tool interface based on Profile System requirements
 interface PersonalTool {
@@ -157,7 +157,7 @@ export function PersonalToolsCard({
   // Loading State
   if (toolsLoading || statsLoading) {
     return (
-      <HiveCard className={`h-full p-4 ${className}`}>
+      <Card className={`h-full p-4 ${className}`}>
         <div className="animate-pulse">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
@@ -201,14 +201,14 @@ export function PersonalToolsCard({
             🔄 Syncing tool configurations and data...
           </div>
         </div>
-      </HiveCard>
+      </Card>
     );
   }
 
   // Empty State
   if (!tools || tools.length === 0) {
     return (
-      <HiveCard 
+      <Card 
         className={`h-full p-6 cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-hive-brand-primary/10 transition-all duration-300 ease-out ${className}`}
         onClick={handleAddTools}
       >
@@ -219,17 +219,16 @@ export function PersonalToolsCard({
               <span className="text-lg">🔧</span>
               <h3 className="text-sm font-semibold text-hive-text-primary">Your Tools</h3>
             </div>
-            <HiveButton 
+            <Button 
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
               }}
               variant="outline" 
-              size="sm"
-              className="text-xs"
+              className="max-w-sm text-xs"
             >
               Browse Tools ↗
-            </HiveButton>
+            </Button>
           </div>
 
           {/* Empty State Content */}
@@ -253,7 +252,7 @@ export function PersonalToolsCard({
               </ul>
             </div>
 
-            <HiveButton 
+            <Button 
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
@@ -262,14 +261,14 @@ export function PersonalToolsCard({
               className="hover:scale-105 transition-all duration-200"
             >
               + Install Your First Tool
-            </HiveButton>
+            </Button>
           </div>
 
           <div className="text-xs text-hive-text-muted text-center mt-4">
             Click to explore tool options ↗
           </div>
         </div>
-      </HiveCard>
+      </Card>
     );
   }
 
@@ -278,7 +277,7 @@ export function PersonalToolsCard({
   const totalSlots = variant === 'desktop' ? 12 : 8;
   
   return (
-    <HiveCard 
+    <Card 
       className={`h-full p-4 cursor-pointer hover:scale-[1.02] hover:shadow-lg hover:shadow-hive-brand-primary/10 transition-all duration-300 ease-out group ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -292,28 +291,26 @@ export function PersonalToolsCard({
             <h3 className="text-sm font-semibold text-hive-text-primary">Your Tools</h3>
           </div>
           <div className="flex items-center gap-2">
-            <HiveButton 
+            <Button 
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleAddTools();
               }}
               variant="outline" 
-              size="sm"
-              className="text-xs transition-all duration-200 hover:scale-105"
+              className="max-w-sm text-xs transition-all duration-200 hover:scale-105"
             >
               + Add
-            </HiveButton>
-            <HiveButton 
+            </Button>
+            <Button 
               onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
                 handleManageTools();
               }}
-              variant="ghost" 
-              size="sm"
-              className="text-xs transition-all duration-200 hover:scale-105"
+              variant="outline" 
+              className="max-w-sm text-xs transition-all duration-200 hover:scale-105"
             >
               ⚙️ Manage
-            </HiveButton>
+            </Button>
           </div>
         </div>
 
@@ -395,17 +392,16 @@ export function PersonalToolsCard({
 
         {/* Bottom Action */}
         <div className="mt-auto">
-          <HiveButton 
+          <Button 
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               handleManageTools();
             }}
-            variant="ghost" 
-            size="sm"
-            className={`w-full text-xs transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-70'}`}
+            variant="outline" 
+            className={`max-w-sm w-full text-xs transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-70'}`}
           >
             Manage All Tools ↗
-          </HiveButton>
+          </Button>
         </div>
 
         {/* Click hint */}
@@ -413,6 +409,6 @@ export function PersonalToolsCard({
           Click card body to open tool interface ↗
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }

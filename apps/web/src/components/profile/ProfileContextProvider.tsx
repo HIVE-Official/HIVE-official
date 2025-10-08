@@ -12,7 +12,7 @@ import { toUnifiedProfile, toProfileSystem, createMockProfileSystem } from '@/li
 import type { HiveProfile, UnifiedHiveProfile, ProfileSystem } from '@hive/core';
 import { presenceService, type PresenceData } from '@hive/core';
 import { useAuth } from '@hive/auth-logic';
-import type { PresenceStatus } from '@hive/ui';
+import { PresenceStatus } from "@hive/ui";
 
 interface ProfileContextValue {
   // Raw HiveProfile data (for API compatibility)
@@ -310,7 +310,7 @@ export function withProfileContext<P extends object>(
 /**
  * Development helper: ProfileContext with mock data
  */
-export function MockProfileContextProvider({ children }: { children: ReactNode }) {
+export function MockProfileContextProvider({ children }: { children: React.ReactNode }) {
   const mockData = createMockProfileSystem('mock-dev-user');
 
   return (

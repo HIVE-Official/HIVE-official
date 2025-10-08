@@ -442,7 +442,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           if (!state.user) return;
 
           // Check cache first
-          const cacheKey = `feed_${state.user.uid}`;
+          const cacheKey = `feed_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -456,7 +456,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setError('feed', null);
 
             const integration = getPlatformIntegration();
-            const feedData = await integration.getUnifiedFeedData(state.user.uid, {
+            const feedData = await integration.getUnifiedFeedData(state.user.id, {
               limit: 20,
               sources: ['feed', 'spaces', 'tools', 'profile']
             });
@@ -477,7 +477,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           
           if (!state.user) return;
 
-          const cacheKey = `spaces_${state.user.uid}`;
+          const cacheKey = `spaces_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -519,7 +519,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           
           if (!state.user) return;
 
-          const cacheKey = `tools_${state.user.uid}`;
+          const cacheKey = `tools_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -602,7 +602,8 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
               state.refreshProfile(options)
             ]);
           } catch (error) {
-          } finally {
+      // Intentionally suppressed - non-critical error
+    } finally {
             state.setSyncInProgress(false);
           }
         },
@@ -623,7 +624,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
                   type: 'post',
                   sourceSlice: 'feed',
                   sourceId: `temp_${action.id}`,
-                  userId: state.user?.uid || '',
+                  userId: state.user?.id || '',
                   content: action.data,
                   metadata: {
                     visibility: 'public',
@@ -753,11 +754,12 @@ async function getAuthToken(): Promise<string> {
     if (sessionJson) {
       const session = JSON.parse(sessionJson);
       return process.env.NODE_ENV === 'development' 
-        ? `dev_token_${session.uid}` 
+        ? `dev_token_${session.id}` 
         : session.token;
     }
   } catch (error) {
-  }
+      // Intentionally suppressed - non-critical error
+    }
   
   return '';
 }

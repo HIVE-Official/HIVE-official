@@ -5,7 +5,7 @@
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit as firestoreLimit, Timestamp } from 'firebase/firestore';
 import { db } from '@hive/firebase';
 import { Result } from '../../../domain/shared/base/Result';
-import { EnhancedProfile } from '../../../domain/profile/aggregates/enhanced-profile';
+import { Profile } from '../../../domain/profile/aggregates/profile.aggregate';
 import { ProfileId } from '../../../domain/profile/value-objects/profile-id.value';
 import { UBEmail } from '../../../domain/profile/value-objects';
 import { ProfileHandle } from '../../../domain/profile/value-objects/profile-handle.value';
@@ -201,7 +201,7 @@ export class FirebaseProfileRepository {
                 return Result.fail(userTypeResult.error);
             }
             // Create profile
-            const profile = EnhancedProfile.create({
+            const profile = Profile.create({
                 profileId: ProfileId.create(id).getValue(),
                 email: emailResult.getValue(),
                 handle: handleResult.getValue(),
@@ -262,12 +262,10 @@ export class FirebaseProfileRepository {
             userType: profile.userType.value,
             campusId: profile.campusId.id,
             privacy: profile.privacy ? {
-                level: profile.privacy.level,
+                profileVisibility: profile.privacy.profileVisibility,
                 showEmail: profile.privacy.showEmail,
-                showPhone: profile.privacy.showPhone,
-                showDorm: profile.privacy.showDorm,
-                showSchedule: profile.privacy.showSchedule,
-                showActivity: profile.privacy.showActivity
+                showConnections: profile.privacy.showConnections,
+                allowConnectionRequests: profile.privacy.allowConnectionRequests
             } : {},
             badges: profile.badges,
             blockedUsers: profile.blockedUsers,
@@ -349,7 +347,7 @@ export class FirebaseProfileRepository {
             });
             // Fetch all connected profiles
             const profiles = [];
-            for (const connectedId of connectedProfileIds) {
+            for (const connectedId of Array.from(connectedProfileIds)) {
                 const result = await this.findById(connectedId);
                 if (result.isSuccess) {
                     profiles.push(result.getValue());

@@ -1,35 +1,60 @@
-/* Import HIVE Design System Tokens - Single Source of Truth */
-@import "../../tokens/hive-tokens-generated.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@custom-variant dark (&:is(.dark *));
+
 @layer base {
-  /* === RADIX UI CSS VARIABLES ===
-   * Required for Radix UI components compatibility
-   * Maps HIVE tokens to expected CSS variables
+  /* Import HIVE Design System Tokens FIRST */
+  @import "../../tokens/hive-tokens-generated.css";
+
+  /* === RADIX UI + SHADCN CSS VARIABLES ===
+   * Vercel Geist-inspired: Monochrome base + selective gold accent
+   * True black (#000) for OLED optimization
+   * Minimal borders, high contrast, clean hierarchy
+   *
+   * These MUST come after HIVE tokens to override with HSL format
    */
   :root {
-    --background: var(--hive-background-primary);
-    --foreground: var(--hive-text-primary);
-    --card: var(--hive-background-secondary);
-    --card-foreground: var(--hive-text-primary);
-    --popover: var(--hive-background-secondary);
-    --popover-foreground: var(--hive-text-primary);
-    --primary: var(--hive-brand-primary);
-    --primary-foreground: var(--hive-text-inverse);
-    --secondary: var(--hive-background-interactive);
-    --secondary-foreground: var(--hive-text-primary);
-    --muted: var(--hive-background-tertiary);
-    --muted-foreground: var(--hive-text-muted);
-    --accent: var(--hive-brand-accent);
-    --accent-foreground: var(--hive-text-inverse);
-    --destructive: var(--hive-status-error);
-    --destructive-foreground: var(--hive-text-primary);
-    --border: var(--hive-border-primary);
-    --input: var(--hive-border-primary);
-    --ring: var(--hive-interactive-focus);
+    /* Base colors - True black foundation */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    /* Cards & surfaces - Subtle elevation */
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Primary brand - Gold accent (selective use) */
+    --primary: 51 100% 50%;
+    --primary-foreground: 0 0% 0%;
+
+    /* Secondary - Minimal gray interactive states */
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted - Lower hierarchy content */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+
+    /* Accent - Reserved for interactive highlights */
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive - Error states */
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders - Subtle, minimal chrome (Geist principle) */
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.12;
+
+    /* Focus ring - Gold accent for accessibility */
+    --ring: 51 100% 50%;
+
+    /* Radius - Consistent, minimal */
+    --radius: 0.5rem;
   }
 
   /* === GLOBAL STYLES === */
@@ -40,7 +65,8 @@
   body {
     background-color: var(--hive-background-primary);
     color: var(--hive-text-primary);
-    font-family: var(--hive-font-family-sans, 'Geist Sans', system-ui, sans-serif);
+    /* Font-family set by Next.js font loader via className in layout.tsx */
+    /* Uses var(--font-geist-sans) which is properly loaded and optimized */
   }
 
   /* === UTILITY CLASSES INHERITANCE === */
@@ -58,5 +84,142 @@
 
   .hive-interactive:hover {
     transform: translateY(-1px) scale(1.02);
+  }
+
+  /* === WCAG 2.2 FOCUS INDICATORS === */
+  /* Enhanced focus appearance for keyboard navigation */
+  *:focus {
+    outline: none; /* Remove default outline */
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--hive-brand-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+    /* WCAG 2.2: Focus Appearance (Enhanced) - minimum 2px solid */
+  }
+
+  /* High contrast focus for interactive elements */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role="button"]:focus-visible,
+  [role="link"]:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--hive-brand-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.2);
+  }
+
+  /* === REDUCED MOTION SUPPORT === */
+  /* WCAG 2.1: Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Keep focus indicators visible */
+    *:focus-visible {
+      transition: outline 0ms, box-shadow 0ms;
+    }
+  }
+
+  /* === SCREEN READER UTILITIES === */
+  /* Visually hidden but accessible to screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Show on focus (for skip links) */
+  .sr-only:focus,
+  .sr-only:focus-visible,
+  .focus\:not-sr-only:focus,
+  .focus\:not-sr-only:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+:root {
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }

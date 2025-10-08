@@ -6,7 +6,7 @@ import { Button, Card } from "@hive/ui";
 import { ErrorBoundary } from '../error-boundary';
 
 interface ToolsErrorFallbackProps {
-  error?: Error;
+  error?: any;
   retry: () => void;
   errorId?: string;
 }
@@ -45,7 +45,7 @@ function ToolsErrorFallback({ error, retry, errorId }: ToolsErrorFallbackProps) 
             Retry Tools
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/feed'}
             className="border-hive-border text-hive-text-secondary"
           >
@@ -53,7 +53,7 @@ function ToolsErrorFallback({ error, retry, errorId }: ToolsErrorFallbackProps) 
             Go to Feed
           </Button>
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={() => window.location.href = '/tools'}
             className="border-hive-border text-hive-text-secondary"
           >

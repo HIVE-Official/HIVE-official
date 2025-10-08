@@ -154,7 +154,7 @@ interface CacheStats {
 }
 
 class HiveRedisCache {
-  private client: RedisClient | MockRedis;
+  private client!: RedisClient | MockRedis; // Definite assignment assertion - initialized in constructor via initializeClient()
   private readonly config: CacheConfig;
   private stats: CacheStats;
   private healthCheckInterval?: NodeJS.Timeout;
@@ -258,11 +258,11 @@ class HiveRedisCache {
     return `${namespace}:${campusId}:${key}`;
   }
 
-  private async trackOperation<T>(operation: Promise<T>, type: 'get' | 'set' | 'del'): Promise<T> {
+  private async trackOperation<T>(action: Promise<T>, type: 'get' | 'set' | 'del'): Promise<T> {
     const start = Date.now();
 
     try {
-      const result = await operation;
+      const result = await action;
 
       switch (type) {
         case 'get':

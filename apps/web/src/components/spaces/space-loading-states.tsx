@@ -1,6 +1,6 @@
 'use client';
 
-import { HiveCard } from '@hive/ui';
+import { Card } from '@hive/ui';
 
 /**
  * Loading state for space discovery page
@@ -89,14 +89,14 @@ export function SpaceDetailLoading() {
 
           {/* Sidebar Skeleton */}
           <div className="lg:col-span-5 space-y-6">
-            <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+            <Card className="bg-gray-900/50 border-gray-800 p-4">
               <div className="h-6 bg-gray-800 rounded w-32 mb-4 animate-pulse" />
               <div className="space-y-3">
                 <div className="h-16 bg-gray-800 rounded animate-pulse" />
                 <div className="h-4 bg-gray-800 rounded w-full animate-pulse" />
                 <div className="h-4 bg-gray-800 rounded w-3/4 animate-pulse" />
               </div>
-            </HiveCard>
+            </Card>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ export function SpaceDetailLoading() {
 export function SpaceCreationLoading() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 flex items-center justify-center p-4">
-      <HiveCard className="w-full max-w-2xl bg-gray-900/50 border-gray-800 p-6">
+      <Card className="w-full max-w-2xl bg-gray-900/50 border-gray-800 p-6">
         <div className="text-center space-y-6">
           <div className="text-6xl animate-pulse">🍯</div>
           <div className="space-y-2">
@@ -125,7 +125,7 @@ export function SpaceCreationLoading() {
             <div className="h-12 bg-gray-800 rounded animate-pulse" />
           </div>
         </div>
-      </HiveCard>
+      </Card>
     </div>
   );
 }
@@ -135,7 +135,7 @@ export function SpaceCreationLoading() {
  */
 function SpaceCardSkeleton() {
   return (
-    <HiveCard className="bg-gray-900/50 border-gray-800 overflow-hidden">
+    <Card className="bg-gray-900/50 border-gray-800 overflow-hidden">
       {/* Banner Skeleton */}
       <div className="h-32 bg-gray-800 animate-pulse" />
 
@@ -150,7 +150,7 @@ function SpaceCardSkeleton() {
           <div className="h-6 bg-gray-800 rounded w-16 animate-pulse" />
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -159,7 +159,7 @@ function SpaceCardSkeleton() {
  */
 function PostSkeleton() {
   return (
-    <HiveCard className="bg-gray-900/50 border-gray-800 p-4">
+    <Card className="bg-gray-900/50 border-gray-800 p-4">
       <div className="flex gap-3">
         <div className="w-10 h-10 bg-gray-800 rounded-full animate-pulse" />
         <div className="flex-1 space-y-2">
@@ -173,7 +173,7 @@ function PostSkeleton() {
           </div>
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -184,7 +184,7 @@ export function ToolsLoading() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (
-        <HiveCard key={i} className="bg-gray-900/50 border-gray-800 p-4">
+        <Card key={i} className="bg-gray-900/50 border-gray-800 p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 bg-gray-800 rounded animate-pulse" />
             <div className="flex-1">
@@ -193,7 +193,7 @@ export function ToolsLoading() {
             </div>
           </div>
           <div className="h-16 bg-gray-800 rounded animate-pulse" />
-        </HiveCard>
+        </Card>
       ))}
     </div>
   );

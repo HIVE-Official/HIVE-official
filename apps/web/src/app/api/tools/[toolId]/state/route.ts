@@ -2,7 +2,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import * as admin from "firebase-admin";
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 
 // Schema for tool state update requests
@@ -14,17 +14,20 @@ const ToolStateSchema = z.object({
 
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const authenticatedUserId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
   const searchParams = request.nextUrl.searchParams;
   const spaceId = searchParams.get("spaceId");
   const userId = searchParams.get("userId") || authenticatedUserId;
 
   if (!spaceId) {
     return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
+  }
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
   }
 
     const db = dbAdmin;
@@ -50,13 +53,16 @@ export const POST = withAuthValidationAndErrors(
   ToolStateSchema,
   async (
     request: AuthenticatedRequest,
-    { params }: { params: Promise<{ toolId: string }> },
+    context,
     body: ToolStateData,
     respond
   ) => {
     const { spaceId, userId: requestUserId, state } = body;
     const authenticatedUserId = getUserId(request);
-    const { toolId } = await params;
+    const toolId = context.params.toolId;
+    if (!toolId) {
+      return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+    }
 
     // Ensure user can only update their own state
     const userId = requestUserId || authenticatedUserId;
@@ -148,17 +154,21 @@ export const POST = withAuthValidationAndErrors(
 
 export const DELETE = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const authenticatedUserId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
   const searchParams = request.nextUrl.searchParams;
   const spaceId = searchParams.get("spaceId");
   const userId = searchParams.get("userId") || authenticatedUserId;
 
   if (!spaceId) {
     return respond.error("spaceId parameter is required", "INVALID_INPUT", { status: 400 });
+  }
+
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
   }
 
   // Ensure user can only delete their own state

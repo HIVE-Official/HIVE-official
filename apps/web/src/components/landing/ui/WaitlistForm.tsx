@@ -106,8 +106,8 @@ export function WaitlistForm() {
               <Button
                 type="submit"
                 variant="glow"
-                size="lg"
-                className="w-full"
+                className="max-w-lg w-full"
+                
                 disabled={submitStatus === "loading"}
               >
                 {submitStatus === "loading" ? "Joining..." : "Get early access"}

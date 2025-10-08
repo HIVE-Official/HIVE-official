@@ -47,7 +47,7 @@ export async function GET(
     } else {
       const auth = getAuth();
       const decodedToken = await auth.verifyIdToken(token);
-      requestingUserId = decodedToken.uid;
+      requestingUserId = decodedToken.id;
     }
 
     // Get space from flat collection structure
@@ -138,7 +138,7 @@ export async function GET(
             : null,
         };
       } catch (error) {
-        logger.error('Error fetching user', { userId, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/[spaceId]/membership' });
+        logger.error('Error fetching user', { userId, error: error instanceof Error ? error.message : String(error), endpoint: '/api/spaces/[spaceId]/membership' });
         return {
           userId,
           membership: {

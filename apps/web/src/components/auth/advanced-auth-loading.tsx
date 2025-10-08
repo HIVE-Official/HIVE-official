@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
-import { HiveButton } from '@hive/ui';
+import { Button } from '@hive/ui';
 
 interface AdvancedAuthLoadingProps {
   stage: 'initializing' | 'validating' | 'loading_profile' | 'securing' | 'complete' | 'error';
@@ -177,14 +177,14 @@ export function AdvancedAuthLoading({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <HiveButton
+              <Button
                 onClick={onRetry}
                 variant="default"
-                size="lg"
-                className="mx-auto"
+                className="max-w-lg mx-auto"
+                
               >
                 Try Again
-              </HiveButton>
+              </Button>
             </motion.div>
           )}
 

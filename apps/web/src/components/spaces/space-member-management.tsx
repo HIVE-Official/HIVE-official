@@ -2,42 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, 
-  Crown, 
-  Shield, 
-  User, 
-  UserPlus, 
-  UserMinus, 
-  MoreHorizontal, 
+import {
+  Users,
+  Crown,
+  Shield,
+  User,
+  UserPlus,
+  UserMinus,
   Search,
-  Filter,
   Settings,
   AlertTriangle,
   CheckCircle,
-  XCircle,
-  Mail,
-  MessageSquare,
   Eye,
-  EyeOff,
   Ban,
   UserCheck,
-  Star,
-  Calendar,
-  Activity,
-  TrendingUp,
-  Clock,
-  MapPin,
-  ExternalLink,
-  Download,
-  Upload,
-  Trash2,
-  Edit3,
-  Save,
-  X,
-  Plus
+  X
 } from 'lucide-react';
-import { Button, Badge, Alert } from "@hive/ui";
+import { Button, Badge } from "@hive/ui";
 // Space Member Management Interface for Claimed Leaders
 export interface MemberManagementProps {
   spaceId: string;
@@ -119,16 +100,16 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
   const [selectedRole, setSelectedRole] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedMember, setSelectedMember] = useState<MemberData | null>(null);
-  const [showMemberDetails, setShowMemberDetails] = useState(false);
+  const [_showMemberDetails, setShowMemberDetails] = useState(false);
   const [showRoleChangeModal, setShowRoleChangeModal] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [_showInviteModal, setShowInviteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
 
   // Permission checks
   const canChangeRoles = currentUserRole === 'owner' || currentUserRole === 'admin';
   const canRemoveMembers = currentUserRole === 'owner' || currentUserRole === 'admin';
-  const canSuspendMembers = true; // currentUserRole is always admin/owner/moderator
+  const _canSuspendMembers = true; // currentUserRole is always admin/owner/moderator
   const canInviteMembers = true; // currentUserRole is always admin/owner/moderator
 
   // Fetch members from API
@@ -365,8 +346,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
           <div className="flex items-center gap-2">
             {canInviteMembers && (
               <Button
-                size="sm"
-                className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/30"
+                className="max-w-sm bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/30 hover:bg-[var(--hive-brand-primary)]/30"
                 onClick={() => setShowInviteModal(true)}
               >
                 <UserPlus className="h-4 w-4 mr-2" />
@@ -375,9 +355,8 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             )}
             
             <Button
-              variant="secondary"
-              size="sm"
-              className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+              variant="outline"
+              className="max-w-sm border-white/[0.2] text-white hover:bg-white/[0.1]"
               onClick={onClose}
             >
               <X className="h-4 w-4" />
@@ -395,7 +374,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                 type="text"
                 placeholder="Search members..."
                 value={searchQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery((e.target as any).value)}
                 className="w-full pl-10 pr-4 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50 focus:border-[var(--hive-brand-primary)]/30"
               />
             </div>
@@ -403,7 +382,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Role Filter */}
             <select
               value={selectedRole}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole((e.target as any).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Roles</option>
@@ -416,7 +395,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
             {/* Status Filter */}
             <select
               value={selectedStatus}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus((e.target as any).value)}
               className="px-3 py-2 bg-white/[0.02] border border-white/[0.06] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--hive-brand-primary)]/50"
             >
               <option value="all">All Status</option>
@@ -495,13 +474,13 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                       {/* Status Indicators */}
                       {member.flags?.isSuspended && (
-                        <Badge variant="freshman" className="border-red-500/30 text-red-400">
+                        <Badge variant="secondary" className="border-red-500/30 text-red-400">
                           Suspended
                         </Badge>
                       )}
                       
                       {member.flags?.isReported && (
-                        <Badge variant="freshman" className="border-orange-500/30 text-orange-400">
+                        <Badge variant="secondary" className="border-orange-500/30 text-orange-400">
                           Reported
                         </Badge>
                       )}
@@ -522,9 +501,8 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                   <div className="flex items-center gap-2">
                     {/* View Details */}
                     <Button
-                      variant="secondary"
-                      size="sm"
-                      className="border-white/[0.2] text-white hover:bg-white/[0.1]"
+                      variant="outline"
+                      className="max-w-sm border-white/[0.2] text-white hover:bg-white/[0.1]"
                       onClick={() => {
                         setSelectedMember(member);
                         setShowMemberDetails(true);
@@ -537,9 +515,8 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                       <>
                         {/* Change Role */}
                         <Button
-                          variant="secondary"
-                          size="sm"
-                          className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+                          variant="outline"
+                          className="max-w-sm border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
                           onClick={() => {
                             setSelectedMember(member);
                             setShowRoleChangeModal(true);
@@ -550,12 +527,11 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
                         {/* Suspend/Unsuspend */}
                         <Button
-                          variant="secondary"
-                          size="sm"
-                          className={member.flags?.isSuspended 
+                          variant="outline"
+                          className={`max-w-sm ${member.flags?.isSuspended 
                             ? "border-green-500/30 text-green-400 hover:bg-green-500/10"
                             : "border-orange-500/30 text-orange-400 hover:bg-orange-500/10"
-                          }
+                          }`}
                           onClick={() => handleSuspendMember(member.id, !member.flags?.isSuspended)}
                         >
                           {member.flags?.isSuspended ? <CheckCircle className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
@@ -564,9 +540,8 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
                         {/* Remove Member */}
                         {canRemoveMembers && member.role !== 'owner' && (
                           <Button
-                            variant="secondary"
-                            size="sm"
-                            className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                            variant="outline"
+                            className="max-w-sm border-red-500/30 text-red-400 hover:bg-red-500/10"
                             onClick={() => handleRemoveMember(member.id)}
                           >
                             <UserMinus className="h-4 w-4" />
@@ -632,7 +607,7 @@ export function SpaceMemberManagement({ spaceId, spaceName, currentUserRole, onC
 
               <div className="flex gap-3">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   className="flex-1 border-white/[0.2] text-white hover:bg-white/[0.1]"
                   onClick={() => {
                     setShowRoleChangeModal(false);

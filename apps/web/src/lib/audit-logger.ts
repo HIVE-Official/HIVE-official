@@ -117,7 +117,7 @@ class AuditLogger {
       severity?: AuditSeverity;
       success?: boolean;
       metadata?: Record<string, any>;
-      error?: Error | string;
+      error?: any | string;
       sessionId?: string;
       isAdmin?: boolean;
       duration?: number;

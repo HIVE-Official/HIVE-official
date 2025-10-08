@@ -51,6 +51,38 @@ export declare class EnhancedFeed extends AggregateRoot<EnhancedFeedProps> {
     private sortItems;
     updatePreferences(preferences: any): void;
     adjustAlgorithmWeights(adjustments: Record<string, number>): void;
+    /**
+     * Business Logic: Apply content filtering based on user options
+     * Moved from FeedGenerationService
+     */
+    applyContentFilters(items: FeedItem[], options: {
+        includeSpacePosts?: boolean;
+        includeRSSPosts?: boolean;
+        includeConnectionActivity?: boolean;
+        includeEvents?: boolean;
+        includeRituals?: boolean;
+    }): FeedItem[];
+    /**
+     * Business Logic: Generate feed insights from current items
+     * Moved from FeedGenerationService
+     */
+    generateInsights(items: FeedItem[]): {
+        primaryContentType: string;
+        engagementRate: number;
+        averageScore: number;
+        topSpaces: string[];
+        suggestedAdjustments: string[];
+    };
+    /**
+     * Business Logic: Generate algorithm adjustment suggestions
+     * Moved from FeedGenerationService
+     */
+    getSuggestedAdjustments(primaryContentType: string, engagementRate: number, averageScore: number): string[];
+    /**
+     * Business Logic: Adjust algorithm weights based on user feedback
+     * Moved from FeedGenerationService
+     */
+    adjustWeightsFromFeedback(feedback: 'positive' | 'negative', itemType: string): void;
     toData(): any;
 }
 export {};

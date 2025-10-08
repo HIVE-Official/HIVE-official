@@ -5,13 +5,12 @@
 
 import { config } from './config';
 import { logger } from './structured-logger';
+import type { SessionData } from "@hive/core";
 
-interface SessionData {
-  uid: string;
+type StoredSession = Pick<SessionData, "userId" | "email"> & {
   token: string;
-  email?: string;
   expiresAt: number;
-}
+};
 
 interface AuthHeaders {
   Authorization?: string;
@@ -25,14 +24,21 @@ class AuthManager {
   /**
    * Get current session data from storage
    */
-  private getStoredSession(): SessionData | null {
+  private getStoredSession(): StoredSession | null {
     if (typeof window === 'undefined') return null;
     
     try {
       const sessionJson = window.localStorage.getItem(this.storageKey);
       if (!sessionJson) return null;
-      
-      const session = JSON.parse(sessionJson) as SessionData;
+
+      const rawSession = JSON.parse(sessionJson) as StoredSession & { uid?: string; id?: string };
+
+      const session: StoredSession = {
+        userId: rawSession.userId || rawSession.id || rawSession.uid || '',
+        token: rawSession.token,
+        email: rawSession.email,
+        expiresAt: rawSession.expiresAt,
+      };
       
       // Check if token is expired
       if (session.expiresAt && Date.now() > session.expiresAt) {
@@ -106,27 +112,31 @@ class AuthManager {
    */
   getCurrentUserId(): string | null {
     const session = this.getStoredSession();
-    return session?.uid || null;
+    return session?.userId || null;
   }
 
   /**
    * Store session data
    */
-  setSession(sessionData: Omit<SessionData, 'expiresAt'> & { expiresAt?: number }): void {
+  setSession(sessionData: (Pick<StoredSession, "token" | "email"> & { userId?: string; uid?: string; expiresAt?: number }) ): void {
     if (typeof window === 'undefined') return;
-    
+
     const expiresAt = sessionData.expiresAt || 
       (Date.now() + (config.auth.tokenExpiryHours * 60 * 60 * 1000));
-    
-    const session: SessionData = {
-      ...sessionData,
+
+    const userId = sessionData.userId || sessionData.uid || '';
+
+    const session: StoredSession = {
+      userId,
+      token: sessionData.token,
+      email: sessionData.email,
       expiresAt,
     };
-    
+
     try {
       window.localStorage.setItem(this.storageKey, JSON.stringify(session));
       logger.info('Session stored successfully', { 
-        userId: session.uid,
+        userId: session.userId,
         action: 'auth_session_stored' 
       });
     } catch (error) {
@@ -163,14 +173,14 @@ class AuthManager {
         // this.setSession({ ...session, token: newToken });
         
         logger.info('Token refresh needed', { 
-          userId: session.uid,
+          userId: session.id,
           action: 'auth_refresh_needed' 
         });
         
         return true;
       } catch (error) {
         logger.error('Token refresh failed', { 
-          userId: session.uid,
+          userId: session.id,
           action: 'auth_refresh_failed' 
         }, error as Error);
         

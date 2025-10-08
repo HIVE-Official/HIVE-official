@@ -49,7 +49,7 @@ import {
   uploadBytes,
   getDownloadURL,
   deleteObject,
-  type Storage
+  FirebaseStorage
 } from 'firebase/storage';
 
 // Analytics - load lazily

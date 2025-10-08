@@ -1,41 +1,31 @@
 import * as React from "react";
-import { type VariantProps } from "class-variance-authority";
-declare const navigationShellVariants: (props?: {
-    variant?: "default" | "glass" | "solid" | "floating";
-    blur?: "none" | "sm" | "lg" | "xl" | "md";
-} & import("class-variance-authority/types").ClassProp) => string;
-declare const navigationContentVariants: (props?: {
-    maxWidth?: "sm" | "lg" | "xl" | "2xl" | "md" | "full";
-    spacing?: "normal" | "loose" | "tight";
-} & import("class-variance-authority/types").ClassProp) => string;
-export interface NavigationItem {
-    id: string;
+import { NotificationItem } from "../molecules/notification-item";
+export interface NavigationLink {
     label: string;
-    icon: React.ReactNode;
     href: string;
     isActive?: boolean;
-    badge?: string | number;
-    tier: 1 | 2 | 3;
+    badge?: number;
 }
-export interface NavigationShellProps extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof navigationShellVariants> {
-    items: NavigationItem[];
-    currentPath?: string;
-    onSearch?: (query: string) => void;
-    searchPlaceholder?: string;
-    maxWidth?: VariantProps<typeof navigationContentVariants>["maxWidth"];
-    spacing?: VariantProps<typeof navigationContentVariants>["spacing"];
-    showSearch?: boolean;
-    showNotifications?: boolean;
-    showMessages?: boolean;
+export interface NavigationShellProps extends React.HTMLAttributes<HTMLDivElement> {
+    currentUserName?: string;
+    currentUserAvatar?: string;
+    currentUserHandle?: string;
+    links?: NavigationLink[];
     notificationCount?: number;
-    messageCount?: number;
-    onNotificationsClick?: () => void;
-    onMessagesClick?: () => void;
-    logoVariant?: "default" | "white" | "dark" | "gradient" | "monochrome";
-    logoSize?: "sm" | "default" | "lg" | "xl" | "2xl";
-    showLogoText?: boolean;
-    showLogoIcon?: boolean;
+    notifications?: React.ComponentProps<typeof NotificationItem>[];
+    onSearch?: (query: string) => void;
+    onNotificationClick?: (notification: React.ComponentProps<typeof NotificationItem>) => void;
+    onProfileClick?: () => void;
+    onSettingsClick?: () => void;
+    onSignOutClick?: () => void;
+    showSearch?: boolean;
+    /** Layout mode: header or sidebar */
+    layout?: "header" | "sidebar";
+    /** Whether sidebar is collapsed */
+    isCollapsed?: boolean;
+    /** Callback to toggle layout */
+    onToggleLayout?: () => void;
 }
-declare const NavigationShell: React.ForwardRefExoticComponent<NavigationShellProps & React.RefAttributes<HTMLElement>>;
-export { NavigationShell, navigationShellVariants, navigationContentVariants };
+declare const NavigationShell: React.ForwardRefExoticComponent<NavigationShellProps & React.RefAttributes<HTMLDivElement>>;
+export { NavigationShell };
 //# sourceMappingURL=navigation-shell.d.ts.map

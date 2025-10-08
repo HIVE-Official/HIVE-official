@@ -1,4 +1,3 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import * as admin from 'firebase-admin';
@@ -69,7 +68,7 @@ const ritualFramework = {
 
       return ritualRef.id;
     } catch (error) {
-      logger.error('Failed to create ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualName: ritual.name });
+      logger.error('Failed to create ritual', { error: error instanceof Error ? error.message : String(error), ritualName: ritual.name });
       throw new Error('Failed to create ritual in Firestore');
     }
   },
@@ -108,14 +107,14 @@ const ritualFramework = {
 
       return participationRef.id;
     } catch (error) {
-      logger.error('Failed to join ritual', { error: error instanceof Error ? error : new Error(String(error)), ritualId, userId });
+      logger.error('Failed to join ritual', { error: error instanceof Error ? error.message : String(error), ritualId, userId });
       throw new Error('Failed to join ritual');
     }
   }
 };
 
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Ritual query schema
 const RitualQuerySchema = z.object({
@@ -211,13 +210,13 @@ const CreateRitualSchema = z.object({
  * GET - List rituals with filtering
  * POST - Create new ritual (admin only)
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
     const url = new URL(request.url);
     const queryParams = Object.fromEntries(url.searchParams.entries());
     const { status, type, university, limit, offset } = RitualQuerySchema.parse(queryParams);
 
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     logger.info('🎭 Rituals query', { queryParams: JSON.stringify({ status, type, university, limit, offset }), endpoint: '/api/rituals' });
 
@@ -476,14 +475,11 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
 
     return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}, { 
-  allowDevelopmentBypass: true, // Ritual browsing is safe for development
-  operation: 'get_rituals' 
 });
 
-export const POST = withAuth(async (request: NextRequest, authContext) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
 
     // TODO: Verify user has admin permissions
     // For now, allow any authenticated user to create rituals
@@ -563,7 +559,4 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: false, // Ritual creation is sensitive - require real auth
-  operation: 'create_ritual' 
 });

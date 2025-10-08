@@ -5,7 +5,7 @@
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit as firestoreLimit, Timestamp } from 'firebase/firestore';
 import { db } from '@hive/firebase';
 import { Result } from '../../../domain/shared/base/Result';
-import { EnhancedSpace } from '../../../domain/spaces/aggregates/enhanced-space';
+import { Space } from '../../../domain/spaces/aggregates/space.aggregate';
 import { SpaceId } from '../../../domain/spaces/value-objects/space-id.value';
 import { SpaceName } from '../../../domain/spaces/value-objects/space-name.value';
 import { SpaceDescription } from '../../../domain/spaces/value-objects/space-description.value';
@@ -240,7 +240,7 @@ export class FirebaseSpaceRepository {
                 return Result.fail(spaceId.error);
             }
             // Create space
-            const spaceResult = EnhancedSpace.create({
+            const spaceResult = Space.create({
                 spaceId: spaceId.getValue(),
                 name: nameResult.getValue(),
                 description: descriptionResult.getValue(),
@@ -382,15 +382,6 @@ export class FirebaseSpaceRepository {
         catch (error) {
             return Result.fail(`Failed to find public spaces: ${error}`);
         }
-    }
-    // Missing method implementations from interface
-    async findPublicEnhancedSpaces(campusId, limit = 100) {
-        // This is the same as findPublicSpaces since we already return EnhancedSpace
-        return this.findPublicSpaces(campusId, limit);
-    }
-    async searchEnhancedSpaces(query, campusId) {
-        // This is the same as searchSpaces since we already return EnhancedSpace
-        return this.searchSpaces(query, campusId);
     }
 }
 //# sourceMappingURL=space.repository.js.map

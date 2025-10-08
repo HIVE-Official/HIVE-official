@@ -118,11 +118,12 @@ export function validateEmailCampus(email: string): boolean {
  * Security audit function for campus violations
  */
 export function auditCampusViolation(
-  operation: string,
+  action: string,
   details: Record<string, any>
 ): void {
   logger.error('CAMPUS_ISOLATION_VIOLATION', {
-    operation,
+    action,
+    operation: action,
     timestamp: new Date().toISOString(),
     currentCampus: getCurrentCampusId(),
     ...details
@@ -131,6 +132,6 @@ export function auditCampusViolation(
   // In production, this should trigger alerts
   if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
     // Send to monitoring service
-    // notifySecurityTeam({ type: 'campus_violation', operation, details });
+    // notifySecurityTeam({ type: 'campus_violation', action, details });
   }
 }

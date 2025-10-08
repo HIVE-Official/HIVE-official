@@ -1,9 +1,11 @@
-/**
- * Template Exports
- * Page-level layouts and compositions
- */
+export { SpaceLayout } from './space-layout';
+// SpaceLayoutAdaptive deprecated - use SpaceLayout instead (see space-layout-adaptive.deprecated.tsx)
+export { FeedLayout } from './feed-layout';
+export { RitualDetailView } from './ritual-detail-view';
 
-export { ProfileViewLayout } from './profile-view-layout';
+// HiveLab Templates
+export { HiveLabBuilderLayout } from './hivelab';
+export type { HiveLabBuilderLayoutProps } from './hivelab';
 
-// Types
-export type { ProfileViewLayoutProps } from './profile-view-layout';
+// Profile Templates
+export { ProfileViewLayout, specProfileToUIProfile } from './profile-view-layout';

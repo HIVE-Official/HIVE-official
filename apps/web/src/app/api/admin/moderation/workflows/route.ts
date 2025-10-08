@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error getting moderation workflows', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting moderation workflows', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to get workflows', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow created', {
       workflowId,
-      adminUserId: user.uid,
+      adminUserId: user.id,
       workflowName: workflowData.name
     });
 
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error creating moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error creating moderation workflow', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to create workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -180,7 +180,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -213,7 +213,7 @@ export async function PUT(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow updated', {
       workflowId,
-      adminUserId: user.uid,
+      adminUserId: user.id,
       updatedFields: Object.keys(updateData)
     });
 
@@ -223,7 +223,7 @@ export async function PUT(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error updating moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error updating moderation workflow', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to update workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -243,7 +243,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(user.id);
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -269,7 +269,7 @@ export async function DELETE(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow deleted', {
       workflowId,
-      adminUserId: user.uid
+      adminUserId: user.id
     });
 
     return NextResponse.json({
@@ -278,7 +278,7 @@ export async function DELETE(request: NextRequest) {
     });
 
   } catch (error) {
-    logger.error('Error deleting moderation workflow', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error deleting moderation workflow', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       ApiResponseHelper.error('Failed to delete workflow', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
@@ -296,7 +296,7 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
-    logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error checking admin permissions', { error: error instanceof Error ? error.message : String(error), userId });
     return false;
   }
 }
@@ -319,7 +319,7 @@ async function getWorkflows(activeOnly: boolean = false) {
       ...doc.data()
     }));
   } catch (error) {
-    logger.error('Error getting workflows', { error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Error getting workflows', { error: error instanceof Error ? error.message : String(error) });
     return [];
   }
 }

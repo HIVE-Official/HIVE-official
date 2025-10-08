@@ -95,6 +95,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
             onMessage?.(message);
           }
         } catch (error) {
+          // Intentionally suppressed - non-critical error
         }
       };
 
@@ -155,35 +156,31 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
     content: any,
     targetUsers?: string[]
   ) => {
-    try {
-      const response = await fetch('/api/realtime/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type,
-          channel,
-          content,
-          targetUsers,
-          metadata: {
-            timestamp: new Date().toISOString(),
-            priority: 'normal',
-            requiresAck: false,
-            retryCount: 0
-          }
-        })
-      });
+    const response = await fetch('/api/realtime/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        type,
+        channel,
+        content,
+        targetUsers,
+        metadata: {
+          timestamp: new Date().toISOString(),
+          priority: 'normal',
+          requiresAck: false,
+          retryCount: 0
+        }
+      })
+    });
 
-      if (!response.ok) {
-        throw new Error(`Failed to send message: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      return result.messageId;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Failed to send message: ${response.statusText}`);
     }
+
+    const result = await response.json();
+    return result.messageId;
   }, []);
 
   const sendChatMessage = useCallback(async (
@@ -214,6 +211,7 @@ export function useRealtimeSSE(options: UseRealtimeSSEOptions) {
         })
       });
     } catch (error) {
+      // Intentionally suppressed - non-critical error
     }
   }, []);
 

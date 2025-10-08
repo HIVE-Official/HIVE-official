@@ -1,4 +1,4 @@
-import { Skeleton, HiveCard } from '@hive/ui';
+import { Skeleton, Card } from '@hive/ui';
 
 export function ToolsLoadingSkeleton() {
   return (
@@ -68,7 +68,7 @@ export function ToolsLoadingSkeleton() {
 
 function FeaturedToolSkeleton() {
   return (
-    <HiveCard className="p-6 space-y-4 relative overflow-hidden">
+    <Card className="p-6 space-y-4 relative overflow-hidden">
       {/* Featured Badge */}
       <div className="absolute top-4 right-4">
         <Skeleton className="h-6 w-20 rounded-full" />
@@ -105,13 +105,13 @@ function FeaturedToolSkeleton() {
         <Skeleton className="h-10 flex-1 rounded-lg" />
         <Skeleton className="h-10 w-10 rounded-lg" />
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
 function ToolCardSkeleton() {
   return (
-    <HiveCard className="p-5 space-y-4">
+    <Card className="p-5 space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <Skeleton className="h-12 w-12 rounded-lg" />
@@ -143,7 +143,7 @@ function ToolCardSkeleton() {
         <Skeleton className="h-9 flex-1 rounded-lg" />
         <Skeleton className="h-9 w-9 rounded-lg" />
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -152,7 +152,7 @@ export function ToolsListLoadingSkeleton() {
   return (
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
-        <HiveCard key={i} className="p-4">
+        <Card key={i} className="p-4">
           <div className="flex items-center gap-4">
             <Skeleton className="h-12 w-12 rounded-lg flex-shrink-0" />
 
@@ -168,7 +168,7 @@ export function ToolsListLoadingSkeleton() {
 
             <Skeleton className="h-9 w-24 rounded-lg flex-shrink-0" />
           </div>
-        </HiveCard>
+        </Card>
       ))}
     </div>
   );

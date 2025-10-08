@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Personal event type for calendar tool
 interface PersonalEvent {
@@ -120,10 +120,13 @@ async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]>
 }
 
 // GET - Fetch calendar events (personal + space events)
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
-    
+    const userId = context.userId;
+    if (!userId) {
+      return NextResponse.json(ApiResponseHelper.error("User not authenticated", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
+
     // Try to fetch real calendar events from Firebase
     try {
       const realEvents = await fetchUserCalendarEvents(userId);
@@ -286,15 +289,15 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     );
     return NextResponse.json(ApiResponseHelper.error("Failed to fetch calendar events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'get_calendar_events' 
 });
 
 // POST - Create personal event
-export const POST = withAuth(async (request: NextRequest, authContext) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const userId = authContext.userId;
+    const userId = context.userId;
+    if (!userId) {
+      return NextResponse.json(ApiResponseHelper.error("User not authenticated", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    }
 
     const body = await request.json();
     const { title, description, startDate, endDate, location, isAllDay, reminderMinutes } = body;
@@ -340,7 +343,4 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     );
     return NextResponse.json(ApiResponseHelper.error("Failed to create personal event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}, { 
-  allowDevelopmentBypass: true,
-  operation: 'create_calendar_event' 
 });

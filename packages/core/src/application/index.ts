@@ -57,12 +57,12 @@ export type {
 
 // Ritual domain services
 export {
-  EnhancedRitualParticipationService
+  RitualParticipationService
 } from './ritual-participation.service';
 
 export type {
-  EnhancedRitualCreationData,
-  EnhancedRitualProgress,
+  RitualCreationData,
+  RitualProgress,
   LeaderboardEntry
 } from './ritual-participation.service';
 

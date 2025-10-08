@@ -1,3 +1,4 @@
+import { ToolSchema } from "@hive/core";
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
@@ -53,7 +54,7 @@ export async function GET(
       .collection('spaces')
       .doc(spaceId)
       .collection('members')
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -95,7 +96,7 @@ export async function GET(
             const deployerData = deployerDoc.data();
             deployer = {
               id: deployerDoc.id,
-              name: deployerData?.fullName || 'Unknown',
+              name: deployerData?.displayName || 'Unknown',
               avatar: deployerData?.photoURL || null,
             };
           }
@@ -217,7 +218,7 @@ export async function POST(
       .collection('spaces')
       .doc(spaceId)
       .collection('members')
-      .doc(decodedToken.uid)
+      .doc(decodedToken.id)
       .get();
 
     if (!memberDoc.exists) {
@@ -252,7 +253,7 @@ export async function POST(
     const deploymentData = {
       toolId,
       spaceId,
-      userId: decodedToken.uid,
+      userId: decodedToken.id,
       status: 'active',
       version: toolData?.version || '1.0.0',
       configuration: configuration || {},
@@ -281,7 +282,7 @@ export async function POST(
     }
 
     // Get deployer info
-    const deployerDoc = await dbAdmin.collection('users').doc(decodedToken.uid).get();
+    const deployerDoc = await dbAdmin.collection('users').doc(decodedToken.id).get();
     const deployerData = deployerDoc.data();
 
     const deployment = {
@@ -296,8 +297,8 @@ export async function POST(
       permissions: deploymentData.permissions,
       isShared: deploymentData.isShared,
       deployer: {
-        id: decodedToken.uid,
-        name: deployerData?.fullName || 'Unknown User',
+        id: decodedToken.id,
+        name: deployerData?.displayName || 'Unknown User',
         avatar: deployerData?.photoURL || null,
       },
       deployedAt: deploymentData.deployedAt.toISOString(),

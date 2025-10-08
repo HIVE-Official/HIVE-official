@@ -8,13 +8,13 @@ import { RefreshCw, AlertTriangle, Sparkles } from 'lucide-react';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  onError?: (error: any, errorInfo: React.ErrorInfo) => void;
   ritualName?: string;
 }
 
 interface State {
   hasError: boolean;
-  error?: Error;
+  error?: any;
   errorId: string;
   retryCount: number;
 }
@@ -35,7 +35,7 @@ export class RitualErrorBoundary extends Component<Props, State> {
     return `ritual_error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: any): State {
     return {
       hasError: true,
       error,
@@ -44,7 +44,7 @@ export class RitualErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: any, errorInfo: React.ErrorInfo) {
     console.error('Ritual Error Boundary caught an error:', {
       error: error.message,
       stack: error.stack,
@@ -64,7 +64,7 @@ export class RitualErrorBoundary extends Component<Props, State> {
     }
   }
 
-  private reportError(error: Error, errorInfo: React.ErrorInfo) {
+  private reportError(error: any, errorInfo: React.ErrorInfo) {
     try {
       fetch('/api/errors/report', {
         method: 'POST',
@@ -139,9 +139,9 @@ export class RitualErrorBoundary extends Component<Props, State> {
               {this.state.retryCount < this.maxRetries && (
                 <Button
                   onClick={this.handleRetry}
-                  size="sm"
+                  className="max-w-sm border-orange-500/30 text-orange-400 hover:bg-orange-500/20"
                   variant="outline"
-                  className="border-orange-500/30 text-orange-400 hover:bg-orange-500/20"
+                  
                 >
                   <RefreshCw className="h-3 w-3" />
                 </Button>
@@ -149,9 +149,9 @@ export class RitualErrorBoundary extends Component<Props, State> {
 
               <Button
                 onClick={this.handleHideRitual}
-                size="sm"
-                variant="ghost"
-                className="text-orange-400/70 hover:text-orange-400"
+                className="max-w-sm text-orange-400/70 hover:text-orange-400"
+                variant="outline"
+                
               >
                 <span className="text-xs">Skip</span>
               </Button>

@@ -1,8 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { User, Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveNameStepProps {
@@ -65,7 +64,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize(e.target.value);
+    const capitalized = autoCapitalize((e.target as any).value);
     setFirstName(capitalized);
     const newFullName = `${capitalized} ${lastName}`.trim();
     const newHandle = generateHandle(capitalized, lastName);
@@ -78,7 +77,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capitalized = autoCapitalize(e.target.value);
+    const capitalized = autoCapitalize((e.target as any).value);
     setLastName(capitalized);
     const newFullName = `${firstName} ${capitalized}`.trim();
     const newHandle = generateHandle(firstName, capitalized);
@@ -141,34 +140,32 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
         transition={{ delay: 0.3 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HiveInput
+          <Input
             id="firstName"
             type="text"
             label="First Name"
             placeholder="First name"
-            value={firstName}
-            onChange={handleFirstNameChange}
-            variant="default"
-            size="lg"
-            maxLength={50}
-            autoFocus
-            required
-            className="w-full"
-          />
+          value={firstName}
+          onChange={handleFirstNameChange}
+          variant="default"
+          className="max-w-lg w-full"
+          maxLength={50}
+          autoFocus
+          required
+        />
           
-          <HiveInput
+          <Input
             id="lastName"
             type="text"
             label="Last Name"
             placeholder="Last name"
-            value={lastName}
-            onChange={handleLastNameChange}
-            variant="default"
-            size="lg"
-            maxLength={50}
-            required
-            className="w-full"
-          />
+          value={lastName}
+          onChange={handleLastNameChange}
+          variant="default"
+          className="max-w-lg w-full"
+          maxLength={50}
+          required
+        />
         </div>
 
         {/* Live Preview */}

@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { SearchResultItem, SearchType } from '@hive/core/application/search/queries/search.query';
+import { SearchResultItem, SearchType } from '@hive/core';
 import { useAuth } from '@hive/auth-logic';
 import { useToast } from './use-toast';
 
@@ -19,7 +19,7 @@ interface UseSearchOptions {
 interface UseSearchReturn {
   results: SearchResultItem[];
   loading: boolean;
-  error: Error | null;
+  error: any | null;
   search: (query: string) => Promise<void>;
   clearResults: () => void;
   suggestions: string[];

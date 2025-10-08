@@ -69,7 +69,7 @@ export async function enforceCompusIsolation(userId: string): Promise<string> {
     // For vBETA, hardcoded to UB Buffalo
     return userData?.campusId || 'ub-buffalo';
   } catch (error) {
-    logger.error('Campus isolation check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Campus isolation check failed', { userId, error: error instanceof Error ? error.message : String(error) });
     // Default to UB for vBETA
     return 'ub-buffalo';
   }
@@ -127,7 +127,7 @@ export async function getConnectionType(
 
     return ConnectionType.NONE;
   } catch (error) {
-    logger.error('Connection type check failed', { userId: viewerId, targetId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Connection type check failed', { userId: viewerId, targetId, error: error instanceof Error ? error.message : String(error) });
     return ConnectionType.NONE;
   }
 }
@@ -145,7 +145,7 @@ export async function isGhostModeActive(userId: string): Promise<boolean> {
     const userData = userDoc.data();
     return userData?.privacy?.ghostMode === true;
   } catch (error) {
-    logger.error('Ghost mode check failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Ghost mode check failed', { userId, error: error instanceof Error ? error.message : String(error) });
     return false;
   }
 }
@@ -154,62 +154,69 @@ export async function isGhostModeActive(userId: string): Promise<boolean> {
  * Filter profile data based on connection level and privacy settings
  */
 export async function filterProfileData(
-  profile: any,
+  profile: ProfileSystem,
   viewerId: string,
   targetId: string
-): Promise<any> {
-  // User viewing their own profile gets everything
+): Promise<FilteredProfile> {
   if (viewerId === targetId) {
-    return profile;
+    return profile as FilteredProfile;
   }
 
   const connectionType = await getConnectionType(viewerId, targetId);
   const isGhost = await isGhostModeActive(targetId);
 
-  const filtered: any = {};
+  const profileRecord = profile as unknown as Record<string, unknown>;
+  const filteredRecord: Record<string, unknown> = {};
 
-  // Apply field-level access control
   for (const control of PROFILE_FIELD_ACCESS) {
     const fieldPath = control.field.split('.');
-    let sourceValue = profile;
-    let canAccess = true;
+    const sourceValue = getNestedField(profileRecord, fieldPath);
 
-    // Navigate to the field value
-    for (const path of fieldPath) {
-      sourceValue = sourceValue?.[path];
-      if (sourceValue === undefined) {
-        canAccess = false;
-        break;
-      }
+    if (sourceValue === undefined) {
+      continue;
     }
 
-    // Check access permission
-    if (canAccess) {
-      // Check connection level
-      const hasConnectionLevel = connectionType >= control.requiredLevel;
+    const hasConnectionLevel = connectionType >= control.requiredLevel;
+    const ghostBlocked = isGhost && control.respectsGhostMode && connectionType !== ConnectionType.FRIEND;
 
-      // Check ghost mode
-      const ghostBlocked = isGhost && control.respectsGhostMode && connectionType !== ConnectionType.FRIEND;
-
-      if (hasConnectionLevel && !ghostBlocked) {
-        // Set the value in filtered object
-        let target = filtered;
-        for (let i = 0; i < fieldPath.length - 1; i++) {
-          if (!target[fieldPath[i]]) {
-            target[fieldPath[i]] = {};
-          }
-          target = target[fieldPath[i]];
-        }
-        target[fieldPath[fieldPath.length - 1]] = sourceValue;
-      }
+    if (hasConnectionLevel && !ghostBlocked) {
+      setNestedField(filteredRecord, fieldPath, sourceValue);
     }
   }
 
-  // Add connection context
-  filtered._connectionType = connectionType;
-  filtered._ghostModeActive = isGhost;
+  filteredRecord._connectionType = connectionType;
+  filteredRecord._ghostModeActive = isGhost;
 
-  return filtered;
+  return filteredRecord as FilteredProfile;
+}
+
+/**
+ * Rate limiting for profile operations
+ */
+function getNestedField(source: Record<string, unknown>, path: string[]): unknown {
+  return path.reduce<unknown>((current, key) => {
+    if (!current || typeof current !== 'object') {
+      return undefined;
+    }
+    return (current as Record<string, unknown>)[key];
+  }, source);
+}
+
+function setNestedField(target: Record<string, unknown>, path: string[], value: unknown): void {
+  let current: Record<string, unknown> = target;
+
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const key = path[index];
+    const existing = current[key];
+
+    if (!existing || typeof existing !== 'object') {
+      current[key] = {};
+    }
+
+    current = current[key] as Record<string, unknown>;
+  }
+
+  current[path[path.length - 1]] = value as unknown;
 }
 
 /**
@@ -219,11 +226,11 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 export function checkRateLimit(
   userId: string,
-  operation: string,
+  action: string,
   limit: number = 60,
   windowMs: number = 60000
 ): boolean {
-  const key = `${userId}:${operation}`;
+  const key = `${userId}:${action}`;
   const now = Date.now();
 
   const current = rateLimitMap.get(key);
@@ -249,20 +256,20 @@ export function checkRateLimit(
  */
 export async function auditLog(
   userId: string,
-  operation: string,
-  details: any
+  action: string,
+  details: Record<string, unknown>
 ): Promise<void> {
   try {
     await dbAdmin.collection('audit_logs').add({
       userId,
-      operation,
+      operation: action,
       details,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       ip: details.ip || 'unknown',
       userAgent: details.userAgent || 'unknown'
     });
   } catch (error) {
-    logger.error('Audit logging failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Audit logging failed', { userId, error: error instanceof Error ? error.message : String(error) });
   }
 }
 
@@ -278,7 +285,7 @@ export function withProfileSecurity(
     rateLimit?: { limit: number; window: number };
   } = {}
 ) {
-  return async (req: NextRequest | AuthenticatedRequest, context: any) => {
+  return async (req: NextRequest | AuthenticatedRequest, context: Record<string, unknown>) => {
     try {
       // Check authentication if required
       if (options.requireAuth) {
@@ -325,7 +332,7 @@ export function withProfileSecurity(
       // Execute the handler
       return await handler(req, context);
     } catch (error) {
-      logger.error('Profile security middleware error', { error: error instanceof Error ? error : new Error(String(error)) });
+      logger.error('Profile security middleware error', { error: error instanceof Error ? error.message : String(error) });
       return NextResponse.json(
         { error: 'Internal server error' },
         { status: 500 }
@@ -353,6 +360,11 @@ export interface PrivacySettings {
   spaceActivityVisibility: Map<string, boolean>;
 }
 
+export type FilteredProfile = Partial<ProfileSystem> & {
+  _connectionType?: ConnectionType;
+  _ghostModeActive?: boolean;
+};
+
 export async function getPrivacySettings(userId: string): Promise<PrivacySettings> {
   try {
     const userDoc = await dbAdmin.collection('users').doc(userId).get();
@@ -379,7 +391,7 @@ export async function getPrivacySettings(userId: string): Promise<PrivacySetting
       spaceActivityVisibility: new Map(Object.entries(privacy.spaceActivityVisibility || {}))
     };
   } catch (error) {
-    logger.error('Privacy settings fetch failed', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Privacy settings fetch failed', { userId, error: error instanceof Error ? error.message : String(error) });
     // Return default privacy settings
     return {
       ghostMode: false,

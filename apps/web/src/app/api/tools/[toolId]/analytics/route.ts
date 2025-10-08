@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
 interface AnalyticsQuery {
@@ -81,11 +81,14 @@ interface ToolAnalytics {
 // GET - Get tool analytics
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ toolId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { toolId } = await params;
+  const toolId = context.params.toolId;
+  if (!toolId) {
+    return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
+  }
   const { searchParams } = new URL(request.url);
 
   // Get tool details and check ownership

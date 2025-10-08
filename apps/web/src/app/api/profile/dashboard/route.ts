@@ -1,4 +1,4 @@
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 
@@ -275,7 +275,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     return respond.success({ dashboard });
   } catch (error) {
     logger.error('Failed to fetch dashboard data', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error : new Error('Unknown error'),
       userId,
     });
     return respond.error(

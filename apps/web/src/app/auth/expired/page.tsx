@@ -7,14 +7,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 // Temporarily using temp-stubs to avoid SSG useRef errors
-// import { HiveButton, HiveCard, HiveLogo, HiveInput, HiveModal, HiveModalContent } from '@hive/ui';
-const HiveButton = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
-const HiveCard = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg ${className}`} {...props}>{children}</div>;
-const HiveLogo = ({ size = "default", variant = "gradient", showText = false, ...props }: any) => <div className="flex items-center gap-2" {...props}><div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center"><span className="text-black font-bold text-sm">H</span></div>{showText && <span className="font-bold text-white">HIVE</span>}</div>;
-const HiveInput = ({ type = "text", className = "", ...props }: any) => <input type={type} className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`} {...props} />;
-const HiveModal = ({ children, open, onOpenChange, size = "default", ...props }: any) => open ? <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => onOpenChange && onOpenChange(false)} {...props}>{children}</div> : null;
-const HiveModalContent = ({ children, className = "", ...props }: any) => <div className={`relative bg-gray-900 rounded-lg p-6 max-w-md mx-4 ${className}`} onClick={(e) => e.stopPropagation()} {...props}>{children}</div>;
-import { Clock, AlertTriangle, ArrowLeft, RefreshCw, Mail, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
+// import { Button, Card, HiveLogo, Input, Dialog, DialogContent } from '@hive/ui';
+const Button = ({ children, variant: _variant = "default", size: _size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
+const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg ${className}`} {...props}>{children}</div>;
+const HiveLogo = ({ size: _size = "default", variant: _variant = "gradient", showText = false, ...props }: any) => <div className="flex items-center gap-2" {...props}><div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center"><span className="text-black font-bold text-sm">H</span></div>{showText && <span className="font-bold text-white">HIVE</span>}</div>;
+const Input = ({ type = "text", className = "", ...props }: any) => <input type={type} className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`} {...props} />;
+const Dialog = ({ children, open, onOpenChange, size: _size = "default", ...props }: any) => open ? <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => onOpenChange && onOpenChange(false)} {...props}>{children}</div> : null;
+const DialogContent = ({ children, className = "", ...props }: any) => <div className={`relative bg-gray-900 rounded-lg p-6 max-w-md mx-4 ${className}`} onClick={(e: React.MouseEvent) => e.stopPropagation()} {...props}>{children}</div>;
+import { Clock, ArrowLeft, RefreshCw, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
 // Temporarily removing framer-motion for SSR issues
 // import { motion, AnimatePresence } from 'framer-motion';
 
@@ -213,7 +213,7 @@ export default function ExpiredPage() {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+    setEmail((e.target as any).value);
     setError(null);
   };
 
@@ -267,7 +267,7 @@ export default function ExpiredPage() {
               </p>
             </div>
 
-            <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+            <Card className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
               {/* Security Info Box */}
               <div className="p-4 mb-6 bg-[var(--hive-brand-primary)]/[0.08] border border-[var(--hive-brand-primary)]/20 rounded-xl">
                 <div className="flex gap-3">
@@ -287,7 +287,7 @@ export default function ExpiredPage() {
                   <label className="block text-sm font-medium text-white/80 mb-2">
                     Your email address
                   </label>
-                  <HiveInput
+                  <Input
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
@@ -335,12 +335,11 @@ export default function ExpiredPage() {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <HiveButton
+                <Button
                   onClick={handleResendLink}
                   disabled={isResending || countdown > 0 || (!email && !schoolId)}
                   variant="default"
-                  size="lg"
-                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
+                  className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
                 >
                   {isResending ? (
                     <>
@@ -358,16 +357,15 @@ export default function ExpiredPage() {
                       Send new magic link
                     </>
                   )}
-                </HiveButton>
+                </Button>
 
                 <Link href="/auth/login" className="block">
-                  <HiveButton
-                    variant="ghost"
-                    size="lg"
-                    className="w-full text-white/60 hover:text-white hover:bg-white/[0.05]"
+                  <Button
+                    variant="outline"
+                    className="max-w-lg w-full text-white/60 hover:text-white hover:bg-white/[0.05]"
                   >
                     Start over with new login
-                  </HiveButton>
+                  </Button>
                 </Link>
               </div>
 
@@ -381,7 +379,7 @@ export default function ExpiredPage() {
                   </div>
                 </div>
               )}
-            </HiveCard>
+            </Card>
 
             {/* Support Link */}
             <p className="text-center text-sm text-white/40 mt-8">
@@ -398,12 +396,12 @@ export default function ExpiredPage() {
       </div>
 
       {/* Success Modal */}
-      <HiveModal
+      <Dialog
         open={resendSuccess}
         onOpenChange={() => setResendSuccess(false)}
-        size="sm"
+        className="max-w-sm"
       >
-        <HiveModalContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
+        <DialogContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
           <div
             className="text-center space-y-6"
           >
@@ -428,25 +426,23 @@ export default function ExpiredPage() {
 
             {/* Development mode - show the magic link */}
             {devMagicLink && (
-              <HiveCard className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
+              <Card className="p-4 bg-[var(--hive-brand-primary)]/10 border-[var(--hive-brand-primary)]/30 text-left">
                 <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                   🛠️ Development Mode - Magic Link:
                 </p>
-                <HiveButton
+                <Button
                   variant="default"
-                  size="sm"
-                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
+                  className="max-w-sm w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
-                </HiveButton>
-              </HiveCard>
+                </Button>
+              </Card>
             )}
 
-            <HiveButton
+            <Button
               variant="default"
-              size="lg"
-              className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
+              className="max-w-lg w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
               onClick={() => {
                 setResendSuccess(false);
                 // Clear the form for next attempt
@@ -457,10 +453,10 @@ export default function ExpiredPage() {
               }}
             >
               Got it
-            </HiveButton>
+            </Button>
           </div>
-        </HiveModalContent>
-      </HiveModal>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

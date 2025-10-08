@@ -5,7 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 // Temporary stubs until GlobalErrorBoundary is exported from @hive/ui
 interface GlobalErrorBoundaryProps {
   children: React.ReactNode;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
@@ -14,14 +14,14 @@ function GlobalErrorBoundary({ children }: GlobalErrorBoundaryProps) {
 
 function useGlobalErrorBoundary() {
   return {
-    trackError: (error: Error, context?: Record<string, unknown>) => console.error('Error tracked:', error, context),
+    trackError: (error: any, context?: Record<string, unknown>) => console.error('Error tracked:', error, context),
     getAnalytics: () => ({}),
     reset: () => {}
   };
 }
 
 interface ErrorProviderContext {
-  reportError: (error: Error, _context?: Record<string, unknown>) => void;
+  reportError: (error: any, _context?: Record<string, unknown>) => void;
   getErrorAnalytics: () => Record<string, unknown>;
   resetErrorState: () => void;
   isOnline: boolean;
@@ -122,7 +122,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
   }, [trackError, user, campusInfo, isOnline]);
 
   const contextValue: ErrorProviderContext = {
-    reportError: (error: Error, context?: Record<string, unknown>) => {
+    reportError: (error: any, context?: Record<string, unknown>) => {
       trackError(error, {
         ...context,
         user,
@@ -146,7 +146,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
         context={{
           user: user ? {
             id: (user as any).id,
-            name: (user as any).fullName || undefined,
+            name: (user as any).displayName || undefined,
             email: (user as any).email || undefined,
             isAdmin: (user as any).isAdmin || false,
           } : undefined,
@@ -197,7 +197,7 @@ export function withErrorHandling<P extends Record<string, unknown>>(
     const ComponentErrorBoundary = ({ children }: { children: React.ReactNode }) => {
       const [hasError, setHasError] = useState(false);
 
-      const handleError = (error: Error) => {
+      const handleError = (error: any) => {
         setHasError(true);
         reportError(error, {
           component: componentName || Component.displayName || Component.name,

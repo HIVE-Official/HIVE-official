@@ -235,20 +235,19 @@ export function EnhancedEventCard({
             <Button
               onClick={handleRSVP}
               disabled={actionLoading === 'rsvp'}
-              className={`${
+              className={`max-w-sm ${
                 event.isAttending
                   ? 'bg-green-500 hover:bg-green-600'
                   : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
               }`}
-              size="sm"
             >
               {event.isAttending ? 'Going' : 'RSVP'}
             </Button>
 
             <Button
               onClick={handleBookmark}
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               disabled={actionLoading === 'bookmark'}
             >
               <Bookmark className={`h-4 w-4 ${event.isBookmarked ? 'fill-current text-[var(--hive-brand-primary)]' : ''}`} />
@@ -256,8 +255,8 @@ export function EnhancedEventCard({
 
             <Button
               onClick={handleShare}
-              variant="secondary"
-              size="sm"
+              variant="outline"
+              className="max-w-sm"
               disabled={actionLoading === 'share'}
             >
               <Share2 className="h-4 w-4" />
@@ -266,8 +265,8 @@ export function EnhancedEventCard({
 
           <Button
             onClick={handleCardClick}
-            variant="secondary"
-            size="sm"
+            variant="outline"
+            className="max-w-sm"
           >
             View Details
             <ExternalLink className="h-4 w-4 ml-2" />
@@ -318,17 +317,16 @@ export function EnhancedEventCard({
             {isMobile && (
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleRSVP();
                   }}
-                  size="sm"
-                  disabled={actionLoading === 'rsvp'}
-                  className={`${
+                  className={`max-w-sm ${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
+                  disabled={actionLoading === 'rsvp'}
                 >
                   {event.isAttending ? 'Going' : 'RSVP'}
                 </Button>
@@ -390,7 +388,7 @@ export function EnhancedEventCard({
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-hive-border">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleBookmark();
                   }}
@@ -405,7 +403,7 @@ export function EnhancedEventCard({
                 </button>
 
                 <button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleShare();
                   }}
@@ -418,17 +416,16 @@ export function EnhancedEventCard({
 
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent) => {
                     e.stopPropagation();
                     handleRSVP();
                   }}
-                  size="sm"
-                  disabled={actionLoading === 'rsvp'}
-                  className={`${
+                  className={`max-w-sm ${
                     event.isAttending
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-[var(--hive-brand-primary)] text-hive-obsidian hover:bg-hive-champagne'
                   }`}
+                  disabled={actionLoading === 'rsvp'}
                 >
                   {event.isAttending ? (
                     <>
@@ -445,8 +442,8 @@ export function EnhancedEventCard({
 
                 <Button
                   onClick={handleCardClick}
-                  variant="secondary"
-                  size="sm"
+                  variant="outline"
+                  className="max-w-sm"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>

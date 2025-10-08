@@ -1,72 +1,102 @@
 /**
- * Profile UI Types
- * Simplified interfaces for UI components that adapt from ProfileSystem
+ * Profile UI Types - Spec Compliant
+ * Based on spec.md User Profile Schema (lines 2231-2249)
  */
 /**
- * Convert ProfileSystem to UIProfile
+ * Convert spec Profile to UIProfile
+ * Adapter for component consumption
  */
-export function specProfileToUIProfile(profile) {
-    // Extract first photo URL from carousel if available
-    const avatarUrl = profile.identity.photoCarousel?.photos?.[0]?.url;
-    // Combine major arrays into single string
-    const majorString = profile.identity.academic.majors?.join(', ') || '';
+export function profileToUIProfile(profile, viewerContext) {
+    const handle = profile.identity.email.split('@')[0];
+    // Generate badges based on status and type
+    const badges = [];
+    if (profile.academic.facultyVerified) {
+        badges.push({ label: 'Faculty', variant: 'default' });
+    }
+    if (profile.status.isSpaceLeader) {
+        badges.push({ label: 'Space Leader', variant: 'default' });
+    }
+    if (profile.status.isModerator) {
+        badges.push({ label: 'Moderator', variant: 'secondary' });
+    }
+    // Check if recently active (within last 30 minutes)
+    const isRecentlyActive = profile.activity.lastActive &&
+        (Date.now() - profile.activity.lastActive.getTime()) < 30 * 60 * 1000;
+    if (isRecentlyActive && viewerContext?.isOwnProfile) {
+        badges.push({ label: 'Active Now', variant: 'secondary' });
+    }
     return {
-        identity: {
-            id: profile.userId,
-            fullName: profile.identity.academic.name,
-            email: `${profile.handle}@buffalo.edu`, // Construct email from handle
-            avatarUrl: avatarUrl,
-            bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined
-        },
-        academic: {
-            campusId: 'ub-buffalo',
-            major: majorString,
-            academicYear: profile.identity.academic.year,
-            graduationYear: profile.identity.academic.graduationYear,
-            housing: undefined, // Not available in ProfileSystem
-            pronouns: profile.identity.academic.pronouns
-        },
-        personal: {
-            bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined,
-            interests: [], // Not directly available in ProfileSystem
-            currentVibe: profile.presence.vibe,
-            lookingFor: []
-        },
-        social: {
-            connections: {
-                connectionIds: profile.connections.connections?.map(c => c.userId) || [],
-                friendIds: profile.connections.friends?.map(f => f.userId) || [],
-                strength: {}
-            },
-            mutualSpaces: [] // Would need to be calculated
-        },
-        privacy: {
-            level: profile.privacy.visibilityLevel,
-            widgets: {
-                myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-                mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-                myConnections: { level: profile.privacy.visibilityLevel }
-            }
-        },
-        verification: {
-            facultyVerified: false, // Not available in ProfileSystem
-            emailVerified: true, // Assumed true for ProfileSystem
-            profileVerified: profile.isSetupComplete,
-            accountStatus: profile.isSetupComplete ? 'active' : 'incomplete',
-            userType: 'student', // Default for ProfileSystem
-            onboardingCompleted: profile.isSetupComplete
-        },
-        metadata: {
-            completionPercentage: profile.completeness,
-            createdAt: profile.createdAt instanceof Date ? profile.createdAt : profile.createdAt.toDate(),
-            updatedAt: profile.updatedAt instanceof Date ? profile.updatedAt : profile.updatedAt.toDate(),
-            lastActiveAt: profile.presence.lastActive
-        },
-        widgets: {
-            myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-            mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-            myConnections: { level: profile.privacy.visibilityLevel }
-        }
+        id: profile.identity.id,
+        fullName: profile.identity.fullName,
+        email: profile.identity.email,
+        handle,
+        avatarUrl: profile.identity.avatarUrl,
+        photos: profile.identity.photos,
+        bio: profile.identity.bio,
+        pronouns: profile.identity.pronouns,
+        major: profile.academic.major,
+        graduationYear: profile.academic.graduationYear,
+        academicYear: profile.academic.academicYear,
+        userType: profile.academic.userType,
+        facultyVerified: profile.academic.facultyVerified,
+        courses: profile.academic.courses,
+        connectionCount: profile.social.connectionCount,
+        friendCount: profile.social.friendCount,
+        spaceCount: profile.activity.joinedSpaces.length,
+        postCount: 0, // Would need to be calculated
+        mutualConnections: viewerContext?.mutualConnections,
+        mutualSpaces: viewerContext?.mutualSpaces,
+        verified: profile.status.isVerified,
+        isOwnProfile: viewerContext?.isOwnProfile ?? false,
+        isConnected: viewerContext?.isConnected ?? false,
+        isSpaceLeader: profile.status.isSpaceLeader,
+        profileVisibility: profile.privacy.profileVisibility,
+        widgetPrivacy: profile.privacy.widgets,
+        badges,
+        completionScore: profile.activity.profileCompletionScore,
+        lastActive: profile.activity.lastActive,
     };
+}
+/**
+ * Check if widget should be visible based on privacy settings
+ */
+export function canViewWidget(widget, viewerContext) {
+    if (viewerContext.isOwnProfile)
+        return true;
+    switch (widget.level) {
+        case 'visible':
+            return true;
+        case 'private':
+            return viewerContext.isConnected;
+        case 'ghost':
+            return false;
+        default:
+            return false;
+    }
+}
+/**
+ * Get privacy indicator for UI display
+ */
+export function getPrivacyIndicator(level) {
+    switch (level) {
+        case 'visible':
+            return {
+                icon: '🌍',
+                label: 'Campus Visible',
+                description: 'Everyone on campus can see this'
+            };
+        case 'private':
+            return {
+                icon: '🔒',
+                label: 'Connections Only',
+                description: 'Only your connections can see this'
+            };
+        case 'ghost':
+            return {
+                icon: '👻',
+                label: 'Private',
+                description: 'Hidden from everyone (you appear inactive)'
+            };
+    }
 }
 //# sourceMappingURL=profile-types.js.map

@@ -70,7 +70,7 @@ export async function validateProductionToken(
       type: 'forbidden_token_attempt',
       token: token,
       environment: currentEnvironment,
-      operation: context?.operation,
+      action: context?.operation,
       requestId,
       ip: request.headers.get('x-forwarded-for') ||
           request.headers.get('x-real-ip') ||
@@ -86,7 +86,7 @@ export async function validateProductionToken(
       requestId,
       ip: securityIncident.ip,
       userAgent: securityIncident.userAgent,
-      operation: context?.operation || 'token_validation',
+      action: context?.operation || 'token_validation',
       tags: {
         severity: 'critical',
         tokenType: 'forbidden',
@@ -136,7 +136,7 @@ export async function validateProductionToken(
     if (pattern.test(token)) {
       await logSecurityEvent('bypass_attempt', {
         requestId,
-        operation: context?.operation || 'token_validation',
+        action: context?.operation || 'token_validation',
         tags: {
           severity: 'high',
           pattern: pattern.toString(),
@@ -189,7 +189,7 @@ export async function validateProductionToken(
     }
 
     // Validate required fields
-    if (!decodedToken.uid || !decodedToken.email) {
+    if (!decodedToken.id || !decodedToken.email) {
       throw new ProductionAuthError(
         'Invalid token claims',
         'INVALID_CLAIMS',
@@ -202,8 +202,8 @@ export async function validateProductionToken(
     // Log successful validation (but not the token itself)
     await logSecurityEvent('invalid_token', {
       requestId,
-      userId: decodedToken.uid,
-      operation: context?.operation || 'token_validation',
+      userId: decodedToken.id,
+      action: context?.operation || 'token_validation',
       tags: {
         result: 'success',
         duration: duration.toString()
@@ -211,7 +211,7 @@ export async function validateProductionToken(
     });
 
     return {
-      uid: decodedToken.uid,
+      uid: decodedToken.id,
       email: decodedToken.email!,
       emailVerified: decodedToken.email_verified || false,
       customClaims: decodedToken.customClaims,
@@ -225,7 +225,7 @@ export async function validateProductionToken(
     // Log failed validation
     await logSecurityEvent('invalid_token', {
       requestId,
-      operation: context?.operation || 'token_validation',
+      action: context?.operation || 'token_validation',
       tags: {
         result: 'failure',
         duration: duration.toString(),
@@ -335,7 +335,7 @@ export async function auditAuthEvent(
     environment: currentEnvironment,
     requestId: request.headers.get('x-request-id') || undefined,
     userId: context?.userId,
-    operation: context?.operation,
+    action: context?.operation,
     ip: request.headers.get('x-forwarded-for') ||
         request.headers.get('x-real-ip') ||
         request.headers.get('cf-connecting-ip') || undefined,

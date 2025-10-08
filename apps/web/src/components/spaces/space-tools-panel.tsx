@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent } from 'react';
 import {
   Plus,
   Settings,
@@ -35,11 +35,12 @@ import {
   ExternalLink
 } from 'lucide-react';
 import {
-  HiveCard,
-  HiveButton,
+  Card,
+  Button,
   Badge,
-  HiveModal,
-  HiveInput
+  Dialog,
+  DialogContent,
+  Input
 } from '@hive/ui';
 import type { Space } from '@hive/core';
 
@@ -293,13 +294,13 @@ export function SpaceToolsPanel({ space, userMembership }: SpaceToolsPanelProps)
         </div>
 
         {canAddTools && (
-          <HiveButton
+          <Button
             onClick={() => setShowAddModal(true)}
             className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Tool
-          </HiveButton>
+          </Button>
         )}
       </div>
 
@@ -334,13 +335,13 @@ export function SpaceToolsPanel({ space, userMembership }: SpaceToolsPanelProps)
             }
           </p>
           {canAddTools && (
-            <HiveButton
+            <Button
               onClick={() => setShowAddModal(true)}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Your First Tool
-            </HiveButton>
+            </Button>
           )}
         </div>
       ) : (
@@ -389,7 +390,7 @@ function ToolCard({
   const ToolIcon = toolConfig?.icon || Zap;
 
   return (
-    <HiveCard
+    <Card
       className={`transition-all duration-300 cursor-pointer hover:border-[var(--hive-brand-primary)]/50 ${
         isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
       }`}
@@ -415,7 +416,7 @@ function ToolCard({
 
             {canManage && (
               <button
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();
                   onRemove?.();
                 }}
@@ -455,26 +456,25 @@ function ToolCard({
             </div>
 
             <div className="flex space-x-2">
-              <HiveButton
-                size="sm"
-                className="flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
-                onClick={(e) => e.stopPropagation()}
+              <Button
+                className="max-w-sm flex-1 bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Open Tool
-              </HiveButton>
-              <HiveButton
-                variant="secondary"
-                size="sm"
-                onClick={(e) => e.stopPropagation()}
+              </Button>
+              <Button
+                variant="outline"
+                className="max-w-sm"
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <Copy className="w-4 h-4" />
-              </HiveButton>
+              </Button>
             </div>
           </div>
         )}
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 
@@ -505,17 +505,24 @@ function AddToolModal({
   });
 
   return (
-    <HiveModal open={isOpen} onOpenChange={onClose} className="max-w-4xl max-h-[90vh]">
-      <div className="p-6">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose();
+        }
+      }}
+    >
+      <DialogContent className="max-w-4xl max-h-[90vh]">
         <h2 className="text-2xl font-bold text-white mb-2">Add Tool to Space</h2>
         <p className="text-gray-400 mb-6">Choose from our collection of interactive tools</p>
 
         {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1">
-            <HiveInput
+            <Input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
               placeholder="Search tools..."
               className="w-full"
             />
@@ -543,7 +550,7 @@ function AddToolModal({
           {filteredTools.map(([type, config]) => {
             const ToolIcon = config.icon;
             return (
-              <HiveCard
+              <Card
                 key={type}
                 className="p-4 cursor-pointer hover:border-[var(--hive-brand-primary)]/50 transition-all"
                 onClick={() => onAddTool(type as ToolType)}
@@ -572,7 +579,7 @@ function AddToolModal({
                     </Badge>
                   )}
                 </div>
-              </HiveCard>
+              </Card>
             );
           })}
         </div>
@@ -582,7 +589,7 @@ function AddToolModal({
             <p className="text-gray-400">No tools found matching your criteria</p>
           </div>
         )}
-      </div>
-    </HiveModal>
+      </DialogContent>
+    </Dialog>
   );
 }

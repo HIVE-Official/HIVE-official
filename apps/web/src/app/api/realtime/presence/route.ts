@@ -121,11 +121,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current presence
-    const currentPresence = await getUserPresence(user.uid);
+    const currentPresence = await getUserPresence(user.id);
     
     // Prepare presence update
     const presenceUpdate: Partial<UserPresence> = {
-      userId: user.uid,
+      userId: user.id,
       userName: user.displayName || user.email || 'Unknown User',
       lastSeen: new Date().toISOString(),
       metadata: {
@@ -179,18 +179,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Store presence update
-    await dbAdmin.collection('userPresence').doc(user.uid).update(presenceUpdate);
+    await dbAdmin.collection('userPresence').doc(user.id).update(presenceUpdate);
 
     // Create presence event
     const presenceEvent: PresenceEvent = {
-      id: `presence_${user.uid}_${Date.now()}`,
-      userId: user.uid,
+      id: `presence_${user.id}_${Date.now()}`,
+      userId: user.id,
       eventType: status ? 'status_change' : 'activity_change',
       previousStatus: currentPresence?.status,
       newStatus: status || currentPresence?.status,
       context,
       timestamp: new Date().toISOString(),
-      broadcastToSpaces: await getUserSpaces(user.uid)
+      broadcastToSpaces: await getUserSpaces(user.id)
     };
 
     // Store presence event
@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       presence: {
-        userId: user.uid,
+        userId: user.id,
         status: presenceUpdate.status || currentPresence?.status,
         activity: presenceUpdate.currentActivity || currentPresence?.currentActivity,
         lastUpdate: presenceUpdate.metadata?.lastActivityUpdate
@@ -245,7 +245,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Check if requesting user has permission to see this presence
-      const canView = await canViewUserPresence(user.uid, userId, spaceId ?? undefined);
+      const canView = await canViewUserPresence(user.id, userId, spaceId ?? undefined);
       if (!canView) {
         return NextResponse.json({ 
           presence: getPrivacyFilteredPresence(userPresence) 
@@ -255,7 +255,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ presence: userPresence });
     } else if (spaceId) {
       // Get space presence
-      const spacePresence = await getSpacePresence(spaceId, user.uid, includeOffline);
+      const spacePresence = await getSpacePresence(spaceId, user.id, includeOffline);
       
       if (!spacePresence) {
         return NextResponse.json(ApiResponseHelper.error("Space not found or access denied", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
@@ -264,13 +264,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ spacePresence });
     } else {
       // Get user's own presence and active spaces
-      const userPresence = await getUserPresence(user.uid);
-      const userSpaces = await getUserSpaces(user.uid);
+      const userPresence = await getUserPresence(user.id);
+      const userSpaces = await getUserSpaces(user.id);
       
       // Get presence summary for user's spaces
       const spacePresenceSummaries = await Promise.all(
         userSpaces.map(async spaceId => {
-          const spacePresence = await getSpacePresence(spaceId, user.uid, false);
+          const spacePresence = await getSpacePresence(spaceId, user.id, false);
           return {
             spaceId,
             onlineCount: spacePresence?.statistics.totalOnline || 0,
@@ -310,7 +310,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get current presence
-    const currentPresence = await getUserPresence(user.uid);
+    const currentPresence = await getUserPresence(user.id);
     
     // Update settings
     const updatedSettings = {
@@ -319,7 +319,7 @@ export async function PUT(request: NextRequest) {
       ...settings
     };
 
-    await dbAdmin.collection('userPresence').doc(user.uid).update({
+    await dbAdmin.collection('userPresence').doc(user.id).update({
       settings: updatedSettings,
       'metadata.lastActivityUpdate': new Date().toISOString()
     });
@@ -352,11 +352,11 @@ export async function DELETE(request: NextRequest) {
 
     if (connectionId) {
       // Remove specific connection
-      const currentPresence = await getUserPresence(user.uid);
+      const currentPresence = await getUserPresence(user.id);
       if (currentPresence?.connections) {
         const updatedConnections = currentPresence.connections.filter(c => c.connectionId !== connectionId);
         
-        await dbAdmin.collection('userPresence').doc(user.uid).update({
+        await dbAdmin.collection('userPresence').doc(user.id).update({
           connections: updatedConnections,
           status: updatedConnections.length === 0 ? 'offline' : currentPresence.status,
           'metadata.lastActivityUpdate': new Date().toISOString()
@@ -365,13 +365,13 @@ export async function DELETE(request: NextRequest) {
         // Broadcast offline status if no connections remain
         if (updatedConnections.length === 0) {
           await broadcastPresenceUpdate({
-            id: `presence_disconnect_${user.uid}_${Date.now()}`,
-            userId: user.uid,
+            id: `presence_disconnect_${user.id}_${Date.now()}`,
+            userId: user.id,
             eventType: 'status_change',
             previousStatus: currentPresence.status,
             newStatus: 'offline',
             timestamp: new Date().toISOString(),
-            broadcastToSpaces: await getUserSpaces(user.uid)
+            broadcastToSpaces: await getUserSpaces(user.id)
           });
         }
       }
@@ -384,7 +384,7 @@ export async function DELETE(request: NextRequest) {
       // Clean up old presence events
       const cutoffDate = new Date(olderThan).toISOString();
       const oldEventsQuery = dbAdmin.collection('presenceEvents')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('timestamp', '<', cutoffDate);
 
       const oldEventsSnapshot = await oldEventsQuery.get();
@@ -397,7 +397,7 @@ export async function DELETE(request: NextRequest) {
       });
     } else {
       // Set user offline
-      await dbAdmin.collection('userPresence').doc(user.uid).update({
+      await dbAdmin.collection('userPresence').doc(user.id).update({
         status: 'offline',
         connections: [],
         'metadata.lastActivityUpdate': new Date().toISOString()
@@ -405,12 +405,12 @@ export async function DELETE(request: NextRequest) {
 
       // Broadcast offline status
       await broadcastPresenceUpdate({
-        id: `presence_offline_${user.uid}_${Date.now()}`,
-        userId: user.uid,
+        id: `presence_offline_${user.id}_${Date.now()}`,
+        userId: user.id,
         eventType: 'status_change',
         newStatus: 'offline',
         timestamp: new Date().toISOString(),
-        broadcastToSpaces: await getUserSpaces(user.uid)
+        broadcastToSpaces: await getUserSpaces(user.id)
       });
 
       return NextResponse.json({

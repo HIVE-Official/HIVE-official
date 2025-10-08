@@ -164,7 +164,7 @@ export async function validateDevBypass(
           request.headers.get('x-real-ip') || 
           request.headers.get('cf-connecting-ip') || undefined,
       path: context?.path || new URL(request.url).pathname,
-      operation: context?.operation,
+      action: context?.operation,
       timestamp: new Date().toISOString()
     };
 
@@ -174,7 +174,7 @@ export async function validateDevBypass(
       requestId: securityContext.token, // Using token as identifier
       ip: securityContext.ip,
       userAgent: securityContext.userAgent,
-      operation: context?.operation,
+      action: context?.operation,
       tags: {
         bypassType: 'dev_token',
         environment: currentEnvironment,
@@ -196,6 +196,7 @@ export async function validateDevBypass(
         extra: securityContext
       });
     } catch (error) {
+      // Intentionally suppressed - security logging failure should not break auth
     }
 
     return {
@@ -234,7 +235,7 @@ export async function validateMagicLinkBypass(
       await logSecurityEvent('bypass_attempt', {
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
-        operation: 'magic_link_verify',
+        action: 'magic_link_verify',
         tags: {
           bypassType: 'dev_magic_link',
           environment: currentEnvironment,
@@ -262,6 +263,7 @@ export async function validateMagicLinkBypass(
           }
         });
       } catch (error) {
+        // Intentionally suppressed - security logging failure should not break auth
       }
 
       return {
@@ -383,8 +385,11 @@ export function secureLog(level: 'info' | 'warn' | 'error', message: string, dat
   const config = getSecurityConfig();
 
   if (level === 'error') {
+    console.error(`[Security] ${message}`, data);
   } else if (level === 'warn') {
+    console.warn(`[Security] ${message}`, data);
   } else {
+    console.log(`[Security] ${message}`, data);
   }
 }
 

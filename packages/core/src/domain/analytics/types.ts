@@ -18,6 +18,8 @@ export interface BaseAnalyticsEvent {
 export type CreationEventType =
   | 'builder_session_start'
   | 'builder_session_end'
+  | 'builder_opened'
+  | 'canvas_saved'
   | 'tool_created'
   | 'tool_updated'
   | 'tool_published'
@@ -44,8 +46,10 @@ export type FeedEventType =
   | 'post_viewed'
   | 'post_edited'
   | 'post_deleted'
+  | 'post_liked'
   | 'space_joined'
   | 'space_left'
+  | 'space_viewed'
   | 'builder_action'
   | 'space_heartbeat'
   | 'space_feed_viewed';
@@ -76,7 +80,10 @@ export type OnboardingStepName =
   | 'handle'
   | 'photo'
   | 'builder'
-  | 'legal';
+  | 'legal'
+  | 'email_verification'
+  | 'profile_setup'
+  | 'interests';
 
 export interface OnboardingAnalyticsEvent extends BaseAnalyticsEvent {
   stepName: OnboardingStepName;

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { NextResponse } from 'next/server';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
@@ -36,11 +36,15 @@ const RSS_FEEDS = {
 
 export const POST = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
   const userId = getUserId(request);
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
+
+  if (!spaceId) {
+    return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
+  }
 
   try {
     // Get space data to determine category
@@ -131,11 +135,19 @@ export const POST = withAuthAndErrors(async (
               }
             });
           } catch (sseError) {
-            logger.warn('Failed to broadcast RSS post via SSE', { sseError, postId: postRef.id });
+            logger.warn('Failed to broadcast RSS post via SSE', {
+              error: sseError instanceof Error ? sseError : new Error(String(sseError)),
+              postId: postRef.id
+            });
           }
         }
       } catch (feedError) {
-        logger.warn('Failed to process RSS feed', { feedUrl, error: feedError });
+        logger.warn('Failed to process RSS feed', {
+          metadata: {
+            feedUrl
+          },
+          error: feedError instanceof Error ? feedError : new Error(String(feedError))
+        });
       }
     }
 
@@ -154,7 +166,7 @@ export const POST = withAuthAndErrors(async (
     });
 
   } catch (error) {
-    logger.error('Error seeding RSS content', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
+    logger.error('Error seeding RSS content', { error: error instanceof Error ? error.message : String(error), spaceId, userId });
     return respond.error("Failed to seed RSS content", "INTERNAL_ERROR", { status: 500 });
   }
 });

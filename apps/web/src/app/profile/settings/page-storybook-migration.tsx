@@ -245,7 +245,7 @@ export default function ProfileSettingsStorybook() {
       }
     } catch (error) {
       logger.error("Failed to save settings", {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
     }
@@ -261,7 +261,7 @@ export default function ProfileSettingsStorybook() {
       });
     } catch (error) {
       logger.error("Failed to toggle ghost mode", {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       });
     }
@@ -272,7 +272,7 @@ export default function ProfileSettingsStorybook() {
     if (!profile) return null;
     return {
       id: profile.identity.id,
-      name: profile.identity.fullName || "",
+      name: profile.identity.displayName || "",
       handle: profile.identity.handle || "",
       email: profile.identity.email || "",
       role: profile.builder?.isBuilder ? "builder" : "member",
@@ -306,7 +306,7 @@ export default function ProfileSettingsStorybook() {
         ]}
         actions={
           <div className="flex items-center gap-3">
-            <Button variant="secondary" onClick={() => router.push("/profile")}>
+            <Button variant="outline" onClick={() => router.push("/profile")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Profile
             </Button>
@@ -562,7 +562,7 @@ export default function ProfileSettingsStorybook() {
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                 <Moon className="h-5 w-5 text-purple-400" />
                 Ghost Mode
-                <Badge variant="sophomore" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
                   UB Exclusive
                 </Badge>
               </h3>
@@ -584,7 +584,7 @@ export default function ProfileSettingsStorybook() {
                       />
                       {privacySettings.ghostMode.enabled && (
                         <Badge
-                          variant="sophomore"
+                          variant="secondary"
                           className="text-xs bg-purple-500/20 text-purple-300"
                         >
                           Active - {privacySettings.ghostMode.level}
@@ -674,7 +674,7 @@ export default function ProfileSettingsStorybook() {
                       {_currentUser?.email}
                     </span>
                     {_currentUser?.isVerified && (
-                      <Badge variant="senior" className="text-xs">
+                      <Badge variant="gold" className="text-xs">
                         Verified
                       </Badge>
                     )}
@@ -690,7 +690,7 @@ export default function ProfileSettingsStorybook() {
 
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm text-gray-300">Student Status</span>
-                  <Badge variant="senior" className="text-xs">
+                  <Badge variant="gold" className="text-xs">
                     Active
                   </Badge>
                 </div>
@@ -739,7 +739,7 @@ export default function ProfileSettingsStorybook() {
                   </p>
                   <Button
                     variant="destructive"
-                    size="sm"
+                    className="max-w-sm"
                     onClick={() => setShowDeleteModal(true)}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />

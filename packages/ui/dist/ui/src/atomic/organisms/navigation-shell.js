@@ -1,95 +1,76 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils.js";
-import { TopBarNav } from "../atoms/top-bar-nav.js";
+import { MotionNav } from "../../shells/motion-safe.js";
+import { transitions } from "../../lib/animations/index.js";
+import { Badge } from "../atoms/badge.js";
 import { HiveLogo } from "../atoms/hive-logo.js";
-import { Button } from "../atoms/button.js";
-import { Input } from "../atoms/input.js";
-import { Search, Bell, MessageCircle, X, Plus } from "lucide-react";
-const navigationShellVariants = cva([
-    "fixed top-0 left-0 right-0 z-50",
-    "bg-background/80 backdrop-blur-lg border-b border-border/50",
-    "supports-[backdrop-filter]:bg-background/60",
-    "transition-all duration-300"
-], {
-    variants: {
-        variant: {
-            default: "bg-background/80 rounded-b-lg",
-            glass: "bg-background/40 backdrop-blur-xl rounded-b-lg",
-            solid: "bg-background border-b rounded-b-lg",
-            floating: [
-                "top-4 left-4 right-4 rounded-2xl border",
-                "bg-background/90 backdrop-blur-xl shadow-xl shadow-black/10"
-            ]
-        },
-        blur: {
-            none: "backdrop-blur-none",
-            sm: "backdrop-blur-sm",
-            md: "backdrop-blur-md",
-            lg: "backdrop-blur-lg",
-            xl: "backdrop-blur-xl"
-        }
-    },
-    defaultVariants: {
-        variant: "glass",
-        blur: "xl"
-    }
-});
-const navigationContentVariants = cva("flex items-center justify-between px-4 py-3 mx-auto min-h-[56px]", {
-    variants: {
-        maxWidth: {
-            sm: "max-w-screen-sm",
-            md: "max-w-screen-md",
-            lg: "max-w-screen-lg",
-            xl: "max-w-screen-xl",
-            "2xl": "max-w-screen-2xl",
-            full: "max-w-full"
-        },
-        spacing: {
-            tight: "gap-2",
-            normal: "gap-4",
-            loose: "gap-6"
-        }
-    },
-    defaultVariants: {
-        maxWidth: "xl",
-        spacing: "normal"
-    }
-});
-// Mobile bottom navigation styles
-const mobileBottomNavVariants = cva([
-    "fixed bottom-0 left-0 right-0 z-50 md:hidden",
-    "bg-background/95 backdrop-blur-xl border-t border-border/50",
-    "supports-[backdrop-filter]:bg-background/80",
-    "transition-all duration-300",
-    "safe-area-pb"
-]);
-const NavigationShell = React.forwardRef(({ className, variant, blur, items, currentPath, onSearch, searchPlaceholder = "Search everything...", maxWidth, spacing, showSearch = true, showNotifications = true, showMessages = true, notificationCount, messageCount, onNotificationsClick, onMessagesClick, logoVariant = "default", logoSize = "default", showLogoText = true, showLogoIcon = true, ...props }, ref) => {
-    const [isSearchExpanded, setIsSearchExpanded] = React.useState(false);
-    const [searchQuery, setSearchQuery] = React.useState("");
-    // Tier 1 items (primary navigation - always visible)
-    const tier1Items = items.filter(item => item.tier === 1);
-    // Tier 2 items (action zone)
-    const tier2Items = items.filter(item => item.tier === 2);
-    // Tier 3 items (menu/overflow)
-    const tier3Items = items.filter(item => item.tier === 3);
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        if (onSearch && searchQuery.trim()) {
-            onSearch(searchQuery.trim());
-        }
-    };
-    const handleSearchToggle = () => {
-        setIsSearchExpanded(!isSearchExpanded);
-        if (isSearchExpanded) {
-            setSearchQuery("");
-        }
-    };
-    return (_jsxs(_Fragment, { children: [_jsxs("nav", { ref: ref, className: cn(navigationShellVariants({ variant, blur }), className), role: "navigation", "aria-label": "Main navigation", ...props, children: [_jsxs("div", { className: cn(navigationContentVariants({ maxWidth, spacing })), children: [_jsx("div", { className: "flex items-center gap-4", children: _jsx(HiveLogo, { variant: logoVariant, size: logoSize, showIcon: showLogoIcon, showText: showLogoText, href: "/", className: "h-8" }) }), showSearch && (_jsx("div", { className: "flex-1 max-w-md mx-4 hidden lg:block", children: _jsxs("form", { onSubmit: handleSearchSubmit, className: "relative", children: [_jsx(Search, { className: "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground", "aria-hidden": "true" }), _jsx(Input, { type: "search", placeholder: searchPlaceholder, value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: cn("pl-10 pr-4 bg-accent/50 border-accent", "focus:bg-background focus:border-primary/50", "transition-all duration-200", "min-h-[48px]" // Accessibility: minimum touch target
-                                            ), "aria-label": searchPlaceholder })] }) })), _jsxs("div", { className: "flex items-center gap-2", children: [showSearch && (_jsx(Button, { variant: "ghost", size: "icon", onClick: handleSearchToggle, className: "lg:hidden min-w-[48px] min-h-[48px]", "aria-label": isSearchExpanded ? "Close search" : "Open search", "aria-expanded": isSearchExpanded, children: isSearchExpanded ? _jsx(X, { className: "h-5 w-5" }) : _jsx(Search, { className: "h-5 w-5" }) })), showNotifications && (_jsxs(Button, { variant: "ghost", size: "icon", onClick: onNotificationsClick, className: "relative min-w-[48px] min-h-[48px] hidden sm:inline-flex", "aria-label": `Notifications${notificationCount ? ` (${notificationCount} unread)` : ''}`, children: [_jsx(Bell, { className: "h-5 w-5" }), notificationCount && notificationCount > 0 && (_jsx("span", { className: "absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1", "aria-hidden": "true", children: notificationCount > 99 ? '99+' : notificationCount }))] })), showMessages && (_jsxs(Button, { variant: "ghost", size: "icon", onClick: onMessagesClick, className: "relative min-w-[48px] min-h-[48px] hidden sm:inline-flex", "aria-label": `Messages${messageCount ? ` (${messageCount} unread)` : ''}`, children: [_jsx(MessageCircle, { className: "h-5 w-5" }), messageCount && messageCount > 0 && (_jsx("span", { className: "absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1", "aria-hidden": "true", children: messageCount > 99 ? '99+' : messageCount }))] })), _jsx("div", { className: "hidden md:flex items-center gap-1 ml-2", children: tier1Items.map((item) => (_jsx(TopBarNav, { icon: item.icon, label: item.label, href: item.href, isActive: currentPath === item.href || item.isActive, badge: item.badge, className: "min-w-[48px] min-h-[48px]", labelVisibility: "always", "aria-current": currentPath === item.href ? "page" : undefined }, item.id))) })] })] }), isSearchExpanded && (_jsx("div", { className: "lg:hidden border-t border-border/50 p-4 bg-background/90 backdrop-blur-lg", children: _jsx("form", { onSubmit: handleSearchSubmit, children: _jsx(Input, { type: "search", placeholder: searchPlaceholder, value: searchQuery, onChange: (e) => setSearchQuery(e.target.value), className: "w-full min-h-[48px]", autoFocus: true, "aria-label": searchPlaceholder }) }) }))] }), _jsx("nav", { className: cn(mobileBottomNavVariants()), role: "navigation", "aria-label": "Mobile navigation", children: _jsxs("div", { className: "flex justify-around items-center py-2 px-4 min-h-[72px]", children: [tier1Items.map((item, index) => (_jsx(TopBarNav, { icon: item.icon, label: item.label, href: item.href, isActive: currentPath === item.href || item.isActive, badge: item.badge, className: cn("flex-1 flex-col min-w-[48px] min-h-[48px] max-w-[80px]", "text-xs gap-1"), labelVisibility: "always", size: "sm", "aria-current": currentPath === item.href ? "page" : undefined }, item.id))), _jsx(Button, { variant: "default", size: "icon", className: "min-w-[48px] min-h-[48px] rounded-full bg-primary hover:bg-primary/90", "aria-label": "Create new post", children: _jsx(Plus, { className: "h-5 w-5" }) }), _jsxs("div", { className: "flex flex-col items-center gap-1 min-w-[48px]", children: [_jsxs("div", { className: "flex gap-1", children: [showNotifications && (_jsxs(Button, { variant: "ghost", size: "icon", onClick: onNotificationsClick, className: "relative min-w- min-h- p-1", "aria-label": `Notifications${notificationCount ? ` (${notificationCount} unread)` : ''}`, children: [_jsx(Bell, { className: "h-4 w-4" }), notificationCount && notificationCount > 0 && (_jsx("span", { className: "absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full min-w- h- flex items-center justify-center text-[10px]", "aria-hidden": "true", children: notificationCount > 9 ? '9+' : notificationCount }))] })), showMessages && (_jsxs(Button, { variant: "ghost", size: "icon", onClick: onMessagesClick, className: "relative min-w- min-h- p-1", "aria-label": `Messages${messageCount ? ` (${messageCount} unread)` : ''}`, children: [_jsx(MessageCircle, { className: "h-4 w-4" }), messageCount && messageCount > 0 && (_jsx("span", { className: "absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full min-w- h- flex items-center justify-center text-[10px]", "aria-hidden": "true", children: messageCount > 9 ? '9+' : messageCount }))] }))] }), _jsx("span", { className: "text-[10px] text-muted-foreground", children: "More" })] })] }) }), _jsx("div", { className: "h-16" }), _jsx("div", { className: "h-[72px] md:hidden" })] }));
+import { SearchBar } from "../molecules/search-bar.js";
+import { NotificationItem } from "../molecules/notification-item.js";
+import { cn } from "../../lib/utils.js";
+const NavigationShell = React.forwardRef(({ className, children, currentUserName = "Guest", currentUserAvatar, currentUserHandle = "@guest", links = [], notificationCount = 0, notifications = [], onSearch, onNotificationClick, onProfileClick, onSettingsClick, onSignOutClick, showSearch = true, layout = "header", isCollapsed = false, onToggleLayout, ...props }, ref) => {
+    const [showNotifications, setShowNotifications] = React.useState(false);
+    const [showUserMenu, setShowUserMenu] = React.useState(false);
+    const notificationRef = React.useRef(null);
+    const userMenuRef = React.useRef(null);
+    const isSidebar = layout === "sidebar";
+    // Generate initials from name
+    const initials = currentUserName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    // Close dropdowns when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+                setShowNotifications(false);
+            }
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+                setShowUserMenu(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+    return (_jsxs("div", { ref: ref, className: cn("flex", isSidebar ? "flex-row min-h-screen" : "flex-col min-h-screen", className), ...props, children: [_jsx(MotionNav, { layout: true, initial: false, animate: {
+                    width: isSidebar ? (isCollapsed ? 64 : 240) : "100%",
+                    height: isSidebar ? "100vh" : "auto"
+                }, transition: transitions.slow, className: cn("z-50 border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", isSidebar ? "sticky top-0 h-screen border-r flex flex-col" : "sticky top-0 w-full border-b"), children: isSidebar ? (
+                /* Sidebar Layout */
+                _jsxs(_Fragment, { children: [_jsxs("div", { className: cn("flex items-center gap-2 p-4 border-b border-border", isCollapsed && "justify-center"), children: [_jsx(HiveLogo, { variant: "currentColor", size: isCollapsed ? 24 : 32, className: "text-primary shrink-0" }), !isCollapsed && (_jsx("span", { className: "text-base font-bold text-foreground", children: "HIVE" }))] }), links.length > 0 && (_jsx("nav", { className: "flex-1 flex flex-col gap-1 p-2 overflow-y-auto", children: links.map((link, index) => (_jsx("a", { href: link.href, className: cn("relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-smooth ease-liquid", link.isActive
+                                    ? "bg-accent text-foreground"
+                                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground", isCollapsed && "justify-center px-0"), title: isCollapsed ? link.label : undefined, children: isCollapsed ? (_jsx("span", { className: "text-base", children: link.label.charAt(0) })) : (_jsxs(_Fragment, { children: [_jsx("span", { children: link.label }), link.badge !== undefined && link.badge > 0 && (_jsx(Badge, { variant: "freshman", className: "ml-auto h-5 min-w-5 px-1 text-xs transition-smooth ease-liquid", children: link.badge > 99 ? "99+" : link.badge }))] })) }, index))) })), _jsxs("div", { className: "mt-auto border-t border-border p-2", children: [_jsxs("div", { ref: notificationRef, className: "relative mb-1", children: [_jsxs("button", { onClick: () => setShowNotifications(!showNotifications), className: cn("relative flex h-9 items-center gap-3 rounded-md text-muted-foreground transition-smooth ease-liquid hover:bg-accent hover:text-foreground", isCollapsed ? "w-9 justify-center" : "w-full px-3"), title: isCollapsed ? "Notifications" : undefined, children: [_jsx("svg", { className: "h-5 w-5 shrink-0", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" }) }), !isCollapsed && _jsx("span", { className: "text-sm font-medium", children: "Notifications" }), notificationCount > 0 && (_jsx("div", { className: cn("flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground", isCollapsed ? "absolute -right-1 -top-1" : "ml-auto"), children: notificationCount > 99 ? "99+" : notificationCount }))] }), showNotifications && (_jsxs("div", { className: cn("absolute bottom-0 w-[400px] rounded-lg border border-border bg-card shadow-lg transition-all duration-smooth ease-liquid", isCollapsed ? "left-16" : "left-full ml-2"), children: [_jsxs("div", { className: "flex items-center justify-between border-b border-border p-4", children: [_jsx("h3", { className: "text-sm font-semibold text-foreground", children: "Notifications" }), notificationCount > 0 && (_jsxs(Badge, { variant: "sophomore", children: [notificationCount, " new"] }))] }), _jsx("div", { className: "max-h-[400px] overflow-y-auto p-2", children: notifications.length > 0 ? (_jsx("div", { className: "flex flex-col gap-1", children: notifications.map((notification, index) => (_jsx("div", { onClick: () => {
+                                                                onNotificationClick?.(notification);
+                                                                setShowNotifications(false);
+                                                            }, children: _jsx(NotificationItem, { ...notification }) }, index))) })) : (_jsxs("div", { className: "flex flex-col items-center justify-center py-8", children: [_jsx("svg", { className: "h-12 w-12 text-muted-foreground/30", fill: "none", strokeWidth: "1.5", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" }) }), _jsx("p", { className: "mt-2 text-sm text-muted-foreground", children: "No notifications yet" })] })) })] }))] }), _jsxs("div", { ref: userMenuRef, className: "relative", children: [_jsxs("button", { onClick: () => setShowUserMenu(!showUserMenu), className: cn("flex items-center gap-3 rounded-md transition-smooth ease-liquid hover:bg-accent", isCollapsed ? "h-9 w-9 justify-center p-0" : "w-full p-2"), title: isCollapsed ? currentUserName : undefined, children: [_jsx("div", { className: cn("overflow-hidden rounded border border-border bg-muted", isCollapsed ? "h-7 w-7" : "h-8 w-7 shrink-0"), children: currentUserAvatar ? (_jsx("img", { src: currentUserAvatar, alt: currentUserName, className: "h-full w-full object-cover" })) : (_jsx("div", { className: "flex h-full w-full items-center justify-center bg-primary/10 text-[10px] font-semibold text-primary", children: initials })) }), !isCollapsed && (_jsxs("div", { className: "flex flex-1 flex-col items-start min-w-0", children: [_jsx("span", { className: "truncate text-xs font-semibold text-foreground max-w-full", children: currentUserName }), _jsx("span", { className: "truncate text-[10px] text-muted-foreground max-w-full", children: currentUserHandle })] }))] }), showUserMenu && (_jsxs("div", { className: cn("absolute bottom-0 w-[280px] rounded-lg border border-border bg-card shadow-lg transition-all duration-smooth ease-liquid", isCollapsed ? "left-16" : "left-full ml-2"), children: [_jsx("div", { className: "border-b border-border p-3", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "h-12 w-10 overflow-hidden rounded-md border border-border bg-muted", children: currentUserAvatar ? (_jsx("img", { src: currentUserAvatar, alt: currentUserName, className: "h-full w-full object-cover" })) : (_jsx("div", { className: "flex h-full w-full items-center justify-center bg-primary/10 text-xs font-semibold text-primary", children: initials })) }), _jsxs("div", { className: "flex flex-1 flex-col min-w-0", children: [_jsx("span", { className: "truncate text-sm font-semibold text-foreground", children: currentUserName }), _jsx("span", { className: "truncate text-xs text-muted-foreground", children: currentUserHandle })] })] }) }), _jsxs("div", { className: "p-2", children: [_jsxs("button", { onClick: () => {
+                                                                onProfileClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-smooth ease-liquid hover:bg-accent", children: [_jsx("svg", { className: "h-4 w-4 text-muted-foreground", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" }) }), _jsx("span", { className: "text-foreground", children: "View Profile" })] }), _jsxs("button", { onClick: () => {
+                                                                onSettingsClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-smooth ease-liquid hover:bg-accent", children: [_jsxs("svg", { className: "h-4 w-4 text-muted-foreground", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: [_jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" }), _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" })] }), _jsx("span", { className: "text-foreground", children: "Settings" })] }), _jsx("div", { className: "my-2 border-t border-border" }), _jsxs("button", { onClick: () => {
+                                                                onSignOutClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive transition-smooth ease-liquid hover:bg-destructive/10", children: [_jsx("svg", { className: "h-4 w-4", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" }) }), _jsx("span", { children: "Sign Out" })] })] })] }))] })] })] })) : (
+                /* Header Layout */
+                _jsxs("div", { className: "flex items-center gap-4 container h-16 px-4", children: [_jsx("div", { className: "flex items-center gap-2", children: _jsx(HiveLogo, { variant: "currentColor", size: 32, className: "text-primary" }) }), links.length > 0 && (_jsx("nav", { className: "hidden md:flex items-center gap-1", children: links.map((link, index) => (_jsxs("a", { href: link.href, className: cn("relative flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-smooth ease-liquid", link.isActive
+                                    ? "bg-accent text-foreground"
+                                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"), children: [link.label, link.badge !== undefined && link.badge > 0 && (_jsx(Badge, { variant: "freshman", className: "h-5 min-w-5 px-1 text-xs transition-smooth ease-liquid", children: link.badge > 99 ? "99+" : link.badge }))] }, index))) })), showSearch && (_jsx("div", { className: "hidden md:block flex-1 max-w-md", children: _jsx(SearchBar, { placeholder: "Search HIVE...", onSearch: onSearch, showShortcut: true }) })), _jsxs("div", { className: "flex flex-1 items-center justify-end gap-2", children: [_jsxs("div", { ref: notificationRef, className: "relative", children: [_jsxs("button", { onClick: () => setShowNotifications(!showNotifications), className: "relative flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-smooth ease-liquid hover:bg-accent hover:text-foreground", children: [_jsx("svg", { className: "h-5 w-5", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" }) }), notificationCount > 0 && (_jsx("div", { className: "absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground", children: notificationCount > 99 ? "99+" : notificationCount }))] }), showNotifications && (_jsxs("div", { className: "absolute right-0 top-12 w-[400px] rounded-lg border border-border bg-card shadow-lg transition-all duration-smooth ease-liquid", children: [_jsxs("div", { className: "flex items-center justify-between border-b border-border p-4", children: [_jsx("h3", { className: "text-sm font-semibold text-foreground", children: "Notifications" }), notificationCount > 0 && (_jsxs(Badge, { variant: "sophomore", children: [notificationCount, " new"] }))] }), _jsx("div", { className: "max-h-[400px] overflow-y-auto p-2", children: notifications.length > 0 ? (_jsx("div", { className: "flex flex-col gap-1", children: notifications.map((notification, index) => (_jsx("div", { onClick: () => {
+                                                                onNotificationClick?.(notification);
+                                                                setShowNotifications(false);
+                                                            }, children: _jsx(NotificationItem, { ...notification }) }, index))) })) : (_jsxs("div", { className: "flex flex-col items-center justify-center py-8", children: [_jsx("svg", { className: "h-12 w-12 text-muted-foreground/30", fill: "none", strokeWidth: "1.5", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" }) }), _jsx("p", { className: "mt-2 text-sm text-muted-foreground", children: "No notifications yet" })] })) })] }))] }), _jsxs("div", { ref: userMenuRef, className: "relative", children: [_jsxs("button", { onClick: () => setShowUserMenu(!showUserMenu), className: "flex items-center gap-2 rounded-md p-1 transition-smooth ease-liquid hover:bg-accent", children: [_jsx("div", { className: "h-8 w-7 overflow-hidden rounded border border-border bg-muted", children: currentUserAvatar ? (_jsx("img", { src: currentUserAvatar, alt: currentUserName, className: "h-full w-full object-cover" })) : (_jsx("div", { className: "flex h-full w-full items-center justify-center bg-primary/10 text-[10px] font-semibold text-primary", children: initials })) }), _jsx("svg", { className: "hidden h-4 w-4 text-muted-foreground sm:block", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 8.25l-7.5 7.5-7.5-7.5" }) })] }), showUserMenu && (_jsxs("div", { className: "absolute right-0 top-12 w-[280px] rounded-lg border border-border bg-card shadow-lg transition-all duration-smooth ease-liquid", children: [_jsx("div", { className: "border-b border-border p-3", children: _jsxs("div", { className: "flex items-center gap-3", children: [_jsx("div", { className: "h-12 w-10 overflow-hidden rounded-md border border-border bg-muted", children: currentUserAvatar ? (_jsx("img", { src: currentUserAvatar, alt: currentUserName, className: "h-full w-full object-cover" })) : (_jsx("div", { className: "flex h-full w-full items-center justify-center bg-primary/10 text-xs font-semibold text-primary", children: initials })) }), _jsxs("div", { className: "flex flex-1 flex-col min-w-0", children: [_jsx("span", { className: "truncate text-sm font-semibold text-foreground", children: currentUserName }), _jsx("span", { className: "truncate text-xs text-muted-foreground", children: currentUserHandle })] })] }) }), _jsxs("div", { className: "p-2", children: [_jsxs("button", { onClick: () => {
+                                                                onProfileClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-smooth ease-liquid hover:bg-accent", children: [_jsx("svg", { className: "h-4 w-4 text-muted-foreground", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" }) }), _jsx("span", { className: "text-foreground", children: "View Profile" })] }), _jsxs("button", { onClick: () => {
+                                                                onSettingsClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-smooth ease-liquid hover:bg-accent", children: [_jsxs("svg", { className: "h-4 w-4 text-muted-foreground", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: [_jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" }), _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z" })] }), _jsx("span", { className: "text-foreground", children: "Settings" })] }), _jsx("div", { className: "my-2 border-t border-border" }), _jsxs("button", { onClick: () => {
+                                                                onSignOutClick?.();
+                                                                setShowUserMenu(false);
+                                                            }, className: "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive transition-smooth ease-liquid hover:bg-destructive/10", children: [_jsx("svg", { className: "h-4 w-4", fill: "none", strokeWidth: "2", stroke: "currentColor", viewBox: "0 0 24 24", children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" }) }), _jsx("span", { children: "Sign Out" })] })] })] }))] })] })] })) }), _jsx("main", { className: "flex-1", children: children })] }));
 });
 NavigationShell.displayName = "NavigationShell";
-export { NavigationShell, navigationShellVariants, navigationContentVariants };
+export { NavigationShell };
 //# sourceMappingURL=navigation-shell.js.map

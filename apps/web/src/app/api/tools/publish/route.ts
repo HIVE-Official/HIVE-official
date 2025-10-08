@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     const toolData = toolDoc.data();
     
     // Check ownership
-    if (toolData?.ownerId !== user.uid) {
+    if (toolData?.ownerId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to publish this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const publishRequest: PublishRequest = {
       toolId: validatedData.toolId,
-      requestedBy: user.uid,
+      requestedBy: user.id,
       publishType: validatedData.publishType,
       category: validatedData.category,
       tags: validatedData.tags,
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
         toolId: validatedData.toolId,
         toolName: toolData.name,
         requestId: requestRef.id,
-        requestedBy: user.uid
+        requestedBy: user.id
       },
       recipients: ['admin'],
       createdAt: now.toISOString(),
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
     // Log activity
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_publish_requested',
-      userId: user.uid,
+      userId: user.id,
       toolId: validatedData.toolId,
       publishType: validatedData.publishType,
       timestamp: now.toISOString(),
@@ -206,7 +206,7 @@ export async function GET(request: NextRequest) {
     }
 
     const toolData = toolDoc.data();
-    if (toolData?.ownerId !== user.uid) {
+    if (toolData?.ownerId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Not authorized to view this publish request", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 

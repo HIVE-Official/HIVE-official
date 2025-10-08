@@ -3,7 +3,7 @@ import { type Space } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { findSpaceOptimized } from "@/lib/space-query-optimizer";
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 const UpdateSpaceSchema = z.object({
   name: z.string().min(1).max(100).optional(),
@@ -23,10 +23,10 @@ const UpdateSpaceSchema = z.object({
 
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
-  { params }: { params: Promise<{ spaceId: string }> },
+  context,
   respond
 ) => {
-  const { spaceId } = await params;
+  const spaceId = context.params.spaceId;
 
   if (!spaceId) {
     return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
@@ -53,11 +53,11 @@ export const PATCH = withAuthValidationAndErrors(
   UpdateSpaceSchema,
   async (
     request: AuthenticatedRequest,
-    { params }: { params: Promise<{ spaceId: string }> },
+    context,
     updates: UpdateSpaceData,
     respond
   ) => {
-    const { spaceId } = await params;
+    const spaceId = context.params.spaceId;
     const userId = getUserId(request);
 
     if (!spaceId) {

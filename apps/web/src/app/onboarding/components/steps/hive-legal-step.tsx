@@ -1,7 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Shield, FileText, Eye, Check, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard } from "@hive/ui";
+import { Card } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveLegalStepProps {
@@ -108,7 +108,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 + index * 0.1 }}
           >
-            <HiveCard
+            <Card
               variant={agreement.checked ? "brand" : "elevated"}
               className={cn(
                 "p-[var(--hive-spacing-4)] transition-all duration-300 cursor-pointer",
@@ -166,7 +166,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
                 </button>
               </div>
             </div>
-            </HiveCard>
+            </Card>
           </motion.div>
         ))}
       </motion.div>
@@ -177,7 +177,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
       >
-        <HiveCard className="p-[var(--hive-spacing-4)]">
+        <Card className="p-[var(--hive-spacing-4)]">
           <h4 className="text-sm font-medium text-[var(--hive-text-primary)] mb-[var(--hive-spacing-3)] flex items-center">
             <Shield className="w-4 h-4 mr-2 text-[var(--hive-brand-primary)]" />
             Your Privacy Matters
@@ -197,7 +197,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
               </motion.div>
             ))}
           </div>
-        </HiveCard>
+        </Card>
       </motion.div>
 
       {/* Completion Status */}
@@ -206,7 +206,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
       >
-        <HiveCard 
+        <Card 
           variant={data.acceptedTerms && data.acceptedPrivacy ? "brand" : "elevated"}
           className="p-[var(--hive-spacing-4)]"
         >
@@ -250,7 +250,7 @@ export function HiveLegalStep({ data, updateData }: HiveLegalStepProps) {
               transition={{ duration: 0.5, ease: "easeOut" }}
             />
           </motion.div>
-        </HiveCard>
+        </Card>
       </motion.div>
     </motion.div>
   );

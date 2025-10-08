@@ -71,7 +71,7 @@
   }
   /* Emoji reactions that bounce */
   .emoji-bounce {
-    animation: bounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: bounce 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);  /* Apple slow with bounce */
   }
 
   @keyframes bounce {
@@ -92,7 +92,7 @@
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: hype-shift 3s ease infinite;
+    animation: hype-shift 3s cubic-bezier(0.42, 0, 0.58, 1) infinite;  /* Apple liquid easing */
   }
 
   @keyframes hype-shift {
@@ -102,7 +102,7 @@
 
   /* Notification badge that DEMANDS attention */
   .notif-rage {
-    animation: rage 0.5s ease-in-out infinite alternate;
+    animation: rage 600ms cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;  /* Apple slow with liquid easing */
   }
 
   @keyframes rage {
@@ -188,7 +188,7 @@
       var(--hive-overlay-gold-subtle) 100%
     );
     background-size: 200% 200%;
-    animation: liquidFlow 8s ease-in-out infinite;
+    animation: liquidFlow 8s cubic-bezier(0.42, 0, 0.58, 1) infinite;  /* Apple liquid easing */
   }
 
   @keyframes liquidFlow {
@@ -196,17 +196,17 @@
     50% { background-position: 100% 50%; }
   }
 
-  /* HIVE Interactive States - MORE CHAOS */
+  /* HIVE Interactive States - Apple-Inspired Premium Feel */
   .hive-interactive {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 250ms cubic-bezier(0.25, 0.1, 0.25, 1);  /* Apple fast */
     transform-origin: center;
   }
 
   .hive-interactive:hover {
-    transform: translateY(-2px) scale(1.05) rotate(0.5deg);
+    transform: translateY(-2px) scale(1.02);  /* Subtle, refined hover */
     box-shadow:
-      0 20px 40px rgba(255, 215, 0, 0.3),
-      0 0 60px rgba(255, 215, 0, 0.1);
+      0 8px 25px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 215, 0, 0.3);
   }
 
   /* VIBE SHIFTS - Make it feel alive */
@@ -216,12 +216,12 @@
   }
 
   .vibe-on-hover:hover {
-    animation: vibe 0.3s ease-in-out infinite;
+    animation: vibe 400ms cubic-bezier(0.42, 0, 0.58, 1) infinite;  /* Apple smooth with liquid easing */
   }
 
   .hive-interactive:active {
     transform: translateY(0) scale(0.98);
-    transition-duration: var(--hive-duration-quick);
+    transition-duration: 150ms;  /* Apple instant response */
   }
 
   /* Focus Accessibility */
@@ -246,7 +246,7 @@
   }
 }
 
-/* HIVE Liquid Metal Motion System */
+/* HIVE Liquid Metal Motion System - Apple-Inspired Timing */
 @keyframes hiveFlowIn {
   0% {
     opacity: 0;
@@ -329,19 +329,19 @@
 
 @layer utilities {
   .hive-animate-flow-in {
-    animation: hiveFlowIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation: hiveFlowIn 400ms cubic-bezier(0.25, 0.1, 0.25, 1) both;  /* Apple smooth */
   }
 
   .hive-animate-magnetic-entry {
-    animation: hiveMagneticEntry 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+    animation: hiveMagneticEntry 600ms cubic-bezier(0.25, 0.1, 0.25, 1) 250ms both;  /* Apple slow with fast delay */
   }
 
   .hive-animate-liquid-reveal {
-    animation: hiveLiquidReveal 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.8s both;
+    animation: hiveLiquidReveal 400ms cubic-bezier(0.42, 0, 0.58, 1) 400ms both;  /* Apple liquid with smooth delay */
   }
 
   .hive-animate-silk-emerge {
-    animation: hiveSilkEmerge 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+    animation: hiveSilkEmerge 400ms cubic-bezier(0.16, 1, 0.3, 1) 600ms both;  /* Apple gentle with slow delay */
   }
 }
 
@@ -389,25 +389,25 @@
 
 @layer utilities {
   .hive-word-cycle {
-    animation: hiveWordCycle 2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+    animation: hiveWordCycle 2s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;  /* Apple smooth */
   }
 }
 
-/* HIVE Motion Base Classes */
+/* HIVE Motion Base Classes - Apple-Inspired Timing */
 .hive-motion-base {
-  transition: all var(--hive-duration-smooth) var(--hive-easing);
+  transition: all 400ms cubic-bezier(0.25, 0.1, 0.25, 1);  /* Apple smooth */
   transform-origin: center;
   will-change: transform;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
 
-.hive-motion-quick {
-  transition-duration: var(--hive-duration-quick);
+.hive-motion-fast {
+  transition-duration: 250ms;  /* Apple fast */
 }
 
-.hive-motion-flowing {
-  transition-duration: var(--hive-duration-flowing);
+.hive-motion-slow {
+  transition-duration: 600ms;  /* Apple slow */
 }
 
 /* Reduced Motion Support */
@@ -428,8 +428,16 @@
   }
 
   .hive-motion-base,
-  .hive-motion-quick,
-  .hive-motion-flowing {
+  .hive-motion-fast,
+  .hive-motion-slow {
     transition: none;
+  }
+
+  .emoji-bounce,
+  .hype-text,
+  .notif-rage,
+  .vibe-on-hover,
+  .liquid-metal {
+    animation: none;
   }
 }

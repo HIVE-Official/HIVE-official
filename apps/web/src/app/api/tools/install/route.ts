@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate installation target
-    if (validatedData.installTo === 'profile' && validatedData.targetId !== user.uid) {
+    if (validatedData.installTo === 'profile' && validatedData.targetId !== user.id) {
       return NextResponse.json(ApiResponseHelper.error("Can only install to your own profile", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
 
       const membershipSnapshot = await adminDb
         .collection('members')
-        .where('userId', '==', user.uid)
+        .where('userId', '==', user.id)
         .where('spaceId', '==', validatedData.targetId)
         .where('status', '==', 'active')
         .get();
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
     const now = new Date();
     const installation: ToolInstallation = {
       toolId: validatedData.toolId,
-      installerId: user.uid,
+      installerId: user.id,
       installTo: validatedData.installTo,
       targetId: validatedData.targetId,
       surface: validatedData.surface || (validatedData.installTo === 'space' ? 'tools' : undefined),
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
     // Create deployment record for compatibility
     const deployment = {
       toolId: validatedData.toolId,
-      deployedBy: user.uid,
+      deployedBy: user.id,
       deployedTo: validatedData.installTo,
       targetId: validatedData.targetId,
       surface: installation.surface,
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
     // Log analytics event
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_installed',
-      userId: user.uid,
+      userId: user.id,
       toolId: validatedData.toolId,
       installTo: validatedData.installTo,
       targetId: validatedData.targetId,
@@ -224,7 +224,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Create notification for tool owner (if different)
-    if (toolData.ownerId !== user.uid) {
+    if (toolData.ownerId !== user.id) {
       await adminDb.collection('notifications').add({
         type: 'tool_installed',
         title: 'Tool Installed',
@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
         data: {
           toolId: validatedData.toolId,
           toolName: toolData.name,
-          installerId: user.uid,
+          installerId: user.id,
           installerName: user.displayName,
           installTo: validatedData.installTo,
           targetId: validatedData.targetId
@@ -285,7 +285,7 @@ export async function GET(request: NextRequest) {
 
     let installsQuery = adminDb
       .collection('toolInstallations')
-      .where('installerId', '==', user.uid);
+      .where('installerId', '==', user.id);
 
     if (installTo) {
       installsQuery = installsQuery.where('installTo', '==', installTo);

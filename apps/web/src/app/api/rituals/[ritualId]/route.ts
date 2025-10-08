@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
-import { withAuth } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 /**
  * Get Ritual Detail API
  * 
  * GET - Get detailed ritual information including user participation
  */
-export const GET = withAuth(async (request: NextRequest, authContext, { params }) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
+  const ritualId = context.params.ritualId;
   try {
-    const userId = authContext.userId;
-    const ritualId = params?.ritualId as string;
+    const userId = context.userId;
 
     if (!ritualId) {
       return NextResponse.json(
@@ -22,10 +22,10 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
       );
     }
 
-    logger.info('🎭 Fetching ritual detail', { 
-      userId, 
-      ritualId, 
-      endpoint: `/api/rituals/${ritualId}` 
+    logger.info('🎭 Fetching ritual detail', {
+      userId,
+      ritualId,
+      endpoint: `/api/rituals/${ritualId}`
     });
 
     // For development mode, return mock data
@@ -319,10 +319,10 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
     });
 
   } catch (error: any) {
-    logger.error('Get ritual detail error', { 
-      error: error.message, 
-      ritualId: params?.ritualId,
-      endpoint: `/api/rituals/${params?.ritualId}` 
+    logger.error('Get ritual detail error', {
+      error: error instanceof Error ? error.message : String(error),
+      ritualId,
+      endpoint: `/api/rituals/${ritualId}`
     });
 
     return NextResponse.json(
@@ -330,7 +330,4 @@ export const GET = withAuth(async (request: NextRequest, authContext, { params }
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: true, // Ritual detail viewing is safe for development
-  operation: 'get_ritual_detail' 
 });

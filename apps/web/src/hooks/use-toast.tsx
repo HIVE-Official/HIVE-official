@@ -9,17 +9,21 @@ interface Toast {
   description?: string;
   type: ToastType;
   duration?: number;
+  variant?: 'default' | 'destructive'; // Deprecated - use type instead
 }
+
+// Helper type for toast calls - allows either type or variant
+type ToastInput = Omit<Toast, 'id'> | (Omit<Omit<Toast, 'id'>, 'type'> & { variant: 'default' | 'destructive' });
 
 interface ToastContextType {
   toasts: Toast[];
-  addToast: (toast: Omit<Toast, 'id'>) => void;
+  addToast: (toast: ToastInput) => void;
   removeToast: (id: string) => void;
 }
 
 // Hook return type for better type safety
 interface UseToastReturn {
-  toast: (toast: Omit<Toast, 'id'>) => void;
+  toast: (toast: ToastInput) => void;
   toasts: Toast[];
   dismiss: (id: string) => void;
   success: (title: string, description?: string) => void;
@@ -30,12 +34,25 @@ interface UseToastReturn {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export function ToastProvider({ children }: { children: ReactNode }) {
+export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
+  const addToast = useCallback((toast: ToastInput) => {
     const id = Math.random().toString(36).substr(2, 9);
-    const newToast = { ...toast, id };
+
+    // Map variant to type for backward compatibility
+    let type: ToastType;
+    if ('type' in toast && toast.type) {
+      type = toast.type;
+    } else if ('variant' in toast && toast.variant === 'destructive') {
+      type = 'error';
+    } else if ('variant' in toast && toast.variant === 'default') {
+      type = 'info';
+    } else {
+      type = 'info';
+    }
+
+    const newToast: Toast = { ...toast, id, type };
 
     setToasts(prev => [...prev, newToast]);
 

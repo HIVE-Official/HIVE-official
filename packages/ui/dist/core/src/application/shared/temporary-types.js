@@ -12,9 +12,9 @@ export { CampusId } from '../../domain/profile/value-objects/campus-id.value';
 export { ConnectionId } from '../../domain/profile/value-objects/connection-id.value';
 // Re-export aggregates
 export { EnhancedFeed } from '../../domain/feed/enhanced-feed';
-export { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual';
-export { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
-export { EnhancedProfile } from '../../domain/profile/aggregates/enhanced-profile';
+export { Ritual } from '../../domain/rituals/aggregates/ritual.aggregate';
+// export { Space } from '../../domain/spaces/aggregates/space.aggregate'; // Commented out - using local stub class below
+export { Profile } from '../../domain/profile/aggregates/profile.aggregate';
 export { Connection } from '../../domain/profile/aggregates/connection';
 // Re-export entities and types
 export { FeedItem } from '../../domain/feed/feed-item';
@@ -63,53 +63,8 @@ export class FeedFilter {
         };
     }
 }
-export class Ritual {
-    constructor(id, name, description, milestones) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.milestones = milestones;
-        this.participants = 0;
-        this.isActive = true;
-        this.settings = { isVisible: true };
-    }
-    static create(data) {
-        return {
-            isSuccess: true,
-            isFailure: false,
-            getValue: () => {
-                const ritual = new Ritual(data.id, data.name, data.description, data.milestones || []);
-                ritual.participants = data.participants || 0;
-                ritual.isActive = data.isActive !== undefined ? data.isActive : true;
-                ritual.settings = data.settings || { isVisible: true };
-                ritual.startDate = data.startDate;
-                ritual.endDate = data.endDate;
-                return ritual;
-            },
-            error: null
-        };
-    }
-    addParticipant(profileId) {
-        this.participants++;
-        return { isSuccess: true, isFailure: false };
-    }
-    updateMilestoneProgress(milestoneId, progress) {
-        return { isSuccess: true, isFailure: false };
-    }
-    toData() {
-        return {
-            id: this.id,
-            name: this.name,
-            description: this.description,
-            milestones: this.milestones,
-            participants: this.participants,
-            isActive: this.isActive,
-            settings: this.settings,
-            startDate: this.startDate,
-            endDate: this.endDate
-        };
-    }
-}
+// NOTE: Ritual is now exported from domain/rituals/aggregates/ritual.aggregate
+// Legacy wrapper removed - use proper domain model instead
 export class Participation {
     constructor(id, profileId, ritualId, completedMilestones = [], progress = 0) {
         this.id = id;
@@ -181,6 +136,7 @@ export class Space {
         this.lastActivityAt = new Date();
         this.createdAt = new Date();
         this.spaceType = 'general';
+        this.type = SpaceType.GENERAL; // Add type property
         this.posts = [];
         this.settings = {};
         this.members = [];
@@ -197,6 +153,7 @@ export class Space {
                 space.lastActivityAt = data.lastActivityAt || new Date();
                 space.createdAt = data.createdAt || new Date();
                 space.spaceType = data.spaceType || 'general';
+                space.type = data.type || SpaceType.GENERAL;
                 space.posts = data.posts || [];
                 space.settings = data.settings || {};
                 space.members = data.members || [];
@@ -252,6 +209,7 @@ export class Space {
             lastActivityAt: this.lastActivityAt,
             createdAt: this.createdAt,
             spaceType: this.spaceType,
+            type: this.type,
             posts: this.posts,
             settings: this.settings,
             members: this.members

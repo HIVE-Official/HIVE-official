@@ -8,7 +8,7 @@ exports.FirebaseSpaceRepository = void 0;
 const firestore_1 = require("firebase/firestore");
 const firebase_1 = require("@hive/firebase");
 const Result_1 = require("../../../domain/shared/base/Result");
-const enhanced_space_1 = require("../../../domain/spaces/aggregates/enhanced-space");
+const space_aggregate_1 = require("../../../domain/spaces/aggregates/space.aggregate");
 const space_id_value_1 = require("../../../domain/spaces/value-objects/space-id.value");
 const space_name_value_1 = require("../../../domain/spaces/value-objects/space-name.value");
 const space_description_value_1 = require("../../../domain/spaces/value-objects/space-description.value");
@@ -243,7 +243,7 @@ class FirebaseSpaceRepository {
                 return Result_1.Result.fail(spaceId.error);
             }
             // Create space
-            const spaceResult = enhanced_space_1.EnhancedSpace.create({
+            const spaceResult = space_aggregate_1.Space.create({
                 spaceId: spaceId.getValue(),
                 name: nameResult.getValue(),
                 description: descriptionResult.getValue(),
@@ -362,6 +362,7 @@ class FirebaseSpaceRepository {
         }
         catch (error) {
             // If 'type' field doesn't exist, fallback to category
+            console.warn(`Falling back to category search for type ${type}`, error);
             return this.findByCategory(type, campusId);
         }
     }
@@ -385,15 +386,6 @@ class FirebaseSpaceRepository {
         catch (error) {
             return Result_1.Result.fail(`Failed to find public spaces: ${error}`);
         }
-    }
-    // Missing method implementations from interface
-    async findPublicEnhancedSpaces(campusId, limit = 100) {
-        // This is the same as findPublicSpaces since we already return EnhancedSpace
-        return this.findPublicSpaces(campusId, limit);
-    }
-    async searchEnhancedSpaces(query, campusId) {
-        // This is the same as searchSpaces since we already return EnhancedSpace
-        return this.searchSpaces(query, campusId);
     }
 }
 exports.FirebaseSpaceRepository = FirebaseSpaceRepository;

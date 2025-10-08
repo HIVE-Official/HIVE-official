@@ -1,74 +1,49 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+import * as React from "react";
+import { cn } from "../../lib/utils";
 
-const gridVariants = cva(
-  "grid",
-  {
-    variants: {
-      columns: {
-        1: "grid-cols-1",
-        2: "grid-cols-2",
-        3: "grid-cols-3",
-        4: "grid-cols-4",
-        5: "grid-cols-5",
-        6: "grid-cols-6",
-        12: "grid-cols-12",
-        auto: "grid-cols-auto",
-        "auto-fit": "grid-cols-[repeat(auto-fit,minmax(250px,1fr))]",
-        "auto-fill": "grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
-      },
-      gap: {
-        0: "gap-0",
-        1: "gap-1",
-        2: "gap-2",
-        3: "gap-3",
-        4: "gap-4",
-        5: "gap-5",
-        6: "gap-6",
-        8: "gap-8",
-        10: "gap-10",
-        12: "gap-12",
-      },
-      responsive: {
-        none: "",
-        sm: "sm:grid-cols-2",
-        md: "md:grid-cols-3",
-        lg: "lg:grid-cols-4",
-        xl: "xl:grid-cols-5",
-        adaptive: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-      },
-    },
-    defaultVariants: {
-      columns: 1,
-      gap: 4,
-      responsive: "none",
-    },
-  }
-)
-
-export interface GridProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof gridVariants> {
-  children: React.ReactNode
+interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
+  cols?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
+  gap?: "none" | "sm" | "md" | "lg" | "xl";
+  children: React.ReactNode;
 }
 
-const Grid = React.forwardRef<HTMLDivElement, GridProps>(
-  ({ className, columns, gap, responsive, children, ...props }, ref) => {
+const colsClasses = {
+  1: "grid-cols-1",
+  2: "grid-cols-1 md:grid-cols-2",
+  3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+  4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+  5: "grid-cols-1 md:grid-cols-3 lg:grid-cols-5",
+  6: "grid-cols-1 md:grid-cols-3 lg:grid-cols-6",
+  12: "grid-cols-12",
+};
+
+const gapClasses = {
+  none: "gap-0",
+  sm: "gap-2",
+  md: "gap-4",
+  lg: "gap-6",
+  xl: "gap-8",
+};
+
+export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
+  ({ className, cols = 3, gap = "md", children, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={cn(gridVariants({ columns, gap, responsive }), className)}
+        className={cn(
+          "grid",
+          colsClasses[cols],
+          gapClasses[gap],
+          className
+        )}
         {...props}
       >
         {children}
       </div>
-    )
+    );
   }
-)
+);
 
-Grid.displayName = "Grid"
-
-export { Grid, gridVariants }
+Grid.displayName = "Grid";

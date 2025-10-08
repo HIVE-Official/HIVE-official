@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { withAuthAndErrors, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, type AuthenticatedRequest } from '@/lib/middleware/index';
 
 export async function GET(
   request: NextRequest,

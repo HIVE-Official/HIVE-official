@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton } from '@hive/ui';
+import { Button } from '@hive/ui';
 import { SchoolsPageHeader } from '../../components/temp-stubs';
 
 
@@ -395,7 +395,7 @@ export default function SchoolsPage() {
                 type="text"
                 placeholder="Search universities..."
                 value={searchTerm}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm((e.target as any).value)}
                 className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
               />
             </div>
@@ -531,9 +531,9 @@ export default function SchoolsPage() {
             <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
               We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
-            <HiveButton variant="default" size="lg" className="px-8 py-3">
+ <Button variant="default" className="max-w-lg px-8 py-3">
               Join General Waitlist
-            </HiveButton>
+            </Button>
           </div>
         </div>
       </div>

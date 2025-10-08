@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight } from "lucide-react";
-import { HiveButton, HiveLogo } from "@hive/ui";
+import { Button, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveWelcomeStepProps {
@@ -27,7 +27,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         className="mx-auto w-32 h-32 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center relative overflow-hidden"
       >
-        <HiveLogo size="lg" variant="gradient" showText={false} />
+        <HiveLogo className="max-w-lg" variant="gradient" showText={false} />
         
         {/* Pulse animation */}
         <motion.div
@@ -69,17 +69,15 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
           className="flex justify-center"
         >
-          <HiveButton
+          <Button
             variant="default"
-            size="lg"
+            className="max-w-lg px-[var(--hive-spacing-8)]"
             onClick={onNext}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-            className="px-[var(--hive-spacing-8)]"
             data-testid="get-started"
             aria-label="Start the onboarding process"
           >
-            Get Started
-          </HiveButton>
+            Get Started <ArrowRight className="w-4 h-4" />
+          </Button>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
           'Cache-Control': 'no-cache',
         } });
     } catch (error) {
-      logger.error('Error exporting activity logs', { error: error instanceof Error ? error : new Error(String(error))});
+      logger.error('Error exporting activity logs', { error });
       return NextResponse.json(
         { success: false, error: 'Failed to export activity logs' },
         { status: HttpStatus.INTERNAL_SERVER_ERROR }

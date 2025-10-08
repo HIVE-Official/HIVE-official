@@ -35,17 +35,8 @@ export function useRealtimePosts({ spaceId, enabled = true, limitCount = 50 }: U
     if (!spaceId || !enabled) return;
 
     try {
-      const response = await api.spaces.posts.list(spaceId);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
-
-      const data = await response.json();
-
-      if (data.posts) {
-        setPosts(data.posts);
-      }
+      const postsResponse = await api.spaces.posts.list<{ posts: Post[] }>(spaceId);
+      setPosts(postsResponse.posts || []);
     } catch (err) {
       console.error('Failed to fetch posts:', err);
       setError(err as Error);
@@ -176,14 +167,8 @@ export function useRealtimePosts({ spaceId, enabled = true, limitCount = 50 }: U
     if (!spaceId) return null;
 
     try {
-      const response = await api.spaces.posts.create(spaceId, content, parentId);
-
-      if (!response.ok) {
-        throw new Error('Failed to create post');
-      }
-
-      const data = await response.json();
-      return data.post;
+      const result = await api.spaces.posts.create<{ post: Post }>(spaceId, content, parentId);
+      return result.post ?? null;
     } catch (err) {
       console.error('Failed to create post:', err);
       throw err;

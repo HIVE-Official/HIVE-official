@@ -117,7 +117,7 @@ export async function createSpaceConnections(
 
     return connections;
   } catch (error) {
-    logger.error('Failed to create space connections', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to create space connections', { userId, spaceId, error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 }
@@ -168,7 +168,7 @@ export async function removeSpaceConnections(
       data: { removed: removedCount, updated: updatedCount }
     });
   } catch (error) {
-    logger.error('Failed to remove space connections', { userId, spaceId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to remove space connections', { userId, spaceId, error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 }
@@ -400,7 +400,7 @@ export async function getUserConnections(
 
     return connections;
   } catch (error) {
-    logger.error('Failed to get user connections', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to get user connections', { userId, error: error instanceof Error ? error.message : String(error) });
     throw error;
   }
 }
@@ -466,7 +466,7 @@ export async function getFriendSuggestions(
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
   } catch (error) {
-    logger.error('Failed to get friend suggestions', { userId, error: error instanceof Error ? error : new Error(String(error)) });
+    logger.error('Failed to get friend suggestions', { userId, error: error instanceof Error ? error.message : String(error) });
     return [];
   }
 }

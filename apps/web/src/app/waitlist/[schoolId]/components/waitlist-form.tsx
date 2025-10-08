@@ -1,28 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-// UI Components
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
-import { Input } from "@hive/ui";
-import { Label } from "@hive/ui";
-import { Button } from "@hive/ui";
-
-
-// Icons
-import { Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from "@hive/ui";
+import { Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 
 // Validation schema
 const waitlistSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   fullName: z.string().min(2, "Name must be at least 2 characters"),
-  graduationYear: z.number().min(2024).max(2030),
+  graduationYear: z.coerce
+    .number({
+      invalid_type_error: "Please enter a valid graduation year",
+    })
+    .min(2024, "Graduation year must be 2024 or later")
+    .max(2030, "Graduation year must be 2030 or earlier"),
 });
 
 type WaitlistFormData = z.infer<typeof waitlistSchema>;
@@ -102,7 +109,7 @@ export function WaitlistForm({
             opportunities.
           </p>
           <Button
-            variant="secondary"
+            variant="outline"
             className="w-full"
             onClick={() => router.push("/welcome")}
           >
@@ -119,9 +126,9 @@ export function WaitlistForm({
         <div className="flex items-center mb-4">
           <Link href="/welcome">
             <Button
-              variant="ghost"
-              size="sm"
-              className="p-2 text-zinc-400 hover:text-white"
+              variant="outline"
+              className="max-w-sm p-2 text-zinc-400 hover:text-white"
+              
             >
               <ArrowLeft className="w-4 h-4" />
             </Button>

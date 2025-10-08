@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton, HiveCard, Badge } from "@hive/ui";
+import { Button, Card, Badge } from "@hive/ui";
 import { 
   Shield, 
   Eye, 
@@ -233,9 +233,9 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
               <p className="text-sm text-gray-400">Control how you appear on HIVE</p>
             </div>
           </div>
-          <HiveButton variant="ghost" size="sm" onClick={onClose}>
+          <Button variant="outline" className="max-w-sm" onClick={onClose}>
             <X className="h-5 w-5" />
-          </HiveButton>
+          </Button>
         </div>
 
         <div className="flex h-[600px]">
@@ -287,7 +287,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                   </div>
 
                   {/* Current Status */}
-                  <HiveCard className="p-4">
+                  <Card className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn(
@@ -321,7 +321,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                         {settings.ghostMode.enabled ? 'HIDDEN' : 'VISIBLE'}
                       </Badge>
                     </div>
-                  </HiveCard>
+                  </Card>
 
                   {/* Privacy Levels */}
                   <div className="space-y-3">
@@ -376,7 +376,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
 
                   {/* Schedule Ghost Mode */}
                   {settings.ghostMode.enabled && (
-                    <HiveCard className="p-4">
+                    <Card className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-blue-400" />
@@ -400,7 +400,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                               min="1"
                               max="24"
                               value={scheduleHours}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt(e.target.value))}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setScheduleHours(parseInt((e.target as any).value))}
                               className="flex-1"
                             />
                             <span className="text-sm text-gray-300 w-16">{scheduleHours}h</span>
@@ -410,7 +410,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           </p>
                         </div>
                       )}
-                    </HiveCard>
+                    </Card>
                   )}
                 </motion.div>
               )}
@@ -431,7 +431,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                   </div>
 
                   {Object.entries(settings.visibility).map(([category, currentLevel]) => (
-                    <HiveCard key={category} className="p-4">
+                    <Card key={category} className="p-4">
                       <div className="mb-3">
                         <h4 className="font-medium text-[var(--hive-text-primary)] capitalize mb-1">
                           {category} Visibility
@@ -469,7 +469,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           );
                         })}
                       </div>
-                    </HiveCard>
+                    </Card>
                   ))}
                 </motion.div>
               )}
@@ -490,7 +490,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                   </div>
 
                   {Object.entries(settings.discoverability).map(([setting, enabled]) => (
-                    <HiveCard key={setting} className="p-4">
+                    <Card key={setting} className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">
@@ -521,7 +521,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           />
                         </button>
                       </div>
-                    </HiveCard>
+                    </Card>
                   ))}
                 </motion.div>
               )}
@@ -542,7 +542,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                   </div>
 
                   {Object.entries(settings.analytics).map(([setting, enabled]) => (
-                    <HiveCard key={setting} className="p-4">
+                    <Card key={setting} className="p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">
@@ -577,7 +577,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
                           />
                         </button>
                       </div>
-                    </HiveCard>
+                    </Card>
                   ))}
                 </motion.div>
               )}
@@ -591,10 +591,10 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
             Changes take effect immediately and sync across all your devices
           </div>
           <div className="flex gap-3">
-            <HiveButton variant="secondary" onClick={onClose} disabled={isLoading}>
+            <Button variant="outline" onClick={onClose} disabled={isLoading}>
               Cancel
-            </HiveButton>
-            <HiveButton onClick={handleSave} disabled={isLoading}>
+            </Button>
+            <Button onClick={handleSave} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
@@ -603,7 +603,7 @@ export const EnhancedPrivacyModal: React.FC<EnhancedPrivacyModalProps> = ({
               ) : (
                 'Save Changes'
               )}
-            </HiveButton>
+            </Button>
           </div>
         </div>
       </motion.div>

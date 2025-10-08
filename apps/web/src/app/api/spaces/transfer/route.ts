@@ -1,7 +1,7 @@
 import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
 
 // Space movement restrictions
 interface MovementRestriction {

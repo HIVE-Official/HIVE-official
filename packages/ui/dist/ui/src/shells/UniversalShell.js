@@ -16,7 +16,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { MotionDiv, MotionSpan, MotionButton, MotionLink, MotionNav, MotionAside, AnimatePresence } from './motion-safe.js';
 import { Home, Users, User, Wrench, Calendar, Sparkles, MessageCircle, Search, Menu, X, Plus, ChevronDown, TrendingUp, Activity, Settings, LogOut, Moon, Sun, } from 'lucide-react';
-import { NotificationSystem } from '../atomic/organisms/notification-system.js';
+// NotificationSystem was deleted - use shadcn/ui Sonner toast instead
 // HIVE Easing Curves from Design System
 const HIVE_EASING = {
     liquid: [0.23, 1, 0.32, 1],
@@ -131,14 +131,7 @@ const GlobalHeader = () => {
                                                 }, children: "HIVE" }), _jsx(MotionSpan, { className: "text-[10px] text-hive-brand-primary font-medium tracking-[0.3em] uppercase opacity-80 font-sans", initial: { opacity: 0, y: -10 }, animate: { opacity: 0.8, y: 0 }, transition: { delay: 0.2, ease: HIVE_EASING.silk }, children: "SOCIAL UTILITY" })] }))] })] }), !isMobile && (_jsx(MotionDiv, { className: "flex-1 max-w-2xl mx-8", animate: {
                             scale: searchFocused ? 1.01 : 1,
                             y: searchFocused ? -1 : 0
-                        }, transition: { duration: 0.3, ease: HIVE_EASING.liquid }, children: _jsx(GlobalSearch, { onFocusChange: setSearchFocused }) })), _jsxs("div", { className: "flex items-center gap-2", children: [isMobile && (_jsx(MotionButton, { className: "p-2 text-hive-text-secondary hover:text-hive-text-primary transition-colors", whileTap: { scale: 0.95 }, children: _jsx(Search, { className: "w-6 h-6" }) })), _jsx(NotificationSystem, { onNavigate: (url) => {
-                                    // In the shell context, we can't use useRouter directly
-                                    // This would need to be passed down from the app level
-                                    console.log('Navigate to:', url);
-                                    if (typeof window !== 'undefined') {
-                                        window.location.href = url;
-                                    }
-                                } }), _jsx(UserMenu, {})] })] })] }));
+                        }, transition: { duration: 0.3, ease: HIVE_EASING.liquid }, children: _jsx(GlobalSearch, { onFocusChange: setSearchFocused }) })), _jsxs("div", { className: "flex items-center gap-2", children: [isMobile && (_jsx(MotionButton, { className: "p-2 text-hive-text-secondary hover:text-hive-text-primary transition-colors", whileTap: { scale: 0.95 }, children: _jsx(Search, { className: "w-6 h-6" }) })), _jsx(UserMenu, {})] })] })] }));
 };
 // Sidebar - Ultra Premium Glass with Magnetic Navigation
 const Sidebar = () => {

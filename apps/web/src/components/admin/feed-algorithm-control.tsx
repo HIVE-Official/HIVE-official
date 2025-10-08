@@ -259,11 +259,11 @@ export function FeedAlgorithmControl() {
               Last updated: {lastUpdated.toLocaleTimeString()}
             </span>
           )}
-          <Button onClick={loadMetrics} variant="outline" size="sm">
+          <Button onClick={loadMetrics} variant="outline" className="max-w-sm">
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button onClick={resetToDefaults} variant="outline" size="sm">
+          <Button onClick={resetToDefaults} variant="outline" className="max-w-sm">
             Reset Defaults
           </Button>
           <Button
@@ -353,7 +353,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary capitalize">
                     {key.replace(/([A-Z])/g, ' $1')}
                   </label>
-                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                  <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                     {value} pts
                   </Badge>
                 </div>
@@ -389,7 +389,7 @@ export function FeedAlgorithmControl() {
                     {key.replace(/([A-Z])/g, ' $1')}
                   </label>
                   <Badge
-                    variant="outline"
+                    variant="secondary"
                     className={value >= 8 ? "text-green-400" : value >= 6 ? "text-yellow-400" : "text-gray-400"}
                   >
                     Priority {value}
@@ -432,7 +432,7 @@ export function FeedAlgorithmControl() {
                     <label className="text-sm font-medium text-hive-text-primary capitalize">
                       {key.replace(/([A-Z])/g, ' $1')}
                     </label>
-                    <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                    <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                       {displayValue}{isBonus ? ' pts' : ''}
                     </Badge>
                   </div>
@@ -474,7 +474,7 @@ export function FeedAlgorithmControl() {
                     <label className="text-sm font-medium text-hive-text-primary capitalize">
                       {key.replace(/([A-Z])/g, ' $1')}
                     </label>
-                    <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                    <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                       {displayValue}
                     </Badge>
                   </div>
@@ -527,7 +527,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Update Interval
                   </label>
-                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                  <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.updateInterval / 1000}s
                   </Badge>
                 </div>
@@ -548,7 +548,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Max Concurrent Users
                   </label>
-                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                  <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.maxConcurrentUsers}
                   </Badge>
                 </div>
@@ -567,7 +567,7 @@ export function FeedAlgorithmControl() {
                   <label className="text-sm font-medium text-hive-text-primary">
                     Cache Timeout
                   </label>
-                  <Badge variant="outline" className="text-[var(--hive-brand-primary)]">
+                  <Badge variant="secondary" className="text-[var(--hive-brand-primary)]">
                     {config.realTimeSettings.cacheTimeout}s
                   </Badge>
                 </div>

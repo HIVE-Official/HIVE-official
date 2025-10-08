@@ -358,10 +358,10 @@ export class SecurityScanner {
  * Comprehensive validation function with security scanning
  */
 export async function validateWithSecurity<T>(
-  data: unknown,
+  data: any,
   schema: z.ZodSchema<T>,
   context: {
-    operation: string;
+    action: string;
     userId?: string;
     ip?: string;
   }
@@ -464,7 +464,7 @@ export function createValidationMiddleware<T>(
       try {
         const body = await request.json();
         const result = await validateWithSecurity(body, schema, {
-          operation: 'request_body',
+          action: 'request_body',
           userId: context.userId,
           ip: request.headers.get('x-forwarded-for') || undefined
         });
@@ -483,7 +483,7 @@ export function createValidationMiddleware<T>(
       const queryParams = Object.fromEntries(url.searchParams.entries());
       
       const result = await validateWithSecurity(queryParams, schema, {
-        operation: 'query_params',
+        action: 'query_params',
         userId: context.userId,
         ip: request.headers.get('x-forwarded-for') || undefined
       });

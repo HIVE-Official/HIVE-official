@@ -1,9 +1,12 @@
 /**
  * Base Application Service
  * Foundation for all application services with common patterns
+ * Extended to include automatic event dispatching
  */
 
 import { Result } from '../domain';
+import { AggregateRoot } from '../domain/shared/base/AggregateRoot.base';
+import { EventDispatcher } from '../infrastructure/events/event-dispatcher';
 
 export interface ApplicationServiceContext {
   userId?: string;
@@ -81,6 +84,61 @@ export abstract class BaseApplicationService {
   }
 
   /**
+   * Save aggregate and automatically dispatch its domain events
+   * This ensures events are published after successful persistence
+   *
+   * Usage:
+   * await this.saveAndDispatchEvents(profile, (p) => this.profileRepo.save(p));
+   */
+  protected async saveAndDispatchEvents<T extends AggregateRoot<unknown>>(
+    aggregate: T,
+    saveFn: (aggregate: T) => Promise<Result<void>>
+  ): Promise<Result<void>> {
+    // First, save the aggregate
+    const saveResult = await saveFn(aggregate);
+
+    if (saveResult.isFailure) {
+      return saveResult;
+    }
+
+    // If save successful, dispatch domain events
+    try {
+      await EventDispatcher.dispatchEventsForAggregate(aggregate);
+    } catch (error) {
+      console.error('[BaseService] Failed to dispatch events:', error);
+      // Don't fail the operation - event dispatch failure should not rollback the save
+      // Events can be reprocessed via event sourcing if needed
+    }
+
+    return Result.ok<void>();
+  }
+
+  /**
+   * Save multiple aggregates and dispatch all their events
+   */
+  protected async saveAllAndDispatchEvents<T extends AggregateRoot<unknown>>(
+    aggregates: T[],
+    saveFn: (aggregates: T[]) => Promise<Result<void>>
+  ): Promise<Result<void>> {
+    // First, save all aggregates
+    const saveResult = await saveFn(aggregates);
+
+    if (saveResult.isFailure) {
+      return saveResult;
+    }
+
+    // If save successful, dispatch all domain events
+    try {
+      await EventDispatcher.dispatchEventsForAggregates(aggregates);
+    } catch (error) {
+      console.error('[BaseService] Failed to dispatch events:', error);
+      // Don't fail the operation
+    }
+
+    return Result.ok<void>();
+  }
+
+  /**
    * Generate unique request ID for tracking
    */
   private generateRequestId(): string {
@@ -109,7 +167,7 @@ export class ServiceError extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly context?: any
+    public readonly context?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'ServiceError';
@@ -123,7 +181,7 @@ export class ServiceError extends Error {
     return new ServiceError(`${resource} not found`, 'NOT_FOUND', { resource });
   }
 
-  static validationFailed(errors: any): ServiceError {
+  static validationFailed(errors: unknown): ServiceError {
     return new ServiceError('Validation failed', 'VALIDATION_FAILED', { errors });
   }
 

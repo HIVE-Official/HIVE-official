@@ -1,7 +1,7 @@
-/**
- * Template Exports
- * Page-level layouts and compositions
- */
-export { ProfileViewLayout } from './profile-view-layout';
-export type { ProfileViewLayoutProps } from './profile-view-layout';
+export { SpaceLayout } from './space-layout';
+export { FeedLayout } from './feed-layout';
+export { RitualDetailView } from './ritual-detail-view';
+export { HiveLabBuilderLayout } from './hivelab';
+export type { HiveLabBuilderLayoutProps } from './hivelab';
+export { ProfileViewLayout, specProfileToUIProfile } from './profile-view-layout';
 //# sourceMappingURL=index.d.ts.map

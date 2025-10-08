@@ -1,118 +1,100 @@
-'use client';
+"use client"
 
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
+
 import { cn } from "../../lib/utils"
 
-const avatarVariants = cva(
-  "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-  {
-    variants: {
-      size: {
-        sm: "h-6 w-6",
-        default: "h-10 w-10",
-        lg: "h-16 w-16",
-        xl: "h-20 w-20",
-        "2xl": "h-24 w-24",
-      },
-      variant: {
-        default: "bg-[var(--hive-background-tertiary)]",
-        brand: "bg-gradient-to-br from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)]",
-        outline: "border-2 border-[var(--hive-border-strong)]",
-      },
-    },
-    defaultVariants: {
-      size: "default",
-      variant: "default",
-    },
-  }
-)
-
-export interface AvatarProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof avatarVariants> {}
-
-const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, size, variant, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(avatarVariants({ size, variant }), className)}
-      {...props}
-    />
-  )
-)
-Avatar.displayName = "Avatar"
-
-const AvatarImage = React.forwardRef<
-  HTMLImageElement,
-  React.ImgHTMLAttributes<HTMLImageElement> & {
-    onLoadingStatusChange?: (status: "idle" | "loading" | "loaded" | "error") => void
-  }
->(({ className, src, alt, onLoadingStatusChange, ...props }, ref) => {
-  const [loadingStatus, setLoadingStatus] = React.useState<"idle" | "loading" | "loaded" | "error">("idle")
-
-  React.useEffect(() => {
-    if (!src) {
-      setLoadingStatus("error")
-      return
-    }
-
-    setLoadingStatus("loading")
-
-    const img = new Image()
-    img.onload = () => {
-      setLoadingStatus("loaded")
-      onLoadingStatusChange?.("loaded")
-    }
-    img.onerror = () => {
-      setLoadingStatus("error")
-      onLoadingStatusChange?.("error")
-    }
-    img.src = src
-  }, [src, onLoadingStatusChange])
-
-  if (loadingStatus === "loaded") {
-    return (
-      <img
-        ref={ref}
-        src={src}
-        alt={alt}
-        className={cn("aspect-square h-full w-full object-cover", className)}
-        {...props}
-      />
-    )
-  }
-
-  return null
-})
-AvatarImage.displayName = "AvatarImage"
-
-const AvatarFallback = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+const Avatar = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <div
+  <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-[var(--hive-background-tertiary)] text-[var(--hive-text-primary)] text-sm font-medium",
+      "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
       className
     )}
     {...props}
   />
 ))
-AvatarFallback.displayName = "AvatarFallback"
+Avatar.displayName = AvatarPrimitive.Root.displayName
 
-// Alternative names for compatibility
-const ShadcnAvatar = Avatar
-const ShadcnAvatarImage = AvatarImage
-const ShadcnAvatarFallback = AvatarFallback
+const AvatarImage = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Image>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full", className)}
+    {...props}
+  />
+))
+AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
-export {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-  ShadcnAvatar,
-  ShadcnAvatarImage,
-  ShadcnAvatarFallback,
-  avatarVariants,
-}
+const AvatarFallback = React.forwardRef<
+  React.ElementRef<typeof AvatarPrimitive.Fallback>,
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, ...props }, ref) => (
+  <AvatarPrimitive.Fallback
+    ref={ref}
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-full bg-white/10",
+      className
+    )}
+    {...props}
+  />
+))
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
+
+const AvatarGroup = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    size?: "xs" | "sm" | "md" | "lg"
+    max?: number
+  }
+>(({ className, children, size = "md", max = 3, ...props }, ref) => {
+  const sizeClasses = {
+    xs: "h-6 w-6 text-[10px]",
+    sm: "h-8 w-8 text-xs",
+    md: "h-10 w-10 text-sm",
+    lg: "h-12 w-12 text-base",
+  }
+
+  const childArray = React.Children.toArray(children)
+  const displayChildren = max ? childArray.slice(0, max) : childArray
+  const remaining = max && childArray.length > max ? childArray.length - max : 0
+
+  return (
+    <div
+      ref={ref}
+      className={cn("flex -space-x-2", className)}
+      {...props}
+    >
+      {displayChildren.map((child, index) => (
+        <div
+          key={index}
+          className={cn(
+            "relative ring-2 ring-[#0c0c0c]",
+            sizeClasses[size]
+          )}
+        >
+          {child}
+        </div>
+      ))}
+      {remaining > 0 && (
+        <div
+          className={cn(
+            "relative flex items-center justify-center rounded-full bg-white/10 text-white/70 ring-2 ring-[#0c0c0c] font-medium",
+            sizeClasses[size]
+          )}
+        >
+          +{remaining}
+        </div>
+      )}
+    </div>
+  )
+})
+AvatarGroup.displayName = "AvatarGroup"
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarGroup }

@@ -42,7 +42,7 @@ export async function createNotification(notificationData: {
     logger.info('Created notification', { notificationId: docRef.id, userId: notificationData.userId });
     return docRef.id;
   } catch (error) {
-    logger.error('Error creating notification', { error: error instanceof Error ? error : new Error(String(error)), notificationData });
+    logger.error('Error creating notification', { error: error instanceof Error ? error.message : String(error), notificationData });
     return null;
   }
 }

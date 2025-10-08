@@ -2,7 +2,7 @@ import { z } from "zod";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 
 const updateSpacePreferencesSchema = z.object({
   spaceId: z.string().min(1, "Space ID is required"),
@@ -208,7 +208,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
           }
         });
       } catch (error) {
-        logger.error('❌ Error fetching spaces for type', { spaceType, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/my' });
+        logger.error('❌ Error fetching spaces for type', { spaceType, error: error instanceof Error ? error.message : String(error), endpoint: '/api/spaces/my' });
         // Continue with other types even if one fails
       }
     }

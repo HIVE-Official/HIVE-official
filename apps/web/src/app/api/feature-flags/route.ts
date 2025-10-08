@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     const includeConfig = searchParams.get('includeConfig') === 'true';
 
     // Build user context
-    const userContext = await buildUserContext(user.uid);
+    const userContext = await buildUserContext(user.id);
 
     let results: Record<string, any> = {};
 
@@ -100,11 +100,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Build user context with custom overrides
-    const baseUserContext = await buildUserContext(user.uid);
+    const baseUserContext = await buildUserContext(user.id);
     const userContext: UserFeatureContext = {
       ...baseUserContext,
       ...customContext,
-      userId: user.uid // Always keep the real user ID
+      userId: user.id // Always keep the real user ID
     };
 
     const results = await featureFlagService.getUserFeatureFlags(flagIds, userContext);
@@ -170,7 +170,7 @@ async function buildUserContext(userId: string): Promise<UserFeatureContext> {
       }
     };
   } catch (error) {
-    logger.error('Error building user context', { error: error instanceof Error ? error : new Error(String(error)), userId });
+    logger.error('Error building user context', { error: error instanceof Error ? error.message : String(error), userId });
     
     // Return minimal context on error
     return {

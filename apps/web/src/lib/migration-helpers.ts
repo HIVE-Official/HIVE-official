@@ -102,7 +102,7 @@ export const safeStorage = {
  * Error handler that provides consistent error handling across components
  */
 export function handleComponentError(
-  error: Error, 
+  error: any, 
   componentName: string, 
   context?: Record<string, any>
 ): void {
@@ -126,7 +126,7 @@ export function handleComponentError(
  */
 export async function monitorPerformance<T>(
   operationName: string,
-  operation: () => Promise<T>,
+  action: () => Promise<T>,
   context?: Record<string, any>
 ): Promise<T> {
   const startTime = performance.now();
@@ -134,19 +134,19 @@ export async function monitorPerformance<T>(
     const duration = performance.now() - startTime;
     logger.debug(`Performance: ${operationName} completed in ${duration.toFixed(2)}ms`, {
       action: 'performance',
-      metadata: { operation: operationName, duration },
+      metadata: { action: operationName, duration },
     });
   };
   
   try {
-    const result = await operation();
+    const result = await action();
     endTimer();
     return result;
   } catch (error) {
     endTimer();
     logger.error(`Performance monitoring: ${operationName} failed`, {
       action: 'performance_error',
-      metadata: { operation: operationName, ...context }
+      metadata: { action: operationName, ...context }
     }, error as Error);
     throw error;
   }
@@ -156,12 +156,12 @@ export async function monitorPerformance<T>(
  * Safe async operation wrapper with error handling
  */
 export async function safeAsync<T>(
-  operation: () => Promise<T>,
+  action: () => Promise<T>,
   fallback: T,
   errorContext?: Record<string, any>
 ): Promise<T> {
   try {
-    return await operation();
+    return await action();
   } catch (error) {
     logger.error('Safe async operation failed', {
       action: 'safe_async_error',

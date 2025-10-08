@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
+        userId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       try {
         const auth = getAuth();
         const decodedToken = await auth.verifyIdToken(token);
-        userId = decodedToken.uid;
+        userId = decodedToken.id;
       } catch (authError) {
         return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
       }

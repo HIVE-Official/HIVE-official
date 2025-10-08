@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const body = await request.json() as { events: unknown[] };
+    const body = await request.json() as { events: any[] };
     const { events } = body;
 
     if (!Array.isArray(events) || events.length === 0) {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     // Update daily summaries asynchronously (fire and forget)
     validEvents.forEach(event => {
-      updateDailySummary(user.uid, event).catch(error => {
+      updateDailySummary(user.id, event).catch(error => {
         logger.error(
       `Error updating daily summary at /api/activity/batch`,
       error instanceof Error ? error : new Error(String(error))

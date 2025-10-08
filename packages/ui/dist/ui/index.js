@@ -5,7 +5,6 @@ export * from "./src/atomic/molecules/index.js";
 export * from "./src/atomic/organisms/index.js";
 // Export universal components
 export { UniversalShell, useShell } from "./src/shells/UniversalShell.js";
-export * from "./src/atomic/atoms/universal-atoms.js";
 export * from "./src/navigation/UniversalNav.js";
 export * from "./src/systems/modal-toast-system.js";
 export * from "./src/providers/HiveProvider.js";
@@ -13,4 +12,5 @@ export * from "./src/providers/HiveProvider.js";
 export * from "./src/hooks/index.js";
 // Export utilities
 export { cn } from "./src/lib/utils.js";
+export { DATA_TYPE_COLORS, getPrimaryType } from "./src/types/hivelab.types.js";
 //# sourceMappingURL=index.js.map

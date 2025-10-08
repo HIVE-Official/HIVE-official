@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge, Grid } from '@hive/ui';
+import { Grid, Card, Button, Badge, Input } from "@hive/ui";
 import {
   Search,
   Filter,
@@ -87,7 +87,7 @@ export default function SpacesBrowsePage() {
   const loadInitialSpaces = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/spaces', {
+      const response = await api.get<{ spaces: SpaceSearchResult[] }>('/api/spaces', {
         params: { limit: 20 }
       });
       setResults(response.spaces || []);
@@ -109,7 +109,7 @@ export default function SpacesBrowsePage() {
       setHasSearched(true);
 
       // SPEC.md: Text search with fuzzy matching
-      const response = await api.get('/api/spaces/search', {
+      const response = await api.get<{ spaces: SpaceSearchResult[] }>('/api/spaces/search', {
         params: {
           q: searchQuery,
           ...filters,
@@ -155,23 +155,23 @@ export default function SpacesBrowsePage() {
             <div className="flex-1 flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <HiveInput
+                <Input
                   placeholder="Search by name, description, or tags..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent) => setSearchQuery((e.target as any).value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   className="pl-10 bg-gray-900 border-gray-700"
                 />
               </div>
 
-              <HiveButton
+              <Button
                 onClick={handleSearch}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 Search
-              </HiveButton>
+              </Button>
 
-              <HiveButton
+              <Button
                 onClick={() => setShowFilters(!showFilters)}
                 variant="outline"
                 className={`border-gray-700 relative ${showFilters ? 'bg-gray-800' : ''}`}
@@ -182,7 +182,7 @@ export default function SpacesBrowsePage() {
                     {activeFilterCount}
                   </span>
                 )}
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -192,14 +192,13 @@ export default function SpacesBrowsePage() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-white">Filters</h3>
                 {activeFilterCount > 0 && (
-                  <HiveButton
-                    size="sm"
-                    variant="ghost"
+                  <Button
+                    className="max-w-sm text-red-400 hover:text-red-300"
+                    variant="outline"
                     onClick={clearFilters}
-                    className="text-red-400 hover:text-red-300"
                   >
                     Clear all
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
 
@@ -209,7 +208,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Category</label>
                   <select
                     value={filters.category || ''}
-                    onChange={(e) => handleFilterChange('category', e.target.value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('category', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">All Categories</option>
@@ -227,14 +226,14 @@ export default function SpacesBrowsePage() {
                       type="number"
                       placeholder="Min"
                       value={filters.memberCountMin || ''}
-                      onChange={(e) => handleFilterChange('memberCountMin', e.target.value ? parseInt(e.target.value) : undefined)}
+                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMin', (e.target as any).value ? parseInt((e.target as any).value) : undefined)}
                       className="w-1/2 bg-gray-800 border border-gray-700 rounded px-2 py-2 text-white text-sm"
                     />
                     <input
                       type="number"
                       placeholder="Max"
                       value={filters.memberCountMax || ''}
-                      onChange={(e) => handleFilterChange('memberCountMax', e.target.value ? parseInt(e.target.value) : undefined)}
+                      onChange={(e: React.ChangeEvent) => handleFilterChange('memberCountMax', (e.target as any).value ? parseInt((e.target as any).value) : undefined)}
                       className="w-1/2 bg-gray-800 border border-gray-700 rounded px-2 py-2 text-white text-sm"
                     />
                   </div>
@@ -245,7 +244,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Activity Level</label>
                   <select
                     value={filters.activityLevel || ''}
-                    onChange={(e) => handleFilterChange('activityLevel', e.target.value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('activityLevel', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">Any Activity</option>
@@ -260,7 +259,7 @@ export default function SpacesBrowsePage() {
                   <label className="text-sm text-gray-400 mb-2 block">Join Policy</label>
                   <select
                     value={filters.joinPolicy || ''}
-                    onChange={(e) => handleFilterChange('joinPolicy', e.target.value || undefined)}
+                    onChange={(e: React.ChangeEvent) => handleFilterChange('joinPolicy', (e.target as any).value || undefined)}
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option value="">Any Policy</option>
@@ -326,7 +325,7 @@ function SpaceSearchCard({
   const joinPolicy = JOIN_POLICIES[space.joinPolicy];
 
   return (
-    <HiveCard
+    <Card
       className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)] transition-all cursor-pointer"
       onClick={onClick}
     >
@@ -420,19 +419,18 @@ function SpaceSearchCard({
 
         {/* Join Button */}
         <div className="flex-shrink-0">
-          <HiveButton
-            size="sm"
-            className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
-            onClick={(e) => {
+          <Button
+            className="max-w-sm bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               // Handle join
             }}
           >
             View
-          </HiveButton>
+          </Button>
         </div>
       </div>
-    </HiveCard>
+    </Card>
   );
 }
 

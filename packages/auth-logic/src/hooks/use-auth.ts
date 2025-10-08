@@ -36,10 +36,13 @@ export interface UseAuthReturn {
   // Additional methods for backward compatibility
   getAuthToken?: () => Promise<string>;
   logout?: () => Promise<void>;
-  completeOnboarding?: (data: any) => Promise<any>;
+  completeOnboarding?: (data: Record<string, unknown>) => Promise<{ success: boolean }>;
   canAccessFeature?: (feature: string) => boolean;
   hasValidSession?: () => boolean;
-  session?: any;
+  session?: {
+    user: AuthUser;
+    expiresAt: number;
+  } | null;
 }
 
 export function useAuth(): UseAuthReturn {
@@ -260,6 +263,9 @@ export function useAuth(): UseAuthReturn {
     completeOnboarding: undefined, // This would be implemented elsewhere
     canAccessFeature: () => true, // Simple implementation
     hasValidSession: () => !!user,
-    session: user ? { issuedAt: new Date().toISOString() } : null,
+    session: user ? {
+      user: user,
+      expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours from now
+    } : null,
   };
 }

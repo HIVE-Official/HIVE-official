@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaceDiscoveryService = void 0;
 const base_service_1 = require("./base.service");
 const Result_1 = require("../domain/shared/base/Result");
-const enhanced_space_1 = require("../domain/spaces/aggregates/enhanced-space");
+const space_aggregate_1 = require("../domain/spaces/aggregates/space.aggregate");
 const space_id_value_1 = require("../domain/spaces/value-objects/space-id.value");
 const space_name_value_1 = require("../domain/spaces/value-objects/space-name.value");
 const space_description_value_1 = require("../domain/spaces/value-objects/space-description.value");
@@ -30,7 +30,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             let spaces = [];
             // Apply different discovery strategies based on filters
             if (filters.searchQuery) {
-                const searchResult = await this.spaceRepo.searchEnhancedSpaces(filters.searchQuery, this.context.campusId);
+                const searchResult = await this.spaceRepo.searchSpaces(filters.searchQuery, this.context.campusId);
                 if (searchResult.isSuccess) {
                     spaces = searchResult.getValue();
                 }
@@ -49,7 +49,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             }
             else {
                 // Default: get public spaces
-                const publicResult = await this.spaceRepo.findPublicEnhancedSpaces(this.context.campusId, filters.limit || 20);
+                const publicResult = await this.spaceRepo.findPublicSpaces(this.context.campusId, filters.limit || 20);
                 if (publicResult.isSuccess) {
                     spaces = publicResult.getValue();
                 }
@@ -59,7 +59,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 spaces = spaces.filter(space => space.toData().visibility === 'public');
             }
             // Sort spaces based on criteria
-            spaces = this.sortEnhancedSpaces(spaces, filters.sortBy || 'trending');
+            spaces = this.sortSpaces(spaces, filters.sortBy || 'trending');
             const result = {
                 data: spaces,
                 metadata: {
@@ -68,7 +68,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedSpaceDiscovery.discoverSpaces');
+        }, 'SpaceDiscovery.discoverSpaces');
     }
     /**
      * Get personalized space recommendations for a user
@@ -88,22 +88,22 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             const profile = profileResult.getValue();
             const profileData = profile; // ProfileDTO doesn't need toData
             // Get spaces user is already in
-            const userEnhancedSpacesResult = await this.spaceRepo.findByMember(profileId.id);
-            const userSpaceIds = userEnhancedSpacesResult.isSuccess
-                ? userEnhancedSpacesResult.getValue().map((s) => typeof s.id === 'string' ? s.id : s.id)
+            const userSpacesResult = await this.spaceRepo.findByMember(profileId.id);
+            const userSpaceIds = userSpacesResult.isSuccess
+                ? userSpacesResult.getValue().map((s) => typeof s.id === 'string' ? s.id : s.id)
                 : [];
             // Build recommendation based on multiple factors
             const recommendations = [];
-            // 1. EnhancedSpaces related to user's major
+            // 1. Spaces related to user's major
             if (profileData.personalInfo.major) {
-                const majorEnhancedSpaces = await this.spaceRepo.findByType('study-group', this.context.campusId);
-                if (majorEnhancedSpaces.isSuccess) {
-                    recommendations.push(...majorEnhancedSpaces.getValue().filter(s => !userSpaceIds.includes(s.id)));
+                const majorSpaces = await this.spaceRepo.findByType('study-group', this.context.campusId);
+                if (majorSpaces.isSuccess) {
+                    recommendations.push(...majorSpaces.getValue().filter(s => !userSpaceIds.includes(s.id)));
                 }
             }
-            // 2. EnhancedSpaces matching user interests
+            // 2. Spaces matching user interests
             for (const interest of profileData.interests.slice(0, 3)) {
-                const searchResult = await this.spaceRepo.searchEnhancedSpaces(interest, this.context.campusId);
+                const searchResult = await this.spaceRepo.searchSpaces(interest, this.context.campusId);
                 if (searchResult.isSuccess) {
                     recommendations.push(...searchResult.getValue().filter((s) => !userSpaceIds.includes(s.id)));
                 }
@@ -114,20 +114,20 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 recommendations.push(...trendingResult.getValue().filter(s => !userSpaceIds.includes(s.id)));
             }
             // Deduplicate and limit
-            const uniqueEnhancedSpaces = Array.from(new Map(recommendations.map(space => [typeof space.id === 'string' ? space.id : space.id, space])).values()).slice(0, 10);
+            const uniqueSpaces = Array.from(new Map(recommendations.map(space => [typeof space.id === 'string' ? space.id : space.id, space])).values()).slice(0, 10);
             const result = {
-                data: uniqueEnhancedSpaces,
+                data: uniqueSpaces,
                 metadata: {
-                    totalCount: uniqueEnhancedSpaces.length
+                    totalCount: uniqueSpaces.length
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedSpaceDiscovery.getRecommendedSpaces');
+        }, 'SpaceDiscovery.getRecommendedSpaces');
     }
     /**
      * Create a new space
      */
-    async createEnhancedSpace(creatorId, data) {
+    async createSpace(creatorId, data) {
         return this.execute(async () => {
             // Validate creator exists
             const creatorProfileId = profile_id_value_1.ProfileId.create(creatorId).getValue();
@@ -153,14 +153,14 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 return Result_1.Result.fail(campusIdResult.error);
             }
             // Check if space name already exists
-            const existingEnhancedSpace = await this.spaceRepo.findByName(spaceNameResult.getValue().value, this.context.campusId);
-            if (existingEnhancedSpace.isSuccess) {
+            const existingSpace = await this.spaceRepo.findByName(spaceNameResult.getValue().value, this.context.campusId);
+            if (existingSpace.isSuccess) {
                 return Result_1.Result.fail('A space with this name already exists');
             }
             // Generate space ID
             const spaceId = space_id_value_1.SpaceId.create(`space_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`).getValue();
             // Create space
-            const spaceResult = enhanced_space_1.EnhancedSpace.create({
+            const spaceResult = space_aggregate_1.Space.create({
                 spaceId: spaceId,
                 name: spaceNameResult.getValue(),
                 description: spaceDescriptionResult.getValue(),
@@ -191,12 +191,12 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 await this.scheduleRSSFetch(space);
             }
             return Result_1.Result.ok(space);
-        }, 'EnhancedSpaceDiscovery.createEnhancedSpace');
+        }, 'SpaceDiscovery.createSpace');
     }
     /**
      * Join a space
      */
-    async joinEnhancedSpace(userId, spaceId) {
+    async joinSpace(userId, spaceId) {
         return this.execute(async () => {
             // Get user profile
             const userProfileId = profile_id_value_1.ProfileId.create(userId).getValue();
@@ -208,7 +208,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             const spaceIdVO = space_id_value_1.SpaceId.create(spaceId).getValue();
             const spaceResult = await this.spaceRepo.findById(spaceIdVO);
             if (spaceResult.isFailure) {
-                return Result_1.Result.fail('EnhancedSpace not found');
+                return Result_1.Result.fail('Space not found');
             }
             const space = spaceResult.getValue();
             const spaceData = space.toData();
@@ -227,9 +227,9 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             }
             // Save updated space
             await this.spaceRepo.save(space);
-            // Generate welcome message and suggested actions
-            const welcomeMessage = this.generateWelcomeMessage(space);
-            const suggestedActions = this.generateSuggestedActions(space);
+            // Generate welcome message and suggested actions (using domain logic)
+            const welcomeMessage = space.getWelcomeMessage();
+            const suggestedActions = space.getSuggestedActions();
             const result = {
                 data: {
                     space,
@@ -239,7 +239,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 }
             };
             return Result_1.Result.ok(result);
-        }, 'EnhancedSpaceDiscovery.joinEnhancedSpace');
+        }, 'SpaceDiscovery.joinSpace');
     }
     /**
      * Leave a space
@@ -250,7 +250,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             const spaceIdVO = space_id_value_1.SpaceId.create(spaceId).getValue();
             const spaceResult = await this.spaceRepo.findById(spaceIdVO);
             if (spaceResult.isFailure) {
-                return Result_1.Result.fail('EnhancedSpace not found');
+                return Result_1.Result.fail('Space not found');
             }
             const space = spaceResult.getValue();
             // Check if member
@@ -270,7 +270,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             // Save updated space
             await this.spaceRepo.save(space);
             return Result_1.Result.ok();
-        }, 'EnhancedSpaceDiscovery.leaveSpace');
+        }, 'SpaceDiscovery.leaveSpace');
     }
     /**
      * Get space activity summary
@@ -280,7 +280,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
             const spaceIdVO = space_id_value_1.SpaceId.create(spaceId).getValue();
             const spaceResult = await this.spaceRepo.findById(spaceIdVO);
             if (spaceResult.isFailure) {
-                return Result_1.Result.fail('EnhancedSpace not found');
+                return Result_1.Result.fail('Space not found');
             }
             const space = spaceResult.getValue();
             const spaceData = space.toData();
@@ -310,10 +310,10 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 }
             };
             return Result_1.Result.ok(activity);
-        }, 'EnhancedSpaceDiscovery.getSpaceActivity');
+        }, 'SpaceDiscovery.getSpaceActivity');
     }
     // Private helper methods
-    sortEnhancedSpaces(spaces, sortBy) {
+    sortSpaces(spaces, sortBy) {
         switch (sortBy) {
             case 'members':
                 return spaces.sort((a, b) => b.getMemberCount() - a.getMemberCount());
@@ -331,36 +331,7 @@ class SpaceDiscoveryService extends base_service_1.BaseApplicationService {
                 });
         }
     }
-    generateWelcomeMessage(space) {
-        const spaceData = space.toData();
-        const name = typeof spaceData.name === 'string' ? spaceData.name : spaceData.name.value;
-        return `Welcome to ${name}! ${spaceData.description}`;
-    }
-    generateSuggestedActions(space) {
-        const spaceData = space.toData();
-        const actions = [];
-        if (spaceData.posts.length > 0) {
-            actions.push({
-                action: 'read_recent_posts',
-                description: 'Catch up on recent discussions'
-            });
-        }
-        actions.push({
-            action: 'introduce_yourself',
-            description: 'Post an introduction to let others know you\'re here'
-        });
-        if (spaceData.spaceType === 'study-group') {
-            actions.push({
-                action: 'share_resources',
-                description: 'Share helpful study materials or notes'
-            });
-        }
-        actions.push({
-            action: 'invite_friends',
-            description: 'Invite classmates who might be interested'
-        });
-        return actions;
-    }
+    // NOTE: Trending topics extraction could become a domain service if it grows more complex
     extractTrendingTopics(posts) {
         // Simple word frequency analysis (would be more sophisticated in production)
         const wordFrequency = new Map();

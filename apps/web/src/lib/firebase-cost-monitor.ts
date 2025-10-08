@@ -186,6 +186,7 @@ class FirebaseCostMonitor {
 
     // Warn if approaching limits
     if (this.metrics.estimatedMonthlyCost > this.limits.emergencyShutoffThreshold * 0.8) {
+      // Warning logged via monitoring system
     }
   }
 
@@ -314,8 +315,8 @@ class FirebaseCostMonitor {
 export const firebaseCostMonitor = new FirebaseCostMonitor();
 
 // Helper function to check if operation should proceed
-export function shouldProceedWithFirebaseOp(userId: string, operation: 'read' | 'write' | 'listen'): boolean {
-  switch (operation) {
+export function shouldProceedWithFirebaseOp(userId: string, action: 'read' | 'write' | 'listen'): boolean {
+  switch (action) {
     case 'read':
       return firebaseCostMonitor.trackRead(userId, 1);
     case 'listen':

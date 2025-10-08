@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware/index';
 
 /**
  * Builder Activation System - "Request to Lead" API
@@ -124,7 +124,14 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
         userName = userData?.displayName || userData?.handle || userName;
       }
     } catch (error) {
-      logger.warn('Could not fetch user data for', { userId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/request-to-lead' });
+      const details = error instanceof Error
+        ? { message: error.message, stack: error.stack }
+        : { error: String(error) };
+      logger.warn('Could not fetch user data for builder request', {
+        userId,
+        metadata: details,
+        endpoint: '/api/spaces/request-to-lead'
+      });
     }
 
     // Create builder request

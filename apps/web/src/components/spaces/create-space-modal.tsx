@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HiveModal, Button, HiveCard, Badge, HiveInput, Alert } from "@hive/ui";
+import { Dialog, Button, Card, Badge, Input, Alert } from "@hive/ui";
 import { 
   ArrowRight, 
   ArrowLeft,
@@ -253,7 +253,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 const isSelected = spaceData.type === type;
                 
                 return (
-                  <HiveCard
+                  <Card
                     key={type}
                     className={`p-4 cursor-pointer transition-all duration-200 ${
                       isSelected 
@@ -276,7 +276,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                           <div className="text-xs text-zinc-500 font-medium">Examples:</div>
                           <div className="flex flex-wrap gap-1">
                             {config.examples.slice(0, 2).map((example) => (
-                              <Badge key={example} variant="skill-tag" className="text-xs">
+                              <Badge key={example} variant="secondary" className="text-xs">
                                 {example}
                               </Badge>
                             ))}
@@ -284,7 +284,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                       </div>
                     </div>
-                  </HiveCard>
+                  </Card>
                 );
               })}
             </div>
@@ -312,9 +312,9 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Space Name *</label>
-                <HiveInput
+                <Input
                   value={spaceData.name}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSpaceData({ name: (e.target as any).value })}
                   placeholder="Enter a clear, descriptive name..."
                   maxLength={50}
                   error={errors.name}
@@ -326,7 +326,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <label className="block text-sm font-medium text-white mb-2">Description *</label>
                 <textarea
                   value={spaceData.description}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSpaceData({ description: (e.target as any).value })}
                   placeholder="Describe the purpose and goals of your space..."
                   maxLength={200}
                   rows={4}
@@ -349,7 +349,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   {['study-group', 'social', 'academic', 'project', 'community', 'networking'].map((tag) => (
                     <Badge
                       key={tag}
-                      variant="skill-tag"
+                      variant="secondary"
                       className={`cursor-pointer transition-colors ${
                         spaceData.customizations.tags?.includes(tag) ? 'bg-[var(--hive-brand-primary)] text-hive-obsidian' : ''
                       }`}
@@ -408,7 +408,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.visibility === option.value;
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -425,7 +425,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -459,7 +459,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.joinProcess === option.value;
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={option.value}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -476,7 +476,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -506,7 +506,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <input
                   type="text"
                   value={newRule}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewRule((e.target as any).value)}
                   placeholder="Enter a community guideline..."
                   className="flex-1 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-400 focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   onKeyPress={(e) => {
@@ -571,10 +571,9 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     <div key={index} className="flex items-center justify-between p-3 bg-[var(--hive-brand-primary)]/10 border border-[var(--hive-brand-primary)] rounded-lg">
                       <span className="text-sm text-white">{rule}</span>
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        variant="outline"
+                        className="max-w-sm text-red-400 hover:text-red-300"
                         onClick={() => removeRule(index)}
-                        className="text-red-400 hover:text-red-300"
                       >
                         <X className="h-4 w-4" />
                       </Button>
@@ -613,7 +612,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                   const isSelected = spaceData.tools.includes(toolId);
                   
                   return (
-                    <HiveCard
+                    <Card
                       key={toolId}
                       className={`p-4 cursor-pointer transition-all duration-200 ${
                         isSelected 
@@ -630,7 +629,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                         </div>
                         {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                       </div>
-                    </HiveCard>
+                    </Card>
                   );
                 })}
               </div>
@@ -646,7 +645,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     const isSelected = spaceData.tools.includes(toolId);
                     
                     return (
-                      <HiveCard
+                      <Card
                         key={toolId}
                         className={`p-4 cursor-pointer transition-all duration-200 ${
                           isSelected 
@@ -663,7 +662,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                           </div>
                           {isSelected && <Check className="h-5 w-5 text-[var(--hive-brand-primary)]" />}
                         </div>
-                      </HiveCard>
+                      </Card>
                     );
                   })}
               </div>
@@ -674,7 +673,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                 <div className="text-sm text-zinc-400 mb-2">Selected Tools:</div>
                 <div className="flex flex-wrap gap-2">
                   {spaceData.tools.map((toolId) => (
-                    <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
+                    <Badge key={toolId} variant="secondary" className="flex items-center space-x-1">
                       <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
                       <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                     </Badge>
@@ -734,12 +733,12 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
 
             <div className="space-y-4">
               {/* Basic Info */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-3">Basic Information</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Type:</span>
-                    <Badge variant="skill-tag">{SPACE_TYPES[spaceData.type].name}</Badge>
+                    <Badge variant="secondary">{SPACE_TYPES[spaceData.type].name}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-400">Name:</span>
@@ -754,16 +753,16 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     <span className="text-white capitalize">{spaceData.joinProcess.replace('_', ' ')}</span>
                   </div>
                 </div>
-              </HiveCard>
+              </Card>
 
               {/* Description */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-2">Description</h4>
                 <p className="text-zinc-300 text-sm leading-relaxed">{spaceData.description}</p>
-              </HiveCard>
+              </Card>
 
               {/* Guidelines */}
-              <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+              <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                 <h4 className="font-medium text-white mb-3">Community Guidelines ({spaceData.rules.length})</h4>
                 <div className="space-y-2">
                   {spaceData.rules.map((rule, index) => (
@@ -773,21 +772,21 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
                     </div>
                   ))}
                 </div>
-              </HiveCard>
+              </Card>
 
               {/* Tools */}
               {spaceData.tools.length > 0 && (
-                <HiveCard className="p-4 bg-zinc-800/50 border-zinc-700">
+                <Card className="p-4 bg-zinc-800/50 border-zinc-700">
                   <h4 className="font-medium text-white mb-3">Enabled Tools ({spaceData.tools.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {spaceData.tools.map((toolId) => (
-                      <Badge key={toolId} variant="building-tools" className="flex items-center space-x-1">
+                      <Badge key={toolId} variant="secondary" className="flex items-center space-x-1">
                         <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.icon}</span>
                         <span>{SUGGESTED_TOOLS[toolId as keyof typeof SUGGESTED_TOOLS]?.name}</span>
                       </Badge>
                     ))}
                   </div>
-                </HiveCard>
+                </Card>
               )}
             </div>
           </div>
@@ -799,7 +798,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
   };
 
   return (
-    <HiveModal
+    <Dialog
       open={isOpen}
       onOpenChange={handleClose}
      
@@ -848,7 +847,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           )}
           <div className="flex items-center justify-between">
             <Button
-              variant="secondary"
+              variant="outline"
               onClick={currentStepIndex === 0 ? handleClose : prevStep}
               className="flex items-center space-x-2"
               disabled={isLoading}
@@ -877,6 +876,6 @@ export function CreateSpaceModal({ isOpen, onClose, onCreateSpace, isLoading = f
           </div>
         </div>
       </div>
-    </HiveModal>
+    </Dialog>
   );
 }

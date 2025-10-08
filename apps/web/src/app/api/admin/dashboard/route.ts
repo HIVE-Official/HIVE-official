@@ -1,10 +1,9 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuth, ApiResponse } from '@/lib/middleware/index';
 
 /**
  * Admin Dashboard - Platform Overview API
@@ -29,14 +28,17 @@ async function _isAdmin(userId: string): Promise<boolean> {
 /**
  * Get platform overview statistics
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuth(async (request, context) => {
   try {
     // This is an admin-only endpoint
-    if (!authContext.isAdmin) {
-      return ApiResponse.forbidden('Admin access required');
+    if (!context.isAdmin) {
+      return NextResponse.json(
+        ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
+        { status: HttpStatus.FORBIDDEN }
+      );
     }
 
-    const adminUserId = authContext.userId;
+    const adminUserId = context.userId;
     
     logger.info('👑 Admin dashboard accessed by', { adminUserId });
 
@@ -72,7 +74,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     });
 
   } catch (error) {
-    logger.error('Admin dashboard error', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Admin dashboard error', { error });
     return NextResponse.json(ApiResponseHelper.error("Failed to load admin dashboard", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 });
@@ -118,7 +120,7 @@ async function getUsersStatistics() {
       }
     };
   } catch (error) {
-    logger.error('Error getting user statistics', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error getting user statistics', { error });
     return {
       total: 0,
       active: 0,
@@ -178,7 +180,7 @@ async function getSpacesStatistics() {
 
     return spaceStats;
   } catch (error) {
-    logger.error('Error getting spaces statistics', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error getting spaces statistics', { error });
     return {
       total: 0,
       active: 0,
@@ -217,7 +219,7 @@ async function getBuilderRequestsStatistics() {
 
     return stats;
   } catch (error) {
-    logger.error('Error getting builder requests statistics', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error getting builder requests statistics', { error });
     return {
       total: 0,
       pending: 0,
@@ -269,7 +271,7 @@ async function getSystemHealth() {
       lastUpdated: new Date().toISOString()
     };
   } catch (error) {
-    logger.error('Error getting system health', { error: error instanceof Error ? error : new Error(String(error))});
+    logger.error('Error getting system health', { error });
     return {
       status: 'error',
       uptime: 0,
@@ -296,7 +298,7 @@ async function getAllSpacesCount() {
         .get();
       totalCount += snapshot.size;
     } catch (error) {
-      logger.error('Error counting spaces for', { spaceType, error: error instanceof Error ? error : new Error(String(error))});
+      logger.error('Error counting spaces for', { spaceType, error: error instanceof Error ? error.message : String(error)});
     }
   }
 

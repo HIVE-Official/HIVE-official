@@ -1,521 +1,200 @@
-# HIVE Platform - Production Launch TODO
+# 🎯 HIVE Platform TODO - Prioritized Based on Audit
 
-**Last Updated**: September 29, 2025
-**Current Status**: 78/100 Production-Ready
-**Dev Server**: http://localhost:3001 (running ✅)
-
----
-
-## 📊 CURRENT STATE ANALYSIS
-
-### ✅ What's Working (Excellent Progress!)
-
-```yaml
-TypeScript Compilation: ✅ 0 errors (was 72)
-Build System: ✅ Stable and fast
-Security: ✅ Production-ready (CSRF, rate limiting, middleware)
-Core Features: ✅ 90%+ backend complete
-Git State: ✅ Clean (no uncommitted chaos)
-Build Size: 🟡 152MB (acceptable, could optimize to <100MB)
-Type Safety: 🟡 214 any types (down from 1,473!)
-Test Files: 🟡 20 test files (need 40+ for confidence)
-Technical Debt: 🟡 99 TODO/FIXME markers
-```
-
-### 🎯 Launch Readiness by Area
-
-| Area | Status | Priority |
-|------|--------|----------|
-| **Authentication** | 95% ✅ | P0 - Critical |
-| **Onboarding** | 92% ✅ | P0 - Critical |
-| **Spaces System** | 90% ✅ | P0 - Critical |
-| **Real-time Feed** | 88% ✅ | P0 - Critical |
-| **Profile System** | 85% ✅ | P0 - Critical |
-| **Events/Calendar** | 82% ✅ | P1 - High |
-| **Tools/HiveLab** | 80% ✅ | P1 - High |
-| **Rituals** | 75% ✅ | P1 - High |
-| **Search/Discovery** | 78% ✅ | P2 - Medium |
-| **Admin Dashboard** | 70% 🟡 | P2 - Medium |
-| **Notifications** | 65% 🟡 | P2 - Medium |
-| **UI/UX Polish** | 60% 🟠 | P1 - High |
-| **Performance** | 75% 🟡 | P1 - High |
-| **Testing Coverage** | 45% 🟠 | P1 - High |
+**Last Updated**: October 8, 2025  
+**Current Status**: 65-70% Complete, NOT Production Ready  
+**See**: PLATFORM_AUDIT_OCT_2025.md for full analysis
 
 ---
 
-## 🚀 PRIORITY 0: LAUNCH BLOCKERS (This Week)
+## 🔴 CRITICAL BLOCKERS (Must Fix Immediately)
 
-### Critical Path Features
+### P0: Build Failure
 
-#### 1. Verify Core User Flows ⏱️ 4 hours
-**Status**: Not started
-**Assignee**: QA Team
+- [ ] Fix React Hook Form barrel optimization issue in waitlist page
+- [ ] Resolve `TypeError: e.createContext is not a function`
+- [ ] Fix import errors: `useToast`, `FormProvider`, `Controller`, `useFormContext`
+- [ ] Verify production build succeeds: `cd apps/web && npx next build`
+- [ ] Test deployment to Vercel staging environment
 
-- [ ] **Authentication Flow**
-  - [ ] Login with @buffalo.edu email
-  - [ ] Receive magic link
-  - [ ] Click link, get authenticated
-  - [ ] Session persists across refresh
-  - [ ] Logout works correctly
+### P0: Code Quality Crisis
 
-- [ ] **Onboarding Wizard**
-  - [ ] Step 1: Welcome screen loads
-  - [ ] Step 2: Name collection validates
-  - [ ] Step 3: Handle generation (uniqueness check)
-  - [ ] Step 4: Photo upload works
-  - [ ] Step 5: Academic info saves
-  - [ ] Step 6: Builder status selection
-  - [ ] Step 7: Faculty sponsor (if builder)
-  - [ ] Step 8: Legal agreements
-  - [ ] Profile created in Firestore
+- [ ] Fix 1,038 ESLint errors (current: 2,245 problems total)
+- [ ] Resolve 9 type definition errors in @hive/ui (missing tsconfig.json refs)
+- [ ] Fix 5 template parsing errors in component templates
+- [ ] Reduce warnings from 1,207 to <50 (target for production)
+- [ ] Run: `npx eslint . --max-warnings 50 --fix` to auto-fix what's possible
 
-- [ ] **Spaces Core Loop**
-  - [ ] Browse spaces (show all)
-  - [ ] Join space
-  - [ ] Create post
-  - [ ] Add comment
-  - [ ] Leave space
-  - [ ] Verify campus isolation (campusId: 'ub-buffalo')
+### P0: Complete Middleware Migration
 
-- [ ] **Feed Basics**
-  - [ ] Load feed on login
-  - [ ] Infinite scroll works
-  - [ ] Real-time updates (SSE)
-  - [ ] Posts from joined spaces appear
-  - [ ] Click post opens details
-
-#### 2. Fix Critical UI/UX Issues ⏱️ 8 hours
-**Status**: Not started
-**Priority**: BLOCKING LAUNCH
-
-- [ ] **Loading States** (2h)
-  - [ ] Add skeletons for all async data
-  - [ ] Show spinners during mutations
-  - [ ] Disable buttons during submission
-  - [ ] Toast notifications for success/error
-
-- [ ] **Error Handling** (2h)
-  - [ ] Replace `console.log` with user-friendly messages
-  - [ ] Add error boundaries to key pages
-  - [ ] Show error toast on API failures
-  - [ ] Graceful degradation for offline
-
-- [ ] **Mobile Responsiveness** (2h)
-  - [ ] Touch targets minimum 44px
-  - [ ] Navigation works on mobile
-  - [ ] Forms accessible on small screens
-  - [ ] Images responsive
-
-- [ ] **Visual Consistency** (2h)
-  - [ ] Verify design tokens used (not hardcoded)
-  - [ ] Check spacing consistency
-  - [ ] Verify typography scales
-  - [ ] Test dark mode (if enabled)
-
-#### 3. Production Environment Setup ⏱️ 3 hours
-**Status**: Partially complete
-**Priority**: CRITICAL
-
-- [ ] **Firebase Production**
-  - [ ] Create production project
-  - [ ] Deploy Firestore indexes
-  - [ ] Deploy security rules
-  - [ ] Configure authentication
-  - [ ] Set up SendGrid for emails
-
-- [ ] **Vercel Deployment**
-  - [ ] Connect to GitHub repo
-  - [ ] Set environment variables
-  - [ ] Configure custom domain
-  - [ ] Enable SSL certificate
-  - [ ] Test preview deployment
-
-- [ ] **Monitoring Setup**
-  - [ ] Configure error tracking (Sentry optional)
-  - [ ] Set up performance monitoring
-  - [ ] Enable Firebase analytics
-  - [ ] Create admin notification system
+- [ ] Commit or revert 30 uncommitted API route modifications
+- [ ] Update remaining tool routes to follow new middleware pattern
+- [ ] Double-check new wrappers for missing `AuthenticatedRequest` imports
+- [ ] Create mappers/shared types for `ProfileSystem`, `PrivacySettings`, `SessionData`
+- [ ] Clean up tool DTO usages to align with `createToolDefaults` and `ToolSchema`
+- [ ] Document new middleware usage in `docs/development/middleware-guide.md`
 
 ---
 
-## 🎯 PRIORITY 1: CRITICAL POLISH (Next Week)
+## 🟡 HIGH PRIORITY (Week 1-2)
 
-### Testing Coverage ⏱️ 12 hours
-**Current**: 20 test files | **Target**: 40+ test files
+### Security & Compliance
 
-#### Unit Tests (6h)
-- [ ] **Authentication** (packages/auth-logic)
-  - [ ] Test magic link generation
-  - [ ] Test email validation
-  - [ ] Test session management
-  - [ ] Test rate limiting
+- [ ] Conduct internal security audit (auth flows, API endpoints, data access)
+- [ ] Fix campus isolation gaps in Profile, Space, and Tool aggregates
+- [ ] Implement rate limiting on all remaining API routes
+- [ ] Add input validation to all endpoints (Zod schemas)
+- [ ] Address 97 TODO/FIXME/HACK comments in critical files:
+  - [ ] `apps/web/src/app/api/admin/spaces/analytics/route.ts` (10 TODOs)
+  - [ ] `apps/web/src/lib/rituals-framework.ts` (7 TODOs)
+  - [ ] `apps/web/src/lib/tool-execution-runtime.ts` (6 TODOs)
+  - [ ] `apps/web/src/app/api/tools/[toolId]/analytics/route.ts` (5 TODOs)
 
-- [ ] **Profile System** (apps/web/src/hooks)
-  - [ ] Test useProfile hook
-  - [ ] Test profile updates
-  - [ ] Test avatar upload
-  - [ ] Test privacy settings
+### Testing & Quality
 
-- [ ] **Spaces System** (apps/web/src/components/spaces)
-  - [ ] Test space creation
-  - [ ] Test join/leave
-  - [ ] Test post creation
-  - [ ] Test comment system
+- [ ] Measure actual test coverage: `pnpm test:coverage`
+- [ ] Write integration tests for critical user flows
+- [ ] Add E2E tests for: onboarding → space join → tool creation → sharing
+- [ ] Achieve 80% test coverage on core packages
+- [ ] Add focused tests for refactored middleware + mappers
 
-#### Integration Tests (4h)
-- [ ] **API Routes**
-  - [ ] Test /api/auth endpoints
-  - [ ] Test /api/profile endpoints
-  - [ ] Test /api/spaces endpoints
-  - [ ] Test /api/feed endpoint
+### UI Component Library
 
-- [ ] **Real-time Systems**
-  - [ ] Test SSE connection
-  - [ ] Test feed updates
-  - [ ] Test notification delivery
-
-#### E2E Tests (2h)
-- [ ] **Critical User Journeys**
-  - [ ] Complete signup flow
-  - [ ] Join space and post
-  - [ ] Update profile
-  - [ ] Create event
-
-### Performance Optimization ⏱️ 6 hours
-**Current**: 152MB build | **Target**: <100MB
-
-- [ ] **Bundle Analysis** (2h)
-  - [ ] Run webpack-bundle-analyzer
-  - [ ] Identify large dependencies
-  - [ ] Check for duplicate packages
-  - [ ] Review code splitting strategy
-
-- [ ] **Optimization Implementation** (4h)
-  - [ ] Dynamic imports for heavy components
-  - [ ] Optimize images with next/image
-  - [ ] Tree-shake Firebase SDK properly
-  - [ ] Remove unused dependencies
-  - [ ] Enable compression in production
-  - [ ] Implement proper caching headers
-
-### Code Quality ⏱️ 8 hours
-**Current**: 214 any types, 99 debt markers
-
-- [ ] **Type Safety** (4h)
-  - [ ] Audit 214 remaining `any` types
-  - [ ] Replace with specific types
-  - [ ] Fix type mismatches
-  - [ ] Enable strict TypeScript checks
-
-- [ ] **Technical Debt** (4h)
-  - [ ] Review 99 TODO/FIXME/HACK comments
-  - [ ] Fix critical items
-  - [ ] Document deferred items
-  - [ ] Remove obsolete comments
+- [ ] Expand `@hive/ui` atoms/molecules to expose props app needs
+- [ ] Sweep onboarding/auth/profile screens to use updated UI API
+- [ ] Remove stopgap `as any` casts from components
+- [ ] Verify Storybook and Tailwind tokens align after updates
+- [ ] Fix import/export inconsistencies in component library
 
 ---
 
-## 📱 PRIORITY 2: USER EXPERIENCE (Week After Launch)
+## 🟢 MEDIUM PRIORITY (Week 2-3)
 
-### UI/UX Enhancement ⏱️ 10 hours
+### Performance Optimization
 
-#### Visual Polish (4h)
-- [ ] Design token consistency check
-- [ ] Spacing and alignment audit
-- [ ] Typography consistency
-- [ ] Color contrast verification (WCAG 2.1 AA)
+- [ ] Run Lighthouse audits on all main pages (target: 90+ score)
+- [ ] Optimize bundle size with `pnpm build:analyze`
+- [ ] Set up Sentry for error monitoring (currently shows "DSN not configured")
+- [ ] Measure and optimize Core Web Vitals (LCP, FID, CLS)
+- [ ] Test on actual mobile devices (iOS and Android)
+- [ ] Perform load testing with 1000+ concurrent users
 
-#### Interaction Design (3h)
-- [ ] Add micro-interactions
-- [ ] Improve button states (hover, active, disabled)
-- [ ] Smooth page transitions
-- [ ] Loading animations
+### Domain Layer Hardening
 
-#### Accessibility (3h)
-- [ ] Add ARIA labels to interactive elements
-- [ ] Keyboard navigation support
-- [ ] Screen reader testing
-- [ ] Focus management
+- [ ] Add domain events to Feed aggregate (currently marked as "anemic")
+- [ ] Replace repository hydration setters with factory/adapters
+- [ ] Add type guards for runtime type checking in all aggregates
+- [ ] Fix `any` types in Feed domain algorithm data
+- [ ] Add acceptance tests for domain stories in DDD documentation
 
-### Mobile Experience ⏱️ 6 hours
+### Documentation Updates
 
-- [ ] **Touch Optimization**
-  - [ ] Increase touch target sizes to 44px
-  - [ ] Add safe area insets for notches
-  - [ ] Optimize gesture handling
-  - [ ] Test on actual devices
-
-- [ ] **Performance**
-  - [ ] Optimize for 3G networks
-  - [ ] Lazy load images
-  - [ ] Reduce JavaScript payload
-  - [ ] Enable service worker caching
+- [ ] Update all "100% complete" claims to reflect actual 65-70% state
+- [ ] Remove "production ready" claims from documentation
+- [ ] Update PLATFORM_CURRENT_STATE.md with realistic assessment
+- [ ] Create honest roadmap document with real timelines
+- [ ] Document all known gaps and TODOs in central tracking document
 
 ---
 
-## 🔒 PRIORITY 3: SECURITY & COMPLIANCE
+## 🔵 LOWER PRIORITY (Week 3-4)
 
-### Security Audit ⏱️ 4 hours
+### Beta Testing Preparation
 
-- [ ] **Authentication Security**
-  - [ ] Verify CSRF protection
-  - [ ] Test rate limiting effectiveness
-  - [ ] Check session expiry
-  - [ ] Validate token refresh
+- [ ] Recruit 50+ University at Buffalo students for beta
+- [ ] Set up feedback collection system in app
+- [ ] Create beta user onboarding flow with expectations
+- [ ] Prepare beta testing tracking dashboard
+- [ ] Document beta testing procedures and metrics
 
-- [ ] **Data Protection**
-  - [ ] Verify campus isolation (campusId checks)
-  - [ ] Test privacy settings enforcement
-  - [ ] Check for data leaks in API responses
-  - [ ] Validate input sanitization
+### Infrastructure & Deployment
 
-- [ ] **Firebase Security Rules**
-  - [ ] Review all collection rules
-  - [ ] Test unauthorized access attempts
-  - [ ] Verify row-level security
-  - [ ] Check for injection vulnerabilities
+- [ ] Set up production Firebase project (separate from dev)
+- [ ] Configure production environment variables
+- [ ] Set up monitoring and alerting (Sentry, Firebase Performance)
+- [ ] Test disaster recovery procedures
+- [ ] Document incident response plan
+- [ ] Verify backup systems working
 
-### Compliance ⏱️ 2 hours
+### Final Polish
 
-- [ ] **FERPA Compliance**
-  - [ ] Review data collection practices
-  - [ ] Verify consent mechanisms
-  - [ ] Check data retention policies
-  - [ ] Test data export functionality
-
-- [ ] **Privacy Policy**
-  - [ ] Ensure policy is accessible
-  - [ ] Verify consent flow
-  - [ ] Test opt-out mechanisms
-  - [ ] Document data practices
+- [ ] Complete legal pages (Terms, Privacy, Community Guidelines)
+- [ ] Create launch announcement materials
+- [ ] Prepare rollback procedures
+- [ ] Test all critical user journeys end-to-end
+- [ ] Final UI consistency pass across all pages
 
 ---
 
-## 📊 METRICS & MONITORING
+## 📊 Quality Gates (Must Pass Before Launch)
 
-### Launch Day Metrics
-Monitor these closely for first 48 hours:
+### Build & Deploy
 
-- [ ] **User Metrics**
-  - [ ] Signup completion rate (target: >80%)
-  - [ ] Onboarding completion rate (target: >70%)
-  - [ ] Daily active users
-  - [ ] User retention (D1, D7, D30)
+- [ ] Production build succeeds: `cd apps/web && npx next build`
+- [ ] TypeScript compiles: `export NODE_OPTIONS="--max-old-space-size=4096" && pnpm typecheck`
+- [ ] ESLint passes: `npx eslint . --max-warnings 50`
+- [ ] All tests pass: `pnpm test`
+- [ ] Deployment to Vercel succeeds
 
-- [ ] **Performance Metrics**
-  - [ ] Page load time (target: <3s)
-  - [ ] API response time (target: <500ms)
-  - [ ] Error rate (target: <1%)
-  - [ ] Uptime (target: >99.5%)
+### Testing & Coverage
 
-- [ ] **Engagement Metrics**
-  - [ ] Spaces joined per user
-  - [ ] Posts created per day
-  - [ ] Comments per post
-  - [ ] Time spent in app
+- [ ] Test coverage ≥80% on core packages
+- [ ] All E2E tests pass
+- [ ] Cross-browser testing complete (Chrome, Firefox, Safari, Mobile)
+- [ ] Performance targets met (Lighthouse 90+, <3s load time)
+- [ ] Load testing passed (1000+ concurrent users)
 
-### Monitoring Setup
+### Security & Compliance
 
-- [ ] **Dashboard Setup**
-  - [ ] Firebase Analytics dashboard
-  - [ ] Vercel Analytics (if available)
-  - [ ] Custom admin dashboard for key metrics
-  - [ ] Error tracking dashboard
+- [ ] Security audit completed with zero critical issues
+- [ ] All auth flows tested and hardened
+- [ ] Campus isolation verified in all queries
+- [ ] Rate limiting implemented and tested
+- [ ] Input validation comprehensive
 
-- [ ] **Alerts**
-  - [ ] Error rate > 5%
-  - [ ] API latency > 2s
-  - [ ] Signup failures
-  - [ ] Server errors
+### User Validation
+
+- [ ] 50+ beta users engaged for 1+ week
+- [ ] 4.5+ star average feedback rating
+- [ ] Critical user flows validated with real users
+- [ ] All major user feedback addressed
+- [ ] Success metrics defined and tracking enabled
 
 ---
 
-## 🚦 LAUNCH READINESS CHECKLIST
+## 🎯 Launch Readiness Checklist
 
-### Pre-Launch (72 Hours Before)
+### MUST HAVE (0/6 currently met)
 
-- [ ] **Technical**
-  - [ ] All P0 tests passing
-  - [ ] Build succeeds in production
-  - [ ] Performance benchmarks met
-  - [ ] Security audit complete
+- [ ] All authentication flows working with 95%+ success rate
+- [ ] Space creation, joining, and real-time updates functional
+- [ ] All three vBETA tools (JoinForm, PromptPost, EventCard) operational
+- [ ] Mobile experience with 90+ Lighthouse score
+- [ ] Security audit passed with zero critical issues
+- [ ] 50+ beta users actively engaged for 1+ week
 
-- [ ] **Content**
-  - [ ] Welcome email template ready
-  - [ ] Help documentation published
-  - [ ] FAQ page complete
-  - [ ] Contact/support info available
+### SHOULD HAVE (0/5 currently met)
 
-- [ ] **Communication**
-  - [ ] UB administration notified
-  - [ ] Beta testers lined up (50-100 students)
-  - [ ] Launch announcement prepared
-  - [ ] Social media posts ready
-
-### Launch Day
-
-- [ ] **Morning** (8am)
-  - [ ] Final smoke tests
-  - [ ] Monitor error rates
-  - [ ] Check all services running
-  - [ ] Verify emails working
-
-- [ ] **Soft Launch** (10am)
-  - [ ] Open to 50 beta testers
-  - [ ] Monitor for critical issues
-  - [ ] Gather immediate feedback
-  - [ ] Fix any blockers
-
-- [ ] **Public Launch** (2pm - if no critical issues)
-  - [ ] Send announcement email to UB students
-  - [ ] Post on social media
-  - [ ] Monitor dashboards continuously
-  - [ ] Have team on standby
-
-- [ ] **Evening** (8pm)
-  - [ ] Review day's metrics
-  - [ ] Triage reported issues
-  - [ ] Plan fixes for next day
-  - [ ] Celebrate launch! 🎉
-
-### Post-Launch (Week 1)
-
-- [ ] **Daily Monitoring**
-  - [ ] Review error logs
-  - [ ] Check performance metrics
-  - [ ] Respond to user feedback
-  - [ ] Deploy hotfixes as needed
-
-- [ ] **User Support**
-  - [ ] Respond to questions (<2 hour SLA)
-  - [ ] Document common issues
-  - [ ] Update FAQ based on questions
-  - [ ] Gather feature requests
+- [ ] Builder adoption rate >10% in beta community
+- [ ] Average session duration >5 minutes
+- [ ] Tool interaction rate >30% of placed tools
+- [ ] Cross-browser compatibility verified
+- [ ] Performance monitoring and alerting operational
 
 ---
 
-## 🎯 SUCCESS CRITERIA
+## 📅 Realistic Timeline
 
-### Launch Week Targets
+- **Week 1**: Fix critical blockers (build, lint, middleware)
+- **Week 2**: Security audit, testing foundation
+- **Week 3**: Performance optimization, UI polish
+- **Week 4**: Beta testing recruitment and setup
+- **Week 5-6**: Active beta testing with iterations
+- **Week 7**: Final hardening and launch prep
+- **Week 8**: Production launch 🚀
 
-```yaml
-Users:
-  - Total Signups: 500+ UB students
-  - Onboarding Completion: >70%
-  - Daily Active Users: >200
-  - User Retention (D7): >50%
-
-Engagement:
-  - Spaces Joined per User: >3
-  - Posts Created: >100/day
-  - Comments per Post: >2
-  - Average Session Duration: >5 minutes
-
-Technical:
-  - Uptime: >99.5%
-  - Error Rate: <1%
-  - Page Load Time: <3s (95th percentile)
-  - API Latency: <500ms (95th percentile)
-
-Quality:
-  - Critical Bugs: 0
-  - User-Reported Issues: <10/day
-  - User Satisfaction: >4/5 stars
-```
+**Estimated Time to Launch-Ready**: 6-8 weeks (realistic with proper testing)
 
 ---
 
-## 📋 DEFINITION OF DONE
-
-A feature is **DONE** when:
-
-1. ✅ **Functionally Complete**
-   - Core functionality works
-   - Edge cases handled
-   - Error states managed
-
-2. ✅ **Tested**
-   - Unit tests written and passing
-   - Integration test coverage
-   - Manual QA completed
-
-3. ✅ **Type-Safe**
-   - No `any` types (or justified with comment)
-   - TypeScript compiles without errors
-   - Proper types for props/returns
-
-4. ✅ **User-Friendly**
-   - Loading states present
-   - Error messages clear
-   - Mobile responsive
-
-5. ✅ **Documented**
-   - Code comments for complex logic
-   - README updated if needed
-   - API documented
-
-6. ✅ **Reviewed**
-   - Code review completed
-   - Security considerations reviewed
-   - Performance impact assessed
-
-7. ✅ **Deployed**
-   - Merged to main
-   - Deployed to production
-   - Monitoring enabled
-
----
-
-## 🔄 WEEKLY REVIEW PROCESS
-
-### Every Monday (30 minutes)
-
-1. Review previous week's progress
-2. Update completion percentages
-3. Prioritize this week's tasks
-4. Identify blockers and dependencies
-5. Update stakeholders
-
-### Every Friday (30 minutes)
-
-1. Demo completed features
-2. Review metrics and dashboards
-3. Document lessons learned
-4. Plan next week's priorities
-5. Celebrate wins 🎉
-
----
-
-## 📞 CONTACTS & ESCALATION
-
-### Team Roles
-
-- **Technical Lead**: Overall architecture and deployment
-- **Frontend Lead**: UI/UX implementation
-- **QA Lead**: Testing and quality assurance
-- **Product Owner**: Feature prioritization and requirements
-- **UB Liaison**: University stakeholder communication
-
-### Escalation Path
-
-**Level 1**: Team Lead (response: <2 hours)
-**Level 2**: Technical Lead (response: <1 hour)
-**Level 3**: All Hands (critical issues only)
-
----
-
-## 🎉 LAUNCH CELEBRATION
-
-When we hit production with >500 users and >99.5% uptime:
-
-- [ ] Team celebration dinner
-- [ ] Screenshot the dashboards
-- [ ] Document lessons learned
-- [ ] Plan expansion to other campuses
-- [ ] Start building advanced features
-
----
-
-**Remember**: Ship remarkable, not just viable. The first impression matters.
-
-**Current Focus**: Complete P0 tasks this week → Launch next Monday! 🚀
+**Previous TODO (Outdated)**:
+See commit history for old middleware-focused TODO that claimed tasks were complete when they were not.

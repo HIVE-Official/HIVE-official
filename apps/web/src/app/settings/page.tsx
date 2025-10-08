@@ -9,7 +9,7 @@ import { PageContainer } from "@/components/temp-stubs";
 import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2, Navigation } from 'lucide-react';
 import { useSession } from '../../hooks/use-session';
 // Temp fix for chunk 2073 useRef errors
-const Button = ({ children, variant = 'default', size = 'default', className = '', ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
+const Button = ({ children, variant: _variant = 'default', size: _size = 'default', className = '', ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
 const Card = ({ children, className = '', ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
 // useShell is a hook, not a component - create a mock hook
 const useShell = () => ({ isSidebarOpen: true, toggleSidebar: () => {}, isMobile: false });
@@ -24,7 +24,7 @@ export default function SettingsPage() {
   
   // Form state
   const [formData, setFormData] = useState({
-    fullName: user?.fullName || '',
+    fullName: user?.displayName || '',
     handle: user?.handle || '',
     bio: ''
   });
@@ -136,8 +136,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-white mb-2">Full Name</label>
                   <input 
                     type="text" 
-                    value={formData.fullName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    value={formData.displayName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: (e.target as any).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -146,7 +146,7 @@ export default function SettingsPage() {
                   <input 
                     type="text" 
                     value={formData.handle}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: (e.target as any).value }))}
                     className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                 <textarea 
                   rows={3}
                   value={formData.bio}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: (e.target as any).value }))}
                   className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />
@@ -271,7 +271,7 @@ export default function SettingsPage() {
               <h4 className="text-white text-sm font-medium mb-4">Data Management</h4>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   onClick={handleDownloadData}
                   disabled={isDownloading}
                   className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)] disabled:opacity-50"
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                   {isDownloading ? 'Downloading...' : 'Download My Data'}
                 </Button>
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   onClick={() => setShowDeleteConfirm(true)}
                   className="border-red-500/20 text-red-400 hover:bg-red-500/10"
                 >
@@ -299,7 +299,7 @@ export default function SettingsPage() {
                 <p className="text-[#A1A1AA] text-sm">Sign out of your HIVE account on this device</p>
               </div>
               <Button 
-                variant="secondary" 
+                variant="outline" 
                 className="border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 onClick={logout}
               >
@@ -338,7 +338,7 @@ export default function SettingsPage() {
               
               <div className="flex gap-3 pt-4">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => setShowDeleteConfirm(false)}
                   className="flex-1 border-[rgba(255,255,255,0.2)] text-white hover:bg-[rgba(255,255,255,0.1)]"
                 >

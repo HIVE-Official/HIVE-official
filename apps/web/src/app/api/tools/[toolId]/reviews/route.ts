@@ -61,7 +61,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const existingReviewSnapshot = await adminDb
       .collection('toolReviews')
       .where('toolId', '==', toolId)
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .get();
 
     if (!existingReviewSnapshot.empty) {
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const usageSnapshot = await adminDb
       .collection('analytics_events')
       .where('eventType', '==', 'tool_interaction')
-      .where('userId', '==', user.uid)
+      .where('userId', '==', user.id)
       .where('toolId', '==', toolId)
       .limit(1)
       .get();
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const now = new Date();
     const review: ToolReview = {
       toolId,
-      userId: user.uid,
+      userId: user.id,
       rating: validatedData.rating,
       title: validatedData.title,
       content: validatedData.content,
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Log activity
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_reviewed',
-      userId: user.uid,
+      userId: user.id,
       toolId,
       rating: validatedData.rating,
       timestamp: now.toISOString(),
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
 
     // Notify tool owner
-    if (toolData?.ownerId !== user.uid) {
+    if (toolData?.ownerId !== user.id) {
       await adminDb.collection('notifications').add({
         type: 'tool_review_received',
         title: 'New Tool Review',

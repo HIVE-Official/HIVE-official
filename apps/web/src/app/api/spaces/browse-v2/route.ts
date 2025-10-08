@@ -3,20 +3,20 @@
  * Uses CQRS pattern for space discovery
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { FirebaseUnitOfWork } from '@hive/core/infrastructure/repositories/firebase/unit-of-work';
-import { withAuthAndErrors } from '@/lib/api-auth-middleware';
+import { NextResponse } from 'next/server';
+import { FirebaseUnitOfWork } from '@hive/core';
+import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (request: NextRequest, context) => {
+export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context) => {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category') || 'all';
     const sort = searchParams.get('sort') || 'trending';
     const limit = parseInt(searchParams.get('limit') || '20', 10);
 
-    const userId = context.user.uid;
-    const campusId = context.user.campusId || 'ub-buffalo';
+    const userId = getUserId(request);
+    const campusId = 'ub-buffalo'; // Campus isolation
 
     logger.info('Browse spaces request', {
       category,
@@ -63,11 +63,11 @@ export const GET = withAuthAndErrors(async (request: NextRequest, context) => {
     // Get user's joined spaces to mark them
     const userSpacesResult = await unitOfWork.spaces.findUserSpaces(userId);
     const userSpaceIds = userSpacesResult.isSuccess
-      ? userSpacesResult.getValue().map(s => s.id.id)
+      ? userSpacesResult.getValue().map((s: any) => s.id.id)
       : [];
 
     // Transform spaces for API response
-    const transformedSpaces = spaces.map(space => ({
+    const transformedSpaces = spaces.map((space: any) => ({
       id: space.id.id,
       name: space.name.name,
       description: space.description.value,
@@ -80,13 +80,13 @@ export const GET = withAuthAndErrors(async (request: NextRequest, context) => {
       trendingScore: space.trendingScore,
       createdAt: space.createdAt,
       lastActivityAt: space.lastActivityAt,
-      tabs: space.tabs.map(tab => ({
+      tabs: space.tabs.map((tab: any) => ({
         id: tab.id.id,
         title: tab.title,
         messageCount: tab.messageCount,
         isActive: !tab.isArchived
       })),
-      widgets: space.widgets.filter(w => w.isEnabled).map(widget => ({
+      widgets: space.widgets.filter((w: any) => w.isEnabled).map((widget: any) => ({
         type: widget.type,
         config: widget.config
       }))

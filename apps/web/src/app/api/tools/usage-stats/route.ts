@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import { withAuth, ApiResponse as _ApiResponse } from '@/lib/api-auth-middleware';
+import { withAuthAndErrors } from '@/lib/middleware/index';
 
 // Usage statistics interface matching the component expectations
 interface ToolUsageStats {
@@ -47,14 +47,14 @@ const fetchUsageStats = async (userId: string): Promise<ToolUsageStats> => {
  * Get tool usage statistics for the authenticated user
  * GET /api/tools/usage-stats
  */
-export const GET = withAuth(async (request: NextRequest, authContext) => {
+export const GET = withAuthAndErrors(async (request, context, respond) => {
   try {
-    const stats = await fetchUsageStats(authContext.userId);
+    const stats = await fetchUsageStats(context.userId);
     
     return NextResponse.json({
       success: true,
       stats,
-      userId: authContext.userId,
+      userId: context.userId,
       generatedAt: new Date().toISOString(),
       message: 'Usage statistics retrieved successfully'
     });
@@ -72,16 +72,13 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: true, // Usage stats are non-sensitive
-  operation: 'fetch_usage_stats' 
 });
 
 /**
  * Record a tool usage event
  * POST /api/tools/usage-stats
  */
-export const POST = withAuth(async (request: NextRequest, authContext) => {
+export const POST = withAuthAndErrors(async (request, context, respond) => {
   try {
     const body = await request.json();
     const { toolId, action, metadata } = body;
@@ -103,7 +100,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       success: true,
       toolId,
       action,
-      userId: authContext.userId,
+      userId: context.userId,
       timestamp: new Date().toISOString(),
       message: `Usage event recorded successfully`
     });
@@ -121,7 +118,4 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}, { 
-  allowDevelopmentBypass: true, // Usage tracking is non-sensitive
-  operation: 'record_usage_event' 
 });
