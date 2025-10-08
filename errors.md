@@ -1,83 +1,71 @@
-# HIVE Codebase Errors & Warnings - Complete Audit
+# Error and Warning Tracker
 
-**Generated:** $(date)
-**Command:** `pnpm lint` across all packages
-**Total Issues:** ~2,132 problems (122 errors, 2,010 warnings)
+Monorepo TypeScript and ESLint status to target deployment readiness. Updated by Codex on migration/shadcn-foundation.
 
----
+## Current State
 
-## 📊 Executive Summary
+- TypeScript: clean across all packages (`pnpm typecheck` passes)
+- ESLint: high warning volume causing lint step to fail by package scripts; no fatal parse errors found in current scan
 
-| Package              | Errors  | Warnings  | Total     | Status            |
-| -------------------- | ------- | --------- | --------- | ----------------- |
-| **@hive/core**       | 34      | 1,113     | 1,147     | 🟠 TYPE SAFETY    |
-| **@hive/ui**         | 88      | 269       | 357       | 🔴 CLEANUP NEEDED |
-| **apps/web**         | 0       | 628       | 628       | 🟡 CODE QUALITY   |
-| **@hive/analytics**  | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/api-client** | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/auth-logic** | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/firebase**   | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/hooks**      | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/i18n**       | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/tokens**     | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/utilities**  | 0       | 0         | 0         | ✅ CLEAN          |
-| **@hive/validation** | 0       | 0         | 0         | ✅ CLEAN          |
-| **TOTAL**            | **122** | **2,010** | **2,132** |                   |
+## Package Summaries (fresh scan)
 
----
+- @hive/core (warnings only)
+  - Top rules: `@typescript-eslint/no-unsafe-member-access` (412), `@typescript-eslint/no-explicit-any` (275), `@typescript-eslint/no-unsafe-assignment` (243), `@typescript-eslint/no-unsafe-argument` (97), `@typescript-eslint/no-unsafe-call` (89)
+  - Top files:
+    - packages/core/src/infrastructure/repositories/firebase/ritual.repository.ts (146)
+    - packages/core/src/application/shared/temporary-types.ts (125)
+    - packages/core/src/infrastructure/repositories/firebase/space.repository.ts (106)
+    - packages/core/src/infrastructure/repositories/firebase/profile.repository.ts (98)
+    - packages/core/src/infrastructure/repositories/firebase/feed.repository.ts (93)
 
-## 🎯 Team 1: @hive/core Domain Logic (1,147 ISSUES)
+- apps/web (warnings only)
+  - Top rules: `@typescript-eslint/no-unused-vars` (393), `react-hooks/exhaustive-deps` (44), `@next/next/no-img-element` (9), `jsx-a11y/alt-text` (7)
 
-**Priority:** 🟠 HIGH - Type Safety Critical
-**Owner:** Backend/Domain team
-**Estimated effort:** 1-2 weeks
+- @hive/ui (warnings only)
+  - Top rules: `@typescript-eslint/no-unused-vars` (135), `@typescript-eslint/no-explicit-any` (62), `@typescript-eslint/no-unsafe-assignment` (42), `@typescript-eslint/no-unsafe-member-access` (25), `storybook/csf-component` (24)
 
-### Breakdown by Layer
+## Root Causes
 
-| Layer             | Errors | Warnings  | Total     | Primary Issue                  |
-| ----------------- | ------ | --------- | --------- | ------------------------------ |
-| `application/`    | 12     | 380       | 392       | `any` types, unsafe operations |
-| `infrastructure/` | 9      | 518       | 527       | Firebase type safety           |
-| `domain/`         | 3      | 145       | 148       | Unused imports                 |
-| **TOTAL**         | **34** | **1,113** | **1,147** |                                |
+- Core repositories depend on untyped Firestore `data()` and loose DTOs; pervasive `any` and unchecked property access lead to unsafe-* rule violations.
+- `application/shared/temporary-types.ts` re-exports legacy shapes and introduces `any`, leaking into services and mappers.
+- Web app has many stale or placeholder variables from migrations and incomplete effect dependency lists.
+- UI contains scaffolded components/stories using `any` and leaving unused props; some stories not CSF compliant.
 
-### Top Problem Files
+## Remediation Plan
 
-#### 1. application/feed-generation.service.ts (56 warnings + 3 errors)
+- Core data layer
+  - Define Firestore DTOs per collection and add type guards to narrow `data()` results.
+  - Replace `any` with concrete types; convert generics to `unknown` where appropriate and assert safely.
+  - Remove `application/shared/temporary-types.ts`; update imports to domain value objects and aggregates.
 
-```typescript
-// ERRORS - Remove unused imports
-11:10  error  'SpaceId' is defined but never used
-12:10  error  'EnhancedProfile' is defined but never used
-13:10  error  'EnhancedSpace' is defined but never used
+- Web
+  - Remove unused variables; explicitly disable the rule only when placeholders are intentional.
+  - Fix `useEffect` deps; memoize callbacks/selectors and include in dependency arrays.
+  - Replace `<img>` with `next/image` and ensure `alt` text present.
 
-// WARNINGS - 56 type safety warnings (sample)
-98:47   warning  Unexpected any. Specify a different type
-113:9   warning  Unsafe argument of type `any[]` assigned to `string[]`
-125:40  warning  Unsafe argument of type `any[]` assigned to `FeedItem[]`
-130:11  warning  Unsafe call of a(n) `any` typed value
-130:13  warning  Unsafe member access .toData on an `any` value
-[+46 more similar warnings]
-```
+- UI
+  - Type component props precisely; eliminate `any`.
+  - Update Storybook files to CSF3; ensure default export meta present and component stories follow conventions.
 
-**Impact:** Feed algorithm type safety - CRITICAL for production
+## Pre-commit Hook Blockers (Design Tokens)
 
-#### 2. infrastructure/repositories (527 warnings, 9 errors)
+- Hardcoded colors/spacings detected in: `packages/ui/src/atomic/atoms/button.tsx`, `packages/ui/src/atomic/atoms/hive-logo.tsx`, `packages/ui/src/atomic/molecules/hive-confirm-modal.tsx`, `packages/ui/src/legacy/hive-modal.tsx`, and specific lines in `form.tsx`.
+- Action: replace with `@hive/tokens` semantic tokens and Tailwind spacing utilities; migration scripts listed in the hook (`migrate-tokens.js`, `migrate-final-hex-colors.js`) can accelerate this.
 
-**Pattern:** Almost all Firebase snapshot operations lack type guards
+## Verification Commands
 
-```typescript
-// CURRENT (unsafe):
-const doc = await getDoc(docRef);
-const data = doc.data(); // Returns any
-return data.someField;
+- TypeScript: `pnpm typecheck`
+- ESLint JSON reports:
+  - Core: `pnpm --filter @hive/core exec -- eslint . --format json --output-file ../../core-lint.json`
+  - Web: `pnpm --filter web exec -- eslint . --format json --output-file ../../web-lint.json`
+  - UI: `pnpm --filter @hive/ui exec -- eslint . --format json --output-file ../../ui-lint.json`
 
-// SHOULD BE:
-const doc = await getDoc(docRef);
-const data = doc.data() as ProfileSnapshot | undefined;
-if (!data) throw new Error("Document not found");
-return data.someField;
-```
+## Immediate Fix Queue
+
+- Add DTOs + guards in: ritual.repository.ts, space.repository.ts, profile.repository.ts, feed.repository.ts, tool.repository.ts
+- Remove `temporary-types.ts` and migrate usages
+- Clean unused vars and fix effect deps in key web pages/components
+- Replace hardcoded UI values with tokens to pass pre-commit
 
 ---
 
