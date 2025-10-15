@@ -1,14 +1,45 @@
 // Bounded Context Owner: Identity & Access Management Guild
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Heading, Text, Input, Card, CardContent, HiveLogo, Eyebrow } from "@hive/ui";
+import {
+  Button,
+  Heading,
+  Text,
+  Card,
+  CardContent,
+  HiveLogo,
+  Eyebrow,
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator
+} from "@hive/ui";
 import { GradientBackdrop } from "../layout/GradientBackdrop";
 import { Container } from "../layout/Container";
 import { Section } from "../layout/Section";
 
 const ACCESS_STORAGE_KEY = "hive.lab.access.granted";
+
+const experienceHighlights = [
+  {
+    title: "Ritual prototypes",
+    body: "Pilot cadence builders, automation hooks, and accountability loops for campus crews."
+  },
+  {
+    title: "Tool experiments",
+    body: "Ship Hive-native utilities, gather telemetry, and iterate with partner feedback in real time."
+  },
+  {
+    title: "Navigation futures",
+    body: "Pressure-test sidebar layouts, mobile chrome, and command palette flows before launch."
+  },
+  {
+    title: "Leader controls",
+    body: "Gate access, seed cohorts, and manage pilot programs without leaving the LAB."
+  }
+] as const;
 
 export function Landing(): JSX.Element {
   const router = useRouter();
@@ -31,12 +62,10 @@ export function Landing(): JSX.Element {
   }, []);
 
   const hasConfiguredCodes = configuredCodes.length > 0;
+  const sanitizedCode = useMemo(() => code.replace(/\D+/g, "").slice(0, 6), [code]);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
+    if (typeof window === "undefined") return;
     if (window.sessionStorage.getItem(ACCESS_STORAGE_KEY) === "true") {
       router.replace("/hivelab");
     }
@@ -46,18 +75,18 @@ export function Landing(): JSX.Element {
     event.preventDefault();
 
     if (!hasConfiguredCodes) {
-      setError("Access codes are not configured. Add NEXT_PUBLIC_HIVELAB_ACCESS_CODES to your env before launching.");
+      setError("Access codes are not configured. Add NEXT_PUBLIC_HIVELAB_ACCESS_CODES to your env before launch.");
       return;
     }
 
-    if (code.length !== 6 || !/^\d+$/.test(code)) {
+    if (sanitizedCode.length !== 6) {
       setError("Enter the 6-digit access code.");
       return;
     }
 
     setIsSubmitting(true);
 
-    const isMatch = configuredCodes.includes(code);
+    const isMatch = configuredCodes.includes(sanitizedCode);
     if (isMatch) {
       if (typeof window !== "undefined") {
         window.sessionStorage.setItem(ACCESS_STORAGE_KEY, "true");
@@ -70,7 +99,8 @@ export function Landing(): JSX.Element {
   };
 
   const handleGenerateCode = useCallback(() => {
-    const buffer = typeof window !== "undefined" && window.crypto ? window.crypto.getRandomValues(new Uint32Array(1))[0] : Math.random() * 1_000_000;
+    const buffer =
+      typeof window !== "undefined" && window.crypto ? window.crypto.getRandomValues(new Uint32Array(1))[0] : Math.random() * 1_000_000;
     const nextCode = Math.floor(buffer % 1_000_000)
       .toString()
       .padStart(6, "0");
@@ -97,106 +127,158 @@ export function Landing(): JSX.Element {
   return (
     <GradientBackdrop>
       <Container>
-        <Section className="flex min-h-screen items-center justify-center py-24">
-          <Card className="w-full max-w-xl border-border/70 bg-card/75 backdrop-blur">
-            <CardContent className="flex flex-col items-center gap-10 px-10 py-12 text-center">
+        <Section className="min-h-screen py-16 sm:py-24">
+          <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]">
+            <div className="flex flex-col gap-12 text-left text-foreground">
               <div className="space-y-6">
-                <div className="relative flex flex-col items-center gap-6">
-                  <div className="glitch-logo relative">
-                    <HiveLogo variant="gradient" size={88} className="drop-shadow-[0_0_24px_rgba(255,196,26,0.35)]" aria-hidden />
-                    <HiveLogo variant="white" size={88} className="glitch-logo__layer glitch-logo__layer--offset" aria-hidden />
-                    <HiveLogo variant="gold" size={88} className="glitch-logo__layer glitch-logo__layer--offset-alt" aria-hidden />
+                <div className="relative flex flex-col gap-4">
+                  <div className="flex items-center gap-6">
+                    <div className="glitch-logo relative">
+                      <HiveLogo variant="gradient" size={96} className="drop-shadow-[0_0_28px_rgba(255,196,26,0.35)]" aria-hidden />
+                      <HiveLogo variant="white" size={96} className="glitch-logo__layer glitch-logo__layer--offset" aria-hidden />
+                      <HiveLogo variant="gold" size={96} className="glitch-logo__layer glitch-logo__layer--offset-alt" aria-hidden />
+                    </div>
+                    <span className="glitch-text text-4xl font-semibold uppercase tracking-[0.45em]" data-text="HIVE(LAB)">
+                      HIVE(LAB)
+                    </span>
                   </div>
-                  <span className="glitch-text block text-4xl font-semibold uppercase tracking-[0.35em]" data-text="HIVE(LAB)">
-                    HIVE(LAB)
-                  </span>
-                  <Eyebrow className="tracking-[0.45em] text-muted-foreground/80">Experimental Access Gate</Eyebrow>
+                  <Eyebrow className="w-fit rounded-full border border-border/40 bg-card/60 px-4 py-1 tracking-[0.35em] text-muted-foreground">
+                    Experimental campus control center
+                  </Eyebrow>
+                  <Heading level="display" className="max-w-3xl text-foreground">
+                    Where Hive’s next wave is designed, tested, and launched with the community.
+                  </Heading>
+                  <Text variant="body" className="max-w-2xl text-muted-foreground">
+                    HiveLAB is our staging ground for campus rituals, navigation systems, and automation flows. Leaders, operators, and build crews
+                    join here first to stress test ideas before they reach every Hive member.
+                  </Text>
+                </div>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                {experienceHighlights.map((feature) => (
+                  <Card key={feature.title} className="border-border/60 bg-card/70 backdrop-blur">
+                    <CardContent className="flex flex-col gap-3 px-5 py-6">
+                      <Heading level="h3" className="text-base font-semibold uppercase tracking-[0.3em] text-foreground">
+                        {feature.title}
+                      </Heading>
+                      <Text variant="bodySm" className="text-muted-foreground">
+                        {feature.body}
+                      </Text>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <Card className="border-border/70 bg-card/80 shadow-[0_22px_68px_-24px_rgba(22,24,29,0.85)] backdrop-blur">
+              <CardContent className="flex flex-col gap-8 px-9 py-10">
+                <div className="space-y-2 text-center">
+                  <Heading level="h2" className="text-sm font-semibold uppercase tracking-[0.45em] text-muted-foreground">
+                    HiveLAB access gate
+                  </Heading>
+                  <Heading level="h3" className="text-2xl font-semibold text-foreground">
+                    Enter your six-digit key
+                  </Heading>
+                  <Text variant="bodySm" className="text-muted-foreground">
+                    Keys rotate often—grab one from your launch brief or the HiveLAB ops channel, then drop it below to unlock the build lane.
+                  </Text>
                 </div>
 
-                <Heading level="display" className="text-foreground">
-                  Enter the LAB
-                </Heading>
+                <form onSubmit={handleSubmit} className="flex flex-col items-center gap-5">
+                  <InputOTP
+                    value={sanitizedCode}
+                    onChange={(value) => {
+                      const next = value.replace(/\D+/g, "").slice(0, 6);
+                      setCode(next);
+                      setError(null);
+                    }}
+                    maxLength={6}
+                    pattern="\\d*"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    containerClassName="gap-4"
+                    className="text-2xl"
+                    aria-label="HiveLAB access code"
+                  >
+                    <InputOTPGroup className="flex items-center gap-4 rounded-2xl border border-border/70 bg-background/70 px-6 py-4 ring-1 ring-border/30">
+                      {Array.from({ length: 6 }).map((_, index) => (
+                        <Fragment key={index}>
+                          <InputOTPSlot
+                            index={index}
+                            className="h-16 w-12 rounded-xl border border-border/50 bg-card/70 text-2xl font-semibold tracking-[0.2em] shadow-[0_0_18px_rgba(53,58,69,0.35)]"
+                          />
+                          {index === 1 || index === 3 ? <InputOTPSeparator className="text-muted-foreground" /> : null}
+                        </Fragment>
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
+                  <Button type="submit" size="lg" variant="brand" className="w-full" disabled={isSubmitting || sanitizedCode.length !== 6}>
+                    {isSubmitting ? "Checking…" : "Enter HiveLAB"}
+                  </Button>
+                </form>
 
-                <Text variant="body" className="mx-auto max-w-md text-muted-foreground">
-                  HiveLAB previews new systems, navigation, and rituals before they ship to the wider Hive community. Drop the six-digit code to unlock the build.
-                </Text>
-              </div>
+                {error ? (
+                  <Text variant="bodySm" className="text-destructive text-center" role="alert">
+                    {error}
+                  </Text>
+                ) : (
+                  <Text variant="bodySm" className="text-muted-foreground text-center">
+                    Need a key? Ping the HiveLAB crew. Access persists for this session once validated.
+                  </Text>
+                )}
 
-              <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-4">
-                <Input
-                  value={code}
-                  onChange={(event) => {
-                    setCode(event.target.value.replace(/\D+/g, "").slice(0, 6));
-                    setError(null);
-                  }}
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  pattern="\\d{6}"
-                  placeholder="000000"
-                  maxLength={6}
-                  className="h-16 rounded-lg border-border/60 bg-background/60 text-center text-2xl tracking-[0.6em]"
-                  aria-label="HiveLAB access code"
-                />
-                <Button type="submit" size="lg" variant="brand" disabled={isSubmitting || code.length !== 6}>
-                  {isSubmitting ? "Checking…" : "Enter HiveLAB"}
-                </Button>
-              </form>
-
-              {error ? (
-                <Text variant="bodySm" className="text-destructive" role="alert">
-                  {error}
-                </Text>
-              ) : (
-                <Text variant="bodySm" className="text-muted-foreground">
-                  Codes refresh often—check your launch brief or ask the HiveLAB crew if you need a hand.
-                </Text>
-              )}
-
-              <div className="w-full space-y-3">
-                <Button variant="ghost" size="sm" className="mx-auto flex items-center gap-2 text-muted-foreground hover:text-foreground" type="button" onClick={() => setShowGenerator((prev) => !prev)}>
-                  {showGenerator ? "Hide code tools" : "Create a new access code"}
-                </Button>
-
-                {showGenerator ? (
-                  <div className="rounded-2xl border border-dashed border-border/60 bg-muted/20 p-6 text-left">
-                    <Heading level="h3" className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-                      Code generator
+                <div className="space-y-4 rounded-2xl border border-dashed border-border/60 bg-muted/10 p-6">
+                  <div className="flex items-center justify-between gap-2">
+                    <Heading level="h3" className="text-xs font-semibold uppercase tracking-[0.4em] text-muted-foreground">
+                      Operator utilities
                     </Heading>
-                    <Text variant="bodySm" className="mt-2 text-muted-foreground">
-                      Generate a fresh six-digit code for limited drops. Add it to `NEXT_PUBLIC_HIVELAB_ACCESS_CODES` (comma separated) before pushing live, then share with your crew.
-                    </Text>
-                    <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <Button variant="outline" size="sm" type="button" onClick={handleGenerateCode}>
-                        Generate 6-digit code
-                      </Button>
-                      {generatedCode ? (
-                        <div className="flex items-center gap-2 rounded-full border border-border/60 bg-background/70 px-4 py-2">
-                          <code className="text-base font-semibold tracking-[0.4em] text-foreground">{generatedCode}</code>
-                          <Button variant="ghost" size="sm" type="button" onClick={handleCopyGenerated}>
-                            {copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy"}
-                          </Button>
-                        </div>
+                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" type="button" onClick={() => setShowGenerator((prev) => !prev)}>
+                      {showGenerator ? "Hide tools" : "Generate code"}
+                    </Button>
+                  </div>
+
+                  {showGenerator ? (
+                    <div className="space-y-4">
+                      <Text variant="bodySm" className="text-muted-foreground">
+                        Generate a fresh key, add it to `NEXT_PUBLIC_HIVELAB_ACCESS_CODES`, redeploy, then share with your pilot cohort.
+                      </Text>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button variant="outline" size="sm" type="button" onClick={handleGenerateCode}>
+                          Generate code
+                        </Button>
+                        {generatedCode ? (
+                          <div className="flex items-center gap-2 rounded-full border border-border/50 bg-background/80 px-4 py-2">
+                            <code className="text-lg font-semibold tracking-[0.35em] text-foreground">{generatedCode}</code>
+                            <Button variant="ghost" size="sm" type="button" onClick={handleCopyGenerated}>
+                              {copyState === "copied" ? "Copied" : copyState === "error" ? "Retry" : "Copy"}
+                            </Button>
+                          </div>
+                        ) : null}
+                      </div>
+                      {copyState === "error" ? (
+                        <Text variant="bodySm" className="text-destructive">
+                          Clipboard permissions blocked. Copy manually before sharing.
+                        </Text>
                       ) : null}
-                    </div>
-                    {copyState === "error" ? (
-                      <Text variant="bodySm" className="mt-2 text-destructive">
-                        Copy permissions blocked. Manually note the code above.
-                      </Text>
-                    ) : null}
-                    {!hasConfiguredCodes ? (
-                      <Text variant="bodySm" className="mt-3 text-destructive">
-                        No codes detected yet. Update your environment variable before launch.
-                      </Text>
-                    ) : (
-                      <Text variant="bodySm" className="mt-3 text-muted-foreground/80">
+                      <Text variant="bodySm" className="text-muted-foreground/80">
                         Active codes configured: {configuredCodes.length}
                       </Text>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            </CardContent>
-          </Card>
+                      {!hasConfiguredCodes ? (
+                        <Text variant="bodySm" className="text-destructive">
+                          No active codes detected. Update your env before launch.
+                        </Text>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <Text variant="bodySm" className="text-muted-foreground">
+                      Quickly generate pilot keys, copy them, and keep launch cadence tight.
+                    </Text>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </Section>
       </Container>
 
@@ -324,3 +406,4 @@ export function Landing(): JSX.Element {
     </GradientBackdrop>
   );
 }
+
