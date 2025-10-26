@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "types": ["mocha", "chai", "sinon"]
-  },
-  "include": ["src/test/**/*.ts"]
-} 

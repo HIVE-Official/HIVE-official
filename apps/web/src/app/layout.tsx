@@ -1,52 +1,97 @@
+// Bounded Context Owner: Identity & Access Management Guild
+import "./globals.css";
+import "@hive/ui/styles.css";
+// Align app with Storybook brand and component-level tokens
+import "../../../../packages/ui/src/brand/brand.css";
+import "../../../../packages/ui/src/styles/tokens.css";
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Providers } from "./providers";
-import "./globals.css";
-import { WelcomeMatProvider } from "../components/welcome-mat-provider";
-import { FeedbackToast } from "../components/feedback-toast";
-import { ErrorBoundary } from "../components/error-boundary";
-import { UniversalShellProvider } from "./universal-shell-provider";
+import AppShell from "./shell";
+import RouteTransitions from "./route-transitions";
+import EarlyAccessRibbon from "../components/layout/EarlyAccessRibbon";
+import Footer from "../components/layout/Footer";
+import React from "react";
 
-// Force all routes to be dynamically rendered (disable SSG)
-export const dynamic = 'force-dynamic';
-export const dynamicParams = true;
-export const revalidate = 0;
-
-// Using Geist font family from Vercel for optimal readability and modern aesthetics
-// Geist Sans for UI text and Geist Mono for code snippets
+const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "HIVE",
-  description: "The social platform for builders.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    viewportFit: "cover", // Enable safe area insets for notch support
+  title: "HIVE — Campus OS run by students",
+  description: "Student-owned. Tech-sleek. Trust-visible. Always evolving.",
+  metadataBase: new URL(metadataBaseUrl),
+  openGraph: {
+    title: "HIVE — Campus OS run by students",
+    description: "Student-owned. Tech-sleek. Trust-visible. Always evolving.",
+    type: "website",
+    url: metadataBaseUrl,
+    siteName: "HIVE",
+    images: [
+      {
+        url: "/og/hive-og.svg",
+        width: 1200,
+        height: 630,
+        alt: "HIVE — Campus OS run by students"
+      }
+    ]
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "HIVE — Campus OS run by students",
+    description: "Student-owned. Tech-sleek. Trust-visible. Always evolving.",
+    images: ["/og/hive-og.svg"],
+    creator: "@hive"
+  }
 };
 
+const geistSans = GeistSans;
+const geistMono = GeistMono;
+
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  children
+}: {
+  readonly children: React.ReactNode;
+}): JSX.Element {
   return (
-    <html
-      lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} dark`}
-      style={{ colorScheme: "dark" }}
-    >
-      <body className={`${GeistSans.className} antialiased bg-hive-background-primary text-hive-text-primary`} style={{ backgroundColor: '#0A0A0B' }}>
-        <ErrorBoundary>
-          <Providers>
-            <UniversalShellProvider>
-              <WelcomeMatProvider>{children}</WelcomeMatProvider>
-            </UniversalShellProvider>
-            <FeedbackToast />
-          </Providers>
-        </ErrorBoundary>
+    <html lang="en" className={`brand-hive dark ${geistSans.className} ${geistMono.className}`}>
+      <body className="min-h-screen bg-background text-foreground">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                try {
+                  var key='hive-theme';
+                  var stored=localStorage.getItem(key);
+                  var prefersLight=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches;
+                  var theme=(stored==="light"||stored==="dark")?stored:"dark";
+                  var root=document.documentElement; root.classList.toggle('light', theme==='light'); root.classList.toggle('dark', theme==='dark');
+                } catch(_){}
+              })();
+            `
+          }}
+        />
+        <Providers>
+          {/* Site-wide early-access ribbon (visible on landing too) */}
+          <EarlyAccessRibbon />
+          <AppShell>
+            <RouteTransitions>{children}</RouteTransitions>
+          </AppShell>
+          <Footer />
+        </Providers>
+        {/* JSON-LD for basic org/site markup */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'HIVE',
+              url: metadataBaseUrl,
+              slogan: 'Campus OS — run by students',
+              sameAs: [],
+            })
+          }}
+        />
       </body>
     </html>
   );

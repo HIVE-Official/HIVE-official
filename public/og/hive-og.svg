@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f1115"/>
+      <stop offset="100%" stop-color="#0b0d12"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.2" cy="0.25" r="0.6">
+      <stop offset="0%" stop-color="#ffc41a" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffc41a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="260" cy="180" r="180" fill="url(#halo)"/>
+  <g transform="translate(120,140)">
+    <rect x="0" y="0" width="180" height="180" rx="28" fill="#1a1f2b" stroke="#2a3142"/>
+    <text x="90" y="112" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="72" fill="#ffc41a" text-anchor="middle">H</text>
+  </g>
+  <g transform="translate(360,120)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="54" fill="#e6e7ea">HIVE</text>
+    <text x="0" y="44" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="28" fill="#9aa0ae">Campus OS — run by students.</text>
+  </g>
+  <g transform="translate(360,210)" fill="#9aa0ae" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="22">
+    <text y="0">Student-owned. Tech-sleek. Trust-visible. Always evolving.</text>
+  </g>
+  <g transform="translate(360,290)" fill="#c9ced9" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="18">
+    <text y="0">Sovereign Spaces • Campus-wide Voice • Distribution that works • Extensions, not complexity</text>
+  </g>
+</svg>

@@ -1,0 +1,144 @@
+.alert-root {
+  --alert-border: hsla(var(--border) / 0.6);
+  --alert-surface: hsl(var(--card));
+  --alert-foreground: hsl(var(--foreground));
+  --alert-shadow: 0 12px 24px hsla(var(--foreground) / 0.08);
+  --alert-icon-bg: hsla(var(--foreground) / 0.08);
+  --alert-icon-color: hsl(var(--primary));
+  --alert-accent: hsla(var(--primary) / 0.8);
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  border: 1px solid var(--alert-border);
+  background: var(--alert-surface);
+  color: var(--alert-foreground);
+  box-shadow: var(--alert-shadow);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.alert-root::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.9rem;
+  inset-inline-start: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--alert-accent);
+  opacity: 0.85;
+}
+
+.alert-root:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 32px hsla(var(--foreground) / 0.12);
+}
+
+.alert-root[data-variant="gold"] {
+  --alert-border: hsla(var(--primary) / 0.5);
+  --alert-surface: linear-gradient(150deg, hsla(var(--primary) / 0.14), hsla(var(--background) / 0.96));
+  --alert-icon-bg: hsla(var(--primary) / 0.12);
+  --alert-icon-color: hsl(var(--primary));
+  --alert-accent: hsla(var(--primary) / 0.85);
+}
+
+.alert-root[data-variant="info"] {
+  --alert-border: hsla(210 92% 60% / 0.45);
+  --alert-surface: linear-gradient(150deg, hsla(214 64% 14% / 0.88), hsla(208 100% 18% / 0.25));
+  --alert-icon-bg: hsla(210 92% 60% / 0.12);
+  --alert-icon-color: hsl(204 92% 72%);
+  --alert-accent: hsl(204 94% 72%);
+}
+
+.alert-root[data-variant="success"] {
+  --alert-border: hsla(142 71% 45% / 0.45);
+  --alert-surface: linear-gradient(150deg, hsla(155 74% 16% / 0.88), hsla(150 68% 24% / 0.22));
+  --alert-icon-bg: hsla(142 76% 45% / 0.12);
+  --alert-icon-color: hsl(144 58% 55%);
+  --alert-accent: hsl(144 58% 52%);
+}
+
+.alert-root[data-variant="warning"] {
+  --alert-border: hsla(48 100% 58% / 0.5);
+  --alert-surface: linear-gradient(150deg, hsla(46 100% 14% / 0.9), hsla(48 100% 48% / 0.18));
+  --alert-icon-bg: hsla(48 100% 60% / 0.12);
+  --alert-icon-color: hsl(48 100% 63%);
+  --alert-accent: hsl(48 100% 58%);
+}
+
+.alert-root[data-variant="destructive"] {
+  --alert-border: hsla(352 83% 57% / 0.5);
+  --alert-surface: linear-gradient(150deg, hsla(350 92% 14% / 0.9), hsla(350 84% 52% / 0.18));
+  --alert-icon-bg: hsla(352 83% 57% / 0.14);
+  --alert-icon-color: hsl(352 83% 62%);
+  --alert-accent: hsl(352 83% 57%);
+}
+
+.alert-root[data-variant="muted"],
+.alert-root[data-variant="default"] {
+  --alert-border: hsla(var(--border) / 0.65);
+  --alert-surface: hsl(var(--card));
+  --alert-icon-bg: hsla(var(--foreground) / 0.08);
+  --alert-icon-color: hsl(var(--foreground));
+  --alert-accent: hsla(var(--foreground) / 0.25);
+}
+
+.alert-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: calc(var(--radius-md) + 0.05rem);
+  background: var(--alert-icon-bg);
+  color: var(--alert-icon-color);
+  box-shadow: inset 0 0 0 1px hsla(var(--foreground) / 0.05);
+}
+
+.alert-icon svg,
+.alert-icon *[data-lucide-icon] {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 1.5;
+}
+
+.alert-icon[data-default-icon] {
+  position: relative;
+}
+
+.alert-icon[data-default-icon]::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  transform: translate(-50%, -50%);
+  background: var(--alert-icon-color);
+  mask: url("/assets/hive-logo-white.svg") center / contain no-repeat;
+  -webkit-mask: url("/assets/hive-logo-white.svg") center / contain no-repeat;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.alert-title {
+  font-size: var(--type-400);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+}
+
+.alert-description {
+  font-size: var(--type-300);
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+}

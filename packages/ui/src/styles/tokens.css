@@ -1,0 +1,5 @@
+:root {
+  --button-radius: var(--radius-md);
+  --button-radius-sm: var(--radius-sm);
+  --button-radius-lg: var(--radius-lg);
+}

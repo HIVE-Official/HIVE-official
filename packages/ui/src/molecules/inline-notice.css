@@ -1,0 +1,52 @@
+.inline-notice {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  border-radius: calc(var(--radius-md) + 0.05rem);
+  border: 1px solid hsl(var(--border) / 0.65);
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  padding: 0.5rem 0.75rem;
+}
+
+.inline-notice::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.5rem;
+  inset-inline-start: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--notice-accent, hsl(var(--foreground) / 0.25));
+  opacity: 0.9;
+}
+
+.inline-notice-icon {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  width: 1rem;
+  height: 1rem;
+  color: var(--notice-accent, hsl(var(--foreground) / 0.55));
+}
+
+.inline-notice-icon svg { width: 1rem; height: 1rem; }
+
+.inline-notice-content { flex: 1 1 auto; min-width: 0; }
+
+.inline-notice-heading { font-size: var(--type-300); font-weight: var(--weight-medium); line-height: 1.3; }
+
+.inline-notice-body { font-size: var(--type-300); color: hsl(var(--muted-foreground)); line-height: 1.55; }
+
+.inline-notice-action { flex: 0 0 auto; margin-left: 0.25rem; }
+
+/* Variants set the accent only; keep surface neutral and calm */
+.inline-notice[data-variant="neutral"] { --notice-accent: hsl(var(--foreground) / 0.35); }
+.inline-notice[data-variant="info"] { --notice-accent: hsl(var(--ring)); }
+.inline-notice[data-variant="success"] { --notice-accent: hsl(var(--success)); }
+.inline-notice[data-variant="warning"] { --notice-accent: hsl(var(--warning)); }
+.inline-notice[data-variant="destructive"] { --notice-accent: hsl(var(--destructive)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .inline-notice { transition: none; }
+}
+

@@ -1,327 +1,81 @@
+// Bounded Context Owner: HiveLab Guild
+import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { toolService, serializeTool } from "../../../server/tools/service";
+import { requireActorProfileId } from "../../../server/auth/session-actor";
+import { spaceService } from "../../../server/spaces/service";
 
-// Define tool schemas locally (not in core package)
-const CreateToolSchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
-  category: z.string().optional(),
-  type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
-  status: z.enum(['draft', 'preview', 'published']).default('draft'),
-  config: z.any().optional(),
-});
+export async function POST(request: NextRequest) {
+  const body = await request.json().catch(() => ({}));
+  const BodySchema = z.object({
+    name: z.coerce.string().trim().min(1).default("New Tool"),
+    description: z.coerce.string().trim().default("Untitled draft"),
+    campusId: z.coerce.string().trim().optional(),
+    spaceId: z.coerce.string().trim().optional(),
+    templateId: z.coerce.string().trim().optional()
+  });
+  const parsed = BodySchema.safeParse(body);
+  const { name, description, campusId: bodyCampusId, spaceId, templateId } = parsed.success
+    ? parsed.data
+    : BodySchema.parse({});
 
-const createToolDefaults = {
-  status: 'draft' as const,
-  type: 'visual' as const,
-  config: {},
-};
-
-// Rate limiting: 10 tool creations per hour per user
-// // const createToolLimiter = rateLimit({
-//   windowMs: 60 * 60 * 1000, // 1 hour
-//   max: 10, // 10 requests per hour
-// });
-
-// GET /api/tools - List user's tools
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = getUserId(request);
-
-  const { searchParams } = new URL(request.url);
-  const spaceId = searchParams.get("spaceId");
-  const status = searchParams.get("status");
-  const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
-  const offset = parseInt(searchParams.get("offset") || "0");
-
-  // Build query
-  let query = adminDb
-    .collection("tools")
-    .where("ownerId", "==", userId)
-    .orderBy("updatedAt", "desc");
-
-    // Filter by space if provided
-    if (spaceId) {
-      query = query.where("spaceId", "==", spaceId);
-    }
-
-    // Filter by status if provided
-    if (status && ["draft", "preview", "published"].includes(status)) {
-      query = query.where("status", "==", status);
-    }
-
-    // Apply pagination
-    query = query.limit(limit).offset(offset);
-
-    const snapshot = await query.get();
-    const tools = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    // Get total count for pagination
-    const countQuery = adminDb.collection("tools").where("ownerId", "==", userId);
-    const countSnapshot = await countQuery.count().get();
-    const total = countSnapshot.data().count;
-
-    return respond.success({
-      tools,
-      pagination: {
-        total,
-        limit,
-        offset,
-        hasMore: offset + limit < total,
-      }
-    });
+  // Resolve actor from session; allow dev override only when BYPASS_AUTH
+  const profileId = await requireActorProfileId(request, true);
+  if (!profileId) {
+    return NextResponse.json(
+      { success: false, error: { code: "UNAUTHENTICATED", message: "Sign in to create tools" } },
+      { status: 401 }
+    );
   }
-);
 
-// Enhanced schema to support template-based creation
-const EnhancedCreateToolSchema = CreateToolSchema.extend({
-  templateId: z.string().optional(),
-  type: z.enum(['template', 'visual', 'code', 'wizard']).default('visual'),
-  config: z.any().optional(), // Allow any config for flexibility
-  elements: z.array(z.any()).optional(), // Add elements support
-});
-
-// POST /api/tools - Create new tool (supports templates)
-export const POST = withAuthValidationAndErrors(
-  EnhancedCreateToolSchema,
-  async (request: AuthenticatedRequest, context, validatedData: any, respond) => {
-    const userId = getUserId(request);
-
-    // Rate limiting
+  // Resolve campusId: prefer explicit campusId; else derive from spaceId if provided
+  let campusId = bodyCampusId ?? null;
+  if (!campusId && spaceId) {
     try {
-      // await createToolLimiter.check(); // Check rate limit for this user
+      const space = await spaceService.getSpaceById(spaceId);
+      campusId = space?.campusId ?? null;
     } catch {
-      return respond.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR", { status: 429 });
+      campusId = null;
     }
-
-    logger.info('🔨 Creating tool for user', { userUid: userId, endpoint: '/api/tools'  });
-
-    // If creating a space tool, verify user has builder permissions
-    if (validatedData.isSpaceTool && validatedData.spaceId) {
-      const spaceDoc = await adminDb
-        .collection("spaces")
-        .doc(validatedData.spaceId)
-        .get();
-      if (!spaceDoc.exists) {
-        return respond.error("Space not found", "RESOURCE_NOT_FOUND", { status: 404 });
-      }
-
-      const spaceData = spaceDoc.data();
-      const userRole = spaceData?.members?.[userId]?.role;
-
-      if (!["builder", "admin"].includes(userRole)) {
-        return respond.error("Insufficient permissions to create tools in this space", "FORBIDDEN", { status: 403 });
-      }
-    }
-
-    // Handle template-based creation
-    let templateElements = [];
-    let templateConfig = {};
-    if (validatedData.templateId) {
-      try {
-        const templateDoc = await adminDb
-          .collection("tool_templates")
-          .doc(validatedData.templateId)
-          .get();
-        
-        if (templateDoc.exists) {
-          const templateData = templateDoc.data();
-          templateElements = templateData?.elements || [];
-          templateConfig = templateData?.config || {};
-        }
-      } catch (error) {
-        logger.warn(
-      `Failed to load template at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-        // Continue without template
-      }
-    }
-
-    // Create tool document
-    const toolData = createToolDefaults(userId, validatedData);
-    const now = new Date();
-
-    const tool = {
-      ...toolData,
-      elements: templateElements, // Use template elements if available
-      config: { ...toolData.config, ...templateConfig, ...validatedData.config }, // Merge configs
-      metadata: {
-        ...toolData.metadata,
-        templateId: validatedData.templateId,
-        toolType: validatedData.type,
-      },
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    // Validate the complete tool object
-    const validatedTool = ToolSchema.parse(tool);
-
-    // Save to Firestore
-    const toolRef = await adminDb.collection("tools").add(validatedTool);
-
-    // Create initial version
-    const initialVersion = {
-      version: "1.0.0",
-      changelog: validatedData.templateId ? `Created from template ${validatedData.templateId}` : "Initial version",
-      createdAt: now,
-      createdBy: userId,
-      isStable: false,
-    };
-
-    await toolRef.collection("versions").doc("1.0.0").set(initialVersion);
-
-    // If this is for a specific space, also add to space's tools collection
-    if (validatedData.spaceId && validatedData.spaceId !== 'personal') {
-      try {
-        const spaceToolRef = adminDb
-          .collection('spaces')
-          .doc(validatedData.spaceId)
-          .collection('tools')
-          .doc(toolRef.id);
-          
-        await spaceToolRef.set({
-          toolId: toolRef.id,
-          name: validatedData.name,
-          description: validatedData.description,
-          createdBy: userId,
-          createdAt: now,
-          type: validatedData.type,
-          status: 'draft'
-        });
-      } catch (error) {
-        logger.warn(
-      `Failed to add tool to space collection at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-        // Don't fail the whole operation
-      }
-    }
-
-    // Update user's tool count
-    try {
-      const userRef = adminDb.collection('users').doc(userId);
-      const userDoc = await userRef.get();
-      const currentStats = userDoc.data()?.stats || {};
-      
-      await userRef.update({
-        'stats.toolsCreated': (currentStats.toolsCreated || 0) + 1,
-        updatedAt: now
-      });
-    } catch (error) {
-      logger.warn(
-      `Failed to update user stats at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    }
-
-    // Track analytics event
-    await adminDb.collection("analytics_events").add({
-      eventType: "tool_created",
-      userId: userId,
-      toolId: toolRef.id,
-      spaceId: validatedData.spaceId || null,
-      isSpaceTool: validatedData.isSpaceTool,
-      timestamp: now,
-      metadata: {
-        toolName: validatedData.name,
-        toolType: validatedData.type,
-        hasDescription: !!validatedData.description,
-        hasTemplate: !!validatedData.templateId,
-        templateId: validatedData.templateId,
-      } });
-
-    const createdTool = {
-      ...validatedTool,
-      id: toolRef.id,
-    };
-
-    logger.info('✅ Successfully created tool', { toolRefId: toolRef.id, endpoint: '/api/tools'  });
-
-    return respond.success({
-      tool: createdTool,
-      message: `Tool "${validatedData.name}" created successfully`,
-    }, { status: 201 });
   }
-);
-
-// Schema for tool update requests
-const UpdateToolSchema = z.object({
-  toolId: z.string().min(1, 'Tool ID is required'),
-}).extend(EnhancedCreateToolSchema.partial().shape);
-
-// PUT /api/tools - Update existing tool
-export const PUT = withAuthValidationAndErrors(
-  UpdateToolSchema,
-  async (request: AuthenticatedRequest, context, validatedData: any, respond) => {
-    const userId = getUserId(request);
-    const { toolId, ...updateData } = validatedData;
-
-    logger.info('🔨 Updating tool for user', { toolId, userId, endpoint: '/api/tools' });
-
-    // Get existing tool
-    const toolDoc = await adminDb.collection("tools").doc(toolId).get();
-    if (!toolDoc.exists) {
-      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
-    }
-
-    const existingTool = toolDoc.data();
-
-    // Check ownership
-    if (existingTool?.ownerId !== userId) {
-      return respond.error("Not authorized to update this tool", "FORBIDDEN", { status: 403 });
-    }
-
-    const now = new Date();
-    const updatedTool = {
-      ...existingTool,
-      ...updateData,
-      updatedAt: now,
-    };
-
-    // Update the tool
-    await adminDb.collection("tools").doc(toolId).update(updatedTool);
-
-    // Create new version if elements changed
-    if (updateData.elements && JSON.stringify(updateData.elements) !== JSON.stringify(existingTool?.elements)) {
-      const versionNumber = `1.${Date.now()}`;
-      const newVersion = {
-        version: versionNumber,
-        changelog: "Tool updated via builder",
-        createdAt: now,
-        createdBy: userId,
-        isStable: false,
-      };
-
-      await adminDb.collection("tools").doc(toolId).collection("versions").doc(versionNumber).set(newVersion);
-    }
-
-    // Track analytics event
-    await adminDb.collection("analytics_events").add({
-      eventType: "tool_updated",
-      userId: userId,
-      toolId: toolId,
-      timestamp: now,
-      metadata: {
-        fieldsUpdated: Object.keys(updateData),
-        hasElementsChange: !!updateData.elements,
-      } });
-
-    const result = {
-      ...updatedTool,
-      id: toolId,
-    };
-
-    logger.info('✅ Successfully updated tool', { toolId, endpoint: '/api/tools' });
-
-    return respond.success({
-      tool: result,
-      message: `Tool "${updatedTool.name}" updated successfully`
-    });
+  if (!campusId) {
+    return NextResponse.json(
+      { success: false, error: { code: "INVALID", message: "campusId (or a valid spaceId) is required" } },
+      { status: 400 }
+    );
   }
-);
+
+  const id = `tool-${randomUUID()}`;
+
+  // Create draft. If no templateId provided, include a minimal default element.
+  const result = await toolService.createDraft({
+    id,
+    campusId,
+    name,
+    description,
+    createdBy: profileId,
+    spaceId,
+    templateId,
+    elements: templateId
+      ? undefined
+      : [
+          {
+            id: "quick_form",
+            name: "Quick Form",
+            type: "collector",
+            config: { fieldLimit: 1 }
+          }
+        ]
+  });
+
+  if (!result.ok) {
+    const code = result.error === "FORBIDDEN" ? 403 : 400;
+    return NextResponse.json(
+      { success: false, error: { code: result.error === "FORBIDDEN" ? "FORBIDDEN" : "CREATE_FAILED", message: String(result.error) } },
+      { status: code }
+    );
+  }
+
+  return NextResponse.json({ success: true, data: serializeTool(result.value) });
+}

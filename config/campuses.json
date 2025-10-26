@@ -1,0 +1,10 @@
+{
+  "campuses": [
+    {
+      "campusId": "ub-buffalo",
+      "name": "University at Buffalo",
+      "emailDomains": ["buffalo.edu"],
+      "default": true
+    }
+  ]
+}

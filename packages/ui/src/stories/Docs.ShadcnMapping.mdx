@@ -1,0 +1,26 @@
+---
+title: Foundation/Shadcn Mapping
+---
+
+# Shadcn Mapping (Hive)
+
+- Import via `@/atoms` or `@/index`; avoid `@/components/ui/*` outside atoms.
+- Tokens from `@hive/tokens` drive surfaces, borders, rings, motion, and typography.
+- Dials in the toolbar adjust radius, density, elevation, glass, contrast, motion.
+
+## Curated primitives
+
+Button, Input, Textarea, Checkbox, RadioGroup, Switch, Label, Badge, Card, Separator, Skeleton, Progress, Slider, Toggle, Tooltip, Avatar.
+
+## Overlays & Menus
+
+Dialog, Sheet, DropdownMenu, Command (Combobox), Tabs, Select, Popover.
+
+## Customizations
+
+- Focus-ring: 2px token ring; offset for clarity.
+- Glass surfaces: use elevation-aware utilities: `glass-subtle`, `glass-float`, `glass-elevated`, `glass-command`. Legacy `surface-glass` still supported; disable via `.no-glass`.
+- Motion: canonical 100–600ms scale (common: 150/200/300/400ms), easings tokenized; reduced-motion respected.
+- Density: 0.92/1/1.08 scales for typography and spacing.
+
+See docs/design/SHADCN_CATALOG.md and docs/design/INTERACTION_CONTRACTS.md for full details.

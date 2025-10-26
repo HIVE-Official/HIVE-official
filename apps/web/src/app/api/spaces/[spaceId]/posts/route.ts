@@ -1,369 +1,229 @@
+// Bounded Context Owner: Community Guild
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { withAuth, type AuthenticatedRequest } from "@/lib/middleware/auth";
-import { postCreationRateLimit } from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import { sseRealtimeService } from "@/lib/sse-realtime-service";
+import {
+  spaceService,
+  spacePostService,
+  spaceMediaApprovalService,
+  serializePost,
+  SPACE_ROLE_PERMISSIONS
+} from "../../../../../server/spaces/service";
+
+const AttachmentSchema = z.object({
+  type: z.enum(["image", "file", "link", "video"]).optional().default("link"),
+  url: z.string().url().min(1),
+  title: z.string().trim().min(1).optional(),
+  description: z.string().trim().min(1).optional()
+});
 
 const CreatePostSchema = z.object({
-  content: z.string().min(1).max(2000),
-  type: z.enum(["text", "image", "link", "tool"]).default("text"),
-  imageUrl: z.string().url().optional(),
-  linkUrl: z.string().url().optional(),
-  toolId: z.string().optional() });
+  authorId: z.string().min(1),
+  authorHandle: z.string().min(1),
+  content: z.string().min(1),
+  tags: z.array(z.string().min(1)).optional(),
+  attachments: z.array(AttachmentSchema).optional()
+});
 
-// Using dbAdmin directly for consistency
-
-// Simple profanity check - in production, use a proper service
-const checkProfanity = (text: string): boolean => {
-  const profanityWords = ["spam", "scam"]; // Minimal list for demo
-  return profanityWords.some((word) => text.toLowerCase().includes(word));
-};
-
-// GET /api/spaces/[spaceId]/posts - Get posts for a space
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
+  _request: Request,
+  context: { params: { spaceId: string } }
 ) {
-  try {
-    // Get and validate auth token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+  const space = await spaceService.getSpaceById(context.params.spaceId);
 
-    const token = authHeader.substring(7);
-
-    let decodedToken;
-    let userId;
-
-    // Handle dev tokens in development mode
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
-      userId = token.replace('dev_token_', '');
-      // Handle session token format
-      if (userId.includes('_')) {
-        userId = userId.split('_')[0];
-      }
-      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
-    } else {
-      const auth = getAuth();
-      decodedToken = await auth.verifyIdToken(token);
-      userId = decodedToken.uid;
-    }
-
-    const { spaceId } = await params;
-
-    const { searchParams } = new URL(request.url);
-    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 50);
-    const lastPostId = searchParams.get("lastPostId");
-    const type = searchParams.get("type");
-    const minReplies = parseInt(searchParams.get("minReplies") || "0");
-
-    // Check if user is member of the space using nested collection structure
-    const memberDoc = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Build query for posts
-    let query = dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts");
-
-    // Handle hot threads request
-    if (type === 'hot_threads') {
-      query = query
-        .where("commentCount", ">=", minReplies)
-        .orderBy("commentCount", "desc")
-        .orderBy("lastActivity", "desc");
-    } else {
-      query = query.orderBy("createdAt", "desc");
-    }
-
-    query = query.limit(limit);
-
-    if (lastPostId) {
-      const lastPostDoc = await dbAdmin
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("posts")
-        .doc(lastPostId)
-        .get();
-
-      if (lastPostDoc.exists) {
-        query = query.startAfter(lastPostDoc);
-      }
-    }
-
-    const postsSnapshot = await query.get();
-
-    // Get pinned posts separately (always show at top)
-    // TODO: Create composite index for production: isPinned + pinnedAt
-    // For now, we'll fetch pinned posts without ordering by pinnedAt
-    const pinnedQuery = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .where("isPinned", "==", true)
-      .get();
-
-    const posts = [];
-    const pinnedPosts = [];
-
-    // Process pinned posts
-    for (const doc of pinnedQuery.docs) {
-      const postData = doc.data();
-
-      // Get author info
-      const authorDoc = await dbAdmin
-        .collection("users")
-        .doc(postData.authorId)
-        .get();
-      const author = authorDoc.exists ? authorDoc.data() : null;
-
-      pinnedPosts.push({
-        id: doc.id,
-        ...postData,
-        author: author
-          ? {
-              id: authorDoc.id,
-              fullName: author.fullName,
-              handle: author.handle,
-              photoURL: author.photoURL,
-            }
-          : null });
-    }
-
-    // Process regular posts
-    for (const doc of postsSnapshot.docs) {
-      const postData = doc.data();
-
-      // Skip if already in pinned posts
-      if (postData.isPinned) continue;
-
-      // Get author info
-      const authorDoc = await dbAdmin
-        .collection("users")
-        .doc(postData.authorId)
-        .get();
-      const author = authorDoc.exists ? authorDoc.data() : null;
-
-      posts.push({
-        id: doc.id,
-        ...postData,
-        author: author
-          ? {
-              id: authorDoc.id,
-              fullName: author.fullName,
-              handle: author.handle,
-              photoURL: author.photoURL,
-            }
-          : null });
-    }
-
-    return NextResponse.json({
-      posts: [...pinnedPosts, ...posts],
-      hasMore: postsSnapshot.docs.length === limit,
-      lastPostId:
-        postsSnapshot.docs.length > 0
-          ? postsSnapshot.docs[postsSnapshot.docs.length - 1].id
-          : null });
-  } catch (error) {
-    logger.error(
-      `Error fetching posts at /api/spaces/[spaceId]/posts`,
-      error instanceof Error ? error : new Error(String(error))
+  if (!space) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "SPACE_NOT_FOUND",
+          message: "Space not found"
+        }
+      },
+      { status: 404 }
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch posts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
+
+  const posts = await spacePostService.list(space.id, 50);
+
+  return NextResponse.json({
+    success: true,
+    data: posts.map(serializePost)
+  });
 }
 
-// POST /api/spaces/[spaceId]/posts - Create a new post
 export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
+  request: Request,
+  context: { params: { spaceId: string } }
 ) {
-  // Declare variables outside try block for error logging
-  let spaceId: string = '';
-  let userId: string = '';
+  const space = await spaceService.getSpaceById(context.params.spaceId);
 
-  try {
-    const resolvedParams = await params;
-    spaceId = resolvedParams.spaceId;
+  if (!space) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "SPACE_NOT_FOUND",
+          message: "Space not found"
+        }
+      },
+      { status: 404 }
+    );
+  }
 
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+  const json = await request.json().catch(() => null);
+  const parsed = CreatePostSchema.safeParse(json ?? {});
 
-    const token = authHeader.substring(7);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "INVALID_BODY",
+          message: parsed.error.issues.map((issue) => issue.message).join(", ")
+        }
+      },
+      { status: 400 }
+    );
+  }
 
-    let decodedToken;
+  const postingPolicy = space.settings.postingPolicy ?? "members";
+  const membership = space.members.find((member) => member.profileId === parsed.data.authorId);
 
-    // Handle dev tokens in development mode
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
-      userId = token.replace('dev_token_', '');
-      // Handle session token format
-      if (userId.includes('_')) {
-        userId = userId.split('_')[0];
-      }
-      decodedToken = { uid: userId, email: 'test@buffalo.edu' };
+  if (!membership) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "NOT_A_MEMBER",
+          message: "Only members can post in this space"
+        }
+      },
+      { status: 403 }
+    );
+  }
+
+  if (postingPolicy === "leaders_only" && !SPACE_ROLE_PERMISSIONS.canPin.has(membership.role)) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "POSTING_RESTRICTED",
+          message: "Only leaders can post in this space"
+        }
+      },
+      { status: 403 }
+    );
+  }
+
+  const attachments = parsed.data.attachments ?? [];
+  const mediaPolicy = space.settings.mediaApprovalPolicy ?? "leaders_only";
+  let requiresApproval = false;
+  if (mediaPolicy === "disabled") {
+    requiresApproval = false;
+  } else if (mediaPolicy === "all") {
+    requiresApproval = true;
+  } else {
+    requiresApproval = !SPACE_ROLE_PERMISSIONS.canPin.has(membership.role);
+  }
+
+  const pendingApprovalAttachments: {
+    type: "image" | "video" | "file" | "link";
+    url: string;
+    title?: string;
+    description?: string;
+  }[] = [];
+  const approvedAttachments: {
+    type: "image" | "video" | "file" | "link";
+    url: string;
+    title?: string;
+    description?: string;
+  }[] = [];
+
+  for (const attachment of attachments) {
+    const normalized = {
+      type: attachment.type,
+      url: attachment.url,
+      title: attachment.title ?? undefined,
+      description: attachment.description ?? undefined
+    } as const;
+
+    const needsApproval =
+      requiresApproval && (normalized.type === "image" || normalized.type === "video");
+
+    if (needsApproval) {
+      pendingApprovalAttachments.push({ ...normalized });
     } else {
-      const auth = getAuth();
-      decodedToken = await auth.verifyIdToken(token);
-      userId = decodedToken.uid;
+      approvedAttachments.push({ ...normalized });
     }
+  }
 
-    // Check rate limiting
-    const rateLimitResult = postCreationRateLimit.check(decodedToken.uid);
-    if (!rateLimitResult.success) {
-      return NextResponse.json(
-        {
-          error: "Rate limit exceeded. Please wait before posting again.",
-        },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": rateLimitResult.limit.toString(),
-            "X-RateLimit-Remaining": rateLimitResult.remaining.toString(),
-            "X-RateLimit-Reset": new Date(
-              rateLimitResult.resetTime
-            ).toISOString(),
-          },
+  const result = await spacePostService.create({
+    postId: randomUUID(),
+    spaceId: space.id,
+    authorId: parsed.data.authorId,
+    authorHandle: parsed.data.authorHandle,
+    content: parsed.data.content,
+    tags: parsed.data.tags,
+    attachments: approvedAttachments
+  });
+
+  if (!result.ok) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: {
+          code: "CREATE_FAILED",
+          message: result.error
         }
-      );
-    }
-
-    // Check if user is member of the space using nested collection structure
-    const memberDoc = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists || !memberDoc.data()?.isActive) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = (await request.json()) as unknown;
-    const validatedData = CreatePostSchema.parse(body);
-
-    // Check for profanity
-    if (checkProfanity(validatedData.content)) {
-      return NextResponse.json(
-        {
-          error:
-            "Post contains inappropriate content. Please revise and try again.",
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    // Create post document
-    const postData = {
-      ...validatedData,
-      authorId: userId,
-      spaceId: spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastActivity: new Date(), // For hot threads sorting
-      commentCount: 0, // For hot threads filtering
-      reactions: {
-        heart: 0,
       },
-      reactedUsers: {
-        heart: [],
-      },
-      isPinned: false,
-      isEdited: false,
-      isDeleted: false,
+      { status: 400 }
+    );
+  }
+
+  let pendingMedia: Array<{
+    approvalId: string;
+    attachment: {
+      type: string;
+      url: string;
+      title?: string;
+      description?: string;
     };
+  }> = [];
 
-    const postRef = await dbAdmin
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .add(postData);
-
-    // Get the created post with author info
-    const authorDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
-    const author = authorDoc.data();
-
-    const createdPost = {
-      id: postRef.id,
-      ...postData,
-      author: {
-        id: decodedToken.uid,
-        fullName: author?.fullName || "Unknown User",
-        handle: author?.handle || "unknown",
-        photoURL: author?.photoURL || null,
-      },
-    };
-
-    // Broadcast new post to space members via SSE
-    try {
-      await sseRealtimeService.sendMessage({
-        type: 'chat',
-        channel: `space:${spaceId}:posts`,
-        senderId: userId,
-        content: {
-          type: 'new_post',
-          post: createdPost,
-          spaceId: spaceId
-        },
-        metadata: {
-          timestamp: new Date().toISOString(),
-          priority: 'normal',
-          requiresAck: false,
-          retryCount: 0
-        }
-      });
-    } catch (sseError) {
-      // Don't fail the request if SSE fails
-      logger.warn('Failed to broadcast new post via SSE', { sseError, postId: postRef.id });
-    }
-
-    return NextResponse.json({ post: createdPost }, { status: HttpStatus.CREATED });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid post data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    // Enhanced error logging to debug the issue
-    console.error('🔴 Post creation error details:', {
-      error: error instanceof Error ? {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      } : error,
-      spaceId,
-      userId,
-      endpoint: '/api/spaces/[spaceId]/posts'
+  if (pendingApprovalAttachments.length > 0) {
+    const enqueueResult = await spaceMediaApprovalService.enqueuePendingMedia({
+      spaceId: space.id,
+      postId: result.value.id,
+      requestedBy: parsed.data.authorId,
+      attachments: pendingApprovalAttachments
     });
 
-    logger.error(
-      `Error creating post at /api/spaces/[spaceId]/posts`,
-      error instanceof Error ? error.message : String(error)
-    );
+    if (!enqueueResult.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: "MEDIA_APPROVAL_QUEUE_FAILED",
+            message: enqueueResult.error
+          }
+        },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json(ApiResponseHelper.error("Failed to create post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    pendingMedia = enqueueResult.value.map((entry) => ({
+      approvalId: entry.id,
+      attachment: entry.attachment
+    }));
   }
+
+  return NextResponse.json(
+    {
+      success: true,
+      data: serializePost(result.value),
+      pendingMedia
+    },
+    { status: 201 }
+  );
 }

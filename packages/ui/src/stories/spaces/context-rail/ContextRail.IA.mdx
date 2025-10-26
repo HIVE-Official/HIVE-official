@@ -1,0 +1,42 @@
+import { Meta, Canvas, Story, ArgsTable } from "@storybook/blocks";
+import * as LayoutStories from "./ContextRail.Layouts.stories";
+
+<Meta of={LayoutStories} />
+
+# Dock IA (right-side)
+
+- Purpose: actionable widgets for a Space (Calendar, Members, About, Tools/Resources when relevant).
+- Brand posture: calm core, fast paths to action. Information stays scannable; avoid dashboard overload.
+
+## Layout Variants
+
+- Standard (sticky, scrollable contents): desktop 60/40 or 65/35 split. Dock sticks under header; inner content scrolls when long.
+- Compact (non‑scrollable): prioritized widgets only; useful for tighter layouts or when the feed must dominate.
+- Mobile Drawer/Sheet: Dock opens from a sheet instead of stacking below the feed.
+
+### Standard Sticky
+
+<Canvas>
+  <Story of={LayoutStories.StandardSticky} />
+  <ArgsTable of={LayoutStories.default} />
+  
+</Canvas>
+
+### Compact
+
+<Canvas>
+  <Story of={LayoutStories.CompactNoScroll} />
+</Canvas>
+
+### Mobile Drawer
+
+<Canvas>
+  <Story of={LayoutStories.MobileDrawer} />
+</Canvas>
+
+## Notes
+
+- Members search is present even in the preview to drive quick lookups; full roster is a click‑through.
+- Calendar preview caps visible rows; “View all” elevates Events when a Space is event‑heavy.
+- About is intentionally short (3 lines); deep details live on the About page.
+- Ordering of widgets flips in chat‑mode versus feed‑mode at the layout level, not inside the Dock component.

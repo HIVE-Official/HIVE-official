@@ -1,0 +1,175 @@
+{
+  "greek_life": {
+    "fraternities_sororities": [
+      "Alpha Gamma Delta",
+      "Alpha Kappa Alpha Sorority, Inc.",
+      "alpha Kappa Delta Phi International Sorority, Inc.",
+      "Alpha Phi Alpha Fraternity, Inc.",
+      "Alpha Sigma Tau",
+      "Delta Phi Epsilon",
+      "Gamma Sigma Alpha (Academic Greek Honor Society)",
+      "Kappa Alpha Psi Fraternity, Inc.",
+      "Lambda Phi Epsilon",
+      "Lambda Theta Alpha Latin Sorority, Inc.",
+      "Lambda Theta Phi Latin Fraternity, Inc.",
+      "Omega Psi Phi Fraternity, Inc.",
+      "Phi Beta Sigma Fraternity, Inc.",
+      "Phi Delta Theta",
+      "Phi Sigma Kappa",
+      "Pi Kappa Phi",
+      "Sigma Alpha Epsilon",
+      "Sigma Beta Rho Fraternity, Inc.",
+      "Sigma Chi",
+      "Sigma Delta Tau",
+      "Sigma Psi Zeta Sorority, Inc.",
+      "Tau Kappa Epsilon",
+      "Theta Tau (Professional Engineering Fraternity)",
+      "Zeta Phi Beta Sorority, Inc."
+    ],
+    "governing": [
+      "Inter-Greek Council (IGC)",
+      "National Pan-Hellenic Council (NPHC)",
+      "Panhellenic Council (PHC)"
+    ]
+  },
+  "residential": {
+    "councils": [
+      "Alliance Community",
+      "Campus Living Student Staff",
+      "Clement Hall Council",
+      "Creekside Village & Flickinger Court",
+      "Evans Quad",
+      "Fargo Quad",
+      "Flint Village",
+      "Governors Complex",
+      "Greiner Hall",
+      "Hadley Village",
+      "Richmond Quad",
+      "South Lake Village",
+      "Spaulding Quad",
+      "UB Res-Fit",
+      "Wilkeson Quad"
+    ],
+    "organizations": [
+      "Residence Hall Association (RHA)",
+      "Hall Council Executive Boards"
+    ]
+  },
+  "student_organizations": {
+    "Academic Council": [
+      "Accounting Association",
+      "American Institute of Chemical Engineers (AIChE)",
+      "Biomedical Engineering Society",
+      "Institute of Electrical and Electronics Engineers (IEEE)",
+      "Mechanical & Aerospace Engineering Society",
+      "Pre-Dental Association",
+      "Psychology Club",
+      "Public Health Club",
+      "UB Neuroscience Club"
+    ],
+    "Engineering Council": [
+      "American Society of Civil Engineers (ASCE)",
+      "National Society of Black Engineers (NSBE)",
+      "Society of Hispanic Professional Engineers (SHPE)",
+      "Society of Women Engineers (SWE)",
+      "Engineers for a Sustainable World (ESW)",
+      "UB Robotics"
+    ],
+    "Hobby Council": [
+      "Anime Club",
+      "Chess Club",
+      "Cosplay Club",
+      "Gaming Association",
+      "UB Photography Club",
+      "UB Marching Band"
+    ],
+    "International Council": [
+      "African Student Association (ASA)",
+      "Bengali Student Association",
+      "Filipino American Student Association (FASA)",
+      "Indian Student Association (ISA)",
+      "Japanese Student Association (JSA)",
+      "Korean Student Association (KSA)",
+      "Malaysian Student Association (MYSA)",
+      "Nepalese Student Association",
+      "Pakistani Student Association (PSA)",
+      "Saudi Students Organization (SSO)",
+      "Vietnamese Student Association (VSA)"
+    ],
+    "POC Council": [
+      "African American Student Union (AASU)",
+      "Black Student Union (BSU)",
+      "Eight Count Dance Troupe",
+      "PULSE Dance Company",
+      "South Asian Student Association (SASA)",
+      "UB NAACP Chapter"
+    ],
+    "Special Interest Council": [
+      "Environmental Network (UBEN)",
+      "UB Sustainability Club",
+      "Vegan Club",
+      "Queer Student Alliance (QSA)",
+      "Women in STEM",
+      "Students for Justice in Palestine",
+      "Amnesty International @ UB",
+      "UB Student Veterans Association"
+    ],
+    "Sports Council": [
+      "Club Baseball",
+      "Club Soccer (Men’s & Women’s)",
+      "Club Volleyball (Men’s & Women’s)",
+      "Club Basketball",
+      "Club Rugby",
+      "Club Lacrosse",
+      "Club Ultimate Frisbee",
+      "Club Tennis",
+      "Club Rowing",
+      "Club Esports",
+      "Club Ice Hockey",
+      "Club Swimming"
+    ]
+  },
+  "university_organizations": {
+    "Academic & Research Centers": [
+      "Center for Academic Development Services",
+      "Center for Excellence in Writing",
+      "Center for Undergraduate Research and Creative Activities (CURCA)",
+      "Career Design Center",
+      "Office of Fellowships and Scholarships"
+    ],
+    "Student Support & Engagement": [
+      "Health Promotion",
+      "Intercultural and Diversity Center (IDC)",
+      "International Student Services (ISS)",
+      "LGBTQ+ Resource Center",
+      "Orientation, Transition and Parent Programs",
+      "Student Conduct and Advocacy",
+      "Student Engagement Office",
+      "Student Unions",
+      "Veteran Services",
+      "UB Sustainability Office"
+    ],
+    "Admissions & Administration": [
+      "Undergraduate Admissions",
+      "Graduate Admissions",
+      "Office of the Registrar",
+      "Student Accounts Office",
+      "UB Parking and Transportation Services",
+      "UB Information Technology (UBIT)",
+      "UB Human Resources",
+      "UB Campus Dining & Shops"
+    ],
+    "University Programs": [
+      "UB TrACE (Transfer, Adult, Commuter, and Evening Student Programs)",
+      "UB Veggie Van",
+      "UB STEMinism",
+      "UB Honors College Student Council",
+      "UB Academic Success Center",
+      "UB Accessibility Resources",
+      "McNair Scholars Program",
+      "Be The Impact Challenge",
+      "UB Educational Opportunity Program (EOP)"
+    ]
+  }
+}
+

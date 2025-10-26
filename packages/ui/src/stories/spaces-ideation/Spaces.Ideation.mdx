@@ -1,0 +1,43 @@
+import { Meta, Title, Subtitle, Description, Stories } from '@storybook/blocks';
+
+<Meta title="Spaces/Ideation" />
+
+<Title>Spaces — Layouts & Interfaces (Ideation)</Title>
+
+<Subtitle>Calm shell, fast actions, student‑first.</Subtitle>
+
+<Description>
+This is our working canvas to converge on Space layouts and interactions before deep implementation. See the full brief at <code>docs/design/spaces/SPACES_LAYOUTS_AND_INTERFACES_IDEATION.md</code>.
+
+Key principles:
+- Calm Core: sticky header + feed/rail grid using shell tokens.
+- Purposeful Motion: slower, readable; compact header on scroll.
+- Extensions, not apps: Tools show as actions/rail widgets.
+- Trust‑Visible: roles/policies surfaced via friendly InlineNotice.
+</Description>
+
+## Surfaces (vNext)
+
+- Header & Tabs — identity, verified chip, actions, rail toggle; tabs are feed‑scoped.
+- Feed (Post Stream) — Standard, Announcement, Poll, Event cards; PinnedCluster ≤ 2; Composer at bottom.
+- Chat (Optional) — channel‑like grouping, newest at bottom, “Jump to present”.
+- Events — List/Month + detail sheet with RSVP → Undo.
+- Members — roster with role filters and quick actions.
+- About & Resources — identity, featured links, pinned resources.
+- Tools — catalog, install, and surface as actions.
+- Moderation — media/queue with quick decisions.
+- Settings — visibility, join/posting policies, roles.
+
+## Acceptance Themes
+
+- Header compact‑on‑scroll; tabs sticky; consistent baselines.
+- Keyboard traversal across feed; focus visible; Esc closes sheets.
+- PinnedCluster never > 2; respects expiry in fixtures.
+- No glossy sheens; gold CTAs remain static.
+
+## Try the Frame
+
+Use the “Spaces/Ideation/Frame” stories to toggle density, rail, and mode (feed/chat/events/members) and sketch variations.
+
+<Stories />
+

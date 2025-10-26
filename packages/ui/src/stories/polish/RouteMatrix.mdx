@@ -1,0 +1,22 @@
+---
+title: Polish/Route Matrix
+---
+
+# Route Transition Matrix
+
+All transitions are calm-first, HC/RM compliant, and depth-honest. Timings map to tokens. RM substitutes transform with short fades.
+
+| From ⇄ To | Primitive | Duration | Easing/Spring | Elevation | Scrim/Blur | RM Fallback |
+|---|---|---|---|---|---|---|
+| Feed ⇄ Space | routeCrossfade | md (180ms) | standard | E0 → E0 | none | fadeIn xs |
+| Space ⇄ Tool | liftY (8px) | md (180ms) | decel | E0 → E1 | none | fadeIn sm |
+| Space ⇄ Profile | routeCrossfade + active tab glide | md (180ms) | standard | E0 | none | fadeIn xs |
+| Space ⇄ Ritual | fadeScale | lg (220ms) | decel | E0 → E2 (if panel) | overlay if modal | fadeIn sm |
+| Dialog (desktop) | sheetRight | lg (220ms) | SPRING.overlay | E4 | scrim-overlay + scrim-blur | fadeIn sm, no blur |
+| Sheet (mobile) | sheetUp | lg (220ms) | SPRING.overlay | E4 | scrim-overlay + scrim-blur | fadeIn sm, no blur |
+
+Notes
+- HC: `.high-contrast` disables blur for glass/scrim.
+- No-glass: `.no-glass` removes backdrop blur globally.
+- Performance mode: `[data-glass-mode="performance"]` removes heavy blur on mobile.
+

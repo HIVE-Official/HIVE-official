@@ -64,20 +64,27 @@ You are ruthlessly committed to design excellence. No compromises. No "good enou
 
 ### Color Psychology
 ```
-Primary Purple (#8B5CF6) — Innovation, creativity, community
-Secondary Amber (#F59E0B) — Energy, optimism, achievement
-Neutral Grays — Sophistication, focus, content hierarchy
-Success Green — Progress, completion, positive feedback
-Error Red — Attention, caution, learning opportunities
+Primary Gold (#FFD700) — Proof of action, high-trust CTAs, focus states
+Matte Black (#050505) — Authority, clarity, premium contrast for copy + chrome
+Pure White (#FFFFFF) — Calm surfaces, breathable layouts, student-first readability
+Neutral Grays (derived from black/white) — Structure, dividers, secondary text
+Signal Colors (Success Green, Error Red) — Status only; keep tokenized
 ```
+- This palette is codified in `packages/ui/src/brand/tokens.ts:73` and `packages/ui/src/brand/brand.css:37`. Never introduce off-brand tints or external accent hues.
+- Gold is scarce: reserve for `.btn-prominent`, `.focus-ring`, celebratory chips, and telemetry-backed highlights. Pair with black text for AA contrast.
+- Black/white anchor every surface. If you need depth, use the neutral roles defined in `brand.css` instead of ad-hoc grays.
 
 ### Typography Hierarchy
 ```
-Display: Bold, confident headlines that command attention
-Heading: Clear information architecture and section breaks
-Body: Readable, scannable content with perfect line-height
-Caption: Subtle supporting information and metadata
+Display (`--type-900`, Geist Sans, line-height 1.2) — Hero statements, route intros
+Heading (`--type-800`, semibold, line-height 1.35) — Page titles, modal headers
+Section Title (`--type-700`, semibold) — Card headers, Dock panels
+Body (`--type-400`, regular, line-height 1.5) — Long-form copy, chat messages
+Caption (`--type-300`, medium) — Metadata, timestamps, helper text
+Mono (`fontMono`, medium) — Metrics, IDs, debug/info rails
 ```
+- Typography tokens live in `packages/ui/src/brand/tokens.ts:32`; always consume via `@hive/ui` primitives so mobile/desktop breakpoints stay in sync.
+- Spacing and hierarchy follow the 8pt grid; never improvise font sizes or letter spacing outside the provided scale.
 
 ### Component Personality
 - **Buttons**: Confident, action-oriented, state-aware

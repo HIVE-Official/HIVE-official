@@ -1,74 +1,73 @@
-/**
- * @hive/core - Main export file
- * Domain-Driven Design architecture with proper bounded contexts
- */
-
-// Domain Models - Specific exports to avoid conflicts
-export { EnhancedProfile } from "./domain/profile/aggregates/enhanced-profile";
-export type { SpecCompliantProfile } from "./domain/profile/spec-compliant-profile";
-export { isProfileComplete, getProfileCompletionPercentage, createDefaultProfile } from "./domain/profile/spec-compliant-profile";
-export { Connection, ConnectionType, ConnectionSource } from "./domain/profile/aggregates/connection";
-export { SpaceId } from "./domain/spaces/value-objects/space-id.value";
-export { SpaceName } from "./domain/spaces/value-objects/space-name.value";
-export { SpaceDescription } from "./domain/spaces/value-objects/space-description.value";
-export { SpaceCategory } from "./domain/spaces/value-objects/space-category.value";
-export { EnhancedSpace } from "./domain/spaces/aggregates/enhanced-space";
-export { Tab } from "./domain/spaces/entities/tab";
-export { Widget } from "./domain/spaces/entities/widget";
-export { RitualId } from "./domain/rituals/value-objects/ritual-id.value";
-export { EnhancedRitual } from "./domain/rituals/aggregates/enhanced-ritual";
-export { FeedItem } from "./domain/feed/feed-item";
-export { EnhancedFeed } from "./domain/feed/enhanced-feed";
-
-// Application Services - Use Case Orchestration
-export * from "./application";
-
-// Repository Pattern - Data Access Layer
-export * from "./infrastructure/repositories/interfaces";
-export * from "./infrastructure/repositories/factory";
-export { FirebaseUnitOfWork } from "./infrastructure/repositories/firebase/unit-of-work";
-
-// DTOs and Mappers
-export * from "./application/identity/dtos/profile.dto";
-export * from "./infrastructure/mappers/profile.firebase-mapper";
-
-// Services
-export { presenceService } from "./services/presence-service";
-export type { PresenceData } from "./services/presence-service";
-
-// Constants
-export * from "./constants/majors";
-
-// Stores
-export * from "./stores/useAppStore";
-
-// Feature Flags
-export * from "./feature-flags";
-
-// Firebase Configuration (temporary until @hive/firebase is fixed)
-export { app, db, auth, storage } from "./firebase";
-
-// Server-side utilities
-export * from "./server";
-
-// Types and Interfaces - Specific exports to avoid conflicts
-export type { ProfileSystem, HiveProfile, UnifiedHiveProfile } from "./types/profile-system";
-
-// Utilities
-export * from "./utils/activity-tracker";
-export * from "./utils/privacy-utils";
-export * from "./utils/profile-aggregator";
-
-// Analytics convenience functions (for backwards compatibility)
-export * from "./analytics-temp-exports";
-
-// Realtime and Query exports
-export { feedListener } from "./infrastructure/realtime/feed-listener";
-export type { FeedUpdate, FeedListenerOptions } from "./infrastructure/realtime/feed-listener";
-export { GetFeedQueryHandler } from "./application/feed/queries/get-feed.query";
-export type { GetFeedQuery, GetFeedQueryResult } from "./application/feed/queries/get-feed.query";
-export { SearchType, SearchQueryHandler } from "./application/search/queries/search.query";
-export type { SearchResultItem, SearchQuery, SearchQueryResult } from "./application/search/queries/search.query";
-
-// Temporary backward compatibility (will be removed)
-export * from "./application/shared/temporary-types";
+// Bounded Context Owner: Identity & Access Management Guild
+export * from "./config/campus-registry";
+export * from "./domain/profile/aggregates/profile.aggregate";
+export * from "./domain/profile/dto/onboarding-submission.dto";
+export * from "./domain/profile/events/profile-onboarded.event";
+export * from "./domain/profile/profile.types";
+export * from "./domain/profile/value-objects/academic-info.value";
+export * from "./domain/profile/value-objects/affiliation-info.value";
+export * from "./domain/profile/value-objects/campus-email.value";
+export * from "./domain/profile/value-objects/profile-id.value";
+export * from "./domain/profile/value-objects/personal-info.value";
+export * from "./domain/profile/value-objects/profile-handle.value";
+export * from "./domain/profile/value-objects/social-info.value";
+export * from "./domain/profile/value-objects/leadership-info.value";
+export * from "./domain/profile/repositories/profile.repository";
+export * from "./domain/onboarding/onboarding-progress.snapshot";
+export * from "./domain/onboarding/onboarding-progress.repository";
+export * from "./domain/profile/onboarding/auto-join.helper";
+export * from "./shared/result";
+export * from "./shared/id-generator";
+export * from "./shared/http";
+export * from "./application/auth/sign-up.service";
+export * from "./application/auth/profile-onboarding.service";
+export * from "./application/auth/session.service";
+export * from "./application/auth/ports/magic-link-sender.port";
+export * from "./application/auth/ports/auth-telemetry.port";
+export * from "./application/onboarding/progress.service";
+export * from "./domain/auth/session/session.entity";
+export * from "./domain/auth/session/session.repository";
+export * from "./infrastructure/persistence/in-memory-profile.repository";
+export * from "./infrastructure/persistence/in-memory-onboarding-progress.repository";
+export * from "./infrastructure/persistence/in-memory-session.repository";
+export * from "./data";
+export * from "./domain/spaces/space.types";
+export * from "./domain/tools/tool.types";
+export * from "./domain/tools/aggregates/tool.aggregate";
+export * from "./domain/tools/events/tool.events";
+export * from "./domain/tools/tool.repository";
+export * from "./application/tools/tool.application.service";
+export * from "./application/tools/ports/tool-permissions.port";
+export * from "./application/tools/ports/tool-telemetry.port";
+export * from "./domain/spaces/space.types";
+export * from "./domain/spaces/aggregates/space.aggregate";
+export * from "./domain/spaces/events/space.events";
+export * from "./domain/spaces/space.repository";
+export * from "./application/spaces/space.application.service";
+export * from "./domain/spaces/aggregates/space-post.aggregate";
+export * from "./domain/spaces/events/post.events";
+export * from "./domain/spaces/space-post.repository";
+export * from "./application/spaces/space-post.application.service";
+export * from "./domain/spaces/media-approval.types";
+export * from "./domain/spaces/media-approval.repository";
+export * from "./application/spaces/media-approval.application.service";
+export * from "./application/spaces/ports/space-post-telemetry.port";
+export * from "./application/spaces/ports/space-post-audit-log.port";
+export * from "./application/spaces/ports/space-post-domain-event-publisher.port";
+export * from "./application/spaces/ports/space-domain-event-publisher.port";
+export * from "./domain/spaces/join-request.repository";
+export * from "./application/spaces/space-join-request.application.service";
+export * from "./application/feed/feed.types";
+export * from "./application/feed/feed.application.service";
+export * from "./domain/rituals/ritual.types";
+export * from "./domain/rituals/events/ritual.events";
+export * from "./domain/rituals/aggregates/ritual.aggregate";
+export * from "./domain/rituals/ritual.repository";
+export * from "./application/rituals/ritual.application.service";
+export * from "./infrastructure/persistence/in-memory-ritual.repository";
+export * from "./infrastructure/id/uuid-generator";
+// HiveLab authoring + elements contracts
+export * from "./hivelab/contracts";
+export * from "./hivelab/runtime";
+export * from "./hivelab/catalog";
+export * from "./domain/hivelab/tool-definition.aggregate";

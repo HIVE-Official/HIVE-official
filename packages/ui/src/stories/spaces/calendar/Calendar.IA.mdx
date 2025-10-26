@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Organisms/Spaces/Calendar/IA" />
+
+# Calendar IA — Spaces Widget + Full View
+
+Vision
+- One calendar, many sources: Campus, Spaces you follow, your RSVP’d items, Tools (deadlines).
+- Calm core views: Day/Week/Month/Agenda with a compact EventSheet.
+- Trust‑visible actions: Create vs Propose based on role/policy.
+
+Widget (in Spaces)
+- Tabs: **Spaces | My Schedule** (My shows RSVP’d Going/Maybe only).
+- Sources row: Campus, current Space, My, Tools (toggles).
+- View switcher: List/Month (Week/Day via engine adapter next).
+- Event click → EventSheet (RSVP with Undo, capacity meter, Add to Calendar).
+- “Open full calendar” affordance links to the full planner.
+
+Full Calendar (discoverable)
+- Route: `/calendar?scope=my&view=week` (not primary nav; accessible via widget/Profile).
+- Views: Day/Week/Month/Agenda with drag‑to‑create for leaders; members propose.
+- Sources: Campus + Spaces + Tools + Personal (private .ics overlay in My view).
+
+Role/Policy gates
+- Leaders/Mods → Create Event.
+- Members + `members_open` → Create.
+- Members + `members_with_approval` → Propose (no direct insert).
+- Members + `leaders_only` → Disabled with tooltip.
+
+Next
+- Engine: `react-big-calendar` adapter for Day/Week/Month.
+- My Schedule: private .ics overlay (local only); time conflict nudge.
+- Proposals rail (leaders) with Approve/Decline (Undo) inserting to calendar.
+
+Related stories
+- `Calendar/SpaceCalendarView` — Widget in Space with tabs.
+- `Calendar/Composer Integration` — Create vs Propose paths.
+- `Calendar/List`, `Calendar/Month`, `Calendar/EventSheet` — core surfaces.
+

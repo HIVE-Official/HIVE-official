@@ -1,53 +1,47 @@
-/**
- * ProfileHandle Value Object
- * Represents a unique handle/username for a profile
- */
+// Bounded Context Owner: Identity & Access Management Guild
+import { z } from "zod";
+import { err, ok, type Result } from "../../../shared/result";
 
-import { Result } from '../../shared/base/Result';
-import { ValueObject } from '../../shared/base/ValueObject.base';
+// Normalized, lowercase handle with constraints:
+// - 3–20 chars
+// - allowed: a–z, 0–9, dot, underscore, hyphen
+// - must start and end with alphanumeric
+// - no consecutive special chars (., _, -)
+const baseSchema = z
+  .string({ invalid_type_error: "Handle is required" })
+  .min(3, "Handle must be at least 3 characters")
+  .max(20, "Handle must be no more than 20 characters");
 
-interface ProfileHandleProps {
-  value: string;
+const formatSchema = z
+  .string()
+  .regex(
+    /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])$/,
+    "Handle must start/end with a letter or number and may contain . _ - in between"
+  )
+  .refine((v) => !/[._-]{2,}/.test(v), {
+    message: "Handle cannot contain consecutive special characters"
+  });
+
+export interface ProfileHandle {
+  readonly value: string;
 }
 
-export class ProfileHandle extends ValueObject<ProfileHandleProps> {
-  private static readonly MIN_LENGTH = 3;
-  private static readonly MAX_LENGTH = 20;
-  private static readonly VALID_PATTERN = /^[a-z0-9_]+$/;
+export const ProfileHandleFactory = {
+  create(rawHandle: string): Result<ProfileHandle> {
+    const normalized = rawHandle.trim().toLowerCase();
 
-  get value(): string {
-    return this.props.value;
-  }
-
-  private constructor(props: ProfileHandleProps) {
-    super(props);
-  }
-
-  public static create(handle: string): Result<ProfileHandle> {
-    const normalized = handle.toLowerCase().trim();
-
-    if (normalized.length < ProfileHandle.MIN_LENGTH) {
-      return Result.fail<ProfileHandle>(
-        `Handle must be at least ${ProfileHandle.MIN_LENGTH} characters`
-      );
+    const lengthCheck = baseSchema.safeParse(normalized);
+    if (!lengthCheck.success) {
+      return err(lengthCheck.error.issues[0]?.message ?? "Invalid handle");
     }
 
-    if (normalized.length > ProfileHandle.MAX_LENGTH) {
-      return Result.fail<ProfileHandle>(
-        `Handle must be no more than ${ProfileHandle.MAX_LENGTH} characters`
-      );
+    const formatCheck = formatSchema.safeParse(normalized);
+    if (!formatCheck.success) {
+      return err(formatCheck.error.issues[0]?.message ?? "Invalid handle format");
     }
 
-    if (!ProfileHandle.VALID_PATTERN.test(normalized)) {
-      return Result.fail<ProfileHandle>(
-        'Handle can only contain lowercase letters, numbers, and underscores'
-      );
-    }
-
-    return Result.ok<ProfileHandle>(new ProfileHandle({ value: normalized }));
+    return ok({ value: normalized });
   }
+};
 
-  public toString(): string {
-    return this.props.value;
-  }
-}
+export type ProfileHandleFactoryType = typeof ProfileHandleFactory;

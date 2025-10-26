@@ -2132,6 +2132,65 @@ interface LeadersLab {
 
 ---
 
+## 🧭 HiveLab Business Strategy (Launch → vBETA)
+
+### Roles, Surfaces, and Guardrails
+- **Who builds**: Space leaders on desktop. Students interact on mobile/desktop but never configure. Hive Team certifies and can yank unsafe templates. No campus admin path.
+- **Experience depth**: L0 Post (Space feed) → optional L1 Sheet (details + quick actions) → L2 Tool Home/Manage (desktop). Anything deeper is out of scope until post-vBETA.
+- **Every tool publishes a post**: If it doesn’t create something visible in the Space feed, it’s not a HiveLab tool.
+- **Mobile vs desktop**: Phones handle actions, RSVPs, submissions, quick edits; creation, presets, and template management stay desktop-only with clear “Use a laptop to build” messaging.
+
+### Usage Budgets (per Tool Instance)
+- ≤2 composer verbs, ≤12 form fields, ≤4 record types, ≤1 threshold trigger, ≤1 optional module.
+- ≤2 auto-posts per day per Space; overflow collapses into a nightly digest.
+- Calendar remains sacred: only Events (attend) and Deadlines (finish) appear, both deep-linking to their post.
+- Anonymous mode defaults off; if a Student space enables it, cooldowns escalate on abuse. Greek and Residential spaces never allow anonymous.
+
+### Policy Overlays (defaults applied at publish time)
+| Overlay | Key Rules |
+| --- | --- |
+| **Org** | Anonymous off. Reschedule allowed until check-in opens. |
+| **Student** | Anonymous off by default; leader can enable per post. |
+| **Greek** | Anonymous off, photo consent required, reschedule lock at T‑2h. |
+| **Residential** | Anonymous off, RA-only event creation, cross-posting disabled. |
+
+Labels gate who can create, participate, or take actions. No custom ACLs per post.
+
+### Lifecycle & Quality Gates
+1. **Draft** – Builder experiments; lint engine surfaces warnings in real time.
+2. **Lab-Only** – Runs in sandbox with ghost roster, time-warp, quota simulator, risk score. Must be “green” to advance.
+3. **Pilot** – Limited to ≤2 invited Spaces. Hive Team monitors metrics and reports.
+4. **Certified** – Appears in Library. Hive Team owns certification and takedown.
+
+Open posts pin to `tool@version`. In-flight posts can opt-in to migrate; closed posts never migrate. Uninstalling disables future actions but leaves history intact.
+
+### Triggers, Bundling, and Safety Nets
+- Allowed triggers: `onOpen`, `T-24h`, `T-10m`, `atStart`, `checkinWindow`, `atClose`, `weeklyDigest (Fri 17:00)`, `onThreshold(N)`.
+- Auto-post bundler coalesces anything beyond two posts per day into an end-of-day digest with deduped notifications.
+- Instance-level quick edits (mobile-safe): Poll extend/close/pin, Event capacity/waitlist/check-in controls, Deadline ±24h nudges, Form close toggle.
+- Blocking lints: missing close times, >12 fields, >4 record types, forbidden anonymous use, quota overflow, unsafe regex, module write attempts. Warnings cover copy clarity, overlapping triggers, operator bloat.
+- Complexity meter (green ≤4, yellow 4–6, red >6) governs Pilot requests; red cannot progress.
+
+### Library & Discovery Expectations
+- Library facets (job-to-be-done, space type, elements, complexity, module) help leaders find the right template fast.
+- Cards show plain-language intent, actions, elements, calendar impact, metrics profile, and “Try in Sandbox.”
+- Install flow: select Space → confirm policy fit → tool lands in Space → presets wired to composer.
+
+### Analytics & Business Outcomes
+- Element signals feed the weekly leader brief (participation %, fill rates, compliance). North-star = Weekly Active Contributors per Space.
+- Hive Team quality score uses conversion ↑ / reports ↓ to rank Certified templates and recommend adjustments.
+- Sandbox risk score (PII, spam, anon misuse) must pass before Pilot. Post-launch, negative signals trigger Hive Team review.
+
+### 30-Day Marching Orders (as co-founders)
+1. **Week 1**: Ship Office Hours + Peer Review Swap slices end-to-end, including leader quick-action bar.
+2. **Week 2**: Deliver SeriesGenerator, Queue/Waitlist presets, Library facets, Element Presets v1.
+3. **Week 3**: Residential bundle (Intro, Norms Ack, Micro-events, Digest) and Requirements utility.
+4. **Week 4**: Stand up Sandbox (time-warp, quota/notif sim), lint + complexity enforcement, Pilot→Certified workflow, and ranking system.
+
+Success looks like leaders publishing certified tools without breaking Space UX, Hive Team spotting risk before it hits campus, and students seeing meaningful posts—not brittle productivity apps.
+
+---
+
 ## 🛠️ HiveLab (Tools) Strategy: Complete Technical Architecture
 
 ### Strategic Purpose: Social Objects, Not Productivity Apps

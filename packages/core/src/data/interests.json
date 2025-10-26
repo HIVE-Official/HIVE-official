@@ -1,0 +1,37 @@
+[
+  {
+    "id": "coding",
+    "label": "Coding",
+    "category": "STEM"
+  },
+  {
+    "id": "entrepreneurship",
+    "label": "Entrepreneurship",
+    "category": "Business"
+  },
+  {
+    "id": "design",
+    "label": "Product Design",
+    "category": "Creative"
+  },
+  {
+    "id": "sports",
+    "label": "Intramural Sports",
+    "category": "Wellness"
+  },
+  {
+    "id": "music",
+    "label": "Music Production",
+    "category": "Creative"
+  },
+  {
+    "id": "volunteer",
+    "label": "Community Service",
+    "category": "Civic"
+  },
+  {
+    "id": "research",
+    "label": "Undergraduate Research",
+    "category": "Academic"
+  }
+]

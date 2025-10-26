@@ -1,0 +1,17 @@
+// Bounded Context Owner: Identity & Access Management Guild
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["DOM", "ES2022"],
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "allowJs": false,
+    "jsx": "react-jsx",
+    "types": ["vitest/globals", "node"]
+  }
+}

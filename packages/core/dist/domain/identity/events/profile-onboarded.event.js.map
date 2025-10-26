@@ -1,1 +1,0 @@
-{"version":3,"file":"profile-onboarded.event.js","sourceRoot":"","sources":["../../../../src/domain/identity/events/profile-onboarded.event.ts"],"names":[],"mappings":";;;AAAA,yEAAiE;AAEjE,MAAa,qBAAsB,SAAQ,8BAAW;IACpD,YAAY,WAAmB;QAC7B,KAAK,CAAC,WAAW,CAAC,CAAC;IACrB,CAAC;IAED,YAAY;QACV,OAAO,kBAAkB,CAAC;IAC5B,CAAC;CACF;AARD,sDAQC"}

@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Organisms/Spaces/About/IA" />
+
+# About IA — Space Identity & Credibility
+
+Purpose
+- Space identity and credibility card for students, leaders, and downstream modules.
+- Clear, policy‑aware information that helps students decide to join and contribute.
+
+Route & Surfaces
+- Route: `/space/:id/about` (spec). Current app path aligns: `/spaces/[spaceId]/about`.
+- Surfaces: Full About page and a 3‑line Context Rail preview with a “View full about” affordance.
+
+Above the fold (full page)
+- Name • type • verified badge; quick stats (members, upcoming events count).
+- Overview (rich text), Tags (3–8), Links (allow‑listed), Policies summary (join, posting, visibility, media policy).
+
+Editing & Roles
+- Leaders can edit description, tags, and featured links (inline for v1).
+- Members/Guests read only; contacts redacted for non‑campus (future policy plumbing).
+
+Safety & Lints
+- Link allowlist + https‑only; friendly errors on blocked domains.
+- Upcoming: profanity/PII, contrast, length guidance.
+
+Versioning
+- Save appends an audit/version entry (leaders can view log in a later flag).
+
+Related stories
+- `Organisms/Spaces/About/Section` — View/Edit/Empty states
+- `Organisms/Spaces/Dock/About Preview` — 3‑line summary + links
+
+References
+- Product & IA Spec: `docs/design/spaces/SPACES_V1_PRODUCT_IA_SPEC.md:158`
+- AboutSection organism: `packages/ui/src/organisms/spaces/about-section.tsx:1`
+- Dock widget (ContextRail code): `packages/ui/src/organisms/spaces/context-rail.tsx:221`

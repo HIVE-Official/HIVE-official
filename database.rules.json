@@ -1,0 +1,81 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    
+    "users": {
+      "$uid": {
+        // Users can read/write only their own data
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        
+        "profile": {
+          ".read": "auth != null", // All authenticated users can read profiles
+          ".write": "auth != null && auth.uid == $uid" // Only the owner can write
+        },
+        
+        "private": {
+          ".read": "auth != null && auth.uid == $uid", // Only the owner can read private data
+          ".write": "auth != null && auth.uid == $uid" // Only the owner can write
+        }
+      }
+    },
+    
+    "messages": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      
+      "$messageId": {
+        // Only sender or recipient can read/write the message
+        ".read": "auth != null && (data.child('senderId').val() == auth.uid || data.child('recipientId').val() == auth.uid)",
+        ".write": "auth != null && (data.child('senderId').val() == auth.uid || newData.child('senderId').val() == auth.uid)"
+      }
+    },
+    
+    "chats": {
+      "$chatId": {
+        // Validate that only participants can access the chat
+        ".read": "auth != null && (data.child('participants').child(auth.uid).exists())",
+        ".write": "auth != null && (data.child('participants').child(auth.uid).exists() || !data.exists())"
+      }
+    },
+    
+    "events": {
+      ".read": "auth != null", // All authenticated users can read events
+      
+      "$eventId": {
+        // Only creator can modify the event
+        ".write": "auth != null && (!data.exists() || data.child('createdBy').val() == auth.uid)"
+      }
+    },
+    
+    "userActivity": {
+      "$uid": {
+        // Users can only read/write their own activity
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    
+    "notifications": {
+      "$uid": {
+        // Users can only read/write their own notifications
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && (auth.uid == $uid || root.child('admins').child(auth.uid).exists())"
+      }
+    },
+    
+    "admins": {
+      // Only admins can read/write admin data
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    
+    "feedContent": {
+      // All authenticated users can read feed content
+      ".read": "auth != null",
+      // Only admins can write to feed content
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    }
+  }
+}

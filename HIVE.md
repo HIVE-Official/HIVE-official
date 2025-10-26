@@ -1,290 +1,190 @@
-# HIVE: The Collegiate Social Operating System
+# HIVE Platform Audit — 2025-10-11
 
-## 🎯 Product Vision
+> Ground-truth snapshot of what ships, what breaks, and what still needs owners before UB release.
 
-**HIVE transforms student anxiety into campus connection in <10 seconds.**
+## Executive Summary
+- The product surface spans landing, schools directory, magic-link login, onboarding, feed, spaces, rituals, and HiveLab surfaces; flows are navigable end-to-end with seeded data.
+- Production readiness is blocked by design-system TypeScript errors (`packages/ui/src/organisms/profile/profile-header.tsx:62`) and reliance on in-memory repositories for core data paths (`apps/web/src/server/spaces/service.ts:19`).
+- Firebase Admin credentials, magic-link sender, and telemetry fall back to console/in-memory implementations, leaving authentication/state without persistence or audit trails (`apps/web/src/server/auth/container.ts:95`).
+- Observability, notifications, search, and growth instrumentation are not yet implemented; performance budgets and bundle audits remain unmeasured.
 
-We're building the platform where students instinctively turn when they need help, want to connect, or seek insider knowledge about campus life. HIVE becomes the default response to student stress - replacing panic with community discovery.
+## Scoreboard
+- [ ] **Launch-ready build** — `pnpm exec tsc -p apps/web/tsconfig.json --noEmit` fails on profile components in @hive/ui (`packages/ui/src/organisms/profile/profile-header.tsx:62`, `profile-privacy-banner.tsx:43`)
+- [x] **Core identity flow clickable** — Magic link → onboarding → spaces routes exist (`apps/web/src/app/login/page.tsx:1`, `apps/web/src/app/onboarding/page.tsx:23`, `apps/web/src/app/spaces/page.tsx:5`)
+- [ ] **Live data sources wired** — Feed, spaces, rituals, and HiveLab fall back to in-memory seeds unless env toggles are set (`apps/web/src/server/spaces/service.ts:19`, `apps/web/src/server/feed/service.ts:19`, `apps/web/src/server/rituals/service.ts:12`, `apps/web/src/server/tools/service.ts:9`)
+- [ ] **Operational SRE baseline** — No monitoring, alerting, or error boundary coverage; Firebase AppCheck/App config absent
+- [ ] **Growth loop instrumentation** — Notifications, search, analytics, and campus expansion flows are still stubs
 
-## 🧠 Core Product Philosophy
+## Product Surface Readiness
 
-### The ONE Interaction That Matters
-**Panic → Discovery → Relief → Share**
+### Authentication & Identity
+**Shipped**
+- [x] Magic-link request/resume UI with user-type segmentation and deep-link support (`apps/web/src/app/login/page.tsx:1`)
+- [x] Session fetch/destroy endpoints return onboarding completion state and set cookies on completion (`apps/web/src/app/api/auth/session/route.ts:1`, `apps/web/src/app/api/onboarding/complete/route.ts:1`)
+- [x] Integration tests cover sign-up, progress persistence, and onboarding completion happy path (`apps/web/src/server/auth/controllers/auth.controllers.test.ts:8`)
 
-This loop must work flawlessly in <10 seconds or the product fails. Everything else is distraction until this is perfect.
+**Gaps**
+- [ ] Magic link sender and telemetry default to console when Firebase env vars are missing (`apps/web/src/server/auth/container.ts:95`)
+- [ ] Profile, progress, and session repositories fall back to in-memory stores without persistence or multi-process safety (`apps/web/src/server/auth/container.ts:123`)
+- [ ] Session hardening (expiry rotation, refresh, CSRF) and admin MFA policies are not defined in code or docs
 
-### The Three Currencies We Trade In
-1. **Social Proof** - Not looking like a loser in front of peers
-2. **Insider Knowledge** - Knowing things others don't about campus
-3. **Connection Capital** - Building real relationships, not followers
+### Onboarding Flow
+**Shipped**
+- [x] Catalog-driven stepper with personal, academic, interests, and consent collection (`apps/web/src/contexts/onboarding/components/OnboardingStepper.tsx:1`)
+- [x] Catalog API hydrates majors/interests/residential options with Firestore fallback (`apps/web/src/server/catalog/catalog.service.ts:13`)
+- [x] Onboarding progress endpoints allow resume/save/complete with tests exercising collision scenarios (`apps/web/src/app/api/onboarding/progress/route.ts:1`, `apps/web/src/app/api/onboarding/complete/route.ts:1`)
 
-*Note: Romantic currency is being phased out to focus on authentic connection.*
+**Gaps**
+- [ ] Catalog data lives in Firestore doc `catalog/onboarding` but no migration or seeding script ensures parity across environments
+- [ ] Post-onboarding redirect logic assumes `/spaces` with static viewer ID and campus (`apps/web/src/app/onboarding/page.tsx:27`)
+- [ ] No UX for photo upload, interest limits, or guardian consent enforcement
 
-## 📱 What HIVE Actually Is
+### Spaces & Communities
+**Shipped**
+- [x] Discovery grid with joined, recommended, and categorized sections; includes join/leave API endpoints (`apps/web/src/app/spaces/page.tsx:5`, `apps/web/src/app/api/spaces/join/route.ts:1`)
+- [x] Space serialization enriches metadata, guidelines, and seeded events for UI presentation (`apps/web/src/server/spaces/service.ts:216`)
+- [x] Space post service supports list/save against repository abstraction (`apps/web/src/server/spaces/service.ts:29`)
 
-### For Students
-- **Morning**: Check what happened overnight, see who's doing what
-- **Afternoon**: Find study groups, discover events tonight
-- **Evening**: See where things are happening, who's going
-- **Late Night**: Connect with others awake, find support
-- **Crisis Mode**: Instant access to help without admitting weakness
+**Gaps**
+- [ ] Viewer and campus IDs are hardcoded to `profile-jwrhineh` / `ub-buffalo`, blocking multi-user behavior (`apps/web/src/app/spaces/page.tsx:5`)
+- [ ] Default repository is in-memory; Firestore integration requires `USE_FIRESTORE_SPACES=true` plus credentials (`apps/web/src/server/spaces/service.ts:19`)
+- [ ] Event creation, admin moderation, and granular permissions are not implemented in UI or API contracts
 
-### For Universities
-- **Engagement Platform**: Drive participation in campus life
-- **Behavioral Campaigns**: Coordinate campus-wide initiatives
-- **Crisis Response**: Mobilize support during emergencies
-- **Analytics Dashboard**: Understand student behavior patterns
+### Feed & Discovery
+**Shipped**
+- [x] Feed page renders list of posts with timestamps, reactions, and tags (`apps/web/src/app/feed/page.tsx:5`)
+- [x] Feed API validates query params with Zod and serializes domain items (`apps/web/src/app/api/feed/route.ts:5`)
+- [x] Feed service composes space and post repositories for scoring pipeline (`apps/web/src/server/feed/service.ts:19`)
 
-## 🏗️ Platform Architecture
+**Gaps**
+- [ ] Feed data comes from static seeds unless Firestore flag enabled; no real-time updates or pagination state persisted (`apps/web/src/server/feed/service.ts:24`)
+- [ ] Composer/posting UI is absent; feed remains read-only with no reporting or moderation
+- [ ] Ranking inputs (engagement, relevance) are stubs; no instrumentation to tune algorithm
 
-### Five Core Features
+### Rituals System
+**Shipped**
+- [x] Ritual list page loads profile-specific rituals with cadence metadata (`apps/web/src/app/rituals/page.tsx:5`)
+- [x] In-memory ritual repository seeds daily/weekly rituals for demo state (`apps/web/src/server/rituals/service.ts:12`)
+- [x] Domain services and tests cover basic participation flows (`apps/web/src/server/rituals/ritual.application.service.test.ts:1`)
 
-#### 1. **Authentication & Onboarding**
-*Status: 0% (Refactoring for excellence)*
+**Gaps**
+- [ ] No creation/edit UI or API; participants data static
+- [ ] Campaign lifecycle (buildup, climax, resolution) not represented in domain snapshot
+- [ ] Notifications/social amplification hooks not present
 
-**Magic Link Authentication**
-- SUNY-wide support (64 campuses)
-- 30-minute link expiry
-- No passwords ever
-- Faculty verification system
+### HiveLab Tools
+**Shipped**
+- [x] Dashboard renders owned/draft/published tools with template catalog (`apps/web/src/app/hivelab/page.tsx:31`)
+- [x] Tool service wraps domain aggregates with in-memory repository and blueprint catalog (`apps/web/src/server/tools/service.ts:9`)
 
-**7-Step Onboarding Flow**
-- Welcome & value prop
-- User type selection (Student/Faculty/Alumni)
-- Personal info & auto-generated handle
-- Profile photo (3:4 portrait optimized)
-- Academic info & bio
-- Interest selection (authentic voice)
-- Completion celebration
+**Gaps**
+- [ ] No visual builder, runtime execution, or publishing pipeline beyond seeds
+- [ ] Tool analytics and deployment targets are static arrays; no persistence layer
+- [ ] Permissions and space integration remain conceptual
 
-**Behavioral Target**: 70% completion rate
+### Profile & Social Graph
+**Shipped**
+- [x] Design-system provides profile header, stats, timeline, connections, and privacy banner components (`packages/ui/src/organisms/profile/profile-header.tsx:27`, `profile-layout.tsx:23`)
+- [x] Profile domain contract defines sample snapshot for Storybook/tests (`apps/web/src/profile/profile.sample.ts:1`)
 
-#### 2. **Spaces System**
-*Status: 0% (Complete rebuild planned)*
+**Gaps**
+- [ ] Design-system profile variants fail typecheck (missing `secondary`/`soft` badge variants, incorrect props) blocking builds (`packages/ui/src/organisms/profile/profile-header.tsx:62`, `profile-privacy-banner.tsx:43`)
+- [ ] No Next.js route for `/profile/[handle]`; profile context not wired to data sources
+- [ ] Connections/follow graph logic absent; design components rely on synthetic IDs (`packages/ui/src/organisms/profile/profile-layout.tsx:48`)
 
-**Five Space Categories**:
-1. **University Organizations** - Official campus groups
-2. **Student Organizations** - Student-run clubs
-3. **Residential** - Dorm and housing communities
-4. **Greek Life** - Fraternities and sororities
-5. **Academic** - Major and class-specific
+### Growth, Search, and Notifications
+**Shipped**
+- [x] Schools directory with request modal and API stub capturing interest (`apps/web/src/components/schools/SchoolsPage.tsx:23`, `apps/web/src/app/api/schools/request/route.ts:1`)
 
-**Space Features**:
-- Posts originate here (feed is read-only)
-- Member management and roles
-- Event creation and management
-- Custom reactions per space
-- Analytics for leaders
+**Gaps**
+- [ ] Landing page lacks waitlist capture, hero social proof, or metrics instrumentation (`apps/web/src/app/page.tsx:1`)
+- [ ] No search endpoint or global command palette
+- [ ] Notifications, inbox, messaging, and push infrastructure unimplemented
+- [ ] Growth analytics (events, funnel tracking) missing from app and docs
 
-#### 3. **Feed Algorithm**
-*Status: 0% (Reimplementation needed)*
+## Platform & Architecture
 
-**The Discovery Engine**
+### Frontend (Next.js 15 / React 18)
+**Shipped**
+- [x] App Router layout with shared GradientBackdrop/Container wrappers (`apps/web/src/app/layout.tsx`)
+- [x] Context packages for auth, onboarding, profile, spaces, tools with provider hooks (`apps/web/src/contexts`)
+
+**Gaps**
+- [ ] TypeScript compilation fails, blocking `next build` and CI (`packages/ui/src/organisms/profile/profile-header.tsx:62`)
+- [ ] Viewer identity is hardcoded across pages, preventing SSR per-user data (`apps/web/src/app/feed/page.tsx:5`, `apps/web/src/app/hivelab/page.tsx:11`)
+- [ ] No error boundaries or loading states around critical routes; unhandled exceptions will crash the app
+
+### Design System (@hive/ui)
+**Shipped**
+- [x] Tokenized atoms/molecules built on shadcn primitives (`packages/ui/src/atoms`)
+- [x] Storybook configuration under `packages/ui` for component development
+
+**Gaps**
+- [ ] Badge variants lack `secondary` and `soft` definitions used by profile components (`packages/ui/src/organisms/profile/profile-header.tsx:62`, `profile-privacy-banner.tsx:50`)
+- [ ] `ProfilePrivacyBanner` extends `HTMLAttributes` but overloads `onChange`, violating DOM typings (`packages/ui/src/organisms/profile/profile-privacy-banner.tsx:9`)
+- [ ] Component props duplicate IDs instead of accepting caller-provided keys (`packages/ui/src/organisms/profile/profile-layout.tsx:66`)
+
+### Backend & Data Layer
+**Shipped**
+- [x] Domain layer centralizes aggregates/services for auth, spaces, feed, rituals, tools (`packages/core/src`)
+- [x] Firebase Admin wiring with Firestore repositories when credentials provided (`apps/web/src/server/firebase/admin.ts:12`)
+
+**Gaps**
+- [ ] Default execution uses in-memory repositories across auth, spaces, feed, rituals, and tools, so server restarts lose state (`apps/web/src/server/auth/container.ts:123`, `apps/web/src/server/spaces/service.ts:21`)
+- [ ] Environment toggles (`USE_FIRESTORE_SPACES`) undocumented; no runtime guardrails to prevent mixing seeds with production data
+- [ ] Firestore indexes and schema migrations not automated; `firestore.rules` hardcodes UB campus segregation (`firestore.rules:29`)
+
+### Performance & Reliability
+**Shipped**
+- [x] Vitest unit coverage for onboarding, auth, feed, rituals (17 tests, 9 files)
+
+**Gaps**
+- [ ] Bundle size, Lighthouse, and Web Vitals budgets not measured; no code-splitting plan
+- [ ] No caching, CDN configuration, or ISR strategy described
+- [ ] Rate limiting limited to auth; API routes lack throttling, AppCheck, or abuse protections
+
+## Quality, Testing & Operations
+
+### Automated Quality Gates
+- [ ] `pnpm exec tsc -p apps/web/tsconfig.json --noEmit` fails with 7 design-system errors (Badge variants, Card props)
+- [x] `pnpm test` passes 17 unit/integration tests but logs Firebase credential fallbacks indicating env miss (`apps/web/src/server/firebase/admin.ts:12`)
+- [ ] `pnpm lint` only targets auth/onboarding contexts; broader linting not configured
+
+### Manual & E2E Coverage
+- [ ] No Playwright tests or Storybook visual regression suite connected to CI
+- [ ] Manual runbooks exist (`MANUAL_TESTING_GUIDE.md`) but not linked to release gating
+- [ ] No device lab coverage; responsive/mobile QA pending
+
+### Observability & Incident Response
+- [ ] No Sentry/LogRocket integration, error boundary, or structured logging pipeline
+- [ ] No uptime, performance, or cost dashboards; Firebase monitoring not wired to alerts
+- [ ] `LAUNCH_DAY_RUNBOOK.md` referenced but metrics/on-call ownership not linked in code
+
+### Security & Compliance
+- [x] Firestore rules enforce campus isolation and UB-only access (`firestore.rules:29`)
+- [ ] Rules rely on hardcoded campus ID and email domain; no support for multi-campus expansion (`firestore.rules:29`)
+- [ ] Session cookies lack rotation and secure attribute enforcement outside production (`apps/web/src/app/api/onboarding/complete/route.ts:27`)
+- [ ] No consent/audit logging persistence; magic link logs go to console fallback
+
+## Critical Path (Next 14 Days)
+- [ ] Fix @hive/ui profile component TypeScript regressions and re-run `pnpm typecheck`
+- [ ] Replace hardcoded viewer/campus IDs with session-derived context across pages and services
+- [ ] Stand up production Firestore with proper env wiring, seed scripts, and index deployment
+- [ ] Implement minimal notifications/search or formally de-scope from launch plan
+- [ ] Add error boundaries, monitoring (Sentry/Loki), and logging for auth and feed APIs
+- [ ] Run bundle analysis, enforce split/lazy loading, and document performance budget
+
+## Reference Runs
 ```
-Score = (R × 0.3) + (E × 0.2) + (A × 0.2) + (S × 0.2) + (P × 0.1) + (V × random(0, 0.2))
+$ NODE_OPTIONS='' pnpm exec tsc -p apps/web/tsconfig.json --noEmit
+packages/ui/src/organisms/profile/profile-header.tsx(65,20): error TS2322: Type "secondary" is not assignable ...
+packages/ui/src/organisms/profile/profile-privacy-banner.tsx(43,20): error TS2322: Type "secondary" is not assignable ...
+EXIT_CODE:1
 ```
 
-- **R**: Recency (newer = higher)
-- **E**: Engagement (reactions, comments, shares)
-- **A**: Author affinity (connection strength)
-- **S**: Space relevance (membership, similarity)
-- **P**: Promotion factor (leader boost, velocity)
-- **V**: Variable reward (randomness for discovery)
+```
+$ NODE_OPTIONS='' pnpm test
+Test Files  9 passed (9) — Firebase unavailable, using in-memory repositories (console fallback)
+```
 
-**Content Sources**:
-- 40% from joined spaces
-- 30% upcoming events
-- 15% promoted content
-- 10% reposts/requotes
-- 5% ritual updates
-
-**Key Principle**: Feed is READ-ONLY. All content originates from spaces.
-
-#### 4. **Rituals System**
-*Status: 0% (Not yet built)*
-
-**Campus-Wide Behavioral Campaigns**
-
-**Concept**: Collective achievement mechanics that drive specific behaviors across campus through individual contribution to group success.
-
-**Types of Rituals**:
-- **Onboarding**: First week friend-making
-- **Seasonal**: Midterms, finals, orientation
-- **Challenge**: 30-day streaks, wellness weeks
-- **Emergency**: Crisis response, mutual aid
-
-**Mechanics**:
-- Progress tracking (personal, space, campus)
-- Milestone rewards (badges, titles, perks)
-- Social amplification (feed integration)
-- Competition (space vs space)
-
-**Example**: "Midterm Marathon"
-- Goal: 10,000 collective study hours
-- Individual: Log hours, join groups, help others
-- Reward: "Scholar" title + coffee credits
-
-#### 5. **HiveLab Tools**
-*Status: 0% (Innovation opportunity)*
-
-**User-Created Mini-Applications**
-
-**Concept**: Let students build and share tools within their spaces - calculators, trackers, quizzes, games.
-
-**Tool Types**:
-- Study timers with group sync
-- Grade calculators
-- Compatibility quizzes
-- Course review aggregators
-
-**Distribution**:
-- Created within spaces
-- Shared via feed
-- Analytics for creators
-- Marketplace discovery
-
-## 🎨 Design Philosophy
-
-### Tech Sleek Aesthetic
-- **Inspiration**: Apple simplicity meets Vercel polish
-- **Color**: Dark mode first, accent colors minimal
-- **Typography**: Clean, readable, hierarchical
-- **Motion**: Subtle, purposeful, performant
-- **Mobile**: Web-first but mobile-optimized
-
-### Behavioral Psychology Integration
-- **Variable Ratio Reinforcement**: Not every interaction has gold
-- **Investment Escalation**: View → React → Comment → Share
-- **Social Proof Signals**: "3 friends reacted", "Trending in your dorm"
-- **FOMO Generation**: "Filling up fast", limited access
-
-## 📊 Success Metrics
-
-### Primary KPIs
-- **Panic-to-Relief Time**: <10 seconds (core loop)
-- **Onboarding Completion**: 70% target
-- **Daily Active Return**: 60% within 14 days
-- **Ritual Participation**: 60% of active users
-
-### Behavioral Indicators
-- Students open HIVE during stress moments
-- Natural sharing without prompts
-- Repeat usage of same features
-- Community formation around problems
-
-### What We DON'T Optimize For
-- Session length (addiction without utility)
-- Page views (vanity metric)
-- Click-through rates (engagement without completion)
-
-## 🚀 Launch Strategy
-
-### October 1st, 2024 - UB Buffalo Launch
-**Campus**: University at Buffalo (vBETA)
-**Users**: 32,000 students
-**Focus**: SUNY system (64 campuses)
-
-### Phase 1: Foundation (Current)
-- Rebuild core features to 2025 standard
-- Implement Rituals System
-- Launch HiveLab Tools
-- Perfect the 10-second loop
-
-### Phase 2: Growth (Post-Launch)
-- Expand to full SUNY system
-- Partner with student organizations
-- Launch behavioral campaigns
-- Iterate based on data
-
-### Phase 3: Scale (2025)
-- National university expansion
-- Platform API for developers
-- Premium features for universities
-- Mobile apps (iOS/Android)
-
-## 💡 Product Principles
-
-### Ship Remarkable, Not Viable
-- First version must make competitors look slow
-- Polish the core loop until flawless
-- Delete features that don't serve panic-to-relief
-
-### Distribution IS the Product
-- Sharing built into every interaction
-- Natural virality through relief delivery
-- Success = students recruit students
-
-### Behavior Change Over Features
-- Don't build features, build new student behaviors
-- "Never panic alone" becomes automatic response
-- Measure success by behavior, not usage
-
-## 🏛️ Business Model (Future)
-
-### For Students (Always Free)
-- Core platform access
-- All social features
-- Basic analytics
-
-### For Universities (SaaS)
-- Advanced analytics dashboard
-- Behavioral campaign tools
-- Crisis response systems
-- API access
-
-### For Partners
-- Sponsored rituals
-- Student deals/perks
-- Recruitment access
-- Research partnerships
-
-## 🎯 Why HIVE Wins
-
-### The Moat
-1. **Campus Isolation**: Each campus is its own universe
-2. **Network Effects**: Value increases with each user
-3. **Behavioral Lock-in**: Becomes habitual response to stress
-4. **University Partnership**: Official integration potential
-
-### The Timing
-- Post-COVID campus reconnection need
-- Gen Z mental health crisis
-- Universities seeking engagement tools
-- AI enables rapid development
-
-### The Team
-- Technical co-founders who ship fast
-- Deep understanding of student psychology
-- Direct access to target users
-- Lean operation with zero overhead
-
-## 🚦 Current Status
-
-**Platform**: 0% complete (full refactor underway)
-**Team**: 2 co-founders
-**Funding**: Bootstrap
-**Timeline**: October 1st launch target
-
-All features marked as "NOT IMPLEMENTED" as we rebuild to 2025 excellence standard. Previous build was MVP quality - new build will be remarkable from day one.
-
-## 📝 Development Philosophy
-
-### Code Principles
-- **Production Only**: No mocks, stubs, or "fix later"
-- **TypeScript Strict**: Type safety throughout
-- **Component Reuse**: Check existing patterns first
-- **Mobile Performance**: <3s load, <1s transitions
-- **Security First**: Campus isolation in every query
-
-### Process
-1. Find student pain point
-2. Design instant relief mechanism
-3. Build sharing into solution
-4. Ship when remarkable
-5. Iterate based on behavior data
-
----
-
-**Remember**: We're not building a social network. We're building the operating system for college life - where every student interaction creates value, connection, and relief from the universal anxieties of university experience.
-
-**The Mission**: Make "Never Panic Alone" the default student response to any campus challenge.
+*Generated: 2025-10-11 — Update weekly or after major feature landings to keep the readiness picture honest.*

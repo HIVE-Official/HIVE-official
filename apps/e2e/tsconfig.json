@@ -1,0 +1,95 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": [
+      "react",
+      "react-dom",
+      "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@hive/ui": [
+        "src/types/hive-ui-shim.d.ts"
+      ],
+      "@hive/ui/src/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@hive/tokens": [
+        "../../packages/tokens/src/tokens.ts"
+      ],
+      "@hive/tokens/*": [
+        "../../packages/tokens/src/*"
+      ],
+      "@core/hivelab/*": [
+        "src/stubs/core/hivelab/*"
+      ],
+      "@core": [
+        "src/stubs/core/index.ts"
+      ],
+      "@core/*": [
+        "src/stubs/core/*"
+      ],
+      "@auth": [
+        "../web/src/contexts/auth/index.ts"
+      ],
+      "@auth/*": [
+        "../web/src/contexts/auth/*"
+      ],
+      "@onboarding": [
+        "../web/src/contexts/onboarding/index.ts"
+      ],
+      "@onboarding/*": [
+        "../web/src/contexts/onboarding/*"
+      ],
+      "@profile": [
+        "../web/src/contexts/profile/index.ts"
+      ],
+      "@profile/*": [
+        "../web/src/contexts/profile/*"
+      ],
+      "@profile/contract": [
+        "../web/src/profile/profile.contract.ts"
+      ],
+      "@profile/sample": [
+        "../web/src/profile/profile.sample.ts"
+      ],
+      "@web/*": [
+        "../web/src/*"
+      ],
+      "@/*": [
+        "../../packages/ui/src/*"
+      ]
+    },
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

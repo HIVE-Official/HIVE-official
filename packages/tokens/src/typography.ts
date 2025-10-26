@@ -1,63 +1,97 @@
-// Typography design tokens
+// Bounded Context Owner: Identity & Access Management Guild
+// Canonical typography system for Hive. Defaults to Geist Sans/Mono, with
+// density-aware roles and numeric/mono rules. All apps should consume these
+// roles through the Tailwind preset — never hard-code pixel values.
 
-export const typography = {
-  fontFamily: {
-    sans: ['Geist Sans', 'system-ui', 'sans-serif'],
-    display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-    mono: ['JetBrains Mono', 'monospace'],
-  },
-  fontSize: {
-    // Display Scale (Hero/Marketing) - Mobile-optimized
-    'display-2xl': '2.5rem',      // 40px - Hero headlines
-    'display-xl': '2.25rem',      // 36px - Large headlines
-    'display-lg': '2rem',         // 32px - Section headlines
-    'display-md': '1.75rem',      // 28px - Page titles
-    'display-sm': '1.5rem',       // 24px - Subsection titles
-    
-    // Heading Scale - Mobile-optimized
-    'heading-xl': '1.25rem',      // 20px - Main headings
-    'heading-lg': '1.125rem',     // 18px - Section headings
-    'heading-md': '1rem',         // 16px - Subsection headings
-    'heading-sm': '0.875rem',     // 14px - Small headings
-    
-    // Body Scale - Mobile-optimized
-    'body-lg': '1rem',            // 16px - Large body text
-    'body-md': '0.875rem',        // 14px - Standard body text
-    'body-sm': '0.75rem',         // 12px - Small body text
-    'body-xs': '0.625rem',        // 10px - Small text
-    'body-2xs': '0.5rem',         // 8px - Captions
-    
-    // Legacy aliases for backwards compatibility - Mobile-optimized
-    xs: '0.625rem',              // 10px (body-xs)
-    sm: '0.75rem',               // 12px (body-sm)
-    base: '0.875rem',            // 14px (body-md)
-    lg: '1rem',                  // 16px (body-lg)
-    xl: '1.125rem',              // 18px (heading-lg)
-    '2xl': '1.25rem',            // 20px (heading-xl)
-  },
-  fontWeight: {
-    light: '300',                // Light text
-    normal: '400',               // Body text
-    medium: '500',               // Emphasized text
-    semibold: '600',             // Headings
-    bold: '700',                 // Strong emphasis
-  },
-  lineHeight: {
-    none: '1',
-    tight: '1.25',
-    snug: '1.375',
-    normal: '1.5',
-    relaxed: '1.625',
-    loose: '2',
-  },
-  letterSpacing: {
-    tighter: '-0.05em',
-    tight: '-0.025em',
-    normal: '0',
-    wide: '0.025em',
-    wider: '0.05em',
-    widest: '0.1em',
-  },
+import { z } from "zod";
+
+export const textRoles = [
+  "display",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "lead",
+  "body",
+  "bodySm",
+  "caption",
+  "label",
+  "legal",
+  "code",
+  "kbd"
+] as const;
+
+export type TextRole = typeof textRoles[number];
+
+export const Density = {
+  compact: { fontScale: 0.95, lineScale: 0.92 },
+  cozy: { fontScale: 1.0, lineScale: 1.0 },
+  comfortable: { fontScale: 1.05, lineScale: 1.05 }
 } as const;
 
-export type TypographyToken = keyof typeof typography; 
+export type DensityKey = keyof typeof Density;
+
+export const TypographyRoleSchema = z.object({
+  sizeRem: z.number().positive(), // base font-size in rem
+  line: z.number().positive(), // unitless line-height
+  trackingEm: z.number().default(0), // letter-spacing in em (can be negative)
+  weight: z.number().int().min(100).max(1000),
+  family: z.enum(["sans", "mono"]).default("sans"),
+  uppercase: z.boolean().optional()
+});
+
+export type TypographyRole = z.infer<typeof TypographyRoleSchema>;
+
+export const TypographyConfigSchema = z.object({
+  density: z.nativeEnum({ compact: "compact", cozy: "cozy", comfortable: "comfortable" }).default(
+    "cozy"
+  ) as z.ZodType<DensityKey>,
+  roles: z.record(z.enum(textRoles), TypographyRoleSchema)
+});
+
+export type TypographyConfig = z.infer<typeof TypographyConfigSchema>;
+
+export const defaultTypographyConfig: TypographyConfig = {
+  density: "cozy",
+  roles: {
+    display: { sizeRem: 3.75, line: 1.1, trackingEm: -0.02, weight: 600, family: "sans" }, // 60px
+    h1: { sizeRem: 3.0, line: 1.12, trackingEm: -0.01, weight: 600, family: "sans" }, // 48px
+    h2: { sizeRem: 2.0, line: 1.15, trackingEm: -0.005, weight: 600, family: "sans" }, // 32px
+    h3: { sizeRem: 1.25, line: 1.2, trackingEm: 0, weight: 600, family: "sans" }, // 20px
+    h4: { sizeRem: 1.125, line: 1.2, trackingEm: 0, weight: 600, family: "sans" }, // 18px
+
+    lead: { sizeRem: 1.125, line: 1.6, trackingEm: 0, weight: 400, family: "sans" }, // 18px
+    body: { sizeRem: 1.0, line: 1.65, trackingEm: 0, weight: 400, family: "sans" }, // 16px
+    bodySm: { sizeRem: 0.875, line: 1.55, trackingEm: 0, weight: 400, family: "sans" }, // 14px
+    caption: { sizeRem: 0.75, line: 1.4, trackingEm: 0, weight: 400, family: "sans" }, // 12px
+    legal: { sizeRem: 0.75, line: 1.4, trackingEm: 0, weight: 400, family: "sans" }, // 12px
+
+    label: { sizeRem: 0.75, line: 1.2, trackingEm: 0.18, weight: 600, family: "sans", uppercase: true },
+    code: { sizeRem: 0.875, line: 1.5, trackingEm: 0, weight: 500, family: "mono" }, // 14px
+    kbd: { sizeRem: 0.75, line: 1.2, trackingEm: 0, weight: 600, family: "mono" } // 12px
+  }
+};
+
+export function getDensityScales(density: DensityKey) {
+  return Density[density];
+}
+
+// Compute CSS var map for use in Tailwind preset and styles.css
+export function computeTypographyVars(config: TypographyConfig) {
+  const { fontScale, lineScale } = getDensityScales(config.density);
+  const vars: Record<string, string> = {};
+  (textRoles as readonly TextRole[]).forEach((role) => {
+    const r = config.roles[role];
+    const size = `calc(${r.sizeRem}rem * ${fontScale})`;
+    const line = `calc(${r.line} * ${lineScale})`;
+    const track = `${r.trackingEm}em`;
+    vars[`--font-size-${role}`] = size;
+    vars[`--line-height-${role}`] = line;
+    vars[`--tracking-${role}`] = track;
+    vars[`--font-weight-${role}`] = String(r.weight);
+  });
+  return vars;
+}
+
+export const typographyVars = computeTypographyVars(defaultTypographyConfig);
+

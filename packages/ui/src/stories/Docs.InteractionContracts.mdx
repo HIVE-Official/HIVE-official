@@ -1,0 +1,26 @@
+---
+title: Foundation/Interaction Contracts
+---
+
+# Interaction Contracts
+
+States
+- Idle, Hover, Focus-visible, Active, Disabled, Loading, Error, Selected/Current.
+
+Keyboard
+- Generic: Tab/Shift+Tab, Space/Enter.
+- Menus: Arrow keys, Home/End, typeahead, Escape.
+- Tabs: Arrow keys within tablist.
+- Dialog/Sheet: Escape to close; focus trap; return focus.
+
+ARIA
+- Inputs: labeled by `Label htmlFor`; helper/error via `aria-describedby`.
+- Tooltip: `role="tooltip"` with labeled trigger when needed.
+- Progress/Spinner: `role="progressbar"` with `aria-valuenow` when determinate.
+
+Tokens & Motion
+- Token surfaces/borders/rings; no raw hex.
+- Motion 120–240ms, `(0.2,0,0.2,1)`; reduced motion disables transforms.
+
+See docs/design/INTERACTION_CONTRACTS.md for full text.
+

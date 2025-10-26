@@ -33,6 +33,8 @@ headers: {
 
 ### Spaces (`/api/spaces/*`)
 - `GET /api/spaces` - List all spaces
+- `GET /api/spaces/recommended` - Recommended spaces (campus‑isolated, excludes joined)
+- `GET /api/spaces/search` - Search spaces with facets (q, type, tags)
 - `POST /api/spaces` - Create new space
 - `GET /api/spaces/[spaceId]` - Get space details
 - `POST /api/spaces/[spaceId]` - Update space
@@ -153,3 +155,35 @@ List endpoints support sorting:
 ```
 GET /api/spaces?sort=memberCount&order=desc
 ```
+
+## HiveLab Tools (App Router)
+
+These endpoints power the HiveLab tools system in the web app. All return `{ success, data }` or `{ success:false, error }`.
+
+- Create tool
+  - `POST /api/tools` — body `{ name, description, campusId?, spaceId?, templateId? }` (auth required)
+- Get tool
+  - `GET /api/tools/{toolId}` — returns serialized tool (countdown when applicable)
+- Run Test (gates publish)
+  - `POST /api/tools/{toolId}/test` — body `{ health: looks_good|heads_up|fix_required, blockingIssueCount }`
+- Publish
+  - `POST /api/tools/{toolId}/publish` — body `{ stage: limited_run|certified }` (auth required)
+  - Returns 400 with codes `RUN_TEST_REQUIRED`, `RUN_TEST_STALE`, or `BLOCKING_LINTS` when gates fail
+- Visibility
+  - `POST /api/tools/{toolId}/visibility` — body `{ visibility: private|space|campus|public }` (auth required)
+- Elements (authoring)
+  - `PUT /api/tools/{toolId}/elements` — body `{ elements: [...] }` (draft only; auth required)
+  - `GET /api/tools/{toolId}/elements/{elementId}/attachable-events?spaceId=...&query=&cursor=&limit=&windowDays=` — list future events for attachment (auth; dev bypass allowed in seeds)
+  - `POST /api/tools/{toolId}/elements/{elementId}/attach` — body `{ eventId: string | null }` to persist event attachment (auth required)
+- Deploy
+  - `POST /api/tools/{toolId}/deploy` — body `{ spaceIds: string[] }` (auth required)
+- Usage
+  - `POST /api/tools/{toolId}/use` — records usage (auth required; no dev bypass)
+- Campus catalog (leaders)
+  - `GET /api/tools/campus?campusId=...&visibility=campus|public|all` (auth required)
+- Lab (space context)
+  - `GET /api/lab/spaces/{spaceId}/tools`
+  - `POST /api/lab/spaces/{spaceId}/tools/{toolId}/publish`
+  - `POST /api/lab/spaces/{spaceId}/tools/{toolId}/execute` — creates a board post with `toolContext` in the space (auth required)
+- Jobs (dev only)
+  - `POST /api/tools/jobs/reconcile` — disabled unless `ENABLE_DEV_SEEDS=true`

@@ -1,0 +1,45 @@
+.badge-root {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: var(--radius-pill);
+  padding: 0.2rem 0.6rem;
+  font-size: var(--type-300);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.badge-root:hover {
+  transform: translateY(-1px);
+}
+
+.badge-gold {
+  /* Recast as brand accent pill without heavy gradient */
+  background: hsl(var(--primary) / 0.14);
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.35);
+}
+
+.badge-neutral { background: hsl(var(--foreground) / 0.08); color: hsl(var(--foreground)); }
+
+.badge-outline { border-color: hsl(var(--border)); color: hsl(var(--foreground)); }
+
+.badge-success { background: hsl(var(--success) / 0.14); color: hsl(var(--success)); border-color: hsl(var(--success) / 0.35); }
+
+.badge-warning { background: hsl(var(--warning) / 0.14); color: hsl(var(--warning)); border-color: hsl(var(--warning) / 0.35); }
+
+.badge-destructive { background: hsl(var(--destructive) / 0.14); color: hsl(var(--destructive)); border-color: hsl(var(--destructive) / 0.35); }
+
+.badge-muted { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+
+.badge-root svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}

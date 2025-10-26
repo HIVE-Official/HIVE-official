@@ -1,139 +1,140 @@
+// Bounded Context Owner: Identity & Access Management Guild
 "use client";
 
-// Force dynamic rendering to avoid SSG issues
-export const dynamic = 'force-dynamic';
-
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-import nextDynamic from "next/dynamic";
-import { useAuth } from "@hive/auth-logic";
-// TEMPORARY: Using local implementation due to export resolution issue
-import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { useAuth } from "@auth";
+// Replace legacy stepper with shadcn-style 7-step wizard
+import HiveOnboardingWizard from "./components/HiveOnboardingWizard";
+import { GradientBackdrop } from "../../components/layout/GradientBackdrop";
+import { Container } from "../../components/layout/Container";
+import { Heading, Text } from "@hive/ui";
 
-// Dynamic import for heavy onboarding wizard
-const HiveOnboardingWizard = nextDynamic(
-  () => import("./components/hive-onboarding-wizard").then(mod => ({ default: mod.HiveOnboardingWizard })),
-  {
-    loading: () => (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--hive-brand-primary)]" />
-      </div>
-    ),
-    ssr: false
-  }
+const SectionShell = ({ title, description, children }: { title: string; description?: string; children?: ReactNode }) => (
+  <div className="text-center">
+    <Heading level="h1" className="sm:text-4xl">{title}</Heading>
+    {description ? <Text variant="muted" className="mt-2">{description}</Text> : null}
+    {children ? <div className="mt-6 flex justify-center">{children}</div> : null}
+  </div>
 );
 
-// Enhanced onboarding wrapper with unified auth integration
-function OnboardingWizardWrapper() {
+export default function OnboardingPage(): JSX.Element {
+  const { state } = useAuth();
   const router = useRouter();
-  const unifiedAuth = useAuth();
-  const onboardingBridge = useOnboardingBridge();
-  const [isCreatingSpaces, setIsCreatingSpaces] = useState(false);
 
-  // Handle onboarding completion with auto-space creation
-  const handleOnboardingComplete = async (onboardingData: OnboardingData, retryCount = 0) => {
-    if (!unifiedAuth.isAuthenticated || !unifiedAuth.user) {
+  // Feature flag: redirect to DM-style onboarding when enabled
+  const DM_ENABLED = process.env.NEXT_PUBLIC_ONBOARDING_DM === "true";
+  const PICK_SPACES_ENABLED = process.env.NEXT_PUBLIC_ONBOARDING_PICK_SPACES === "true";
+
+  useEffect(() => {
+    if (DM_ENABLED) {
+      router.replace("/dm/onboarding");
       return;
     }
+  }, [DM_ENABLED, router]);
 
-    try {
-      setIsCreatingSpaces(true);
-      
-      // Complete onboarding through the bridge
-      const result = await onboardingBridge.completeOnboarding(onboardingData);
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Onboarding completion failed');
+  useEffect(() => {
+    if (state.status === "authenticated") {
+      if (PICK_SPACES_ENABLED) {
+        router.replace("/onboarding/pick-spaces");
+      } else {
+        router.replace("/spaces");
       }
-      
-      // Auto-create spaces after onboarding (non-blocking)
-      try {
-        const spaceResults = await onboardingBridge.createPostOnboardingSpaces(onboardingData);
-      } catch (spaceError) {
-      }
-      
-      // Redirect to dashboard
-      router.push('/');
-      
-    } catch (error) {
-      
-      // Retry mechanism for network errors
-      if (retryCount < 2 && error instanceof Error && 
-          (error.message.includes('network') || error.message.includes('timeout'))) {
-        setTimeout(() => {
-          handleOnboardingComplete(onboardingData, retryCount + 1);
-        }, 2000);
-        return;
-      }
-      
-      // For auth errors, redirect to login
-      if (error instanceof Error && 
-          (error.message.includes('authentication') || error.message.includes('token'))) {
-        router.push('/schools');
-        return;
-      }
-      
-      // For other errors, still try to redirect to dashboard
-      router.push('/');
-    } finally {
-      setIsCreatingSpaces(false);
     }
-  };
+  }, [PICK_SPACES_ENABLED, router, state.status]);
 
-  if (isCreatingSpaces) {
+  // Show a brief skeleton only while actively restoring a session.
+  // Treat "idle" as no-session so users aren't stuck on this screen.
+  if (state.status === "loading") {
     return (
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="h-12 w-12 text-[var(--hive-brand-primary)] animate-spin" />
-        <div className="text-center space-y-2">
-          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Setting up your spaces...</h2>
-          <p className="text-[var(--hive-text-muted)]">Creating your personalized campus communities</p>
-        </div>
-      </div>
+      <GradientBackdrop>
+        <Container className="flex min-h-screen flex-col items-center justify-center py-16">
+          <SectionShell
+            title="Preparing your onboarding flow"
+            description="Hold tight while we confirm your session."
+          >
+            <div className="h-32 w-64 animate-pulse rounded-xl border border-dashed border-border" />
+          </SectionShell>
+        </Container>
+      </GradientBackdrop>
     );
   }
 
-  return <HiveOnboardingWizard />;
+  if (state.status === "awaitingVerification") {
+    return (
+      <CalloutPage
+        title="Check your email to continue"
+        description={`We sent a verification link to ${state.email ?? "your campus inbox"}. Click it to resume onboarding.`}
+        linkLabel="Back to magic link request"
+      />
+    );
+  }
+
+  if (state.status === "error") {
+    return (
+      <CalloutPage
+        title="We hit a snag loading your onboarding data"
+        description={state.error ?? "Head back to the sign-in page to try again."}
+      />
+    );
+  }
+
+  if (state.status === "authenticated") {
+    // Brief placeholder while redirecting
+    return (
+      <GradientBackdrop>
+        <Container className="flex min-h-screen flex-col items-center justify-center py-16">
+          <SectionShell title="Redirecting" description="Taking you to your spaces..." />
+        </Container>
+      </GradientBackdrop>
+    );
+  }
+
+  if (state.status !== "onboarding") {
+    return (
+      <CalloutPage
+        title="We couldn’t find an active onboarding session"
+        description="Request a magic link to pick up where you left off."
+      />
+    );
+  }
+
+  return (
+    <GradientBackdrop>
+      <Container className="flex min-h-screen flex-col gap-10 py-16">
+        <div className="text-center">
+          <Heading level="h1" className="sm:text-4xl">Complete your profile</Heading>
+          <Text variant="muted" className="mt-2">We use this information to match you with the right spaces, rituals, and teammates.</Text>
+        </div>
+        <HiveOnboardingWizard />
+      </Container>
+    </GradientBackdrop>
+  );
 }
 
-export default function OnboardingPage() {
-  const router = useRouter();
-  const unifiedAuth = useAuth();
-  const onboardingBridge = useOnboardingBridge();
-
-  // Handle authentication and onboarding status
-  useEffect(() => {
-    if (!unifiedAuth.isLoading) {
-      if (!unifiedAuth.isAuthenticated) {
-        // User is not authenticated, redirect to schools
-        router.push("/schools");
-        return;
-      }
-
-      if (unifiedAuth.user?.onboardingCompleted) {
-        // User has already completed onboarding, redirect to dashboard
-        router.push("/");
-        return;
-      }
-    }
-  }, [
-    unifiedAuth.isLoading, 
-    unifiedAuth.isAuthenticated, 
-    unifiedAuth.user?.onboardingCompleted, 
-    router
-  ]);
-
-  // Show loading while auth is initializing or if redirecting
-  if (unifiedAuth.isLoading || 
-      !unifiedAuth.isAuthenticated || 
-      unifiedAuth.user?.onboardingCompleted) {
-    return (
-      <div className="min-h-screen bg-[var(--hive-background-primary)] flex items-center justify-center">
-        <Loader2 className="h-12 w-12 text-[var(--hive-brand-primary)] animate-spin" />
-      </div>
-    );
-  }
-
-  // Show onboarding wizard for authenticated users who need onboarding
-  return <OnboardingWizardWrapper />;
+function CalloutPage({
+  title,
+  description,
+  linkLabel
+}: {
+  title: string;
+  description: string;
+  linkLabel?: string;
+}): JSX.Element {
+  return (
+    <GradientBackdrop>
+      <Container className="flex min-h-screen flex-col items-center justify-center py-16">
+        <SectionShell title={title} description={description}>
+          <Link
+            href="/login"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            {linkLabel ?? "Return to sign in"}
+          </Link>
+        </SectionShell>
+      </Container>
+    </GradientBackdrop>
+  );
 }

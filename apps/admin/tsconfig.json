@@ -1,69 +1,59 @@
+// Bounded Context Owner: Governance Guild
 {
-  "extends": "../../packages/config/typescript/nextjs.json",
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "src/app/**/*",
+    "src/middleware.ts",
+    ".next/types/**/*.ts"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
       "@hive/ui": [
-        "../../packages/ui/src"
+        "../../packages/ui/src/index.ts"
       ],
-      "@hive/core": [
-        "../../packages/core/src"
+      "@hive/ui/*": [
+        "../../packages/ui/src/*"
       ],
-      "@hive/hooks": [
-        "../../packages/hooks/src"
+      "@hive/firebase": [
+        "../../packages/firebase/src/index.ts"
       ],
-      "@hive/auth-logic": [
-        "../../packages/auth-logic/src"
+      "@hive/firebase/*": [
+        "../../packages/firebase/src/*"
       ],
       "@hive/tokens": [
-        "../../packages/tokens"
+        "../../packages/tokens/src/tokens.ts"
       ],
-      "@hive/utilities": [
-        "../../packages/utilities/src"
+      "@hive/tokens/*": [
+        "../../packages/tokens/src/*"
       ],
-      "@hive/validation": [
-        "../../packages/validation/src"
+      "@/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@/components/*": [
+        "../../packages/ui/src/components/*"
+      ],
+      "@core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@core/*": [
+        "../../packages/core/src/*"
+      ],
+      "@admin/server/*": [
+        "src/server/*"
       ]
     },
+    "incremental": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "noEmit": true,
-    "incremental": true,
-    "module": "esnext",
-    "esModuleInterop": true,
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "target": "ES2017",
-    "typeRoots": [
-      "../../node_modules/@types",
-      "../../node_modules",
-      "node_modules/@types"
-    ],
-    "strictNullChecks": true
+    ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next/**"
   ]
 }

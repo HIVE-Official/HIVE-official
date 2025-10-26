@@ -17,10 +17,10 @@
 - **Performance Target**: <3s page loads, <1s transitions
 
 ### 2. Deployment Scripts
-- **Deploy**: `pnpm indexes:deploy [staging|production]`
+- **Deploy**: `pnpm indexes:deploy [projectId]`
 - **Validate**: `pnpm indexes:validate`
-- **File**: `/scripts/deploy-firestore-indexes.js`
-- **File**: `/scripts/validate-firestore-indexes.js`
+- **File**: `/scripts/deploy-firestore-indexes.mjs`
+- **File**: `/scripts/validate-firestore-indexes.mjs`
 
 ### 3. Comprehensive Documentation
 - **Guide**: `/FIRESTORE_INDEXES_GUIDE.md`
@@ -33,7 +33,7 @@
 ### Core Platform Queries
 1. **Users**: Campus isolation + activity tracking + handle lookups
 2. **Spaces**: Campus filtering + popularity + categories + access levels
-3. **Posts**: Feed aggregation + space posts + user history + engagement
+3. **Posts**: Feed aggregation + space posts + user history + engagement + pin sweeps (spaceId+pinnedAt+createdAt)
 4. **Events**: Campus events + space calendars + category browsing
 5. **Members**: User memberships + role management + activity tracking
 

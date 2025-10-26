@@ -1,0 +1,36 @@
+.msl-root {
+  --msl-gap: var(--space-3, 0.75rem);
+  --msl-size: 10px;
+  --msl-radius: var(--radius-pill, 9999px);
+  --msl-track: hsl(var(--muted));
+  --msl-fill: hsl(var(--primary));
+  --msl-duration: var(--motion-duration-smooth, 300ms);
+}
+
+.msl-track {
+  position: relative;
+  height: var(--msl-size);
+  border-radius: var(--msl-radius);
+  background: color-mix(in oklab, var(--msl-track) 60%, transparent);
+  overflow: hidden;
+}
+
+.msl-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: var(--msl-fill);
+  border-radius: inherit;
+  transform-origin: left center;
+  animation: msl-fill var(--msl-duration) var(--motion-ease-standard, cubic-bezier(.32,.72,0,1)) both;
+}
+
+@keyframes msl-fill {
+  from { width: 0%; opacity: 0.85; }
+  to { width: 100%; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msl-fill { animation: none; width: 100%; }
+}
+

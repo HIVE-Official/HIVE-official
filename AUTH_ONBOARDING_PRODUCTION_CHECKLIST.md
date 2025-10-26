@@ -143,7 +143,7 @@ vercel logs --follow
 ### Session Management
 - Secure cookie settings
 - HTTP-only cookies in production
-- Session expiration after 24 hours
+- Session expiration after 12 hours
 - Automatic refresh token rotation
 
 ### Data Protection

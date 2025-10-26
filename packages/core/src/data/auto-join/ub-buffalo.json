@@ -1,0 +1,57 @@
+{
+  "campusId": "ub-buffalo",
+  "defaults": [
+    {
+      "id": "space-welcome",
+      "name": "Welcome to Hive"
+    },
+    {
+      "id": "space-new-students",
+      "name": "New Students Hub"
+    },
+    {
+      "id": "space-campus-updates",
+      "name": "Campus Updates"
+    }
+  ],
+  "residential": {
+    "off-campus-students": {
+      "id": "space-off-campus-students",
+      "name": "Off-Campus Students Network"
+    },
+    "ellicott-residence": {
+      "id": "space-residential-ellicott",
+      "name": "Ellicott Community"
+    },
+    "governors-residence": {
+      "id": "space-residential-governors",
+      "name": "Governors Residence Community"
+    },
+    "south-lake": {
+      "id": "space-residential-south-lake",
+      "name": "South Lake Village Community"
+    },
+    "greek-life": {
+      "id": "space-greek-life-housing",
+      "name": "Greek Life Housing"
+    },
+    "south-campus": {
+      "id": "space-residential-south-campus",
+      "name": "South Campus Apartments Network"
+    }
+  },
+  "cohorts": {
+    "business-administration": {
+      "prefix": "space-cohort-business-administration",
+      "nameTemplate": "Business Administration Class of {year}"
+    },
+    "computer-science": {
+      "prefix": "space-cohort-computer-science",
+      "nameTemplate": "Computer Science Class of {year}"
+    },
+    "industrial-engineering": {
+      "prefix": "space-cohort-industrial-engineering",
+      "nameTemplate": "Industrial Engineering Class of {year}"
+    }
+  }
+}

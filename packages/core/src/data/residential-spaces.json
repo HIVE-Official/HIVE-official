@@ -1,0 +1,32 @@
+[
+  {
+    "spaceId": "ellicott-residence",
+    "name": "Ellicott Complex",
+    "campus": "North Campus",
+    "cta": "Join the Ellicott community events"
+  },
+  {
+    "spaceId": "governors-residence",
+    "name": "Governors Residence Halls",
+    "campus": "North Campus",
+    "cta": "Connect with neighbors in Governors"
+  },
+  {
+    "spaceId": "south-lake",
+    "name": "South Lake Village",
+    "campus": "North Campus",
+    "cta": "Stay informed on South Lake happenings"
+  },
+  {
+    "spaceId": "greek-life",
+    "name": "Greek Life Housing",
+    "campus": "North Campus",
+    "cta": "Coordinate with fraternity & sorority life"
+  },
+  {
+    "spaceId": "south-campus",
+    "name": "South Campus Apartments",
+    "campus": "South Campus",
+    "cta": "Meet peers across South Campus apartments"
+  }
+]

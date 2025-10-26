@@ -1,14 +1,8 @@
 {
-  "extends": "../config/typescript/base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "types": ["node"]
+    "rootDir": "src",
+    "baseUrl": "src"
   },
-  "include": ["src/**/*", "scripts/**/*"],
-  "exclude": ["dist", "node_modules"]
-} 
+  "include": ["src/**/*"]
+}

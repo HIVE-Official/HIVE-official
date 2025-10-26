@@ -1,16 +1,9 @@
+// Bounded Context Owner: Identity & Access Management Guild
 {
-  "extends": "../config/typescript/base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
     "rootDir": "src",
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "module": "CommonJS",
-    "target": "ES2020",
-    "types": ["node"]
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules"]
-} 
+  "include": ["src/**/*"]
+}

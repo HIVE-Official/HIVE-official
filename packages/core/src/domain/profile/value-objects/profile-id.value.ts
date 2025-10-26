@@ -1,41 +1,24 @@
-/**
- * ProfileId Value Object
- * Represents a unique identifier for a Profile aggregate
- */
+// Bounded Context Owner: Identity & Access Management Guild
+import { z } from "zod";
+import { err, ok, type Result } from "../../../shared/result";
+import type { ProfileId } from "../profile.types";
 
-import { Result } from '../../shared/base/Result';
-import { ValueObject } from '../../shared/base/ValueObject.base';
+const profileIdSchema = z
+  .string({ required_error: "Profile ID is required" })
+  .trim()
+  .min(1, "Profile ID is required")
+  .max(64, "Profile ID must be 64 characters or fewer");
 
-interface ProfileIdProps {
-  value: string;
-}
-
-export class ProfileId extends ValueObject<ProfileIdProps> {
-  get value(): string {
-    return this.props.value;
-  }
-
-  get id(): string {
-    return this.props.value;
-  }
-
-  private constructor(props: ProfileIdProps) {
-    super(props);
-  }
-
-  public static create(id: string): Result<ProfileId> {
-    if (!id || id.trim().length === 0) {
-      return Result.fail<ProfileId>('ProfileId cannot be empty');
+export const ProfileIdFactory = {
+  create(raw: string): Result<ProfileId> {
+    const parsed = profileIdSchema.safeParse(raw);
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      return err(issue?.message ?? "Invalid profile id");
     }
 
-    return Result.ok<ProfileId>(new ProfileId({ value: id }));
+    return ok({ value: parsed.data });
   }
+};
 
-  public static createFromUserId(userId: string): Result<ProfileId> {
-    return ProfileId.create(`profile_${userId}`);
-  }
-
-  public toString(): string {
-    return this.props.value;
-  }
-}
+export type ProfileIdFactoryType = typeof ProfileIdFactory;

@@ -1,256 +1,122 @@
-import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
-import type { Space } from "@hive/core";
+// Bounded Context Owner: Community Guild
+import { NextResponse } from "next/server";
+import { spaceService, serializeSpace } from "../../../../server/spaces/service";
+import { Flags } from "../../../../server/flags";
+import { buildRecommendedOrder } from "../../../../server/spaces/recommendations";
 
-/**
- * SPEC.md Behavioral Psychology Algorithm:
- * Score = (AnxietyRelief × 0.4) + (SocialProof × 0.3) + (InsiderAccess × 0.3)
- */
-interface BehavioralSpace extends Space {
-  anxietyReliefScore: number;
-  socialProofScore: number;
-  insiderAccessScore: number;
-  recommendationScore: number;
-  joinToActiveRate: number;
-  mutualConnections: number;
-  friendsInSpace: number;
-}
+// Lightweight in-process campus-level cache for recommendation ranking inputs.
+// Caches pre-serialized space summaries with activity metrics for a campus,
+// then filters by viewer membership per request. TTL is tunable via Flags.
+type CacheEntry = { at: number; items: any[] };
+const CAMPUS_CACHE = new Map<string, CacheEntry>();
 
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = request.user.uid;
+const DEFAULT_CAMPUS_ID = "ub-buffalo";
+const DEFAULT_PROFILE_ID = "profile-jwrhineh";
 
+const parseLimit = (value: string | null | undefined, fallback = 20) => {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return fallback;
+  return Math.min(50, Math.floor(n));
+};
+
+const decodeCursor = (cursor: string | null) => {
+  if (!cursor) return 0;
   try {
-    // Get user profile for personalization
-    const userDoc = await dbAdmin.collection('users').doc(userId).get();
-    const userData = userDoc.data();
+    const raw = Buffer.from(cursor, "base64").toString("utf8");
+    const n = Number(raw);
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
+  } catch {
+    return 0;
+  }
+};
 
-    if (!userData) {
-      return respond.error("User profile not found", "NOT_FOUND", { status: 404 });
+const encodeCursor = (offset: number) => Buffer.from(String(offset)).toString("base64");
+
+export async function GET(request: Request): Promise<NextResponse> {
+  const url = new URL(request.url);
+  const campusId = url.searchParams.get("campusId") ?? DEFAULT_CAMPUS_ID;
+  const profileId = url.searchParams.get("profileId") ?? DEFAULT_PROFILE_ID;
+  const limit = parseLimit(url.searchParams.get("limit"), 20);
+  const startOffset = decodeCursor(url.searchParams.get("cursor"));
+  const startedAt = Date.now();
+  // Load catalog for viewer (to exclude already joined), and hydrate campus cache
+  const catalog = await spaceService.getCatalogForProfile({ campusId, profileId });
+  const ttlMs = Flags.recommendationCacheTtlMs();
+  const now = Date.now();
+  const cached = CAMPUS_CACHE.get(campusId);
+  const fresh = cached && ttlMs > 0 && now - cached.at <= ttlMs;
+  let source: "cache" | "recompute" = fresh ? "cache" : "recompute";
+
+  let campusRanked: any[];
+  if (fresh && cached) {
+    campusRanked = cached.items;
+  } else {
+    const allSpaces = await spaceService.listByCampus(campusId);
+    // Serialize with activity metrics for ranking; viewer-independent payload
+    const cacheLocal = new Map<string, Promise<any>>();
+    const serializeForCampus = (space: typeof allSpaces[number]) => {
+      const key = space.id;
+      const existing = cacheLocal.get(key);
+      if (existing) return existing;
+      const task = serializeSpace(space, "", {
+        includeMeta: false,
+        includePosts: false,
+        includeTools: false,
+        includeActivityMetrics: true
+      }) as Promise<any>;
+      cacheLocal.set(key, task);
+      return task;
+    };
+    const summaries = await Promise.all(allSpaces.map(serializeForCampus));
+    campusRanked = buildRecommendedOrder(summaries);
+    if (ttlMs > 0) {
+      CAMPUS_CACHE.set(campusId, { at: now, items: campusRanked });
     }
+  }
 
-    // Get user's connections and friends for social proof
-    const connectionsSnapshot = await dbAdmin
-      .collection('connections')
-      .where('userId', '==', userId)
-      .where('status', '==', 'connected')
-      .get();
+  // Exclude viewer's joined spaces from campus-ranked list
+  const joinedIds = new Set(catalog.joined.map((s) => s.id));
+  const ranked = campusRanked.filter((s) => !joinedIds.has(s.id));
 
-    const connectionIds = connectionsSnapshot.docs.map(doc => doc.data().connectedUserId);
+  const end = Math.min(startOffset + limit, ranked.length);
+  const items = ranked.slice(startOffset, end);
+  const nextCursor = end < ranked.length ? encodeCursor(end) : null;
 
-    const friendsSnapshot = await dbAdmin
-      .collection('friends')
-      .where('userId', '==', userId)
-      .where('status', '==', 'accepted')
-      .get();
-
-    const friendIds = friendsSnapshot.docs.map(doc => doc.data().friendId);
-
-    // Get all spaces with campus isolation
-    const spacesSnapshot = await dbAdmin
-      .collection('spaces')
-      .where('campusId', '==', 'ub-buffalo')
-      .where('isActive', '==', true)
-      .limit(100)
-      .get();
-
-    const spaces: BehavioralSpace[] = [];
-
-    // Calculate behavioral scores for each space
-    for (const spaceDoc of spacesSnapshot.docs) {
-      const spaceData = spaceDoc.data() as Space;
-
-      // Get member data for social proof calculation
-      const membersSnapshot = await dbAdmin
-        .collection('spaceMembers')
-        .where('spaceId', '==', spaceDoc.id)
-        .where('status', '==', 'active')
-        .limit(100)
-        .get();
-
-      const memberIds = membersSnapshot.docs.map(doc => doc.data().userId);
-
-      // Calculate mutual connections
-      const mutualConnections = memberIds.filter(id => connectionIds.includes(id)).length;
-      const friendsInSpace = memberIds.filter(id => friendIds.includes(id)).length;
-
-      // Calculate anxiety relief score based on space activity and category
-      const anxietyReliefScore = calculateAnxietyReliefScore(spaceData, userData);
-
-      // Calculate social proof score
-      const socialProofScore = calculateSocialProofScore(
-        mutualConnections,
-        friendsInSpace,
-        spaceData.memberCount || 0
-      );
-
-      // Calculate insider access score
-      const insiderAccessScore = calculateInsiderAccessScore(spaceData);
-
-      // Overall recommendation score (SPEC.md formula)
-      const recommendationScore =
-        (anxietyReliefScore * 0.4) +
-        (socialProofScore * 0.3) +
-        (insiderAccessScore * 0.3);
-
-      // Calculate join-to-active rate
-      const joinToActiveRate = calculateJoinToActiveRate(spaceData, membersSnapshot.size);
-
-      spaces.push({
-        ...spaceData,
-        id: spaceDoc.id,
-        anxietyReliefScore,
-        socialProofScore,
-        insiderAccessScore,
-        recommendationScore,
-        joinToActiveRate,
-        mutualConnections,
-        friendsInSpace
-      });
+  const endedAt = Date.now();
+  const latencyMs = endedAt - startedAt;
+  // Lightweight telemetry until a proper sink is wired
+  // eslint-disable-next-line no-console
+  console.warn({
+    metric: "spaces.recommendations.rank.latency_ms",
+    value: latencyMs,
+    labels: { campusId, itemsTotal: campusRanked.length, blend: Flags.recommendationBlend() }
+  });
+  // cache metrics
+  // eslint-disable-next-line no-console
+  console.warn({
+    metric: "spaces.recommendations.cache.hit",
+    value: source === "cache" ? 1 : 0,
+    labels: { campusId, ttlMs, ageMs: cached ? now - cached.at : null }
+  });
+  // eslint-disable-next-line no-console
+  console.warn({
+    metric: "spaces.recommendations.items.returned",
+    value: items.length,
+    labels: {
+      campusId,
+      limit,
+      nextCursor: Boolean(nextCursor),
+      blendEnabled: Flags.recommendationBlend(),
+      repeatCap: Flags.recommendationRepeatCap()
     }
+  });
 
-    // Sort by recommendation score
-    spaces.sort((a, b) => b.recommendationScore - a.recommendationScore);
-
-    // Categorize spaces for SPEC.md sections
-    const panicRelief = spaces
-      .filter(s => s.anxietyReliefScore > 0.6)
-      .slice(0, 5);
-
-    const whereYourFriendsAre = spaces
-      .filter(s => s.socialProofScore > 0.5 && (s.friendsInSpace > 0 || s.mutualConnections > 2))
-      .slice(0, 5);
-
-    const insiderAccess = spaces
-      .filter(s => s.insiderAccessScore > 0.7)
-      .slice(0, 5);
-
-    return respond.success({
-      panicRelief,
-      whereYourFriendsAre,
-      insiderAccess,
-      recommendations: spaces.slice(0, 20), // Top 20 overall
-      meta: {
-        totalSpaces: spacesSnapshot.size,
-        userConnections: connectionIds.length,
-        userFriends: friendIds.length
-      }
-    });
-
-  } catch (error) {
-    logger.error('Error generating space recommendations', { error: error instanceof Error ? error : new Error(String(error)), userId });
-    return respond.error("Failed to generate recommendations", "INTERNAL_ERROR", { status: 500 });
-  }
-});
-
-/**
- * Calculate anxiety relief score based on space characteristics
- * Higher scores for spaces that address common student anxieties
- */
-function calculateAnxietyReliefScore(space: any, user: any): number {
-  let score = 0;
-
-  // Study stress relief
-  if (space.category === 'student_org' && space.tags?.includes('study')) {
-    score += 0.3;
-  }
-
-  // Loneliness relief - active social spaces
-  if (space.activityLevel === 'very_active' || space.activityLevel === 'active') {
-    score += 0.2;
-  }
-
-  // FOMO relief - trending or popular spaces
-  if (space.memberCount > 50) {
-    score += 0.2;
-  }
-
-  // Major-specific anxiety relief
-  if (user.major && space.tags?.includes(user.major.toLowerCase())) {
-    score += 0.3;
-  }
-
-  return Math.min(score, 1);
-}
-
-/**
- * Calculate social proof score based on connections
- */
-function calculateSocialProofScore(
-  mutualConnections: number,
-  friendsInSpace: number,
-  totalMembers: number
-): number {
-  let score = 0;
-
-  // Friends are highest signal
-  if (friendsInSpace > 0) {
-    score += Math.min(friendsInSpace * 0.2, 0.4);
-  }
-
-  // Connections are medium signal
-  if (mutualConnections > 0) {
-    score += Math.min(mutualConnections * 0.1, 0.3);
-  }
-
-  // Popular spaces have social proof
-  if (totalMembers > 100) {
-    score += 0.2;
-  } else if (totalMembers > 50) {
-    score += 0.1;
-  }
-
-  // Network effect bonus
-  const networkRatio = (mutualConnections + friendsInSpace) / Math.max(totalMembers, 1);
-  score += Math.min(networkRatio * 0.2, 0.2);
-
-  return Math.min(score, 1);
-}
-
-/**
- * Calculate insider access score based on exclusivity
- */
-function calculateInsiderAccessScore(space: any): number {
-  let score = 0;
-
-  // Join policy affects exclusivity
-  if (space.joinPolicy === 'invite_only') {
-    score += 0.4;
-  } else if (space.joinPolicy === 'approval') {
-    score += 0.2;
-  }
-
-  // Smaller spaces feel more exclusive
-  if (space.memberCount < 30) {
-    score += 0.3;
-  } else if (space.memberCount < 50) {
-    score += 0.1;
-  }
-
-  // Greek life and certain categories are inherently exclusive
-  if (space.category === 'greek_life') {
-    score += 0.2;
-  }
-
-  // Private spaces are exclusive
-  if (space.visibility === 'members_only') {
-    score += 0.1;
-  }
-
-  return Math.min(score, 1);
-}
-
-/**
- * Calculate the join-to-active member conversion rate
- * SPEC.md target: 70% for optimal behavioral change
- */
-function calculateJoinToActiveRate(space: any, activeMembers: number): number {
-  const totalMembers = space.memberCount || 1;
-  const rate = activeMembers / totalMembers;
-
-  // Simulate some variability for demo
-  // In production, this would be calculated from real engagement data
-  const variation = (Math.random() * 0.2) - 0.1; // +/- 10%
-
-  return Math.max(0, Math.min(1, rate + variation));
+  return NextResponse.json({
+    success: true,
+    data: {
+      items,
+      total: ranked.length,
+      nextCursor
+    }
+  });
 }

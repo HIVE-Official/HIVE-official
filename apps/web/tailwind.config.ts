@@ -1,29 +1,26 @@
+// Bounded Context Owner: Identity & Access Management Guild
 import type { Config } from "tailwindcss";
-import masterConfig from "../../packages/tokens/tailwind.config.master";
+import tokensPreset from "@hive/tokens/tailwind";
+import tailwindcssAnimate from "tailwindcss-animate";
+import tailwindcssForms from "@tailwindcss/forms";
 
-// HIVE Web App Tailwind Config - Extends Master Configuration with Optimizations
 const config: Config = {
-  // Override content paths for web app specific files
+  darkMode: ["class"],
+  presets: [tokensPreset],
   content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-    // Include shared packages
-    '../../packages/ui/src/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "../../packages/core/src/**/*.{ts,tsx}",
+    "../../packages/ui/src/**/*.{ts,tsx}"
   ],
-  darkMode: masterConfig.darkMode as 'class' | 'media',
-  theme: masterConfig.theme,
-  plugins: masterConfig.plugins,
-  // Production optimizations
-  ...(process.env.NODE_ENV === 'production' && {
-    // Remove unused CSS in production
-    corePlugins: {
-      // Disable unused features to reduce CSS size
-      float: false,
-      clear: false,
-      skew: false,
-      caretColor: false,
-      sepia: false,
-    },
-  }),
+  theme: {
+    extend: {
+      colors: {
+        // Map brand gold role to CSS variable for Tailwind utilities (e.g., from-gold-role/20)
+        'gold-role': 'hsl(var(--gold) / <alpha-value>)',
+      },
+    }
+  },
+  plugins: [tailwindcssAnimate, tailwindcssForms]
 };
 
 export default config;

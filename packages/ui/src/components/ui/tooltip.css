@@ -1,0 +1,50 @@
+.tooltip-content {
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  /* subtle gold touch via border */
+  border: 1px solid hsl(var(--primary) / 0.35);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.6rem;
+  font-size: var(--type-300);
+  line-height: 1.35;
+  box-shadow: 0 10px 20px hsl(var(--foreground) / 0.1);
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  transition: opacity var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+[data-state="delayed-open"].tooltip-content {
+  animation: tooltip-fade-in var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+[data-state="closed"].tooltip-content {
+  animation: tooltip-fade-out var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tooltip-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+.tooltip-arrow { fill: hsl(var(--card)); stroke: hsl(var(--primary) / 0.35); stroke-width: 1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-content { transition: none; }
+}

@@ -1,62 +1,51 @@
+// Bounded Context Owner: Identity & Access Management Guild
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { checkHandleAvailability } from "@/lib/handle-service";
-import { createCrudHandler } from "@/lib/api-wrapper";
-import { ApiResponseHelper as _ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { getAuthContainer } from "../../../../server/auth/container";
 
-// Validation schemas
-const checkHandleBodySchema = z.object({
-  handle: z.string().min(1, "Handle is required")
+const schema = z.object({
+  handle: z
+    .string()
+    .min(3, "Handle must be at least 3 characters")
+    .max(20, "Handle must be at most 20 characters")
+    // Lowercase, start/end alphanumeric, allow . _ - in between
+    .regex(
+      /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])$/,
+      "Handle must start/end with a letter or number and may contain . _ - in between"
+    )
+    .refine((v) => !/[._-]{2,}/.test(v), {
+      message: "Handle cannot contain consecutive special characters"
+    })
 });
 
-const checkHandleQuerySchema = z.object({
-  handle: z.string().min(1, "Handle parameter is required")
-});
+const normalise = (value: string): string => value.trim().toLowerCase();
 
-interface CheckHandleResponse {
-  available: boolean;
-  reason?: string;
-  handle?: string;
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const handle = request.nextUrl.searchParams.get("handle") ?? "";
+  return checkHandle(handle);
 }
 
-// Modern API handler using the new wrapper
-export const { GET, POST } = createCrudHandler({
-  // Handle POST requests with body validation
-  post: async (context) => {
-    const { handle } = context.body;
-    
-    // Use centralized handle validation service
-    const result = await checkHandleAvailability(handle);
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const bodySchema = z.object({ handle: z.string().optional() });
+  const rawJson = (await request.json().catch(() => null)) as unknown;
+  const parsedBody = bodySchema.safeParse(rawJson);
+  const handle = parsedBody.success && typeof parsedBody.data.handle === "string"
+    ? parsedBody.data.handle
+    : "";
+  return checkHandle(handle);
+}
 
-    const response: CheckHandleResponse = {
-      available: result.isAvailable,
-      reason: result.error,
-      handle: result.normalizedHandle,
-    };
-
-    return response;
-  },
-
-  // Handle GET requests with query validation
-  get: async (context) => {
-    const { handle } = context.query;
-    
-    // Use centralized handle validation service
-    const result = await checkHandleAvailability(handle);
-
-    const response: CheckHandleResponse = {
-      available: result.isAvailable,
-      reason: result.error,
-      handle: result.normalizedHandle,
-    };
-
-    return response;
+async function checkHandle(raw: string): Promise<NextResponse> {
+  const parsed = schema.safeParse({ handle: normalise(raw) });
+  if (!parsed.success) {
+    return NextResponse.json(
+      { available: false, reason: parsed.error.issues[0]?.message ?? "Invalid handle" },
+      { status: 400 }
+    );
   }
-}, {
-  // Configuration
-  public: true, // No authentication required for handle checking
-  rateLimit: 'auth', // Apply authentication-level rate limiting
-  validation: {
-    body: checkHandleBodySchema,
-    query: checkHandleQuerySchema
-  }
-}) as any;
+
+  const { handle } = parsed.data;
+  const container = getAuthContainer();
+  const existing = await container.profileRepository.findByHandle(handle);
+  return NextResponse.json({ available: !existing, handle });
+}

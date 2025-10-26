@@ -1,0 +1,27 @@
+.dock-root {
+  --dock-w: 384px; /* default, token-friendly */
+  --dock-min: 320px;
+  --dock-max: 480px;
+}
+
+.dock-panel {
+  width: var(--dock-w);
+  transition:
+    transform var(--motion-duration-smooth) var(--motion-ease-standard),
+    opacity var(--motion-duration-swift) var(--motion-ease-standard);
+}
+
+.dock-panel[data-state="closed"] { transform: translateX(100%); opacity: 0; }
+.dock-panel[data-state="open"] { transform: translateX(0); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-panel { transition: none !important; }
+}
+
+.dock-resizer {
+  position: absolute;
+  top: 0; left: -6px; bottom: 0;
+  width: 12px;
+  cursor: ew-resize;
+}
+

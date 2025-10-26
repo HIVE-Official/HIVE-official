@@ -1,0 +1,430 @@
+:root {
+  color-scheme: dark;
+
+  /* Typography families: canonical variables (override-able by apps) */
+  --font-sans: 'Geist Sans', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /* Back-compat aliases (deprecated, prefer --font-sans/--font-mono) */
+  --font-geist-sans: var(--font-sans);
+  --font-geist-mono: var(--font-mono);
+  --font-jetbrains-mono: var(--font-mono);
+
+  /* Density scales — controlled via [data-density] attribute */
+  --density-font-scale: 1;
+  --density-line-scale: 1;
+
+  /* Typography role variables — computed defaults for the cozy density */
+  /* Values are further scaled by --density-* scales above */
+  --font-size-display: calc(3.75rem * var(--density-font-scale));
+  --line-height-display: calc(1.1 * var(--density-line-scale));
+  --tracking-display: -0.02em;
+  --font-weight-display: 600;
+
+  --font-size-h1: calc(3rem * var(--density-font-scale));
+  --line-height-h1: calc(1.12 * var(--density-line-scale));
+  --tracking-h1: -0.01em;
+  --font-weight-h1: 600;
+
+  --font-size-h2: calc(2rem * var(--density-font-scale));
+  --line-height-h2: calc(1.15 * var(--density-line-scale));
+  --tracking-h2: -0.005em;
+  --font-weight-h2: 600;
+
+  --font-size-h3: calc(1.25rem * var(--density-font-scale));
+  --line-height-h3: calc(1.2 * var(--density-line-scale));
+  --tracking-h3: 0em;
+  --font-weight-h3: 600;
+
+  --font-size-h4: calc(1.125rem * var(--density-font-scale));
+  --line-height-h4: calc(1.2 * var(--density-line-scale));
+  --tracking-h4: 0em;
+  --font-weight-h4: 600;
+
+  --font-size-lead: calc(1.125rem * var(--density-font-scale));
+  --line-height-lead: calc(1.6 * var(--density-line-scale));
+  --tracking-lead: 0em;
+  --font-weight-lead: 400;
+
+  --font-size-body: calc(1rem * var(--density-font-scale));
+  --line-height-body: calc(1.65 * var(--density-line-scale));
+  --tracking-body: 0em;
+  --font-weight-body: 400;
+
+  --font-size-bodySm: calc(0.875rem * var(--density-font-scale));
+  --line-height-bodySm: calc(1.55 * var(--density-line-scale));
+  --tracking-bodySm: 0em;
+  --font-weight-bodySm: 400;
+
+  --font-size-caption: calc(0.75rem * var(--density-font-scale));
+  --line-height-caption: calc(1.4 * var(--density-line-scale));
+  --tracking-caption: 0em;
+  --font-weight-caption: 400;
+
+  --font-size-legal: calc(0.75rem * var(--density-font-scale));
+  --line-height-legal: calc(1.4 * var(--density-line-scale));
+  --tracking-legal: 0em;
+  --font-weight-legal: 400;
+
+  --font-size-label: calc(0.75rem * var(--density-font-scale));
+  --line-height-label: calc(1.2 * var(--density-line-scale));
+  --tracking-label: 0.18em;
+  --font-weight-label: 600;
+
+  --font-size-code: calc(0.875rem * var(--density-font-scale));
+  --line-height-code: calc(1.5 * var(--density-line-scale));
+  --tracking-code: 0em;
+  --font-weight-code: 500;
+
+  --font-size-kbd: calc(0.75rem * var(--density-font-scale));
+  --line-height-kbd: calc(1.2 * var(--density-line-scale));
+  --tracking-kbd: 0em;
+  --font-weight-kbd: 600;
+
+  /* Layout: base spacing and gutters (density-scaled) */
+  --space-unit: 0.25rem; /* 4px baseline */
+  --density-space-scale: 1; /* overridden by [data-density] */
+
+  /* Core spacing tokens (scaled) */
+  --space-1: calc(var(--space-unit) * 1 * var(--density-space-scale));
+  --space-2: calc(var(--space-unit) * 2 * var(--density-space-scale));
+  --space-3: calc(var(--space-unit) * 3 * var(--density-space-scale));
+  --space-4: calc(var(--space-unit) * 4 * var(--density-space-scale));
+  --space-5: calc(var(--space-unit) * 5 * var(--density-space-scale));
+  --space-6: calc(var(--space-unit) * 6 * var(--density-space-scale));
+  --space-8: calc(var(--space-unit) * 8 * var(--density-space-scale));
+  --space-10: calc(var(--space-unit) * 10 * var(--density-space-scale));
+  --space-12: calc(var(--space-unit) * 12 * var(--density-space-scale));
+  --space-16: calc(var(--space-unit) * 16 * var(--density-space-scale));
+  --space-20: calc(var(--space-unit) * 20 * var(--density-space-scale));
+  --space-24: calc(var(--space-unit) * 24 * var(--density-space-scale));
+  --space-32: calc(var(--space-unit) * 32 * var(--density-space-scale));
+
+  /* Gutters and page paddings (responsive) */
+  --gutter-inline: var(--space-6);
+  --page-inline: var(--space-8);
+  --section-space-y: var(--space-16);
+
+  /* Stack helpers (used by utilities) */
+  --stack-xs: var(--space-3);
+  --stack-sm: var(--space-4);
+  --stack-md: var(--space-6);
+  --stack-lg: var(--space-8);
+  --stack-xl: var(--space-12);
+
+  /* vNext defaults (dark) */
+  --background: 0 0% 4%; /* #0A0A0A */
+  --foreground: 0 0% 93%; /* #EDEDED */
+  --card: 240 5% 6%; /* ~#0E0E10 */
+  --card-foreground: 0 0% 93%;
+  --popover: 240 6% 8%; /* ~#131316 */
+  --popover-foreground: 0 0% 93%;
+
+  /* Brand */
+  --primary: 48 100% 52%; /* #FFD700 */
+  --primary-foreground: 0 0% 0%;
+
+  /* Calendar sources (HSL tuples) */
+  --source-campus: 217 91% 60%;   /* blue 500 */
+  --source-space: var(--primary); /* gold */
+  --source-my: 239 84% 67%;       /* indigo 500 */
+  --source-tools: 38 92% 50%;     /* amber 500 */
+
+  /* Secondary surfaces */
+  --secondary: 240 6% 10%; /* ~#18181C */
+  --secondary-foreground: 0 0% 95%;
+
+  --muted: 0 0% 25%; /* #404040 */
+  --muted-foreground: 220 7% 66%; /* ~#A9ABB0 */
+
+  --accent: 0 0% 83%; /* #D4D4D4 */
+  --accent-foreground: 0 0% 9%; /* #171717 */
+
+  /* Status */
+  --destructive: 0 100% 61%; /* #FF3737 */
+  --destructive-foreground: 0 0% 0%;
+  --success: 152 100% 42%; /* #00D46A */
+  --warning: 45 100% 51%; /* #FFB800 */
+  --info: 48 100% 52%; /* reuse gold */
+
+  /* System tokens */
+  --border: 240 5% 16%; /* ~#2A2A2E */
+  --input: 240 5% 16%;
+  --ring: 48 100% 52%;
+  /* Focus ring geometry (consumed by @hive/ui utilities) */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-appear: 200ms;
+  --shadow-subtle: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 30px rgba(255, 215, 0, 0.35);
+  --radius: 20px;
+
+  /* Interaction state layer tokens (overlay approach) */
+  --state-layer-color: var(--foreground); /* HSL triple; used with percentage alpha */
+  --state-hover-opacity: 0.06;
+  --state-pressed-opacity: 0.11;
+  --state-selected-opacity: 0.13;
+  --state-disabled-opacity: 0.50;
+
+  /* Scrim for modal backdrops */
+  --scrim-color: 0 0% 0%;
+  --scrim-opacity: 0.80;
+  --scrim-blur: 0px;
+
+  /* Motion tokens (canonical, single source of truth) */
+  /* Durations aligned to 60fps frame cadence */
+  --motion-duration-instant: 0ms;   /* 0 frames */
+  --motion-duration-micro: 100ms;   /* ~6 frames */
+  --motion-duration-rapid: 150ms;   /* ~9 frames */
+  --motion-duration-swift: 200ms;   /* ~12 frames (Apple standard) */
+  --motion-duration-smooth: 300ms;  /* ~18 frames */
+  --motion-duration-deliberate: 400ms; /* ~24 frames */
+  --motion-duration-linger: 600ms;  /* ~36 frames, ambient */
+  /* Motion grid constants */
+  --motion-duration-tilt-hover: 200ms;
+  --motion-duration-skeleton-grow: 200ms;
+  --motion-duration-skeleton-sweep: 2000ms;
+  --motion-duration-gradient-drift: 12000ms;
+  --motion-duration-border-run: 3000ms;
+  --motion-duration-float: 6000ms;
+  --motion-duration-shine: 1250ms;
+  --motion-duration-meteor: 5000ms;
+  --motion-stagger-text: 50ms;
+  --motion-duration-text-item: 300ms;
+  --motion-delay-meteor-min: 200ms;
+  --motion-delay-meteor-max: 1200ms;
+  --motion-duration-meteor-min: 2000ms;
+  --motion-duration-meteor-max: 10000ms;
+  --motion-angle-meteor: 215deg;
+
+  /* Easings */
+  --motion-ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-ease-decel: cubic-bezier(0.1, 0, 0, 1);
+  --motion-ease-accel: cubic-bezier(0.3, 0, 0.8, 0.2);
+  --motion-ease-entrance: cubic-bezier(0.12, 0.64, 0.04, 1);
+  --motion-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --motion-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Back-compat aliases (remove after migration) */
+  --motion-duration-fast: var(--motion-duration-rapid);
+  --motion-duration-standard: var(--motion-duration-swift);
+  --motion-duration-composed: var(--motion-duration-smooth);
+  --motion-ease-enter: var(--motion-ease-entrance);
+
+  /* Additional scale (xs–xl) for utilities */
+  --motion-duration-xs: 90ms;
+  --motion-duration-sm: 140ms;
+  --motion-duration-md: 180ms;
+  --motion-duration-lg: 220ms;
+  --motion-duration-xl: 300ms;
+
+  /* Respect OS-level reduced motion preference by collapsing durations */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-duration-instant: 0ms;
+      --motion-duration-micro: 0ms;
+      --motion-duration-rapid: 0ms;
+      --motion-duration-swift: 0ms;
+      --motion-duration-smooth: 0ms;
+      --motion-duration-deliberate: 0ms;
+      --motion-duration-linger: 0ms;
+      --motion-duration-tilt-hover: 0ms;
+      --motion-duration-skeleton-grow: 0ms;
+      --motion-duration-skeleton-sweep: 0ms;
+      --motion-duration-gradient-drift: 0ms;
+      --motion-duration-border-run: 0ms;
+      --motion-duration-float: 0ms;
+      --motion-duration-shine: 0ms;
+      --motion-duration-meteor: 0ms;
+      --motion-duration-text-item: 0ms;
+      --motion-stagger-text: 0ms;
+      --motion-delay-meteor-min: 0ms;
+      --motion-delay-meteor-max: 0ms;
+      --motion-duration-meteor-min: 0ms;
+      --motion-duration-meteor-max: 0ms;
+      /* Easing less relevant with zero durations */
+      --motion-ease-standard: linear;
+      --motion-ease-entrance: linear;
+      --motion-ease-exit: linear;
+      --motion-ease-emphasized: linear;
+      /* Collapse xs–xl aliases as well */
+      --motion-duration-xs: 0ms;
+      --motion-duration-sm: 0ms;
+      --motion-duration-md: 0ms;
+      --motion-duration-lg: 0ms;
+      --motion-duration-xl: 0ms;
+    }
+  }
+
+  /* Elevation/Z tokens for depth palette */
+  --z-app-0: 0;
+  --z-app-1: 10;
+  --z-app-2: 20;
+  --z-app-3: 30;
+  --z-app-4: 40;
+  --z-app-5: 50;
+  --shadow-e0: none;
+  --shadow-e1: 0 1px 2px rgba(0,0,0,0.30);
+  --shadow-e2: 0 4px 12px rgba(0,0,0,0.35);
+  --shadow-e3: 0 10px 28px rgba(0,0,0,0.45);
+  --shadow-e4: 0 16px 48px rgba(0,0,0,0.50);
+  --shadow-e5: 0 24px 64px rgba(0,0,0,0.55);
+  --scrim-opacity-overlay: 0.32;
+  --scrim-opacity-overlay-mobile: 0.38;
+  --backdrop-blur-overlay: 8px;
+
+  /* Motion distance tokens — used for subtle icon/button translations */
+  --motion-translate-x-subtle: 1px;
+  --motion-translate-x-sm: 2px;
+  --motion-translate-x-md: 3px;
+  --motion-translate-x-lg: 6px;
+
+  --motion-translate-y-subtle: 1px;
+  --motion-translate-y-sm: 2px;
+  --motion-translate-y-md: 3px;
+  --motion-translate-y-lg: 6px;
+}
+
+.light {
+  color-scheme: light;
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 220 6% 5%; /* ~#0B0C0E */
+  --card: 240 6% 98%; /* #FAFAFB */
+  --card-foreground: 220 6% 5%;
+  --popover: 240 6% 96%; /* #F5F6F7 */
+  --popover-foreground: 220 6% 5%;
+  --secondary: 240 8% 94%; /* #EEEFF2 */
+  --secondary-foreground: 220 6% 12%;
+  --muted: 240 10% 94%;
+  --muted-foreground: 220 6% 34%; /* ~#4B4F57 */
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 100% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 220 10% 85%; /* ~#D7D9DE */
+  --input: 220 10% 85%;
+  --ring: 48 100% 40%;
+}
+
+/* Density controls: set on any container (commonly html or body) */
+[data-density="compact"] {
+  --density-font-scale: 0.95;
+  --density-line-scale: 0.92;
+  --density-space-scale: 0.95;
+}
+[data-density="cozy"] {
+  --density-font-scale: 1.0;
+  --density-line-scale: 1.0;
+  --density-space-scale: 1.0;
+}
+[data-density="comfortable"] {
+  --density-font-scale: 1.05;
+  --density-line-scale: 1.05;
+  --density-space-scale: 1.05;
+}
+
+/* High contrast theme overlay */
+.high-contrast {
+  --foreground: 0 0% 98%;
+  --muted-foreground: 0 0% 80%;
+  --border: 0 0% 40%;
+  --ring: 48 100% 62%;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 3px;
+}
+
+.light.high-contrast {
+  --foreground: 0 0% 7%;
+  --muted-foreground: 0 0% 35%;
+  --border: 0 0% 30%;
+  --ring: 48 100% 55%;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 3px;
+}
+
+/* vNext Preview Theme (toggle via data-theme-set="vnext") */
+/* DARK */
+:root[data-theme-set="vnext"] {
+  /* Background and key surfaces tuned for #0A0A0A base */
+  --background: 0 0% 4%; /* #0A0A0A */
+  --foreground: 0 0% 93%; /* #EDEDED */
+  --card: 240 5% 6%; /* ~#0E0E10 */
+  --card-foreground: 0 0% 93%;
+  --popover: 240 6% 8%; /* ~#131316 */
+  --popover-foreground: 0 0% 93%;
+  --secondary: 240 6% 10%; /* ~#18181C */
+  --secondary-foreground: 0 0% 95%;
+  --muted: 0 0% 25%;
+  --muted-foreground: 220 7% 66%; /* ~#A9ABB0 */
+
+  /* Brand accent (gold) preserved */
+  --primary: 48 100% 52%; /* #FFD700 */
+  --primary-foreground: 0 0% 0%;
+  --ring: 48 100% 52%;
+
+  /* Borders slightly stronger for clarity on dark */
+  --border: 240 5% 16%; /* ~#2A2A2E */
+  --input: 240 5% 16%;
+}
+
+/* LIGHT */
+.light[data-theme-set="vnext"] {
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 220 6% 5%; /* ~#0B0C0E */
+  --card: 240 6% 98%; /* #FAFAFB */
+  --card-foreground: 220 6% 5%;
+  --popover: 240 6% 96%; /* #F5F6F7 */
+  --popover-foreground: 220 6% 5%;
+  --secondary: 240 8% 94%; /* #EEEFF2 */
+  --secondary-foreground: 220 6% 12%;
+  --muted: 240 10% 94%;
+  --muted-foreground: 220 6% 34%; /* ~#4B4F57 */
+
+  /* Accent shifts slightly darker for ring on light */
+  --primary: 48 100% 40%; /* ~#C28E00 */
+  --primary-foreground: 0 0% 100%;
+  --ring: 48 100% 40%;
+
+  --border: 220 10% 85%; /* ~#D7D9DE */
+  --input: 220 10% 85%;
+}
+
+/* Responsive gutters and section rhythm */
+@media (min-width: 640px) {
+  :root {
+    --gutter-inline: var(--space-8);
+    --page-inline: var(--space-10);
+    --section-space-y: var(--space-20);
+  }
+}
+@media (min-width: 768px) {
+  :root {
+    --gutter-inline: var(--space-10);
+    --page-inline: var(--space-12);
+    --section-space-y: var(--space-24);
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --gutter-inline: var(--space-12);
+    --page-inline: var(--space-16);
+    --section-space-y: var(--space-24);
+  }
+}
+@media (min-width: 1280px) {
+  :root {
+    --gutter-inline: var(--space-16);
+    --page-inline: calc(var(--space-16) + var(--space-4));
+    --section-space-y: var(--space-32);
+  }
+}
+
+/* Typographic utility helpers (framework-agnostic) */
+.text-sans { font-family: var(--font-sans); }
+.text-mono { font-family: var(--font-mono); }
+.text-numeric { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
+.text-numeric-zero { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1; }
+.text-measure { max-width: 68ch; }
+.text-measure-tight { max-width: 60ch; }
+.text-measure-wide { max-width: 75ch; }
+.smallcaps { font-variant-caps: small-caps; }

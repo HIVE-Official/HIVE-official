@@ -1,0 +1,20 @@
+name: UI Client Directive Check
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: corepack enable
+      - run: pnpm -v || npm i -g pnpm@10
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint:client-directives
+

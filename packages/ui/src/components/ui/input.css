@@ -1,0 +1,44 @@
+.input-base {
+  height: 2.75rem; /* 44px */
+  width: 100%;
+  border-radius: var(--button-radius);
+  border: 1px solid hsl(var(--border));
+  background-color: transparent;
+  padding: 0 var(--space-sm);
+  font-size: var(--type-400);
+  line-height: var(--line-height-default);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.input-base::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.input-base:hover:not(:disabled) {
+  border-color: hsl(var(--border) / 0.85);
+}
+
+.input-base:focus-visible { outline: none; box-shadow: 0 0 0 1px #000, 0 0 0 3px #FFD700; border-color: #000; }
+
+.input-base[data-invalid="true"] {
+  border-color: hsl(var(--destructive));
+}
+
+.input-base:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dark .input-base,
+.brand-hive.dark .input-base {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border) / 0.6);
+}
+.dark .input-base:hover:not(:disabled),
+.brand-hive.dark .input-base:hover:not(:disabled) {
+  border-color: hsl(var(--border));
+}

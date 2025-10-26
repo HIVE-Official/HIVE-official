@@ -1,0 +1,118 @@
+connectorId: example
+generate:
+  javascriptSdk:
+    - outputDir: ../../src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../..
+      react: true
+      angular: false
+    - outputDir: ../../packages/tokens/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../packages/tokens
+      react: false
+      angular: false
+    - outputDir: ../../packages/ui/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../packages/ui
+      react: false
+      angular: false
+    - outputDir: ../../apps/web/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../apps/web
+      react: true
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/scripts/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/scripts
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/functions/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/functions
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/firebase/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/firebase
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/validation/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/validation
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/utilities/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/utilities
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/i18n/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/i18n
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/tokens/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/tokens
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/hooks/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/hooks
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/firebase/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/firebase
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/core/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/core
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/analytics/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/analytics
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/auth-logic/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/auth-logic
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/ui/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/ui
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/api-client/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/api-client
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/docker/websocket-server/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/docker/websocket-server
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/apps/web/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/apps/web
+      react: true
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/config/typescript/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/config/typescript
+      react: false
+      angular: false
+    - outputDir: ../../blueprints/shadcn-foundation/packages/config/eslint/src/dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ../../blueprints/shadcn-foundation/packages/config/eslint
+      react: false
+      angular: false

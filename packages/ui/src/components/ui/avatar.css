@@ -1,0 +1,56 @@
+
+
+.avatar-root {
+  --avatar-height: 3.75rem;
+  --avatar-width: calc(var(--avatar-height) * 0.78);
+  --avatar-radius: clamp(0.6rem, calc(var(--avatar-height) * 0.22), 1rem);
+  --avatar-border: hsla(var(--primary) / 0.45);
+  --avatar-shadow: hsla(var(--foreground) / 0.32);
+  --avatar-shadow-hover: hsla(var(--foreground) / 0.38);
+  --avatar-sheen: hsla(var(--primary) / 0.15);
+  --avatar-base: hsla(var(--foreground) / 0.85);
+  position: relative;
+  display: inline-flex;
+  height: var(--avatar-height);
+  width: var(--avatar-width);
+  border-radius: var(--avatar-radius);
+  overflow: hidden;
+  border: 1.5px solid var(--avatar-border);
+  box-shadow: 0 18px 34px var(--avatar-shadow);
+  background: linear-gradient(155deg, var(--avatar-sheen), var(--avatar-base));
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.avatar-root.size-sm {
+  --avatar-height: 3rem;
+}
+
+.avatar-root.size-lg {
+  --avatar-height: 4.75rem;
+}
+
+.avatar-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 40px var(--avatar-shadow-hover);
+}
+
+.avatar-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--type-500);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  color: hsl(var(--foreground));
+  background: hsla(var(--background) / 0.6);
+}

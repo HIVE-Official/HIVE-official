@@ -1,0 +1,10 @@
+/* Import tokens via stable relative path to avoid CSS alias resolution issues */
+@import "../../../../packages/tokens/src/styles.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground antialiased; min-height: 100vh; }
+}

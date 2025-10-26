@@ -1,0 +1,37 @@
+[
+  {
+    "id": "cs",
+    "name": "Computer Science",
+    "college": "School of Engineering and Applied Sciences"
+  },
+  {
+    "id": "ee",
+    "name": "Electrical Engineering",
+    "college": "School of Engineering and Applied Sciences"
+  },
+  {
+    "id": "bio",
+    "name": "Biological Sciences",
+    "college": "College of Arts and Sciences"
+  },
+  {
+    "id": "psych",
+    "name": "Psychology",
+    "college": "College of Arts and Sciences"
+  },
+  {
+    "id": "mba",
+    "name": "Business Administration",
+    "college": "School of Management"
+  },
+  {
+    "id": "architecture",
+    "name": "Architecture",
+    "college": "School of Architecture and Planning"
+  },
+  {
+    "id": "pharm",
+    "name": "Pharmaceutical Sciences",
+    "college": "School of Pharmacy and Pharmaceutical Sciences"
+  }
+]

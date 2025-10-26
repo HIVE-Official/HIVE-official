@@ -1,43 +1,16 @@
 {
   "name": "@hive/tokens",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
-    "./hive-tokens-generated.css": {
-      "style": "./hive-tokens-generated.css",
-      "default": "./hive-tokens-generated.css"
-    },
-    "./tailwind.config.master": {
-      "types": "./tailwind.config.master.ts",
-      "default": "./tailwind.config.master.ts"
-    }
-  },
-  "scripts": {
-    "build": "npm run build:types && npm run build:css",
-    "build:types": "npx tsc",
-    "build:css": "tsx scripts/generate-css.ts",
-    "postbuild": "npm run build:css",
-    "lint": "npx eslint . --max-warnings 10",
-    "typecheck": "npx tsc --noEmit"
+    "./tokens": "./src/tokens.ts",
+    "./tailwind": "./src/tailwind.preset.ts",
+    "./styles.css": "./src/styles.css",
+    "./typography": "./src/typography.ts"
   },
   "dependencies": {
-    "tsx": "^4.19.2"
-  },
-  "devDependencies": {
-    "@types/node": "^20.19.0",
-    "eslint": "^9.28.0",
-    "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "eslint": "$eslint"
+    "@dataconnect/generated": "file:src/dataconnect-generated",
+    "zod": "^3.23.8"
   }
 }

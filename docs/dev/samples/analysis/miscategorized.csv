@@ -1,0 +1,43 @@
+spaceId,name,currentType,predictedType,source,tagsPreview
+org-accessibility-resources,Accessibility Resources,student_organization,university_organization,taxonomy,engage|auto-import|event:social|raw:thoughtfullearning|raw:health-and-wellness
+org-american-association-of-psychiatric-pharmacist-c,American Association of Psychiatric Pharmacist Collegiate Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|raw:pharmacy-students|raw:diy-crafting
+org-american-institute-of-chemical-engineers-ub-stud,American Institute of Chemical Engineers - UB Student Chapter,greek_life,student_organization,taxonomy,engage|auto-import|event:social
+org-american-pharmacists-association-academy-of-stud,American Pharmacists Association- Academy of Student Pharmacists UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|raw:communityservice
+org-american-society-of-civil-engineers-ub-chapter,American Society of Civil Engineers UB Chapter,greek_life,student_organization,taxonomy,engage|auto-import|raw:groupbusiness|campus:north|raw:general-body-meeting-gbm-
+org-associated-general-contractors-buffalo-student-c,Associated General Contractors: Buffalo Student Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|event:career|event:professional-development
+org-be-the-impact-challenge,Be the Impact Challenge,student_organization,university_organization,taxonomy,engage|auto-import|raw:communityservice|raw:service|raw:social-justice
+org-biomedical-engineering-society-ub-chapter,Biomedical Engineering Society - UB Chapter,greek_life,student_organization,taxonomy,engage|auto-import|raw:thoughtfullearning|raw:academics|campus:north
+org-campus-living,Campus Living,student_organization,residential,taxonomy,engage|auto-import|raw:communityservice|event:social|raw:campus-living
+org-christian-pharmacists-fellowship-international-u,Christian Pharmacists Fellowship International - UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|raw:guest-speaker
+org-clement-hall,Clement Hall,student_organization,residential,taxonomy,engage|auto-import|event:cultural|campus:north|audience:undergrad
+org-college-republicans-ub-chapter,College Republicans - UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|campus:north|audience:undergrad
+org-creekside-village-flickinger-court,Creekside Village & Flickinger Court,student_organization,residential,taxonomy,engage|auto-import|raw:thoughtfullearning|event:social|raw:campus-living
+org-engineers-for-a-sustainable-world-ub-chapter,Engineers for a Sustainable World - UB Chapter,greek_life,student_organization,taxonomy,engage|auto-import|raw:thoughtfullearning|campus:north|raw:sustainability-environment
+org-evans-quad,Evans Quad,student_organization,residential,taxonomy,engage|auto-import|event:social|campus:north|raw:campus-living
+org-fargo-quad,Fargo Quad,student_organization,residential,taxonomy,engage|auto-import|raw:thoughtfullearning|raw:health-and-wellness|campus:north
+org-flint-village,Flint Village,student_organization,residential,taxonomy,engage|auto-import|event:social|raw:health-and-wellness|raw:campus-living
+org-governors-complex,Governors Complex,student_organization,residential,taxonomy,engage|auto-import|event:social|raw:health-and-wellness|campus:north
+org-greiner-hall,Greiner Hall,student_organization,residential,taxonomy,engage|auto-import|event:social|raw:campus-living|raw:diy-crafting
+org-hadley-village,Hadley Village,student_organization,residential,taxonomy,engage|auto-import|event:social|raw:campus-living|raw:groupbusiness
+org-health-promotion,Health Promotion,student_organization,university_organization,taxonomy,engage|auto-import|event:social|raw:health-and-wellness|audience:masters
+org-industry-pharmacists-organization-ub-chapter,Industry Pharmacists Organization-UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|raw:groupbusiness|event:career|event:professional-development
+org-institute-of-industrial-and-system-engineers-ub-,Institute of Industrial and System Engineers - UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|event:career|event:professional-development
+org-international-student-services,International Student Services,student_organization,university_organization,taxonomy,engage|auto-import|event:cultural
+org-minority-association-of-pre-medical-students-ub-,Minority Association of Pre-Medical Students UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|campus:north|raw:general-body-meeting-gbm-
+org-nmdp-chapter-of-ub,NMDP Chapter of UB,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|campus:north|raw:tabling
+org-powerful-united-ladies-striving-to-elevate-ub-ch,"Powerful United Ladies Striving To Elevate, UB Chapter",greek_life,student_organization,heuristic,engage|auto-import|event:social|raw:sa-club-event
+org-pre-law-chapter-of-the-national-black-law-studen,Pre-Law Chapter of the National Black Law Students Association,greek_life,student_organization,heuristic,engage|auto-import|event:cultural
+org-richmond-quad,Richmond Quad,student_organization,residential,taxonomy,engage|auto-import|event:cultural|raw:campus-living|event:arts
+org-society-of-hispanic-professional-engineers-ub-ch,Society of Hispanic Professional Engineers UB Chapter,greek_life,student_organization,taxonomy,engage|auto-import|raw:thoughtfullearning|event:career|event:professional-development
+org-south-lake-village,South Lake Village,student_organization,residential,taxonomy,engage|auto-import|event:cultural|campus:north|raw:campus-living
+org-spaulding-quad,Spaulding Quad,student_organization,residential,taxonomy,engage|auto-import|event:cultural|raw:campus-living|event:arts
+org-student-academy-of-audiology-ub-chapter,Student Academy of Audiology - UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|audience:masters|campus:south
+org-student-engagement,Student Engagement,student_organization,university_organization,taxonomy,engage|auto-import|raw:communityservice|raw:service|audience:masters
+org-ub-chapter-american-institute-of-aeronautics-and,UB Chapter American Institute of Aeronautics and Astronautics,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|event:social|raw:general-body-meeting-gbm-
+org-ub-chapter-of-the-american-academy-of-developmen,UB chapter of The American Academy of Developmental Medicine and Dentistry,greek_life,student_organization,heuristic,engage|auto-import|raw:fundraising|raw:advocacy-activism
+org-ub-chapter-of-the-food-recovery-network,UB Chapter of the Food Recovery Network,greek_life,student_organization,heuristic,engage|auto-import|raw:communityservice|raw:general-body-meeting-gbm-
+org-ub-chapter-of-the-national-student-nurses-associ,UB Chapter of the National Student Nurses' Association,greek_life,student_organization,heuristic,engage|auto-import|raw:thoughtfullearning|raw:guest-speaker
+org-ub-veggie-van,UB Veggie Van,student_organization,university_organization,taxonomy,engage|auto-import|raw:communityservice
+org-wilkeson-quad,Wilkeson Quad,student_organization,residential,taxonomy,engage|auto-import|event:social|raw:campus-living
+org-women-of-aeronautics-and-astronautics-ub-chapter,Women of Aeronautics and Astronautics UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|raw:campus-living|raw:thoughtfullearning
+org-young-democratic-socialists-of-america-ub-chapte,Young Democratic Socialists of America - UB Chapter,greek_life,student_organization,heuristic,engage|auto-import|event:social|raw:general-body-meeting-gbm-|raw:advocacy-activism

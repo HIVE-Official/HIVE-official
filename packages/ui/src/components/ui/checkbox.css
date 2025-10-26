@@ -1,0 +1,85 @@
+.checkbox-base {
+  position: relative;
+  display: inline-flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1.5px solid hsl(var(--border));
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition:
+    transform var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.checkbox-base:hover:not(:disabled) {
+  border-color: hsl(var(--border) / 0.85);
+}
+
+.checkbox-base:focus-visible { outline: none; box-shadow: 0 0 0 1px #000, 0 0 0 3px #FFD700; }
+
+.checkbox-base[data-state="checked"],
+.checkbox-base[data-state="indeterminate"] {
+  background-color: #FFD700;
+  border-color: #FFD700;
+  transform: translateY(-1px);
+  color: #000;
+}
+
+.dark .checkbox-base[data-state="checked"],
+.dark .checkbox-base[data-state="indeterminate"],
+.brand-hive.dark .checkbox-base[data-state="checked"],
+.brand-hive.dark .checkbox-base[data-state="indeterminate"] { color: #000; }
+
+.checkbox-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0);
+  transition: transform var(--motion-duration-fast) var(--motion-ease-emphasized);
+}
+
+.checkbox-check,
+.checkbox-minus {
+  width: 0.85rem;
+  height: 0.85rem;
+  display: none;
+}
+
+.checkbox-base[data-state="checked"] .checkbox-indicator {
+  transform: scale(1);
+}
+
+.checkbox-base[data-state="checked"] .checkbox-check {
+  display: block;
+}
+
+.checkbox-base[data-state="indeterminate"] .checkbox-indicator {
+  transform: scale(1);
+}
+
+.checkbox-base[data-state="indeterminate"] .checkbox-minus {
+  display: block;
+}
+
+.checkbox-base:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.checkbox-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: hsl(var(--foreground));
+}
+
+.checkbox-label .checkbox-description {
+  color: hsl(var(--muted-foreground));
+  font-size: var(--type-300);
+}

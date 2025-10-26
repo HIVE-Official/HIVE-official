@@ -47,6 +47,7 @@ import * as report from './feed/report';
 import * as sayHello from './feed/sayHello';
 import * as createPost from './feed/createPost';
 import * as managePost from './feed/managePost';
+import { handlePinExpiryRequest } from './pin-expiry';
 
 // Export notification functions
 export * from "./notifications";
@@ -74,6 +75,41 @@ export const healthCheck = functions.https.onRequest((request, response) => {
   logger.info("Health check request received");
   response.status(200).send("Firebase Functions for HIVE UI are running");
 });
+
+const requireSchedulerSecret = () => {
+  const expected = process.env.SPACE_PIN_SWEEP_SECRET;
+  if (!expected) {
+    return null;
+  }
+  return expected;
+};
+
+export const spacesPinsExpiry = functions
+  .runWith({ maxInstances: 1 })
+  .https.onRequest(async (request, response) => {
+    if (request.method !== "POST") {
+      response.status(405).json({ success: false, error: "METHOD_NOT_ALLOWED" });
+      return;
+    }
+
+    const secret = requireSchedulerSecret();
+    if (secret) {
+      const provided = request.get("x-hive-cron-secret");
+      if (provided !== secret) {
+        response.status(401).json({ success: false, error: "UNAUTHORIZED" });
+        return;
+      }
+    }
+
+    try {
+      const metrics = await handlePinExpiryRequest();
+      logger.info("spaces.posts.pins.expired.summary", metrics);
+      response.status(200).json({ success: true, expired: metrics.expiredCount });
+    } catch (error) {
+      logger.error("spaces.posts.pins.expiry_failed", error as Error);
+      response.status(500).json({ success: false, error: "PIN_SWEEP_FAILED" });
+    }
+  });
 
 // Export the new trigger directly
 export const onUserCreateAutoJoin = onUserCreate.onUserCreateAutoJoin;
