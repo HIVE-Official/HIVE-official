@@ -1,28 +1,30 @@
-import type { Metadata } from "next";
-import { Inter, Space_Grotesk as SpaceGrotesk } from 'next/font/google';
+// Bounded Context Owner: Governance Guild
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
-const spaceGrotesk = SpaceGrotesk({
-  subsets: ['latin'],
-  variable: '--font-display',
-});
+import "@hive/ui/styles.css";
+import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import AdminShell from "./shell";
+import { Toaster } from "@hive/ui";
+import { CommandK } from "./CommandK";
 
 export const metadata: Metadata = {
   title: "HIVE Admin",
-  description: "HIVE administration and moderation tools.",
+  description: "Administrative console for HIVE platform",
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } }
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const geistSans = GeistSans;
+const geistMono = GeistMono;
+
+export default function RootLayout({ children }: { readonly children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} dark`} style={{ colorScheme: 'dark' }}>
-      <body className={inter.className}>
-        {children}
+    <html lang="en" className={`${geistSans.className} ${geistMono.className}`}>
+      <body className="min-h-screen bg-background text-foreground">
+        <AdminShell>{children}</AdminShell>
+        <CommandK />
+        <Toaster />
       </body>
     </html>
   );
-} 
+}

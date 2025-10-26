@@ -1,28 +1,79 @@
+// Bounded Context Owner: Identity & Access Management Guild
 {
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "src/**/*",
+    ".next/types/**/*.ts"
+  ],
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@auth": [
+        "src/contexts/auth/index.ts"
+      ],
+      "@auth/*": [
+        "src/contexts/auth/*"
+      ],
+      "@onboarding": [
+        "src/contexts/onboarding/index.ts"
+      ],
+      "@onboarding/*": [
+        "src/contexts/onboarding/*"
+      ],
+      "@profile": [
+        "src/contexts/profile/index.ts"
+      ],
+      "@profile/*": [
+        "src/contexts/profile/*"
+      ],
+      "@profile/contract": [
+        "src/profile/profile.contract.ts"
+      ],
+      "@profile/sample": [
+        "src/profile/profile.sample.ts"
+      ],
+      "@core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@core/*": [
+        "../../packages/core/src/*"
+      ],
+      "@hive/tokens": [
+        "../../packages/tokens/src/tokens.ts"
+      ],
+      "@hive/tokens/*": [
+        "../../packages/tokens/src/*"
+      ],
+      "@hive/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@hive/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@hive/ui/client": [
+        "../../packages/ui/src/index.client.ts"
+      ],
+      "@hive/ui/server": [
+        "../../packages/ui/src/index.server.ts"
+      ],
+      "@hive/firebase": [
+        "../../packages/firebase/src/index.ts"
+      ],
+      "@/*": [
+        "../../packages/ui/src/*"
+      ]
+    },
+    "incremental": false,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": []
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "vitest*.config.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
+  "exclude": [
+    "node_modules",
+    ".next/**"
+  ]
 }

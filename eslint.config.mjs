@@ -1,206 +1,352 @@
-// @ts-check
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+// Bounded Context Owner: Identity & Access Management Guild
 import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-import { fixupConfigRules } from "@eslint/compat";
-import tseslint from "typescript-eslint";
+import tsParser from "@typescript-eslint/parser";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import nextPlugin from "@next/eslint-plugin-next";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const typeCheckedRules =
+  tsPlugin.configs["recommended-type-checked"]?.rules ?? {};
+const tsconfigRootDir = path.resolve(
+  fileURLToPath(new URL(".", import.meta.url))
+);
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
-// Patch Next.js config for ESLint 9 compatibility
-const patchedNextConfig = fixupConfigRules([
-  ...compat.extends("next/core-web-vitals"),
-]);
-
-// Patch Storybook config for ESLint 9 compatibility
-const patchedStorybookConfig = fixupConfigRules([
-  ...compat.extends("plugin:storybook/recommended"),
-]);
-
-const config = [
-  // Base JavaScript config
-  js.configs.recommended,
-
-  // TypeScript configs for regular TypeScript files
-  ...tseslint.configs.recommended,
-
-  // Main TypeScript files with full type checking
+export default [
+  // Turn off unused-disable reporting to keep pre-GA noise low
   {
-    files: [
-      "apps/web/src/**/*.{ts,tsx}",
-      "packages/*/src/**/*.{ts,tsx}",
-      "functions/src/**/*.ts",
-    ],
+    linterOptions: {
+      reportUnusedDisableDirectives: "off",
+    },
+  },
+  // Next.js plugin + rules in flat config shape
+  {
+    plugins: {
+      "@next/next": nextPlugin,
+    },
+    rules: {
+      ...(nextPlugin.configs?.["core-web-vitals"]?.rules ?? {}),
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
+  {
+    plugins: {
+      "react-hooks": reactHooks,
+    },
+    rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+  // Admin API route handlers: relax strict unsafe rules (typed incrementally)
+  {
+    files: ["apps/admin/src/app/api/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-base-to-string": "off",
+    },
+  },
+  {
     ignores: [
-      "**/*.stories.{js,jsx,ts,tsx}",
-      "**/*.test.{js,jsx,ts,tsx}",
-      "**/*.spec.{js,jsx,ts,tsx}",
+      "node_modules",
+      "dist",
+      "coverage",
+      // Next.js build outputs
+      ".next/**",
+      "apps/**/.next/**",
+      // Generated SDKs and types
+      "apps/web/src/dataconnect-generated/**",
+      "packages/**/src/dataconnect-generated/**",
+      "packages/**/dataconnect-generated/**",
     ],
+  },
+  js.configs.recommended,
+  // Browser environment for client-side code
+  {
     languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: __dirname,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
       },
-    },
-    rules: {
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-call": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-
-  // Storybook stories files - NO TypeScript project parsing
+  // TypeScript files with type checking (apps/web)
   {
-    files: ["**/*.stories.@(js|jsx|ts|tsx)"],
+    files: ["apps/web/**/*.{ts,tsx}"],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-        ecmaFeatures: {
-          jsx: true,
-        },
-        // NO project parsing for stories
+        project: "./apps/web/tsconfig.json",
+        tsconfigRootDir,
       },
     },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
     rules: {
+      ...typeCheckedRules,
+      // Pre-GA: do not warn on these categories in web
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      // Use TS-aware unused-vars, disable core rule
+      "no-unused-vars": "off",
+      // Disable core no-undef for TS (not type-aware)
+      "no-undef": "off",
+      // Allow console in development
+      "no-console": "off",
+      // Allow unused vars with underscore prefix
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
     },
   },
-
-  // Test files - relaxed TypeScript rules
+  // TypeScript files with type checking (apps/admin)
   {
-    files: [
-      "**/*.test.{js,jsx,ts,tsx}",
-      "**/*.spec.{js,jsx,ts,tsx}",
-      "**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "**/__mocks__/**/*.{js,jsx,ts,tsx}",
-    ],
+    files: ["apps/admin/**/*.{ts,tsx}"],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-        ecmaFeatures: {
-          jsx: true,
+        project: "./apps/admin/tsconfig.json",
+        tsconfigRootDir,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
+    rules: {
+      ...typeCheckedRules,
+      // Pre-GA posture for admin: reduce noise
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/require-await": "off",
+      // For admin surfaces, disable noisy unsafe rules until DTOs are fully typed
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/no-misused-promises": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "no-empty": ["warn", { allowEmptyCatch: true }],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      // Use TS-aware unused-vars, disable core rule
+      "no-unused-vars": "off",
+      "no-undef": "off",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
         },
+      ],
+    },
+  },
+  // TypeScript files with type checking (apps/e2e)
+  {
+    files: ["apps/e2e/**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: "./apps/e2e/tsconfig.json",
+        tsconfigRootDir,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
+    rules: {
+      ...typeCheckedRules,
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/require-await": "off",
+      // Relax unsafe rules in e2e app sandbox
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "no-undef": "off",
+      "no-empty": "off",
+      // Use TS-aware unused-vars, disable core rule
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrors: "all", caughtErrorsIgnorePattern: "^_" },
+      ],
+    },
+  },
+  // TypeScript files without type checking (packages)
+  {
+    files: ["packages/**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: false,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
+    rules: {
+      // UI/library code: do not warn on any in pre-GA
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      // Use TS-aware unused-vars, disable core rule
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      // Disable core no-undef for TS (not type-aware)
+      "no-undef": "off",
+      // Allow console in development
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      // Allow unused vars with underscore prefix
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
+  // Specific rules for auth/onboarding contexts
+  {
+    files: ["apps/web/src/contexts/{auth,onboarding}/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/require-await": "off",
+    },
+  },
+  // Next.js route handlers: relax strict unsafe rules (will be typed incrementally)
+  {
+    files: ["apps/web/src/app/api/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+    },
+  },
+  // Test files: allow flexible patterns and vitest globals
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+    languageOptions: {
+      globals: {
+        describe: true,
+        it: true,
+        test: true,
+        expect: true,
+        beforeAll: true,
+        beforeEach: true,
+        afterAll: true,
+        afterEach: true,
+        vi: true,
       },
     },
     rules: {
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
-      "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/require-await": "off",
+      "no-undef": "off",
     },
   },
-
-  // Next.js configuration
-  ...patchedNextConfig.map((config) => ({
-    ...config,
-    files: ["apps/web/src/**/*.{js,jsx,ts,tsx}"],
-    ignores: ["**/*.stories.{js,jsx,ts,tsx}"],
-    rules: {
-      ...config.rules,
-      "@next/next/no-html-link-for-pages": ["error", "apps/web/src/app"],
-    },
-  })),
-
-  // Firebase Functions - relaxed type checking
+  // Generated declaration files: turn off noisy rules
   {
-    files: ["functions/src/**/*.ts", "packages/firebase/**/*.ts"],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: ["./functions/tsconfig.json"],
-        tsconfigRootDir: __dirname,
-      },
-    },
+    files: ["**/dataconnect-generated/**/*.d.ts"],
     rules: {
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-unsafe-argument": "warn",
-      "@typescript-eslint/no-unsafe-call": "warn",
-      "@typescript-eslint/no-unsafe-return": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-redeclare": "off",
+      "no-undef": "off",
+    },
+  },
+  // UI package: treat unused vars as warnings during active redesign
+  {
+    files: ["packages/ui/src/**/*.{ts,tsx}"],
+    ignores: [
+      "packages/ui/src/stories/**",
+      "packages/ui/.storybook/**",
+    ],
+    rules: {
+      // Disable core rule here too; TS rule below governs
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { argsIgnorePattern: "^_|^context$" },
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrors: "all", caughtErrorsIgnorePattern: "^_" },
       ],
     },
   },
-
-  // Comprehensive ignore patterns
-  {
-    ignores: [
-      // Build outputs and caches
-      "**/storybook-static/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/node_modules/**",
-      "**/.turbo/**",
-      "**/.next/**",
-      "**/coverage/**",
-      "**/lib/**/*.js",
-
-      // Configuration files
-      "**/eslint.config.mjs",
-      "**/eslint.config.js",
-      "**/tailwind.config.js",
-      "**/tailwind.config.ts",
-      "**/postcss.config.js",
-      "**/next.config.js",
-      "**/next.config.mjs",
-      "**/vite.config.js",
-      "**/vite.config.ts",
-
-      // Storybook configuration
-      "**/.storybook/**",
-
-      // Firebase functions compiled
-      "**/functions/lib/**",
-      "**/functions/dist/**",
-
-      // Orphaned files
-      "src/components/**",
-      "src/lib/**",
-      "src/types/**",
-    ],
-  },
-
-  // File-specific overrides
+  // Storybook and Stories: relax DX rules (last-wins)
   {
     files: [
-      "apps/web/src/app/legal/**/*.tsx",
-      "apps/web/src/app/profile/**/*.tsx",
+      "**/*.stories.ts",
+      "**/*.stories.tsx",
+      "**/.storybook/**/*.{ts,tsx}",
     ],
     rules: {
-      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
+      "no-console": "off",
+      "no-undef": "off",
+      "react-hooks/rules-of-hooks": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "no-irregular-whitespace": "off",
     },
   },
+  // Apps: prohibit deep imports from design-system internals
   {
-    files: ["apps/web/src/app/onboarding/**/*.tsx"],
+    files: ["apps/**/*.{ts,tsx}"],
     rules: {
-      "@next/next/no-img-element": "warn",
-      "react-hooks/exhaustive-deps": "warn",
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "@/components/*",
+                "@/atoms/*",
+                "@/molecules/*",
+                "@/organisms/*",
+              ],
+              message: "Import from @hive/ui instead of internal '@/…' paths (single source of truth)",
+            },
+          ],
+        },
+      ],
     },
   },
 ];
-
-export default config;

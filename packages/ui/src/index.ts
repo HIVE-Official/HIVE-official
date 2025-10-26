@@ -37,7 +37,8 @@ export * from "./molecules/accordion";
 export * from "./molecules/countdown";
 export * from "./molecules/banner";
 export * from "./molecules/empty-state";
-export * from "./molecules/breadcrumb";
+// Breadcrumb primitives (shadcn-derived)
+export * from "./components/ui/breadcrumb";
 export * from "./molecules/avatar-card";
 export * from "./molecules/popover";
 export * from "./molecules/segmented-control";
@@ -46,26 +47,64 @@ export * from "./molecules/inline-notice";
 export * from "./molecules/toolbar";
 export * from "./molecules/pagination";
 
-// Templates (page-level layouts)
-export * from "./templates";
-
 export * from "./organisms/stepper-header";
 export * from "./organisms/toaster";
-// App shells removed as we rebuild the layout around a shadcn sidebar pattern.
-export * from "./organisms/app-sidebar";
-export * from "./organisms/app-chrome";
-export * from "./organisms/profile";
 export * from "./organisms/dashboard-header";
 export * from "./organisms/auth/sign-in-card";
 export * from "./organisms/onboarding/onboarding-frame";
+// Auth & Entry
+export * from "./organisms/auth/entry-hero";
+export * from "./organisms/auth/await-checklist-card";
+export * from "./organisms/auth/auth-magic-link-card";
+// Patterns (brand-safe recipes to pull from)
+export * from "./patterns/spotlight";
+export * from "./patterns/no-shift-box";
+export * from "./patterns/sticky-container";
+export * from "./patterns/baseline-grid-overlay";
+export * from "./patterns/marquee";
+export * from "./patterns/bento-grid";
+export * from "./patterns/neutral-border";
+export * from "./patterns/meteor-shower";
+// Motion primitives
+export * from "./motion/use-reduced-motion";
+export * from "./motion/reveal";
+export * from "./motion/count-up";
+export * from "./motion/neutral-ripple";
+export * from "./motion/view-transition";
+export * from "./motion/text-animate";
+export * from "./motion/focus-blur-overlay";
+export * from "./motion/tokens";
+export * from "./motion/variants";
+export * from "./motion/config";
 export * from "./organisms/spaces";
+// HiveLab Canvas shell + editor primitives
 export * from "./organisms/hivelab";
+// Canonical sidebar-07 shell primitives
+export * from "./components/app-sidebar";
+export * from "./components/app-sidebar-hive";
+export * from "./components/app-sidebar-admin";
+export * from "./components/app-sidebar-compact";
+export * from "./components/app-header";
+export * from "./components/app-dock";
+export * from "./components/mobile-tab-bar";
+export * from "./components/command-k";
 // Note: sidebars and experimental nav components removed per product direction
+// Sidebar primitives (shadcn-derived)
+export * from "./components/ui/sidebar";
+// Admin nav config/types
+export * from "./organisms/admin-nav-config";
 export * from "./providers/theme-provider";
 export { useToast, toast } from "./hooks/use-toast";
 export { cn } from "./utils/cn";
 export * from "./utils/motion";
 // shadcn-derived primitives (curated)
 export * from "./components/ui/alert-dialog";
+export * from "./components/ui/alert";
 export * from "./components/ui/input-otp";
+export * from "./components/ui/multi-step-loader";
 export { RadioGroup, RadioGroupItem } from "./atoms/radio";
+export * from "./brand/tokens";
+// animate-ui primitives
+export { SlidingNumber, type SlidingNumberProps } from "./components/animate-ui/primitives/texts/sliding-number";
+// Navigation config (used by App headers/sidebars)
+export * from "./organisms/nav-config";
