@@ -361,3 +361,4 @@ export async function auditAuthEvent(
     extra: auditData
   });
 }
+import 'server-only';

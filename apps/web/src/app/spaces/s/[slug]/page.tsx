@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, notFound } from 'next/navigation';
 import { UnifiedSpaceInterface } from '@/components/spaces/unified-space-interface';
 import type { Space, User } from '@hive/core';
-import { api } from '@/lib/api-client';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 /**
  * ★ Insight ─────────────────────────────────────
@@ -34,7 +34,7 @@ export default function SpacePage() {
         setError(null);
 
         // Try to resolve slug to space ID via API
-        const response = await fetch(`/api/spaces/resolve-slug/${slug}`);
+        const response = await secureApiFetch(`/api/spaces/resolve-slug/${slug}`, { method: 'GET' });
 
         if (response.status === 404) {
           notFound();

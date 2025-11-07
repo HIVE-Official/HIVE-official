@@ -1,80 +1,4 @@
 export declare const hiveTailwindColors: {
-    gray: {
-        readonly 50: "#4A4A4F";
-        readonly 100: "#6B6B70";
-        readonly 200: "#9B9B9F";
-        readonly 300: "#C1C1C4";
-        readonly 400: "#E5E5E7";
-        readonly 500: "#2A2A2D";
-        readonly 600: "#222225";
-        readonly 700: "#1A1A1C";
-        readonly 800: "#111113";
-        readonly 900: "#0A0A0B";
-        readonly 950: "#000000";
-    };
-    background: {
-        readonly primary: "#0A0A0B";
-        readonly secondary: "#111113";
-        readonly tertiary: "#1A1A1C";
-        readonly overlay: "rgba(255, 255, 255, 0.05)";
-        readonly interactive: "#222225";
-    };
-    text: {
-        readonly primary: "#E5E5E7";
-        readonly secondary: "#C1C1C4";
-        readonly muted: "#9B9B9F";
-        readonly disabled: "#6B6B70";
-        readonly inverse: "#0A0A0B";
-        readonly mutedLight: "#A1A1AA";
-        readonly mutedDark: "#71717A";
-        readonly subtle: "#3F3F46";
-    };
-    brand: {
-        readonly primary: "#FFD700";
-        readonly secondary: "#F7E98E";
-        readonly accent: "#FFA500";
-        readonly muted: "#CD7F32";
-    };
-    interactive: {
-        readonly hover: "rgba(255, 255, 255, 0.08)";
-        readonly focus: "#FFD700";
-        readonly active: "rgba(255, 255, 255, 0.12)";
-        readonly disabled: "#4A4A4F";
-    };
-    status: {
-        readonly success: "#10B981";
-        readonly warning: "#F59E0B";
-        readonly error: "#EF4444";
-        readonly info: "#3B82F6";
-    };
-    border: {
-        readonly primary: "#2A2A2D";
-        readonly secondary: "#1A1A1C";
-        readonly subtle: "rgba(255, 255, 255, 0.05)";
-        readonly focus: "rgba(255, 215, 0, 0.2)";
-        readonly error: "#EF4444";
-        readonly muted: "#3F3F46";
-        readonly interactive: "#A1A1AA";
-    };
-    void: "#000000";
-    obsidian: "#0A0A0B";
-    charcoal: "#111113";
-    graphite: "#1A1A1C";
-    slate: "#222225";
-    steel: "#2A2A2D";
-    platinum: "#E5E5E7";
-    silver: "#C1C1C4";
-    mercury: "#9B9B9F";
-    pewter: "#6B6B70";
-    smoke: "#4A4A4F";
-    gold: "#FFD700";
-    champagne: "#F7E98E";
-    amber: "#FFA500";
-    bronze: "#CD7F32";
-    emerald: "#10B981";
-    ruby: "#EF4444";
-    sapphire: "#3B82F6";
-    citrine: "#F59E0B";
     glass: "rgba(255, 255, 255, 0.05)";
     'glass-medium': "rgba(255, 255, 255, 0.08)";
     'glass-strong': "rgba(255, 255, 255, 0.12)";
@@ -82,6 +6,36 @@ export declare const hiveTailwindColors: {
     'gold-medium': "rgba(255, 215, 0, 0.15)";
     'gold-strong': "rgba(255, 215, 0, 0.3)";
     'gold-glow': "rgba(255, 215, 0, 0.4)";
+    'hive-background': {
+        primary: "#000000";
+        secondary: "#171717";
+        tertiary: "#262626";
+        interactive: "#404040";
+    };
+    'hive-text': {
+        primary: "#FFFFFF";
+        secondary: "#D4D4D4";
+        tertiary: "#A3A3A3";
+        disabled: "#525252";
+    };
+    'hive-brand': {
+        primary: "#FFD700";
+        secondary: "#FFD700";
+        hover: "#FFD700";
+        'on-gold': "#000000";
+    };
+    'hive-status': {
+        success: "#00D46A";
+        warning: "#FFB800";
+        error: "#FF3737";
+        info: "#FFFFFF";
+    };
+    'hive-border': {
+        default: "rgba(255, 255, 255, 0.08)";
+        hover: "rgba(255, 255, 255, 0.16)";
+        focus: "rgba(255, 255, 255, 0.40)";
+        strong: "#404040";
+    };
 };
 export declare const hiveTailwindSpacing: {
     0: "0";
@@ -158,82 +112,6 @@ export declare const hiveTailwindBoxShadow: {
 };
 export declare const hiveTailwindConfig: {
     colors: {
-        gray: {
-            readonly 50: "#4A4A4F";
-            readonly 100: "#6B6B70";
-            readonly 200: "#9B9B9F";
-            readonly 300: "#C1C1C4";
-            readonly 400: "#E5E5E7";
-            readonly 500: "#2A2A2D";
-            readonly 600: "#222225";
-            readonly 700: "#1A1A1C";
-            readonly 800: "#111113";
-            readonly 900: "#0A0A0B";
-            readonly 950: "#000000";
-        };
-        background: {
-            readonly primary: "#0A0A0B";
-            readonly secondary: "#111113";
-            readonly tertiary: "#1A1A1C";
-            readonly overlay: "rgba(255, 255, 255, 0.05)";
-            readonly interactive: "#222225";
-        };
-        text: {
-            readonly primary: "#E5E5E7";
-            readonly secondary: "#C1C1C4";
-            readonly muted: "#9B9B9F";
-            readonly disabled: "#6B6B70";
-            readonly inverse: "#0A0A0B";
-            readonly mutedLight: "#A1A1AA";
-            readonly mutedDark: "#71717A";
-            readonly subtle: "#3F3F46";
-        };
-        brand: {
-            readonly primary: "#FFD700";
-            readonly secondary: "#F7E98E";
-            readonly accent: "#FFA500";
-            readonly muted: "#CD7F32";
-        };
-        interactive: {
-            readonly hover: "rgba(255, 255, 255, 0.08)";
-            readonly focus: "#FFD700";
-            readonly active: "rgba(255, 255, 255, 0.12)";
-            readonly disabled: "#4A4A4F";
-        };
-        status: {
-            readonly success: "#10B981";
-            readonly warning: "#F59E0B";
-            readonly error: "#EF4444";
-            readonly info: "#3B82F6";
-        };
-        border: {
-            readonly primary: "#2A2A2D";
-            readonly secondary: "#1A1A1C";
-            readonly subtle: "rgba(255, 255, 255, 0.05)";
-            readonly focus: "rgba(255, 215, 0, 0.2)";
-            readonly error: "#EF4444";
-            readonly muted: "#3F3F46";
-            readonly interactive: "#A1A1AA";
-        };
-        void: "#000000";
-        obsidian: "#0A0A0B";
-        charcoal: "#111113";
-        graphite: "#1A1A1C";
-        slate: "#222225";
-        steel: "#2A2A2D";
-        platinum: "#E5E5E7";
-        silver: "#C1C1C4";
-        mercury: "#9B9B9F";
-        pewter: "#6B6B70";
-        smoke: "#4A4A4F";
-        gold: "#FFD700";
-        champagne: "#F7E98E";
-        amber: "#FFA500";
-        bronze: "#CD7F32";
-        emerald: "#10B981";
-        ruby: "#EF4444";
-        sapphire: "#3B82F6";
-        citrine: "#F59E0B";
         glass: "rgba(255, 255, 255, 0.05)";
         'glass-medium': "rgba(255, 255, 255, 0.08)";
         'glass-strong': "rgba(255, 255, 255, 0.12)";
@@ -241,6 +119,36 @@ export declare const hiveTailwindConfig: {
         'gold-medium': "rgba(255, 215, 0, 0.15)";
         'gold-strong': "rgba(255, 215, 0, 0.3)";
         'gold-glow': "rgba(255, 215, 0, 0.4)";
+        'hive-background': {
+            primary: "#000000";
+            secondary: "#171717";
+            tertiary: "#262626";
+            interactive: "#404040";
+        };
+        'hive-text': {
+            primary: "#FFFFFF";
+            secondary: "#D4D4D4";
+            tertiary: "#A3A3A3";
+            disabled: "#525252";
+        };
+        'hive-brand': {
+            primary: "#FFD700";
+            secondary: "#FFD700";
+            hover: "#FFD700";
+            'on-gold': "#000000";
+        };
+        'hive-status': {
+            success: "#00D46A";
+            warning: "#FFB800";
+            error: "#FF3737";
+            info: "#FFFFFF";
+        };
+        'hive-border': {
+            default: "rgba(255, 255, 255, 0.08)";
+            hover: "rgba(255, 255, 255, 0.16)";
+            focus: "rgba(255, 255, 255, 0.40)";
+            strong: "#404040";
+        };
     };
     spacing: {
         0: "0";
@@ -395,82 +303,6 @@ export declare function extendTailwindConfig(existingConfig?: Record<string, unk
     theme: {
         extend: {
             colors: {
-                gray: {
-                    readonly 50: "#4A4A4F";
-                    readonly 100: "#6B6B70";
-                    readonly 200: "#9B9B9F";
-                    readonly 300: "#C1C1C4";
-                    readonly 400: "#E5E5E7";
-                    readonly 500: "#2A2A2D";
-                    readonly 600: "#222225";
-                    readonly 700: "#1A1A1C";
-                    readonly 800: "#111113";
-                    readonly 900: "#0A0A0B";
-                    readonly 950: "#000000";
-                };
-                background: {
-                    readonly primary: "#0A0A0B";
-                    readonly secondary: "#111113";
-                    readonly tertiary: "#1A1A1C";
-                    readonly overlay: "rgba(255, 255, 255, 0.05)";
-                    readonly interactive: "#222225";
-                };
-                text: {
-                    readonly primary: "#E5E5E7";
-                    readonly secondary: "#C1C1C4";
-                    readonly muted: "#9B9B9F";
-                    readonly disabled: "#6B6B70";
-                    readonly inverse: "#0A0A0B";
-                    readonly mutedLight: "#A1A1AA";
-                    readonly mutedDark: "#71717A";
-                    readonly subtle: "#3F3F46";
-                };
-                brand: {
-                    readonly primary: "#FFD700";
-                    readonly secondary: "#F7E98E";
-                    readonly accent: "#FFA500";
-                    readonly muted: "#CD7F32";
-                };
-                interactive: {
-                    readonly hover: "rgba(255, 255, 255, 0.08)";
-                    readonly focus: "#FFD700";
-                    readonly active: "rgba(255, 255, 255, 0.12)";
-                    readonly disabled: "#4A4A4F";
-                };
-                status: {
-                    readonly success: "#10B981";
-                    readonly warning: "#F59E0B";
-                    readonly error: "#EF4444";
-                    readonly info: "#3B82F6";
-                };
-                border: {
-                    readonly primary: "#2A2A2D";
-                    readonly secondary: "#1A1A1C";
-                    readonly subtle: "rgba(255, 255, 255, 0.05)";
-                    readonly focus: "rgba(255, 215, 0, 0.2)";
-                    readonly error: "#EF4444";
-                    readonly muted: "#3F3F46";
-                    readonly interactive: "#A1A1AA";
-                };
-                void: "#000000";
-                obsidian: "#0A0A0B";
-                charcoal: "#111113";
-                graphite: "#1A1A1C";
-                slate: "#222225";
-                steel: "#2A2A2D";
-                platinum: "#E5E5E7";
-                silver: "#C1C1C4";
-                mercury: "#9B9B9F";
-                pewter: "#6B6B70";
-                smoke: "#4A4A4F";
-                gold: "#FFD700";
-                champagne: "#F7E98E";
-                amber: "#FFA500";
-                bronze: "#CD7F32";
-                emerald: "#10B981";
-                ruby: "#EF4444";
-                sapphire: "#3B82F6";
-                citrine: "#F59E0B";
                 glass: "rgba(255, 255, 255, 0.05)";
                 'glass-medium': "rgba(255, 255, 255, 0.08)";
                 'glass-strong': "rgba(255, 255, 255, 0.12)";
@@ -478,6 +310,36 @@ export declare function extendTailwindConfig(existingConfig?: Record<string, unk
                 'gold-medium': "rgba(255, 215, 0, 0.15)";
                 'gold-strong': "rgba(255, 215, 0, 0.3)";
                 'gold-glow': "rgba(255, 215, 0, 0.4)";
+                'hive-background': {
+                    primary: "#000000";
+                    secondary: "#171717";
+                    tertiary: "#262626";
+                    interactive: "#404040";
+                };
+                'hive-text': {
+                    primary: "#FFFFFF";
+                    secondary: "#D4D4D4";
+                    tertiary: "#A3A3A3";
+                    disabled: "#525252";
+                };
+                'hive-brand': {
+                    primary: "#FFD700";
+                    secondary: "#FFD700";
+                    hover: "#FFD700";
+                    'on-gold': "#000000";
+                };
+                'hive-status': {
+                    success: "#00D46A";
+                    warning: "#FFB800";
+                    error: "#FF3737";
+                    info: "#FFFFFF";
+                };
+                'hive-border': {
+                    default: "rgba(255, 255, 255, 0.08)";
+                    hover: "rgba(255, 255, 255, 0.16)";
+                    focus: "rgba(255, 255, 255, 0.40)";
+                    strong: "#404040";
+                };
             };
             spacing: {
                 0: "0";

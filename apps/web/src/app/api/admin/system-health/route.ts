@@ -1,21 +1,16 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withAdminCampusIsolation(async (request, token) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '24h';
 
   try {
-    logger.info('Fetching system health metrics', { userId: auth.userId, range });
+    logger.info('Fetching system health metrics', { userId: token?.uid || 'unknown', range });
 
     // Calculate time range
     const now = new Date();
@@ -75,7 +70,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching system health', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching system health', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -155,7 +150,7 @@ async function getAuthenticationHealth(since: Date) {
   try {
     // Test auth system responsiveness
     const startTime = Date.now();
-    const usersCount = await dbAdmin.collection('users').count().get();
+    const usersCount = await dbAdmin.collection('users').where('campusId', '==', CURRENT_CAMPUS_ID).count().get();
     const responseTime = Date.now() - startTime;
 
     // Get auth metrics
@@ -319,7 +314,7 @@ async function getSystemAlerts(since: Date) {
         level: data.level || 'info',
         resolved: data.resolved || false
       };
-    });
+    }).filter(a => typeof a.campusId === 'undefined' || a.campusId === CURRENT_CAMPUS_ID);
 
     // Categorize alerts
     const critical = alerts.filter(a => a.level === 'critical');

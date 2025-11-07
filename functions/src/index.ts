@@ -37,6 +37,7 @@ import * as updateUserProfile from './profile/updateUserProfile';
 
 // Import creation functions
 import * as tool from './creation/tool';
+import { handleToolSubmission } from './creation/submission';
 
 // Import feed functions
 import * as getFeed from './feed/getFeed';
@@ -96,6 +97,7 @@ export const verification = {
 export const spaces = {
   // Space denormalization functions
   updateSpaceMemberCount: spaceDenormalization.updateSpaceMemberCount,
+  updateSpaceMemberMetricsFromFlat: spaceDenormalization.updateSpaceMemberMetricsFromFlat,
   getSpaceContent: pagination.getSpaceContent,
   leaveSpace: leaveSpace.leaveSpace,
   requestBuilderRole: requestBuilder.requestBuilderRole,
@@ -106,6 +108,7 @@ export const spaces = {
 export const creation = {
   createTool: tool.createTool,
   updateTool: tool.updateTool,
+  handleToolSubmission,
 };
 
 export const profile = {

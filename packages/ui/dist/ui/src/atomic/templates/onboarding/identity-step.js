@@ -1,0 +1,31 @@
+'use client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from 'react';
+import { AlertCircle, User, Check, Loader2 } from 'lucide-react';
+import { Input, Badge } from '../../atoms/index.js';
+import { MotionDiv, MotionButton } from '../../../shells/motion-safe.js';
+import { cn } from '../../../lib/utils.js';
+import { enterTransition, popTransition, HIVE_EASING } from './motion-presets.js';
+export const IdentityStep = ({ firstName, lastName, fullName, handle, handleLocked, handleStatus, onFirstNameChange, onLastNameChange, onHandleChange, onResetHandle, }) => {
+    const [previewVisible, setPreviewVisible] = useState(true);
+    const statusCopy = (() => {
+        switch (handleStatus) {
+            case 'checking':
+                return { icon: _jsx(Loader2, { className: "h-4 w-4 animate-spin", "aria-hidden": true }), copy: 'Checking availability…' };
+            case 'available':
+                return { icon: _jsx(Check, { className: "h-4 w-4", "aria-hidden": true }), copy: 'Handle available!' };
+            case 'taken':
+                return { icon: _jsx(AlertCircle, { className: "h-4 w-4", "aria-hidden": true }), copy: 'Already claimed. Try another combination.' };
+            case 'invalid':
+                return { icon: _jsx(AlertCircle, { className: "h-4 w-4", "aria-hidden": true }), copy: 'Use 3-20 lowercase letters, numbers, dots, underscores, or hyphens.' };
+            default:
+                return null;
+        }
+    })();
+    return (_jsxs(MotionDiv, { initial: { opacity: 0, y: 26 }, animate: { opacity: 1, y: 0 }, transition: enterTransition, className: "space-y-[var(--hive-spacing-6)]", children: [_jsxs("div", { className: "grid gap-4 md:grid-cols-2", children: [_jsx(MotionDiv, { className: "space-y-2", initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.1, ...enterTransition }, children: _jsx(Input, { label: "First name", placeholder: "Jess", value: firstName, onChange: (event) => onFirstNameChange(event.target.value), autoComplete: "given-name", variant: "default", size: "lg" }) }), _jsx(MotionDiv, { className: "space-y-2", initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.14, ...enterTransition }, children: _jsx(Input, { label: "Last name", placeholder: "Rivera", value: lastName, onChange: (event) => onLastNameChange(event.target.value), autoComplete: "family-name", variant: "default", size: "lg" }) })] }), _jsxs(MotionDiv, { className: "space-y-3", initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.18, ...enterTransition }, children: [_jsx(Input, { label: "Handle", placeholder: "jess.rivera", value: handle, onChange: (event) => onHandleChange(event.target.value), autoComplete: "off", variant: "default", size: "lg" }), _jsxs(MotionDiv, { className: "flex flex-wrap items-center justify-between gap-3 text-sm rounded-xl border border-[var(--hive-border-primary)]/40 bg-[var(--hive-background-secondary)]/60 px-3 py-2", initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: enterTransition, children: [_jsx("div", { className: "inline-flex items-center gap-2", children: statusCopy && (_jsxs(MotionDiv, { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -6 }, transition: popTransition, className: cn('flex items-center gap-2 text-xs font-medium', handleStatus === 'available'
+                                        ? 'text-[var(--hive-status-success)]'
+                                        : handleStatus === 'taken' || handleStatus === 'invalid'
+                                            ? 'text-[var(--hive-status-warning)]'
+                                            : 'text-[var(--hive-text-muted)]'), children: [statusCopy.icon, statusCopy.copy] })) }), handleLocked && (_jsx(MotionButton, { type: "button", whileHover: { scale: 1.03 }, whileTap: { scale: 0.97 }, onClick: onResetHandle, className: "text-[var(--hive-brand-primary)] text-xs font-medium underline-offset-4 hover:underline", children: "Reset suggestion" }))] })] }), _jsxs(MotionDiv, { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.24, ...enterTransition }, className: "rounded-2xl border border-[var(--hive-border-primary)]/40 bg-[linear-gradient(145deg,rgba(255,255,255,0.04),rgba(14,16,23,0.88))] p-5 space-y-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("p", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Preview" }), _jsx(MotionButton, { whileHover: { scale: 1.03 }, whileTap: { scale: 0.97 }, onClick: () => setPreviewVisible((prev) => !prev), className: "text-xs text-[var(--hive-text-muted)] hover:text-[var(--hive-text-primary)] transition-colors", type: "button", children: previewVisible ? 'Hide' : 'Show' })] }), previewVisible && (_jsxs(MotionDiv, { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -12 }, transition: enterTransition, className: "flex items-center gap-4", children: [_jsxs(MotionDiv, { initial: { scale: 0.9, opacity: 0.6 }, animate: { scale: 1, opacity: 1 }, transition: { duration: 0.35, ease: HIVE_EASING.magnetic }, className: "w-14 h-14 rounded-xl bg-[radial-gradient(circle_at_30%_30%,rgba(255,215,0,0.35),transparent_70%)] border border-[var(--hive-border-gold)] flex items-center justify-center text-lg font-semibold text-[var(--hive-brand-primary)]", children: [(firstName[0] || 'U').toUpperCase(), (lastName[0] || 'B').toUpperCase()] }), _jsxs("div", { className: "space-y-1", children: [_jsx("p", { className: "font-semibold text-[var(--hive-text-primary)]", children: fullName || 'Your name appears here' }), _jsxs("p", { className: "text-sm text-[var(--hive-text-muted)]", children: ["@", handle || 'handle'] }), _jsx(Badge, { variant: "outline", children: "Student-run community" })] })] }, "identity-preview"))] }), _jsxs("div", { className: "inline-flex items-center gap-2 text-xs text-[var(--hive-text-muted)]", children: [_jsx(User, { className: "h-3 w-3", "aria-hidden": true }), "Your handle is how classmates find you \u2014 we keep it unique inside UB."] })] }));
+};
+//# sourceMappingURL=identity-step.js.map

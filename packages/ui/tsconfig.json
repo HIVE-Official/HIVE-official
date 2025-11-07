@@ -36,7 +36,14 @@
       "@hive/hooks": ["../hooks/src"],
       "@hive/hooks/*": ["../hooks/src/*"],
       "@hive/auth-logic": ["../auth-logic/src"],
-      "@hive/auth-logic/*": ["../auth-logic/src/*"]
+      "@hive/auth-logic/*": ["../auth-logic/src/*"],
+      "@hive/tokens": ["../tokens/src"],
+      "@hive/tokens/hive-tokens-generated.css": ["../tokens/hive-tokens-generated.css"],
+      "@hive/tokens/*": ["../tokens/src/*"],
+      "next/navigation": ["./.storybook/next-mocks.tsx"],
+      "next/router": ["./.storybook/next-mocks.tsx"],
+      "next/image": ["./.storybook/next-image-mock.tsx"],
+      "next-themes": ["./.storybook/mocks.tsx"]
     },
     "resolveJsonModule": true
   },

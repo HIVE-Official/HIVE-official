@@ -2,11 +2,11 @@ import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
 declare const Command: React.ForwardRefExoticComponent<Omit<{
     children?: React.ReactNode;
-} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key"> & {
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild"> & {
     label?: string;
     shouldFilter?: boolean;
     filter?: (value: string, search: string, keywords?: string[]) => number;
@@ -23,51 +23,51 @@ declare const CommandInput: React.ForwardRefExoticComponent<Omit<Omit<Pick<Pick<
     ref?: React.Ref<HTMLInputElement>;
 } & {
     asChild?: boolean;
-}, "asChild" | "key" | keyof React.InputHTMLAttributes<HTMLInputElement>>, "onChange" | "type" | "value"> & {
+}, "key" | "asChild" | keyof React.InputHTMLAttributes<HTMLInputElement>>, "type" | "value" | "onChange"> & {
     value?: string;
     onValueChange?: (search: string) => void;
 } & React.RefAttributes<HTMLInputElement>, "ref"> & React.RefAttributes<HTMLInputElement>>;
 declare const CommandList: React.ForwardRefExoticComponent<Omit<{
     children?: React.ReactNode;
-} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key"> & {
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild"> & {
     label?: string;
 } & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const CommandEmpty: React.ForwardRefExoticComponent<Omit<{
     children?: React.ReactNode;
-} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+} & Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key"> & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild"> & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const CommandGroup: React.ForwardRefExoticComponent<Omit<{
     children?: React.ReactNode;
-} & Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+} & Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key">, "heading" | "value"> & {
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild">, "value" | "heading"> & {
     heading?: React.ReactNode;
     value?: string;
     forceMount?: boolean;
 } & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
-declare const CommandSeparator: React.ForwardRefExoticComponent<Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+declare const CommandSeparator: React.ForwardRefExoticComponent<Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key"> & {
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild"> & {
     alwaysRender?: boolean;
 } & React.RefAttributes<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
 declare const CommandItem: React.ForwardRefExoticComponent<Omit<{
     children?: React.ReactNode;
-} & Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, keyof React.HTMLAttributes<HTMLDivElement> | "key"> & {
+} & Omit<Pick<Pick<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "key" | keyof React.HTMLAttributes<HTMLDivElement>> & {
     ref?: React.Ref<HTMLDivElement>;
 } & {
     asChild?: boolean;
-}, keyof React.HTMLAttributes<HTMLDivElement> | "asChild" | "key">, "onSelect" | "disabled" | "value"> & {
+}, "key" | keyof React.HTMLAttributes<HTMLDivElement> | "asChild">, "value" | "disabled" | "onSelect"> & {
     disabled?: boolean;
     onSelect?: (value: string) => void;
     value?: string;

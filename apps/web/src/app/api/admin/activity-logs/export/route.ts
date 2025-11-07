@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAdminAuth } from '@/lib/admin-middleware';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { adminActivityLogger } from '@/lib/admin-activity-logger';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -9,8 +9,7 @@ import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _Err
  * GET - Export activity logs as CSV
  */
 
-export async function GET(request: NextRequest) {
-  return withAdminAuth(request, async (request, _admin) => {
+export const GET = withSecureAuth(async (request: NextRequest) => {
     try {
       const url = new URL(request.url);
       const filters = {
@@ -41,5 +40,4 @@ export async function GET(request: NextRequest) {
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
-  });
-}
+}, { requireAdmin: true });

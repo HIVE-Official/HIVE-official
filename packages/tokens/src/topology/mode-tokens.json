@@ -1,0 +1,125 @@
+{
+  "version": "2025-02-13",
+  "defaults": {
+    "motion": {
+      "enterMs": 140,
+      "exitMs": 110,
+      "easing": "cubic-bezier(0.32, 0.72, 0, 1)"
+    },
+    "reducedMotion": {
+      "enterMs": 0,
+      "exitMs": 0,
+      "easing": "linear",
+      "halo": "transparent"
+    },
+    "typeScale": {
+      "headline": "1.25rem",
+      "body": "0.9375rem",
+      "caption": "0.8125rem"
+    }
+  },
+  "modes": {
+    "calm": {
+      "accent": "#FFD700",
+      "surface": "#111113",
+      "surfaceRaised": "#1A1A1C",
+      "textPrimary": "#E5E5E7",
+      "textSecondary": "#C1C1C4",
+      "halo": "rgba(255, 215, 0, 0.12)",
+      "shadow": "rgba(0, 0, 0, 0.24)",
+      "motion": {
+        "enterMs": 120,
+        "exitMs": 100
+      },
+      "copy": {
+        "caughtUp": "You're caught up.",
+        "defaultVerb": "Explore"
+      }
+    },
+    "focus": {
+      "accent": "#3B82F6",
+      "surface": "#0A0A0B",
+      "surfaceRaised": "#111113",
+      "textPrimary": "#E5E5E7",
+      "textSecondary": "#A1A1AA",
+      "halo": "rgba(59, 130, 246, 0.16)",
+      "shadow": "rgba(0, 0, 0, 0.32)",
+      "motion": {
+        "enterMs": 100,
+        "exitMs": 90
+      },
+      "copy": {
+        "caughtUp": "Focus mode active.",
+        "defaultVerb": "Review"
+      }
+    },
+    "warm": {
+      "accent": "#F7E98E",
+      "surface": "#111113",
+      "surfaceRaised": "#1A1A1C",
+      "textPrimary": "#E5E5E7",
+      "textSecondary": "#C1C1C4",
+      "halo": "rgba(247, 233, 142, 0.2)",
+      "shadow": "rgba(0, 0, 0, 0.22)",
+      "motion": {
+        "enterMs": 130,
+        "exitMs": 110
+      },
+      "copy": {
+        "caughtUp": "Welcome in.",
+        "defaultVerb": "Join"
+      }
+    },
+    "celebrate": {
+      "accent": "#10B981",
+      "surface": "#111113",
+      "surfaceRaised": "#1F1F22",
+      "textPrimary": "#E5E5E7",
+      "textSecondary": "#C1C1C4",
+      "halo": "rgba(16, 185, 129, 0.18)",
+      "shadow": "rgba(0, 0, 0, 0.28)",
+      "motion": {
+        "enterMs": 150,
+        "exitMs": 120
+      },
+      "copy": {
+        "caughtUp": "Thanks for joining.",
+        "defaultVerb": "Share"
+      }
+    },
+    "urgent": {
+      "accent": "#EF4444",
+      "surface": "#111113",
+      "surfaceRaised": "#1F1F22",
+      "textPrimary": "#FFE255",
+      "textSecondary": "#F9A8D4",
+      "halo": "rgba(239, 68, 68, 0.24)",
+      "shadow": "rgba(0, 0, 0, 0.4)",
+      "motion": {
+        "enterMs": 160,
+        "exitMs": 130
+      },
+      "copy": {
+        "caughtUp": "Happening now.",
+        "defaultVerb": "Act"
+      }
+    },
+    "sober": {
+      "accent": "#9B9B9F",
+      "surface": "#0A0A0B",
+      "surfaceRaised": "#111113",
+      "textPrimary": "#E5E5E7",
+      "textSecondary": "#A1A1AA",
+      "halo": "rgba(155, 155, 159, 0.18)",
+      "shadow": "rgba(0, 0, 0, 0.3)",
+      "motion": {
+        "enterMs": 110,
+        "exitMs": 90
+      },
+      "copy": {
+        "caughtUp": "Safety update.",
+        "defaultVerb": "Review"
+      }
+    }
+  }
+}

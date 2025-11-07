@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
 import { automatedModerationWorkflows } from '@/lib/automated-moderation-workflows';
 import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
@@ -62,18 +62,10 @@ const WorkflowSchema = z.object({
 });
 
 // GET - Get all workflows and statistics
-export async function GET(request: NextRequest) {
+export const GET = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(token?.uid || '');
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -108,21 +100,13 @@ export async function GET(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // POST - Create new workflow
-export async function POST(request: NextRequest) {
+export const POST = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(token?.uid || '');
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -149,7 +133,7 @@ export async function POST(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow created', {
       workflowId,
-      adminUserId: user.uid,
+      adminUserId: token?.uid || 'unknown',
       workflowName: workflowData.name
     });
 
@@ -166,21 +150,13 @@ export async function POST(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // PUT - Update existing workflow
-export async function PUT(request: NextRequest) {
+export const PUT = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(token?.uid || '');
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -213,7 +189,7 @@ export async function PUT(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow updated', {
       workflowId,
-      adminUserId: user.uid,
+      adminUserId: token?.uid || 'unknown',
       updatedFields: Object.keys(updateData)
     });
 
@@ -229,21 +205,13 @@ export async function PUT(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // DELETE - Delete workflow
-export async function DELETE(request: NextRequest) {
+export const DELETE = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(token?.uid || '');
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -269,7 +237,7 @@ export async function DELETE(request: NextRequest) {
     // Log admin action
     logger.info('Automated workflow deleted', {
       workflowId,
-      adminUserId: user.uid
+      adminUserId: token?.uid || 'unknown'
     });
 
     return NextResponse.json({
@@ -284,7 +252,7 @@ export async function DELETE(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // Helper function to check admin permissions
 async function checkAdminPermissions(userId: string): Promise<boolean> {
@@ -302,10 +270,12 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
 }
 
 // Helper function to get workflows
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 async function getWorkflows(activeOnly: boolean = false) {
   try {
     const { dbAdmin } = await import('@/lib/firebase-admin');
     let query = dbAdmin.collection('automatedWorkflows')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .orderBy('priority', 'desc')
       .orderBy('createdAt', 'desc');
 

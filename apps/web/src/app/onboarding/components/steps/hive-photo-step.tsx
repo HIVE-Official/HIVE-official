@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
-import { Camera, Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
+import { Upload, X, CheckCircle, User, Crop, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveButton, HiveCard } from "@hive/ui";
+import { Button, HiveCard } from "@hive/ui";
 import { getDefaultAvatarOptions } from "@/lib/avatar-generator";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
@@ -342,23 +342,23 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
               </div>
               
               <div className="flex gap-3">
-                <HiveButton
+                <Button
                   variant="secondary"
                   size="sm"
                   onClick={cancelCrop}
                   leftIcon={<X className="w-4 h-4" />}
                 >
                   Cancel
-                </HiveButton>
+                </Button>
                 
-                <HiveButton
+                <Button
                   variant="default"
                   size="sm"
                   onClick={cropImage}
                   leftIcon={<CheckCircle className="w-4 h-4" />}
                 >
                   Apply Crop
-                </HiveButton>
+                </Button>
               </div>
             </div>
           </div>
@@ -374,20 +374,11 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
       className="space-y-[var(--hive-spacing-8)] py-[var(--hive-spacing-6)] max-w-lg mx-auto"
     >
       {/* Header */}
-      <div className="text-center space-y-[var(--hive-spacing-4)]">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-brand-primary)]/30"
-        >
-          <Camera className="w-8 h-8 text-[var(--hive-brand-primary)]" />
-        </motion.div>
-        
+      <div className="text-center space-y-[var(--hive-spacing-3)]">
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
         >
           <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
             Add a profile picture
@@ -445,14 +436,14 @@ export function HivePhotoStep({ data, updateData, onNext }: HivePhotoStepProps) 
             </div>
 
             {/* Change Photo Button */}
-            <HiveButton
+            <Button
               onClick={openFileDialog}
               variant="secondary"
               size="sm"
               leftIcon={<Upload className="w-4 h-4" />}
             >
               Change Photo
-            </HiveButton>
+            </Button>
           </motion.div>
         ) : (
           <div className="space-y-[var(--hive-spacing-6)]">

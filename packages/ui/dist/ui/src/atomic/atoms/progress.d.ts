@@ -1,12 +1,13 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const progressVariants: (props?: {
-    size?: "default" | "sm" | "lg" | "xl";
-    variant?: "default" | "success" | "warning" | "error" | "secondary";
+    size?: "sm" | "lg" | "xl" | "xs" | "default";
+    variant?: "primary" | "secondary" | "success" | "error" | "warning" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const progressIndicatorVariants: (props?: {
-    variant?: "default" | "success" | "warning" | "error" | "secondary" | "gradient";
-    animation?: "none" | "pulse" | "indeterminate";
+    variant?: "secondary" | "success" | "error" | "warning" | "default" | "gradient";
+    animation?: "none" | "indeterminate" | "pulse" | "bounce" | "spin";
+    gradient?: "none" | "subtle" | "vibrant" | "hive";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof progressVariants> {
     value?: number;
@@ -16,6 +17,11 @@ export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement>, Var
     formatValue?: (value: number, max: number) => string;
     indicatorVariant?: VariantProps<typeof progressIndicatorVariants>["variant"];
     animation?: VariantProps<typeof progressIndicatorVariants>["animation"];
+    label?: string;
+    showLabel?: boolean;
+    showPercentage?: boolean;
+    gradient?: VariantProps<typeof progressIndicatorVariants>["gradient"];
+    indicatorClassName?: string;
 }
 declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
 export interface CircularProgressProps {

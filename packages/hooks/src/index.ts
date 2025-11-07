@@ -17,3 +17,5 @@ export { useDebounce } from './use-debounce';
 
 // Feature flags hooks
 export { useFeatureFlags, useToolBuilderVariant, useNavigationVariant } from './use-feature-flags'; 
+// Topology budgets
+export { useCognitiveBudget } from './topology/use-cognitive-budget';

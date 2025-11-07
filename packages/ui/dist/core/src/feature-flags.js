@@ -6,6 +6,7 @@ export const DEFAULT_FLAGS = {
     enableAdvancedBuilder: false,
     enableCollaborativeEditing: false,
     enableRealTimeNotifications: false,
+    adminDashboard: true,
     spaces: 'enabled',
     tools: 'enabled',
     analytics: 'enabled',
@@ -29,6 +30,7 @@ export function getFeatureFlags(userId) {
         enableAdvancedBuilder: hash % 10 < 3, // 30% of users
         enableCollaborativeEditing: hash % 10 < 2, // 20% of users  
         enableRealTimeNotifications: hash % 10 < 5, // 50% of users
+        adminDashboard: hash % 10 < 9, // 90% of users enabled by default
         // Analytics categories - always enabled
         spaces: 'enabled',
         tools: 'enabled',

@@ -18,7 +18,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchQueryHandler = exports.SearchType = exports.GetFeedQueryHandler = exports.feedListener = exports.storage = exports.auth = exports.db = exports.app = exports.presenceService = exports.FirebaseUnitOfWork = exports.EnhancedFeed = exports.FeedItem = exports.EnhancedRitual = exports.RitualId = exports.Widget = exports.Tab = exports.EnhancedSpace = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.createDefaultProfile = exports.getProfileCompletionPercentage = exports.isProfileComplete = exports.EnhancedProfile = void 0;
+exports.SearchQueryHandler = exports.SearchType = exports.GetFeedQueryHandler = exports.feedListener = exports.storage = exports.auth = exports.db = exports.app = exports.presenceService = exports.FirebaseUnitOfWork = exports.getTemplatesByArchetype = exports.getTemplatesByCategory = exports.getTemplate = exports.getAvailableTemplates = exports.RITUAL_TEMPLATES = exports.createDefaultConfig = exports.RitualComposerSchema = exports.parseRitualUnion = exports.RitualUnionSchema = exports.RitualSchema = exports.RitualArchetype = exports.EnhancedFeed = exports.FeedItem = exports.EnhancedRitual = exports.RitualId = exports.Widget = exports.Tab = exports.EnhancedSpace = exports.SpaceCategory = exports.SpaceDescription = exports.SpaceName = exports.SpaceId = exports.ConnectionSource = exports.ConnectionType = exports.Connection = exports.createDefaultProfile = exports.getProfileCompletionPercentage = exports.isProfileComplete = exports.EnhancedProfile = void 0;
 // Domain Models - Specific exports to avoid conflicts
 var enhanced_profile_1 = require("./domain/profile/aggregates/enhanced-profile");
 Object.defineProperty(exports, "EnhancedProfile", { enumerable: true, get: function () { return enhanced_profile_1.EnhancedProfile; } });
@@ -52,6 +52,22 @@ var feed_item_1 = require("./domain/feed/feed-item");
 Object.defineProperty(exports, "FeedItem", { enumerable: true, get: function () { return feed_item_1.FeedItem; } });
 var enhanced_feed_1 = require("./domain/feed/enhanced-feed");
 Object.defineProperty(exports, "EnhancedFeed", { enumerable: true, get: function () { return enhanced_feed_1.EnhancedFeed; } });
+var archetypes_1 = require("./domain/rituals/archetypes");
+Object.defineProperty(exports, "RitualArchetype", { enumerable: true, get: function () { return archetypes_1.RitualArchetype; } });
+Object.defineProperty(exports, "RitualSchema", { enumerable: true, get: function () { return archetypes_1.RitualSchema; } });
+Object.defineProperty(exports, "RitualUnionSchema", { enumerable: true, get: function () { return archetypes_1.RitualUnionSchema; } });
+Object.defineProperty(exports, "parseRitualUnion", { enumerable: true, get: function () { return archetypes_1.parseRitualUnion; } });
+__exportStar(require("./domain/rituals/events"), exports);
+var composer_1 = require("./domain/rituals/composer");
+Object.defineProperty(exports, "RitualComposerSchema", { enumerable: true, get: function () { return composer_1.RitualComposerSchema; } });
+Object.defineProperty(exports, "createDefaultConfig", { enumerable: true, get: function () { return composer_1.createDefaultConfig; } });
+// Ritual Templates
+var templates_1 = require("./domain/rituals/templates");
+Object.defineProperty(exports, "RITUAL_TEMPLATES", { enumerable: true, get: function () { return templates_1.RITUAL_TEMPLATES; } });
+Object.defineProperty(exports, "getAvailableTemplates", { enumerable: true, get: function () { return templates_1.getAvailableTemplates; } });
+Object.defineProperty(exports, "getTemplate", { enumerable: true, get: function () { return templates_1.getTemplate; } });
+Object.defineProperty(exports, "getTemplatesByCategory", { enumerable: true, get: function () { return templates_1.getTemplatesByCategory; } });
+Object.defineProperty(exports, "getTemplatesByArchetype", { enumerable: true, get: function () { return templates_1.getTemplatesByArchetype; } });
 // Application Services - Use Case Orchestration
 __exportStar(require("./application"), exports);
 // Repository Pattern - Data Access Layer
@@ -67,6 +83,7 @@ var presence_service_1 = require("./services/presence-service");
 Object.defineProperty(exports, "presenceService", { enumerable: true, get: function () { return presence_service_1.presenceService; } });
 // Constants
 __exportStar(require("./constants/majors"), exports);
+__exportStar(require("./constants/onboarding-interests"), exports);
 // Stores
 __exportStar(require("./stores/useAppStore"), exports);
 // Feature Flags
@@ -95,4 +112,6 @@ Object.defineProperty(exports, "SearchType", { enumerable: true, get: function (
 Object.defineProperty(exports, "SearchQueryHandler", { enumerable: true, get: function () { return search_query_1.SearchQueryHandler; } });
 // Temporary backward compatibility (will be removed)
 __exportStar(require("./application/shared/temporary-types"), exports);
+// Schemas
+__exportStar(require("./schemas/admin/dashboard"), exports);
 //# sourceMappingURL=index.js.map

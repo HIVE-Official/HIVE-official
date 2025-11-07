@@ -1,9 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { getPlacementFromDeploymentDoc } from '@/lib/tool-placement';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import {
+  withAuthValidationAndErrors,
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { z } from "zod";
 
 // Feed content generation interface
 interface FeedContentTemplate {
@@ -30,34 +36,50 @@ interface FeedContentTemplate {
 }
 
 // POST - Generate feed content from tool interaction
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+const FeedIntegrationSchema = z.object({
+  deploymentId: z.string(),
+  toolId: z.string(),
+  action: z.string(),
+  data: z.any().optional(),
+  elementId: z.string().optional(),
+  generateContent: z.boolean().optional(),
+});
 
-    const body = await request.json();
-    const { deploymentId, toolId, action, data, elementId, generateContent = true } = body;
-
-    if (!deploymentId || !toolId || !action) {
-      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+export const POST = withAuthValidationAndErrors(
+  FeedIntegrationSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context,
+    body,
+    respond
+  ) => {
+    try {
+      const userId = getUserId(request);
+      const { deploymentId, toolId, action, data, elementId, generateContent = true } = body;
 
     // Get deployment details
     const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
     if (!deploymentDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Deployment not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const deployment = deploymentDoc.data();
     if (!deployment) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Deployment data not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    }
+    if (deployment?.campusId && deployment.campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
     }
 
+    const placementContext = await getPlacementFromDeploymentDoc(deploymentDoc);
+    const placementData = placementContext?.snapshot?.data();
+    const targetType = placementData?.targetType || deployment.deployedTo;
+    const targetId = placementData?.targetId || deployment.targetId;
+    const collectAnalytics = placementData?.settings?.collectAnalytics ?? deployment.settings?.collectAnalytics;
+
     // Only generate content for space deployments with analytics enabled
-    if (deployment.deployedTo !== 'space' || !deployment.settings?.collectAnalytics) {
-      return NextResponse.json({ 
+    if (targetType !== 'space' || !collectAnalytics) {
+      return respond.success({ 
         generated: false, 
         reason: 'Content generation disabled for this deployment' 
       });
@@ -66,87 +88,93 @@ export async function POST(request: NextRequest) {
     // Get tool details
     const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const tool = toolDoc.data();
     if (!tool) {
-      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool data not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    }
+    if (tool?.campusId && tool.campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
     }
 
     if (!generateContent) {
-      return NextResponse.json({ generated: false, reason: 'Content generation disabled' });
+      return respond.success({ generated: false, reason: 'Content generation disabled' });
     }
 
     // Generate feed content based on action
     const feedContent = await generateFeedContentFromAction({
-      deployment,
+      deployment: { ...deployment, targetId },
       tool,
-      user: { uid: user.uid },
+        user: { uid: userId },
       action,
       data,
       elementId
     });
 
     if (!feedContent) {
-      return NextResponse.json({ 
+      return respond.success({ 
         generated: false, 
         reason: 'No content template matched this action' 
       });
     }
 
     // Create the feed post
-    const postId = await createFeedPost(deployment, tool, user.uid, feedContent);
+    const postId = await createFeedPost({ ...deployment, targetId }, tool, userId, feedContent);
 
-    return NextResponse.json({
+      return respond.success({
       generated: true,
       postId,
       content: feedContent,
-      spaceId: deployment.targetId
+      spaceId: targetId
     });
   } catch (error) {
     logger.error(
       `Error generating feed content at /api/tools/feed-integration`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to generate feed content", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      return respond.error("Failed to generate feed content", "INTERNAL_ERROR", { status: 500 });
   }
-}
+  }
+);
 
 // GET - Get feed content templates for a tool
-export async function GET(request: NextRequest) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond
+) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    const userId = getUserId(request);
 
     const { searchParams } = new URL(request.url);
     const toolId = searchParams.get('toolId');
     const isActive = searchParams.get('isActive');
 
     if (!toolId) {
-      return NextResponse.json(ApiResponseHelper.error("Tool ID is required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Tool ID is required", "INVALID_INPUT", { status: 400 });
     }
 
     // Check if user can view this tool
     const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const tool = toolDoc.data();
     if (!tool) {
-      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool data not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
-    if (tool.ownerId !== user.uid && tool.status !== 'published') {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (tool.ownerId !== userId && tool.status !== 'published') {
+      return respond.error("Access denied", "FORBIDDEN", { status: 403 });
     }
 
     // Get feed content templates
     let templatesQuery = dbAdmin
       .collection('feedContentTemplates')
       .where('toolId', '==', toolId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .orderBy('createdAt', 'desc');
 
     if (isActive !== null) {
@@ -159,7 +187,7 @@ export async function GET(request: NextRequest) {
       ...doc.data()
     }));
 
-    return NextResponse.json({
+    return respond.success({
       templates,
       count: templates.length
     });
@@ -168,9 +196,9 @@ export async function GET(request: NextRequest) {
       `Error fetching feed templates at /api/tools/feed-integration`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch feed templates", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to fetch feed templates", "INTERNAL_ERROR", { status: 500 });
   }
-}
+});
 
 // Helper function to generate feed content from tool action
 async function generateFeedContentFromAction(params: {
@@ -188,6 +216,7 @@ async function generateFeedContentFromAction(params: {
     const templatesSnapshot = await dbAdmin
       .collection('feedContentTemplates')
       .where('toolId', '==', tool.id || deployment.toolId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('triggerEvent', '==', action)
       .where('isActive', '==', true)
       .get();
@@ -364,6 +393,7 @@ async function createFeedPost(deployment: any, tool: any, userId: string, conten
   const post = {
     authorId: userId,
     spaceId: deployment.targetId,
+    campusId: CURRENT_CAMPUS_ID,
     type: 'tool_generated',
     subType: content.type,
     toolId: deployment.toolId,

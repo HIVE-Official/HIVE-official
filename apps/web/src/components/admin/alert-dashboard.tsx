@@ -38,7 +38,7 @@ import {
   AlertCircle,
   XCircle
 } from 'lucide-react';
-import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface Alert {
   id: string;
@@ -122,7 +122,7 @@ export function AlertDashboard() {
     search: ''
   });
 
-  const { token: csrfToken, getHeaders } = useCSRF();
+  // CSRF token is provided via <meta name="csrf-token"> in admin head
 
   useEffect(() => {
     loadAlerts();
@@ -146,9 +146,7 @@ export function AlertDashboard() {
         ...(filters.component && { component: filters.component })
       });
 
-      const response = await protectedFetch(`/api/admin/alerts?${params}`, {
-        headers: getHeaders()
-      }, csrfToken);
+      const response = await secureApiFetch(`/api/admin/alerts?${params}`);
 
       if (!response.ok) {
         throw new Error('Failed to load alerts');
@@ -165,11 +163,11 @@ export function AlertDashboard() {
 
   const handleAlertAction = async (alertId: string, action: string, notes?: string) => {
     try {
-      const response = await protectedFetch('/api/admin/alerts', {
+      const response = await secureApiFetch('/api/admin/alerts', {
         method: 'POST',
-        headers: getHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ alertId, action, notes })
-      }, csrfToken);
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to ${action} alert`);

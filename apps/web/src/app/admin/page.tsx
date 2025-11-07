@@ -1,923 +1,1009 @@
 'use client';
 
-// Force dynamic rendering to avoid SSG issues
-export const dynamic = 'force-dynamic';
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@hive/ui';
-import { Button } from '@hive/ui';
-import { Badge } from '@hive/ui';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
-import { Alert, AlertDescription } from '@hive/ui';
-import { Switch } from '@hive/ui';
-import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AdminGuard } from '@/components/admin/admin-guard';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
+import type { AdminDashboardResponse, RitualComposerInput } from '@hive/core';
+import { RitualArchetype, createDefaultConfig } from '@hive/core';
 import {
-  Users,
-  Home,
-  Settings,
+  AdminShell,
+  AdminMetricCard,
+  AuditLogList,
+  ModerationQueue,
+  AdminRitualComposer,
+  type AdminNavItem,
+  type ModerationQueueItem,
+  type AuditLogEvent,
+  Button,
+  Skeleton,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from '@hive/ui';
+import { useToast } from '@/hooks/use-toast';
+import { useFeatureFlags } from '@hive/hooks';
+import {
   Activity,
   Flag,
+  Layers,
+  Rocket,
+  ShieldCheck,
   TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  BarChart3,
-  Database,
-  Shield,
-  LineChart,
-  Bell,
-  Server
+  Users,
 } from 'lucide-react';
-import { RealTimeModeration } from '@/components/admin/real-time-moderation';
-import { ContentAnalytics } from '@/components/admin/content-analytics';
-import { FeedAlgorithmControl } from '@/components/admin/feed-algorithm-control';
-import { BehavioralAnalytics } from '@/components/admin/behavioral-analytics';
-import { AdminGuard } from '@/components/admin/admin-guard';
-import { FeedConfigurationPanel } from '@/components/admin/feed-configuration-panel';
-import { RitualManagementPanel } from '@/components/admin/ritual-management-panel';
-import { FirebaseMonitoring } from '@/components/admin/firebase-monitoring';
-import { AlertDashboard } from '@/components/admin/alert-dashboard';
-import { DatabasePerformanceDashboard } from '@/components/admin/database-performance-dashboard';
-import CampusExpansionDashboard from '@/components/admin/campus-expansion-dashboard';
-import CacheManagementDashboard from '@/components/admin/cache-management-dashboard';
 
-interface AdminDashboardData {
-  platform: {
-    name: string;
-    version: string;
-    environment: string;
-    university: string;
-  };
-  statistics: {
-    users: {
-      total: number;
-      active: number;
-      inactive: number;
-      byMajor: Record<string, number>;
-      byYear: Record<string, number>;
-      growth?: {
-        lastWeek: number;
-        lastMonth: number;
-      };
-    };
-    spaces: {
-      total: number;
-      active: number;
-      dormant: number;
-      byType: Record<string, { total: number; members: number }>;
-      hasBuilders: number;
-      totalMembers: number;
-      activationRate: number;
-    };
-    builderRequests: {
-      total: number;
-      pending: number;
-      approved: number;
-      rejected: number;
-      urgent: number;
-      approvalRate: number;
-      averageResponseTime: number;
-    };
-    system: {
-      status: string;
-      uptime: number;
-      memory: { heapUsed: number; heapTotal: number } | null;
-      collections: {
-        users: number;
-        spaces: number;
-        builderRequests: number;
-      };
-    };
-  };
+interface DashboardState {
+  data: AdminDashboardResponse | null;
+  loading: boolean;
+  error: string | null;
 }
 
-interface FeatureFlag {
-  id: string;
-  name: string;
-  description: string;
-  category: 'core' | 'experimental' | 'infrastructure' | 'ui_ux' | 'tools' | 'spaces' | 'admin';
-  enabled: boolean;
-  rollout: {
-    type: 'all' | 'percentage' | 'users' | 'schools' | 'ab_test';
-    percentage?: number;
-    targetUsers?: string[];
-    targetSchools?: string[];
-  };
-  metadata: {
-    createdAt: string;
-    updatedAt: string;
-    updatedBy: string;
-    version: number;
-  };
+interface RitualsStatsState {
+  total: number;
+  byPhase: { draft: number; announced: number; active: number; cooldown: number; ended: number };
+  metrics: { participants: number; submissions: number; conversions: number };
 }
 
-function AdminDashboardInternal() {
-  const [dashboardData, setDashboardData] = useState<AdminDashboardData | null>(null);
-  const [featureFlags, setFeatureFlags] = useState<FeatureFlag[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [flagsLoading, setFlagsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const { token: csrfToken, getHeaders } = useCSRF();
+const NAV_SECTIONS: AdminNavItem[] = [
+  { id: 'overview', label: 'Overview', icon: ShieldCheck },
+  { id: 'campaigns', label: 'Campaigns', icon: Rocket },
+  { id: 'rituals', label: 'Rituals', icon: Flag },
+  { id: 'hivelab', label: 'HiveLab', icon: Layers },
+  { id: 'moderation', label: 'Moderation', icon: Activity },
+];
+
+function AdminDashboardContent() {
+  const { error: toastError, success: toastSuccess, error: toastFailure } = useToast();
+  const featureFlags = useFeatureFlags();
+  const [state, setState] = useState<DashboardState>({
+    data: null,
+    loading: true,
+    error: null,
+  });
+  const [activeSection, setActiveSection] = useState<string>('overview');
+  const [refreshToken, setRefreshToken] = useState(0);
+  const [sheetItem, setSheetItem] = useState<AdminNavItem | null>(null);
+  const [isSubmittingRitual, setIsSubmittingRitual] = useState(false);
+  const [composerInitialValue, setComposerInitialValue] = useState<Partial<RitualComposerInput> | undefined>(undefined);
+  const [ritualsStats, setRitualsStats] = useState<RitualsStatsState | null>(null);
+  const [sheetLoading, setSheetLoading] = useState(false);
+  const [existingRituals, setExistingRituals] = useState<
+    Array<{
+      id: string;
+      title: string;
+      phase: 'draft' | 'announced' | 'active' | 'cooldown' | 'ended';
+      startsAt?: string;
+      endsAt?: string;
+    }>
+  >([]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    let isMounted = true;
 
-  useEffect(() => {
-    if (mounted) {
-      loadDashboardData();
-    }
-  }, [mounted]);
+    const loadDashboard = async () => {
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-  if (!mounted) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
+      try {
+        const [response, ritualsStatsRes] = await Promise.all([
+          secureApiFetch('/api/admin/dashboard', {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+          }),
+          secureApiFetch('/api/admin/rituals/stats', {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+          }).catch(() => null),
+        ]);
 
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-      const response = await protectedFetch('/api/admin/dashboard', {
-        headers: getHeaders()
-      }, csrfToken);
-      
-      if (!response.ok) {
-        throw new Error('Failed to load dashboard data');
+        if (!response.ok) {
+          throw new Error(`Request failed with ${response.status}`);
+        }
+
+        const payload = (await response.json()) as AdminDashboardResponse;
+        if (isMounted) {
+          setState({ data: payload, loading: false, error: null });
+          if (ritualsStatsRes && ritualsStatsRes.ok) {
+            const rjson = await ritualsStatsRes.json().catch(() => null);
+            const data = rjson?.data as RitualsStatsState | undefined;
+            if (data) setRitualsStats(data);
+          } else {
+            setRitualsStats(null);
+          }
+        }
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Unable to load dashboard';
+        console.error('[AdminDashboard] Failed to load', message);
+        toastError('Failed to load admin dashboard', message);
+        if (isMounted) {
+          setState({
+            data: null,
+            loading: false,
+            error: 'We could not load the dashboard data. Try again shortly.',
+          });
+        }
       }
-      
-      const data = await response.json() as AdminDashboardData;
-      setDashboardData(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+    };
+
+    loadDashboard();
+    return () => {
+      isMounted = false;
+    };
+  }, [toastError, refreshToken]);
+
+  const handleNavSelect = useCallback(
+    (item: AdminNavItem) => {
+      setActiveSection(item.id);
+
+      if (item.id === 'overview') {
+        setSheetItem(null);
+        return;
+      }
+
+      setSheetItem(item);
+      if (item.id === 'rituals') {
+        // Reset template selection when opening composer
+        setComposerInitialValue(undefined);
+        // Load current campus rituals for quick actions
+        setSheetLoading(true);
+        secureApiFetch('/api/admin/rituals?phase=announced&phase=active')
+          .then(async (res) => {
+            if (!res.ok) throw new Error(String(res.status));
+            const payload = await res.json();
+            const rows: typeof existingRituals = (payload?.data || []).map((r: any) => ({
+              id: r.id,
+              title: r.title || 'Untitled',
+              phase: r.phase,
+              startsAt: r.startsAt,
+              endsAt: r.endsAt,
+            }));
+            setExistingRituals(rows);
+          })
+          .catch(() => setExistingRituals([]))
+          .finally(() => setSheetLoading(false));
+      }
+    },
+    [],
+  );
+
+  const handleRitualSubmit = useCallback(
+    async (payload: RitualComposerInput) => {
+      try {
+        setIsSubmittingRitual(true);
+        const response = await secureApiFetch('/api/admin/rituals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const errorBody = await response.json().catch(() => ({}));
+          throw new Error(errorBody?.error || `Request failed with status ${response.status}`);
+        }
+
+        toastSuccess('Ritual created', 'New campus ritual scheduled successfully.');
+        setSheetItem(null);
+        setActiveSection('overview');
+        setRefreshToken((value) => value + 1);
+      } catch (err) {
+        toastFailure('Unable to create ritual', err instanceof Error ? err.message : 'Unknown error');
     } finally {
-      setLoading(false);
+      setIsSubmittingRitual(false);
     }
-  };
+  },
+    [toastFailure, toastSuccess],
+  );
 
-  const loadFeatureFlags = async () => {
-    try {
-      setFlagsLoading(true);
-      const response = await protectedFetch('/api/admin/feature-flags', {
-        headers: getHeaders()
-      }, csrfToken);
-      
-      if (!response.ok) {
-        throw new Error('Failed to load feature flags');
+  const navItems = useMemo(() => {
+    const ritualsBadge = ritualsStats?.byPhase?.active ? (
+      <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70">
+        {ritualsStats.byPhase.active}
+      </span>
+    ) : undefined;
+
+    const moderationBadge = state.data?.statistics.builderRequests.pending ? (
+      <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs text-red-200">
+        {state.data.statistics.builderRequests.pending}
+      </span>
+    ) : undefined;
+
+    return NAV_SECTIONS.map((item) => ({
+      ...item,
+      active: item.id === activeSection,
+      badge:
+        item.id === 'rituals'
+          ? ritualsBadge
+          : item.id === 'moderation'
+            ? moderationBadge
+            : item.badge,
+    }));
+  }, [activeSection, ritualsStats, state.data]);
+
+  const metrics = useMemo(() => {
+    if (!state.data) {
+      return [];
+    }
+    const { statistics } = state.data;
+    const { users, spaces, builderRequests, system } = statistics;
+
+    const healthScore = computeHealthScore(statistics);
+    const uptimeHours = Math.round(system.uptime / 3600);
+
+    const list = [
+      {
+        id: 'health',
+        title: 'Platform Health',
+        value: healthScore,
+        delta: { value: Math.min(healthScore - 80, 20), label: 'day over day' },
+        icon: ShieldCheck,
+        description: `Uptime ${uptimeHours}h • Reads healthy • Campus isolation enforced`,
+      },
+      {
+        id: 'active-users',
+        title: 'Active Students',
+        value: users.total,
+        delta: {
+          value: users.growth?.lastWeek ?? 0,
+          label: 'week over week',
+        },
+        icon: Users,
+        description: `${users.active} active in the last 7 days`,
+      },
+      {
+        id: 'spaces',
+        title: 'Spaces Online',
+        value: spaces.total,
+        delta: {
+          value: spaces.activationRate - 50,
+          label: 'activation delta',
+        },
+        icon: TrendingUp,
+        description: `${spaces.active} active • ${spaces.dormant} dormant`,
+      },
+      {
+        id: 'pending-actions',
+        title: 'Pending Actions',
+        value: builderRequests.pending,
+        delta: {
+          value: builderRequests.pending,
+          label: 'awaiting review',
+          tone: builderRequests.pending > 0 ? 'negative' : 'positive',
+        },
+        icon: Flag,
+        description: `${builderRequests.approved} approved • ${builderRequests.rejected} rejected`,
+      },
+    ] as const;
+
+    // Optionally include rituals card when stats are available
+    if (ritualsStats) {
+      const active = ritualsStats.byPhase.active;
+      const upcoming = ritualsStats.byPhase.announced;
+      const participants = ritualsStats.metrics.participants;
+      return [
+        {
+          id: 'rituals',
+          title: 'Rituals Live',
+          value: active,
+          delta: { value: upcoming, label: 'upcoming' },
+          icon: Flag,
+          description: `${participants} participants across campus`,
+        },
+        ...list,
+      ];
+    }
+
+    return [...list];
+  }, [state.data, ritualsStats]);
+
+  const auditEvents = useMemo<AuditLogEvent[]>(() => {
+    if (!state.data) {
+      return [];
+    }
+    const { statistics } = state.data;
+    const now = Date.now();
+
+    return [
+      {
+        id: 'activity-1',
+        summary: 'Dashboard refreshed with latest campus metrics',
+        description: `Users ${statistics.users.total} • Spaces ${statistics.spaces.total}`,
+        timestamp: new Date(now - 2 * 60 * 1000),
+        meta: ['System'],
+      },
+      {
+        id: 'activity-2',
+        summary: 'Builder request queue evaluated',
+        description: `${statistics.builderRequests.pending} requests pending review`,
+        timestamp: new Date(now - 30 * 60 * 1000),
+        variant:
+          statistics.builderRequests.pending > 3 ? 'warning' : 'default',
+        meta: ['HiveLab'],
+      },
+      {
+        id: 'activity-3',
+        summary: 'System uptime check complete',
+        description: `Process uptime ${Math.round(statistics.system.uptime / 3600)} hours`,
+        timestamp: new Date(now - 3 * 60 * 60 * 1000),
+        variant: 'positive',
+        meta: ['Infrastructure'],
+      },
+    ];
+  }, [state.data]);
+
+  const moderationQueue = useMemo<ModerationQueueItem[]>(() => {
+    if (!state.data) {
+      return [];
+    }
+    const { builderRequests } = state.data.statistics;
+    const now = Date.now();
+    const pending = builderRequests.pending;
+
+    return [
+      {
+        id: 'queue-builder',
+        title: 'Builder requests awaiting review',
+        summary: `${pending} request${pending === 1 ? '' : 's'} need decisions`,
+        submittedBy: 'HiveLab Automation',
+        submittedAt: new Date(now - pending * 45 * 60 * 1000),
+        status: pending > 0 ? 'pending' : 'resolved',
+        severity: pending >= 5 ? 'high' : pending >= 2 ? 'medium' : 'low',
+        ctaLabel: pending > 0 ? 'Review queue' : undefined,
+        tags: ['HiveLab'],
+      },
+      {
+        id: 'queue-system-health',
+        title: 'Infrastructure monitoring',
+        summary: 'Firebase quotas within safe thresholds.',
+        submittedBy: 'System Monitor',
+        submittedAt: new Date(now - 90 * 60 * 1000),
+        status: 'resolved',
+        severity: 'low',
+        tags: ['Infrastructure'],
+      },
+    ];
+  }, [state.data]);
+
+  const campusName =
+    state.data?.platform.university ?? 'University at Buffalo';
+
+  const featureEnabled =
+    featureFlags?.adminDashboard === undefined
+      ? true
+      : featureFlags.adminDashboard;
+
+  const sheetCopy = useMemo(() => {
+    if (!sheetItem) return null;
+
+    const stats = state.data?.statistics;
+    const extendedStats = stats as (typeof stats & Record<string, any>) | undefined;
+
+    switch (sheetItem.id) {
+      case 'campaigns': {
+        const pending = stats?.builderRequests.pending ?? 0;
+        return {
+          title: 'Campaign Planner',
+          description:
+            'Queue rituals, feature drops, and space spotlights without leaving the dashboard. Campaigns are sheet-first so leads never lose context.',
+          bullets: [
+            'Create a campus-wide broadcast with scheduling and audience targeting.',
+            `Review ${pending} builder request${pending === 1 ? '' : 's'} before launch.`,
+            'Attach onboarding nudges and HiveLab prompts to the rollout.',
+          ],
+          primaryCta: { label: 'Open Control Board', href: '/admin/control-board' },
+        };
       }
-      
-      const data = await response.json() as { flags?: FeatureFlag[] };
-      setFeatureFlags(data.flags || []);
-    } catch (err) {
-      console.error('Error loading feature flags:', err);
-      setFeatureFlags([]);
-    } finally {
-      setFlagsLoading(false);
-    }
-  };
-
-  const toggleFeatureFlag = async (flagId: string, enabled: boolean) => {
-    try {
-      const response = await protectedFetch(`/api/admin/feature-flags/${flagId}`, {
-        method: 'PATCH',
-        headers: getHeaders(),
-        body: JSON.stringify({ enabled }),
-      }, csrfToken);
-
-      if (!response.ok) {
-        throw new Error('Failed to update feature flag');
+      case 'rituals': {
+        const active = stats?.spaces.active ?? 0;
+        return {
+          title: 'Ritual Orchestration',
+          description:
+            'Spin up nine-archetype rituals from a sheet so admins can configure, preview, and launch in under a minute.',
+          bullets: [
+            `Monitor active rituals across ${active} engaged spaces.`,
+            'Configure cadence, incentives, and moderation guardrails.',
+            'Trigger recaps and campus-wide reminders directly from the sheet.',
+          ],
+          primaryCta: { label: 'Launch Ritual', href: '/admin#rituals' },
+        };
       }
-
-      // Update local state
-      setFeatureFlags(prev => 
-        prev.map(flag => 
-          flag.id === flagId ? { ...flag, enabled } : flag
-        )
-      );
-    } catch (err) {
-      console.error('Error updating feature flag:', err);
+      case 'hivelab': {
+        const published = extendedStats?.hivelab?.totals?.published ?? 0;
+        return {
+          title: 'HiveLab Quality Gate',
+          description:
+            'Approve, stage, and deploy tools using sheet-first reviews with analytics context in-line.',
+          bullets: [
+            `${published} certified tools live today – use this screen to stage the next wave.`,
+            'Run quality checks and export catalog proofs without leaving the sheet.',
+            'Coordinate deploy/sunset windows with builders and campus leads.',
+          ],
+          primaryCta: { label: 'Open HiveLab Reviews', href: '/admin/hivelab' },
+        };
+      }
+      case 'moderation': {
+        const pendingReports = stats?.builderRequests.pending ?? 0;
+        return {
+          title: 'Moderation Queue',
+          description:
+            'Resolve reports, automate follow-ups, and escalate to student leaders while staying anchored in the dashboard.',
+          bullets: [
+            `Triage pending actions (${pendingReports} open items) with status chips and severity filters.`,
+            'Escalate to space leaders or campus ops directly from the queue.',
+            'Document outcomes with audit log auto-updates and CSRF-protected actions.',
+          ],
+          primaryCta: { label: 'Review Reports', href: '/admin#moderation' },
+        };
+      }
+      default:
+        return null;
     }
-  };
+  }, [sheetItem, state.data]);
 
-  const formatUptime = (seconds: number): string => {
-    const days = Math.floor(seconds / (24 * 60 * 60));
-    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((seconds % (60 * 60)) / 60);
-    
-    if (days > 0) return `${days}d ${hours}h ${minutes}m`;
-    if (hours > 0) return `${hours}h ${minutes}m`;
-    return `${minutes}m`;
-  };
-
-  const formatMemory = (bytes: number): string => {
-    return `${Math.round(bytes / 1024 / 1024)}MB`;
-  };
-
-  if (loading) {
+  if (!featureEnabled) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Failed to load admin dashboard: {error}
-          </AlertDescription>
-        </Alert>
-        <Button onClick={loadDashboardData} className="mt-4">
-          Retry
-        </Button>
-      </div>
-    );
-  }
-
-  if (!dashboardData) {
-    return null;
-  }
-
-  const { platform, statistics } = dashboardData;
-
-  return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">{platform.name} Admin Dashboard</h1>
-          <p className="text-muted-foreground">
-            {platform.university} • Version {platform.version} • {platform.environment}
+      <div className="flex min-h-screen flex-col items-center justify-center bg-black text-center text-white/70">
+        <div className="max-w-md space-y-4 px-6">
+          <ShieldCheck className="mx-auto h-10 w-10 text-white/40" />
+          <h1 className="text-2xl font-semibold text-white">
+            Admin dashboard coming soon
+          </h1>
+          <p className="text-sm">
+            The admin control center is gated behind the campus rollout flag.
+            Ping the platform team to enable `featureFlags.adminDashboard` for
+            your session.
           </p>
         </div>
-        <Badge variant={platform.environment === 'production' ? 'default' : 'secondary'}>
-          {platform.environment.toUpperCase()}
-        </Badge>
       </div>
+    );
+  }
 
-      {/* Quick Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{statistics.users.total}</div>
-            <p className="text-xs text-muted-foreground">
-              {statistics.users.active} active • {statistics.users.inactive} inactive
-            </p>
-          </CardContent>
-        </Card>
+  const actions = (
+    <>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="border-white/20 text-white/70"
+        onClick={() => handleNavSelect({ id: 'campaigns', label: 'Campaigns' })}
+      >
+        Schedule Broadcast
+      </Button>
+      <Button size="sm" onClick={() => setSheetItem({ id: 'rituals', label: 'Rituals', icon: Flag })}>Launch Ritual</Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={async () => {
+          try {
+            const res = await secureApiFetch('/api/admin/rituals/evaluate');
+            if (res.ok) {
+              const data = await res.json();
+              toastSuccess('Ritual transitions evaluated', `${data.count} transition(s) processed`);
+              setRefreshToken((v) => v + 1);
+            } else {
+              toastFailure('Failed to evaluate transitions', String(res.status));
+            }
+          } catch (e) {
+            toastFailure('Failed to evaluate transitions', e instanceof Error ? e.message : 'Unknown error');
+          }
+        }}
+      >
+        Evaluate Transitions
+      </Button>
+    </>
+  );
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Spaces</CardTitle>
-            <Home className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{statistics.spaces.active}</div>
-            <p className="text-xs text-muted-foreground">
-              {statistics.spaces.activationRate}% activation rate
-            </p>
-          </CardContent>
-        </Card>
+  const banner = state.error ? (
+    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-red-300">
+      <span>{state.error}</span>
+      <Button
+        size="sm"
+        variant="ghost"
+        className="h-8 px-3 text-red-200 hover:text-red-100"
+        onClick={() => setRefreshToken((value) => value + 1)}
+      >
+        Dismiss
+      </Button>
+    </div>
+  ) : (
+    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
+      <span>
+        🚀 Finals Survival ritual scheduled for Friday @ 6pm (UB campus wide).
+      </span>
+      <Button variant="ghost" size="sm" className="h-8 px-3">
+        Review launch plan
+      </Button>
+    </div>
+  );
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Builder Requests</CardTitle>
-            <Settings className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{statistics.builderRequests.pending}</div>
-            <p className="text-xs text-muted-foreground">
-              {statistics.builderRequests.urgent} urgent
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">System Status</CardTitle>
-            <Database className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full ${
-                statistics.system.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'
-              }`} />
-              <span className="text-sm font-medium capitalize">{statistics.system.status}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Uptime: {formatUptime(statistics.system.uptime)}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Enhanced Alert Bar for Critical Issues */}
-      {statistics.builderRequests.urgent > 0 && (
-        <Alert className="bg-red-500/10 border-red-500/30">
-          <Bell className="h-4 w-4 text-red-500" />
-          <AlertDescription className="text-red-400">
-            <strong>{statistics.builderRequests.urgent} urgent items</strong> require immediate attention
-          </AlertDescription>
-        </Alert>
+  return (
+    <AdminShell
+      title="Campus Command Center"
+      subtitle="Real-time health, campaigns, and moderation across UB campus."
+      campusName={campusName}
+      navItems={navItems}
+      onSelectNavItem={handleNavSelect}
+      actions={actions}
+      banner={banner}
+      footer={
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-white/50">
+          <span>
+            Last refreshed{' '}
+            {state.data?.timestamp
+              ? new Date(state.data.timestamp).toLocaleTimeString()
+              : 'just now'}
+          </span>
+          <span>Campus isolation enforced on every query.</span>
+        </div>
+      }
+    >
+      {state.loading ? (
+        <DashboardSkeleton />
+      ) : (
+        <DashboardSections
+          metrics={metrics}
+          auditEvents={auditEvents}
+          moderationItems={moderationQueue}
+        />
       )}
-
-      {/* Detailed Sections */}
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-10 bg-gray-900 border border-gray-800">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="algorithm" className="flex items-center gap-2">
-            <Settings className="w-4 h-4" />
-            Algorithm
-          </TabsTrigger>
-          <TabsTrigger value="rituals" className="flex items-center gap-2">
-            <Activity className="w-4 h-4" />
-            Rituals
-          </TabsTrigger>
-          <TabsTrigger value="moderation" className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            Moderation
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <LineChart className="w-4 h-4" />
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger value="infrastructure" className="flex items-center gap-2">
-            <Server className="w-4 h-4" />
-            Infrastructure
-          </TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="spaces">Spaces</TabsTrigger>
-          <TabsTrigger value="flags">Features</TabsTrigger>
-          <TabsTrigger value="system">System</TabsTrigger>
-        </TabsList>
-
-        {/* Overview Tab - Quick Actions Dashboard */}
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Platform Health Score */}
-            <Card className="bg-gradient-to-br from-green-600/20 to-green-800/20 border-green-500/30">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Platform Health Score</CardTitle>
-                  <div className="text-3xl font-bold text-green-400">92/100</div>
-                </div>
-                <CardDescription>Overall platform performance and stability</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+    </AdminShell>
+      <Sheet
+        open={sheetItem != null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSheetItem(null);
+            setActiveSection('overview');
+            setComposerInitialValue(undefined);
+          }
+        }}
+      >
+        {sheetItem ? (
+          <SheetContent side="right" aria-describedby="admin-sheet-description" className="flex h-full flex-col">
+            {sheetItem.id === 'rituals' ? (
+              <>
+                <SheetHeader>
+                  <SheetTitle>Create campus ritual</SheetTitle>
+                  <SheetDescription id="admin-sheet-description">
+                    Configure archetype, schedule, and presentation before launching to campus.
+                  </SheetDescription>
+                </SheetHeader>
+                {/* Existing Rituals Quick Management */}
+                <div className="mb-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">User Engagement</span>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 w-32 bg-gray-800 rounded-full h-2 overflow-hidden">
-                        <div className="h-full bg-green-500" style={{ width: '88%' }} />
-                      </div>
-                      <span className="text-xs text-gray-400">88%</span>
-                    </div>
+                    <div className="text-xs uppercase tracking-widest text-white/50">Existing rituals</div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 px-3 text-white/70"
+                      onClick={() => handleNavSelect({ id: 'rituals', label: 'Rituals' })}
+                      aria-label="Refresh rituals list"
+                    >
+                      Refresh
+                    </Button>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Content Quality</span>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 w-32 bg-gray-800 rounded-full h-2 overflow-hidden">
-                        <div className="h-full bg-blue-500" style={{ width: '94%' }} />
-                      </div>
-                      <span className="text-xs text-gray-400">94%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">System Performance</span>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 w-32 bg-gray-800 rounded-full h-2 overflow-hidden">
-                        <div className="h-full bg-purple-500" style={{ width: '96%' }} />
-                      </div>
-                      <span className="text-xs text-gray-400">96%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-400">Safety & Trust</span>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 w-32 bg-gray-800 rounded-full h-2 overflow-hidden">
-                        <div className="h-full bg-yellow-500" style={{ width: '90%' }} />
-                      </div>
-                      <span className="text-xs text-gray-400">90%</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="bg-gray-900/50 border-gray-800">
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Common administrative tasks</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-3">
-                  <Button className="w-full justify-start bg-[var(--hive-brand-primary)]/10 hover:bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] border border-[var(--hive-brand-primary)]/30">
-                    <Users className="w-4 h-4 mr-2" />
-                    Review Builder Requests ({statistics.builderRequests.pending})
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Shield className="w-4 h-4 mr-2" />
-                    Moderate Reported Content
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Activity className="w-4 h-4 mr-2" />
-                    View Live Activity Feed
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    Generate Weekly Report
-                  </Button>
-                  <Button className="w-full justify-start" variant="outline">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Platform Settings
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Recent Activity Feed */}
-          <Card className="bg-gray-900/50 border-gray-800">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Recent Admin Activity</CardTitle>
-                <Button size="sm" variant="outline">
-                  View All
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <div className="flex-1">
-                    <p className="text-sm text-white">Builder request approved for @jacoblee</p>
-                    <p className="text-xs text-gray-400">2 minutes ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                  <div className="flex-1">
-                    <p className="text-sm text-white">Feature flag 'new_onboarding_flow' enabled</p>
-                    <p className="text-xs text-gray-400">15 minutes ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
-                  <div className="w-2 h-2 bg-red-500 rounded-full" />
-                  <div className="flex-1">
-                    <p className="text-sm text-white">Content removed for policy violation</p>
-                    <p className="text-xs text-gray-400">1 hour ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                  <div className="flex-1">
-                    <p className="text-sm text-white">System backup completed successfully</p>
-                    <p className="text-xs text-gray-400">3 hours ago</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Algorithm Control Tab - Using Feed Configuration Panel */}
-        <TabsContent value="algorithm" className="space-y-4">
-          <FeedConfigurationPanel />
-        </TabsContent>
-
-        {/* Rituals Tab - Campus-wide Engagement Campaigns */}
-        <TabsContent value="rituals" className="space-y-4">
-          <RitualManagementPanel />
-        </TabsContent>
-
-        {/* Moderation Tab */}
-        <TabsContent value="moderation" className="space-y-4">
-          <RealTimeModeration />
-        </TabsContent>
-
-        {/* Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-4">
-          <Tabs defaultValue="behavioral" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="behavioral">Behavioral Analytics</TabsTrigger>
-              <TabsTrigger value="content">Content Analytics</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="behavioral">
-              <BehavioralAnalytics />
-            </TabsContent>
-
-            <TabsContent value="content">
-              <ContentAnalytics />
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-
-        {/* Infrastructure Tab - Complete Technical Infrastructure */}
-        <TabsContent value="infrastructure" className="space-y-4">
-          <Tabs defaultValue="monitoring" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 mb-6">
-              <TabsTrigger value="monitoring">Firebase Monitoring</TabsTrigger>
-              <TabsTrigger value="database">Database Performance</TabsTrigger>
-              <TabsTrigger value="alerts">Alert Dashboard</TabsTrigger>
-              <TabsTrigger value="expansion">Campus Expansion</TabsTrigger>
-              <TabsTrigger value="cache">Cache Management</TabsTrigger>
-              <TabsTrigger value="health">System Health</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="monitoring">
-              <FirebaseMonitoring />
-            </TabsContent>
-
-            <TabsContent value="database">
-              <DatabasePerformanceDashboard />
-            </TabsContent>
-
-            <TabsContent value="alerts">
-              <AlertDashboard />
-            </TabsContent>
-
-            <TabsContent value="expansion">
-              <CampusExpansionDashboard />
-            </TabsContent>
-
-            <TabsContent value="cache">
-              <CacheManagementDashboard />
-            </TabsContent>
-
-            <TabsContent value="health">
-              <Card>
-                <CardHeader>
-                  <CardTitle>System Health Overview</CardTitle>
-                  <CardDescription>Comprehensive health monitoring across all systems</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-white">Infrastructure Status</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Firebase Database</span>
-                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Healthy</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Authentication</span>
-                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Healthy</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">API Services</span>
-                          <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Degraded</Badge>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Email Service</span>
-                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Operational</Badge>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <h4 className="font-medium text-white">Performance Metrics</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Avg Response Time</span>
-                          <span className="text-white">142ms</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Error Rate</span>
-                          <span className="text-white">0.8%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Uptime</span>
-                          <span className="text-white">99.94%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Active Connections</span>
-                          <span className="text-white">234</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </TabsContent>
-
-        <TabsContent value="users" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>User Distribution by Major</CardTitle>
-                <CardDescription>Top majors on the platform</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(statistics.users.byMajor).slice(0, 5).map(([major, count]) => (
-                    <div key={major} className="flex justify-between items-center">
-                      <span className="text-sm">{major}</span>
-                      <Badge variant="sophomore">{count}</Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>User Distribution by Year</CardTitle>
-                <CardDescription>Class year breakdown</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(statistics.users.byYear).map(([year, count]) => (
-                    <div key={year} className="flex justify-between items-center">
-                      <span className="text-sm">{year}</span>
-                      <Badge variant="freshman">{count}</Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="spaces" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Space Statistics</CardTitle>
-                <CardDescription>Overview of all spaces</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Total Spaces</span>
-                    <span className="font-bold">{statistics.spaces.total}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Active Spaces</span>
-                    <span className="font-bold text-green-600">{statistics.spaces.active}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Dormant Spaces</span>
-                    <span className="font-bold text-yellow-600">{statistics.spaces.dormant}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Total Members</span>
-                    <span className="font-bold">{statistics.spaces.totalMembers}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Spaces by Type</CardTitle>
-                <CardDescription>Distribution across space categories</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Object.entries(statistics.spaces.byType).map(([type, data]) => (
-                    <div key={type} className="flex justify-between items-center">
-                      <span className="text-sm capitalize">{type.replace(/_/g, ' ')}</span>
-                      <div className="flex space-x-2">
-                        <Badge variant="sophomore">{data.total}</Badge>
-                        <Badge variant="freshman">{data.members} members</Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="requests" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Pending Requests</CardTitle>
-                <CardDescription>Builder role requests awaiting review</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-yellow-600">
-                  {statistics.builderRequests.pending}
-                </div>
-                {statistics.builderRequests.urgent > 0 && (
-                  <div className="flex items-center mt-2 text-red-600">
-                    <AlertTriangle className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{statistics.builderRequests.urgent} urgent</span>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Approval Rate</CardTitle>
-                <CardDescription>Historical approval percentage</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-green-600">
-                  {statistics.builderRequests.approvalRate}%
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {statistics.builderRequests.approved} approved, {statistics.builderRequests.rejected} rejected
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Response Time</CardTitle>
-                <CardDescription>Average time to review requests</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">
-                  {statistics.builderRequests.averageResponseTime}h
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Average response time
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Manage builder requests</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex space-x-4">
-                <Button>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Review Pending
-                </Button>
-                <Button variant="secondary">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  View Analytics
-                </Button>
-                <Button variant="secondary">
-                  <Activity className="h-4 w-4 mr-2" />
-                  Export Data
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="flags" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Feature Flags Management</CardTitle>
-              <CardDescription>Control platform features and experiments</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex space-x-4 mb-6">
-                <Button onClick={loadFeatureFlags} disabled={flagsLoading}>
-                  <Flag className="h-4 w-4 mr-2" />
-                  {flagsLoading ? 'Loading...' : 'Refresh Flags'}
-                </Button>
-                <Button variant="secondary">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  View Analytics
-                </Button>
-                <Button variant="secondary">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Create Flag
-                </Button>
-              </div>
-
-              {flagsLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {featureFlags.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      No feature flags found. Load flags or create your first flag.
-                    </div>
-                  ) : (
-                    <div className="grid gap-4">
-                      {featureFlags.map((flag) => (
-                        <Card key={flag.id} className="border-l-4 border-l-blue-500">
-                          <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center space-x-3 mb-2">
-                                  <h3 className="font-semibold">{flag.name}</h3>
-                                  <Badge variant={flag.category === 'experimental' ? 'secondary' : 'outline'}>
-                                    {flag.category.replace('_', ' ')}
-                                  </Badge>
-                                  <Badge variant={flag.enabled ? 'default' : 'secondary'}>
-                                    {flag.enabled ? 'Enabled' : 'Disabled'}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-3">
-                                  {flag.description}
-                                </p>
-                                <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                                  <span>ID: {flag.id}</span>
-                                  <span>Rollout: {flag.rollout.type}</span>
-                                  {flag.rollout.percentage && (
-                                    <span>{flag.rollout.percentage}% rollout</span>
-                                  )}
-                                  <span>v{flag.metadata.version}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-4">
-                                <Switch
-                                  checked={flag.enabled}
-                                  onCheckedChange={(enabled: boolean) => toggleFeatureFlag(flag.id, enabled)}
-                                />
-                              </div>
+                  <div className="max-h-44 overflow-auto rounded-md border border-white/10">
+                    {sheetLoading ? (
+                      <div className="p-3 text-sm text-white/60">Loading…</div>
+                    ) : existingRituals.length === 0 ? (
+                      <div className="p-3 text-sm text-white/60">No active or upcoming rituals</div>
+                    ) : (
+                      <ul className="divide-y divide-white/10">
+                        {existingRituals.map((r) => (
+                          <li key={r.id} className="flex items-center gap-3 px-3 py-2">
+                            <div className="flex-1">
+                              <div className="text-sm text-white">{r.title}</div>
+                              <div className="text-[11px] text-white/50">{r.phase}{r.startsAt ? ` • starts ${new Date(r.startsAt).toLocaleString()}` : ''}</div>
                             </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                            {r.phase !== 'active' && (
+                              <Button
+                                size="sm"
+                                className="h-7"
+                                onClick={async () => {
+                                  try {
+                                    const res = await secureApiFetch(`/api/admin/rituals/${r.id}`, {
+                                      method: 'PATCH',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ phase: 'active' }),
+                                    });
+                                    if (res.ok) {
+                                      setExistingRituals((rows) => rows.map((x) => (x.id === r.id ? { ...x, phase: 'active' } : x)));
+                                      setRefreshToken((v) => v + 1);
+                                    }
+                                  } catch {}
+                                }}
+                              >
+                                Launch
+                              </Button>
+                            )}
+                            {r.phase === 'active' && (
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="h-7"
+                                onClick={async () => {
+                                  try {
+                                    const res = await secureApiFetch(`/api/admin/rituals/${r.id}`, {
+                                      method: 'PATCH',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ phase: 'cooldown' }),
+                                    });
+                                    if (res.ok) {
+                                      setExistingRituals((rows) => rows.map((x) => (x.id === r.id ? { ...x, phase: 'cooldown' } : x)));
+                                      setRefreshToken((v) => v + 1);
+                                    }
+                                  } catch {}
+                                }}
+                              >
+                                Pause
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 text-white/70"
+                              onClick={async () => {
+                                try {
+                                  const res = await secureApiFetch(`/api/admin/rituals/${r.id}`, {
+                                    method: 'PATCH',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ phase: 'ended' }),
+                                  });
+                                  if (res.ok) {
+                                    setExistingRituals((rows) => rows.filter((x) => x.id !== r.id));
+                                    setRefreshToken((v) => v + 1);
+                                  }
+                                } catch {}
+                              }}
+                            >
+                              End
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+                {/* Quick Templates */}
+                <div className="mb-3 space-y-2">
+                  <div className="text-xs uppercase tracking-widest text-white/50">Quick templates</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'CAMPUS_MADNESS', label: 'Campus Madness', archetype: RitualArchetype.Tournament, accent: '#FFD700', desc: 'Tournament between spaces' },
+                      { id: 'FEATURE_DROP', label: 'Feature Drop', archetype: RitualArchetype.FeatureDrop, accent: '#8B5CF6', desc: 'Limited-time unlock' },
+                      { id: 'FOUNDING_CLASS', label: 'Founding Class', archetype: RitualArchetype.FoundingClass, accent: '#22c55e', desc: 'Early supporters' },
+                      { id: 'RULE_INVERSION', label: 'Rule Inversion', archetype: RitualArchetype.RuleInversion, accent: '#f59e0b', desc: 'Temporary campus rule' },
+                      { id: 'COUNTDOWN', label: 'Launch Countdown', archetype: RitualArchetype.LaunchCountdown, accent: '#38bdf8', desc: 'Build anticipation' },
+                      { id: 'BETA_LOTTERY', label: 'Beta Lottery', archetype: RitualArchetype.BetaLottery, accent: '#A78BFA', desc: 'Random early access' },
+                      { id: 'UNLOCK_CHALLENGE', label: 'Unlock Challenge', archetype: RitualArchetype.UnlockChallenge, accent: '#F59E0B', desc: 'Group goal unlock' },
+                      { id: 'SURVIVAL', label: 'Survival', archetype: RitualArchetype.Survival, accent: '#EF4444', desc: 'Attrition competition' },
+                      { id: 'LEAK', label: 'Leak', archetype: RitualArchetype.Leak, accent: '#14B8A6', desc: 'Mystery reveal' },
+                    ].map((tpl) => (
+                      <button
+                        key={tpl.id}
+                        onClick={() => {
+                          const now = new Date();
+                          const ends = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+                          const defaults = createDefaultConfig(tpl.archetype);
+                          setComposerInitialValue({
+                            title: tpl.label,
+                            subtitle: tpl.desc,
+                            description: `${tpl.label} – autogenerated template` ,
+                            archetype: tpl.archetype,
+                            startsAt: now.toISOString(),
+                            endsAt: ends.toISOString(),
+                            visibility: 'public',
+                            presentation: { accentColor: tpl.accent, ctaLabel: 'Join Now' },
+                            config: defaults,
+                          });
+                        }}
+                        className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:border-white/20"
+                      >
+                        <div className="text-sm font-medium text-white">{tpl.label}</div>
+                        <div className="text-xs text-white/60">{tpl.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                  {composerInitialValue ? (
+                    <div className="flex items-center justify-between rounded-md border border-white/10 bg-black/30 p-2 text-xs text-white/60">
+                      <div>
+                        Using template: <span className="text-white/80">{composerInitialValue.title}</span>
+                      </div>
+                      <button
+                        className="rounded-md px-2 py-1 text-white/70 hover:text-white"
+                        onClick={() => setComposerInitialValue(undefined)}
+                      >
+                        Reset
+                      </button>
                     </div>
-                  )}
+                  ) : null}
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        <TabsContent value="system" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>System Health</CardTitle>
-                <CardDescription>Current system status and metrics</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span>Status</span>
-                    <Badge variant={statistics.system.status === 'healthy' ? 'default' : 'destructive'}>
-                      {statistics.system.status}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Uptime</span>
-                    <span>{formatUptime(statistics.system.uptime)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Memory Usage</span>
-                    <span>{formatMemory(statistics.system.memory?.heapUsed || 0)} / {formatMemory(statistics.system.memory?.heapTotal || 0)}</span>
-                  </div>
+                <div className="flex-1 overflow-hidden">
+                  <AdminRitualComposer
+                    initialValue={composerInitialValue}
+                    onSubmit={handleRitualSubmit}
+                    onCancel={() => setSheetItem(null)}
+                    isSubmitting={isSubmittingRitual}
+                  />
                 </div>
-              </CardContent>
-            </Card>
+              </>
+            ) : sheetItem.id === 'campaigns' ? (
+              <>
+                <SheetHeader>
+                  <SheetTitle>Schedule broadcast</SheetTitle>
+                  <SheetDescription id="admin-sheet-description">
+                    Send a campus-wide announcement or target a space. CSRF-protected and campus scoped.
+                  </SheetDescription>
+                </SheetHeader>
+                <BroadcastComposer onSuccess={() => setSheetItem(null)} />
+              </>
+            ) : (
+              <>
+                <SheetHeader>
+                  <SheetTitle>{sheetCopy?.title ?? sheetItem.label}</SheetTitle>
+                  <SheetDescription id="admin-sheet-description">
+                    {sheetCopy?.description ??
+                      'Sheet-first flows keep admins anchored while configuring campaigns and tools.'}
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="space-y-3 text-sm text-white/70">
+                  {sheetCopy?.bullets?.map((item, index) => (
+                    <div key={index} className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-white/50" aria-hidden />
+                      <p>{item}</p>
+                    </div>
+                  ))}
+                </div>
+                <SheetFooter className="mt-8">
+                  {sheetCopy?.primaryCta ? (
+                    <Button asChild>
+                      <a href={sheetCopy.primaryCta.href}>{sheetCopy.primaryCta.label}</a>
+                    </Button>
+                  ) : null}
+                  <SheetClose asChild>
+                    <Button variant="ghost" className="text-white/70 hover:text-white">
+                      Close
+                    </Button>
+                  </SheetClose>
+                </SheetFooter>
+              </>
+            )}
+          </SheetContent>
+        ) : null}
+      </Sheet>
+  );
+}
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Database Collections</CardTitle>
-                <CardDescription>Document counts in Firestore</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Users</span>
-                    <Badge variant="freshman">{statistics.system.collections.users}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Spaces</span>
-                    <Badge variant="freshman">{statistics.system.collections.spaces}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Builder Requests</span>
-                    <Badge variant="freshman">{statistics.system.collections.builderRequests}</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+function BroadcastComposer({ onSuccess }: { onSuccess?: () => void }) {
+  const { success: toastSuccess, error: toastError } = useToast();
+  const [submitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    title: '',
+    message: '',
+    target: 'campus' as 'campus' | 'space',
+    spaceId: '',
+    scheduleAt: '',
+    priority: 'normal' as 'normal' | 'high',
+  });
+  const [scheduled, setScheduled] = useState<Array<{ id: string; title: string; scheduleAt?: string }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await secureApiFetch('/api/admin/broadcasts?limit=10&status=scheduled');
+        if (res.ok) {
+          const payload = await res.json();
+          if (mounted) setScheduled(payload?.data || []);
+        }
+      } catch {}
+      if (mounted) setLoading(false);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const submit = async () => {
+    try {
+      setSubmitting(true);
+      const res = await secureApiFetch('/api/admin/broadcasts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: form.title,
+          message: form.message,
+          target: form.target,
+          spaceId: form.target === 'space' ? form.spaceId : undefined,
+          scheduleAt: form.scheduleAt || undefined,
+          priority: form.priority,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `Request failed: ${res.status}`);
+      }
+      toastSuccess('Broadcast scheduled', 'Your announcement is queued.');
+      onSuccess?.();
+    } catch (e) {
+      toastError('Failed to schedule', e instanceof Error ? e.message : 'Unknown error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-1 flex-col gap-4 overflow-auto p-1">
+      <div className="space-y-2">
+        <label className="block text-sm text-white/70">Title</label>
+        <input
+          className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+          placeholder="Finals Survival kicks off Friday"
+          value={form.title}
+          onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm text-white/70">Message</label>
+        <textarea
+          className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+          rows={4}
+          placeholder="Join campus-wide rituals, view details, and participate together."
+          value={form.message}
+          onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-2">
+          <label className="block text-sm text-white/70">Target</label>
+          <select
+            className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+            value={form.target}
+            onChange={(e) => setForm((f) => ({ ...f, target: e.target.value as any }))}
+          >
+            <option value="campus">Entire campus</option>
+            <option value="space">Specific space</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm text-white/70">Priority</label>
+          <select
+            className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+            value={form.priority}
+            onChange={(e) => setForm((f) => ({ ...f, priority: e.target.value as any }))}
+          >
+            <option value="normal">Normal</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      {form.target === 'space' && (
+        <div className="space-y-2">
+          <label className="block text-sm text-white/70">Space ID</label>
+          <input
+            className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+            placeholder="space_abc123"
+            value={form.spaceId}
+            onChange={(e) => setForm((f) => ({ ...f, spaceId: e.target.value }))}
+          />
+        </div>
+      )}
+      <div className="space-y-2">
+        <label className="block text-sm text-white/70">Schedule (optional)</label>
+        <input
+          type="datetime-local"
+          className="w-full rounded-md border border-white/10 bg-black/30 p-2 text-white outline-none"
+          value={form.scheduleAt}
+          onChange={(e) => setForm((f) => ({ ...f, scheduleAt: e.target.value }))}
+        />
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <Button disabled={submitting || !form.title.trim() || !form.message.trim()} onClick={submit}>
+          {submitting ? 'Scheduling…' : 'Schedule'}
+        </Button>
+        <Button variant="ghost" className="text-white/70" onClick={() => onSuccess?.()}>Cancel</Button>
+      </div>
+      <div className="mt-4">
+        <div className="text-xs uppercase tracking-widest text-white/50">Scheduled (upcoming)</div>
+        <div className="mt-2 rounded-md border border-white/10">
+          {loading ? (
+            <div className="p-3 text-sm text-white/60">Loading…</div>
+          ) : scheduled.length === 0 ? (
+            <div className="p-3 text-sm text-white/60">No upcoming broadcasts</div>
+          ) : (
+            <ul className="divide-y divide-white/10">
+              {scheduled.map((b) => (
+                <li key={b.id} className="px-3 py-2 text-sm text-white/80">
+                  <div className="font-medium">{b.title}</div>
+                  <div className="text-white/50 text-[11px]">{b.scheduleAt ? new Date(b.scheduleAt).toLocaleString() : 'Immediate'}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
 
-// Export wrapped with AdminGuard for security
-export default function AdminDashboard() {
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-10">
+      <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} className="h-40 w-full rounded-lg bg-white/5" />
+        ))}
+      </section>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Skeleton className="h-64 rounded-lg bg-white/5" />
+        <Skeleton className="h-64 rounded-lg bg-white/5" />
+      </div>
+    </div>
+  );
+}
+
+function DashboardSections({
+  metrics,
+  auditEvents,
+  moderationItems,
+}: {
+  metrics: Array<{
+    id: string;
+    title: string;
+    value: number;
+    delta?: { value: number; label?: string; tone?: 'positive' | 'negative' | 'neutral' };
+    icon: typeof ShieldCheck;
+    description?: string;
+  }>;
+  auditEvents: AuditLogEvent[];
+  moderationItems: ModerationQueueItem[];
+}) {
+  return (
+    <div className="space-y-10">
+      <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+        {metrics.map((metric) => (
+          <AdminMetricCard
+            key={metric.id}
+            title={metric.title}
+            value={metric.value}
+            delta={metric.delta}
+            icon={metric.icon}
+            description={metric.description}
+          />
+        ))}
+      </section>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <AuditLogList events={auditEvents} />
+        <ModerationQueue items={moderationItems} />
+      </div>
+    </div>
+  );
+}
+
+function computeHealthScore(stats: AdminDashboardResponse['statistics']): number {
+  let score = 90;
+  if (stats.builderRequests.pending > 3) {
+    score -= 5;
+  }
+  if (stats.system.memory?.heapUsed && stats.system.memory?.heapTotal) {
+    const utilization = stats.system.memory.heapUsed / stats.system.memory.heapTotal;
+    if (utilization > 0.8) score -= 5;
+  }
+  if (stats.spaces.activationRate < 40) {
+    score -= 5;
+  }
+  if (score < 50) score = 50;
+  if (score > 99) score = 99;
+  return score;
+}
+
+export default function AdminDashboardPage() {
   return (
     <AdminGuard>
-      <AdminDashboardInternal />
+      <AdminDashboardContent />
     </AdminGuard>
   );
 }

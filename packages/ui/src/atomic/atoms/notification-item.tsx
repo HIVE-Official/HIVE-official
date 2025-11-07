@@ -13,7 +13,6 @@
 
 import React, { useState } from 'react';
 import {
-  CheckCircle,
   Clock,
   Users,
   Heart,
@@ -22,11 +21,8 @@ import {
   AlertCircle,
   Sparkles,
   MessageCircle,
-  Wrench,
-  Calendar,
   Trophy,
-  Eye,
-  EyeOff
+  Eye
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { HiveNotification } from '../../types/notifications';
@@ -50,7 +46,7 @@ interface MotionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 }
 
 const MotionDiv = React.forwardRef<HTMLDivElement, MotionDivProps>(
-  ({ animate, transition, initial, whileHover, whileTap, layoutId, className, children, ...props }, ref) => (
+  ({ className, children, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
       {children}
     </div>
@@ -59,7 +55,7 @@ const MotionDiv = React.forwardRef<HTMLDivElement, MotionDivProps>(
 MotionDiv.displayName = 'MotionDiv';
 
 const MotionButton = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
-  ({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (
+  ({ className, children, ...props }, ref) => (
     <button ref={ref} className={className} {...props}>
       {children}
     </button>
@@ -100,7 +96,6 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
   index = 0,
   className,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const [showActions, setShowActions] = useState(false);
 
   // Get notification icon based on type and category
@@ -125,14 +120,14 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 
   // Get behavioral messaging
   const getBehavioralMessage = () => {
-    const { category, type, metadata } = notification;
+    const { category, metadata } = notification;
 
     // "Someone needs you" framing
     if (category === 'someone_needs_you') {
       return {
         prefix: "🆘",
         emphasis: "needs your help",
-        context: metadata?.urgencyLevel === 'immediate' ? "Right now" : "Today"
+        context: metadata?.['urgencyLevel'] === 'immediate' ? "Right now" : "Today"
       };
     }
 
@@ -141,7 +136,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
       return {
         prefix: "🏆",
         emphasis: "You're recognized!",
-        context: metadata?.exclusivityText || "Top contributor"
+        context: (metadata as any)?.['exclusivityText'] || "Top contributor"
       };
     }
 
@@ -202,14 +197,8 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
         delay: index * 0.05,
         ease: HIVE_EASING.silk
       }}
-      onMouseEnter={() => {
-        setIsHovered(true);
-        setShowActions(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setShowActions(false);
-      }}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
       onClick={handleClick}
       whileHover={{ x: 2 }}
     >

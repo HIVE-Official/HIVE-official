@@ -1,0 +1,196 @@
+{
+    "version": "2025-02-13",
+    "slots": {
+        "S0": {
+            "name": "Shell",
+            "description": "Global navigation frame and toast anchor.",
+            "allowedComponents": [
+                "UniversalShell",
+                "AppShellNavigation"
+            ],
+            "responsiveBehavior": {
+                "desktop": "fixed-left",
+                "mobile": "top-bar"
+            }
+        },
+        "S1": {
+            "name": "Header",
+            "description": "Primary page header with title, campus context, and role chips.",
+            "allowedComponents": [
+                "CampusHeader",
+                "SpaceHeader",
+                "ProfileHeader"
+            ],
+            "responsiveBehavior": {
+                "desktop": "sticky-top",
+                "mobile": "stacked"
+            }
+        },
+        "S2": {
+            "name": "Pinned",
+            "description": "One banner plus up to two pins; houses ritual strip on Feed.",
+            "allowedComponents": [
+                "RitualStrip",
+                "PinnedCard",
+                "AnnouncementBanner"
+            ],
+            "responsiveBehavior": {
+                "desktop": "below-header",
+                "mobile": "collapsible-card"
+            }
+        },
+        "S3": {
+            "name": "Stream",
+            "description": "Chronological feed of cards and timeline items.",
+            "allowedComponents": [
+                "PostCard",
+                "EventCard",
+                "SystemCard",
+                "RecapCard"
+            ],
+            "responsiveBehavior": {
+                "desktop": "single-column",
+                "mobile": "single-column"
+            }
+        },
+        "S4": {
+            "name": "Composer",
+            "description": "Action/composer surface; optional on feed, required on space board.",
+            "allowedComponents": [
+                "ComposerChat",
+                "ToolComposer"
+            ],
+            "responsiveBehavior": {
+                "desktop": "fixed-below-header",
+                "mobile": "sticky-bottom"
+            }
+        },
+        "Z1": {
+            "name": "Sheet",
+            "description": "First-class detail surfaces that slide over S3.",
+            "allowedComponents": [
+                "EventSheet",
+                "ProfileSheet",
+                "ToolSheet"
+            ],
+            "responsiveBehavior": {
+                "desktop": "side-panel",
+                "mobile": "bottom-sheet"
+            }
+        },
+        "Z2": {
+            "name": "Modal",
+            "description": "Critical confirmation flows and blockers.",
+            "allowedComponents": [
+                "ConfirmModal",
+                "CsrfWarningModal"
+            ],
+            "responsiveBehavior": {
+                "desktop": "centered",
+                "mobile": "full-bleed"
+            }
+        },
+        "R": {
+            "name": "Rail",
+            "description": "Desktop right-rail for live widgets and leader controls.",
+            "allowedComponents": [
+                "RailWidget",
+                "LeaderOpsStack"
+            ],
+            "responsiveBehavior": {
+                "desktop": "right-column",
+                "mobile": "remapped-to-now-card"
+            }
+        }
+    },
+    "railSlots": {
+        "R1": {
+            "label": "Now",
+            "maxInstances": 1
+        },
+        "R2": {
+            "label": "Widgets",
+            "maxInstances": 2
+        },
+        "R3": {
+            "label": "Upcoming",
+            "maxInstances": 3
+        },
+        "R4": {
+            "label": "LeaderOps",
+            "maxInstances": 1,
+            "collapsedByDefault": true
+        }
+    },
+    "capabilities": {
+        "pinned": {
+            "maxPins": 2,
+            "allowBanner": true,
+            "dedupeAgainstRail": true
+        },
+        "composer": {
+            "maxActions": 6,
+            "enforceSinglePrimaryCta": true
+        },
+        "card": {
+            "maxPrimaryCtas": 1,
+            "requireExplainabilityChip": true
+        },
+        "tool": {
+            "maxActions": 2,
+            "maxFields": 12
+        }
+    },
+    "temporalStates": [
+        "open",
+        "remind",
+        "act",
+        "close",
+        "recap"
+    ],
+    "mobileTransforms": {
+        "rail": {
+            "remapTo": [
+                "NowCard",
+                "TodayDrawer"
+            ]
+        },
+        "sheet": {
+            "presentation": "bottom-sheet"
+        }
+    },
+    "cognitiveBudgets": {
+        "feed": {
+            "maxPins": 2,
+            "maxRailWidgets": 0,
+            "composerActions": 0,
+            "cardPrimaryCtas": 1
+        },
+        "spaceBoard": {
+            "maxPins": 2,
+            "maxRailWidgets": 3,
+            "railNowItems": 1,
+            "composerActions": 6,
+            "cardPrimaryCtas": 1
+        },
+        "spaceCalendar": {
+            "maxRailWidgets": 2,
+            "sheetQuickActions": 3,
+            "cardPrimaryCtas": 1
+        },
+        "profile": {
+            "maxRailWidgets": 1,
+            "recommendationCtas": 1
+        },
+        "hiveLab": {
+            "composerActions": 2,
+            "toolFields": 12,
+            "maxRailWidgets": 2
+        },
+        "spaceAdmin": {
+            "maxRailWidgets": 3,
+            "proofExportsPerDay": 2,
+            "cardPrimaryCtas": 1
+        }
+    }
+}

@@ -1,277 +1,200 @@
-'use client';
+"use client";
 
-/**
- * 🔔 HIVE Complete Notification System
- *
- * Integrated notification system combining:
- * - Real-time notification bell with behavioral psychology
- * - Dropdown with "someone needs you" framing
- * - Toast manager for urgent alerts
- * - Seamless integration with existing UI
- */
+import * as React from "react";
+import { cn } from "../../lib/utils";
+import { NotificationBell } from "../atoms/notification-bell";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "../atoms/popover";
+import {
+  NotificationDropdown,
+  type NotificationDropdownProps,
+  type NotificationListItem,
+} from "../molecules/notification-dropdown";
+import {
+  NotificationToastContainer,
+  type NotificationToastContainerProps,
+  type ToastNotification,
+} from "./notification-toast-container";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { NotificationBell } from '../atoms/notification-bell';
-import { NotificationDropdown } from '../molecules/notification-dropdown';
-import { NotificationToastManager } from '../molecules/notification-toast-manager';
-
-// Motion components for animation consistency
-interface MotionDivProps extends React.HTMLAttributes<HTMLDivElement> {
-  animate?: any;
-  transition?: any;
-  initial?: any;
-  exit?: any;
-}
-
-const MotionDiv = React.forwardRef<HTMLDivElement, MotionDivProps>(
-  ({ animate, transition, initial, exit, className, children, ...props }, ref) => (
-    <div ref={ref} className={className} {...props}>
-      {children}
-    </div>
-  )
-);
-MotionDiv.displayName = 'MotionDiv';
-
-// Mock notification data for component development
-// In production, this would come from the useRealtimeNotifications hook
-interface MockNotification {
-  id: string;
-  title: string;
-  message: string;
-  type: 'connection' | 'space' | 'help_request' | 'achievement' | 'system';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  category: 'social_proof' | 'someone_needs_you' | 'insider_knowledge' | 'community_growth';
-  isRead: boolean;
-  timestamp: { toDate: () => Date };
-  actionUrl?: string;
-  actionText?: string;
-  metadata?: any;
-  urgencyLevel?: 'immediate' | 'today' | 'this_week';
-  socialProofText?: string;
-  exclusivityText?: string;
-}
-
-export interface NotificationSystemProps {
-  /** Custom notifications data (for testing or override) */
-  notifications?: MockNotification[];
-  /** Unread count override */
-  unreadCount?: number;
-  /** Loading state */
-  loading?: boolean;
-  /** Error state */
-  error?: string | null;
-  /** Navigation handler */
-  onNavigate?: (url: string) => void;
-  /** Custom className */
-  className?: string;
-  /** Disabled state */
-  disabled?: boolean;
-}
-
-export const NotificationSystem: React.FC<NotificationSystemProps> = ({
-  notifications: propNotifications,
-  unreadCount: propUnreadCount,
-  loading = false,
-  error = null,
-  onNavigate,
-  className,
-  disabled = false,
-}) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [previousNotificationCount, setPreviousNotificationCount] = useState(0);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Mock notifications for demo (in production, use useRealtimeNotifications hook)
-  const mockNotifications: MockNotification[] = propNotifications || [
-    {
-      id: '1',
-      title: 'Sarah needs help with calculus',
-      message: 'She\'s stuck on derivatives and you helped her before!',
-      type: 'help_request',
-      priority: 'urgent',
-      category: 'someone_needs_you',
-      isRead: false,
-      timestamp: { toDate: () => new Date(Date.now() - 5 * 60 * 1000) },
-      actionUrl: '/spaces/math-help/posts/calc-derivatives',
-      actionText: 'Help Now',
-      metadata: {
-        senderName: 'Sarah Chen',
-        avatarUrl: '/api/placeholder/32/32',
-        urgencyLevel: 'immediate'
-      },
-      urgencyLevel: 'immediate',
-      socialProofText: '2 others are also helping',
-    },
-    {
-      id: '2',
-      title: 'You\'re now a Top Contributor!',
-      message: 'Your insights in Computer Science spaces are making a real impact.',
-      type: 'achievement',
-      priority: 'medium',
-      category: 'social_proof',
-      isRead: false,
-      timestamp: { toDate: () => new Date(Date.now() - 30 * 60 * 1000) },
-      actionUrl: '/profile/achievements',
-      actionText: 'View Achievement',
-      exclusivityText: 'You\'re in the top 5% of contributors',
-    },
-    {
-      id: '3',
-      title: 'New study group: Database Design',
-      message: 'CS majors are forming a study group for the midterm. Early access for active members!',
-      type: 'space',
-      priority: 'medium',
-      category: 'insider_knowledge',
-      isRead: false,
-      timestamp: { toDate: () => new Date(Date.now() - 2 * 60 * 60 * 1000) },
-      actionUrl: '/spaces/cs-database-design',
-      actionText: 'Join Group',
-      exclusivityText: 'You\'re among the first to know',
-    },
-    {
-      id: '4',
-      title: 'Mike wants to connect',
-      message: 'You have 3 mutual connections and similar interests in Engineering.',
-      type: 'connection',
-      priority: 'medium',
-      category: 'social_proof',
-      isRead: true,
-      timestamp: { toDate: () => new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      actionUrl: '/profile/connections/requests',
-      actionText: 'View Request',
-      metadata: {
-        senderName: 'Mike Rodriguez',
-        avatarUrl: '/api/placeholder/32/32'
-      },
-      socialProofText: '3 mutual connections',
-    },
-  ];
-
-  const notifications = mockNotifications;
-  const unreadCount = propUnreadCount ?? notifications.filter(n => !n.isRead).length;
-  const hasUrgent = notifications.some(n => n.priority === 'urgent' && !n.isRead);
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isDropdownOpen]);
-
-  // Update previous count for toast manager
-  useEffect(() => {
-    setPreviousNotificationCount(notifications.length);
-  }, [notifications.length]);
-
-  // Notification action handlers
-  const handleMarkAsRead = async (notificationId: string) => {
-    console.log('Marking notification as read:', notificationId);
-    // In production: await markAsRead(notificationId);
-  };
-
-  const handleMarkAllAsRead = async () => {
-    console.log('Marking all notifications as read');
-    // In production: await markAllAsRead();
-  };
-
-  const handleDeleteNotification = async (notificationId: string) => {
-    console.log('Deleting notification:', notificationId);
-    // In production: await deleteNotification(notificationId);
-  };
-
-  const handleClearAll = async () => {
-    console.log('Clearing all notifications');
-    // In production: await clearAll();
-  };
-
-  const handleBellClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleDropdownClose = () => {
-    setIsDropdownOpen(false);
-  };
-
-  return (
-    <div className={className} ref={dropdownRef}>
-      {/* Notification Bell */}
-      <NotificationBell
-        unreadCount={unreadCount}
-        loading={loading}
-        hasError={!!error}
-        hasUrgent={hasUrgent}
-        onClick={handleBellClick}
-        disabled={disabled}
-        aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-      />
-
-      {/* Notification Dropdown */}
-      <AnimatePresence>
-        {isDropdownOpen && (
-          <NotificationDropdown
-            notifications={notifications as any}
-            unreadCount={unreadCount}
-            loading={loading}
-            error={error}
-            isOpen={isDropdownOpen}
-            onClose={handleDropdownClose}
-            onMarkAsRead={handleMarkAsRead}
-            onMarkAllAsRead={handleMarkAllAsRead}
-            onDeleteNotification={handleDeleteNotification}
-            onClearAll={handleClearAll}
-            onNavigate={onNavigate}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Toast Manager for High-Priority Notifications */}
-      <NotificationToastManager
-        notifications={notifications as any}
-        previousCount={previousNotificationCount}
-        onNavigate={onNavigate}
-      />
-    </div>
-  );
+const toastTypeByPriority: Record<
+  NonNullable<NotificationListItem["priority"]>,
+  ToastNotification["type"]
+> = {
+  urgent: "error",
+  high: "warning",
+  medium: "info",
+  low: "info",
 };
 
-// Hook version for easy integration with real data
-export const useNotificationSystem = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // In production, this would use the real hook:
-  // const {
-  //   notifications,
-  //   unreadCount,
-  //   loading,
-  //   error,
-  //   markAsRead,
-  //   markAllAsRead,
-  //   deleteNotification,
-  //   clearAll,
-  // } = useRealtimeNotifications();
-
+function toToastNotification(
+  notification: NotificationListItem,
+): ToastNotification {
   return {
-    // Mock data for development
-    notifications: [],
-    unreadCount: 0,
-    loading: false,
-    error: null,
-    isDropdownOpen,
-    setIsDropdownOpen,
-    // Mock handlers
-    markAsRead: async (id: string) => console.log('Mark as read:', id),
-    markAllAsRead: async () => console.log('Mark all as read'),
-    deleteNotification: async (id: string) => console.log('Delete:', id),
-    clearAll: async () => console.log('Clear all'),
+    id: notification.id,
+    title: notification.title,
+    description: notification.message,
+    type: toastTypeByPriority[notification.priority ?? "medium"],
+    duration: notification.priority === "urgent" ? 8000 : 6000,
   };
-};
+}
+
+export interface NotificationSystemProps
+  extends Omit<NotificationDropdownProps, "heading" | "className" | "error"> {
+  /**
+   * Optional className applied to the wrapper element.
+   */
+  className?: string;
+  /**
+   * Disable interaction with the notification bell.
+   */
+  disabled?: boolean;
+  /**
+   * Position for the toast container rendered for urgent notifications.
+   */
+  toastPosition?: NotificationToastContainerProps["position"];
+  /**
+   * Callback fired when the dropdown open state changes.
+   */
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * Optional error to display in the dropdown.
+   */
+  error?: NotificationDropdownProps["error"] | Error | null;
+}
+
+export const NotificationSystem = React.forwardRef<
+  HTMLDivElement,
+  NotificationSystemProps
+>(
+  (
+    {
+      notifications = [],
+      unreadCount = 0,
+      loading = false,
+      error = null,
+      className,
+      disabled = false,
+      toastPosition = "top-right",
+      onNavigate,
+      onMarkAsRead,
+      onMarkAllAsRead,
+      onClearAll,
+      onOpenChange,
+      ...props
+    },
+    ref,
+  ) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [toastNotifications, setToastNotifications] = React.useState<
+      ToastNotification[]
+    >([]);
+    const seenToastIdsRef = React.useRef<Set<string>>(new Set());
+
+    const handleOpenChange = React.useCallback(
+      (open: boolean) => {
+        setIsOpen(open);
+        onOpenChange?.(open);
+      },
+      [onOpenChange],
+    );
+
+    React.useEffect(() => {
+      if (!notifications.length) return;
+
+      const urgentCandidates = notifications.filter(
+        (notification) =>
+          !notification.isRead &&
+          (notification.priority === "urgent" ||
+            notification.priority === "high"),
+      );
+
+      if (!urgentCandidates.length) return;
+
+      const unseenToasts = urgentCandidates.filter(
+        (notification) => !seenToastIdsRef.current.has(notification.id),
+      );
+
+      if (!unseenToasts.length) return;
+
+      unseenToasts.forEach((notification) => {
+        seenToastIdsRef.current.add(notification.id);
+      });
+
+      setToastNotifications((prev) => [
+        ...unseenToasts.map(toToastNotification),
+        ...prev,
+      ]);
+    }, [notifications]);
+
+    const handleToastClose = React.useCallback((id: string) => {
+      setToastNotifications((prev) => prev.filter((toast) => toast.id !== id));
+    }, []);
+
+    const resolvedError =
+      typeof error === "string" ? error : error instanceof Error ? error.message : null;
+
+    const handleNavigate = React.useCallback(
+      (url: string, notification: NotificationListItem) => {
+        onNavigate?.(url, notification);
+        handleOpenChange(false);
+      },
+      [handleOpenChange, onNavigate],
+    );
+
+    return (
+      <div
+        ref={ref}
+        className={cn("relative inline-flex items-center", className)}
+      >
+        <Popover open={isOpen} onOpenChange={handleOpenChange}>
+          <PopoverTrigger asChild>
+            <NotificationBell
+              unreadCount={unreadCount}
+              loading={loading}
+              hasError={Boolean(resolvedError)}
+              disabled={disabled}
+              hasUrgent={notifications.some(
+                (notification) => notification.priority === "urgent",
+              )}
+              onClick={() => handleOpenChange(!isOpen)}
+            />
+          </PopoverTrigger>
+          <PopoverContent
+            align="end"
+            className="p-0 shadow-hive-level4"
+            sideOffset={14}
+          >
+            <NotificationDropdown
+              notifications={notifications}
+              unreadCount={unreadCount}
+              loading={loading}
+              error={resolvedError}
+              onNavigate={handleNavigate}
+              onMarkAsRead={onMarkAsRead}
+              onMarkAllAsRead={onMarkAllAsRead}
+              onClearAll={onClearAll}
+              {...props}
+            />
+          </PopoverContent>
+        </Popover>
+
+        {toastNotifications.length > 0 ? (
+          <NotificationToastContainer
+            notifications={toastNotifications}
+            onClose={handleToastClose}
+            position={toastPosition}
+          />
+        ) : null}
+      </div>
+    );
+  },
+);
+
+NotificationSystem.displayName = "NotificationSystem";
+
+export type { NotificationListItem };
 
 export default NotificationSystem;

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, User, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveInput } from "@hive/ui";
+import { HiveCard, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveFacultyInfoStepProps {
@@ -45,26 +44,17 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
       className="space-y-[var(--hive-spacing-8)] py-[var(--hive-spacing-6)] max-w-2xl mx-auto"
     >
       {/* Header */}
-      <div className="text-center space-y-[var(--hive-spacing-4)]">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-brand-primary)]/30"
-        >
-          <BookOpen className="w-8 h-8 text-[var(--hive-brand-primary)]" />
-        </motion.div>
-        
+      <div className="text-center space-y-[var(--hive-spacing-3)]">
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
         >
-          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
-            Faculty Information
+          <h2 className="text-2xl font-semibold text-[var(--hive-text-primary)]">
+            Faculty information
           </h2>
           <p className="text-[var(--hive-text-secondary)] mt-2">
-            Tell us your name so we can properly identify you for space management access.
+            Let us know how to address you when we review institutional access requests.
           </p>
         </motion.div>
       </div>
@@ -80,7 +70,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
           <div className="space-y-[var(--hive-spacing-5)]">
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hive-spacing-4)]">
-              <HiveInput
+              <Input
                 label="First Name"
                 placeholder="First name"
                 value={firstName}
@@ -90,7 +80,7 @@ export function HiveFacultyInfoStep({ data, updateData }: HiveFacultyInfoStepPro
                 required
               />
               
-              <HiveInput
+              <Input
                 label="Last Name"
                 placeholder="Last name"
                 value={lastName}

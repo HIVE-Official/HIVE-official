@@ -1,21 +1,16 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withAdminCampusIsolation(async (request, token) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '24h';
 
   try {
-    logger.info('Fetching Firebase metrics', { userId: auth.userId, range });
+    logger.info('Fetching Firebase metrics', { userId: token?.uid || 'unknown', range });
 
     // Calculate time range
     const now = new Date();
@@ -56,7 +51,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching Firebase metrics', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching Firebase metrics', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -109,9 +104,9 @@ async function getCollectionStats() {
   try {
     // Get document counts from major collections
     const [usersSnap, spacesSnap, postsSnap] = await Promise.all([
-      dbAdmin.collection('users').count().get(),
-      dbAdmin.collection('spaces').count().get(),
-      dbAdmin.collectionGroup('posts').count().get()
+      dbAdmin.collection('users').where('campusId', '==', CURRENT_CAMPUS_ID).count().get().catch(() => ({ data: () => ({ count: 0 }) } as any)),
+      dbAdmin.collection('spaces').where('campusId', '==', CURRENT_CAMPUS_ID).count().get().catch(() => ({ data: () => ({ count: 0 }) } as any)),
+      dbAdmin.collectionGroup('posts').where('campusId', '==', CURRENT_CAMPUS_ID).count().get().catch(() => ({ data: () => ({ count: 0 }) } as any)),
     ]);
 
     const totalDocs = usersSnap.data().count + spacesSnap.data().count + postsSnap.data().count;
@@ -147,7 +142,9 @@ async function getRecentOperations(since: Date) {
       .limit(10000);
 
     const operationsSnap = await operationsQuery.get();
-    const operations = operationsSnap.docs.map(doc => doc.data());
+    const operations = operationsSnap.docs
+      .map(doc => doc.data())
+      .filter((op: any) => typeof op.campusId === 'undefined' || op.campusId === CURRENT_CAMPUS_ID);
 
     const reads = operations.filter(op => op.action === 'firestore_read').length;
     const writes = operations.filter(op => op.action === 'firestore_write').length;
@@ -184,7 +181,7 @@ async function getAuthenticationMetrics(since: Date) {
 
     // Get user stats from Firebase Auth (via admin SDK)
     const [totalUsersResult, todaySignIns, todaySignUps] = await Promise.all([
-      dbAdmin.collection('users').count().get(),
+      dbAdmin.collection('users').where('campusId', '==', CURRENT_CAMPUS_ID).count().get(),
       getSignInsToday(),
       getSignUpsToday()
     ]);
@@ -235,11 +232,13 @@ async function getSignInsToday(): Promise<number> {
 
     const signInsQuery = dbAdmin.collection('admin_logs')
       .where('action', '==', 'user_login')
-      .where('timestamp', '>=', today)
-      .count();
+      .where('timestamp', '>=', today);
 
-    const result = await signInsQuery.get();
-    return result.data().count || 234;
+    const snap = await signInsQuery.get();
+    const filtered = snap.docs
+      .map(doc => doc.data())
+      .filter((d: any) => typeof d.campusId === 'undefined' || d.campusId === CURRENT_CAMPUS_ID);
+    return filtered.length || 234;
 
   } catch (error) {
     return 234;
@@ -255,6 +254,7 @@ async function getSignUpsToday(): Promise<number> {
     today.setHours(0, 0, 0, 0);
 
     const signUpsQuery = dbAdmin.collection('users')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('createdAt', '>=', today)
       .count();
 

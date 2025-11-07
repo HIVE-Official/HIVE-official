@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Schema for tool installation requests
 const ToolActionSchema = z.object({
@@ -29,6 +30,7 @@ async function fetchPersonalTools(userId: string): Promise<PersonalTool[]> {
     const userToolsSnapshot = await dbAdmin
       .collection('user_tools')
       .where('userId', '==', userId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('isInstalled', '==', true)
       .get();
 
@@ -103,7 +105,8 @@ export const POST = withAuthValidationAndErrors(
           lastUsed: null,
           usageCount: 0,
           quickLaunch: false,
-          settings: {}
+          settings: {},
+          campusId: CURRENT_CAMPUS_ID
         });
       } else if (action === 'uninstall') {
         // Remove tool from user's collection

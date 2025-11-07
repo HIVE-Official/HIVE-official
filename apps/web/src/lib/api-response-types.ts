@@ -3,7 +3,7 @@
  * Ensures consistent response formats across all API endpoints
  */
 
-export interface StandardSuccessResponse<T = any> {
+export interface StandardSuccessResponse<T = unknown> {
   success: true;
   data?: T;
   message?: string;
@@ -18,7 +18,7 @@ export interface StandardErrorResponse {
   success: false;
   error: string;
   code?: string;
-  details?: any;
+  details?: unknown;
   meta?: {
     timestamp: string;
     endpoint?: string;
@@ -39,7 +39,7 @@ export interface ValidationErrorDetails {
   code: string;
 }
 
-export type ApiResponse<T = any> = StandardSuccessResponse<T> | StandardErrorResponse;
+export type ApiResponse<T = unknown> = StandardSuccessResponse<T> | StandardErrorResponse;
 
 /**
  * Helper functions for creating consistent API responses
@@ -60,7 +60,7 @@ export class ApiResponseHelper {
   static error(
     error: string, 
     code?: string, 
-    details?: any, 
+    details?: unknown, 
     endpoint?: string
   ): StandardErrorResponse {
     return {

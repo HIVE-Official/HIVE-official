@@ -127,6 +127,9 @@ firebase/serviceAccountKey.json
 # Firebase debug logs
 *.log
 lint-output.txt
+apps/web/lint-report.txt
+apps/web/lint-full-report.txt
+apps/web/build-output.txt
 
 # Firebase cache
 .firebase/
@@ -139,6 +142,9 @@ test-dashboard.html
 debug-session.js
 clear-storage.html
 *.backup
+*.backup.*
+*.bak
+*.bak2
 
 # Migration and temporary scripts
 migrate-*.js

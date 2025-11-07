@@ -125,6 +125,33 @@
       ]
     },
     {
+      "collectionGroup": "ritual_action_completions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "completedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_votes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "matchupId", "order": "ASCENDING" },
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_matchups",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "rituals",
       "queryScope": "COLLECTION",
       "fields": [

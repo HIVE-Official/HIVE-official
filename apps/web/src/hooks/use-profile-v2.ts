@@ -95,7 +95,7 @@ export function useProfileV2(options: UseProfileOptions = {}): UseProfileReturn 
       toast({
         title: 'Failed to load profile',
         description: (err as Error).message,
-        variant: 'destructive'
+        type: 'error'
       });
     } finally {
       setLoading(false);
@@ -107,7 +107,7 @@ export function useProfileV2(options: UseProfileOptions = {}): UseProfileReturn 
       toast({
         title: 'Unauthorized',
         description: 'You can only update your own privacy settings',
-        variant: 'destructive'
+        type: 'error'
       });
       return false;
     }
@@ -137,7 +137,8 @@ export function useProfileV2(options: UseProfileOptions = {}): UseProfileReturn 
 
         toast({
           title: 'Privacy settings updated',
-          description: `${data.data.fieldsUpdated} settings were updated`
+          description: `${data.data.fieldsUpdated} settings were updated`,
+          type: 'success'
         });
 
         return true;
@@ -149,7 +150,7 @@ export function useProfileV2(options: UseProfileOptions = {}): UseProfileReturn 
       toast({
         title: 'Failed to update privacy',
         description: (err as Error).message,
-        variant: 'destructive'
+        type: 'error'
       });
       return false;
     }

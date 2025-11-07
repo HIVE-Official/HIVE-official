@@ -1,59 +1,29 @@
-/**
- * 🔔 HIVE Complete Notification System
- *
- * Integrated notification system combining:
- * - Real-time notification bell with behavioral psychology
- * - Dropdown with "someone needs you" framing
- * - Toast manager for urgent alerts
- * - Seamless integration with existing UI
- */
-import React from 'react';
-interface MockNotification {
-    id: string;
-    title: string;
-    message: string;
-    type: 'connection' | 'space' | 'help_request' | 'achievement' | 'system';
-    priority: 'low' | 'medium' | 'high' | 'urgent';
-    category: 'social_proof' | 'someone_needs_you' | 'insider_knowledge' | 'community_growth';
-    isRead: boolean;
-    timestamp: {
-        toDate: () => Date;
-    };
-    actionUrl?: string;
-    actionText?: string;
-    metadata?: any;
-    urgencyLevel?: 'immediate' | 'today' | 'this_week';
-    socialProofText?: string;
-    exclusivityText?: string;
-}
-export interface NotificationSystemProps {
-    /** Custom notifications data (for testing or override) */
-    notifications?: MockNotification[];
-    /** Unread count override */
-    unreadCount?: number;
-    /** Loading state */
-    loading?: boolean;
-    /** Error state */
-    error?: string | null;
-    /** Navigation handler */
-    onNavigate?: (url: string) => void;
-    /** Custom className */
+import * as React from "react";
+import { type NotificationDropdownProps, type NotificationListItem } from "../molecules/notification-dropdown";
+import { type NotificationToastContainerProps } from "./notification-toast-container";
+export interface NotificationSystemProps extends Omit<NotificationDropdownProps, "heading" | "className" | "error"> {
+    /**
+     * Optional className applied to the wrapper element.
+     */
     className?: string;
-    /** Disabled state */
+    /**
+     * Disable interaction with the notification bell.
+     */
     disabled?: boolean;
+    /**
+     * Position for the toast container rendered for urgent notifications.
+     */
+    toastPosition?: NotificationToastContainerProps["position"];
+    /**
+     * Callback fired when the dropdown open state changes.
+     */
+    onOpenChange?: (open: boolean) => void;
+    /**
+     * Optional error to display in the dropdown.
+     */
+    error?: NotificationDropdownProps["error"] | Error | null;
 }
-export declare const NotificationSystem: React.FC<NotificationSystemProps>;
-export declare const useNotificationSystem: () => {
-    notifications: any[];
-    unreadCount: number;
-    loading: boolean;
-    error: any;
-    isDropdownOpen: boolean;
-    setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    markAsRead: (id: string) => Promise<void>;
-    markAllAsRead: () => Promise<void>;
-    deleteNotification: (id: string) => Promise<void>;
-    clearAll: () => Promise<void>;
-};
+export declare const NotificationSystem: React.ForwardRefExoticComponent<NotificationSystemProps & React.RefAttributes<HTMLDivElement>>;
+export type { NotificationListItem };
 export default NotificationSystem;
 //# sourceMappingURL=notification-system.d.ts.map

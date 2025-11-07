@@ -15,6 +15,17 @@ service cloud.firestore {
       return isAuthenticated() && 
         exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
+
+    // Campus isolation helpers
+    function userCampus() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.campusId;
+    }
+    function sameCampus() {
+      return resource.data.campusId == userCampus();
+    }
+    function sameCampusWrite() {
+      return request.resource.data.campusId == userCampus();
+    }
     
     // User documents - users can read/write their own data
     match /users/{userId} {
@@ -29,8 +40,10 @@ service cloud.firestore {
     
     // Spaces collection - flat structure
     match /spaces/{spaceId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && (
+      // Enforce campus isolation on reads
+      allow read: if isAuthenticated() && sameCampus();
+      // Enforce campus isolation on writes
+      allow write: if isAuthenticated() && sameCampusWrite() && (
         isAdmin() || 
         resource.data.members[request.auth.uid].role in ['admin', 'moderator'] ||
         resource.data.createdBy == request.auth.uid
@@ -38,16 +51,16 @@ service cloud.firestore {
       
       // Space posts
       match /posts/{postId} {
-        allow read: if isAuthenticated();
-        allow write: if isAuthenticated() && (
+        allow read: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus();
+        allow write: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus() && (
           isOwner(resource.data.authorId) ||
           get(/databases/$(database)/documents/spaces/$(spaceId)).data.members[request.auth.uid] != null
         );
         
         // Post comments
         match /comments/{commentId} {
-          allow read: if isAuthenticated();
-          allow write: if isAuthenticated() && (
+          allow read: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus();
+          allow write: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus() && (
             isOwner(resource.data.authorId) ||
             get(/databases/$(database)/documents/spaces/$(spaceId)).data.members[request.auth.uid] != null
           );
@@ -56,8 +69,8 @@ service cloud.firestore {
       
       // Space members
       match /members/{memberId} {
-        allow read: if isAuthenticated();
-        allow write: if isAuthenticated() && (
+        allow read: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus();
+        allow write: if isAuthenticated() && get(/databases/$(database)/documents/spaces/$(spaceId)).data.campusId == userCampus() && (
           isOwner(memberId) ||
           get(/databases/$(database)/documents/spaces/$(spaceId)).data.members[request.auth.uid].role in ['admin', 'moderator']
         );
@@ -109,20 +122,104 @@ service cloud.firestore {
     
     // Tools
     match /tools/{toolId} {
-      allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && (
+      allow read: if isAuthenticated() && sameCampus();
+      allow write: if isAuthenticated() && sameCampusWrite() && (
         isOwner(resource.data.createdBy) ||
         isAdmin()
       );
     }
     
-    // Rituals
+    // Rituals V2.0 - Configuration-driven behavioral campaigns
     match /rituals/{ritualId} {
+      // All authenticated campus users can read active rituals
+      allow read: if isAuthenticated() && sameCampus();
+      // Only admins can create/update ritual configs
+      allow create: if isAuthenticated() && isAdmin() && sameCampusWrite();
+      allow update: if isAuthenticated() && isAdmin() && sameCampusWrite();
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual participation tracking
+    match /ritual_participation/{partId} {
+      // Users can read their own participation + admins can read all
+      allow read: if isAuthenticated() && sameCampus() && (isOwner(resource.data.userId) || isAdmin());
+      // Users can join rituals (create participation record)
+      allow create: if isAuthenticated() && sameCampusWrite() && isOwner(request.resource.data.userId);
+      // Users can update their own participation
+      allow update: if isAuthenticated() && sameCampusWrite() && isOwner(resource.data.userId);
+      // Only admins can delete participation
+      allow delete: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual participants (leaderboard data)
+    match /ritual_participants/{participantId} {
+      // Campus-isolated reads for leaderboards
+      allow read: if isAuthenticated() && sameCampus();
+      // Only system/admin can write participant scores
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual events (phase transitions, milestones)
+    match /ritual_events/{eventId} {
+      // Campus-isolated reads for event logs
+      allow read: if isAuthenticated() && sameCampus() && (resource.data.ritualId == ritualId || isAdmin());
+      // Only system/admin can create events
+      allow create: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual templates (admin composer library)
+    match /ritual_templates/{templateId} {
+      // All authenticated users can browse templates
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated() && (
-        isOwner(resource.data.createdBy) ||
-        request.auth.uid in resource.data.participants
-      );
+      // Only admins can create/update templates
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual votes (Tournament archetype)
+    match /ritual_votes/{voteId} {
+      // Users can read votes in their campus rituals
+      allow read: if isAuthenticated() && sameCampus();
+      // Users can create votes (one per matchup per user)
+      allow create: if isAuthenticated() && sameCampusWrite() && isOwner(request.resource.data.userId);
+      // No updates or deletes (votes are immutable)
+      allow update, delete: if false;
+    }
+
+    // Ritual matchups (Tournament archetype)
+    match /ritual_matchups/{matchupId} {
+      // Users can read matchups in their campus rituals
+      allow read: if isAuthenticated() && sameCampus();
+      // Only admins can create/update matchups
+      allow write: if isAuthenticated() && isAdmin();
+    }
+
+    // Ritual usage (Feature Drop archetype)
+    match /ritual_usage/{usageId} {
+      // Users can read their own usage + admins can read all
+      allow read: if isAuthenticated() && sameCampus() && (isOwner(resource.data.userId) || isAdmin());
+      // System tracks usage automatically
+      allow create: if isAuthenticated() && sameCampusWrite() && isOwner(request.resource.data.userId);
+      allow update: if isAuthenticated() && sameCampusWrite() && isOwner(resource.data.userId);
+    }
+
+    // Ritual feedback (post-ritual surveys)
+    match /ritual_feedback/{feedbackId} {
+      // Users can read their own feedback + admins can read all
+      allow read: if isAuthenticated() && sameCampus() && (isOwner(resource.data.userId) || isAdmin());
+      // Users can submit feedback
+      allow create: if isAuthenticated() && sameCampusWrite() && isOwner(request.resource.data.userId);
+      // No updates or deletes (feedback is immutable)
+      allow update, delete: if false;
+    }
+
+    // Anonymous content accountability (Leak archetype)
+    match /anonymous_content_accountability/{accountabilityId} {
+      // Only admins can read (for moderation)
+      allow read: if isAuthenticated() && isAdmin();
+      // System creates accountability records
+      allow create: if isAuthenticated() && sameCampusWrite();
+      // No updates or public deletes
+      allow update, delete: if false;
     }
     
     // Test collection - for diagnostics

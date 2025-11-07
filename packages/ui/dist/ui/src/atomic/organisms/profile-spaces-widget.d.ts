@@ -1,33 +1,18 @@
-import React from 'react';
-import { type PrivacyLevel } from '../molecules/privacy-control';
-export interface SpaceInfo {
+import { type PrivacyLevel } from "../molecules/privacy-control";
+export interface ProfileSpaceItem {
     id: string;
     name: string;
-    type: 'social' | 'academic' | 'event' | 'housing';
-    memberCount: number;
-    role: 'member' | 'moderator' | 'leader';
-    isPrivate: boolean;
-    lastActivity?: Date;
-    activityLevel: 'high' | 'medium' | 'low';
-    unreadCount?: number;
+    role?: string;
+    memberCount?: number;
+    lastActivityAt?: string | number | Date;
+    headline?: string;
 }
-export interface MySpacesWidgetProps {
-    spaces: SpaceInfo[];
+export interface ProfileSpacesWidgetProps {
+    spaces: ProfileSpaceItem[];
     isOwnProfile?: boolean;
     privacyLevel?: PrivacyLevel;
     onPrivacyChange?: (level: PrivacyLevel) => void;
-    onSpaceClick?: (spaceId: string) => void;
-    onExploreSpaces?: () => void;
     className?: string;
 }
-/**
- * My Spaces Widget - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - Luxury card design with subtle depth
- * - Gold accent for leadership/special roles
- * - 8px grid spacing
- * - Mobile-optimized cards
- */
-export declare const MySpacesWidget: React.FC<MySpacesWidgetProps>;
+export declare function ProfileSpacesWidget({ spaces, isOwnProfile, privacyLevel, onPrivacyChange, className, }: ProfileSpacesWidgetProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=profile-spaces-widget.d.ts.map

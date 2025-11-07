@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge } from '@hive/ui';
+import { Button, HiveCard, Input, Badge } from '@hive/ui';
 import {
   ArrowLeft,
   Shield,
@@ -17,7 +17,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -136,7 +136,8 @@ export default function CreateSpacePage() {
     }
 
     try {
-      const response = await api.get('/api/spaces/check-create-permission');
+      const res = await secureApiFetch('/api/spaces/check-create-permission', { method: 'GET' });
+      const response = await res.json();
       setUserPermissions(response);
 
       // Apply locks based on permissions
@@ -192,25 +193,28 @@ export default function CreateSpacePage() {
     try {
       setLoading(true);
 
-      const response = await api.post('/api/spaces', {
-        ...data,
-        campusId: 'ub-buffalo',
-        visibility: 'public', // Default for now
-        settings: {
-          maxPinnedPosts: 3,
-          autoArchiveDays: 7
-        }
+      const createRes = await secureApiFetch('/api/spaces', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...data,
+          campusId: 'ub-buffalo',
+          visibility: 'public',
+          settings: { maxPinnedPosts: 3, autoArchiveDays: 7 }
+        })
       });
+      const response = await createRes.json();
 
-      if (response.space) {
-        // Track creation
-        await api.post('/api/analytics/track', {
-          event: 'space_created',
-          properties: {
-            spaceId: response.space.id,
-            category: data.category
-          }
-        });
+      if (response?.space?.id) {
+        // Best-effort analytics (ignore failures in dev)
+        try {
+          await secureApiFetch('/api/analytics/track', {
+            method: 'POST',
+            body: JSON.stringify({
+              event: 'space_created',
+              properties: { spaceId: response.space.id, category: data.category }
+            })
+          });
+        } catch {}
 
         router.push(`/spaces/${response.space.id}`);
       }
@@ -258,13 +262,13 @@ export default function CreateSpacePage() {
             </ul>
           </div>
 
-          <HiveButton
+          <Button
             onClick={() => router.push('/spaces')}
             variant="outline"
             className="border-gray-700 w-full"
           >
             Browse Existing Spaces
-          </HiveButton>
+          </Button>
         </HiveCard>
       </div>
     );
@@ -275,7 +279,7 @@ export default function CreateSpacePage() {
       {/* Header */}
       <div className="bg-gray-900 border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <HiveButton
+          <Button
             onClick={() => router.back()}
             variant="ghost"
             size="sm"
@@ -283,7 +287,7 @@ export default function CreateSpacePage() {
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
-          </HiveButton>
+          </Button>
 
           <div className="flex items-center justify-between">
             <div>
@@ -363,7 +367,7 @@ export default function CreateSpacePage() {
               {/* Name */}
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Space Name</label>
-                <HiveInput
+                <Input
                   {...register('name')}
                   placeholder="e.g., CS Study Group"
                   className="bg-gray-900 border-gray-700"
@@ -391,7 +395,7 @@ export default function CreateSpacePage() {
               <div>
                 <label className="text-sm text-gray-400 mb-1 block">Tags</label>
                 <div className="flex gap-2 mb-2">
-                  <HiveInput
+                  <Input
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => {
@@ -403,9 +407,9 @@ export default function CreateSpacePage() {
                     placeholder="Add tag"
                     className="bg-gray-900 border-gray-700"
                   />
-                  <HiveButton type="button" onClick={handleAddTag} variant="outline">
+                  <Button type="button" onClick={handleAddTag} variant="outline">
                     Add
-                  </HiveButton>
+                  </Button>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {tags.map(tag => (
@@ -423,9 +427,9 @@ export default function CreateSpacePage() {
                 )}
               </div>
 
-              <HiveButton type="button" onClick={() => setCurrentStep(3)}>
+              <Button type="button" onClick={() => setCurrentStep(3)}>
                 Continue
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}
@@ -493,21 +497,21 @@ export default function CreateSpacePage() {
 
             {/* Actions */}
             <div className="flex gap-3">
-              <HiveButton
+              <Button
                 type="button"
                 onClick={() => setCurrentStep(2)}
                 variant="outline"
                 className="border-gray-700"
               >
                 Back
-              </HiveButton>
-              <HiveButton
+              </Button>
+              <Button
                 type="submit"
                 disabled={loading}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400 flex-1"
               >
                 {loading ? 'Creating...' : 'Create Space'}
-              </HiveButton>
+              </Button>
             </div>
           </form>
         )}

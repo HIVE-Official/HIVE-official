@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { currentEnvironment } from '@/lib/env';
 
 // Conditionally import dev-auth-helper only in development
-let createDevSession: any = null;
+let createDevSession: ((email: string, request: NextRequest) => Promise<{ success: boolean; user?: unknown; tokens?: { accessToken: string }; error?: string }>) | null = null;
 
 if (process.env.NODE_ENV !== 'production') {
   const devAuthHelper = require('@/lib/dev-auth-helper');
@@ -26,6 +26,12 @@ export async function POST(request: NextRequest) {
   try {
     // Use a default test user for quick testing
     const email = 'student@test.edu';
+    if (!createDevSession) {
+      return NextResponse.json(
+        { error: 'Development session helper unavailable' },
+        { status: 503 }
+      );
+    }
     const result = await createDevSession(email, request);
 
     if (!result.success) {

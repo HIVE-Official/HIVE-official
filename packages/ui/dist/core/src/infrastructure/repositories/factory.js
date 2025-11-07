@@ -7,12 +7,14 @@ import { FirebaseProfileRepository } from './firebase/profile.repository';
 import { FirebaseSpaceRepository } from './firebase/space.repository';
 import { FirebaseFeedRepository } from './firebase/feed.repository';
 import { FirebaseRitualRepository } from './firebase/ritual.repository';
+import { FirebaseRitualConfigRepository } from './firebase/ritual-config.repository';
 import { FirebaseConnectionRepository } from './firebase/connection.repository';
 // Singleton instances
 let profileRepo = null;
 let spaceRepo = null;
 let feedRepo = null;
 let ritualRepo = null;
+let ritualConfigRepo = null;
 let connectionRepo = null;
 /**
  * Get or create ProfileRepository instance
@@ -50,6 +52,12 @@ export function getRitualRepository() {
     }
     return ritualRepo;
 }
+export function getRitualConfigRepository() {
+    if (!ritualConfigRepo) {
+        ritualConfigRepo = new FirebaseRitualConfigRepository();
+    }
+    return ritualConfigRepo;
+}
 /**
  * Get or create ConnectionRepository instance
  */
@@ -71,6 +79,8 @@ export function initializeRepositories(config) {
         feedRepo = config.feed;
     if (config.ritual)
         ritualRepo = config.ritual;
+    if (config.ritualConfig)
+        ritualConfigRepo = config.ritualConfig;
     if (config.connection)
         connectionRepo = config.connection;
 }
@@ -82,6 +92,7 @@ export function resetRepositories() {
     spaceRepo = null;
     feedRepo = null;
     ritualRepo = null;
+    ritualConfigRepo = null;
     connectionRepo = null;
 }
 //# sourceMappingURL=factory.js.map

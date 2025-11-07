@@ -2,8 +2,7 @@
 // Provides comprehensive cache monitoring, analytics, and management capabilities
 
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-auth-middleware';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { cacheService } from '@/lib/cache/cache-service';
 import { redisCache } from '@/lib/cache/redis-client';
 import { logger } from '@/lib/logger';
@@ -77,12 +76,7 @@ interface CacheManagementData {
   }>;
 }
 
-export const GET = withAuthAndErrors(async (request, context) => {
-  if (!context?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  await requireAdminRole(context.userId);
+export const GET = withSecureAuth(async (request, token) => {
 
   try {
     const url = new URL(request.url);
@@ -338,14 +332,9 @@ export const GET = withAuthAndErrors(async (request, context) => {
       { status: 500 }
     );
   }
-});
+}, { requireAdmin: true });
 
-export const POST = withAuthAndErrors(async (request, context) => {
-  if (!context?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  await requireAdminRole(context.userId);
+export const POST = withSecureAuth(async (request, token) => {
 
   try {
     const body = await request.json();
@@ -357,7 +346,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
       case 'flushAll':
         result = await cacheService.flushAllCache();
         if (result) {
-          logger.warn(`Cache flushed by admin: ${context.userId}`);
+          logger.warn(`Cache flushed by admin: ${token?.uid || 'unknown'}`);
         }
         break;
 
@@ -366,7 +355,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
           return NextResponse.json({ error: 'Namespace required' }, { status: 400 });
         }
         result = await redisCache.deletePattern(params.namespace, '*', params.campusId);
-        logger.info(`Namespace ${params.namespace} flushed by admin: ${context.userId}`);
+        logger.info(`Namespace ${params.namespace} flushed by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'flushCampus':
@@ -374,7 +363,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
           return NextResponse.json({ error: 'Campus ID required' }, { status: 400 });
         }
         result = await cacheService.invalidateCampusCache(params.campusId);
-        logger.info(`Campus ${params.campusId} cache flushed by admin: ${context.userId}`);
+        logger.info(`Campus ${params.campusId} cache flushed by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'invalidateUser':
@@ -382,7 +371,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
           return NextResponse.json({ error: 'User ID required' }, { status: 400 });
         }
         result = await cacheService.invalidateUser(params.userId, params.campusId);
-        logger.info(`User ${params.userId} cache invalidated by admin: ${context.userId}`);
+        logger.info(`User ${params.userId} cache invalidated by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'invalidateSpace':
@@ -390,7 +379,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
           return NextResponse.json({ error: 'Space ID required' }, { status: 400 });
         }
         result = await cacheService.invalidateSpace(params.spaceId, params.campusId);
-        logger.info(`Space ${params.spaceId} cache invalidated by admin: ${context.userId}`);
+        logger.info(`Space ${params.spaceId} cache invalidated by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'warmUserCache':
@@ -399,7 +388,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
         }
         await cacheService.warmUserCache(params.userId, params.userData, params.campusId);
         result = { success: true };
-        logger.info(`User ${params.userId} cache warmed by admin: ${context.userId}`);
+        logger.info(`User ${params.userId} cache warmed by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'warmSpaceCache':
@@ -408,7 +397,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
         }
         await cacheService.warmSpaceCache(params.spaceId, params.spaceData, params.campusId);
         result = { success: true };
-        logger.info(`Space ${params.spaceId} cache warmed by admin: ${context.userId}`);
+        logger.info(`Space ${params.spaceId} cache warmed by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'getKeyInfo':
@@ -425,7 +414,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
           return NextResponse.json({ error: 'Key required' }, { status: 400 });
         }
         result = await redisCache.delete(params.namespace || 'default', params.key, params.campusId);
-        logger.info(`Key ${params.key} deleted by admin: ${context.userId}`);
+        logger.info(`Key ${params.key} deleted by admin: ${token?.uid || 'unknown'}`);
         break;
 
       case 'analyzeMemoryUsage':
@@ -457,7 +446,7 @@ export const POST = withAuthAndErrors(async (request, context) => {
 
         // This would implement actual optimization logic
         result = optimizationResults;
-        logger.info(`Cache optimization performed by admin: ${context.userId}`);
+        logger.info(`Cache optimization performed by admin: ${token?.uid || 'unknown'}`);
         break;
 
       default:
@@ -473,4 +462,4 @@ export const POST = withAuthAndErrors(async (request, context) => {
       { status: 500 }
     );
   }
-});
+}, { requireAdmin: true });

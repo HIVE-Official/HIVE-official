@@ -1,0 +1,30 @@
+export {
+  AdminShell,
+  AdminNavRail,
+  AdminTopBar,
+  type AdminShellProps,
+  type AdminNavItem,
+  type AdminNavRailProps,
+  type AdminTopBarProps,
+} from "./admin-shell";
+
+export {
+  AdminMetricCard,
+  StatusPill,
+  AuditLogList,
+  ModerationQueue,
+  type AdminMetricCardProps,
+  type StatusPillProps,
+  type AuditLogEvent,
+  type AuditLogListProps,
+  type ModerationQueueItem,
+  type ModerationQueueProps,
+  type MetricFormat,
+  type ModerationStatus,
+  type ModerationSeverity,
+} from "./admin-dashboard-primitives";
+
+export {
+  AdminRitualComposer,
+  type AdminRitualComposerProps,
+} from "./admin-ritual-composer";

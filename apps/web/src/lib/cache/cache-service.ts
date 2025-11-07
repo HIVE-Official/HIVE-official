@@ -348,6 +348,27 @@ class HiveCacheService {
     }
   }
 
+  async invalidateRitual(ritualId: string, campusId?: string): Promise<boolean> {
+    try {
+      await redisCache.delete(CACHE_NAMESPACES.RITUALS, ritualId, campusId);
+      await redisCache.deletePattern(CACHE_NAMESPACES.FEED, `*ritual:${ritualId}*`, campusId);
+      return true;
+    } catch (error) {
+      logger.error('Failed to invalidate ritual cache:', error);
+      return false;
+    }
+  }
+
+  async invalidateActiveRituals(campusId?: string): Promise<boolean> {
+    try {
+      await redisCache.delete(CACHE_NAMESPACES.RITUALS, 'active_list', campusId);
+      return true;
+    } catch (error) {
+      logger.error('Failed to invalidate active rituals cache:', error);
+      return false;
+    }
+  }
+
   // Session management
   async getCachedSession(sessionId: string, campusId?: string): Promise<any | null> {
     try {

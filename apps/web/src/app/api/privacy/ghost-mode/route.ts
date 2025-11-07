@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import * as admin from 'firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Ghost Mode quick toggle and status
 export async function GET(request: NextRequest) {
@@ -194,11 +195,13 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
   // Check if users are in the same spaces
   const targetMembershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
     .where('userId', '==', targetUserId)
-    .where('status', '==', 'active');
+    .where('status', '==', 'active')
+    .where('campusId', '==', CURRENT_CAMPUS_ID);
 
   const viewerMembershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
     .where('userId', '==', viewerUserId)
-    .where('status', '==', 'active');
+    .where('status', '==', 'active')
+    .where('campusId', '==', CURRENT_CAMPUS_ID);
 
   const [targetMemberships, viewerMemberships] = await Promise.all([
     targetMembershipsQuery.get(),
@@ -234,9 +237,10 @@ async function checkUserVisibility(targetUserId: string, viewerUserId: string, g
 async function applyGhostModeChanges(userId: string, ghostMode: any) {
   try {
     // Update user's visibility in spaces
-    const membershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
+  const membershipsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('members')
       .where('userId', '==', userId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const membershipsSnapshot = await membershipsQuery.get();
     

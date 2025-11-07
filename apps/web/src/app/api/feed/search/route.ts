@@ -6,6 +6,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 const SearchFeedSchema = z.object({
   query: z.string().min(1).max(100),
@@ -48,12 +49,14 @@ export async function POST(request: NextRequest) {
 
     // Get user's spaces for filtering relevant content
     const userSpacesSnapshot = await db
-      .collectionGroup('members')
+      .collection('spaceMembers')
       .where('userId', '==', decodedToken.uid)
+      .where('isActive', '==', true)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .limit(200)
       .get();
-    
     const userSpaceIds = userSpacesSnapshot.docs
-      .map(doc => doc.ref.parent.parent?.id)
+      .map(doc => doc.data().spaceId as string)
       .filter((id): id is string => Boolean(id));
 
     const feedItems = [];
@@ -61,7 +64,8 @@ export async function POST(request: NextRequest) {
 
     // Search posts
     if (!type || type === 'post') {
-      let postsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('posts');
+      let postsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('posts')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
       
       if (spaceId) {
         postsQuery = postsQuery.where('spaceId', '==', spaceId);
@@ -169,6 +173,15 @@ export async function POST(request: NextRequest) {
     // Search events
     if (!type || type === 'event') {
       for (const currentSpaceId of (spaceId ? [spaceId] : userSpaceIds.slice(0, 10))) {
+        // When a specific spaceId is provided, ensure it's within current campus
+        if (spaceId) {
+          try {
+            const spaceDoc = await dbAdmin.collection('spaces').doc(currentSpaceId).get();
+            if (!spaceDoc.exists || (spaceDoc.data()?.campusId && spaceDoc.data()?.campusId !== CURRENT_CAMPUS_ID)) {
+              continue;
+            }
+          } catch {}
+        }
         let eventsQuery: admin.firestore.Query<admin.firestore.DocumentData> = db
           .collection('spaces')
           .doc(currentSpaceId)
@@ -267,7 +280,8 @@ export async function POST(request: NextRequest) {
 
     // Search tools
     if (!type || type === 'tool') {
-      let toolsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('tools');
+      let toolsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('tools')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
       
       if (timeFilter) {
         toolsQuery = toolsQuery.where('createdAt', '>=', timeFilter);

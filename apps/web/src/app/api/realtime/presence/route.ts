@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Presence indicator interfaces
 interface UserPresence {
@@ -525,7 +526,8 @@ async function getUserSpaces(userId: string): Promise<string[]> {
   try {
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().spaceId);
@@ -543,7 +545,8 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
     const memberQuery = dbAdmin.collection('members')
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
@@ -562,7 +565,8 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;

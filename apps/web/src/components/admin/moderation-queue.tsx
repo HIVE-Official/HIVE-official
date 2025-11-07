@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Textarea, Alert, AlertDescription, Progress, Tabs, TabsContent, TabsList, TabsTrigger,  } from '@hive/ui';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 import {
   AlertTriangle,
   Eye,
@@ -112,7 +113,7 @@ export function ModerationQueue() {
           assignmentFilter !== "me" && { assignedTo: assignmentFilter }),
       });
 
-      const response = await fetch(`/api/admin/moderation?${params}`);
+      const response = await secureApiFetch(`/api/admin/moderation?${params}`);
       if (response.ok) {
         const data = await response.json();
         setReports(data.reports);
@@ -144,7 +145,7 @@ export function ModerationQueue() {
   ) => {
     try {
       setIsProcessingAction(true);
-      const response = await fetch("/api/admin/moderation", {
+      const response = await secureApiFetch("/api/admin/moderation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

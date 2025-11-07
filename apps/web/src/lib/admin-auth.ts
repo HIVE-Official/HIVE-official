@@ -194,3 +194,4 @@ export async function logAdminActivity(
   } catch (error) {
   }
 }
+import 'server-only';

@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withSecureAuth(async (request) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '24h';
@@ -88,7 +83,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching alerts', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching alerts', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -100,14 +95,9 @@ export const GET = withAuthAndErrors(async (context) => {
       error: 'Using mock data - Alert monitoring API not fully implemented'
     });
   }
-});
+}, { requireAdmin: true });
 
-export const POST = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const POST = withSecureAuth(async (request, token) => {
 
   try {
     const body = await request.json();
@@ -121,16 +111,16 @@ export const POST = withAuthAndErrors(async (context) => {
     let result;
     switch (action) {
       case 'acknowledge':
-        result = await acknowledgeAlert(alertId, auth.userId, notes);
+        result = await acknowledgeAlert(alertId, token?.uid || 'unknown', notes);
         break;
       case 'resolve':
-        result = await resolveAlert(alertId, auth.userId, notes);
+        result = await resolveAlert(alertId, token?.uid || 'unknown', notes);
         break;
       case 'escalate':
-        result = await escalateAlert(alertId, auth.userId, notes);
+        result = await escalateAlert(alertId, token?.uid || 'unknown', notes);
         break;
       case 'suppress':
-        result = await suppressAlert(alertId, auth.userId, notes);
+        result = await suppressAlert(alertId, token?.uid || 'unknown', notes);
         break;
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
@@ -138,7 +128,7 @@ export const POST = withAuthAndErrors(async (context) => {
 
     logger.info('Alert action performed', {
       action,
-      userId: auth.userId,
+      userId: token?.uid || 'unknown',
       metadata: {
         alertId,
         result: result.success
@@ -152,10 +142,10 @@ export const POST = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing alert action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error performing alert action', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Get system-level alerts
@@ -172,8 +162,12 @@ async function getSystemAlerts(since: Date, severity?: string, component?: strin
     }
 
     const alertsSnap = await alertsQuery.limit(500).get();
+    // Campus isolation: only include alerts for current campus when field present
     const alerts = alertsSnap.docs.map(doc => {
-      const data = doc.data();
+      const data = doc.data() as any;
+      if ('campusId' in data && data.campusId !== CURRENT_CAMPUS_ID) {
+        return null;
+      }
       return {
         id: doc.id,
         type: 'system',
@@ -192,7 +186,7 @@ async function getSystemAlerts(since: Date, severity?: string, component?: strin
           stackTrace: data.stackTrace || null
         }
       };
-    });
+    }).filter(Boolean) as any[];
 
     return severity ? alerts.filter(alert => alert.severity === severity) : alerts;
 

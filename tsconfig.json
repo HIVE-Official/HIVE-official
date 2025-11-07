@@ -24,6 +24,8 @@
       "@hive/hooks/*": ["packages/hooks/src/*"],
       "@hive/ui/*": ["packages/ui/src/*"],
       "@hive/config/*": ["packages/config/*"],
+      "@hive/tokens": ["packages/tokens/src"],
+      "@hive/tokens/hive-tokens-generated.css": ["packages/tokens/hive-tokens-generated.css"],
       "@hive/tokens/*": ["packages/tokens/src/*"],
       "@hive/utilities/*": ["packages/utilities/src/*"],
       "@hive/validation/*": ["packages/validation/src/*"],

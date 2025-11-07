@@ -5,18 +5,16 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
 
 const switchVariants = cva(
-  "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+  "peer inline-flex shrink-0 cursor-pointer items-center rounded-full border border-[color-mix(in_srgb,var(--hive-border-subtle) 58%,#ffd700 28%)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 74%,#ffd700 16%)] transition-[background,border,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,215,0,0.45)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--hive-background-primary)] disabled:cursor-not-allowed disabled:opacity-40 data-[state=unchecked]:bg-[color-mix(in_srgb,var(--hive-background-tertiary) 66%,#ffd700 12%)] data-[state=unchecked]:border-[color-mix(in_srgb,var(--hive-border-default) 68%,#ffd700 18%)]",
   {
     variants: {
       variant: {
         default:
-          "data-[state=checked]:bg-[var(--hive-brand-primary)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+          "data-[state=checked]:bg-[#ffd700] data-[state=checked]:border-[#ffd700] data-[state=checked]:shadow-[0_14px_38px_rgba(255,215,0,0.4)]",
         destructive:
-          "data-[state=checked]:bg-[var(--hive-status-error)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+          "data-[state=checked]:bg-[var(--hive-status-error)] data-[state=checked]:border-[var(--hive-status-error)]",
         success:
-          "data-[state=checked]:bg-[var(--hive-status-success)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
-        warning:
-          "data-[state=checked]:bg-[var(--hive-status-warning)] data-[state=unchecked]:bg-[var(--hive-background-tertiary)]",
+          "data-[state=checked]:bg-[var(--hive-status-success)] data-[state=checked]:border-[var(--hive-status-success)]",
       },
       size: {
         default: "h-6 w-11",
@@ -32,13 +30,13 @@ const switchVariants = cva(
 )
 
 const switchThumbVariants = cva(
-  "pointer-events-none block rounded-full bg-background shadow-lg ring-0 transition-transform",
+  "pointer-events-none block rounded-full bg-[color-mix(in_srgb,#1f1f1f 82%,#ffd700 10%)] shadow-[0_4px_14px_rgba(0,0,0,0.45)] ring-0 transition-transform duration-150 data-[state=checked]:bg-[#101010] data-[state=checked]:shadow-[0_8px_20px_rgba(0,0,0,0.45)]",
   {
     variants: {
       size: {
-        default: "h-5 w-5 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
-        sm: "h-4 w-4 data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
-        lg: "h-6 w-6 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+        default: "h-5 w-5 data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-[2px]",
+        sm: "h-4 w-4 data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-[2px]",
+        lg: "h-6 w-6 data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-[2px]",
       },
     },
     defaultVariants: {

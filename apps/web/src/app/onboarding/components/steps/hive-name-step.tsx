@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
+import { Eye, EyeOff, AtSign, Check, X, Loader2 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
+import { apiClient } from "@/lib/api-client";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveNameStepProps {
@@ -41,15 +42,14 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
     setValidationState("checking");
 
     try {
-      const response = await fetch("/api/auth/check-handle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ handle }),
-      });
-
+      const response = await apiClient.post("/api/auth/check-handle", { handle });
       const result = await response.json();
+
+      if (!response.ok) {
+        setValidationState("invalid");
+        return;
+      }
+
       setValidationState(result.available ? "available" : "taken");
     } catch (error) {
       console.error("Handle validation error:", error);
@@ -110,18 +110,9 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
       {/* Header */}
       <div className="text-center space-y-4">
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-overlay-gold-subtle)] backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-border-gold)]"
-        >
-          <User className="w-8 h-8 text-[var(--hive-brand-primary)]" />
-        </motion.div>
-        
-        <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
         >
           <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
             What's your name?
@@ -141,7 +132,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
         transition={{ delay: 0.3 }}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HiveInput
+          <Input
             id="firstName"
             type="text"
             label="First Name"
@@ -156,7 +147,7 @@ export function HiveNameStep({ data, updateData, onNext }: HiveNameStepProps) {
             className="w-full"
           />
           
-          <HiveInput
+          <Input
             id="lastName"
             type="text"
             label="Last Name"

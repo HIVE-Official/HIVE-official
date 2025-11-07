@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -37,7 +38,7 @@ interface EnhancedFeedItem {
   spaceName: string;
   authorId: string;
   authorName: string;
-  content: any;
+  content: unknown;
   contentType: 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
   toolId?: string;
   toolName?: string;
@@ -221,13 +222,23 @@ async function getUserAlgorithmConfig(userId: string): Promise<FeedAlgorithmConf
 }
 
 // Helper function to get user's space memberships with engagement
-async function getUserSpaceMemberships(userId: string): Promise<any[]> {
+interface UserSpaceMembership {
+  spaceId: string;
+  spaceName: string;
+  spaceType: string;
+  engagementScore: number;
+  lastActivity: string;
+  [key: string]: unknown;
+}
+
+async function getUserSpaceMemberships(userId: string): Promise<UserSpaceMembership[]> {
   try {
     const membershipsSnapshot = await dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
-    const memberships = [];
+    const memberships: UserSpaceMembership[] = [];
 
     for (const memberDoc of membershipsSnapshot.docs) {
       const memberData = memberDoc.data();
@@ -240,11 +251,12 @@ async function getUserSpaceMemberships(userId: string): Promise<any[]> {
       const engagementScore = await calculateSpaceEngagementScore(userId, memberData.spaceId);
 
       memberships.push({
-        ...memberData,
-        spaceName: spaceData.name || 'Unknown Space',
-        spaceType: spaceData.type || 'general',
+        ...(memberData as Record<string, unknown>),
+        spaceId: memberData.spaceId,
+        spaceName: (spaceData as Record<string, unknown>)?.name as string || 'Unknown Space',
+        spaceType: (spaceData as Record<string, unknown>)?.type as string || 'general',
         engagementScore,
-        lastActivity: memberData.lastActivity || new Date().toISOString()
+        lastActivity: (memberData as Record<string, unknown>)?.lastActivity as string || new Date().toISOString()
       });
     }
 
@@ -268,6 +280,7 @@ async function calculateSpaceEngagementScore(userId: string, spaceId: string): P
     const activitySnapshot = await dbAdmin.collection('activityEvents')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
       .get();
     const activities = activitySnapshot.docs.map(doc => doc.data());
@@ -307,7 +320,7 @@ async function calculateSpaceEngagementScore(userId: string, spaceId: string): P
 // Helper function to get enhanced feed content
 async function getEnhancedFeedContent(params: {
   userId: string;
-  memberships: any[];
+  memberships: UserSpaceMembership[];
   config: FeedAlgorithmConfig;
   limit: number;
   offset: number;
@@ -385,10 +398,27 @@ async function getEnhancedFeedContent(params: {
 }
 
 // Helper function to get space posts with quality filtering
-async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTime: Date): Promise<any[]> {
+interface MinimalPost {
+  id: string;
+  createdAt: string | Date;
+  type?: string;
+  toolId?: string;
+  engagement?: { likes?: number; comments?: number; shares?: number };
+  authorId?: string;
+  title?: string;
+  content?: string;
+  metadata?: Record<string, unknown>;
+  eventDate?: string;
+  source?: string;
+  isPinned?: boolean;
+  spaceId?: string;
+}
+
+async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTime: Date): Promise<MinimalPost[]> {
   try {
     const postsSnapshot = await dbAdmin.collection('posts')
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('status', '==', 'published')
       .where('createdAt', '>=', cutoffTime.toISOString())
       .orderBy('createdAt', 'desc')
@@ -396,8 +426,8 @@ async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTi
       .get();
     return postsSnapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data()
-    }));
+      ...(doc.data() as Record<string, unknown>)
+    })) as MinimalPost[];
   } catch (error) {
     logger.error(
       `Error getting space posts at /api/feed/algorithm`,
@@ -409,13 +439,13 @@ async function getSpacePostsWithQuality(spaceId: string, limit: number, cutoffTi
 
 // Helper function to calculate relevance factors
 async function calculateRelevanceFactors(
-  post: any, 
-  membership: any, 
+  post: MinimalPost,
+  membership: UserSpaceMembership,
   config: FeedAlgorithmConfig, 
   userId: string
 ): Promise<RelevanceFactors> {
   const now = new Date();
-  const postTime = new Date(post.createdAt);
+  const postTime = new Date(post.createdAt as string);
   const ageHours = (now.getTime() - postTime.getTime()) / (1000 * 60 * 60);
 
   // Space engagement factor
@@ -437,7 +467,7 @@ async function calculateRelevanceFactors(
   const socialSignals = Math.min(100, totalEngagement * 5);
 
   // Creator influence
-  const creatorInfluence = await getCreatorInfluence(post.authorId, membership.spaceId);
+  const creatorInfluence = await getCreatorInfluence((post.authorId as string) || '', membership.spaceId);
 
   // Diversity factor (bonus for content type variety)
   const diversityFactor = 50; // Base value, calculated contextually in final ranking
@@ -479,7 +509,7 @@ function calculateOverallRelevance(factors: RelevanceFactors, config: FeedAlgori
 }
 
 // Helper functions for score calculations
-function calculateContentQuality(post: any): number {
+function calculateContentQuality(post: MinimalPost): number {
   let quality = 50; // Base score
 
   // Tool-generated content gets higher quality score
@@ -501,6 +531,8 @@ async function getToolInteractionValue(toolId: string): Promise<number> {
 
     const tool = toolDoc.data();
     if (!tool) return 50;
+    // Enforce campus isolation
+    if (tool.campusId && tool.campusId !== CURRENT_CAMPUS_ID) return 50;
     
     let value = 50;
 
@@ -524,6 +556,7 @@ async function getCreatorInfluence(authorId: string, spaceId: string): Promise<n
     const memberSnapshot = await dbAdmin.collection('members')
       .where('userId', '==', authorId)
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
     if (memberSnapshot.empty) return 30;
 
@@ -545,7 +578,7 @@ async function getCreatorInfluence(authorId: string, spaceId: string): Promise<n
   }
 }
 
-function calculateTemporalRelevance(post: any, now: Date): number {
+function calculateTemporalRelevance(post: { type?: string; metadata?: { hasDeadline?: boolean }; eventDate?: string }, now: Date): number {
   // Check if content is time-sensitive
   if (post.type === 'event' || post.metadata?.hasDeadline) {
     const eventTime = post.eventDate ? new Date(post.eventDate) : null;
@@ -560,7 +593,7 @@ function calculateTemporalRelevance(post: any, now: Date): number {
   return 50; // Default temporal relevance
 }
 
-function determineContentType(post: any): 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import' {
+function determineContentType(post: { type?: string; toolId?: string; source?: string }): 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import' {
   if (post.type === 'tool_generated' || post.toolId) return 'tool_generated';
   if (post.type === 'event') return 'space_event';
   if (post.type === 'announcement') return 'builder_announcement';
@@ -629,7 +662,7 @@ function calculateToolContentPercentage(items: EnhancedFeedItem[]): number {
   return (toolItems.length / items.length) * 100;
 }
 
-function generatePersonalizationSummary(config: FeedAlgorithmConfig): any {
+function generatePersonalizationSummary(config: FeedAlgorithmConfig): { toolContentWeight: number; preferredSpacesCount: number; optimalPostingTimes: number[]; qualityThreshold: number } {
   return {
     toolContentWeight: config.toolContentWeight,
     preferredSpacesCount: config.userPersonalization.preferredSpaces.length,
@@ -638,8 +671,8 @@ function generatePersonalizationSummary(config: FeedAlgorithmConfig): any {
   };
 }
 
-function generateQualityMetrics(items: EnhancedFeedItem[]): any {
-  if (items.length === 0) return { averageQuality: 0, averageRelevance: 0 };
+function generateQualityMetrics(items: EnhancedFeedItem[]): { averageQuality: number; averageRelevance: number; highQualityPercentage: number } {
+  if (items.length === 0) return { averageQuality: 0, averageRelevance: 0, highQualityPercentage: 0 };
   
   const avgQuality = items.reduce((sum, item) => sum + item.qualityScore, 0) / items.length;
   const avgRelevance = items.reduce((sum, item) => sum + item.relevanceScore, 0) / items.length;
@@ -652,7 +685,7 @@ function generateQualityMetrics(items: EnhancedFeedItem[]): any {
 }
 
 // Helper function to log algorithm metrics
-async function logAlgorithmMetrics(userId: string, metrics: any): Promise<void> {
+async function logAlgorithmMetrics(userId: string, metrics: Record<string, unknown>): Promise<void> {
   try {
     await dbAdmin.collection('algorithmMetrics').add({
       userId,
@@ -669,7 +702,7 @@ async function logAlgorithmMetrics(userId: string, metrics: any): Promise<void> 
 }
 
 // Helper function to get algorithm metrics
-async function getAlgorithmMetrics(userId: string): Promise<any> {
+async function getAlgorithmMetrics(userId: string): Promise<{ weeklyAverages: { relevance: number; diversity: number; toolContentPercentage: number }; totalSessions: number; lastUpdated: unknown } | null> {
   try {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);

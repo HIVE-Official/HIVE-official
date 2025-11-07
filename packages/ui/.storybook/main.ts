@@ -2,51 +2,108 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
 import path from 'path';
 
+const aliasEntries = [
+  {
+    find: '@hive/tokens/hive-tokens-generated.css',
+    replacement: path.resolve(__dirname, '../../tokens/hive-tokens-generated.css'),
+  },
+  {
+    // Map Geist variable font assets to filesystem paths to bypass package export maps
+    find: 'geist/dist/fonts/geist-sans/Geist-Variable.woff2',
+    replacement: path.resolve(__dirname, '../../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2'),
+  },
+  {
+    find: 'geist/dist/fonts/geist-mono/GeistMono-Variable.woff2',
+    replacement: path.resolve(__dirname, '../../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2'),
+  },
+  {
+    find: '@hive/tokens',
+    replacement: path.resolve(__dirname, '../../tokens/src'),
+  },
+  {
+    find: '@',
+    replacement: path.resolve(__dirname, '../src'),
+  },
+  {
+    find: '@hive/ui',
+    replacement: path.resolve(__dirname, '../src'),
+  },
+  {
+    find: '@hive/core',
+    replacement: path.resolve(__dirname, '../../core/src'),
+  },
+  {
+    find: '@hive/hooks',
+    replacement: path.resolve(__dirname, '../../hooks/src'),
+  },
+  {
+    find: '@hive/utilities',
+    replacement: path.resolve(__dirname, '../../utilities/src'),
+  },
+  {
+    find: '@hive/validation',
+    replacement: path.resolve(__dirname, '../../validation/src'),
+  },
+  {
+    // Completely exclude auth-logic from Storybook
+    find: '@hive/auth-logic',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    // Mock Next.js navigation for Storybook
+    find: 'next/navigation',
+    replacement: path.resolve(__dirname, 'next-mocks.tsx'),
+  },
+  {
+    find: 'next/router',
+    replacement: path.resolve(__dirname, 'next-mocks.tsx'),
+  },
+  {
+    // Mock next-themes for Storybook
+    find: 'next-themes',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    // Mock navigation context hook
+    find: '../../hooks/use-navigation-context',
+    replacement: path.resolve(__dirname, 'navigation-context-mock.tsx'),
+  },
+  {
+    // Mock server-side modules for browser compatibility
+    find: 'firebase-admin',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'firebase-admin/firestore',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'firebase-admin/auth',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'google-cloud-firestore',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'google-auth-library',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'gcp-metadata',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+  {
+    find: 'google-logging-utils',
+    replacement: path.resolve(__dirname, 'mocks.tsx'),
+  },
+];
+
 const config: StorybookConfig = {
   stories: [
-    // 🧱 ATOMIC DESIGN COMPONENTS - Direct component stories
-    '../src/atomic/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🎯 SYSTEM OVERVIEW - Platform overview and navigation
-    '../src/stories/00-System-Overview/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🏗️ FOUNDATION - Core design system and tokens
-    '../src/stories/01-Foundation/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🧱 ATOMS - Core UI building blocks
-    '../src/stories/01-Atoms/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔗 MOLECULES - Combined atomic elements
-    '../src/stories/03-Molecules/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🏛️ ORGANISMS - Complex component systems
-    '../src/stories/04-Organisms/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔄 COMPLETE SYSTEMS - Cross-system integrations
-    '../src/stories/07-Complete-Feed-Rituals-System/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/08-Complete-HiveLAB-System/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 📱 FEATURE SLICES - Core platform features
-    '../src/stories/10-Auth-Onboarding/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/10-Campus-Systems/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/11-Advanced-Navigation/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/12-Profile-System/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/13-Spaces-Communities/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/15-Tools-Creation/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🌐 PLATFORM EXPERIENCES
-    '../src/stories/20-Platform-Integration/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/stories/20-Platform-Experiences/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🔬 DEVELOPMENT & DOCUMENTATION
-    '../src/stories/30-Development/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // 🧪 INDIVIDUAL COMPONENT STORIES
-    '../src/components/tools/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
-
-    // Include all MDX documentation
-    '../src/**/*.mdx'
+    // Use a single, stable glob to avoid builder-vite glob edge cases
+    '../src/**/*.mdx',
+    '../src/**/*.stories.@(js|jsx|ts|tsx)'
   ],
   addons: [
     '@storybook/addon-links',
@@ -58,18 +115,7 @@ const config: StorybookConfig = {
     '@storybook/addon-backgrounds',
     '@storybook/addon-measure',
     '@storybook/addon-outline',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        rule: {
-          test: [/\.stories\.tsx?$/],
-          include: [path.resolve(__dirname, '../src')],
-        },
-        loaderOptions: {
-          prettierConfig: { printWidth: 80, singleQuote: false },
-        },
-      },
-    },
+    // storysource is not installed and causes noisy warnings; omit unless needed
   ],
   framework: {
     name: '@storybook/react-vite',
@@ -98,30 +144,16 @@ const config: StorybookConfig = {
         'process.exit': 'undefined',
       },
       resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '../src'),
-          '@hive/core': path.resolve(__dirname, '../../core/src'),
-          '@hive/hooks': path.resolve(__dirname, '../../hooks/src'),
-          '@hive/tokens': path.resolve(__dirname, '../../tokens/src'),
-          '@hive/utilities': path.resolve(__dirname, '../../utilities/src'),
-          '@hive/validation': path.resolve(__dirname, '../../validation/src'),
-          // Completely exclude auth-logic from Storybook
-          '@hive/auth-logic': path.resolve(__dirname, 'mocks.tsx'),
-          // Mock Next.js navigation for Storybook
-          'next/navigation': path.resolve(__dirname, 'next-mocks.tsx'),
-          'next/router': path.resolve(__dirname, 'next-mocks.tsx'),
-          // Mock next-themes for Storybook
-          'next-themes': path.resolve(__dirname, 'mocks.tsx'),
-          // Mock navigation context hook
-          '../../hooks/use-navigation-context': path.resolve(__dirname, 'navigation-context-mock.tsx'),
-          // Mock server-side modules for browser compatibility
-          'firebase-admin': path.resolve(__dirname, 'mocks.tsx'),
-          'firebase-admin/firestore': path.resolve(__dirname, 'mocks.tsx'),
-          'firebase-admin/auth': path.resolve(__dirname, 'mocks.tsx'),
-          'google-cloud-firestore': path.resolve(__dirname, 'mocks.tsx'),
-          'google-auth-library': path.resolve(__dirname, 'mocks.tsx'),
-          'gcp-metadata': path.resolve(__dirname, 'mocks.tsx'),
-          'google-logging-utils': path.resolve(__dirname, 'mocks.tsx'),
+        alias: aliasEntries,
+      },
+      server: {
+        fs: {
+          // Allow monorepo traversal when resolving stories and imports
+          allow: [
+            path.resolve(__dirname, '..'),
+            path.resolve(__dirname, '../../'),
+            path.resolve(__dirname, '../../../'),
+          ],
         },
       },
       optimizeDeps: {

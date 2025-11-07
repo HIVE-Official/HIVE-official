@@ -1,11 +1,11 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const switchVariants: (props?: {
-    variant?: "default" | "destructive" | "success" | "warning";
-    size?: "default" | "sm" | "lg";
+    variant?: "success" | "default" | "destructive";
+    size?: "sm" | "lg" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const switchThumbVariants: (props?: {
-    size?: "default" | "sm" | "lg";
+    size?: "sm" | "lg" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface SwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange">, VariantProps<typeof switchVariants> {
     checked?: boolean;

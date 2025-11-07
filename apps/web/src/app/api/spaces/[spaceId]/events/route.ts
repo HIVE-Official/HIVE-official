@@ -1,22 +1,31 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+"use server";
+
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { requireSpaceMembership } from "@/lib/space-security";
+import { HttpStatus } from "@/lib/api-response-types";
 
 const GetEventsSchema = z.object({
   limit: z.coerce.number().min(1).max(50).default(20),
   offset: z.coerce.number().min(0).default(0),
-  type: z.enum(['academic', 'social', 'recreational', 'cultural', 'meeting', 'virtual']).optional(),
-  upcoming: z.coerce.boolean().default(true) });
+  type: z
+    .enum(["academic", "social", "recreational", "cultural", "meeting", "virtual"])
+    .optional(),
+  upcoming: z.coerce.boolean().default(true),
+});
 
 const CreateEventSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().min(1).max(2000),
-  type: z.enum(['academic', 'social', 'recreational', 'cultural', 'meeting', 'virtual']),
+  type: z.enum(["academic", "social", "recreational", "cultural", "meeting", "virtual"]),
   startDate: z.string().datetime(),
   endDate: z.string().datetime(),
   location: z.string().optional(),
@@ -31,83 +40,56 @@ const CreateEventSchema = z.object({
   isPrivate: z.boolean().default(false),
   requiredRSVP: z.boolean().default(false),
   cost: z.number().nonnegative().optional(),
-  currency: z.string().length(3).optional() });
+  currency: z.string().length(3).optional(),
+});
 
-const db = dbAdmin;
-
-// GET /api/spaces/[spaceId]/events - Get events for a space
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond,
+) => {
   try {
     const { spaceId } = await params;
-    
-    // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const userId = getUserId(request);
+
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    const { searchParams } = new URL(request.url);
-    const { limit, offset, type, upcoming } = GetEventsSchema.parse(
-      Object.fromEntries(searchParams.entries())
+    const queryParams = GetEventsSchema.parse(
+      Object.fromEntries(request.nextUrl.searchParams.entries()),
     );
 
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
+    let query = dbAdmin.collection("spaces").doc(spaceId).collection("events");
 
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Build query for events
-    let query = db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .orderBy("startDate", "asc");
-
-    // Filter by upcoming/past events
-    if (upcoming) {
-      query = query.where("startDate", ">=", new Date());
+    const now = new Date();
+    if (queryParams.upcoming) {
+      query = query.where("startDate", ">=", now).orderBy("startDate", "asc");
     } else {
-      query = query.where("startDate", "<", new Date());
+      query = query.where("startDate", "<", now).orderBy("startDate", "desc");
     }
 
-    // Filter by event type
-    if (type) {
-      query = query.where("type", "==", type);
+    if (queryParams.type) {
+      query = query.where("type", "==", queryParams.type);
     }
 
-    // Apply pagination
-    query = query.offset(offset).limit(limit);
+    query = query.offset(queryParams.offset).limit(queryParams.limit);
 
     const eventsSnapshot = await query.get();
+    const events: any[] = [];
 
-    const events = [];
-
-    // Process events
     for (const doc of eventsSnapshot.docs) {
       const eventData = doc.data();
-
-      // Get organizer info
-      const organizerDoc = await db
-        .collection("users")
-        .doc(eventData.organizerId)
-        .get();
+      if (eventData.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+        continue;
+      }
+      const organizerDoc = await dbAdmin.collection("users").doc(eventData.organizerId).get();
       const organizer = organizerDoc.exists ? organizerDoc.data() : null;
 
-      // Get RSVP count
-      const rsvpSnapshot = await db
+      const rsvpSnapshot = await dbAdmin
         .collection("spaces")
         .doc(spaceId)
         .collection("events")
@@ -116,19 +98,14 @@ export async function GET(
         .where("status", "==", "going")
         .get();
 
-      // Get user's RSVP status
-      const userRsvpDoc = await db
+      const userRsvpDoc = await dbAdmin
         .collection("spaces")
         .doc(spaceId)
         .collection("events")
         .doc(doc.id)
         .collection("rsvps")
-        .doc(decodedToken.uid)
+        .doc(userId)
         .get();
-
-      const userRsvpStatus = userRsvpDoc.exists 
-        ? userRsvpDoc.data()?.status 
-        : null;
 
       events.push({
         id: doc.id,
@@ -142,118 +119,98 @@ export async function GET(
             }
           : null,
         currentAttendees: rsvpSnapshot.size,
-        userRSVP: userRsvpStatus });
+        userRSVP: userRsvpDoc.exists ? userRsvpDoc.data()?.status : null,
+      });
     }
 
-    return NextResponse.json({
+    return respond.success({
       events,
-      hasMore: eventsSnapshot.size === limit,
+      hasMore: eventsSnapshot.size === queryParams.limit,
       pagination: {
-        limit,
-        offset,
-        nextOffset: eventsSnapshot.size === limit ? offset + limit : null,
-      } });
-  } catch (error) {
-    logger.error(
-      `Error fetching events at /api/spaces/[spaceId]/events`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch events", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
-
-// POST /api/spaces/[spaceId]/events - Create a new event
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
-  try {
-    const { spaceId } = await params;
-    
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = (await request.json()) as unknown;
-    const validatedData = CreateEventSchema.parse(body);
-
-    // Validate dates
-    const startDate = new Date(validatedData.startDate);
-    const endDate = new Date(validatedData.endDate);
-    
-    if (endDate <= startDate) {
-      return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Create event document
-    const eventData = {
-      ...validatedData,
-      startDate,
-      endDate,
-      rsvpDeadline: validatedData.rsvpDeadline ? new Date(validatedData.rsvpDeadline) : null,
-      organizerId: decodedToken.uid,
-      spaceId: spaceId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const eventRef = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .add(eventData);
-
-    // Get the created event with organizer info
-    const organizerDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
-    const organizer = organizerDoc.data();
-
-    const createdEvent = {
-      id: eventRef.id,
-      ...eventData,
-      organizer: {
-        id: decodedToken.uid,
-        fullName: organizer?.fullName || "Unknown User",
-        handle: organizer?.handle || "unknown",
-        photoURL: organizer?.photoURL || null,
+        limit: queryParams.limit,
+        offset: queryParams.offset,
+        nextOffset:
+          eventsSnapshot.size === queryParams.limit
+            ? queryParams.offset + queryParams.limit
+            : null,
       },
-      currentAttendees: 0,
-      userRSVP: null,
-    };
-
-    return NextResponse.json({ event: createdEvent }, { status: HttpStatus.CREATED });
+    });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid event data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
     logger.error(
-      `Error creating event at /api/spaces/[spaceId]/events`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error fetching events at /api/spaces/[spaceId]/events",
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to create event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to fetch events", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});
+
+export const POST = withAuthValidationAndErrors(
+  CreateEventSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId } = await params;
+      const userId = getUserId(request);
+
+      const membership = await requireSpaceMembership(spaceId, userId);
+      if (!membership.ok) {
+        const code =
+          membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+        return respond.error(membership.error, code, { status: membership.status });
+      }
+
+      const role = membership.membership.role;
+      if (!["owner", "admin", "moderator", "builder"].includes(role)) {
+        return respond.error("Insufficient permissions to create events", "FORBIDDEN", {
+          status: HttpStatus.FORBIDDEN,
+        });
+      }
+
+      const startDate = new Date(body.startDate);
+      const endDate = new Date(body.endDate);
+      if (startDate >= endDate) {
+        return respond.error("End date must be after start date", "INVALID_INPUT", {
+          status: HttpStatus.BAD_REQUEST,
+        });
+      }
+
+      const eventData = {
+        ...body,
+        startDate,
+        endDate,
+        organizerId: userId,
+        campusId: CURRENT_CAMPUS_ID,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: "scheduled",
+      };
+
+      const eventRef = await dbAdmin
+        .collection("spaces")
+        .doc(spaceId)
+        .collection("events")
+        .add(eventData);
+
+      return respond.created({
+        event: {
+          id: eventRef.id,
+          ...eventData,
+        },
+      });
+    } catch (error) {
+      logger.error(
+        "Error creating event at /api/spaces/[spaceId]/events",
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return respond.error("Failed to create event", "INTERNAL_ERROR", {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
+);

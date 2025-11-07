@@ -1,6 +1,6 @@
-# HIVE UI Scripts
+# UI Tooling Scripts
 
-This directory contains utility scripts for the HIVE UI project.
+This directory contains utility scripts that support the campus web UI.
 
 ## Directory Structure Cleanup
 

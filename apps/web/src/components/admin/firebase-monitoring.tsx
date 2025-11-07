@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Progress,
   Tabs,
   TabsContent,
@@ -38,6 +38,7 @@ import {
   Eye,
   Flame
 } from 'lucide-react';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface FirebaseMetrics {
   firestore: {
@@ -138,8 +139,8 @@ export function FirebaseMonitoring() {
     try {
       setLoading(true);
       const [metricsRes, healthRes] = await Promise.all([
-        fetch(`/api/admin/firebase-metrics?range=${timeRange}`),
-        fetch('/api/admin/system-health')
+        secureApiFetch(`/api/admin/firebase-metrics?range=${timeRange}`),
+        secureApiFetch('/api/admin/system-health')
       ]);
 
       if (metricsRes.ok) {
@@ -233,10 +234,10 @@ export function FirebaseMonitoring() {
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
           </select>
-          <HiveButton variant="outline" size="sm" onClick={loadFirebaseMetrics}>
+          <Button variant="outline" size="sm" onClick={loadFirebaseMetrics}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
-          </HiveButton>
+          </Button>
         </div>
       </div>
 

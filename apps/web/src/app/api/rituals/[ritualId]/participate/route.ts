@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 
 import * as admin from 'firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Enhanced ritual participation framework
 const ritualFramework = {
@@ -24,7 +25,7 @@ const ritualFramework = {
       const existingParticipationQuery = await dbAdmin.collection('ritual_participation')
         .where('ritualId', '==', ritualId)
         .where('userId', '==', userId)
-        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .where('campusId', '==', CURRENT_CAMPUS_ID) // Campus isolation
         .limit(1)
         .get();
 
@@ -49,7 +50,7 @@ const ritualFramework = {
         rewardsEarned: [],
         badgesAwarded: [],
         entryPoint,
-        campusId: 'ub-buffalo', // Campus isolation
+        campusId: CURRENT_CAMPUS_ID, // Campus isolation
         metadata: {
           deviceType: 'web',
           userAgent: 'unknown'
@@ -68,6 +69,13 @@ const ritualFramework = {
         'stats.lastActivityAt': new Date(),
         updatedAt: new Date()
       });
+
+      // Mirror v2 metrics if present
+      const v2Ref = dbAdmin.collection('rituals_v2').doc(ritualId);
+      const v2Snap = await v2Ref.get();
+      if (v2Snap.exists) {
+        await v2Ref.update({ 'metrics.participants': admin.firestore.FieldValue.increment(1), updatedAt: new Date() });
+      }
 
       return { success: true, participationId: participationRef.id };
     } catch (error) {
@@ -95,7 +103,7 @@ const ritualFramework = {
       const participationQuery = await dbAdmin.collection('ritual_participation')
         .where('ritualId', '==', ritualId)
         .where('userId', '==', userId)
-        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .where('campusId', '==', CURRENT_CAMPUS_ID) // Campus isolation
         .limit(1)
         .get();
 
@@ -163,6 +171,11 @@ const ritualFramework = {
           'stats.lastActivityAt': new Date(),
           updatedAt: new Date()
         });
+        const v2Ref = dbAdmin.collection('rituals_v2').doc(ritualId);
+        const v2Snap = await v2Ref.get();
+        if (v2Snap.exists) {
+          await v2Ref.update({ 'metrics.conversions': admin.firestore.FieldValue.increment(1), updatedAt: new Date() });
+        }
       }
 
       return {
@@ -187,7 +200,7 @@ const ritualFramework = {
       const participationQuery = await dbAdmin.collection('ritual_participation')
         .where('ritualId', '==', ritualId)
         .where('userId', '==', userId)
-        .where('campusId', '==', 'ub-buffalo') // Campus isolation
+        .where('campusId', '==', CURRENT_CAMPUS_ID) // Campus isolation
         .limit(1)
         .get();
 
@@ -211,6 +224,12 @@ const ritualFramework = {
         'stats.lastActivityAt': new Date(),
         updatedAt: new Date()
       });
+
+      const v2Ref = dbAdmin.collection('rituals_v2').doc(ritualId);
+      const v2Snap = await v2Ref.get();
+      if (v2Snap.exists) {
+        await v2Ref.update({ 'metrics.participants': admin.firestore.FieldValue.increment(-1), updatedAt: new Date() });
+      }
 
       return true;
     } catch (error) {

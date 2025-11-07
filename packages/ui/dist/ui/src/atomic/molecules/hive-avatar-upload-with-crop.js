@@ -27,8 +27,10 @@ async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
     const radians = (rotation * Math.PI) / 180;
     const sin = Math.abs(Math.sin(radians));
     const cos = Math.abs(Math.cos(radians));
-    const newWidth = image.width * cos + image.height * sin;
-    const newHeight = image.width * sin + image.height * cos;
+    // rotated bounds (unused for now but calculated for potential future use)
+    // rotated bounds (computed but not used)
+    void (image.width * cos + image.height * sin);
+    void (image.width * sin + image.height * cos);
     // Set up the drawing context
     ctx.translate(outputWidth / 2, outputHeight / 2);
     ctx.rotate(radians);

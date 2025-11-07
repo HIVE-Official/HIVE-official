@@ -514,7 +514,7 @@ Atoms:
 ├── HiveButton (responsive sizes)
 ├── HiveAvatar
 ├── HiveBadge
-├── HiveInput
+├── Input
 └── ResponsiveContainer
 
 Molecules:

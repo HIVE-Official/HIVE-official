@@ -1,3 +1,6 @@
+import type { Tool as DomainTool } from '../../domain/creation/tool';
+import type { ElementInstance as DomainElementInstance } from '../../domain/creation/elements';
+
 /**
  * Temporary type exports for backward compatibility
  * These re-export from proper domain models
@@ -381,32 +384,10 @@ export interface User {
   };
 }
 
-// Tool type definitions
-export interface Tool {
-  id: string;
-  name: string;
-  description: string;
-  creatorId: string;
-  version: string;
-  elements: ElementInstance[];
-  settings: ToolSettings;
-  analytics?: ToolAnalytics;
-  permissions: ToolPermissions;
-  createdAt: Date | any;
-  updatedAt?: Date | any;
-  publishedAt?: Date | any;
-  campusId: string;
-}
+// Tool type definitions (legacy alias)
+export type Tool = DomainTool;
 
-export interface ElementInstance {
-  id: string;
-  type: string;
-  config: any;
-  position: { x: number; y: number };
-  size?: { width: number; height: number };
-  style?: any;
-  data?: any;
-}
+export type ElementInstance = DomainElementInstance;
 
 export interface Element {
   id: string;
@@ -418,102 +399,39 @@ export interface Element {
   schema?: any;
 }
 
-export interface ToolSettings {
-  isPublic: boolean;
-  allowComments: boolean;
-  allowSharing: boolean;
-  requireAuth: boolean;
-  maxUsers?: number;
-}
+export {
+  ElementType,
+  ElementInstanceSchema,
+  validateElementConfig,
+} from '../../domain/creation/elements';
 
-export interface ToolAnalytics {
-  views: number;
-  uses: number;
-  shares: number;
-  rating?: number;
-  reviews?: number;
-}
+export {
+  ToolSchema,
+  CreateToolSchema,
+  UpdateToolSchema,
+  ShareToolSchema,
+  ToolStatus,
+  ToolConfigSchema,
+  ToolMetadataSchema,
+  ToolVersionSchema,
+  createToolDefaults,
+  generateShareToken,
+  canUserEditTool,
+  canUserViewTool,
+  getNextVersion,
+  determineChangeType,
+  validateToolStructure,
+} from '../../domain/creation/tool';
 
-export interface ToolPermissions {
-  canEdit: string[];
-  canView: string[];
-  canShare: string[];
-  canDelete: string[];
-}
-
-// Tool-related schemas and validators
-export const ToolSchema = {
-  parse: (data: any) => data,
-  safeParse: (data: any) => ({ success: true, data })
-};
-
-export const CreateToolSchema = {
-  parse: (data: any) => data,
-  safeParse: (data: any) => ({ success: true, data })
-};
-
-export const UpdateToolSchema = {
-  parse: (data: any) => data,
-  safeParse: (data: any) => ({ success: true, data })
-};
-
-export const ShareToolSchema = {
-  parse: (data: any) => data,
-  safeParse: (data: any) => ({ success: true, data })
-};
-
-// Tool utility functions
-export function canUserEditTool(tool: Tool, userId: string): boolean {
-  return tool.creatorId === userId ||
-         (tool.permissions?.canEdit || []).includes(userId);
-}
-
-export function canUserViewTool(tool: Tool, userId: string): boolean {
-  return tool.settings?.isPublic ||
-         tool.creatorId === userId ||
-         (tool.permissions?.canView || []).includes(userId);
-}
-
-export function getNextVersion(currentVersion: string): string {
-  const parts = currentVersion.split('.');
-  const patch = parseInt(parts[2] || '0', 10);
-  return `${parts[0]}.${parts[1]}.${patch + 1}`;
-}
-
-export function determineChangeType(changes: any): 'major' | 'minor' | 'patch' {
-  // Simple heuristic for now
-  if (changes.elements?.length > 0) return 'minor';
-  if (changes.settings) return 'patch';
-  return 'patch';
-}
-
-export function validateToolStructure(tool: any): boolean {
-  return !!(tool.name && tool.elements && Array.isArray(tool.elements));
-}
-
-export function validateElementConfig(element: any): boolean {
-  return !!(element.type && element.config);
-}
-
-export function generateShareToken(toolId: string, userId: string): string {
-  return Buffer.from(`${toolId}:${userId}:${Date.now()}`).toString('base64');
-}
-
-export function createToolDefaults(): Partial<Tool> {
-  return {
-    version: '1.0.0',
-    elements: [],
-    settings: {
-      isPublic: false,
-      allowComments: true,
-      allowSharing: true,
-      requireAuth: false
-    },
-    permissions: {
-      canEdit: [],
-      canView: [],
-      canShare: [],
-      canDelete: []
-    }
-  };
-}
+export {
+  PlacedToolSchema,
+  PlacementTargetType,
+  PlacementPermissionsSchema,
+  PlacementSettingsSchema,
+  getPlacementCollectionPath,
+  getPlacementDocPath,
+  encodePlacementCompositeId,
+  decodePlacementCompositeId,
+  tryDecodePlacementCompositeId,
+  PLACED_TOOL_COLLECTION_NAME,
+} from '../../domain/creation/placement';

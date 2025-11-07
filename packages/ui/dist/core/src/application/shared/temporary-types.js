@@ -258,71 +258,7 @@ export class Space {
         };
     }
 }
-// Tool-related schemas and validators
-export const ToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-export const CreateToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-export const UpdateToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-export const ShareToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-// Tool utility functions
-export function canUserEditTool(tool, userId) {
-    return tool.creatorId === userId ||
-        (tool.permissions?.canEdit || []).includes(userId);
-}
-export function canUserViewTool(tool, userId) {
-    return tool.settings?.isPublic ||
-        tool.creatorId === userId ||
-        (tool.permissions?.canView || []).includes(userId);
-}
-export function getNextVersion(currentVersion) {
-    const parts = currentVersion.split('.');
-    const patch = parseInt(parts[2] || '0', 10);
-    return `${parts[0]}.${parts[1]}.${patch + 1}`;
-}
-export function determineChangeType(changes) {
-    // Simple heuristic for now
-    if (changes.elements?.length > 0)
-        return 'minor';
-    if (changes.settings)
-        return 'patch';
-    return 'patch';
-}
-export function validateToolStructure(tool) {
-    return !!(tool.name && tool.elements && Array.isArray(tool.elements));
-}
-export function validateElementConfig(element) {
-    return !!(element.type && element.config);
-}
-export function generateShareToken(toolId, userId) {
-    return Buffer.from(`${toolId}:${userId}:${Date.now()}`).toString('base64');
-}
-export function createToolDefaults() {
-    return {
-        version: '1.0.0',
-        elements: [],
-        settings: {
-            isPublic: false,
-            allowComments: true,
-            allowSharing: true,
-            requireAuth: false
-        },
-        permissions: {
-            canEdit: [],
-            canView: [],
-            canShare: [],
-            canDelete: []
-        }
-    };
-}
+export { ElementType, ElementInstanceSchema, validateElementConfig, } from '../../domain/creation/elements';
+export { ToolSchema, CreateToolSchema, UpdateToolSchema, ShareToolSchema, ToolStatus, ToolConfigSchema, ToolMetadataSchema, ToolVersionSchema, createToolDefaults, generateShareToken, canUserEditTool, canUserViewTool, getNextVersion, determineChangeType, validateToolStructure, } from '../../domain/creation/tool';
+export { PlacedToolSchema, PlacementTargetType, PlacementPermissionsSchema, PlacementSettingsSchema, getPlacementCollectionPath, getPlacementDocPath, encodePlacementCompositeId, decodePlacementCompositeId, tryDecodePlacementCompositeId, PLACED_TOOL_COLLECTION_NAME, } from '../../domain/creation/placement';
 //# sourceMappingURL=temporary-types.js.map

@@ -44,7 +44,7 @@ import {
   Wrench,
   Gauge
 } from 'lucide-react';
-import { useCSRF, protectedFetch } from '@/hooks/use-csrf';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface OptimizationData {
   overview: {
@@ -99,7 +99,7 @@ export function DatabasePerformanceDashboard() {
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
-  const { token: csrfToken, getHeaders } = useCSRF();
+  // CSRF token provided via meta; secureApiFetch handles credentials & CSRF
 
   useEffect(() => {
     loadOptimizationData();
@@ -122,9 +122,7 @@ export function DatabasePerformanceDashboard() {
         ...(selectedCollection && { collection: selectedCollection })
       });
 
-      const response = await protectedFetch(`/api/admin/database-optimization?${params}`, {
-        headers: getHeaders()
-      }, csrfToken);
+      const response = await secureApiFetch(`/api/admin/database-optimization?${params}`);
 
       if (!response.ok) {
         throw new Error('Failed to load optimization data');
@@ -142,11 +140,11 @@ export function DatabasePerformanceDashboard() {
   const handleOptimizationAction = async (action: string, params: any = {}) => {
     try {
       setActionInProgress(action);
-      const response = await protectedFetch('/api/admin/database-optimization', {
+      const response = await secureApiFetch('/api/admin/database-optimization', {
         method: 'POST',
-        headers: getHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, ...params })
-      }, csrfToken);
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to perform ${action}`);

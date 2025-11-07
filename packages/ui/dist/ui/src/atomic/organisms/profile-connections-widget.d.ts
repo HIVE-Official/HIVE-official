@@ -1,39 +1,18 @@
-import React from 'react';
-import { type PrivacyLevel } from '../molecules/privacy-control';
-import { type PresenceStatus } from '../atoms/presence-indicator';
-export interface Connection {
+import { type PrivacyLevel } from "../molecules/privacy-control";
+export interface ProfileConnectionItem {
     id: string;
     name: string;
-    avatarUrl?: string;
-    major?: string;
-    academicYear?: string;
-    isFriend: boolean;
-    mutualSpaces: number;
-    connectionStrength: number;
-    lastInteraction?: Date;
-    isOnline?: boolean;
-    presenceStatus?: PresenceStatus;
-    lastSeen?: Date;
+    avatarUrl?: string | null;
+    isFriend?: boolean;
+    sharedSpaces?: string[];
+    connectionStrength?: number;
 }
-export interface MyConnectionsWidgetProps {
-    connections: Connection[];
-    pendingFriendRequests?: number;
+export interface ProfileConnectionsWidgetProps {
+    connections: ProfileConnectionItem[];
     isOwnProfile?: boolean;
     privacyLevel?: PrivacyLevel;
     onPrivacyChange?: (level: PrivacyLevel) => void;
-    onConnectionClick?: (connectionId: string) => void;
-    onViewAll?: () => void;
-    onManageFriends?: () => void;
     className?: string;
 }
-/**
- * My Connections Widget - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - Two-layer social graph visualization
- * - Gold accent for friends (inner circle)
- * - Connection strength algorithm visualization
- * - Mobile-optimized grid layout
- */
-export declare const MyConnectionsWidget: React.FC<MyConnectionsWidgetProps>;
+export declare function ProfileConnectionsWidget({ connections, isOwnProfile, privacyLevel, onPrivacyChange, className, }: ProfileConnectionsWidgetProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=profile-connections-widget.d.ts.map

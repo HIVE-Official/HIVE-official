@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { type Space } from "@hive/core";
 import { dbAdmin } from "@/lib/firebase-admin";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { findSpaceOptimized } from "@/lib/space-query-optimizer";
 import { logger } from "@/lib/structured-logger";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
@@ -40,6 +41,11 @@ export const GET = withAuthAndErrors(async (
   }
 
   const space = { id: spaceDoc.id, ...spaceDoc.data() } as Space;
+
+  // Enforce campus isolation
+  if ((space as any).campusId && (space as any).campusId !== CURRENT_CAMPUS_ID) {
+    return respond.error("Access denied - campus mismatch", "FORBIDDEN", { status: 403 });
+  }
 
   logger.info(`Space fetched: ${spaceId}`, { spaceId, endpoint: "/api/spaces/[spaceId]" });
 
@@ -82,6 +88,7 @@ export const PATCH = withAuthValidationAndErrors(
       .where('spaceId', '==', spaceId)
       .where('userId', '==', userId)
       .where('isActive', '==', true)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1);
 
     const memberSnapshot = await memberQuery.get();

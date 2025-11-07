@@ -166,12 +166,10 @@ export class PlatformIntegration {
    */
   private async getFeedSliceData(userId: string, options: { limit: number; timeRange: string }): Promise<FeedItem[]> {
     try {
-      const response = await fetch('/api/feed/algorithm', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch('/api/feed/algorithm', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           limit: options.limit,
           timeRange: options.timeRange,
@@ -208,11 +206,8 @@ export class PlatformIntegration {
   private async getSpaceSliceData(userId: string, options: { limit: number; timeRange: string }): Promise<FeedItem[]> {
     try {
       // Get user's spaces first
-      const spacesResponse = await fetch(`/api/profile/spaces/actions`, {
-        headers: {
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        }
-      });
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const spacesResponse = await secureApiFetch(`/api/profile/spaces/actions`);
 
       if (!spacesResponse.ok) throw new Error('Failed to fetch user spaces');
 
@@ -224,11 +219,7 @@ export class PlatformIntegration {
       // Get recent activities from each space
       for (const space of userSpaces.slice(0, 5)) { // Limit to top 5 spaces
         try {
-          const postsResponse = await fetch(`/api/spaces/${space.id}/posts?limit=5`, {
-            headers: {
-              'Authorization': `Bearer ${await this.getAuthToken()}`
-            }
-          });
+          const postsResponse = await secureApiFetch(`/api/spaces/${space.id}/posts?limit=5`);
 
           if (postsResponse.ok) {
             const postsData = await postsResponse.json();
@@ -265,11 +256,8 @@ export class PlatformIntegration {
    */
   private async getToolSliceData(userId: string, options: { limit: number; timeRange: string }): Promise<FeedItem[]> {
     try {
-      const response = await fetch(`/api/tools/personal`, {
-        headers: {
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        }
-      });
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch(`/api/tools/personal`);
 
       if (!response.ok) throw new Error('Failed to fetch tool data');
 
@@ -301,11 +289,8 @@ export class PlatformIntegration {
    */
   private async getProfileSliceData(userId: string, options: { limit: number; timeRange: string }): Promise<FeedItem[]> {
     try {
-      const response = await fetch(`/api/profile/dashboard`, {
-        headers: {
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        }
-      });
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch(`/api/profile/dashboard`);
 
       if (!response.ok) throw new Error('Failed to fetch profile data');
 

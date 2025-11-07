@@ -46,7 +46,8 @@ export const joinSpace = createHttpsFunction(
         });
 
         transaction.update(spaceRef, {
-          memberCount: FieldValue.increment(1),
+          'metrics.memberCount': FieldValue.increment(1),
+          'metrics.activeMembers': FieldValue.increment(1),
         });
 
         logger.info("User joined space", { userId: uid, spaceId });
@@ -86,7 +87,8 @@ export const leaveSpace = createHttpsFunction(
 
         transaction.delete(memberRef);
         transaction.update(spaceRef, {
-          memberCount: FieldValue.increment(-1),
+          'metrics.memberCount': FieldValue.increment(-1),
+          'metrics.activeMembers': FieldValue.increment(-1),
         });
 
         logger.info("User left space", { userId: uid, spaceId });

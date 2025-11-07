@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,10 +23,53 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@hive/ui": [
+        "../../packages/ui/src"
+      ],
+      "@hive/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@hive/core": [
+        "../../packages/core/dist"
+      ],
+      "@hive/core/*": [
+        "../../packages/core/dist/*"
+      ],
+      "@hive/hooks": [
+        "../../packages/hooks/dist"
+      ],
+      "@hive/auth-logic": [
+        "../../packages/auth-logic/src"
+      ],
+      "@hive/firebase": [
+        "../../packages/firebase/src"
+      ],
+      "@hive/firebase/*": [
+        "../../packages/firebase/src/*"
+      ],
+      "@hive/tokens": [
+        "../../packages/tokens/dist"
+      ]
     },
     "types": []
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "vitest*.config.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "vitest*.config.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "src/test/**",
+    "scripts/**"
+  ]
 }

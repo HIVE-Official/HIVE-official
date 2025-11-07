@@ -1,4 +1,4 @@
-# HIVE Presentation System Setup
+# Presentation System Setup
 
 ## Quick Implementation Guide for October 1st Launch
 
@@ -22,7 +22,7 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'HIVE Design System - Built by students, for students'
+        component: 'UB Design System - built by students, for students'
       }
     }
   }
@@ -30,7 +30,7 @@ export default {
 
 export const Introduction = () => (
   <div className="p-8 bg-hive-obsidian text-hive-platinum">
-    <h1>HIVE Design System</h1>
+    <h1>UB Design System</h1>
     <p>"Dorm Room Startup" Aesthetic</p>
     {/* Add brand colors, typography samples */}
   </div>
@@ -39,18 +39,18 @@ export const Introduction = () => (
 
 ##### 2. Core Atoms (`/packages/ui/src/stories/Atoms.stories.tsx`)
 ```typescript
-import { HiveButton, HiveCard, HiveModal } from '../atomic/atoms'
+import { Button, HiveCard, HiveModal } from '../atomic/atoms'
 
 export default {
   title: '02-Atoms/Core',
-  component: HiveButton
+  component: Button
 }
 
 export const Buttons = () => (
   <>
-    <HiveButton variant="default">Default</HiveButton>
-    <HiveButton variant="gold">Gold Accent</HiveButton>
-    <HiveButton loading>Loading...</HiveButton>
+    <Button variant="primary">Primary</Button>
+    <Button variant="brand">Brand Gradient</Button>
+    <Button loading>Loading...</Button>
   </>
 )
 ```
@@ -104,13 +104,15 @@ pnpm storybook
 
 Add JSDoc comments to your key components:
 ```typescript
-interface HiveButtonProps {
+interface ButtonProps {
   /** Visual style variant */
-  variant?: 'default' | 'gold' | 'ghost'
+  variant?: 'default' | 'primary' | 'secondary' | 'brand'
   /** Size of the button */
   size?: 'sm' | 'md' | 'lg'
   /** Loading state with pulse animation */
   loading?: boolean
+  /** Optional leading icon */
+  leadingIcon?: React.ReactNode
 }
 ```
 
@@ -120,7 +122,7 @@ Track what's ready:
 ```markdown
 | Component | Designed | Built | Documented | Stories |
 |-----------|----------|-------|------------|---------|
-| HiveButton | ✅ | ✅ | ⚠️ | ⚠️ |
+| Button | ✅ | ✅ | ⚠️ | ⚠️ |
 | HiveCard | ✅ | ✅ | ❌ | ❌ |
 | SpaceCard | ✅ | ⚠️ | ❌ | ❌ |
 | FeedItem | ⚠️ | ❌ | ❌ | ❌ |
@@ -153,7 +155,7 @@ Track what's ready:
 ├── .storybook/
 │   ├── main.ts          # Configuration
 │   ├── preview.ts       # Global decorators
-│   └── theme.ts         # HIVE Storybook theme
+│   └── theme.ts         # Custom Storybook theme
 ├── src/
 │   ├── stories/
 │   │   ├── 00-System/   # Overview & tokens
@@ -172,11 +174,11 @@ Show all states in one view:
 ```typescript
 export const ButtonStates = () => (
   <div className="space-y-4">
-    <div>Default: <HiveButton>Click</HiveButton></div>
-    <div>Hover: <HiveButton className="hover">Click</HiveButton></div>
-    <div>Active: <HiveButton className="active">Click</HiveButton></div>
-    <div>Disabled: <HiveButton disabled>Click</HiveButton></div>
-    <div>Loading: <HiveButton loading>Click</HiveButton></div>
+    <div>Default: <Button>Click</Button></div>
+    <div>Hover: <Button className="hover">Click</Button></div>
+    <div>Active: <Button className="active">Click</Button></div>
+    <div>Disabled: <Button disabled>Click</Button></div>
+    <div>Loading: <Button loading>Click</Button></div>
   </div>
 )
 ```
@@ -203,7 +205,7 @@ export const ResponsiveCard = () => (
 ```
 
 #### 3. Dark Theme Testing
-Always show in HIVE dark theme:
+Always show in the campus dark theme:
 ```typescript
 export const decorators = [
   (Story) => (

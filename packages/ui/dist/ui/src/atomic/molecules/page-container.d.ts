@@ -17,7 +17,7 @@ export interface PageContainerProps extends React.HTMLAttributes<HTMLDivElement>
     subtitle?: string;
     breadcrumbs?: Array<{
         label: string;
-        icon?: React.ComponentType<any>;
+        icon?: React.ComponentType<unknown>;
     }>;
     actions?: React.ReactNode;
 }

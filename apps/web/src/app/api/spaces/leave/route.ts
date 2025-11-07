@@ -36,6 +36,7 @@ export const POST = withAuthValidationAndErrors(
       .where('spaceId', '==', spaceId)
       .where('userId', '==', userId)
       .where('isActive', '==', true)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1);
 
     const membershipSnapshot = await membershipQuery.get();
@@ -48,6 +49,7 @@ export const POST = withAuthValidationAndErrors(
         .where('spaceId', '==', spaceId)
         .where('role', '==', 'owner')
         .where('isActive', '==', true)
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .limit(2);
       
       const otherOwnersSnapshot = await otherOwnersQuery.get();

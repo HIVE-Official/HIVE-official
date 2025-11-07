@@ -280,18 +280,16 @@ export class RealTimeFeedManager {
    */
   private async getUserSpaceIds(): Promise<string[]> {
     try {
-      const snapshot = await dbAdmin.collectionGroup('members')
+      const snapshot = await dbAdmin
+        .collection('spaceMembers')
         .where('userId', '==', this._userId)
-        .limit(100)
+        .where('isActive', '==', true)
+        .limit(200)
         .get();
-      
-      const spaceIds: string[] = [];
-      snapshot.docs.forEach(doc => {
-        const spaceId = doc.ref.parent.parent?.id;
-        if (spaceId) spaceIds.push(spaceId);
-      });
-      
-      return spaceIds;
+
+      return snapshot.docs
+        .map(doc => doc.data().spaceId as string)
+        .filter(Boolean);
     } catch (error) {
       return [];
     }
@@ -456,3 +454,4 @@ export async function refreshFeedCache(userId: string): Promise<FeedUpdate> {
   const manager = await feedManagerRegistry.getManager(userId);
   return await manager.forceRefresh();
 }
+import 'server-only';

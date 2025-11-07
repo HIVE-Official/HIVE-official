@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 import { featureFlagService } from '@/lib/feature-flags';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * Individual Feature Flag Management API
@@ -16,20 +16,12 @@ type RouteParams = {
 };
 
 // GET - Get a specific feature flag (admin only)
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export const GET = withSecureAuth(async (request: NextRequest, token, { params }: RouteParams) => {
   let flagId: string = 'unknown';
   
   try {
     const resolvedParams = await params;
     flagId = resolvedParams.flagId;
-    
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Unauthorized', 'UNAUTHORIZED'), 
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
 
     const flag = await featureFlagService.getFeatureFlag(flagId);
 
@@ -52,22 +44,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { requireAdmin: true });
 
 // PATCH - Update a specific feature flag (admin only)
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
+export const PATCH = withSecureAuth(async (request: NextRequest, token, { params }: RouteParams) => {
   let flagId: string = 'unknown';
   
   try {
     const resolvedParams = await params;
     flagId = resolvedParams.flagId;
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Unauthorized', 'UNAUTHORIZED'), 
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
     const body = await request.json();
 
     // Get existing flag
@@ -108,11 +93,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       }
     }
 
-    await featureFlagService.setFeatureFlag(updatedFlag, user.uid);
+    await featureFlagService.setFeatureFlag(updatedFlag, token?.uid || 'unknown');
     
     logger.info('Feature flag updated', { 
       flagId, 
-      adminUserId: user.uid, 
+      adminUserId: token?.uid || 'unknown', 
       action: 'feature_flag_updated'
     });
 
@@ -129,22 +114,15 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { requireAdmin: true });
 
 // DELETE - Delete a specific feature flag (admin only)
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export const DELETE = withSecureAuth(async (request: NextRequest, token, { params }: RouteParams) => {
   let flagId: string = 'unknown';
   
   try {
     const resolvedParams = await params;
     flagId = resolvedParams.flagId;
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Unauthorized', 'UNAUTHORIZED'), 
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
 
     // Check if flag exists
     const existingFlag = await featureFlagService.getFeatureFlag(flagId);
@@ -155,11 +133,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    await featureFlagService.deleteFeatureFlag(flagId, user.uid);
+    await featureFlagService.deleteFeatureFlag(flagId, token?.uid || 'unknown');
     
     logger.info('Feature flag deleted', { 
       flagId, 
-      adminUserId: user.uid,
+      adminUserId: token?.uid || 'unknown',
       action: 'feature_flag_deleted'
     });
 
@@ -176,4 +154,4 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { requireAdmin: true });

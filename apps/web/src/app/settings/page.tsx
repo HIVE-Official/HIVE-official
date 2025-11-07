@@ -97,7 +97,7 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Settings Navigation */}
         <div className="lg:col-span-1">
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <h2 className="text-lg font-semibold text-white mb-4">Settings</h2>
             <nav className="space-y-2">
               {[
@@ -114,7 +114,7 @@ export default function SettingsPage() {
                   className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                     item.active 
                       ? 'bg-[var(--hive-brand-primary)]/10 text-[var(--hive-brand-primary)]' 
-                      : 'text-[#A1A1AA] hover:text-white hover:bg-[rgba(255,255,255,0.05)]'
+                      : 'text-hive-text-tertiary hover:text-white hover:bg-white/10'
                   }`}
                 >
                   <item.icon className="h-4 w-4" />
@@ -128,7 +128,7 @@ export default function SettingsPage() {
         {/* Settings Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Profile Information */}
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <h3 className="text-lg font-semibold text-white mb-6">Profile Information</h3>
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -138,7 +138,7 @@ export default function SettingsPage() {
                     type="text" 
                     value={formData.fullName}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                    className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-hive-text-tertiary focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -147,7 +147,7 @@ export default function SettingsPage() {
                     type="text" 
                     value={formData.handle}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
-                    className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-hive-text-tertiary focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   />
                 </div>
               </div>
@@ -157,9 +157,9 @@ export default function SettingsPage() {
                   type="email" 
                   defaultValue={user?.email || ''}
                   disabled
-                  className="w-full px-3 py-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-lg text-[#A1A1AA] cursor-not-allowed"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-hive-text-tertiary cursor-not-allowed"
                 />
-                <p className="text-xs text-[#A1A1AA] mt-1">Email cannot be changed</p>
+                <p className="text-xs text-hive-text-tertiary mt-1">Email cannot be changed</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Bio</label>
@@ -167,7 +167,7 @@ export default function SettingsPage() {
                   rows={3}
                   value={formData.bio}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-                  className="w-full px-3 py-2 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.12)] rounded-lg text-white placeholder:text-[#A1A1AA] focus:border-[var(--hive-brand-primary)] focus:outline-none"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-hive-text-tertiary focus:border-[var(--hive-brand-primary)] focus:outline-none"
                   placeholder="Tell others about yourself..."
                 />
               </div>
@@ -184,7 +184,7 @@ export default function SettingsPage() {
           </Card>
 
           {/* Navigation Preferences */}
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <h3 className="text-lg font-semibold text-white mb-6">Navigation Preferences</h3>
             <div className="space-y-6">
               {/* TODO: Fix NavigationPreferences - properties don't exist in shell context
@@ -198,7 +198,7 @@ export default function SettingsPage() {
               <div className="p-4 bg-[rgba(255,255,255,0.03)] rounded-lg border border-[rgba(255,255,255,0.08)]">
                 <h4 className="text-sm font-medium text-white mb-2">Current Layout</h4>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#A1A1AA]">Mode: {navigationLayout?.resolvedMode}</span>
+                  <span className="text-hive-text-tertiary">Mode: {navigationLayout?.resolvedMode}</span>
                   <span className="text-[var(--hive-brand-primary)] font-medium">
                     {navigationLayout?.resolvedMode === 'bottom-tabs' && 'Bottom Tabs'}
                     {navigationLayout?.resolvedMode === 'topbar' && 'Top Navigation'}
@@ -206,7 +206,7 @@ export default function SettingsPage() {
                     {navigationLayout?.resolvedMode === 'drawer' && 'Drawer'}
                   </span>
                 </div>
-                <div className="mt-2 text-xs text-[#A1A1AA]">
+                <div className="mt-2 text-xs text-hive-text-tertiary">
                   {navigationLayout?.canUsePreference
                     ? 'User preference active'
                     : navigationLayout?.reasons?.join(', ')
@@ -218,7 +218,7 @@ export default function SettingsPage() {
           </Card>
 
           {/* Notification Preferences */}
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <h3 className="text-lg font-semibold text-white mb-6">Notification Preferences</h3>
             <div className="space-y-4">
               {[
@@ -231,7 +231,7 @@ export default function SettingsPage() {
                 <div key={i} className="flex items-start justify-between py-3">
                   <div className="flex-1">
                     <h4 className="text-white text-sm font-medium">{item.label}</h4>
-                    <p className="text-[#A1A1AA] text-xs mt-1">{item.description}</p>
+                    <p className="text-hive-text-tertiary text-xs mt-1">{item.description}</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer ml-4">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -243,13 +243,13 @@ export default function SettingsPage() {
           </Card>
 
           {/* Privacy & Security */}
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <h3 className="text-lg font-semibold text-white mb-6">Privacy & Security</h3>
             <div className="space-y-4">
               <div className="flex items-start justify-between py-3">
                 <div className="flex-1">
                   <h4 className="text-white text-sm font-medium">Profile visibility</h4>
-                  <p className="text-[#A1A1AA] text-xs mt-1">Make your profile visible to other HIVE users</p>
+                    <p className="text-hive-text-tertiary text-xs mt-1">Make your profile visible to other HIVE users</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer ml-4">
                   <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -259,7 +259,7 @@ export default function SettingsPage() {
               <div className="flex items-start justify-between py-3">
                 <div className="flex-1">
                   <h4 className="text-white text-sm font-medium">Show online status</h4>
-                  <p className="text-[#A1A1AA] text-xs mt-1">Let others see when you&apos;re active on HIVE</p>
+                    <p className="text-hive-text-tertiary text-xs mt-1">Let others see when you&apos;re active on HIVE</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer ml-4">
                   <input type="checkbox" className="sr-only peer" />
@@ -292,11 +292,11 @@ export default function SettingsPage() {
           </Card>
 
           {/* Sign Out */}
-          <Card className="p-6 bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.06)]">
+          <Card className="p-6 bg-white/5 border-hive-border-default">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-white font-medium mb-1">Sign Out</h3>
-                <p className="text-[#A1A1AA] text-sm">Sign out of your HIVE account on this device</p>
+                <p className="text-hive-text-tertiary text-sm">Sign out of your HIVE account on this device</p>
               </div>
               <Button 
                 variant="secondary" 
@@ -322,7 +322,7 @@ export default function SettingsPage() {
               
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Delete Account</h3>
-                <p className="text-[#A1A1AA] text-sm">
+                <p className="text-hive-text-tertiary text-sm">
                   This action cannot be undone. This will permanently delete your account and remove all your data from HIVE.
                 </p>
               </div>
@@ -332,7 +332,7 @@ export default function SettingsPage() {
                 <input 
                   type="text" 
                   placeholder="Type DELETE"
-                  className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-red-500/30 rounded-lg text-white placeholder:text-[#A1A1AA] focus:outline-none focus:border-red-500"
+                  className="w-full p-3 bg-white/10 border border-red-500/30 rounded-lg text-white placeholder:text-hive-text-tertiary focus:outline-none focus:border-red-500"
                 />
               </div>
               

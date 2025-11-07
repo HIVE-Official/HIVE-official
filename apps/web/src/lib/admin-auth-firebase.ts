@@ -87,3 +87,4 @@ export async function logAdminAction(
     } as any);
   }
 }
+import 'server-only';

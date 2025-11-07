@@ -1,72 +1,62 @@
-/**
- * Profile UI Types
- * Simplified interfaces for UI components that adapt from ProfileSystem
- */
-/**
- * Convert ProfileSystem to UIProfile
- */
 export function specProfileToUIProfile(profile) {
-    // Extract first photo URL from carousel if available
     const avatarUrl = profile.identity.photoCarousel?.photos?.[0]?.url;
-    // Combine major arrays into single string
-    const majorString = profile.identity.academic.majors?.join(', ') || '';
+    const majors = profile.identity.academic.majors?.join(", ") || undefined;
+    const createdAt = profile.createdAt instanceof Date ? profile.createdAt : new Date(profile.createdAt);
+    const updatedAt = profile.updatedAt instanceof Date ? profile.updatedAt : new Date(profile.updatedAt);
+    const personalData = profile.personal ?? {};
+    const widgetPrivacy = {
+        myActivity: { level: profile.privacy.availabilityBroadcast.campus ? "public" : "private" },
+        mySpaces: { level: profile.privacy.discoveryParticipation ? "public" : "private" },
+        myConnections: { level: profile.privacy.visibilityLevel },
+    };
     return {
         identity: {
             id: profile.userId,
             fullName: profile.identity.academic.name,
-            email: `${profile.handle}@buffalo.edu`, // Construct email from handle
-            avatarUrl: avatarUrl,
-            bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined
+            email: profile.handle ? `${profile.handle}@buffalo.edu` : undefined,
+            avatarUrl,
+            bio: personalData.bio,
         },
         academic: {
-            campusId: 'ub-buffalo',
-            major: majorString,
+            campusId: profile.campusId,
+            major: majors,
             academicYear: profile.identity.academic.year,
             graduationYear: profile.identity.academic.graduationYear,
-            housing: undefined, // Not available in ProfileSystem
-            pronouns: profile.identity.academic.pronouns
+            pronouns: profile.identity.academic.pronouns,
         },
         personal: {
-            bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined,
-            interests: [], // Not directly available in ProfileSystem
-            currentVibe: profile.presence.vibe,
-            lookingFor: []
+            bio: personalData.bio,
+            interests: personalData.interests ?? [],
+            currentVibe: profile.presence?.currentActivity?.context ?? profile.presence?.vibe,
+            lookingFor: personalData.lookingFor ?? [],
         },
         social: {
             connections: {
-                connectionIds: profile.connections.connections?.map(c => c.userId) || [],
-                friendIds: profile.connections.friends?.map(f => f.userId) || [],
-                strength: {}
+                connectionIds: profile.connections.connections?.map((connection) => connection.userId) ?? [],
+                friendIds: profile.connections.friends?.map((friend) => friend.userId) ?? [],
+                strength: {},
             },
-            mutualSpaces: [] // Would need to be calculated
+            mutualSpaces: [],
         },
         privacy: {
             level: profile.privacy.visibilityLevel,
-            widgets: {
-                myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-                mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-                myConnections: { level: profile.privacy.visibilityLevel }
-            }
+            widgets: widgetPrivacy,
         },
         verification: {
-            facultyVerified: false, // Not available in ProfileSystem
-            emailVerified: true, // Assumed true for ProfileSystem
+            facultyVerified: false,
+            emailVerified: true,
             profileVerified: profile.isSetupComplete,
-            accountStatus: profile.isSetupComplete ? 'active' : 'incomplete',
-            userType: 'student', // Default for ProfileSystem
-            onboardingCompleted: profile.isSetupComplete
+            accountStatus: profile.isSetupComplete ? "active" : "incomplete",
+            userType: "student",
+            onboardingCompleted: profile.isSetupComplete,
         },
         metadata: {
             completionPercentage: profile.completeness,
-            createdAt: profile.createdAt instanceof Date ? profile.createdAt : profile.createdAt.toDate(),
-            updatedAt: profile.updatedAt instanceof Date ? profile.updatedAt : profile.updatedAt.toDate(),
-            lastActiveAt: profile.presence.lastActive
+            createdAt,
+            updatedAt,
+            lastActiveAt: profile.presence?.lastActive,
         },
-        widgets: {
-            myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-            mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-            myConnections: { level: profile.privacy.visibilityLevel }
-        }
+        widgets: widgetPrivacy,
     };
 }
 //# sourceMappingURL=profile-types.js.map

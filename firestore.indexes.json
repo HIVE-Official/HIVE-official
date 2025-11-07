@@ -246,6 +246,33 @@
       ]
     },
     {
+      "collectionGroup": "ritual_action_completions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "completedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_votes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "matchupId", "order": "ASCENDING" },
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_matchups",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" }
+      ]
+    },
+    {
       "collectionGroup": "feed",
       "queryScope": "COLLECTION",
       "fields": [
@@ -472,6 +499,95 @@
         { "fieldPath": "authorId", "order": "ASCENDING" },
         { "fieldPath": "isDeleted", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rituals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "phase", "order": "ASCENDING" },
+        { "fieldPath": "startsAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rituals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "archetype", "order": "ASCENDING" },
+        { "fieldPath": "phase", "order": "ASCENDING" },
+        { "fieldPath": "startsAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rituals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "visibility", "order": "ASCENDING" },
+        { "fieldPath": "phase", "order": "ASCENDING" },
+        { "fieldPath": "startsAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_participants",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "ritualPhase", "order": "ASCENDING" },
+        { "fieldPath": "lastActivityAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_participants",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "score", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ritualId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "campusId", "order": "ASCENDING" },
+        { "fieldPath": "eventType", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_templates",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "archetype", "order": "ASCENDING" },
+        { "fieldPath": "usageCount", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ritual_templates",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isOfficial", "order": "ASCENDING" },
+        { "fieldPath": "usageCount", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "participants",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "score", "order": "DESCENDING" },
+        { "fieldPath": "rank", "order": "ASCENDING" }
       ]
     }
   ],

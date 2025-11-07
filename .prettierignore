@@ -1,0 +1,29 @@
+# Build outputs and caches
+.next/
+dist/
+build/
+out/
+coverage/
+.turbo/
+storybook-static/
+**/storybook-static/
+
+# Dependencies
+node_modules/
+
+# Generated / reports
+**/*.tsbuildinfo
+**/*.log
+apps/web/build-output.txt
+apps/web/lint-report.txt
+apps/web/lint-full-report.txt
+
+# Firebase build artifacts
+functions/lib/
+functions/dist/
+
+# Misc
+public/
+.vercel/
+.playwright-mcp/
+

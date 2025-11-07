@@ -4,9 +4,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
-import { realtimeService } from '@/lib/firebase-realtime';
-import { serverTimestamp } from 'firebase/database';
 
 // WebSocket connection interfaces
 interface WebSocketConnection {
@@ -120,17 +119,6 @@ export async function POST(request: NextRequest) {
     // Subscribe to default channels based on connection type
     const defaultChannels = await getDefaultChannels(user.uid, connectionType, spaceId);
     await subscribeToChannels(connectionId, user.uid, defaultChannels);
-
-    // Update user presence in Firebase Realtime Database
-    await realtimeService.updatePresence(user.uid, {
-      status: 'online',
-      lastSeen: serverTimestamp(),
-      connectionId,
-      metadata: {
-        platform: clientInfo.platform || 'web',
-        version: clientInfo.version || '1.0.0'
-      }
-    });
 
     // Update user presence in Firestore (for persistence)
     await updateUserPresence(user.uid, 'online', connectionId);
@@ -423,7 +411,8 @@ async function getUserSpaces(userId: string): Promise<string[]> {
   try {
     const membershipsQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const membershipsSnapshot = await membershipsQuery.get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
@@ -496,7 +485,8 @@ async function getChannelPermissions(userId: string, channel: string): Promise<C
       const membershipQuery = dbAdmin.collection('members')
         .where('userId', '==', userId)
         .where('spaceId', '==', id)
-        .where('status', '==', 'active');
+        .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
 
       const membershipSnapshot = await membershipQuery.get();
       if (membershipSnapshot.empty) {

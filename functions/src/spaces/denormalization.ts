@@ -43,3 +43,35 @@ export const updateSpaceMemberCount = functions.firestore
       return {success: false, error: error.message};
     }
   });
+
+/**
+ * Updates metrics.memberCount and metrics.activeMembers from flat membership changes.
+ */
+export const updateSpaceMemberMetricsFromFlat = functions.firestore
+  .document("spaceMembers/{membershipId}")
+  .onWrite(async (change, context) => {
+    try {
+      const beforeActive = change.before.exists ? (change.before.data()?.isActive === true) : false;
+      const afterActive = change.after.exists ? (change.after.data()?.isActive === true) : false;
+
+      if (beforeActive === afterActive) {
+        return null; // No active membership change
+      }
+
+      const spaceId: string | undefined = (change.after.exists ? change.after.data()?.spaceId : change.before.data()?.spaceId) as string | undefined;
+      if (!spaceId) return null;
+
+      const spaceRef = admin.firestore().collection('spaces').doc(spaceId);
+      const increment = afterActive ? 1 : -1;
+      await spaceRef.update({
+        'metrics.memberCount': admin.firestore.FieldValue.increment(increment),
+        'metrics.activeMembers': admin.firestore.FieldValue.increment(increment),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      logger.info(`Updated metrics for space ${spaceId} by ${increment} from flat membership.`);
+      return { success: true };
+    } catch (error: any) {
+      logger.error('Error updating metrics from flat membership', error);
+      return { success: false };
+    }
+  });

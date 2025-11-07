@@ -6,20 +6,9 @@
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  serverTimestamp,
-  query,
-  collection,
-  where,
-  getDocs,
-  limit
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { dbAdmin } from '@/lib/firebase-admin';
 import { withSecureAuth } from '@/lib/api-auth-secure';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Profile update schema
 const ProfileUpdateSchema = z.object({
@@ -31,6 +20,9 @@ const ProfileUpdateSchema = z.object({
   major: z.string().min(1).max(100).optional(),
   graduationYear: z.number().int().min(2020).max(2030).optional(),
   dorm: z.string().max(100).optional(),
+  housing: z.string().max(200).optional(),
+  pronouns: z.string().max(50).optional(),
+  academicYear: z.string().max(50).optional(),
   interests: z.array(z.string()).max(10).optional(),
   profileImageUrl: z.string().url().optional(),
   photos: z.array(z.string().url()).max(5).optional(),
@@ -38,6 +30,8 @@ const ProfileUpdateSchema = z.object({
   currentVibe: z.string().max(100).optional(),
   availabilityStatus: z.enum(['online', 'studying', 'busy', 'away', 'invisible']).optional(),
   lookingFor: z.array(z.string()).optional(),
+  builderOptIn: z.boolean().optional(),
+  builderAnalyticsEnabled: z.boolean().optional(),
   isPublic: z.boolean().optional(),
   showActivity: z.boolean().optional(),
   showSpaces: z.boolean().optional(),
@@ -53,9 +47,8 @@ const ProfileUpdateSchema = z.object({
 export const GET = withSecureAuth(
   async (request: NextRequest, token) => {
     try {
-      const campusId = 'ub-buffalo';
-      const userDoc = doc(db, 'users', token.uid);
-      const userSnapshot = await getDoc(userDoc);
+      const campusId = CURRENT_CAMPUS_ID;
+      const userSnapshot = await dbAdmin.collection('users').doc(token.uid).get();
 
       if (!userSnapshot.exists()) {
         logger.warn('Profile not found', {
@@ -153,7 +146,7 @@ export const GET = withSecureAuth(
 export const PUT = withSecureAuth(
   async (request: NextRequest, token) => {
     try {
-      const campusId = 'ub-buffalo';
+      const campusId = CURRENT_CAMPUS_ID;
       const body = await request.json();
 
       // Validate update data
@@ -167,13 +160,11 @@ export const PUT = withSecureAuth(
 
       // Check if handle is being updated and if it's unique
       if (updateData.handle) {
-        const handleQuery = query(
-          collection(db, 'users'),
-          where('handle', '==', updateData.handle),
-          where('campusId', '==', campusId),
-          limit(1)
-        );
-        const existingHandleSnapshot = await getDocs(handleQuery);
+      const existingHandleSnapshot = await dbAdmin.collection('users')
+          .where('handle', '==', updateData.handle)
+          .where('campusId', '==', campusId)
+          .limit(1)
+          .get();
 
         if (!existingHandleSnapshot.empty && existingHandleSnapshot.docs[0].id !== token.uid) {
           return NextResponse.json(
@@ -184,10 +175,9 @@ export const PUT = withSecureAuth(
       }
 
       // Update user document
-      const userDoc = doc(db, 'users', token.uid);
       const updateFields: any = {
         ...updateData,
-        updatedAt: serverTimestamp(),
+        updatedAt: new Date(),
         campusId
       };
 
@@ -199,7 +189,7 @@ export const PUT = withSecureAuth(
           updateData.allowDirectMessages !== undefined ||
           updateData.showOnlineStatus !== undefined) {
 
-        const currentDoc = await getDoc(userDoc);
+        const currentDoc = await dbAdmin.collection('users').doc(token.uid).get();
         const currentPrivacy = currentDoc.data()?.privacySettings || {};
 
         updateFields.privacySettings = {
@@ -221,7 +211,7 @@ export const PUT = withSecureAuth(
         delete updateFields.showOnlineStatus;
       }
 
-      await updateDoc(userDoc, updateFields);
+      await dbAdmin.collection('users').doc(token.uid).update(updateFields);
 
       logger.info('Profile updated successfully', {
         userId: token.uid,
@@ -261,3 +251,14 @@ export const PUT = withSecureAuth(
   }
 );
 
+/**
+ * PATCH /api/profile
+ * Alias for updating current user's profile (matches client usage)
+ */
+export const PATCH = PUT;
+
+/**
+ * POST /api/profile
+ * Alias for updating current user's profile to match API reference
+ */
+export const POST = PUT;

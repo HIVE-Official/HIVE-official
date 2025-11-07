@@ -217,6 +217,10 @@
   --hive-radius-full: 9999px;
 
   /* HIVE Motion */
+  --hive-easing-default: cubic-bezier(0.23, 1, 0.32, 1);
+  --hive-easing-reveal: cubic-bezier(0.23, 1, 0.32, 1);
+  --hive-easing-interactive: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --hive-easing-layout: cubic-bezier(0.4, 0, 0.2, 1);
   --hive-easing-liquid: cubic-bezier(0.23, 1, 0.32, 1);
   --hive-easing-magnetic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --hive-easing-silk: cubic-bezier(0.16, 1, 0.3, 1);

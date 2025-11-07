@@ -7,6 +7,7 @@
 
 import { type PlatformNotification } from './platform-integration';
 import { useUnifiedStore } from './unified-state-management';
+import { secureApiFetch } from './secure-auth-utils';
 
 // ===== NOTIFICATION TYPES =====
 
@@ -405,7 +406,7 @@ export class CrossPlatformNotificationManager {
     }
 
     try {
-      const response = await fetch(`/api/profile/notifications/preferences?userId=${userId}`);
+      const response = await secureApiFetch(`/api/profile/notifications/preferences?userId=${userId}`);
       if (response.ok) {
         const preferences = await response.json();
         this.userPreferences.set(userId, preferences);
@@ -439,7 +440,7 @@ export class CrossPlatformNotificationManager {
    */
   async updateUserPreferences(userId: string, preferences: Partial<NotificationPreferences>): Promise<void> {
     try {
-      const response = await fetch('/api/profile/notifications/preferences', {
+      const response = await secureApiFetch('/api/profile/notifications/preferences', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, preferences })
@@ -623,7 +624,7 @@ export class CrossPlatformNotificationManager {
 
   private async deliverEmail(config: NotificationConfig): Promise<boolean> {
     try {
-      const response = await fetch('/api/notifications/email', {
+      const response = await secureApiFetch('/api/notifications/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(config)
@@ -686,7 +687,7 @@ export class CrossPlatformNotificationManager {
 
   private async logNotificationDelivery(config: NotificationConfig, results: PromiseSettledResult<boolean>[]): Promise<void> {
     try {
-      await fetch('/api/notifications/delivery-log', {
+      await secureApiFetch('/api/notifications/delivery-log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

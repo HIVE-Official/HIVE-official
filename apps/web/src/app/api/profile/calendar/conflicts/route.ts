@@ -1,6 +1,7 @@
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { z } from 'zod';
 
 // Validation schema for conflict resolution
@@ -127,6 +128,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       .collection('users')
       .doc(userId)
       .collection('calendar_events')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('status', '!=', 'cancelled')
       .orderBy('status')
       .orderBy('startDate')

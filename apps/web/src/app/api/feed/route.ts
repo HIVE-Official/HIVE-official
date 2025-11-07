@@ -4,21 +4,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  Timestamp,
-  documentId
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { dbAdmin } from '@/lib/firebase-admin';
 import { withSecureAuth } from '@/lib/api-auth-secure';
 import { logger } from '@/lib/logger';
 import { z } from 'zod';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Feed query schema
 const FeedQuerySchema = z.object({
@@ -39,50 +29,40 @@ export const GET = withSecureAuth(
         spaceId: searchParams.get('spaceId')
       });
 
-      const campusId = 'ub-buffalo';
-      const constraints: any[] = [
-        where('campusId', '==', campusId),
-        where('isActive', '==', true),
-        where('isDeleted', '!=', true)
-      ];
+      const campusId = CURRENT_CAMPUS_ID;
+      const postsRef = dbAdmin.collection('posts');
+      let q: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = postsRef
+        .where('campusId', '==', campusId)
+        .where('isActive', '==', true)
+        .where('isDeleted', '!=', true);
 
-      // Add type filter
       if (params.type !== 'all') {
-        constraints.push(where('contentType', '==', params.type));
+        q = q.where('type', '==', params.type);
       }
-
-      // Add space filter
       if (params.spaceId) {
-        constraints.push(where('spaceId', '==', params.spaceId));
+        q = q.where('spaceId', '==', params.spaceId);
       }
 
-      // Order by creation date
-      constraints.push(orderBy('createdAt', 'desc'));
+      q = q.orderBy('createdAt', 'desc');
 
-      // Add cursor for pagination
       if (params.cursor) {
-        const cursorDoc = await getDocs(
-          query(collection(db, 'posts'), where(documentId(), '==', params.cursor))
-        );
-        if (!cursorDoc.empty) {
-          constraints.push(startAfter(cursorDoc.docs[0]));
+        const cursorSnap = await postsRef.doc(params.cursor).get();
+        if (cursorSnap.exists) {
+          q = q.startAfter(cursorSnap);
         }
       }
 
-      // Add limit
-      constraints.push(limit(params.limit));
+      q = q.limit(params.limit);
 
-      // Execute query
-      const postsQuery = query(collection(db, 'posts'), ...constraints);
-      const snapshot = await getDocs(postsQuery);
+      const snapshot = await q.get();
 
       const posts = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
           ...data,
-          createdAt: data.createdAt?.toDate?.() || new Date(),
-          updatedAt: data.updatedAt?.toDate?.() || new Date()
+          createdAt: data.createdAt?.toDate?.() || data.createdAt || new Date(),
+          updatedAt: data.updatedAt?.toDate?.() || data.updatedAt || new Date()
         };
       });
 

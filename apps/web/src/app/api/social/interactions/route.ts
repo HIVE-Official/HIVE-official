@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Interaction schema
 const InteractionSchema = z.object({
@@ -61,7 +62,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
             postId,
             userId,
             createdAt: new Date(),
-            campusId: 'ub-buffalo'
+            campusId: CURRENT_CAMPUS_ID
           });
 
           // Update post engagement
@@ -113,7 +114,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
           createdAt: new Date(),
           updatedAt: new Date(),
           isDeleted: false,
-          campusId: 'ub-buffalo',
+          campusId: CURRENT_CAMPUS_ID,
           likes: 0,
           replies: 0
         });
@@ -143,7 +144,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
             postId,
             userId,
             createdAt: new Date(),
-            campusId: 'ub-buffalo',
+            campusId: CURRENT_CAMPUS_ID,
             metadata: metadata || {}
           });
 
@@ -173,7 +174,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
             postId,
             userId,
             createdAt: new Date(),
-            campusId: 'ub-buffalo'
+            campusId: CURRENT_CAMPUS_ID
           });
 
           // Update post engagement

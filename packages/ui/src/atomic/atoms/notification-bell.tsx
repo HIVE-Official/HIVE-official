@@ -40,7 +40,7 @@ interface MotionSpanProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 // Create motion components (these should match the shell's motion implementation)
 const MotionDiv = React.forwardRef<HTMLDivElement, MotionDivProps>(
-  ({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (
+  ({ className, children, ...props }, ref) => (
     <div ref={ref} className={className} {...props}>
       {children}
     </div>
@@ -49,7 +49,7 @@ const MotionDiv = React.forwardRef<HTMLDivElement, MotionDivProps>(
 MotionDiv.displayName = 'MotionDiv';
 
 const MotionButton = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
-  ({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (
+  ({ className, children, ...props }, ref) => (
     <button ref={ref} className={className} {...props}>
       {children}
     </button>
@@ -58,7 +58,7 @@ const MotionButton = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
 MotionButton.displayName = 'MotionButton';
 
 const MotionSpan = React.forwardRef<HTMLSpanElement, MotionSpanProps>(
-  ({ animate, transition, initial, layoutId, className, children, ...props }, ref) => (
+  ({ className, children, ...props }, ref) => (
     <span ref={ref} className={className} {...props}>
       {children}
     </span>
@@ -115,6 +115,7 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({
       const timer = setTimeout(() => setHasNewNotification(false), 2000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [unreadCount, loading]);
 
   const sizeClasses = {

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { z, type ZodTypeAny } from 'zod';
 import { authenticateRequest, AuthConfig, AuthContext } from './auth-middleware';
 import { handleApiError, validateRequest } from './api-error-handler';
 import { trackApiCall } from './error-monitoring';
@@ -18,8 +18,8 @@ export interface ApiConfig {
   auth?: AuthConfig;
   rateLimit?: 'auth' | 'api' | 'strict';
   validation?: {
-    body?: z.ZodSchema<any>;
-    query?: z.ZodSchema<any>;
+    body?: ZodTypeAny;
+    query?: ZodTypeAny;
   };
   methods?: ('GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH')[];
   public?: boolean; // Skip authentication entirely
@@ -31,11 +31,11 @@ export interface ApiConfig {
 export interface ApiContext {
   request: NextRequest;
   auth: AuthContext | null;
-  body?: any;
-  query?: any;
+  body?: unknown;
+  query?: Record<string, string> | undefined;
   startTime: number;
   requestId: string;
-  logger: any; // StructuredLogger instance
+  logger: ReturnType<typeof createRequestLogger>;
 }
 
 /**
@@ -43,7 +43,7 @@ export interface ApiContext {
  */
 export type ApiHandler = (
   _context: ApiContext,
-  _params?: any
+  _params?: unknown
 ) => Promise<NextResponse>;
 
 /**
@@ -53,7 +53,8 @@ export function createApiHandler(
   handler: ApiHandler,
   config: ApiConfig = {}
 ) {
-  return async (request: NextRequest, params?: any): Promise<NextResponse> => {
+  type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  return async (request: NextRequest, params?: unknown): Promise<NextResponse> => {
     const startTime = Date.now();
     const requestId = request.headers.get('x-request-id') || 
                      `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -64,7 +65,7 @@ export function createApiHandler(
 
     try {
       // 1. Method validation
-      if (config.methods && !config.methods.includes(request.method as any)) {
+      if (config.methods && !config.methods.includes(request.method as AllowedMethod)) {
         return NextResponse.json(
           { error: `Method ${request.method} not allowed` },
           { status: 405, headers: { 'Allow': config.methods.join(', ') } }
@@ -220,7 +221,7 @@ export function createApiHandler(
  * Utility function for simple GET endpoints
  */
 export function createGetHandler(
-  handler: (_context: ApiContext, _params?: any) => Promise<any>,
+  handler: (_context: ApiContext, _params?: unknown) => Promise<unknown>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
@@ -236,7 +237,7 @@ export function createGetHandler(
  * Utility function for simple POST endpoints
  */
 export function createPostHandler(
-  handler: (_context: ApiContext, _params?: any) => Promise<any>,
+  handler: (_context: ApiContext, _params?: unknown) => Promise<unknown>,
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
   return createApiHandler(
@@ -253,14 +254,14 @@ export function createPostHandler(
  */
 export function createCrudHandler(
   handlers: {
-    get?: (_context: ApiContext, _params?: any) => Promise<any>;
-    post?: (_context: ApiContext, _params?: any) => Promise<any>;
-    put?: (_context: ApiContext, _params?: any) => Promise<any>;
-    delete?: (_context: ApiContext, _params?: any) => Promise<any>;
+    get?: (_context: ApiContext, _params?: unknown) => Promise<unknown>;
+    post?: (_context: ApiContext, _params?: unknown) => Promise<unknown>;
+    put?: (_context: ApiContext, _params?: unknown) => Promise<unknown>;
+    delete?: (_context: ApiContext, _params?: unknown) => Promise<unknown>;
   },
   config: Omit<ApiConfig, 'methods'> = {}
 ) {
-  const methods = Object.keys(handlers).map(method => method.toUpperCase()) as any[];
+  const methods = Object.keys(handlers).map(method => method.toUpperCase()) as Array<'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'>;
   
   return createApiHandler(
     async (context, params) => {

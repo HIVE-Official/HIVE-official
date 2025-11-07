@@ -46,35 +46,41 @@
   --hive-color-gray-950: #000000;
 
   /* HIVE Semantic Colors */
-  --hive-background-primary: #0A0A0B;
-  --hive-background-secondary: #111113;
-  --hive-background-tertiary: #1A1A1C;
-  --hive-background-overlay: rgba(255, 255, 255, 0.05);
-  --hive-background-interactive: #222225;
-  --hive-text-primary: #E5E5E7;
-  --hive-text-secondary: #C1C1C4;
-  --hive-text-muted: #9B9B9F;
-  --hive-text-disabled: #6B6B70;
-  --hive-text-inverse: #0A0A0B;
+  --hive-background-primary: #000000;
+  --hive-background-secondary: #171717;
+  --hive-background-tertiary: #262626;
+  --hive-background-overlay: rgba(0, 0, 0, 0.6);
+  --hive-background-interactive: #404040;
+  --hive-text-primary: #FFFFFF;
+  --hive-text-secondary: #D4D4D4;
+  --hive-text-muted: #A3A3A3;
+  --hive-text-disabled: #525252;
+  --hive-text-inverse: #000000;
   --hive-text-mutedLight: #A1A1AA;
   --hive-text-mutedDark: #71717A;
   --hive-text-subtle: #3F3F46;
   --hive-brand-primary: #FFD700;
-  --hive-brand-secondary: #F7E98E;
-  --hive-brand-accent: #FFA500;
-  --hive-brand-muted: #CD7F32;
-  --hive-interactive-hover: rgba(255, 255, 255, 0.08);
+  --hive-brand-secondary: #FFD700;
+  --hive-brand-hover: #FFD700;
+  /* Legacy alias */
+  --hive-brand-secondary-hover: var(--hive-brand-hover);
+  --hive-brand-on-gold: #000000;
+  --hive-interactive-hover: rgba(255, 255, 255, 0.04);
   --hive-interactive-focus: #FFD700;
-  --hive-interactive-active: rgba(255, 255, 255, 0.12);
-  --hive-interactive-disabled: #4A4A4F;
+  --hive-interactive-active: rgba(255, 255, 255, 0.08);
+  --hive-interactive-disabled: #404040;
   --hive-status-success: #10B981;
-  --hive-status-warning: #F59E0B;
+  --hive-status-warning: #FFB800;
   --hive-status-error: #EF4444;
-  --hive-status-info: #3B82F6;
-  --hive-border-primary: #2A2A2D;
-  --hive-border-secondary: #1A1A1C;
+  --hive-status-info: #FFFFFF;
+  --hive-border-default: rgba(255, 255, 255, 0.08);
+  --hive-border-hover: rgba(255, 255, 255, 0.16);
+  --hive-border-focus: #FFD700;
+  --hive-border-strong: #404040;
+  /* Legacy aliases */
+  --hive-border-primary: var(--hive-border-default);
+  --hive-border-secondary: var(--hive-border-strong);
   --hive-border-subtle: rgba(255, 255, 255, 0.05);
-  --hive-border-focus: rgba(255, 215, 0, 0.2);
   --hive-border-error: #EF4444;
   --hive-border-muted: #3F3F46;
   --hive-border-interactive: #A1A1AA;
@@ -137,6 +143,8 @@
   --hive-border-glass-strong: rgba(255, 255, 255, 0.12);
 
   /* HIVE Typography */
+  --hive-font-family-sans: "Geist Sans", system-ui, sans-serif;
+  --hive-font-family-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --hive-font-size-display-2xl: 2.5rem;
   --hive-font-size-display-xl: 2.25rem;
   --hive-font-size-display-lg: 2rem;
@@ -202,6 +210,10 @@
   --hive-spacing-2xl: 3rem;
 
   /* HIVE Layout Sizes */
+  --hive-topbar-height: 56px;
+  --hive-sidenav-width-expanded: 280px;
+  --hive-sidenav-width-collapsed: 72px;
+  --hive-right-rail-width-default: 360px;
   --hive-height-xs: 12.5rem;
   --hive-height-sm: 18.75rem;
   --hive-height-md: 25rem;
@@ -220,6 +232,10 @@
   --hive-radius-full: 9999px;
 
   /* HIVE Motion */
+  --hive-easing-default: cubic-bezier(0.23, 1, 0.32, 1);
+  --hive-easing-reveal: cubic-bezier(0.23, 1, 0.32, 1);
+  --hive-easing-interactive: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --hive-easing-layout: cubic-bezier(0.4, 0, 0.2, 1);
   --hive-easing-liquid: cubic-bezier(0.23, 1, 0.32, 1);
   --hive-easing-magnetic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --hive-easing-silk: cubic-bezier(0.16, 1, 0.3, 1);

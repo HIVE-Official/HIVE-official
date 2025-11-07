@@ -141,3 +141,4 @@ export function hasPermission(user: AuthUser | SessionUser | null, permission: s
 export function belongsToSchool(user: AuthUser | SessionUser | null, schoolId: string): boolean {
   return user?.schoolId === schoolId;
 }
+import 'server-only';

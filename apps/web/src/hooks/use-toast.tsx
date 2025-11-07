@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { Check, X, AlertCircle, Info } from 'lucide-react';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -49,6 +49,28 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
+
+  // Bridge: listen for non-React toast events (e.g., tool runtime)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { title?: string; description?: string; type?: ToastType; duration?: number };
+      if (!detail) return;
+      addToast({
+        title: detail.title || 'Notice',
+        description: detail.description,
+        type: detail.type || 'info',
+        duration: detail.duration
+      });
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('hive:toast', handler as EventListener);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('hive:toast', handler as EventListener);
+      }
+    };
+  }, [addToast]);
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>

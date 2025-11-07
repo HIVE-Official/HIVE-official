@@ -70,25 +70,32 @@ export const prdSemantic = {
         hover: prdColors.gold[400], // #FFD700 - Hover states
         onGold: prdColors.black, // #000000 - Text on gold backgrounds
     },
-    // Interactive States
+    // Interactive States (Grayscale Default - ChatGPT/Vercel Feel)
     interactive: {
-        hover: 'rgba(255, 255, 255, 0.04)', // Subtle hover
-        focus: prdColors.gold[500], // #FFD700 - Gold focus rings
+        hover: 'rgba(255, 255, 255, 0.04)', // Subtle white hover
+        focus: 'rgba(255, 255, 255, 0.20)', // White focus rings (NOT gold)
         active: 'rgba(255, 255, 255, 0.08)', // Active state
         disabled: prdColors.gray[700], // #404040 - Disabled
+    },
+    // Gold Reserved for Key Moments Only
+    gold: {
+        cta: prdColors.gold[500], // Primary CTAs only
+        achievement: prdColors.gold[500], // Ritual completion, level up
+        online: prdColors.gold[500], // Online presence indicator
+        featured: prdColors.gold[500], // Featured content badge
     },
     // Status Colors (Minimal)
     status: {
         success: prdColors.green[500], // #00D46A
         warning: prdColors.yellow[500], // #FFB800
         error: prdColors.red[500], // #FF3737
-        info: prdColors.gold[500], // #FFD700 - Use gold for info
+        info: prdColors.white, // #FFFFFF - Info uses neutral/white
     },
-    // Border System (Subtle)
+    // Border System (Grayscale - ChatGPT/Vercel Feel)
     border: {
         default: 'rgba(255, 255, 255, 0.08)', // Subtle dividers
         hover: 'rgba(255, 255, 255, 0.16)', // Hover borders
-        focus: prdColors.gold[500], // Gold focus borders
+        focus: 'rgba(255, 255, 255, 0.40)', // White focus borders (NOT gold)
         strong: prdColors.gray[700], // Strong borders
     },
 };
@@ -139,12 +146,20 @@ export const prdCSSVariables = `
   --hive-brand-secondary: ${prdSemantic.brand.secondary};
   --hive-brand-hover: ${prdSemantic.brand.hover};
   --hive-brand-on-gold: ${prdSemantic.brand.onGold};
+  /* Legacy alias */
+  --hive-brand-secondary-hover: var(--hive-brand-hover);
   
-  /* Interactive */
+  /* Interactive (Grayscale Default - ChatGPT/Vercel Feel) */
   --hive-interactive-hover: ${prdSemantic.interactive.hover};
   --hive-interactive-focus: ${prdSemantic.interactive.focus};
   --hive-interactive-active: ${prdSemantic.interactive.active};
-  
+
+  /* Gold - Reserved for Key Moments Only */
+  --hive-gold-cta: ${prdSemantic.gold.cta};
+  --hive-gold-achievement: ${prdSemantic.gold.achievement};
+  --hive-gold-online: ${prdSemantic.gold.online};
+  --hive-gold-featured: ${prdSemantic.gold.featured};
+
   /* Status */
   --hive-status-success: ${prdSemantic.status.success};
   --hive-status-warning: ${prdSemantic.status.warning};
@@ -156,6 +171,10 @@ export const prdCSSVariables = `
   --hive-border-hover: ${prdSemantic.border.hover};
   --hive-border-focus: ${prdSemantic.border.focus};
   --hive-border-strong: ${prdSemantic.border.strong};
+
+  /* Legacy aliases (compat) */
+  --hive-border-primary: var(--hive-border-default);
+  --hive-border-secondary: var(--hive-border-strong);
 }
 `;
 // === TAILWIND CONFIGURATION ===
@@ -193,11 +212,30 @@ export const prdTailwindColors = {
 };
 // === USAGE GUIDELINES ===
 export const prdColorGuidelines = {
-    primary: "Use hive-brand-primary for primary actions and navigation",
-    secondary: "Use hive-brand-secondary (gold) sparingly for special emphasis",
-    backgrounds: "Layer backgrounds from primary → secondary → tertiary for depth",
-    text: "Use primary for main content, secondary for supporting text",
-    interactive: "Use subtle hover states to maintain clean aesthetic",
-    borders: "Prefer default borders, use strong only for emphasis",
+    // ChatGPT/Vercel/SF Startup Aesthetic
+    default: "Black/white/gray for 95% of the UI - clean, minimal, professional",
+    gold: "ONLY for: Primary CTAs, achievements, online presence, featured badges",
+    interactive: "Use grayscale for hovers/focus - NOT gold (avoid visual noise)",
+    backgrounds: "Layer backgrounds from primary (#000) → secondary (#171717) → tertiary (#262626)",
+    text: "White primary, gray secondary - high contrast for readability",
+    borders: "Subtle white borders - NO gold borders except special badges",
+    focus: "White glow for focus rings - save gold for dopamine hits",
+    buttons: "Default buttons are white-on-black, gold ONLY for primary CTAs",
+};
+// === GOLD USAGE RULES (Brand Discipline) ===
+export const goldUsageRules = {
+    allowed: [
+        "Primary CTA buttons (Join Space, Create Tool, Start Ritual)",
+        "Achievement moments (Ritual complete, level unlocked)",
+        "Online presence indicator (147 students online)",
+        "Featured content badges (Featured Tool, Hot Space)",
+    ],
+    forbidden: [
+        "Focus rings (use white glow instead)",
+        "Hover states (use grayscale instead)",
+        "All borders (use white/gray instead)",
+        "Secondary buttons (use outline variant)",
+        "Decorative elements (keep minimal)",
+    ],
 };
 //# sourceMappingURL=colors-prd-aligned.js.map

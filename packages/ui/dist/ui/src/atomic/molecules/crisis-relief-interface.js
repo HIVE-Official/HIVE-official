@@ -37,10 +37,10 @@ const getReliefOptions = (timeOfDay, stressLevel) => {
     ];
     // Prioritize based on time and stress level
     if (timeOfDay === 'late_night' && stressLevel === 'high') {
-        return baseOptions.sort((a, b) => a.relief_type === 'supportive' ? -1 : 1);
+        return baseOptions.sort((a) => a.relief_type === 'supportive' ? -1 : 1);
     }
     if (stressLevel === 'high') {
-        return baseOptions.sort((a, b) => a.relief_type === 'immediate' ? -1 : 1);
+        return baseOptions.sort((a) => a.relief_type === 'immediate' ? -1 : 1);
     }
     return baseOptions;
 };

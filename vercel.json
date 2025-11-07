@@ -5,7 +5,12 @@
   "installCommand": "corepack enable && corepack prepare pnpm@9.1.1 --activate && pnpm install",
   "framework": null,
   "regions": ["iad1"],
-  "crons": [],
+  "crons": [
+    {
+      "path": "/api/internal/rituals/evaluate",
+      "schedule": "*/5 * * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/admin/(.*)",
@@ -126,6 +131,7 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "CRON_SECRET": "replace_me"
   }
 }

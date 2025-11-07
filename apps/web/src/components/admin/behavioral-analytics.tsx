@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Progress,
   Tabs,
   TabsContent,
@@ -31,6 +31,7 @@ import {
   Heart,
   Activity
 } from 'lucide-react';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface BehavioralMetrics {
   completionRates: {
@@ -97,8 +98,8 @@ export function BehavioralAnalytics() {
     try {
       setLoading(true);
       const [metricsRes, funnelRes] = await Promise.all([
-        fetch(`/api/admin/behavioral-analytics?range=${timeRange}`),
-        fetch(`/api/admin/completion-funnel?range=${timeRange}`)
+        secureApiFetch(`/api/admin/behavioral-analytics?range=${timeRange}`),
+        secureApiFetch(`/api/admin/completion-funnel?range=${timeRange}`)
       ]);
 
       if (metricsRes.ok) {
@@ -163,10 +164,10 @@ export function BehavioralAnalytics() {
               <TabsTrigger value="30d">30 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <HiveButton variant="outline" size="sm" onClick={loadBehavioralMetrics}>
+          <Button variant="outline" size="sm" onClick={loadBehavioralMetrics}>
             <Activity className="w-4 h-4 mr-2" />
             Refresh
-          </HiveButton>
+          </Button>
         </div>
       </div>
 

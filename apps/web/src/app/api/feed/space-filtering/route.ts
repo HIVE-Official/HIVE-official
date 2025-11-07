@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import * as admin from 'firebase-admin';
 
 // Space-aware filtering interfaces
@@ -176,6 +177,7 @@ async function getUserSpaceContexts(userId: string): Promise<UserSpaceContext[]>
       .collection('members')
       .where('userId', '==', userId)
       .where('status', 'in', ['active', 'inactive'])
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
     const contexts: UserSpaceContext[] = [];
 
@@ -221,6 +223,10 @@ async function getSpaceVisibilityRules(spaceIds: string[]): Promise<Map<string, 
 
       const spaceData = spaceDoc.data();
       if (!spaceData) {
+        continue;
+      }
+      // Enforce campus isolation: skip spaces from other campuses
+      if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
         continue;
       }
       
@@ -383,6 +389,7 @@ async function getSpaceContent(
     const postsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
       .collection('posts')
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('status', '==', 'published')
       .where('createdAt', '>=', cutoffTime.toISOString())
       .orderBy('createdAt', 'desc')
@@ -515,6 +522,7 @@ async function calculateUserEngagementInSpace(userId: string, spaceId: string): 
       .collection('activityEvents')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('date', '>=', thirtyDaysAgo.toISOString().split('T')[0])
       .limit(100);
     
@@ -577,12 +585,17 @@ async function getSpaceAccessInfo(userId: string, spaceId: string, includePrevie
     if (!spaceData) {
       return { spaceId, accessible: false, reason: 'Space data not found' };
     }
+    // Enforce campus isolation strictly
+    if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+      return { spaceId, accessible: false, reason: 'Access denied - campus mismatch' };
+    }
     
     // Check membership
     const memberQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
       .collection('members')
       .where('userId', '==', userId)
-      .where('spaceId', '==', spaceId);
+      .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
     
     const memberSnapshot = await memberQuery.get();
     

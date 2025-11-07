@@ -1,4 +1,6 @@
 import path from "path";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 import { fileURLToPath } from "url";
 // import webpack from "webpack";
 
@@ -35,8 +37,8 @@ const nextConfig = {
   // Tell Next.js where to find the app directory
   distDir: ".next",
   
-  // Transpile workspace packages
-  transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks'],
+  // Transpile workspace packages and specific ESM deps
+  transpilePackages: ['@hive/ui', '@hive/core', '@hive/hooks', '@hive/firebase', 'react-easy-crop'],
   
   // Performance optimizations
   experimental: {
@@ -427,6 +429,8 @@ const nextConfig = {
     // Resolve workspace packages to source files and handle node: imports
     config.resolve.alias = {
       ...config.resolve.alias,
+      // Ensure explicit resolution for react-easy-crop from workspace root
+      'react-easy-crop': require.resolve('react-easy-crop'),
       // Node.js built-in module aliases for node: protocol
       'node:process': 'process',
       'node:stream': 'stream',
@@ -442,6 +446,7 @@ const nextConfig = {
       "@hive/core": path.resolve(__dirname, "../../packages/core/src"), 
       "@hive/hooks": path.resolve(__dirname, "../../packages/hooks/src"), 
       "@hive/auth-logic": path.resolve(__dirname, "../../packages/auth-logic/src"),
+      "@hive/firebase": path.resolve(__dirname, "../../packages/firebase/src"),
     };
 
     return config;

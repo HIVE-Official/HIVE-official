@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "analyze-firebase": "ts-node analyze-firebase.ts",
-    "analyze": "npm run analyze-firebase"
+    "analyze": "npm run analyze-firebase",
+    "seed-programs": "ts-node seed-academic-programs.ts"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.12",

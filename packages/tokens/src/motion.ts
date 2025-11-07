@@ -1,32 +1,27 @@
 // Motion design tokens - Liquid Metal Motion System
 
 export const motion = {
-  // Liquid Metal Easing - Signature HIVE feel (orchestrated curves)
+  // Simplified Motion System - ChatGPT/Vercel Feel (3 Core Curves)
   easing: {
-    // Primary HIVE signature curves
-    liquid: 'cubic-bezier(0.23, 1, 0.32, 1)',         // Main easing curve - liquid mercury
-    magnetic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // Gravitational pull
-    silk: 'cubic-bezier(0.16, 1, 0.3, 1)',           // Silk touch
-    steel: 'cubic-bezier(0.34, 1.56, 0.64, 1)',      // Steel spring
-    molten: 'cubic-bezier(0.19, 1, 0.22, 1)',        // Molten flow
-    snap: 'cubic-bezier(0.25, 0.1, 0.25, 1)',        // Premium snap
-    
-    // Orchestrated sequence curves
-    orchestrated: 'cubic-bezier(0.215, 0.61, 0.355, 1)', // For milestone sequences
-    cinematic: 'cubic-bezier(0.165, 0.84, 0.44, 1)',     // For major moments
-    cascade: 'cubic-bezier(0.19, 1, 0.22, 1)',           // For ripple effects
-    
-    // Tool-specific curves
-    toolSnap: 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',     // Magnetic tool assembly
-    toolFloat: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',   // Floating tools
-    toolPlant: 'cubic-bezier(0.34, 1.56, 0.64, 1)',      // Tool planting
-    
-    // Legacy support
-    easeIn: 'cubic-bezier(0.4, 0, 1, 1)',            // Entrance
-    easeOut: 'cubic-bezier(0, 0, 0.2, 1)',           // Exit
-    easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',       // Bidirectional
-    spring: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Spring feel
-    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',  // Bounce back
+    // PRIMARY: Use for 90% of animations (buttons, hovers, transitions)
+    default: 'cubic-bezier(0.23, 1, 0.32, 1)',       // Smooth, natural (Vercel-inspired)
+    reveal: 'cubic-bezier(0.23, 1, 0.32, 1)',        // Content entrance ease
+
+    // SNAP: Use for toggles, checkboxes, instant feedback
+    snap: 'cubic-bezier(0.25, 0.1, 0.25, 1)',        // Quick, decisive
+    interactive: 'cubic-bezier(0.25, 0.1, 0.25, 1)', // Interactive tap/press
+
+    // DRAMATIC: Use for achievements, rituals, major moments ONLY
+    dramatic: 'cubic-bezier(0.165, 0.84, 0.44, 1)',  // Cinematic, special
+    layout: 'cubic-bezier(0.165, 0.84, 0.44, 1)',    // Layout transitions
+
+    // Legacy aliases (map to core 3)
+    liquid: 'cubic-bezier(0.23, 1, 0.32, 1)',        // → default
+    magnetic: 'cubic-bezier(0.23, 1, 0.32, 1)',      // → default
+    silk: 'cubic-bezier(0.23, 1, 0.32, 1)',          // → default
+    easeOut: 'cubic-bezier(0.23, 1, 0.32, 1)',       // → default
+    spring: 'cubic-bezier(0.25, 0.1, 0.25, 1)',      // → snap
+    cinematic: 'cubic-bezier(0.165, 0.84, 0.44, 1)', // → dramatic
   },
   
   // Duration Scale - Orchestrated timing (aligned with hive-motion.ts)

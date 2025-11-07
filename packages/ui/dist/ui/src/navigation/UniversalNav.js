@@ -5,9 +5,10 @@
  */
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '../lib/utils.js';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 // Universal Navigation Bar
 export const UniversalNavBar = ({ items, orientation = 'horizontal', variant = 'default', className }) => {
     const pathname = usePathname();
@@ -38,27 +39,34 @@ const NavButton = ({ item, isActive, onClick, variant }) => {
 export const CommandPalette = ({ open, onOpenChange }) => {
     const [search, setSearch] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const inputRef = useRef(null);
     const router = useRouter();
+    const shouldReduce = useReducedMotion();
     const commands = [
-        { id: 'feed', label: 'Go to Feed', action: () => router.push('/feed'), icon: '🏠' },
-        { id: 'spaces', label: 'Browse Spaces', action: () => router.push('/spaces'), icon: '🏛️' },
-        { id: 'profile', label: 'My Profile', action: () => router.push('/profile'), icon: '👤' },
+        { id: 'home', label: 'Go to Home', action: () => router.push('/feed'), icon: '🏠' },
+        { id: 'discover', label: 'Open Discover', action: () => router.push('/spaces?tab=discover'), icon: '🔍' },
+        { id: 'spaces', label: 'Browse Spaces', action: () => router.push('/spaces'), icon: '🧭' },
+        { id: 'build', label: 'HiveLab · Build', action: () => router.push('/hivelab'), icon: '🛠️' },
         { id: 'create-space', label: 'Create Space', action: () => router.push('/spaces/create'), icon: '➕' },
-        { id: 'create-tool', label: 'Build Tool', action: () => router.push('/tools/create'), icon: '🔧' },
+        { id: 'profile', label: 'My Profile', action: () => router.push('/profile'), icon: '👤' },
         { id: 'settings', label: 'Settings', action: () => router.push('/settings'), icon: '⚙️' },
     ];
-    const filteredCommands = commands.filter(cmd => cmd.label.toLowerCase().includes(search.toLowerCase()));
+    const filteredCommands = commands.filter((cmd) => cmd.label.toLowerCase().includes(search.toLowerCase()));
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (!open)
                 return;
+            if (e.key === 'Escape') {
+                onOpenChange(false);
+                return;
+            }
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                setSelectedIndex((i) => (i + 1) % filteredCommands.length);
+                setSelectedIndex((i) => (i + 1) % Math.max(1, filteredCommands.length));
             }
             else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                setSelectedIndex((i) => (i - 1 + filteredCommands.length) % filteredCommands.length);
+                setSelectedIndex((i) => (i - 1 + Math.max(1, filteredCommands.length)) % Math.max(1, filteredCommands.length));
             }
             else if (e.key === 'Enter') {
                 e.preventDefault();
@@ -69,14 +77,18 @@ export const CommandPalette = ({ open, onOpenChange }) => {
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [open, selectedIndex, filteredCommands, onOpenChange]);
-    if (!open)
-        return null;
-    return (_jsx("div", { className: "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm", children: _jsxs("div", { className: "fixed left-1/2 top-20 transform -translate-x-1/2 w-full max-w-2xl bg-black border border-white/10 rounded-xl shadow-2xl", children: [_jsx("div", { className: "border-b border-white/10 p-4", children: _jsx("input", { type: "text", value: search, onChange: (e) => setSearch(e.target.value), placeholder: "Type a command or search...", className: "w-full bg-transparent text-white placeholder-white/40 outline-none text-lg", autoFocus: true }) }), _jsx("div", { className: "max-h-96 overflow-y-auto p-2", children: filteredCommands.map((cmd, index) => (_jsxs("button", { onClick: () => {
-                            cmd.action();
-                            onOpenChange(false);
-                        }, onMouseEnter: () => setSelectedIndex(index), className: cn('w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left', index === selectedIndex
-                            ? 'bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)]'
-                            : 'text-white/60 hover:text-white hover:bg-white/5'), children: [_jsx("span", { className: "text-xl", children: cmd.icon }), _jsx("span", { className: "font-medium", children: cmd.label })] }, cmd.id))) }), _jsxs("div", { className: "border-t border-white/10 p-3 flex items-center justify-between text-xs text-white/40", children: [_jsx("span", { children: "\u2191\u2193 Navigate" }), _jsx("span", { children: "\u23CE Select" }), _jsx("span", { children: "ESC Close" })] })] }) }));
+    useEffect(() => {
+        if (open && inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.select();
+        }
+    }, [open]);
+    return (_jsx(AnimatePresence, { children: open && (_jsx(motion.div, { className: "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: shouldReduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }, "aria-modal": true, role: "dialog", children: _jsxs(motion.div, { className: "fixed left-1/2 top-20 w-full max-w-2xl -translate-x-1/2 rounded-xl border border-white/10 bg-black shadow-2xl", initial: { y: shouldReduce ? 0 : -8, opacity: 0 }, animate: { y: 0, opacity: 1 }, exit: { y: shouldReduce ? 0 : -8, opacity: 0 }, transition: { duration: shouldReduce ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }, children: [_jsx("div", { className: "border-b border-white/10 p-4", children: _jsx("input", { ref: inputRef, type: "text", value: search, onChange: (e) => setSearch(e.target.value), placeholder: "Type a command or search...", className: "w-full bg-transparent text-white placeholder-white/40 outline-none text-lg", "aria-label": "Command palette search" }) }), _jsxs("div", { className: "max-h-96 overflow-y-auto p-2", children: [filteredCommands.map((cmd, index) => (_jsxs("button", { onClick: () => {
+                                    cmd.action();
+                                    onOpenChange(false);
+                                }, onMouseEnter: () => setSelectedIndex(index), className: cn('w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left', index === selectedIndex
+                                    ? 'bg-[var(--hive-brand-secondary)]/10 text-[var(--hive-brand-secondary)]'
+                                    : 'text-white/60 hover:text-white hover:bg-white/5'), children: [_jsx("span", { className: "text-xl", children: cmd.icon }), _jsx("span", { className: "font-medium", children: cmd.label })] }, cmd.id))), filteredCommands.length === 0 && (_jsx("div", { className: "px-4 py-6 text-sm text-white/40", children: "No matches" }))] }), _jsxs("div", { className: "border-t border-white/10 p-3 flex items-center justify-between text-xs text-white/40", children: [_jsx("span", { children: "\u2191\u2193 Navigate" }), _jsx("span", { children: "\u23CE Select" }), _jsx("span", { children: "ESC Close" })] })] }) })) }));
 };
 // Breadcrumb Navigation
 export const Breadcrumbs = ({ items, className }) => {

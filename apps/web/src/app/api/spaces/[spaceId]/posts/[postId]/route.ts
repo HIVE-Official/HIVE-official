@@ -1,403 +1,318 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+"use server";
+
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { requireSpaceMembership } from "@/lib/space-security";
+import { HttpStatus } from "@/lib/api-response-types";
 
 const EditPostSchema = z.object({
-  content: z.string().min(1).max(2000) });
+  content: z.string().min(1).max(2000),
+});
 
 const ReactionSchema = z.object({
-  reaction: z.enum(["heart", "thumbsUp", "laugh", "wow", "sad", "angry"]) });
+  reaction: z.enum(["heart", "thumbsUp", "laugh", "wow", "sad", "angry"]),
+});
 
-const db = dbAdmin;
-
-// GET /api/spaces/[spaceId]/posts/[postId] - Get a specific post
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
-  try {
-    const { spaceId, postId } = await params;
-
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Get the post
-    const postDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
-
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const postData = postDoc.data();
-
-    if (!postData) {
-      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Get author info
-    const authorDoc = await dbAdmin.collection("users").doc(postData.authorId).get();
-    const author = authorDoc.exists ? authorDoc.data() : null;
-
-    const post = {
-      id: postDoc.id,
-      ...postData,
-      author: author
-        ? {
-            id: authorDoc.id,
-            fullName: author.fullName,
-            handle: author.handle,
-            photoURL: author.photoURL,
-          }
-        : null,
+async function loadSpaceMembership(spaceId: string, userId: string) {
+  const membership = await requireSpaceMembership(spaceId, userId);
+  if (!membership.ok) {
+    return {
+      ok: false as const,
+      status: membership.status,
+      message: membership.error,
     };
-
-    return NextResponse.json({ post });
-  } catch (error) {
-    logger.error(
-      `Error fetching post at /api/spaces/[spaceId]/posts/[postId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
+
+  const spaceData = membership.space;
+  if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+    return {
+      ok: false as const,
+      status: HttpStatus.FORBIDDEN,
+      message: "Access denied for this campus",
+    };
+  }
+
+  return {
+    ok: true as const,
+    spaceData,
+    membershipData: membership.membership,
+  };
 }
 
-// PATCH /api/spaces/[spaceId]/posts/[postId] - Edit a post
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
+async function loadPost(spaceId: string, postId: string) {
+  const postDoc = await dbAdmin
+    .collection("spaces")
+    .doc(spaceId)
+    .collection("posts")
+    .doc(postId)
+    .get();
+  if (!postDoc.exists) {
+    return { ok: false as const, status: 404, message: "Post not found" };
+  }
+  const postData = postDoc.data();
+  if (!postData) {
+    return { ok: false as const, status: 404, message: "Post data missing" };
+  }
+  if (postData.campusId && postData.campusId !== CURRENT_CAMPUS_ID) {
+    return { ok: false as const, status: HttpStatus.FORBIDDEN, message: "Access denied for this campus" };
+  }
+  return { ok: true as const, postDoc, postData };
+}
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; postId: string }> },
+  respond,
+) => {
   try {
     const { spaceId, postId } = await params;
+    const userId = getUserId(request);
 
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const membership = await loadSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.message, code, { status: membership.status });
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    const body = (await request.json()) as unknown;
-    const validatedData = EditPostSchema.parse(body);
-
-    // Get the post
-    const postDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
-
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    const post = await loadPost(spaceId, postId);
+    if (!post.ok) {
+      return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
     }
 
-    const postData = postDoc.data();
+    const authorDoc = await dbAdmin.collection("users").doc(post.postData.authorId).get();
+    const authorData = authorDoc.exists ? authorDoc.data() : null;
 
-    if (!postData) {
-      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Check if post is within edit window (15 minutes)
-    const createdAt = postData.createdAt.toDate();
-    const now = new Date();
-    const editWindowMs = 15 * 60 * 1000; // 15 minutes
-
-    if (now.getTime() - createdAt.getTime() > editWindowMs) {
-      return NextResponse.json(
-        {
-          error:
-            "Edit window has expired. Posts can only be edited within 15 minutes of creation.",
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    // Check permissions - only author can edit
-    if (postData.authorId !== userId) {
-      return NextResponse.json(ApiResponseHelper.error("Only the author can edit this post", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Update the post
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .update({
-        ...validatedData,
-        isEdited: true,
-        updatedAt: new Date() });
-
-    // Get updated post with author info
-    const updatedPostDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
-
-    const updatedPostData = updatedPostDoc.data();
-
-    if (!updatedPostData) {
-      return NextResponse.json(ApiResponseHelper.error("Updated post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const authorDoc = await db
-      .collection("users")
-      .doc(updatedPostData.authorId)
-      .get();
-    const author = authorDoc.data();
-
-    const updatedPost = {
-      id: updatedPostDoc.id,
-      ...updatedPostData,
-      author: {
-        id: updatedPostData.authorId,
-        fullName: author?.fullName || "Unknown User",
-        handle: author?.handle || "unknown",
-        photoURL: author?.photoURL || null,
+    return respond.success({
+      post: {
+        id: post.postDoc.id,
+        ...post.postData,
+        author: authorData
+          ? {
+              id: authorDoc.id,
+              fullName: authorData.fullName,
+              handle: authorData.handle,
+              photoURL: authorData.photoURL,
+            }
+          : null,
       },
-    };
-
-    return NextResponse.json({ post: updatedPost });
+    });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid post data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
     logger.error(
-      `Error editing post at /api/spaces/[spaceId]/posts/[postId]`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error fetching post at /api/spaces/[spaceId]/posts/[postId]",
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to edit post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to fetch post", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});
 
-// DELETE /api/spaces/[spaceId]/posts/[postId] - Delete a post
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
+export const PATCH = withAuthValidationAndErrors(
+  EditPostSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string; postId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId, postId } = await params;
+      const userId = getUserId(request);
+
+      const membership = await loadSpaceMembership(spaceId, userId);
+      if (!membership.ok) {
+        const code =
+          membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+        return respond.error(membership.message, code, { status: membership.status });
+      }
+
+      const post = await loadPost(spaceId, postId);
+      if (!post.ok) {
+        return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
+      }
+
+      const createdAt = post.postData.createdAt?.toDate
+        ? post.postData.createdAt.toDate()
+        : new Date(post.postData.createdAt);
+      const now = new Date();
+      if (now.getTime() - createdAt.getTime() > 15 * 60 * 1000) {
+        return respond.error(
+          "Edit window has expired. Posts can only be edited within 15 minutes of creation.",
+          "INVALID_INPUT",
+          { status: HttpStatus.BAD_REQUEST },
+        );
+      }
+
+      if (post.postData.authorId !== userId) {
+        return respond.error("Only the author can edit this post", "FORBIDDEN", {
+          status: HttpStatus.FORBIDDEN,
+        });
+      }
+
+      await post.postDoc.ref.update({
+        content: body.content,
+        isEdited: true,
+        updatedAt: new Date(),
+      });
+
+      const updatedDoc = await post.postDoc.ref.get();
+      const updatedData = updatedDoc.data();
+      if (!updatedData) {
+        return respond.error("Updated post data not found", "RESOURCE_NOT_FOUND", {
+          status: HttpStatus.NOT_FOUND,
+        });
+      }
+
+      const authorDoc = await dbAdmin.collection("users").doc(updatedData.authorId).get();
+      const author = authorDoc.data();
+
+      return respond.success({
+        post: {
+          id: updatedDoc.id,
+          ...updatedData,
+          author: {
+            id: updatedData.authorId,
+            fullName: author?.fullName || "Unknown User",
+            handle: author?.handle || "unknown",
+            photoURL: author?.photoURL || null,
+          },
+        },
+      });
+    } catch (error) {
+      logger.error(
+        "Error editing post at /api/spaces/[spaceId]/posts/[postId]",
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return respond.error("Failed to edit post", "INTERNAL_ERROR", {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
+);
+
+export const DELETE = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; postId: string }> },
+  respond,
+) => {
   try {
     const { spaceId, postId } = await params;
+    const userId = getUserId(request);
 
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const membership = await loadSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.message, code, { status: membership.status });
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    // Get the post
-    const postDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
-
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    const post = await loadPost(spaceId, postId);
+    if (!post.ok) {
+      return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
     }
 
-    const postData = postDoc.data();
-
-    if (!postData) {
-      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Check permissions - author, space builders, or admins can delete
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const memberData = memberDoc.data();
-
-    if (!memberData) {
-      return NextResponse.json(ApiResponseHelper.error("Member data not found", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
+    const role = membership.membershipData.role;
     const canDelete =
-      postData.authorId === userId ||
-      memberData.role === "builder" ||
-      memberData.role === "admin";
+      post.postData.authorId === userId || role === "builder" || role === "admin" || role === "owner";
 
     if (!canDelete) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to delete this post", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Insufficient permissions to delete this post", "FORBIDDEN", {
+        status: HttpStatus.FORBIDDEN,
+      });
     }
 
-    // Soft delete the post
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .update({
-        isDeleted: true,
-        deletedAt: new Date(),
-        deletedBy: userId });
+    await post.postDoc.ref.update({
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy: userId,
+    });
 
-    return NextResponse.json({ message: "Post deleted successfully" });
+    return respond.success({ message: "Post deleted successfully" });
   } catch (error) {
     logger.error(
-      `Error deleting post at /api/spaces/[spaceId]/posts/[postId]`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error deleting post at /api/spaces/[spaceId]/posts/[postId]",
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to delete post", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to delete post", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});
 
-// POST /api/spaces/[spaceId]/posts/[postId] - React to a post
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
-  try {
-    const { spaceId, postId } = await params;
+export const POST = withAuthValidationAndErrors(
+  ReactionSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string; postId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId, postId } = await params;
+      const userId = getUserId(request);
 
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+      const membership = await loadSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.message, code, { status: membership.status });
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-    const userId = decodedToken.uid;
+      const post = await loadPost(spaceId, postId);
+      if (!post.ok) {
+        return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
+      }
 
-    const body = (await request.json()) as unknown;
-    const { reaction } = ReactionSchema.parse(body);
+      const postRef = post.postDoc.ref;
+      const postData = post.postData;
 
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(userId)
-      .get();
+      const currentReactions = postData.reactions || {};
+      const currentReactedUsers = postData.reactedUsers || {};
 
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+      if (!currentReactedUsers[body.reaction]) {
+        currentReactedUsers[body.reaction] = [];
+      }
 
-    // Get the post
-    const postRef = db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId);
+      if (!currentReactedUsers[body.reaction].includes(userId)) {
+        currentReactedUsers[body.reaction].push(userId);
+        currentReactions[body.reaction] = (currentReactions[body.reaction] || 0) + 1;
+      } else {
+        currentReactedUsers[body.reaction] = currentReactedUsers[body.reaction].filter(
+          (uid: string) => uid !== userId,
+        );
+        currentReactions[body.reaction] = Math.max(
+          0,
+          (currentReactions[body.reaction] || 0) - 1,
+        );
+      }
 
-    const postDoc = await postRef.get();
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
+      await postRef.update({
+        reactions: currentReactions,
+        reactedUsers: currentReactedUsers,
+        updatedAt: new Date(),
+      });
 
-    const postData = postDoc.data();
-
-    if (!postData) {
-      return NextResponse.json(ApiResponseHelper.error("Post data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Update reactions
-    const currentReactions = postData.reactions || {};
-    const currentReactedUsers = postData.reactedUsers || {};
-
-    // Initialize reaction arrays if they don't exist
-    if (!currentReactedUsers[reaction]) {
-      currentReactedUsers[reaction] = [];
-    }
-
-    // Toggle reaction
-    if (!currentReactedUsers[reaction].includes(userId)) {
-      currentReactedUsers[reaction].push(userId);
-      currentReactions[reaction] = (currentReactions[reaction] || 0) + 1;
-    } else {
-      // Remove reaction
-      currentReactedUsers[reaction] = currentReactedUsers[reaction].filter(
-        (uid: string) => uid !== userId
+      return respond.success({
+        reactions: currentReactions,
+        userReacted: currentReactedUsers[body.reaction].includes(userId),
+      });
+    } catch (error) {
+      logger.error(
+        "Error updating reaction at /api/spaces/[spaceId]/posts/[postId]",
+        error instanceof Error ? error : new Error(String(error)),
       );
-      currentReactions[reaction] = Math.max(
-        0,
-        (currentReactions[reaction] || 0) - 1
-      );
+      return respond.error("Failed to update reaction", "INTERNAL_ERROR", {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
     }
-
-    // Update the post
-    await postRef.update({
-      reactions: currentReactions,
-      reactedUsers: currentReactedUsers,
-      updatedAt: new Date() });
-
-    return NextResponse.json({
-      success: true,
-      reactions: currentReactions,
-      userReacted: currentReactedUsers[reaction].includes(userId) });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid reaction data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    logger.error(
-      `Error updating reaction at /api/spaces/[spaceId]/posts/[postId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to update reaction", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+  },
+);

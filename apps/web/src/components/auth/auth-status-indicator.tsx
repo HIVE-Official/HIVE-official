@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HiveButton, Avatar, AvatarImage, AvatarFallback } from "@hive/ui";
+import { Button, Avatar, AvatarImage, AvatarFallback } from "@hive/ui";
 import { User, LogOut, Settings, ChevronDown } from "lucide-react";
 
 interface SessionData {
@@ -81,7 +81,7 @@ export function AuthStatusIndicator() {
   // Not logged in - show Sign In button
   if (!session) {
     return (
-      <HiveButton
+      <Button
         variant="secondary"
         size="sm"
         onClick={() => router.push('/schools')}
@@ -89,7 +89,7 @@ export function AuthStatusIndicator() {
       >
         <User className="w-4 h-4" />
         Sign In
-      </HiveButton>
+      </Button>
     );
   }
 

@@ -1,6 +1,7 @@
 'use client';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cva } from "class-variance-authority";
 import { cn } from "../../lib/utils.js";
 const tabsListVariants = cva("inline-flex h-10 items-center justify-center rounded-md bg-[var(--hive-background-secondary)] p-1 text-[var(--hive-text-secondary)]", {
@@ -49,17 +50,58 @@ function Tabs({ value, defaultValue, onValueChange, variant = "default", childre
         }
         onValueChange?.(newValue);
     }, [isControlled, onValueChange]);
+    const triggerRefs = React.useRef(new Map());
+    const listRef = React.useRef(null);
     const contextValue = React.useMemo(() => ({
         value: currentValue,
         onValueChange: handleValueChange,
         variant,
+        registerRef: (val, el) => {
+            triggerRefs.current.set(val, el);
+        },
+        listRef,
+        getRef: (val) => triggerRefs.current.get(val) ?? null,
     }), [currentValue, handleValueChange, variant]);
     return (_jsx(TabsContext.Provider, { value: contextValue, children: _jsx("div", { className: cn("w-full", className), children: children }) }));
 }
 const TabsList = React.forwardRef(({ className, variant, ...props }, ref) => {
     const context = React.useContext(TabsContext);
     const actualVariant = variant || context?.variant || "default";
-    return (_jsx("div", { ref: ref, role: "tablist", className: cn(tabsListVariants({ variant: actualVariant }), className), ...props }));
+    const shouldReduce = useReducedMotion();
+    const [indicator, setIndicator] = React.useState(null);
+    React.useLayoutEffect(() => {
+        if (!context || actualVariant !== "underline")
+            return;
+        const recalc = () => {
+            const listEl = context.listRef.current;
+            const activeEl = context.getRef(context.value);
+            if (!listEl || !activeEl)
+                return;
+            const listRect = listEl.getBoundingClientRect();
+            const elRect = activeEl.getBoundingClientRect();
+            setIndicator({ left: elRect.left - listRect.left, width: elRect.width });
+        };
+        recalc();
+        const onResize = () => recalc();
+        window.addEventListener("resize", onResize);
+        const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(recalc) : undefined;
+        if (ro && context.listRef.current)
+            ro.observe(context.listRef.current);
+        return () => {
+            window.removeEventListener("resize", onResize);
+            ro?.disconnect();
+        };
+    }, [context, actualVariant, context?.value]);
+    return (_jsxs("div", { ref: (node) => {
+            if (ref) {
+                if (typeof ref === "function")
+                    ref(node);
+                else
+                    ref.current = node;
+            }
+            if (context)
+                context.listRef.current = node;
+        }, role: "tablist", className: cn("relative", tabsListVariants({ variant: actualVariant }), className), ...props, children: [actualVariant === "underline" && indicator && (_jsx(motion.div, { "aria-hidden": true, className: "pointer-events-none absolute bottom-0 h-[2px] rounded bg-[var(--hive-brand-primary)]", initial: false, animate: { x: indicator.left, width: indicator.width }, transition: { duration: shouldReduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }, style: { left: 0 } })), props.children] }));
 });
 TabsList.displayName = "TabsList";
 const TabsTrigger = React.forwardRef(({ className, variant, value, children, ...props }, ref) => {
@@ -69,7 +111,22 @@ const TabsTrigger = React.forwardRef(({ className, variant, value, children, ...
         throw new Error("TabsTrigger must be used within Tabs");
     }
     const isActive = context.value === value;
-    return (_jsx("button", { ref: ref, role: "tab", "aria-selected": isActive, "data-state": isActive ? "active" : "inactive", className: cn(tabsTriggerVariants({ variant: actualVariant }), className), onClick: () => context.onValueChange(value), ...props, children: children }));
+    const localRef = React.useRef(null);
+    React.useLayoutEffect(() => {
+        if (!context)
+            return;
+        context.registerRef(value, localRef.current);
+        return () => context.registerRef(value, null);
+    }, [context, value]);
+    return (_jsx("button", { ref: (node) => {
+            localRef.current = node;
+            if (ref) {
+                if (typeof ref === "function")
+                    ref(node);
+                else
+                    ref.current = node;
+            }
+        }, role: "tab", "aria-selected": isActive, "data-state": isActive ? "active" : "inactive", className: cn(tabsTriggerVariants({ variant: actualVariant }), className), onClick: () => context.onValueChange(value), ...props, children: children }));
 });
 TabsTrigger.displayName = "TabsTrigger";
 const TabsContent = React.forwardRef(({ className, variant, value, children, ...props }, ref) => {

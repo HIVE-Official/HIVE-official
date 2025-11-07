@@ -5,7 +5,6 @@
 
 import { logger } from './structured-logger';
 import { sseRealtimeService, RealtimeMessage } from './sse-realtime-service';
-import { realtimeService as firebaseRealtimeService } from './firebase-realtime';
 
 interface ConnectionMetrics {
   connectionId: string;
@@ -536,12 +535,8 @@ export class RealtimeOptimizationManager {
 
   private async tryFallbackDelivery(message: RealtimeMessage): Promise<void> {
     try {
-      if (this.fallbackConfig.enableFirebaseRealtime) {
-        await firebaseRealtimeService.sendMessage(message);
-        logger.info('Message delivered via Firebase fallback', { messageId: message.id });
-      } else {
-        logger.error('Message delivery completely failed', { messageId: message.id });
-      }
+      // Firebase Realtime fallback disabled at build time to avoid RTDB initialization on server
+      logger.error('Message delivery failed and Firebase fallback disabled', { messageId: message.id });
     } catch (error) {
       logger.error('Fallback delivery also failed', { messageId: message.id, error: error instanceof Error ? error : new Error(String(error)) });
     }

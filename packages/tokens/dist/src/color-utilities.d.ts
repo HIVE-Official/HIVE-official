@@ -37,18 +37,23 @@ export declare const getSemanticColor: (semantic: keyof typeof prdSemantic, vari
     readonly onGold: "#000000";
 } | {
     readonly hover: "rgba(255, 255, 255, 0.04)";
-    readonly focus: "#FFD700";
+    readonly focus: "rgba(255, 255, 255, 0.20)";
     readonly active: "rgba(255, 255, 255, 0.08)";
     readonly disabled: "#404040";
+} | {
+    readonly cta: "#FFD700";
+    readonly achievement: "#FFD700";
+    readonly online: "#FFD700";
+    readonly featured: "#FFD700";
 } | {
     readonly success: "#00D46A";
     readonly warning: "#FFB800";
     readonly error: "#FF3737";
-    readonly info: "#FFD700";
+    readonly info: "#FFFFFF";
 } | {
     readonly default: "rgba(255, 255, 255, 0.08)";
     readonly hover: "rgba(255, 255, 255, 0.16)";
-    readonly focus: "#FFD700";
+    readonly focus: "rgba(255, 255, 255, 0.40)";
     readonly strong: "#404040";
 };
 /**
@@ -119,18 +124,18 @@ export declare const getAllHiveColors: () => {
         readonly success: "#00D46A";
         readonly warning: "#FFB800";
         readonly error: "#FF3737";
-        readonly info: "#FFD700";
+        readonly info: "#FFFFFF";
     };
     interactive: {
         readonly hover: "rgba(255, 255, 255, 0.04)";
-        readonly focus: "#FFD700";
+        readonly focus: "rgba(255, 255, 255, 0.20)";
         readonly active: "rgba(255, 255, 255, 0.08)";
         readonly disabled: "#404040";
     };
     borders: {
         readonly default: "rgba(255, 255, 255, 0.08)";
         readonly hover: "rgba(255, 255, 255, 0.16)";
-        readonly focus: "#FFD700";
+        readonly focus: "rgba(255, 255, 255, 0.40)";
         readonly strong: "#404040";
     };
 };

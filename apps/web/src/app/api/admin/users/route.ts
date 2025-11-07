@@ -5,7 +5,9 @@ import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * Admin User Management API
@@ -20,6 +22,30 @@ const ADMIN_USER_IDS = [
   'test-user', // For development
   // Add real admin user IDs here
 ];
+
+interface AdminUserRecord {
+  id: string;
+  displayName?: string;
+  email?: string;
+  handle?: string;
+  major?: string;
+  classYear?: string;
+  bio?: string;
+  isVerified?: boolean;
+  role?: 'student' | 'admin' | 'moderator';
+  isSuspended?: boolean;
+  createdAt?: string;
+  lastActiveAt?: string;
+  suspendedAt?: string | null;
+  suspendedUntil?: string | null;
+}
+
+interface MembershipRecord {
+  spaceId: string;
+  spaceType?: string;
+  role?: string;
+  joinedAt?: string;
+}
 
 const userActionSchema = z.object({
   userId: z.string().min(1, 'User ID is required'),
@@ -50,34 +76,9 @@ async function isAdmin(userId: string): Promise<boolean> {
  * Get users with filtering and pagination
  * GET /api/admin/users
  */
-export async function GET(request: NextRequest) {
+export const GET = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     // Parse query parameters
     const url = new URL(request.url);
@@ -89,40 +90,53 @@ export async function GET(request: NextRequest) {
 
     logger.info('👑 Admin accessing user management', { adminUserId });
 
-    // Get users with filtering
-    let usersQuery = dbAdmin.collection('users');
+    // Get users with filtering (campus isolation)
+    let usersQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin
+      .collection('users')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
     
     // Apply filters
     if (major && major !== 'all') {
-      usersQuery = usersQuery.where('major', '==', major) as any;
+      usersQuery = usersQuery.where('major', '==', major);
     }
     
     if (status !== 'all') {
       if (status === 'suspended') {
-        usersQuery = usersQuery.where('isSuspended', '==', true) as any;
+        usersQuery = usersQuery.where('isSuspended', '==', true);
       } else if (status === 'active') {
-        usersQuery = usersQuery.where('isSuspended', '==', false) as any;
+        usersQuery = usersQuery.where('isSuspended', '==', false);
       }
     }
 
     const usersSnapshot = await usersQuery.limit(limit).offset(offset).get();
-    let users = usersSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate?.()?.toISOString(),
-      lastActiveAt: doc.data().lastActiveAt?.toDate?.()?.toISOString(),
-      suspendedAt: doc.data().suspendedAt?.toDate?.()?.toISOString(),
-      suspendedUntil: doc.data().suspendedUntil?.toDate?.()?.toISOString()
-    }));
+    let users: AdminUserRecord[] = usersSnapshot.docs.map((doc) => {
+      const data = doc.data() as Record<string, unknown>;
+      return {
+        id: doc.id,
+        displayName: data.displayName as string | undefined,
+        email: data.email as string | undefined,
+        handle: data.handle as string | undefined,
+        major: data.major as string | undefined,
+        classYear: data.classYear as string | undefined,
+        bio: data.bio as string | undefined,
+        isVerified: Boolean(data.isVerified),
+        role: (data.role as AdminUserRecord['role']) || undefined,
+        isSuspended: Boolean(data.isSuspended),
+        createdAt: (data.createdAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString(),
+        lastActiveAt: (data.lastActiveAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString(),
+        suspendedAt: (data.suspendedAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString() || null,
+        suspendedUntil: (data.suspendedUntil as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString() || null,
+      };
+    });
 
     // Apply text search filter (client-side for now)
     if (search) {
       const searchLower = search.toLowerCase();
-      users = users.filter(user => 
-        (user as any).displayName?.toLowerCase().includes(searchLower) ||
-        (user as any).email?.toLowerCase().includes(searchLower) ||
-        (user as any).handle?.toLowerCase().includes(searchLower) ||
-        (user as any).major?.toLowerCase().includes(searchLower)
+      users = users.filter((user) =>
+        user.displayName?.toLowerCase().includes(searchLower) ||
+        user.email?.toLowerCase().includes(searchLower) ||
+        user.handle?.toLowerCase().includes(searchLower) ||
+        user.major?.toLowerCase().includes(searchLower)
       );
     }
 
@@ -131,19 +145,30 @@ export async function GET(request: NextRequest) {
       users.map(async (user) => {
         try {
           const membershipsSnapshot = await dbAdmin
-            .collectionGroup('members')
-            .where('uid', '==', user.id)
+            .collection('spaceMembers')
+            .where('userId', '==', user.id)
+            .where('isActive', '==', true)
+            .where('campusId', '==', CURRENT_CAMPUS_ID)
+            .limit(200)
             .get();
-          
-          const memberships = membershipsSnapshot.docs.map(doc => {
-            const pathParts = doc.ref.path.split('/');
-            return {
-              spaceId: pathParts[3],
-              spaceType: pathParts[1],
-              role: doc.data().role,
-              joinedAt: doc.data().joinedAt?.toDate?.()?.toISOString()
-            };
-          });
+
+          const memberships: MembershipRecord[] = await Promise.all(
+            membershipsSnapshot.docs.map(async (doc) => {
+              const data = doc.data();
+              const spaceId = data.spaceId;
+              let spaceType: string | undefined = undefined;
+              try {
+                const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+                spaceType = spaceDoc.exists ? (spaceDoc.data()?.type as string | undefined) : undefined;
+              } catch {}
+              return {
+                spaceId,
+                spaceType,
+                role: data.role,
+                joinedAt: data.joinedAt?.toDate?.()?.toISOString(),
+              };
+            })
+          );
 
           return {
             ...user,
@@ -166,7 +191,7 @@ export async function GET(request: NextRequest) {
     );
 
     // Get total count for pagination
-    const totalUsersSnapshot = await dbAdmin.collection('users').get();
+    const totalUsersSnapshot = await dbAdmin.collection('users').where('campusId', '==', CURRENT_CAMPUS_ID).get();
     const totalCount = totalUsersSnapshot.size;
 
     return NextResponse.json({
@@ -198,40 +223,15 @@ export async function GET(request: NextRequest) {
     logger.error('Admin users GET error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get users", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });
 
 /**
  * Update user information
  * POST /api/admin/users
  */
-export async function POST(request: NextRequest) {
+export const POST = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     // Parse request body
     const body = await request.json();
@@ -246,9 +246,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      lastModifiedBy: adminUserId
+      lastModifiedBy: adminUserId,
     };
 
     if (displayName !== undefined) updateData.displayName = displayName;
@@ -272,7 +272,7 @@ export async function POST(request: NextRequest) {
       updatedBy: adminUserId
     });
 
-  } catch (error: any) {
+  } catch (error) {
     logger.error('Admin users POST error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
@@ -287,40 +287,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(ApiResponseHelper.error("Failed to update user", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });
 
 /**
  * User actions (suspend, delete, etc.)
  * DELETE /api/admin/users
  */
-export async function DELETE(request: NextRequest) {
+export const DELETE = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     // Parse request body
     const body = await request.json();
@@ -337,9 +312,9 @@ export async function DELETE(request: NextRequest) {
     const userData = userDoc.data();
 
     // Perform the requested action
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      lastModifiedBy: adminUserId
+      lastModifiedBy: adminUserId,
     };
 
     let actionMessage = '';
@@ -415,7 +390,7 @@ export async function DELETE(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error: any) {
+  } catch (error) {
     logger.error('Admin users DELETE error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
@@ -430,7 +405,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(ApiResponseHelper.error("Failed to perform user action", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });
 
 /**
  * Log admin actions for audit trail

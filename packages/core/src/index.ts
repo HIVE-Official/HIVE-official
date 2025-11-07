@@ -19,6 +19,58 @@ export { RitualId } from "./domain/rituals/value-objects/ritual-id.value";
 export { EnhancedRitual } from "./domain/rituals/aggregates/enhanced-ritual";
 export { FeedItem } from "./domain/feed/feed-item";
 export { EnhancedFeed } from "./domain/feed/enhanced-feed";
+export {
+  RitualArchetype,
+  type RitualPhase,
+  type RitualPresentation,
+  type RitualMetricsSnapshot,
+  type BaseRitual,
+  type FoundingClassRitual,
+  type LaunchCountdownRitual,
+  type BetaLotteryRitual,
+  type UnlockChallengeRitual,
+  type SurvivalRitual,
+  type LeakRitual,
+  type TournamentRitual,
+  type FeatureDropRitual,
+  type RuleInversionRitual,
+  type RitualUnion,
+  type FoundingClassConfig,
+  type LaunchCountdownConfig,
+  type BetaLotteryConfig,
+  type UnlockChallengeConfig,
+  type SurvivalConfig,
+  type LeakConfig,
+  type TournamentConfig,
+  type TournamentMatchup,
+  type FeatureDropConfig,
+  type FeatureDropAnalyticsMetric,
+  type FeatureDropSurveyQuestion,
+  type RuleInversionConfig,
+  type RuleInversionGuardrail,
+  RitualSchema,
+  RitualUnionSchema,
+  parseRitualUnion,
+} from "./domain/rituals/archetypes";
+
+export * from "./domain/rituals/events";
+export {
+  RitualComposerSchema,
+  createDefaultConfig,
+  type RitualComposerInput,
+} from "./domain/rituals/composer";
+
+// Ritual Templates
+export {
+  RITUAL_TEMPLATES,
+  getAvailableTemplates,
+  getTemplate,
+  getTemplatesByCategory,
+  getTemplatesByArchetype,
+  type RitualTemplate,
+  type RitualTemplateMetadata,
+  type RitualTemplateId,
+} from "./domain/rituals/templates";
 
 // Application Services - Use Case Orchestration
 export * from "./application";
@@ -34,10 +86,11 @@ export * from "./infrastructure/mappers/profile.firebase-mapper";
 
 // Services
 export { presenceService } from "./services/presence-service";
-export type { PresenceData } from "./services/presence-service";
+export type { PresenceData, PresenceStatus } from "./services/presence-service";
 
 // Constants
 export * from "./constants/majors";
+export * from "./constants/onboarding-interests";
 
 // Stores
 export * from "./stores/useAppStore";
@@ -72,3 +125,6 @@ export type { SearchResultItem, SearchQuery, SearchQueryResult } from "./applica
 
 // Temporary backward compatibility (will be removed)
 export * from "./application/shared/temporary-types";
+
+// Schemas
+export * from "./schemas/admin/dashboard";

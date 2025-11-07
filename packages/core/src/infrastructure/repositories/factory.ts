@@ -8,6 +8,7 @@ import {
   ISpaceRepository,
   IFeedRepository,
   IRitualRepository,
+  IRitualConfigRepository,
   IConnectionRepository
 } from './interfaces';
 
@@ -16,6 +17,7 @@ import { FirebaseProfileRepository } from './firebase/profile.repository';
 import { FirebaseSpaceRepository } from './firebase/space.repository';
 import { FirebaseFeedRepository } from './firebase/feed.repository';
 import { FirebaseRitualRepository } from './firebase/ritual.repository';
+import { FirebaseRitualConfigRepository } from './firebase/ritual-config.repository';
 import { FirebaseConnectionRepository } from './firebase/connection.repository';
 
 // Singleton instances
@@ -23,6 +25,7 @@ let profileRepo: IProfileRepository | null = null;
 let spaceRepo: ISpaceRepository | null = null;
 let feedRepo: IFeedRepository | null = null;
 let ritualRepo: IRitualRepository | null = null;
+let ritualConfigRepo: IRitualConfigRepository | null = null;
 let connectionRepo: IConnectionRepository | null = null;
 
 /**
@@ -65,6 +68,13 @@ export function getRitualRepository(): IRitualRepository {
   return ritualRepo;
 }
 
+export function getRitualConfigRepository(): IRitualConfigRepository {
+  if (!ritualConfigRepo) {
+    ritualConfigRepo = new FirebaseRitualConfigRepository();
+  }
+  return ritualConfigRepo;
+}
+
 /**
  * Get or create ConnectionRepository instance
  */
@@ -83,12 +93,14 @@ export function initializeRepositories(config: {
   space?: ISpaceRepository;
   feed?: IFeedRepository;
   ritual?: IRitualRepository;
+  ritualConfig?: IRitualConfigRepository;
   connection?: IConnectionRepository;
 }) {
   if (config.profile) profileRepo = config.profile;
   if (config.space) spaceRepo = config.space;
   if (config.feed) feedRepo = config.feed;
   if (config.ritual) ritualRepo = config.ritual;
+  if (config.ritualConfig) ritualConfigRepo = config.ritualConfig;
   if (config.connection) connectionRepo = config.connection;
 }
 
@@ -100,5 +112,6 @@ export function resetRepositories(): void {
   spaceRepo = null;
   feedRepo = null;
   ritualRepo = null;
+  ritualConfigRepo = null;
   connectionRepo = null;
 }

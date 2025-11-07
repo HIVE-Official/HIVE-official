@@ -1,25 +1,34 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ProfileIdentityWidget } from '../organisms/profile-identity-widget';
-import { MyActivityWidget } from '../organisms/profile-activity-widget';
-import { MySpacesWidget } from '../organisms/profile-spaces-widget';
-import { MyConnectionsWidget } from '../organisms/profile-connections-widget';
-import { ProfileCompletionCard } from '../organisms/profile-completion-card';
-import { HiveLabWidget } from '../organisms/hivelab-widget';
-import type { UIProfile } from '../organisms/profile-types';
-import type { PrivacyLevel } from '../molecules/privacy-control';
+import * as React from "react";
+
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import {
+  ProfileIdentityWidget,
+  ProfileActivityWidget,
+  ProfileSpacesWidget,
+  ProfileConnectionsWidget,
+  ProfileCompletionCard,
+  HiveLabWidget,
+  type ProfileActivityItem,
+  type ProfileSpaceItem,
+  type ProfileConnectionItem,
+} from "../organisms/profile-widgets";
+import type { ProfileSystem } from "@hive/core/types/profile-system";
+import type { PrivacyLevel } from "../molecules/privacy-control";
+import type { PresenceStatus } from "../atoms/presence-indicator";
 
 export interface ProfileViewLayoutProps {
-  profile: UIProfile;
+  profile: ProfileSystem;
   isOwnProfile?: boolean;
-  activities?: any[];
-  spaces?: any[];
-  connections?: any[];
+  activities?: ProfileActivityItem[];
+  spaces?: ProfileSpaceItem[];
+  connections?: ProfileConnectionItem[];
   isSpaceLeader?: boolean;
   hasHiveLabAccess?: boolean;
   toolsCreated?: number;
-  leadingSpaces?: Array<{ id: string; name: string; memberCount: number }>;
+  leadingSpaces?: Array<{ id: string; name: string }>;
   onEditPhoto?: () => void;
   onPrivacyChange?: (widget: string, level: PrivacyLevel) => void;
   onStepClick?: (stepId: string) => void;
@@ -28,155 +37,161 @@ export interface ProfileViewLayoutProps {
   className?: string;
 }
 
-/**
- * Profile View Layout - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - 8px grid system with responsive columns
- * - Mobile: 1 column
- * - Tablet: 2 columns
- * - Desktop: 3 columns
- * - Luxury minimalism with careful spacing
- */
-export const ProfileViewLayout: React.FC<ProfileViewLayoutProps> = ({
+const widgetLevel = (
+  profile: ProfileSystem,
+  widget: "myActivity" | "mySpaces" | "myConnections",
+  fallback: PrivacyLevel,
+): PrivacyLevel => {
+  const widgets = (profile as any).widgets as Record<string, { level?: string }> | undefined;
+  const level = widgets?.[widget]?.level ?? profile.privacy?.visibilityLevel;
+  return (level as PrivacyLevel) ?? fallback;
+};
+
+export function ProfileViewLayout({
   profile,
   isOwnProfile = false,
   activities = [],
   spaces = [],
   connections = [],
-  isSpaceLeader = false,
-  hasHiveLabAccess = false,
-  toolsCreated = 0,
-  leadingSpaces = [],
+  isSpaceLeader,
+  hasHiveLabAccess,
+  toolsCreated,
+  leadingSpaces,
   onEditPhoto,
   onPrivacyChange,
   onStepClick,
   onRequestHiveLabAccess,
   onOpenHiveLab,
-  className = ''
-}) => {
-  const completionPercentage = profile.metadata?.completionPercentage || 0;
-
-  // Determine which steps are completed for the completion card
-  const completedSteps = [];
-  if (profile.identity.avatarUrl) completedSteps.push('avatar');
-  if (profile.personal?.bio) completedSteps.push('bio');
-  if (profile.academic?.major && profile.academic?.academicYear) completedSteps.push('academic');
-  if (profile.academic?.housing) completedSteps.push('housing');
-  if (profile.personal?.interests?.length > 0) completedSteps.push('interests');
-  if (spaces.length >= 3) completedSteps.push('spaces');
-
-  // Check widget privacy settings
-  const shouldShowWidget = (widgetKey: string) => {
-    const widgetPrivacy = profile.widgets?.[widgetKey as keyof typeof profile.widgets];
-    if (!widgetPrivacy) return true;
-
-    // If viewing own profile, always show
-    if (isOwnProfile) return true;
-
-    // Otherwise respect privacy level
-    const level = widgetPrivacy.level || 'public';
-    if (level === 'private') return false;
-
-    // For 'connections' level, we'd need to check if viewer is connected
-    // For now, we'll show it (this would need viewer context)
-    return true;
+  className,
+}: ProfileViewLayoutProps) {
+  const completion = profile.completeness ?? 0;
+  const extendedProfile = profile as unknown as {
+    personal?: { bio?: string };
+    spaces?: Array<{ id: string }>;
+    stats?: { toolsUsed?: number };
+    completedSteps?: string[];
+    presence?: { status?: string; lastSeen?: Date | string | null };
   };
 
+  const handlePrivacyChange = (widget: string) => (level: PrivacyLevel) => {
+    onPrivacyChange?.(widget, level);
+  };
+
+  const derivedPresenceStatus = React.useMemo<PresenceStatus>(() => {
+    const candidate = extendedProfile.presence?.status;
+    if (
+      candidate === "online" ||
+      candidate === "away" ||
+      candidate === "offline" ||
+      candidate === "ghost"
+    ) {
+      return candidate;
+    }
+    if (profile.presence?.isOnline) {
+      return "online";
+    }
+    if (profile.presence?.beacon?.active) {
+      return "away";
+    }
+    return "offline";
+  }, [extendedProfile.presence?.status, profile.presence?.isOnline, profile.presence?.beacon]);
+
+  const lastSeen =
+    extendedProfile.presence?.lastSeen ?? profile.presence?.lastActive ?? null;
+
   return (
-    <div
-      className={`
-        min-h-screen
-        bg-black
-        ${className}
-      `}
-    >
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            {isOwnProfile ? 'My Profile' : `${profile.identity.fullName}'s Profile`}
-          </h1>
-          <p className="text-gray-400">
-            {isOwnProfile
-              ? 'Manage your profile and privacy settings'
-              : `${profile.academic?.academicYear || 'Student'} at University at Buffalo`
-            }
-          </p>
+    <div className={cn("space-y-6", className)}>
+      <ProfileIdentityWidget
+        profile={{
+          identity: {
+            id: profile.userId,
+            fullName: profile.identity.academic.name,
+            avatarUrl: profile.identity.photoCarousel?.photos?.[0]?.url,
+          },
+          academic: {
+            campusId: profile.campusId,
+            major: profile.identity.academic.majors?.join(", ") ?? undefined,
+            academicYear: profile.identity.academic.year,
+            graduationYear: profile.identity.academic.graduationYear,
+            pronouns: profile.identity.academic.pronouns,
+          },
+          personal: {
+            bio: extendedProfile.personal?.bio,
+            currentVibe: profile.presence?.currentActivity?.context ?? profile.presence?.vibe,
+          },
+          social: {
+            connections: {
+              connectionIds: profile.connections.connections?.map((c) => c.userId) ?? [],
+              friendIds: profile.connections.friends?.map((c) => c.userId) ?? [],
+            },
+            mutualSpaces: extendedProfile.spaces?.map((space) => space.id) ?? [],
+          },
+          metadata: {
+            completionPercentage: completion,
+          },
+          widgets: {
+            myActivity: { level: widgetLevel(profile, "myActivity", "public") },
+          },
+        }}
+        isOwnProfile={isOwnProfile}
+        presenceStatus={derivedPresenceStatus}
+        lastSeen={lastSeen}
+        completionPercentage={completion}
+        onEditPhoto={onEditPhoto}
+        privacyLevel={widgetLevel(profile, "myActivity", "public")}
+        onPrivacyChange={onPrivacyChange ? handlePrivacyChange("myActivity") : undefined}
+      />
+
+      {isOwnProfile ? (
+        <ProfileCompletionCard
+          completionPercentage={completion}
+          completedSteps={extendedProfile.completedSteps ?? []}
+          onStepClick={onStepClick}
+        />
+      ) : null}
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <ProfileActivityWidget
+            activities={activities}
+            isOwnProfile={isOwnProfile}
+            privacyLevel={widgetLevel(profile, "myActivity", "public")}
+            onPrivacyChange={onPrivacyChange ? handlePrivacyChange("myActivity") : undefined}
+          />
+
+          <ProfileSpacesWidget
+            spaces={spaces}
+            isOwnProfile={isOwnProfile}
+            privacyLevel={widgetLevel(profile, "mySpaces", "connections")}
+            onPrivacyChange={onPrivacyChange ? handlePrivacyChange("mySpaces") : undefined}
+          />
         </div>
+        <div className="space-y-6">
+          <ProfileConnectionsWidget
+            connections={connections}
+            isOwnProfile={isOwnProfile}
+            privacyLevel={widgetLevel(profile, "myConnections", "connections")}
+            onPrivacyChange={onPrivacyChange ? handlePrivacyChange("myConnections") : undefined}
+          />
 
-        {/* Responsive Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Column 1: Identity & Completion */}
-          <div className="space-y-6">
-            {/* Profile Identity - Always visible */}
-            <ProfileIdentityWidget
-              profile={profile}
-              isOwnProfile={isOwnProfile}
-              onEditPhoto={onEditPhoto}
-            />
-
-            {/* Completion Card - Only for own profile */}
-            {isOwnProfile && completionPercentage < 100 && (
-              <ProfileCompletionCard
-                completionPercentage={completionPercentage}
-                completedSteps={completedSteps}
-                onStepClick={onStepClick}
-              />
-            )}
-          </div>
-
-          {/* Column 2: Activity & Spaces */}
-          <div className="space-y-6">
-            {/* My Activity Widget */}
-            {shouldShowWidget('myActivity') && (
-              <MyActivityWidget
-                activities={activities}
-                isOwnProfile={isOwnProfile}
-                privacyLevel={(profile.widgets?.myActivity?.level || 'public') as PrivacyLevel}
-                onPrivacyChange={(level) => onPrivacyChange?.('myActivity', level)}
-              />
-            )}
-
-            {/* My Spaces Widget */}
-            {shouldShowWidget('mySpaces') && (
-              <MySpacesWidget
-                spaces={spaces}
-                isOwnProfile={isOwnProfile}
-                privacyLevel={(profile.widgets?.mySpaces?.level || 'public') as PrivacyLevel}
-                onPrivacyChange={(level) => onPrivacyChange?.('mySpaces', level)}
-              />
-            )}
-          </div>
-
-          {/* Column 3: Connections & Additional */}
-          <div className="space-y-6">
-            {/* My Connections Widget */}
-            {shouldShowWidget('myConnections') && (
-              <MyConnectionsWidget
-                connections={connections}
-                isOwnProfile={isOwnProfile}
-                privacyLevel={(profile.widgets?.myConnections?.level || 'public') as PrivacyLevel}
-                onPrivacyChange={(level) => onPrivacyChange?.('myConnections', level)}
-              />
-            )}
-
-            {/* HiveLab Widget - Always shown but locked for non-leaders */}
-            <HiveLabWidget
-              isSpaceLeader={isSpaceLeader}
-              hasAccess={hasHiveLabAccess}
-              toolsCreated={toolsCreated}
-              toolsUsed={[]} // Would be populated with actual tools data
-              leadingSpaces={leadingSpaces}
-              onRequestAccess={onRequestHiveLabAccess}
-              onOpenStudio={onOpenHiveLab}
-            />
-          </div>
+          <HiveLabWidget
+            hasAccess={hasHiveLabAccess}
+            isSpaceLeader={isSpaceLeader}
+            toolsCreated={toolsCreated}
+            toolsUsed={extendedProfile.stats?.toolsUsed ?? 0}
+            leadingSpaces={leadingSpaces}
+            onRequestAccess={onRequestHiveLabAccess}
+            onOpenStudio={onOpenHiveLab}
+          />
         </div>
-
-        {/* Mobile-optimized bottom spacing */}
-        <div className="h-20 lg:h-0" />
       </div>
+
+      <Card className="rounded-3xl border-[color-mix(in_srgb,var(--hive-border-default,#2d3145) 55%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary,#10111c) 90%,transparent)] p-6">
+        <h3 className="text-lg font-medium text-[var(--hive-text-primary,#f7f7ff)]">Timeline</h3>
+        <p className="mt-2 text-sm text-[var(--hive-text-secondary,#c0c2cc)]">
+          Ritual streaks, actions, and campus milestones will appear here in the next iteration.
+        </p>
+      </Card>
     </div>
   );
-};
+}

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Progress,
   Tabs,
   TabsContent,
@@ -34,6 +34,7 @@ import {
   Minus
 } from 'lucide-react';
 import { formatDistanceToNow, format, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface ContentMetrics {
   posts: {
@@ -111,8 +112,8 @@ export function ContentAnalytics() {
     try {
       setLoading(true);
       const [metricsRes, spacesRes] = await Promise.all([
-        fetch(`/api/admin/analytics/content?range=${timeRange}&type=${contentType}`),
-        fetch(`/api/admin/analytics/spaces?range=${timeRange}`)
+        secureApiFetch(`/api/admin/analytics/content?range=${timeRange}&type=${contentType}`),
+        secureApiFetch(`/api/admin/analytics/spaces?range=${timeRange}`)
       ]);
 
       if (metricsRes.ok) {
@@ -181,10 +182,10 @@ export function ContentAnalytics() {
               <TabsTrigger value="90d">90 days</TabsTrigger>
             </TabsList>
           </Tabs>
-          <HiveButton variant="outline" size="sm">
+          <Button variant="outline" size="sm">
             <Calendar className="w-4 h-4 mr-2" />
             Export Report
-          </HiveButton>
+          </Button>
         </div>
       </div>
 
@@ -384,10 +385,10 @@ export function ContentAnalytics() {
               <CardTitle>Space Health Monitor</CardTitle>
               <CardDescription>Track community space vitality and growth</CardDescription>
             </div>
-            <HiveButton variant="outline" size="sm">
+            <Button variant="outline" size="sm">
               <BarChart3 className="w-4 h-4 mr-2" />
               Detailed Report
-            </HiveButton>
+            </Button>
           </div>
         </CardHeader>
         <CardContent>

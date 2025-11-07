@@ -1,0 +1,16 @@
+/.next
+/out
+/public
+/playwright-report
+/test-results
+/node_modules
+/.turbo
+/.vercel
+/coverage
+
+# Project-specific ignores
+/src/app/api/**
+/src/test/**
+/src/__tests__/**
+/src/types/**
+/scripts/**

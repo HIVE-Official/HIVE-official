@@ -6,12 +6,14 @@ import * as admin from 'firebase-admin';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { validateSecureSpaceAccess, CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Helper function to safely convert Firestore timestamp to Date
-function toDateSafe(timestamp: any): Date | null {
+function toDateSafe(timestamp: unknown): Date | null {
   if (!timestamp) return null;
   if (typeof timestamp === 'string') return new Date(timestamp);
-  if (timestamp && typeof timestamp.toDate === 'function') return timestamp.toDate();
+  const maybeTs = timestamp as { toDate?: () => Date };
+  if (maybeTs && typeof maybeTs.toDate === 'function') return maybeTs.toDate();
   if (timestamp instanceof Date) return timestamp;
   return null;
 }
@@ -44,15 +46,38 @@ export async function POST(request: NextRequest) {
     const searchParams = SearchUsersSchema.parse(body);
     const { query, limit, offset, userType, major, graduationYear, spaceId, sortBy, includePrivateProfiles } = searchParams;
 
-    let usersToSearch: Array<{ id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any }> = [];
+    interface RawUserDoc {
+      id: string;
+      privacy?: { profileVisibility?: string; bioVisibility?: string; academicVisibility?: string };
+      fullName?: string;
+      handle?: string;
+      bio?: string;
+      academic?: { major?: string; graduationYear?: number; school?: string };
+      isVerified?: boolean;
+      lastLoginAt?: unknown;
+      createdAt?: unknown;
+      userType?: string;
+      photoURL?: string;
+      [key: string]: unknown;
+    }
+
+    let usersToSearch: RawUserDoc[] = [];
 
     // If searching within a specific space, get space members first
     if (spaceId) {
+      // Validate space access (campus isolation + active)
+      const validation = await validateSecureSpaceAccess(spaceId, decodedToken.uid);
+      if (!validation.isValid) {
+        const status = validation.error === 'Space not found' ? HttpStatus.NOT_FOUND : HttpStatus.FORBIDDEN;
+        return NextResponse.json(ApiResponseHelper.error(validation.error || 'Access denied', "FORBIDDEN"), { status });
+      }
       try {
         const membersSnapshot = await db
-          .collection('spaces')
-          .doc(spaceId)
-          .collection('members')
+          .collection('spaceMembers')
+          .where('spaceId', '==', spaceId)
+          .where('isActive', '==', true)
+          .where('campusId', '==', CURRENT_CAMPUS_ID)
+          .limit(200)
           .get();
         
         const memberIds = membersSnapshot.docs.map(doc => doc.data().userId);
@@ -70,7 +95,7 @@ export async function POST(request: NextRequest) {
           const batchResults = await Promise.all(batches);
           for (const snapshot of batchResults) {
             for (const doc of snapshot.docs) {
-              usersToSearch.push({ id: doc.id, ...doc.data() } as { id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any });
+              usersToSearch.push({ id: doc.id, ...(doc.data() as Record<string, unknown>) } as RawUserDoc);
             }
           }
         }
@@ -82,7 +107,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Search all users with basic filters
-      let usersQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('users');
+      let usersQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('users').where('campusId', '==', CURRENT_CAMPUS_ID);
       
       if (userType) {
         usersQuery = usersQuery.where('userType', '==', userType);
@@ -97,7 +122,7 @@ export async function POST(request: NextRequest) {
       }
 
       const usersSnapshot = await usersQuery.get();
-      usersToSearch = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as { id: string; privacy?: any; fullName?: string; handle?: string; bio?: string; academic?: any; isVerified?: boolean; lastLoginAt?: string; [key: string]: any }));
+      usersToSearch = usersSnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, unknown>) } as RawUserDoc));
     }
 
     const users = [];
@@ -172,21 +197,25 @@ export async function POST(request: NextRequest) {
         } else {
           // Get user's spaces
           const currentUserSpacesSnapshot = await db
-            .collectionGroup('members')
+            .collection('spaceMembers')
             .where('userId', '==', decodedToken.uid)
+            .where('isActive', '==', true)
+            .where('campusId', '==', CURRENT_CAMPUS_ID)
+            .limit(200)
             .get();
-          
           const currentUserSpaceIds = currentUserSpacesSnapshot.docs
-            .map(doc => doc.ref.parent.parent?.id)
+            .map(doc => doc.data().spaceId)
             .filter(Boolean);
 
           const otherUserSpacesSnapshot = await db
-            .collectionGroup('members')
+            .collection('spaceMembers')
             .where('userId', '==', userData.id)
+            .where('isActive', '==', true)
+            .where('campusId', '==', CURRENT_CAMPUS_ID)
+            .limit(200)
             .get();
-          
           const otherUserSpaceIds = otherUserSpacesSnapshot.docs
-            .map(doc => doc.ref.parent.parent?.id)
+            .map(doc => doc.data().spaceId)
             .filter(Boolean);
 
           mutualSpacesCount = currentUserSpaceIds.filter(id => otherUserSpaceIds.includes(id)).length;

@@ -52,22 +52,39 @@ export const autoJoinOnCreate = functions.auth.user().onCreate(async (user) => {
     const spacesJoined: string[] = [];
 
     spacesSnapshot.forEach((doc) => {
-      const space = doc.data() as Space;
+      const space = doc.data() as Space & { campusId?: string };
       functions.logger.info(`Adding user ${uid} to space ${doc.id} (${space.name})`);
 
-      // Add user to the members sub-collection
-      const memberRef = db.collection("spaces").doc(doc.id).collection("members").doc(uid);
+      // Legacy nested membership (maintained for compatibility)
+      const nestedMemberRef = db.collection("spaces").doc(doc.id).collection("members").doc(uid);
       const newMember: SpaceMember = {
         userId: uid,
         spaceId: doc.id,
         role: "member",
         joinedAt: new Date(),
       };
-      batch.set(memberRef, newMember);
+      batch.set(nestedMemberRef, newMember);
 
-      // Atomically increment the member count
+      // Flat membership document with campus metadata if available
+      const flatMemberRef = db.collection('spaceMembers').doc();
+      batch.set(flatMemberRef, {
+        userId: uid,
+        spaceId: doc.id,
+        role: 'member',
+        isActive: true,
+        joinedAt: admin.firestore.FieldValue.serverTimestamp(),
+        campusId: space.campusId || null,
+        permissions: ['post'],
+        joinMethod: 'auto',
+      });
+
+      // Increment metrics
       const spaceRef = doc.ref;
-      batch.update(spaceRef, {memberCount: admin.firestore.FieldValue.increment(1)});
+      batch.update(spaceRef, {
+        'metrics.memberCount': admin.firestore.FieldValue.increment(1),
+        'metrics.activeMembers': admin.firestore.FieldValue.increment(1),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
       spacesJoined.push(space.name);
     });
 
@@ -122,9 +139,21 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!oldMajorSpaceQuery.empty) {
           const spaceId = oldMajorSpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.delete(memberRef);
-          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
+          // Remove nested
+          batch.delete(db.doc(`spaces/${spaceId}/members/${userId}`));
+          // Deactivate flat
+          const existingFlat = await db.collection('spaceMembers')
+            .where('spaceId', '==', spaceId)
+            .where('userId', '==', userId)
+            .limit(1).get();
+          if (!existingFlat.empty) {
+            batch.update(existingFlat.docs[0].ref, { isActive: false, leftAt: admin.firestore.FieldValue.serverTimestamp() });
+          }
+          batch.update(db.doc(`spaces/${spaceId}`), {
+            'metrics.memberCount': admin.firestore.FieldValue.increment(-1),
+            'metrics.activeMembers': admin.firestore.FieldValue.increment(-1),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
         }
       }
 
@@ -137,9 +166,19 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!newMajorSpaceQuery.empty) {
           const spaceId = newMajorSpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
-          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
+          // Add nested
+          batch.set(db.doc(`spaces/${spaceId}/members/${userId}`), { userId, spaceId, role: 'member', joinedAt: new Date() });
+          // Add flat
+          batch.set(db.collection('spaceMembers').doc(), {
+            userId, spaceId, role: 'member', isActive: true,
+            joinedAt: admin.firestore.FieldValue.serverTimestamp(),
+            joinMethod: 'auto'
+          });
+          batch.update(db.doc(`spaces/${spaceId}`), {
+            'metrics.memberCount': admin.firestore.FieldValue.increment(1),
+            'metrics.activeMembers': admin.firestore.FieldValue.increment(1),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
         }
       }
 
@@ -152,9 +191,19 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!oldResidencySpaceQuery.empty) {
           const spaceId = oldResidencySpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.delete(memberRef);
-          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(-1)});
+          batch.delete(db.doc(`spaces/${spaceId}/members/${userId}`));
+          const existingFlat = await db.collection('spaceMembers')
+            .where('spaceId', '==', spaceId)
+            .where('userId', '==', userId)
+            .limit(1).get();
+          if (!existingFlat.empty) {
+            batch.update(existingFlat.docs[0].ref, { isActive: false, leftAt: admin.firestore.FieldValue.serverTimestamp() });
+          }
+          batch.update(db.doc(`spaces/${spaceId}`), {
+            'metrics.memberCount': admin.firestore.FieldValue.increment(-1),
+            'metrics.activeMembers': admin.firestore.FieldValue.increment(-1),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
         }
       }
 
@@ -167,9 +216,17 @@ export const autoJoinOnUpdate = functions.firestore
             .limit(1).get();
         if (!newResidencySpaceQuery.empty) {
           const spaceId = newResidencySpaceQuery.docs[0].id;
-          const memberRef = db.doc(`spaces/${spaceId}/members/${userId}`);
-          batch.set(memberRef, {userId, spaceId, role: "member", joinedAt: new Date()});
-          batch.update(db.doc(`spaces/${spaceId}`), {memberCount: admin.firestore.FieldValue.increment(1)});
+          batch.set(db.doc(`spaces/${spaceId}/members/${userId}`), { userId, spaceId, role: 'member', joinedAt: new Date() });
+          batch.set(db.collection('spaceMembers').doc(), {
+            userId, spaceId, role: 'member', isActive: true,
+            joinedAt: admin.firestore.FieldValue.serverTimestamp(),
+            joinMethod: 'auto'
+          });
+          batch.update(db.doc(`spaces/${spaceId}`), {
+            'metrics.memberCount': admin.firestore.FieldValue.increment(1),
+            'metrics.activeMembers': admin.firestore.FieldValue.increment(1),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
         }
       }
 

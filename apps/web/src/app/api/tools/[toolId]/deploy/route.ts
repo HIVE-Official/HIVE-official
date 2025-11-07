@@ -5,6 +5,7 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { withAuthValidationAndErrors, withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Schema for tool deployment requests
 const DeployToolSchema = z.object({
@@ -38,7 +39,7 @@ export const POST = withAuthValidationAndErrors(
     }
 
     const memberData = spaceMemberDoc.data();
-    if (memberData?.role !== "admin") {
+    if (!['admin', 'owner', 'leader'].includes(memberData?.role)) {
       return respond.error("Admin access required to deploy tools", "FORBIDDEN", { status: 403 });
     }
 
@@ -53,6 +54,9 @@ export const POST = withAuthValidationAndErrors(
     }
 
     const toolData = toolDoc.data();
+    if (toolData?.campusId !== CURRENT_CAMPUS_ID) {
+      return NextResponse.json(ApiResponseHelper.error("Access denied for this campus", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
     if (toolData?.status !== "published") {
       return NextResponse.json(ApiResponseHelper.error("Only published tools can be deployed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
     }
@@ -62,6 +66,7 @@ export const POST = withAuthValidationAndErrors(
       .collection("tool_deployments")
       .where("toolId", "==", toolId)
       .where("spaceId", "==", spaceId)
+      .where("campusId", "==", CURRENT_CAMPUS_ID)
       .where("isActive", "==", true)
       .limit(1)
       .get();
@@ -77,6 +82,9 @@ export const POST = withAuthValidationAndErrors(
       .get();
 
     const spaceData = spaceDoc.data();
+    if (spaceData?.campusId !== CURRENT_CAMPUS_ID) {
+      return NextResponse.json(ApiResponseHelper.error("Access denied for this campus", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
     const maxTools = spaceData?.limits?.maxTools || 20;
 
     const activeDeploymentsQuery = await db
@@ -98,6 +106,7 @@ export const POST = withAuthValidationAndErrors(
       id: deploymentId,
       toolId,
       spaceId,
+      campusId: CURRENT_CAMPUS_ID,
       deployedBy: userId,
       deployedAt: admin.firestore.FieldValue.serverTimestamp(),
       isActive: true,
@@ -254,6 +263,7 @@ export const DELETE = withAuthAndErrors(async (
       .collection("tool_states")
       .where("toolId", "==", toolId)
       .where("spaceId", "==", spaceId)
+      .where("campusId", "==", CURRENT_CAMPUS_ID)
       .get();
 
     const batch = dbAdmin.batch();

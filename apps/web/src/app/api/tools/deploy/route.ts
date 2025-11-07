@@ -1,27 +1,76 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
-import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
+"use server";
 
-// Tool deployment interface
-interface ToolDeployment {
-  id?: string;
+import { z } from "zod";
+import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@/lib/structured-logger";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import {
+  createPlacementDocument,
+  buildPlacementCompositeId,
+} from "@/lib/tool-placement";
+
+const SurfaceSchema = z.enum([
+  "pinned",
+  "posts",
+  "events",
+  "tools",
+  "chat",
+  "members",
+]);
+
+const DeploymentPermissionsSchema = z
+  .object({
+    canInteract: z.boolean().optional(),
+    canView: z.boolean().optional(),
+    canEdit: z.boolean().optional(),
+    allowedRoles: z.array(z.string()).optional(),
+  })
+  .optional();
+
+const DeploymentSettingsSchema = z
+  .object({
+    showInDirectory: z.boolean().optional(),
+    allowSharing: z.boolean().optional(),
+    collectAnalytics: z.boolean().optional(),
+    notifyOnInteraction: z.boolean().optional(),
+  })
+  .optional();
+
+const DeployToolSchema = z.object({
+  toolId: z.string(),
+  deployTo: z.enum(["profile", "space"]),
+  targetId: z.string(),
+  surface: SurfaceSchema.optional(),
+  config: z.record(z.any()).optional(),
+  permissions: DeploymentPermissionsSchema,
+  settings: DeploymentSettingsSchema,
+});
+
+type DeployToolInput = z.infer<typeof DeployToolSchema>;
+
+type DeploymentRecord = {
+  id: string;
   toolId: string;
   deployedBy: string;
-  deployedTo: 'profile' | 'space';
-  targetId: string; // userId for profile, spaceId for space
-  surface?: 'pinned' | 'posts' | 'events' | 'tools' | 'chat' | 'members'; // for space deployments
-  position?: number; // for ordering deployments
-  config?: Record<string, any>; // deployment-specific configuration
+  deployedTo: "profile" | "space";
+  targetType: "profile" | "space";
+  targetId: string;
+  surface?: z.infer<typeof SurfaceSchema>;
+  position: number;
+  config: Record<string, unknown>;
   permissions: {
     canInteract: boolean;
     canView: boolean;
     canEdit: boolean;
-    allowedRoles?: string[]; // for space deployments
+    allowedRoles: string[];
   };
-  status: 'active' | 'paused' | 'disabled';
+  status: "active" | "paused" | "disabled";
   deployedAt: string;
   lastUsed?: string;
   usageCount: number;
@@ -31,307 +80,458 @@ interface ToolDeployment {
     collectAnalytics: boolean;
     notifyOnInteraction: boolean;
   };
-  metadata?: Record<string, any>;
-}
+  metadata: Record<string, unknown>;
+  placementId: string;
+  placementPath: string;
+  creatorId: string;
+  spaceId: string | null;
+  profileId: string | null;
+  campusId: string;
+};
 
-// Tool execution context
-interface ToolExecutionContext {
-  deploymentId: string;
-  toolId: string;
-  userId: string;
-  targetType: 'profile' | 'space';
-  targetId: string;
-  surface?: string;
-  permissions: {
-    canRead: boolean;
-    canWrite: boolean;
-    canExecute: boolean;
+function resolvePermissions(
+  permissions: DeployToolInput["permissions"],
+): DeploymentRecord["permissions"] {
+  return {
+    canInteract: permissions?.canInteract ?? true,
+    canView: permissions?.canView ?? true,
+    canEdit: permissions?.canEdit ?? false,
+    allowedRoles:
+      permissions?.allowedRoles ??
+      ["member", "moderator", "admin", "builder"],
   };
-  environment: 'production' | 'preview' | 'sandbox';
 }
 
-// POST - Deploy tool to profile or space
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+function resolveSettings(
+  settings: DeployToolInput["settings"],
+): DeploymentRecord["settings"] {
+  return {
+    showInDirectory: settings?.showInDirectory ?? true,
+    allowSharing: settings?.allowSharing ?? true,
+    collectAnalytics: settings?.collectAnalytics ?? true,
+    notifyOnInteraction: settings?.notifyOnInteraction ?? false,
+  };
+}
 
-    const body = await request.json();
-    const { toolId, deployTo, targetId, surface, config, permissions, settings } = body;
-
-    logger.info(
-      `🚀 Deploying tool to :by user: toolId=${toolId}, targetId=${targetId} at /api/tools/deploy`
-    );
-
-    // Validate required fields
-    if (!toolId || !deployTo || !targetId) {
-      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    if (!['profile', 'space'].includes(deployTo)) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid deployment target", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Get tool details
-    const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const toolData = toolDoc.data();
-    if (!toolData) {
-      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Check tool permissions
-    if (toolData.ownerId !== user.uid && toolData.status !== 'published') {
-      return NextResponse.json(ApiResponseHelper.error("Tool not available for deployment", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Validate deployment target
-    if (deployTo === 'profile' && targetId !== user.uid) {
-      return NextResponse.json(ApiResponseHelper.error("Can only deploy to your own profile", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    if (deployTo === 'space') {
-      // Check space membership and permissions
-      const spaceDoc = await dbAdmin.collection('spaces').doc(targetId).get();
-      if (!spaceDoc.exists) {
-        return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-      }
-
-      // Check if user has permission to deploy tools in this space
-      const spaceData = spaceDoc.data();
-      const userRole = spaceData?.members?.[user.uid]?.role;
-
-      if (!userRole || !['builder', 'admin', 'moderator'].includes(userRole)) {
-        return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to deploy tools", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-      }
-
-      // Validate surface for space deployments
-      if (surface && !['pinned', 'posts', 'events', 'tools', 'chat', 'members'].includes(surface)) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid surface", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-      }
-    }
-
-    // Check for existing deployment
-    const existingSnapshot = await dbAdmin.collection('deployedTools')
-      .where('toolId', '==', toolId)
-      .where('deployedTo', '==', deployTo)
-      .where('targetId', '==', targetId)
-      .where('status', 'in', ['active', 'paused'])
-      .get();
-    
-    if (!existingSnapshot.empty) {
-      return NextResponse.json(ApiResponseHelper.error("Tool already deployed to this target", "UNKNOWN_ERROR"), { status: 409 });
-    }
-
-    // Check space tool limits (20 max per space)
-    if (deployTo === 'space') {
-      const spaceToolsSnapshot = await dbAdmin.collection('deployedTools')
-        .where('deployedTo', '==', 'space')
-        .where('targetId', '==', targetId)
-        .where('status', '==', 'active')
-        .get();
-      
-      if (spaceToolsSnapshot.size >= 20) {
-        return NextResponse.json(ApiResponseHelper.error("Space has reached maximum tool limit (20)", "UNKNOWN_ERROR"), { status: 409 });
-      }
-    }
-
-    // Create deployment
-    const now = new Date().toISOString();
-    const deployment: ToolDeployment = {
-      toolId,
-      deployedBy: user.uid,
-      deployedTo: deployTo as 'profile' | 'space',
-      targetId,
-      surface: surface || (deployTo === 'space' ? 'tools' : undefined),
-      position: await getNextPosition(deployTo, targetId, surface),
-      config: config || {},
-      permissions: {
-        canInteract: permissions?.canInteract !== false,
-        canView: permissions?.canView !== false,
-        canEdit: permissions?.canEdit || false,
-        allowedRoles: permissions?.allowedRoles || ['member', 'moderator', 'admin', 'builder']
-      },
-      status: 'active',
-      deployedAt: now,
-      usageCount: 0,
-      settings: {
-        showInDirectory: settings?.showInDirectory !== false,
-        allowSharing: settings?.allowSharing !== false,
-        collectAnalytics: settings?.collectAnalytics !== false,
-        notifyOnInteraction: settings?.notifyOnInteraction || false
-      },
-      metadata: {
-        toolName: toolData.name,
-        toolVersion: toolData.currentVersion,
-        deploymentContext: {
-          userAgent: request.headers.get('user-agent'),
-          timestamp: now
-        }
-      }
+async function ensureToolIsDeployable(toolId: string, userId: string) {
+  const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
+  if (!toolDoc.exists) {
+    return {
+      ok: false as const,
+      status: 404,
+      message: "Tool not found",
     };
+  }
 
-    const deploymentRef = await dbAdmin.collection('deployedTools').add(deployment);
-
-    // Update tool usage stats
-    await dbAdmin.collection('tools').doc(toolId).update({
-      deploymentCount: (toolData.deploymentCount || 0) + 1,
-      lastDeployedAt: now
-    });
-
-    // Log activity event
-    await dbAdmin.collection('analytics_events').add({
-      eventType: 'tool_deployed',
-      userId: user.uid,
-      toolId,
-      spaceId: deployTo === 'space' ? targetId : undefined,
-      timestamp: new Date(),
-      metadata: {
-        action: 'tool_deployed',
-        deploymentId: deploymentRef.id,
-        deployedTo: deployTo,
-        surface
-      }
-    });
-
-    const createdDeployment = {
-      id: deploymentRef.id,
-      ...deployment
+  const toolData = toolDoc.data();
+  if (!toolData) {
+    return {
+      ok: false as const,
+      status: 404,
+      message: "Tool data missing",
     };
-
-    return NextResponse.json({ 
-      deployment: createdDeployment,
-      message: 'Tool deployed successfully'
-    }, { status: HttpStatus.CREATED });
-  } catch (error) {
-    logger.error(
-      `Error deploying tool at /api/tools/deploy`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to deploy tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
+
+  if (toolData.campusId && toolData.campusId !== CURRENT_CAMPUS_ID) {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "Access denied for this campus",
+    };
+  }
+
+  if (toolData.ownerId !== userId && toolData.status !== "published") {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "Tool not available for deployment",
+    };
+  }
+
+  return { ok: true as const, toolDoc, toolData };
 }
 
-// GET - List deployed tools
-export async function GET(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const { searchParams } = new URL(request.url);
-    const deployedTo = searchParams.get('deployedTo');
-    const targetId = searchParams.get('targetId');
-    const surface = searchParams.get('surface');
-    const status = searchParams.get('status') || 'active';
-
-    // Build query with filters
-    let deploymentsQuery: admin.firestore.Query<admin.firestore.DocumentData> = dbAdmin.collection('deployedTools');
-    if (deployedTo) deploymentsQuery = deploymentsQuery.where('deployedTo', '==', deployedTo);
-    if (targetId) deploymentsQuery = deploymentsQuery.where('targetId', '==', targetId);
-    if (surface) deploymentsQuery = deploymentsQuery.where('surface', '==', surface);
-    if (status) deploymentsQuery = deploymentsQuery.where('status', '==', status);
-
-    const deploymentsSnapshot = await deploymentsQuery.get();
-    const deployments = deploymentsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as { id: string; toolId?: string; [key: string]: any }));
-
-    // Filter by user permissions
-    const accessibleDeployments = [];
-    for (const deployment of deployments) {
-      if (await canUserAccessDeployment(user.uid, deployment)) {
-        // Fetch tool details
-        if (!deployment.toolId) continue;
-        const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
-        if (toolDoc.exists) {
-          const toolData = toolDoc.data();
-          accessibleDeployments.push({
-            ...deployment,
-            toolData: {
-              id: toolDoc.id,
-              name: toolData?.name,
-              description: toolData?.description,
-              currentVersion: toolData?.currentVersion,
-              elements: toolData?.elements
-            }
-          });
-        }
-      }
-    }
-
-    return NextResponse.json({
-      deployments: accessibleDeployments,
-      count: accessibleDeployments.length
-    });
-  } catch (error) {
-    logger.error(
-      `Error fetching deployed tools at /api/tools/deploy`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployed tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+async function ensureSpaceDeploymentAllowed(spaceId: string, userId: string) {
+  const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
+  if (!spaceDoc.exists) {
+    return {
+      ok: false as const,
+      status: 404,
+      message: "Space not found",
+    };
   }
+
+  const spaceData = spaceDoc.data();
+  if (spaceData?.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "Access denied for this campus",
+    };
+  }
+
+  const userRole = spaceData?.members?.[userId]?.role;
+  if (!userRole || !["builder", "admin", "moderator"].includes(userRole)) {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "Insufficient permissions to deploy tools",
+    };
+  }
+
+  return { ok: true as const, spaceData };
 }
 
-// Helper function to get next position for deployment
-async function getNextPosition(deployedTo: string, targetId: string, surface?: string): Promise<number> {
+async function ensureNoExistingDeployment(
+  input: DeployToolInput,
+): Promise<boolean> {
+  const existingSnapshot = await dbAdmin
+    .collection("deployedTools")
+    .where("toolId", "==", input.toolId)
+    .where("deployedTo", "==", input.deployTo)
+    .where("targetId", "==", input.targetId)
+    .where("campusId", "==", CURRENT_CAMPUS_ID)
+    .where("status", "in", ["active", "paused"])
+    .limit(1)
+    .get();
+
+  return existingSnapshot.empty;
+}
+
+async function enforceSpaceLimit(spaceId: string) {
+  const snapshot = await dbAdmin
+    .collection("deployedTools")
+    .where("deployedTo", "==", "space")
+    .where("targetId", "==", spaceId)
+    .where("campusId", "==", CURRENT_CAMPUS_ID)
+    .where("status", "==", "active")
+    .get();
+
+  if (snapshot.size >= 20) {
+    return {
+      ok: false as const,
+      status: 409,
+      message: "Space has reached maximum tool limit (20)",
+    };
+  }
+
+  return { ok: true as const };
+}
+
+async function getNextPosition(
+  deployedTo: "profile" | "space",
+  targetId: string,
+  surface?: string,
+) {
   try {
-    let positionQuery = dbAdmin.collection('deployedTools')
-      .where('deployedTo', '==', deployedTo)
-      .where('targetId', '==', targetId)
-      .where('status', '==', 'active');
+    let query = dbAdmin
+      .collection("deployedTools")
+      .where("deployedTo", "==", deployedTo)
+      .where("targetId", "==", targetId)
+      .where("campusId", "==", CURRENT_CAMPUS_ID)
+      .where("status", "==", "active");
 
     if (surface) {
-      positionQuery = positionQuery.where('surface', '==', surface);
+      query = query.where("surface", "==", surface);
     }
 
-    const positionSnapshot = await positionQuery.get();
-    return positionSnapshot.size;
+    const snapshot = await query.get();
+    return snapshot.size;
   } catch (error) {
     logger.error(
-      `Error getting next position at /api/tools/deploy`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error determining deployment order",
+      error instanceof Error ? error : new Error(String(error)),
     );
     return 0;
   }
 }
 
-// Helper function to check user access to deployment
-async function canUserAccessDeployment(userId: string, deployment: any): Promise<boolean> {
-  try {
-    // User can access their own profile deployments
-    if (deployment.deployedTo === 'profile' && deployment.targetId === userId) {
-      return true;
+async function canUserAccessDeployment(
+  userId: string,
+  deployment: FirebaseFirestore.DocumentData,
+) {
+  if (deployment.campusId && deployment.campusId !== CURRENT_CAMPUS_ID) {
+    return false;
+  }
+
+  if (
+    deployment.deployedTo === "profile" &&
+    deployment.targetId === userId
+  ) {
+    return true;
+  }
+
+  if (deployment.deployedBy === userId) {
+    return true;
+  }
+
+  if (deployment.deployedTo === "space") {
+    const spaceDoc = await dbAdmin
+      .collection("spaces")
+      .doc(deployment.targetId)
+      .get();
+    if (!spaceDoc.exists) {
+      return false;
+    }
+    const spaceData = spaceDoc.data();
+    if (spaceData?.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+      return false;
+    }
+    const userRole = spaceData?.members?.[userId]?.role;
+    return deployment.permissions?.allowedRoles?.includes(userRole) ?? false;
+  }
+
+  return false;
+}
+
+export const POST = withAuthValidationAndErrors(
+  DeployToolSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context: {},
+    payload: DeployToolInput,
+    respond,
+  ) => {
+    const userId = getUserId(request);
+
+    logger.info("Deploying tool", {
+      toolId: payload.toolId,
+      deployTo: payload.deployTo,
+      targetId: payload.targetId,
+      userUid: userId,
+    });
+
+    const toolResult = await ensureToolIsDeployable(payload.toolId, userId);
+    if (!toolResult.ok) {
+      return respond.error(toolResult.message, "FORBIDDEN", {
+        status: toolResult.status,
+      });
     }
 
-    // User deployed this tool
-    if (deployment.deployedBy === userId) {
-      return true;
+    if (payload.deployTo === "profile" && payload.targetId !== userId) {
+      return respond.error(
+        "Can only deploy tools to your own profile",
+        "FORBIDDEN",
+        { status: 403 },
+      );
     }
 
-    // Check space membership for space deployments
-    if (deployment.deployedTo === 'space') {
-      const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
-      if (spaceDoc.exists) {
-        const spaceData = spaceDoc.data();
-        const userRole = spaceData?.members?.[userId]?.role;
-        return deployment.permissions.allowedRoles?.includes(userRole) || false;
+    if (payload.deployTo === "space") {
+      const spaceValidation = await ensureSpaceDeploymentAllowed(
+        payload.targetId,
+        userId,
+      );
+      if (!spaceValidation.ok) {
+        return respond.error(spaceValidation.message, "FORBIDDEN", {
+          status: spaceValidation.status,
+        });
+      }
+
+      if (payload.surface && !SurfaceSchema.options.includes(payload.surface)) {
+        return respond.error("Invalid surface", "INVALID_INPUT", {
+          status: 400,
+        });
+      }
+
+      const limitCheck = await enforceSpaceLimit(payload.targetId);
+      if (!limitCheck.ok) {
+        return respond.error(limitCheck.message, "CONFLICT", {
+          status: limitCheck.status,
+        });
       }
     }
 
-    return false;
+    const uniqueDeployment = await ensureNoExistingDeployment(payload);
+    if (!uniqueDeployment) {
+      return respond.error(
+        "Tool already deployed to this target",
+        "CONFLICT",
+        { status: 409 },
+      );
+    }
+
+    const timestamp = new Date();
+    const resolvedSurface =
+      payload.surface ??
+      (payload.deployTo === "space" ? ("tools" as const) : undefined);
+    const permissions = resolvePermissions(payload.permissions);
+    const settings = resolveSettings(payload.settings);
+    const position = await getNextPosition(
+      payload.deployTo,
+      payload.targetId,
+      resolvedSurface,
+    );
+
+    const placementTargetType =
+      payload.deployTo === "space" ? ("space" as const) : ("profile" as const);
+
+    const placementData = {
+      toolId: payload.toolId,
+      targetType: placementTargetType,
+      targetId: payload.targetId,
+      surface: resolvedSurface ?? "tools",
+      status: "active" as const,
+      position,
+      config: payload.config ?? {},
+      permissions,
+      settings,
+      createdAt: timestamp,
+      createdBy: userId,
+      updatedAt: timestamp,
+      usageCount: 0,
+      metadata: {
+        deploymentContext: {
+          userAgent: request.headers.get("user-agent"),
+          timestamp: timestamp.toISOString(),
+        },
+      },
+    };
+
+    const placement = await createPlacementDocument(
+      placementTargetType,
+      payload.targetId,
+      placementData,
+    );
+
+    const compositeId = buildPlacementCompositeId(
+      placementTargetType,
+      payload.targetId,
+      placement.id,
+    );
+
+    const deploymentDoc: DeploymentRecord = {
+      id: compositeId,
+      toolId: payload.toolId,
+      deployedBy: userId,
+      deployedTo: payload.deployTo,
+      targetType: placementTargetType,
+      targetId: payload.targetId,
+      surface: resolvedSurface,
+      position,
+      config: payload.config ?? {},
+      permissions,
+      status: "active",
+      deployedAt: timestamp.toISOString(),
+      usageCount: 0,
+      settings,
+      metadata: {
+        toolName: toolResult.toolData.name,
+        toolVersion: toolResult.toolData.currentVersion,
+      },
+      placementId: placement.id,
+      placementPath: placement.path,
+      creatorId: userId,
+      spaceId: placementTargetType === "space" ? payload.targetId : null,
+      profileId: placementTargetType === "profile" ? payload.targetId : null,
+      campusId: CURRENT_CAMPUS_ID,
+    };
+
+    await dbAdmin.collection("deployedTools").doc(compositeId).set(deploymentDoc);
+
+    await dbAdmin
+      .collection("tools")
+      .doc(payload.toolId)
+      .update({
+        deploymentCount: (toolResult.toolData.deploymentCount || 0) + 1,
+        lastDeployedAt: timestamp.toISOString(),
+      });
+
+    await dbAdmin.collection("analytics_events").add({
+      eventType: "tool_deployed",
+      userId,
+      toolId: payload.toolId,
+      campusId: CURRENT_CAMPUS_ID,
+      spaceId: payload.deployTo === "space" ? payload.targetId : null,
+      timestamp: timestamp.toISOString(),
+      metadata: {
+        deploymentId: compositeId,
+        deployedTo: payload.deployTo,
+        surface: resolvedSurface ?? null,
+      },
+    });
+
+    return respond.created(
+      {
+        deployment: deploymentDoc,
+        message: "Tool deployed successfully",
+      },
+      { message: "Tool deployed successfully" },
+    );
+  },
+);
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond,
+) => {
+  try {
+    const userId = getUserId(request);
+    const searchParams = request.nextUrl.searchParams;
+    const deployedTo = searchParams.get("deployedTo");
+    const targetId = searchParams.get("targetId");
+    const surface = searchParams.get("surface");
+    const status = searchParams.get("status") ?? "active";
+
+    let deploymentsQuery = dbAdmin
+      .collection("deployedTools")
+      .where("campusId", "==", CURRENT_CAMPUS_ID);
+
+    if (deployedTo) {
+      deploymentsQuery = deploymentsQuery.where("deployedTo", "==", deployedTo);
+    }
+    if (targetId) {
+      deploymentsQuery = deploymentsQuery.where("targetId", "==", targetId);
+    }
+    if (surface) {
+      deploymentsQuery = deploymentsQuery.where("surface", "==", surface);
+    }
+    deploymentsQuery = deploymentsQuery.where("status", "==", status);
+
+    const snapshot = await deploymentsQuery.get();
+    const deployments = [];
+
+    for (const doc of snapshot.docs) {
+      const deploymentData = doc.data();
+      if (!(await canUserAccessDeployment(userId, deploymentData))) {
+        continue;
+      }
+
+      const toolId = deploymentData.toolId as string | undefined;
+      if (!toolId) continue;
+
+      const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
+      if (!toolDoc.exists) continue;
+
+      const toolData = toolDoc.data();
+      if (toolData?.campusId && toolData.campusId !== CURRENT_CAMPUS_ID) {
+        continue;
+      }
+
+      deployments.push({
+        id: doc.id,
+        ...deploymentData,
+        toolData: {
+          id: toolDoc.id,
+          name: toolData?.name,
+          description: toolData?.description,
+          currentVersion: toolData?.currentVersion,
+          elements: toolData?.elements,
+        },
+      });
+    }
+
+    return respond.success({
+      deployments,
+      count: deployments.length,
+    });
   } catch (error) {
     logger.error(
-      `Error checking deployment access at /api/tools/deploy`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error fetching deployed tools",
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return false;
+    return respond.error("Failed to fetch deployed tools", "INTERNAL_ERROR", {
+      status: 500,
+    });
   }
-}
+});

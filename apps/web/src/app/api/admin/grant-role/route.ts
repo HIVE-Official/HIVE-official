@@ -4,7 +4,9 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Validation schema
 const grantRoleSchema = z.object({
@@ -13,7 +15,7 @@ const grantRoleSchema = z.object({
     errorMap: () => ({ message: "Role must be admin, moderator, or builder" }),
   }) });
 
-export async function POST(request: NextRequest) {
+export const POST = withSecureAuth(async (request: NextRequest, token) => {
   try {
     // Parse and validate request body
     const body = (await request.json()) as unknown;
@@ -21,24 +23,11 @@ export async function POST(request: NextRequest) {
 
     const { userId, role } = validatedData;
 
-    // Verify admin authentication
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid authorization format", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const decodedToken = await getAuth().verifyIdToken(token);
-
     // Check if current user is admin
     const db = getFirestore();
     const currentUserDoc = await db
       .collection("users")
-      .doc(decodedToken.uid)
+      .doc(token?.uid || 'unknown')
       .get();
     const currentUserData = currentUserDoc.data() as
       | { role?: string }
@@ -53,12 +42,17 @@ export async function POST(request: NextRequest) {
     if (!targetUserDoc.exists) {
       return NextResponse.json(ApiResponseHelper.error("User not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
+    // Campus isolation: ensure target user is on current campus
+    const targetUserData = targetUserDoc.data() as any;
+    if (targetUserData?.campusId && targetUserData.campusId !== CURRENT_CAMPUS_ID) {
+      return NextResponse.json(ApiResponseHelper.error("Access denied - campus mismatch", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
 
     // Update user role
     await db.collection("users").doc(userId).update({
       role,
       updatedAt: new Date(),
-      updatedBy: decodedToken.uid });
+      updatedBy: token?.uid || 'unknown' });
 
     // Set custom claims for Firebase Auth
     await getAuth().setCustomUserClaims(userId, { role });
@@ -66,7 +60,7 @@ export async function POST(request: NextRequest) {
     // Log admin action
     await db.collection("admin_logs").add({
       action: "grant_role",
-      performedBy: decodedToken.uid,
+      performedBy: token?.uid || 'unknown',
       targetUser: userId,
       newRole: role,
       timestamp: new Date(),
@@ -87,4 +81,4 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });

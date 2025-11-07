@@ -1,11 +1,10 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const hiveCardVariants: (props?: {
-    variant?: "default" | "brand" | "glass" | "elevated" | "interactive";
-    size?: "default" | "sm" | "lg";
+    variant?: "glass" | "interactive" | "default" | "brand" | "elevated";
+    size?: "sm" | "lg" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof hiveCardVariants> {
-    asChild?: boolean;
 }
 declare const HiveCard: React.ForwardRefExoticComponent<HiveCardProps & React.RefAttributes<HTMLDivElement>>;
 declare const HiveCardHeader: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;

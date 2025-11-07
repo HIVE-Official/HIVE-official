@@ -7,7 +7,7 @@ import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/
 // Content validation interfaces
 interface ContentValidationResult {
   isValid: boolean;
-  contentType: 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import' | 'invalid';
+  contentType: 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import' | 'ritual_update' | 'invalid';
   confidence: number; // 0-100
   validationReasons: string[];
   toolMetadata?: {
@@ -152,7 +152,7 @@ const DEFAULT_POLICIES: Record<string, ContentEnforcementPolicy> = {
     toolContentMinimum: 90, // 90% tool content required
     qualityThreshold: 70,   // Moderate quality threshold
     validationStrict: false,
-    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event'],
+    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event', 'ritual_update'],
     enforcementLevel: 'moderate',
     spaceSpecificRules: {}
   },
@@ -160,7 +160,7 @@ const DEFAULT_POLICIES: Record<string, ContentEnforcementPolicy> = {
     toolContentMinimum: 80, // 80% tool content required
     qualityThreshold: 60,   // Lower quality threshold
     validationStrict: false,
-    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event', 'builder_announcement'],
+    allowedContentTypes: ['tool_generated', 'tool_enhanced', 'space_event', 'builder_announcement', 'ritual_update'],
     enforcementLevel: 'lenient',
     spaceSpecificRules: {}
   }
@@ -242,6 +242,13 @@ async function validateContentItem(
       validationReasons.push('Space event content');
       confidence = 90;
       qualityScore += 15;
+    }
+    // Check if content is ritual update
+    else if (contentItem.ritualId || contentItem.type === 'ritual_participation' || contentItem.type === 'campus_ritual_state') {
+      contentType = 'ritual_update';
+      validationReasons.push('Ritual participation or milestone update');
+      confidence = 85;
+      qualityScore += 20;
     }
     // Check if content is builder announcement
     else if (contentItem.type === 'announcement' || contentItem.isAnnouncement) {

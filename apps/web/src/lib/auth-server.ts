@@ -155,3 +155,4 @@ export async function requireAuth(request: NextRequest): Promise<AuthenticatedUs
  * Alias for requireAuth for compatibility
  */
 export const validateAuth = requireAuth;
+import 'server-only';

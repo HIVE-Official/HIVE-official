@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Star, CheckCircle, Loader2, Search } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
-import { useSession } from "@/hooks/use-session";
+import { HiveCard, Button, Input } from "@hive/ui";
+import { apiClient } from "@/lib/api-client";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveBuilderStepProps {
@@ -29,7 +29,6 @@ interface Space {
 }
 
 export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
-  const { user } = useSession();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,25 +54,11 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
     setError(null);
 
     try {
-      // Get authentication token - use test-token for development/onboarding
-      const authToken: string = 'test-token';
-      
-      // In production with real Firebase auth, we'd use:
-      // if (user && typeof user.getIdToken === 'function') {
-      //   authToken = await user.getIdToken();
-      // }
+      const response = await apiClient.get(`/api/spaces/browse?limit=30&search=${encodeURIComponent(searchQuery)}`);
 
-
-      const response = await fetch(`/api/spaces/browse?limit=30&search=${encodeURIComponent(searchQuery)}`, {
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`Failed to fetch spaces: ${response.status} ${response.statusText}`);
+        const errorBody = await response.text();
+        throw new Error(errorBody || `Failed to fetch spaces: ${response.status}`);
       }
 
       const result = await response.json();
@@ -136,28 +121,19 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
       className="space-y-[var(--hive-spacing-6)] py-[var(--hive-spacing-4)] max-w-4xl mx-auto"
     >
       {/* Header */}
-      <div className="text-center space-y-[var(--hive-spacing-6)]">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-[var(--hive-brand-primary)]/30"
-        >
-          <Users className="w-8 h-8 text-[var(--hive-brand-primary)]" />
-        </motion.div>
-        
+      <div className="text-center space-y-[var(--hive-spacing-3)]">
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
         >
-          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
-            {data.userType === 'faculty' ? 'Request Management Access' : 'Request Builder Access'}
+          <h2 className="text-2xl font-semibold text-[var(--hive-text-primary)]">
+            {data.userType === 'faculty' ? 'Request management access' : 'Request builder access'}
           </h2>
-          <p className="text-[var(--hive-text-secondary)] mt-4">
-            {data.userType === 'faculty' 
-              ? 'Search and select institutional spaces to request management access. Your requests will be reviewed by administrators.'
-              : 'Search for communities you\'d like to build and manage on HIVE.'
+          <p className="text-[var(--hive-text-secondary)] mt-3">
+            {data.userType === 'faculty'
+              ? 'Search institutional spaces and request access. We review every submission before granting controls.'
+              : 'Look up communities you want to help program. Select the spaces you want to build alongside student leads.'
             }
           </p>
         </motion.div>
@@ -169,7 +145,7 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        <HiveInput
+        <Input
           placeholder={data.userType === 'faculty'
             ? "Search for institutional spaces (departments, courses, etc.)..."
             : "Search for communities you want to help build..."
@@ -287,13 +263,10 @@ export function HiveBuilderStep({ data, updateData }: HiveBuilderStepProps) {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <HiveCard className="p-[var(--hive-spacing-4)] inline-block">
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-[var(--hive-status-success)]" />
-              <span className="text-sm font-medium text-[var(--hive-text-primary)]">
-                {selectedSpaces.length} space{selectedSpaces.length !== 1 ? 's' : ''} selected {data.userType === 'faculty' ? 'for management requests' : 'for builder requests'}
-              </span>
-            </div>
+          <HiveCard className="p-[var(--hive-spacing-4)] inline-flex">
+            <span className="text-sm font-medium text-[var(--hive-text-primary)]">
+              {selectedSpaces.length} space{selectedSpaces.length !== 1 ? 's' : ''} selected {data.userType === 'faculty' ? 'for management review' : 'for builder review'}
+            </span>
           </HiveCard>
         </motion.div>
       )}

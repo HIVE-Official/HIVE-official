@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-// Use admin SDK methods since we're in an API route
+import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID, addSecureCampusMetadata } from "@/lib/secure-firebase-queries";
 
 // Space quick actions for profile
 interface SpaceQuickAction {
@@ -35,17 +36,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify user is a member of the space
-    const membershipQuery = dbAdmin.collection('members')
+    const membershipSnapshot = await dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', user.uid)
-      .where('spaceId', '==', spaceId);
-
-    const membershipSnapshot = await membershipQuery.get();
+      .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .limit(1)
+      .get();
     if (membershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     const membershipDoc = membershipSnapshot.docs[0];
     const membershipData = membershipDoc.data();
+
+    // Enforce campus isolation for space actions
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    if (!spaceDoc.exists || (spaceDoc.data()?.campusId !== CURRENT_CAMPUS_ID)) {
+      return NextResponse.json(ApiResponseHelper.error("Access denied for this campus", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    }
 
     // Perform the action
     const result = await performSpaceAction(
@@ -83,7 +92,8 @@ async function performSpaceAction(
   membershipRef: any,
   membershipData: any
 ) {
-  const now = new Date().toISOString();
+  const firestoreNow = admin.firestore.FieldValue.serverTimestamp();
+  const isoNow = new Date().toISOString();
 
   switch (type) {
     case 'favorite': {
@@ -91,7 +101,7 @@ async function performSpaceAction(
       const isFavorite = value !== undefined ? value : !membershipData.isFavorite;
       await membershipRef.update({
         isFavorite,
-        updatedAt: now
+        updatedAt: firestoreNow
       });
       
       // Update user's profile preferences
@@ -105,13 +115,18 @@ async function performSpaceAction(
       const isMuted = value !== undefined ? value : !membershipData.isMuted;
       await membershipRef.update({
         isMuted,
-        muteUntil: isMuted && metadata?.duration ? 
-          new Date(Date.now() + metadata.duration * 60000).toISOString() : null,
-        updatedAt: now
+        muteUntil: isMuted && metadata?.duration
+          ? new Date(Date.now() + metadata.duration * 60000).toISOString()
+          : null,
+        updatedAt: firestoreNow
       });
       
-      return { isMuted, muteUntil: isMuted && metadata?.duration ? 
-        new Date(Date.now() + metadata.duration * 60000).toISOString() : null };
+      return {
+        isMuted,
+        muteUntil: isMuted && metadata?.duration
+          ? new Date(Date.now() + metadata.duration * 60000).toISOString()
+          : null,
+      };
     }
 
     case 'pin': {
@@ -119,8 +134,8 @@ async function performSpaceAction(
       const isPinned = value !== undefined ? value : !membershipData.isPinned;
       await membershipRef.update({
         isPinned,
-        pinnedAt: isPinned ? now : null,
-        updatedAt: now
+        pinnedAt: isPinned ? isoNow : null,
+        updatedAt: firestoreNow
       });
       
       return { isPinned };
@@ -131,9 +146,9 @@ async function performSpaceAction(
       const isArchived = value !== undefined ? value : !membershipData.isArchived;
       await membershipRef.update({
         isArchived,
-        archivedAt: isArchived ? now : null,
+        archivedAt: isArchived ? isoNow : null,
         status: isArchived ? 'archived' : 'active',
-        updatedAt: now
+        updatedAt: firestoreNow
       });
       
       return { isArchived };
@@ -142,9 +157,10 @@ async function performSpaceAction(
     case 'leave': {
       // Leave space
       await membershipRef.update({
+        isActive: false,
         status: 'inactive',
-        leftAt: now,
-        updatedAt: now
+        leftAt: firestoreNow,
+        updatedAt: firestoreNow
       });
       
       // Update space member count
@@ -158,20 +174,23 @@ async function performSpaceAction(
       const requestData = {
         userId,
         spaceId,
+        campusId: CURRENT_CAMPUS_ID,
         requestType: 'builder',
         reason: metadata?.reason || '',
         experience: metadata?.experience || '',
         status: 'pending',
-        requestedAt: now
+        requestedAt: isoNow
       };
       
-      const requestRef = await dbAdmin.collection('builderRequests').add(requestData);
+      const requestRef = await dbAdmin
+        .collection('builderRequests')
+        .add(addSecureCampusMetadata(requestData));
       
       // Update membership with pending request
       await membershipRef.update({
         hasBuilderRequest: true,
         builderRequestId: requestRef.id,
-        updatedAt: now
+        updatedAt: firestoreNow
       });
       
       return { 
@@ -206,7 +225,7 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
 
     await dbAdmin.collection('users').doc(userId).update({
       spacePreferences,
-      updatedAt: new Date().toISOString()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
   } catch (error) {
     logger.error(
@@ -219,18 +238,10 @@ async function updateUserSpacePreferences(userId: string, spaceId: string, prefe
 // Helper function to update space member count
 async function updateSpaceMemberCount(spaceId: string, change: number) {
   try {
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-    if (!spaceDoc.exists) return;
-
-    const spaceData = spaceDoc.data();
-    if (!spaceData) {
-      throw new Error('Space data not found');
-    }
-    const newMemberCount = Math.max(0, (spaceData.memberCount || 0) + change);
-
     await dbAdmin.collection('spaces').doc(spaceId).update({
-      memberCount: newMemberCount,
-      updatedAt: new Date().toISOString()
+      'metrics.memberCount': admin.firestore.FieldValue.increment(change),
+      'metrics.activeMembers': admin.firestore.FieldValue.increment(change),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
   } catch (error) {
     logger.error(
@@ -256,11 +267,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Get membership data
-    const membershipQuery = dbAdmin.collection('members')
+    const membershipSnapshot = await dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', user.uid)
-      .where('spaceId', '==', spaceId);
-
-    const membershipSnapshot = await membershipQuery.get();
+      .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .limit(1)
+      .get();
     if (membershipSnapshot.empty) {
       return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
@@ -268,6 +281,12 @@ export async function GET(request: NextRequest) {
     const membershipData = membershipSnapshot.docs[0].data();
     if (!membershipData) {
       return NextResponse.json(ApiResponseHelper.error("Membership data not found", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    }
+
+    // Enforce campus isolation for space
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    if (!spaceDoc.exists || (spaceDoc.data()?.campusId !== CURRENT_CAMPUS_ID)) {
+      return NextResponse.json(ApiResponseHelper.error("Access denied for this campus", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
     // Get builder request status if exists
@@ -289,14 +308,20 @@ export async function GET(request: NextRequest) {
         isArchived: membershipData.isArchived || false,
         hasBuilderRequest: membershipData.hasBuilderRequest || false,
         builderRequestStatus,
-        muteUntil: membershipData.muteUntil || null
+        muteUntil: membershipData.muteUntil || null,
       },
       membership: {
         role: membershipData.role,
-        status: membershipData.status,
-        joinedAt: membershipData.joinedAt,
-        lastActivity: membershipData.lastActivity
-      }
+        status: membershipData.isActive === false ? 'inactive' : 'active',
+        joinedAt:
+          membershipData.joinedAt?.toDate?.()?.toISOString() ||
+          membershipData.joinedAt ||
+          null,
+        lastActivity:
+          membershipData.lastActive?.toDate?.()?.toISOString() ||
+          membershipData.lastActive ||
+          null,
+      },
     });
   } catch (error) {
     logger.error(

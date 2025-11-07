@@ -218,3 +218,4 @@ export async function logAuthEvent(
     extra: details
   });
 }
+import 'server-only';

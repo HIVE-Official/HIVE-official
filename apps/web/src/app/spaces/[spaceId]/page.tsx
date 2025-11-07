@@ -1,348 +1,285 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
+import { formatDistanceToNow } from 'date-fns';
 import {
-  Hash,
-  Users,
-  Calendar,
-  FileText,
-  Settings,
-  Bell,
-  Share,
-  Pin,
-  TrendingUp,
-  MessageSquare,
-  ChevronRight,
-  Menu,
-  X,
-  Plus,
-  Star
-} from 'lucide-react';
-import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
-import { SpaceChatBoard } from '@/components/spaces/space-chat-board';
-import { SpaceSidebar } from '@/components/spaces/space-sidebar';
-import { EventsPanel } from '@/components/spaces/panels/events-panel';
-import { MembersPanel } from '@/components/spaces/panels/members-panel';
-import { ResourcesPanel } from '@/components/spaces/panels/resources-panel';
+  SpaceHeader,
+  SpacePostComposer,
+  SpaceAboutWidget,
+  SpaceToolsWidget,
+  FeedCardPost,
+  type SpaceMembershipState,
+  type FeedCardPostData,
+} from '@hive/ui';
+import { SpaceBoardSkeleton } from '@hive/ui';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
+import { useFeed } from '@/hooks/use-feed';
+import { useSpace } from '@/hooks/use-space';
 
-interface SpaceData {
-  id: string;
+type ToolListItem = {
+  deploymentId: string;
+  toolId: string;
   name: string;
-  description: string;
-  category: string;
-  memberCount: number;
-  onlineCount: number;
-  bannerImage?: string;
-  avatarImage?: string;
-  joinPolicy: string;
-  visibility: string;
-  leaders: string[];
-  settings: {
-    maxPinnedPosts: number;
-    autoArchiveDays: number;
-  };
-}
+  category?: string;
+  status: string;
+  usageCount?: number;
+};
 
-interface SpaceMembership {
-  role: 'owner' | 'leader' | 'moderator' | 'member';
-  joinedAt: Date;
-  notifications: {
-    posts: boolean;
-    events: boolean;
-    announcements: boolean;
-    mentions: boolean;
-  };
-}
-
-export default function SpaceDetailPage() {
-  const params = useParams();
+export default function SpaceBoardPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const spaceId = params.spaceId as string;
+  const params = useParams<{ spaceId: string }>();
+  const spaceId = params.spaceId;
 
-  const [loading, setLoading] = useState(true);
-  const [space, setSpace] = useState<SpaceData | null>(null);
-  const [membership, setMembership] = useState<SpaceMembership | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [contextPanel, setContextPanel] = useState<string | null>(null);
+  const { space, isMember, isLeader, joinSpace, leaveSpace, isLoading: spaceLoading } = useSpace(spaceId);
 
-  // SPEC.md: Hot thread tabs
-  const [hotThreads, setHotThreads] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState('main');
+  const {
+    posts,
+    isLoading: feedLoading,
+    isLoadingMore,
+    hasMore,
+    error,
+    loadMore,
+    refresh,
+    likePost,
+    bookmarkPost,
+    commentOnPost,
+    sharePost,
+    createPost,
+  } = useFeed({ spaceId, limit: 20, sortBy: 'recent' });
 
-  useEffect(() => {
-    loadSpace();
-  }, [spaceId]);
+  const [composerOpen, setComposerOpen] = React.useState(false);
+  const [tools, setTools] = React.useState<ToolListItem[]>([]);
+  const [toolsHasMore, setToolsHasMore] = React.useState(false);
+  const [leaders, setLeaders] = React.useState<Array<{ id: string; name: string; avatarUrl?: string; role: string }>>([]);
 
-  const loadSpace = async () => {
-    try {
-      setLoading(true);
+  // Load tools for right rail (members only)
+  React.useEffect(() => {
+    const loadTools = async () => {
+      if (!spaceId || !isMember) return;
+      try {
+        const res = await secureApiFetch(`/api/spaces/${spaceId}/tools`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setTools(Array.isArray(data.tools) ? data.tools : []);
+        setToolsHasMore(Boolean(data.hasMore));
+      } catch {}
+    };
+    void loadTools();
+  }, [spaceId, isMember]);
 
-      // Load space data and membership
-      const response = await api.get(`/api/spaces/${spaceId}`);
-      setSpace(response.space);
-      setMembership(response.membership);
+  // Load leaders (owners/admins)
+  React.useEffect(() => {
+    const loadLeaders = async () => {
+      if (!spaceId || !isMember) return; // leader list visible to members
+      try {
+        const ownersRes = await secureApiFetch(`/api/spaces/${spaceId}/members?role=owner&limit=5`);
+        const adminsRes = await secureApiFetch(`/api/spaces/${spaceId}/members?role=admin&limit=5`);
+        const owners = ownersRes.ok ? (await ownersRes.json()).members || [] : [];
+        const admins = adminsRes.ok ? (await adminsRes.json()).members || [] : [];
+        const list = [...owners, ...admins].map((m: any) => ({ id: m.id, name: m.name, avatarUrl: m.avatar, role: m.role }));
+        setLeaders(list);
+      } catch {}
+    };
+    void loadLeaders();
+  }, [spaceId, isMember]);
 
-      // Load hot threads (posts with 10+ replies)
-      const threadsResponse = await api.get(`/api/spaces/${spaceId}/posts`, {
-        params: {
-          type: 'hot_threads',
-          minReplies: 10,
-          limit: 5
-        }
-      });
-      setHotThreads(threadsResponse.posts || []);
-
-    } catch (error) {
-      console.error('Failed to load space:', error);
-      router.push('/spaces');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleJoinSpace = async () => {
-    try {
-      const response = await api.post(`/api/spaces/${spaceId}/join`);
-      setMembership(response.membership);
-    } catch (error) {
-      console.error('Failed to join space:', error);
-    }
-  };
-
-  const handleLeaveSpace = async () => {
-    try {
-      await api.post(`/api/spaces/${spaceId}/leave`);
-      setMembership(null);
-    } catch (error) {
-      console.error('Failed to leave space:', error);
-    }
-  };
-
-  const isLeader = membership?.role === 'owner' || membership?.role === 'leader';
-  const isModerator = isLeader || membership?.role === 'moderator';
-
-  if (loading) {
+  // Loading skeleton
+  if (spaceLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-[var(--hive-brand-primary)]">Loading space...</p>
+      <div className="min-h-screen bg-[var(--hive-background-primary)]">
+        <div className="mx-auto max-w-6xl px-4 py-6">
+          <SpaceBoardSkeleton />
+        </div>
       </div>
     );
   }
 
-  if (!space) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-red-400">Space not found</p>
-      </div>
-    );
-  }
+  const membershipState: SpaceMembershipState = isMember ? 'joined' : 'not_joined';
 
-  // SPEC.md: 60/40 split with context panels
-  const mainWidth = contextPanel ? 'w-[40%]' : (sidebarCollapsed ? 'w-[85%]' : 'w-[60%]');
-  const sidebarWidth = sidebarCollapsed ? 'w-[15%]' : 'w-[40%]';
-  const contextWidth = 'w-[40%]';
+  const memberCount = space?.memberCount ?? 0;
+  const onlineCount = undefined;
+  const iconUrl = (space as any)?.iconUrl || (space as any)?.avatarImage;
+
+  // Build pinned posts (max 3)
+  const pinnedPosts = posts
+    .filter((p: any) => p.isPinned)
+    .slice(0, 3)
+    .map((p) => ({
+      id: p.id,
+      title: (p.content || '').split('\n')[0] || 'Pinned Post',
+      author: p.author?.name || 'Unknown',
+      timeAgo: formatDistanceToNow(new Date(p.createdAt), { addSuffix: true }),
+    }));
+
+  // Transform post -> card data
+  const toCardData = (post: any): FeedCardPostData => ({
+    id: post.id,
+    author: {
+      id: post.author?.id || post.authorId,
+      name: post.author?.name || 'Anonymous',
+      avatarUrl: post.author?.avatarUrl,
+      role: post.author?.badges?.[0],
+      verified: post.author?.isVerified,
+    },
+    space: {
+      id: spaceId,
+      name: space?.name || 'Space',
+      color: 'var(--hive-brand-primary)'
+    },
+    content: {
+      headline: post.type === 'link' ? (post.content || '').split('\n')[0] : undefined,
+      body: post.content,
+      media: post.attachments?.map((a: any) => ({ id: a.id, type: a.type, url: a.url, thumbnailUrl: a.thumbnailUrl })),
+      tags: post.tags,
+    },
+    stats: {
+      upvotes: post.engagement?.likes || 0,
+      comments: post.engagement?.comments || 0,
+      isUpvoted: !!post.engagement?.hasLiked,
+      isBookmarked: !!post.engagement?.hasBookmarked,
+    },
+    meta: {
+      timeAgo: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }),
+      isPinned: !!post.isPinned,
+      isEdited: !!post.isEdited,
+    },
+  });
+
+  // Right-rail data mappers
+  const aboutData = {
+    spaceId: spaceId,
+    description: (space?.description || '').trim() || 'Leaders have not added a description yet.',
+    memberCount: memberCount,
+    leaders,
+    isPublic: true,
+    isMember,
+  };
+
+  const toolsData = {
+    spaceId,
+    tools: tools.map((t) => ({
+      id: t.toolId || t.deploymentId,
+      name: t.name,
+      type: t.category || 'tool',
+      isActive: t.status === 'active',
+      responseCount: t.usageCount || 0,
+    })),
+    hasMore: toolsHasMore,
+  };
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Space Header */}
-      <div className="bg-gray-900 border-b border-gray-800">
-        <div className="relative h-32 bg-gradient-to-br from-hive-gold/20 to-purple-600/20">
-          {space.bannerImage && (
-            <img src={space.bannerImage} alt="" className="w-full h-full object-cover" />
+    <div className="min-h-screen bg-[var(--hive-background-primary)]">
+      {/* Header */}
+      <SpaceHeader
+        space={{ id: spaceId, name: space?.name || 'Space', iconUrl }}
+        memberCount={memberCount}
+        onlineCount={onlineCount}
+        membershipState={membershipState}
+        isLeader={isLeader}
+        onJoin={() => joinSpace()}
+        onLeave={() => leaveSpace()}
+        onSettings={isLeader ? () => router.push(`/spaces/${spaceId}/settings`) : undefined}
+        className="border-b border-[var(--hive-border-default)]"
+      />
+
+      {/* Content Grid */}
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 lg:grid-cols-[1fr_320px]">
+        {/* Center Column */}
+        <div className="space-y-4">
+          {/* Composer trigger */}
+          {isMember && (
+            <button
+              onClick={() => setComposerOpen(true)}
+              className="w-full rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-4 py-3 text-left text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)]"
+            >
+              Share something with the space...
+            </button>
           )}
 
-          {/* Header Content */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="max-w-7xl mx-auto flex items-end justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-[var(--hive-brand-primary)] rounded-lg flex items-center justify-center">
-                  <Hash className="w-8 h-8 text-black" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                    {space.name}
-                    <Badge className="bg-gray-800 text-gray-300">
-                      {space.category.replace('_', ' ')}
-                    </Badge>
-                  </h1>
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
-                    <span>{space.memberCount} members</span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                      {space.onlineCount} online
-                    </span>
-                  </div>
-                </div>
+          {/* Pinned posts */}
+          {pinnedPosts.length > 0 && (
+            <div className="space-y-2">
+              <div className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--hive-text-tertiary)]">
+                Pinned Posts
               </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-2">
-                {membership ? (
-                  <>
-                    <HiveButton
-                      size="sm"
-                      variant="outline"
-                      className="border-gray-700"
-                      onClick={() => {}}
-                    >
-                      <Bell className="w-4 h-4" />
-                    </HiveButton>
-                    <HiveButton
-                      size="sm"
-                      variant="outline"
-                      className="border-gray-700"
-                      onClick={() => {}}
-                    >
-                      <Share className="w-4 h-4" />
-                    </HiveButton>
-                    {isLeader && (
-                      <HiveButton
-                        size="sm"
-                        variant="outline"
-                        className="border-gray-700"
-                        onClick={() => router.push(`/spaces/${spaceId}/settings`)}
-                      >
-                        <Settings className="w-4 h-4" />
-                      </HiveButton>
-                    )}
-                    <HiveButton
-                      size="sm"
-                      variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/10"
-                      onClick={handleLeaveSpace}
-                    >
-                      Leave
-                    </HiveButton>
-                  </>
-                ) : (
-                  <HiveButton
-                    className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
-                    onClick={handleJoinSpace}
+              <div className="space-y-2">
+                {pinnedPosts.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => {/* TODO: open post */}}
+                    className="group w-full rounded-xl border-l-4 border-[var(--hive-brand-primary)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 96%,transparent)] p-4 text-left hover:bg-[color-mix(in_srgb,var(--hive-background-secondary) 92%,transparent)]"
                   >
-                    Join Space
-                  </HiveButton>
-                )}
+                    <div className="text-sm font-semibold text-[var(--hive-text-primary)]">{p.title}</div>
+                    <div className="text-xs text-[var(--hive-text-tertiary)]">{p.author} • {p.timeAgo}</div>
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* SPEC.md: Tab System for Hot Threads */}
-      {hotThreads.length > 0 && (
-        <div className="bg-gray-900 border-b border-gray-800">
-          <div className="max-w-7xl mx-auto">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="bg-transparent border-0 h-auto p-0">
-                <TabsTrigger
-                  value="main"
-                  className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-[var(--hive-brand-primary)] rounded-none px-4 py-3"
-                >
-                  <Hash className="w-4 h-4 mr-2" />
-                  Main Board
-                </TabsTrigger>
-                {hotThreads.slice(0, 5).map((thread) => (
-                  <TabsTrigger
-                    key={thread.id}
-                    value={thread.id}
-                    className="data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-[var(--hive-brand-primary)] rounded-none px-4 py-3"
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    {thread.content ?
-                      `${thread.content.slice(0, 30)}...` :
-                      `Thread (${thread.commentCount || thread.replyCount || 0})`
-                    }
-                    {thread.isLive && (
-                      <div className="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    )}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content Area - SPEC.md 60/40 Split */}
-      <div className="flex h-[calc(100vh-12rem)]">
-        {/* Main Board (60% or 40% with context panel) */}
-        <div className={`${mainWidth} transition-all duration-300 border-r border-gray-800`}>
-          {activeTab === 'main' ? (
-            <SpaceChatBoard
-              spaceId={spaceId}
-              membership={membership}
-              isLeader={isLeader}
-              isModerator={isModerator}
-              onOpenContext={(panel) => setContextPanel(panel)}
-            />
-          ) : (
-            <SpaceChatBoard
-              spaceId={spaceId}
-              threadId={activeTab}
-              membership={membership}
-              isLeader={isLeader}
-              isModerator={isModerator}
-              onOpenContext={(panel) => setContextPanel(panel)}
-            />
           )}
+
+          {/* Feed list */}
+          <div className="flex flex-col gap-4">
+            {posts.map((post: any) => (
+              <FeedCardPost
+                key={post.id}
+                post={toCardData(post)}
+                onOpen={() => {/* TODO: open post detail */}}
+                onSpaceClick={() => router.push(`/spaces/${spaceId}`)}
+                onUpvote={(id) => likePost(id)}
+                onComment={(id) => {/* open composer targeted to comment */}}
+                onBookmark={(id) => bookmarkPost(id)}
+                onShare={(id) => sharePost(id)}
+              />
+            ))}
+
+            {/* Load more */}
+            {hasMore && (
+              <button
+                disabled={isLoadingMore}
+                onClick={loadMore}
+                className="rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-4 py-2 text-sm text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
+              >
+                {isLoadingMore ? 'Loading…' : 'Load more posts'}
+              </button>
+            )}
+
+            {error && (
+              <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                {error}
+                <button onClick={refresh} className="ml-3 underline">Retry</button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Sidebar (40% or collapsed) */}
-        <div className={`${sidebarWidth} transition-all duration-300 bg-gray-900/50`}>
-          <SpaceSidebar
-            spaceId={spaceId}
-            collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-            onOpenPanel={(panel) => setContextPanel(panel)}
-            membership={membership}
+        {/* Right Rail */}
+        <div className="hidden lg:block space-y-4">
+          <SpaceAboutWidget data={aboutData} onJoin={() => joinSpace()} onLeave={() => leaveSpace()} />
+          <SpaceToolsWidget
+            data={toolsData}
+            onToolClick={(toolId) => router.push(`/tools/${toolId}`)}
+            onViewAll={() => router.push(`/spaces/${spaceId}/tools`)}
           />
         </div>
-
-        {/* Context Panel (40% when open) */}
-        {contextPanel && (
-          <div className={`${contextWidth} bg-gray-900 border-l border-gray-800 animate-slide-in-right`}>
-            <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-              <h3 className="font-bold text-white capitalize">{contextPanel}</h3>
-              <HiveButton
-                size="sm"
-                variant="ghost"
-                onClick={() => setContextPanel(null)}
-              >
-                <X className="w-4 h-4" />
-              </HiveButton>
-            </div>
-
-            {/* Context Panel Content */}
-            {contextPanel === 'events' && (
-              <EventsPanel
-                spaceId={spaceId}
-                userRole={membership?.role || 'guest'}
-                canCreateEvents={isLeader || isModerator}
-              />
-            )}
-            {contextPanel === 'members' && (
-              <MembersPanel
-                spaceId={spaceId}
-                userRole={membership?.role || 'guest'}
-                isLeader={isLeader}
-              />
-            )}
-            {contextPanel === 'resources' && (
-              <ResourcesPanel
-                spaceId={spaceId}
-                userRole={membership?.role || 'guest'}
-                canUpload={membership !== null}
-                isLeader={isLeader}
-              />
-            )}
-          </div>
-        )}
       </div>
+
+      {/* Composer Modal */}
+      {isMember && (
+        <SpacePostComposer
+          spaceId={spaceId}
+          spaceName={space?.name || 'Space'}
+          spaceIcon={iconUrl}
+          open={composerOpen}
+          onOpenChange={setComposerOpen}
+          onSubmit={async ({ content, media }) => {
+            try {
+              await createPost({ content, type: 'text', visibility: 'space', spaceId, attachments: media });
+              setComposerOpen(false);
+            } catch {}
+          }}
+        />
+      )}
     </div>
   );
 }

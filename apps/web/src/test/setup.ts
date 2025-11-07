@@ -1,16 +1,24 @@
-import '@testing-library/jest-dom';
-import { expect, afterEach, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import * as matchers from '@testing-library/jest-dom/matchers';
+import { expect, afterEach, vi, beforeAll, afterAll } from 'vitest';
 
-// Extend Vitest's expect with Testing Library matchers
-expect.extend(matchers);
+// Optionally load Testing Library matchers and cleanup if available
+let cleanup: (() => void) | undefined;
+try {
+  const jestDom = await import('@testing-library/jest-dom');
+  const matchers = await import('@testing-library/jest-dom/matchers');
+  // Extend Vitest's expect with Testing Library matchers
+  // @ts-ignore - types may not be available if package is missing
+  expect.extend(matchers);
+  const rtl = await import('@testing-library/react');
+  cleanup = rtl.cleanup;
+} catch {}
 
-// Cleanup after each test case
 afterEach(() => {
-  cleanup();
+  try { cleanup?.(); } catch {}
   vi.clearAllMocks();
 });
+
+// Mock Next.js server-only directive used in server files
+vi.mock('server-only', () => ({}));
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({

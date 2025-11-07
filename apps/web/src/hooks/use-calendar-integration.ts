@@ -266,7 +266,7 @@ function getMockCalendarIntegrations(): CalendarIntegration[] {
       lastSync: new Date().toISOString(),
       syncEnabled: true,
       calendars: [
-        { id: 'hive-main', name: 'HIVE Calendar', color: '#FFD700', isEnabled: true, isReadOnly: false }
+        { id: 'hive-main', name: 'HIVE Calendar', color: 'var(--hive-brand-primary)', isEnabled: true, isReadOnly: false }
       ]
     },
     {

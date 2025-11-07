@@ -1,34 +1,42 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card } from '../atoms/card';
-import { Button } from '../atoms/button';
+import * as React from "react";
 import {
   Activity,
-  TrendingUp,
-  Users,
-  MessageCircle,
-  Heart,
-  Zap,
+  CalendarClock,
   ChevronRight,
-  Eye,
-  EyeOff
-} from 'lucide-react';
-import { PrivacyControl, type PrivacyLevel } from '../molecules/privacy-control';
+  Heart,
+  MessageCircle,
+  Users,
+} from "lucide-react";
 
-export interface ActivityItem {
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import { Button } from "../atoms/button";
+import {
+  PrivacyControl,
+  type PrivacyLevel,
+} from "../molecules/privacy-control";
+
+export type ProfileActivityType =
+  | "post"
+  | "comment"
+  | "connection"
+  | "space_join"
+  | "ritual"
+  | "other";
+
+export interface ProfileActivityItem {
   id: string;
-  type: 'post' | 'comment' | 'connection' | 'space_join';
+  type?: ProfileActivityType;
   title: string;
-  description?: string;
-  timestamp: Date;
-  spaceId?: string;
   spaceName?: string;
+  timestamp: string | number | Date;
   engagementCount?: number;
 }
 
-export interface MyActivityWidgetProps {
-  activities: ActivityItem[];
+export interface ProfileActivityWidgetProps {
+  activities: ProfileActivityItem[];
   isOwnProfile?: boolean;
   privacyLevel?: PrivacyLevel;
   onPrivacyChange?: (level: PrivacyLevel) => void;
@@ -36,190 +44,110 @@ export interface MyActivityWidgetProps {
   className?: string;
 }
 
-/**
- * My Activity Widget - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - 8px grid system for spacing
- * - Monochrome with gold accents for key interactions
- * - Subtle hover states with white/4 overlay
- * - Mobile-optimized with 44px touch targets
- */
-export const MyActivityWidget: React.FC<MyActivityWidgetProps> = ({
-  activities = [],
+const ICON_MAP: Record<ProfileActivityType, React.ComponentType<{ className?: string }>> = {
+  post: MessageCircle,
+  comment: MessageCircle,
+  connection: Users,
+  space_join: Users,
+  ritual: CalendarClock,
+  other: Activity,
+};
+
+const formatRelative = (value: string | number | Date) => {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "Recently";
+  const diff = Date.now() - date.getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString();
+};
+
+export function ProfileActivityWidget({
+  activities,
   isOwnProfile = false,
-  privacyLevel = 'public',
+  privacyLevel = "public",
   onPrivacyChange,
   onViewAll,
-  className = ''
-}) => {
-  const getActivityIcon = (type: ActivityItem['type']) => {
-    switch (type) {
-      case 'post':
-        return MessageCircle;
-      case 'comment':
-        return MessageCircle;
-      case 'connection':
-        return Users;
-      case 'space_join':
-        return Users;
-      default:
-        return Activity;
-    }
-  };
-
-  const formatTimestamp = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-
-    if (hours < 1) {
-      const mins = Math.floor(diff / (1000 * 60));
-      return `${mins}m ago`;
-    } else if (hours < 24) {
-      return `${hours}h ago`;
-    } else {
-      const days = Math.floor(hours / 24);
-      return `${days}d ago`;
-    }
-  };
+  className,
+}: ProfileActivityWidgetProps) {
+  const visibleActivities = activities.slice(0, 5);
 
   return (
     <Card
-      className={`
-        relative overflow-hidden
-        bg-black border border-white/8
-        p-6 space-y-4
-        transition-all duration-300
-        hover:border-white/16
-        ${className}
-      `}
+      className={cn(
+        "relative overflow-hidden border-[color-mix(in_srgb,var(--hive-border-default,#2d3145) 60%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary,#111221) 88%,transparent)] p-6",
+        className,
+      )}
     >
-      {/* Header with Privacy Control */}
-      <div className="flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gray-900 rounded-lg">
-            <Activity className="w-4 h-4 text-[#FFD700]" />
+          <div className="rounded-xl bg-[color-mix(in_srgb,var(--hive-background-tertiary,#141522) 85%,transparent)] p-2">
+            <Activity className="h-4 w-4 text-[var(--hive-brand-primary,#facc15)]" aria-hidden />
           </div>
-          <h3 className="text-lg font-medium text-white">My Activity</h3>
+          <h3 className="text-lg font-medium text-[var(--hive-text-primary,#f7f7ff)]">Recent activity</h3>
         </div>
-
-        {isOwnProfile && onPrivacyChange && (
-          <PrivacyControl
-            level={privacyLevel}
-            onLevelChange={onPrivacyChange}
-            compact
-            className="backdrop-blur-sm"
-          />
-        )}
+        {isOwnProfile && onPrivacyChange ? (
+          <PrivacyControl level={privacyLevel} onLevelChange={onPrivacyChange} compact />
+        ) : null}
       </div>
 
-      {/* Activity List */}
-      <div className="space-y-3">
-        {activities.length === 0 ? (
-          <div className="text-center py-8">
-            <Activity className="w-8 h-8 text-gray-600 mx-auto mb-3" />
-            <p className="text-sm text-gray-400">No recent activity</p>
-            {isOwnProfile && (
-              <p className="text-xs text-gray-500 mt-1">
-                Start exploring spaces to build your activity
-              </p>
-            )}
-          </div>
-        ) : (
-          activities.slice(0, 5).map((activity) => {
-            const Icon = getActivityIcon(activity.type);
-
+      {visibleActivities.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-[color-mix(in_srgb,var(--hive-border-default,#2d3145) 45%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-primary,#0a0b16) 80%,transparent)] py-10 text-center">
+          <Activity className="h-6 w-6 text-[color-mix(in_srgb,var(--hive-text-muted,#8d90a2) 80%,transparent)]" aria-hidden />
+          <p className="text-sm text-[var(--hive-text-secondary,#c0c2cc)]">
+            {isOwnProfile
+              ? "Your campus journey will appear here after you join spaces or post."
+              : "No public activity yet."}
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {visibleActivities.map((item) => {
+            const Icon = ICON_MAP[item.type ?? "other"] ?? Activity;
             return (
               <div
-                key={activity.id}
-                className="
-                  group flex items-start gap-3
-                  p-3 -m-3
-                  hover:bg-white/[0.02]
-                  rounded-lg
-                  transition-all duration-200
-                  cursor-pointer
-                "
+                key={item.id}
+                className="group flex items-start gap-3 rounded-2xl px-3 py-2 transition-colors hover:bg-[color-mix(in_srgb,var(--hive-background-tertiary,#141522) 55%,transparent)]"
               >
-                {/* Activity Icon */}
-                <div className="p-1.5 bg-gray-900 rounded-lg group-hover:bg-gray-800 transition-colors">
-                  <Icon className="w-3.5 h-3.5 text-gray-400" />
+                <div className="mt-1 rounded-xl bg-[color-mix(in_srgb,var(--hive-background-tertiary,#141522) 80%,transparent)] p-1.5">
+                  <Icon className="h-3.5 w-3.5 text-[color-mix(in_srgb,var(--hive-text-muted,#8d90a2) 80%,transparent)]" aria-hidden />
                 </div>
-
-                {/* Activity Content */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white truncate">
-                    {activity.title}
-                  </p>
-
-                  {activity.spaceName && (
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      in {activity.spaceName}
-                    </p>
-                  )}
-
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-gray-500">
-                      {formatTimestamp(activity.timestamp)}
-                    </span>
-
-                    {activity.engagementCount !== undefined && activity.engagementCount > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3 text-gray-500" />
-                        <span className="text-xs text-gray-500">
-                          {activity.engagementCount}
-                        </span>
-                      </div>
-                    )}
+                  <p className="text-sm text-[var(--hive-text-primary,#f7f7ff)]">{item.title}</p>
+                  {item.spaceName ? (
+                    <p className="text-xs text-[var(--hive-text-muted,#8d90a2)]">in {item.spaceName}</p>
+                  ) : null}
+                  <div className="mt-2 flex items-center gap-3 text-xs text-[color-mix(in_srgb,var(--hive-text-muted,#8d90a2) 88%,transparent)]">
+                    <span>{formatRelative(item.timestamp)}</span>
+                    {item.engagementCount ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Heart className="h-3 w-3" aria-hidden />
+                        {item.engagementCount}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
-
-                {/* Hover Arrow */}
-                <ChevronRight className="
-                  w-4 h-4 text-gray-600
-                  opacity-0 group-hover:opacity-100
-                  transition-opacity duration-200
-                " />
+                <ChevronRight className="mt-1 h-4 w-4 text-[color-mix(in_srgb,var(--hive-text-muted,#8d90a2) 70%,transparent)] opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
               </div>
             );
-          })
-        )}
-      </div>
-
-      {/* View All Button */}
-      {activities.length > 5 && onViewAll && (
-        <button
-          onClick={onViewAll}
-          className="
-            w-full py-3 px-4
-            bg-gray-900 hover:bg-gray-800
-            text-sm text-gray-300 hover:text-white
-            rounded-lg
-            transition-all duration-200
-            flex items-center justify-center gap-2
-            min-h-[44px]
-          "
-        >
-          View all activity
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      )}
-
-      {/* Activity Streak Indicator */}
-      {activities.length > 0 && (
-        <div className="pt-4 border-t border-white/8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-[#FFD700]" />
-              <span className="text-xs text-gray-400">Activity Streak</span>
-            </div>
-            <span className="text-xs text-[#FFD700] font-medium">
-              3 days
-            </span>
-          </div>
+          })}
         </div>
       )}
+
+      {activities.length > visibleActivities.length && onViewAll ? (
+        <Button
+          variant="ghost"
+          className="mt-4 w-full justify-center text-sm text-[var(--hive-text-secondary,#c0c2cc)]"
+          onClick={onViewAll}
+        >
+          View all activity
+        </Button>
+      ) : null}
     </Card>
   );
-};
+}

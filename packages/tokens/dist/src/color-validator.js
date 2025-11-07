@@ -119,8 +119,8 @@ export const hiveColorRules = {
             '#000000': 'var(--hive-background-primary)',
             '#171717': 'var(--hive-background-secondary)',
             '#262626': 'var(--hive-background-tertiary)',
-            '#FFD700': 'var(--hive-brand-secondary)',
-            '#0070F3': 'var(--hive-brand-primary)'
+            '#FFD700': 'var(--hive-brand-primary)'
+            // Note: Legacy Vercel blue (#0070F3) is not a brand color; avoid new usage
         };
         const upperColor = colorValue.toUpperCase();
         if (hardcodedColors[upperColor]) {
@@ -140,9 +140,10 @@ export const hiveColorRules = {
      */
     deprecatedColors: (colorValue, context) => {
         const deprecated = {
-            '#F7E98E': 'Champagne color is deprecated - use var(--hive-brand-secondary) for gold',
-            '#FFE255': 'Light gold is deprecated - use var(--hive-brand-secondary) for gold',
-            '#FFF2AA': 'Pale gold is deprecated - use var(--hive-brand-secondary) for gold'
+            '#F7E98E': 'Champagne color is deprecated - use var(--hive-brand-primary) for gold',
+            '#FFE255': 'Light gold is deprecated - use var(--hive-brand-primary) for gold',
+            '#FFF2AA': 'Pale gold is deprecated - use var(--hive-brand-primary) for gold',
+            '#0070F3': 'Vercel blue is deprecated for brand usage - use var(--hive-brand-primary) or semantic status tokens'
         };
         const upperColor = colorValue.toUpperCase();
         if (deprecated[upperColor]) {

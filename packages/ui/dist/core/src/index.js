@@ -17,6 +17,11 @@ export { RitualId } from "./domain/rituals/value-objects/ritual-id.value";
 export { EnhancedRitual } from "./domain/rituals/aggregates/enhanced-ritual";
 export { FeedItem } from "./domain/feed/feed-item";
 export { EnhancedFeed } from "./domain/feed/enhanced-feed";
+export { RitualArchetype, RitualSchema, RitualUnionSchema, parseRitualUnion, } from "./domain/rituals/archetypes";
+export * from "./domain/rituals/events";
+export { RitualComposerSchema, createDefaultConfig, } from "./domain/rituals/composer";
+// Ritual Templates
+export { RITUAL_TEMPLATES, getAvailableTemplates, getTemplate, getTemplatesByCategory, getTemplatesByArchetype, } from "./domain/rituals/templates";
 // Application Services - Use Case Orchestration
 export * from "./application";
 // Repository Pattern - Data Access Layer
@@ -30,6 +35,7 @@ export * from "./infrastructure/mappers/profile.firebase-mapper";
 export { presenceService } from "./services/presence-service";
 // Constants
 export * from "./constants/majors";
+export * from "./constants/onboarding-interests";
 // Stores
 export * from "./stores/useAppStore";
 // Feature Flags
@@ -50,4 +56,6 @@ export { GetFeedQueryHandler } from "./application/feed/queries/get-feed.query";
 export { SearchType, SearchQueryHandler } from "./application/search/queries/search.query";
 // Temporary backward compatibility (will be removed)
 export * from "./application/shared/temporary-types";
+// Schemas
+export * from "./schemas/admin/dashboard";
 //# sourceMappingURL=index.js.map

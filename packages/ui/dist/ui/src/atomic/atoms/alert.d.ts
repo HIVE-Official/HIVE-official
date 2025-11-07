@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const alertVariants: (props?: {
-    variant?: "default" | "destructive" | "success" | "warning" | "info";
+    variant?: "success" | "warning" | "info" | "default" | "destructive";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof alertVariants> {
     icon?: React.ReactNode;

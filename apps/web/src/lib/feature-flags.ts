@@ -456,3 +456,4 @@ export async function useFeatureFlag(
 ): Promise<FeatureFlagResult> {
   return featureFlagService.isFeatureEnabled(flagId, userContext);
 }
+import 'server-only';

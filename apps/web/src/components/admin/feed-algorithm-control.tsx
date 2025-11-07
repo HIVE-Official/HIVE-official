@@ -22,6 +22,7 @@ import {
   Zap,
   Target
 } from 'lucide-react';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface AlgorithmConfig {
   temporalWeights: {
@@ -101,7 +102,7 @@ export function FeedAlgorithmControl() {
   const loadAlgorithmConfig = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/feed-algorithm');
+      const response = await secureApiFetch('/api/admin/feed-algorithm');
 
       if (!response.ok) {
         throw new Error('Failed to load algorithm config');
@@ -121,7 +122,7 @@ export function FeedAlgorithmControl() {
 
   const loadMetrics = async () => {
     try {
-      const response = await fetch('/api/admin/feed-metrics');
+      const response = await secureApiFetch('/api/admin/feed-metrics');
 
       if (!response.ok) {
         throw new Error('Failed to load metrics');
@@ -139,7 +140,7 @@ export function FeedAlgorithmControl() {
 
     try {
       setSaving(true);
-      const response = await fetch('/api/admin/feed-algorithm', {
+      const response = await secureApiFetch('/api/admin/feed-algorithm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

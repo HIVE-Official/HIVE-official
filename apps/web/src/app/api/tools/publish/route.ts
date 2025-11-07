@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
 
 const PublishRequestSchema = z.object({
   toolId: z.string(),
@@ -55,32 +59,37 @@ interface PublishRequest {
 }
 
 // POST - Submit tool for publishing
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const body = await request.json();
-    const validatedData = PublishRequestSchema.parse(body);
+export const POST = withAuthValidationAndErrors(
+  PublishRequestSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context,
+    validatedData,
+    respond
+  ) => {
+    try {
+      const userId = getUserId(request);
 
     // Get tool details
     const toolDoc = await adminDb.collection('tools').doc(validatedData.toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const toolData = toolDoc.data();
     
     // Check ownership
-    if (toolData?.ownerId !== user.uid) {
-      return NextResponse.json(ApiResponseHelper.error("Not authorized to publish this tool", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (toolData?.ownerId !== userId) {
+        return respond.error("Not authorized to publish this tool", "FORBIDDEN", { status: 403 });
+    }
+
+    if (toolData?.campusId && toolData.campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
     }
 
     // Check tool readiness
     if (!toolData?.elements || toolData.elements.length === 0) {
-      return NextResponse.json(ApiResponseHelper.error("Tool must have at least one element", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("Tool must have at least one element", "INVALID_INPUT", { status: 400 });
     }
 
     // Check for existing publish request
@@ -91,20 +100,20 @@ export async function POST(request: NextRequest) {
       .get();
 
     if (!existingRequestSnapshot.empty) {
-      return NextResponse.json(ApiResponseHelper.error("Tool already has a pending publish request", "UNKNOWN_ERROR"), { status: 409 });
+        return respond.error("Tool already has a pending publish request", "CONFLICT", { status: 409 });
     }
 
     // Validate guidelines acceptance
     const { guidelines } = validatedData;
     if (!guidelines.contentAppropriate || !guidelines.functionalityTested || 
         !guidelines.documentationComplete || !guidelines.privacyCompliant) {
-      return NextResponse.json(ApiResponseHelper.error("All publishing guidelines must be accepted", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("All publishing guidelines must be accepted", "INVALID_INPUT", { status: 400 });
     }
 
     const now = new Date();
     const publishRequest: PublishRequest = {
       toolId: validatedData.toolId,
-      requestedBy: user.uid,
+        requestedBy: userId,
       publishType: validatedData.publishType,
       category: validatedData.category,
       tags: validatedData.tags,
@@ -117,7 +126,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Create publish request
-    const requestRef = await adminDb.collection('publishRequests').add(publishRequest);
+    const requestRef = await adminDb.collection('publishRequests').add({ ...publishRequest, campusId: CURRENT_CAMPUS_ID } as any);
 
     // Update tool status to pending_review
     await adminDb.collection('tools').doc(validatedData.toolId).update({
@@ -139,7 +148,7 @@ export async function POST(request: NextRequest) {
         toolId: validatedData.toolId,
         toolName: toolData.name,
         requestId: requestRef.id,
-        requestedBy: user.uid
+        requestedBy: userId
       },
       recipients: ['admin'],
       createdAt: now.toISOString(),
@@ -149,7 +158,7 @@ export async function POST(request: NextRequest) {
     // Log activity
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_publish_requested',
-      userId: user.uid,
+        userId,
       toolId: validatedData.toolId,
       publishType: validatedData.publishType,
       timestamp: now.toISOString(),
@@ -160,54 +169,48 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({
+      return respond.created({
       requestId: requestRef.id,
       status: 'pending',
       message: 'Tool submitted for publishing review',
       estimatedReviewTime: '2-3 business days'
-    }, { status: HttpStatus.CREATED });
+      });
 
   } catch (error) {
     logger.error(
       `Error submitting publish request at /api/tools/publish`,
       error instanceof Error ? error : new Error(String(error))
     );
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        error: 'Invalid request data',
-        details: error.errors
-      }, { status: HttpStatus.BAD_REQUEST });
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to submit publish request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      return respond.error("Failed to submit publish request", "INTERNAL_ERROR", { status: 500 });
   }
-}
+  }
+);
 
 // GET - Get publish request status
-export async function GET(request: NextRequest) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond
+) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    const userId = getUserId(request);
 
     const { searchParams } = new URL(request.url);
     const toolId = searchParams.get('toolId');
 
     if (!toolId) {
-      return NextResponse.json(ApiResponseHelper.error("Tool ID required", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+      return respond.error("Tool ID required", "INVALID_INPUT", { status: 400 });
     }
 
     // Get tool details to check ownership
     const toolDoc = await adminDb.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const toolData = toolDoc.data();
-    if (toolData?.ownerId !== user.uid) {
-      return NextResponse.json(ApiResponseHelper.error("Not authorized to view this publish request", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (toolData?.ownerId !== userId) {
+      return respond.error("Not authorized to view this publish request", "FORBIDDEN", { status: 403 });
     }
 
     // Get publish request
@@ -219,7 +222,7 @@ export async function GET(request: NextRequest) {
       .get();
 
     if (requestSnapshot.empty) {
-      return NextResponse.json(ApiResponseHelper.error("No publish request found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+      return respond.error("No publish request found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const publishRequest = {
@@ -227,13 +230,13 @@ export async function GET(request: NextRequest) {
       ...requestSnapshot.docs[0].data()
     };
 
-    return NextResponse.json({ publishRequest });
+    return respond.success({ publishRequest });
 
   } catch (error) {
     logger.error(
       `Error fetching publish request at /api/tools/publish`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch publish request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to fetch publish request", "INTERNAL_ERROR", { status: 500 });
   }
-}
+});

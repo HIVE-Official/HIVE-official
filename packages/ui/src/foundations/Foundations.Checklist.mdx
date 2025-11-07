@@ -1,0 +1,16 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="00-Foundations/Checklist" />
+
+# Foundations Checklist
+
+| Component | Status | Notes |
+| --- | --- | --- |
+| ThemeProvider / Tokens | ☐ | Publish tokens via CSS vars + TS. Includes color, spacing, radius, elevation, motion, breakpoints, z-layers. |
+| ModeProvider | ☐ | Switch `data-emotion` (`calm/warm/celebrate/urgent`), align with reduced motion + high-contrast. |
+| I18n / LocaleProvider | ☐ | Provide campus timezone + locale-specific formatting. |
+| ReducedMotionProvider | ☐ | Respect system preference; expose toggle for QA. |
+| Token docs story | ☐ | Palette, typography, spacing, motion reference. |
+| Emotion mode story | ☐ | Demonstrate UI blocks in calm/warm/celebrate/urgent. |
+
+> Foundations must ship first—every component references these tokens/providers.

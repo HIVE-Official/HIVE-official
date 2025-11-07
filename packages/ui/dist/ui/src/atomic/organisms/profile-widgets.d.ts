@@ -1,18 +1,9 @@
-/**
- * Profile Widget Exports
- * DESIGN_SPEC Compliant Components
- */
-export { ProfileIdentityWidget } from './profile-identity-widget';
-export { MyActivityWidget as ProfileActivityWidget } from './profile-activity-widget';
-export { MySpacesWidget as ProfileSpacesWidget } from './profile-spaces-widget';
-export { MyConnectionsWidget as ProfileConnectionsWidget } from './profile-connections-widget';
-export { ProfileCompletionCard } from './profile-completion-card';
-export { HiveLabWidget } from './hivelab-widget';
-export { specProfileToUIProfile } from './profile-types';
-export type { ProfileIdentityWidgetProps } from './profile-identity-widget';
-export type { MyActivityWidgetProps } from './profile-activity-widget';
-export type { MySpacesWidgetProps } from './profile-spaces-widget';
-export type { MyConnectionsWidgetProps } from './profile-connections-widget';
-export type { ProfileCompletionCardProps } from './profile-completion-card';
-export type { HiveLabWidgetProps, Tool } from './hivelab-widget';
+export { ProfileIdentityWidget } from "./profile-identity-widget";
+export type { ProfileIdentityWidgetProps } from "./profile-identity-widget";
+export { ProfileActivityWidget, type ProfileActivityItem, type ProfileActivityWidgetProps, } from "./profile-activity-widget";
+export { ProfileSpacesWidget, type ProfileSpaceItem, type ProfileSpacesWidgetProps, } from "./profile-spaces-widget";
+export { ProfileConnectionsWidget, type ProfileConnectionItem, type ProfileConnectionsWidgetProps, } from "./profile-connections-widget";
+export { ProfileCompletionCard, type ProfileCompletionCardProps, type ProfileCompletionStep, } from "./profile-completion-card";
+export { HiveLabWidget, type HiveLabWidgetProps } from "./hivelab-widget";
+export { specProfileToUIProfile, type UIProfile } from "./profile-types";
 //# sourceMappingURL=profile-widgets.d.ts.map

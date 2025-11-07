@@ -4,12 +4,15 @@
 export const dynamic = 'force-dynamic';
 
 import { Suspense } from "react";
-import { Scene } from "../../components/landing/3d/Scene";
-import { CorkBoard } from "../../components/landing/3d/CorkBoard";
-import { PostItNote } from "../../components/landing/3d/PostItNote";
-import { PushPin } from "../../components/landing/3d/PushPin";
-import { FloatingText } from "../../components/landing/3d/FloatingText";
+import nextDynamic from "next/dynamic";
 import { WaitlistForm } from "../../components/landing/ui/WaitlistForm";
+
+// Lazily load heavy 3D components to reduce initial JS for this route
+const Scene = nextDynamic(() => import("../../components/landing/3d/Scene").then(m => m.Scene), { ssr: false });
+const CorkBoard = nextDynamic(() => import("../../components/landing/3d/CorkBoard").then(m => m.CorkBoard), { ssr: false });
+const PostItNote = nextDynamic(() => import("../../components/landing/3d/PostItNote").then(m => m.PostItNote), { ssr: false });
+const PushPin = nextDynamic(() => import("../../components/landing/3d/PushPin").then(m => m.PushPin), { ssr: false });
+const FloatingText = nextDynamic(() => import("../../components/landing/3d/FloatingText").then(m => m.FloatingText), { ssr: false });
 
 /**
  * Landing Page - 3D Interactive Experience

@@ -3,6 +3,7 @@ import { auth } from 'firebase-admin';
 import { logger } from './structured-logger';
 import { logAdminAction } from './admin-auth-firebase';
 import { FieldValue } from 'firebase-admin/firestore';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 interface ModerationReport {
   id: string;
@@ -59,7 +60,7 @@ export async function moderateContent(
           message: 'Your content has been flagged for violating community guidelines.',
           reportId,
           createdAt: FieldValue.serverTimestamp(),
-          campusId: 'ub-buffalo'
+          campusId: CURRENT_CAMPUS_ID
         });
 
         // Update user warnings count
@@ -103,7 +104,7 @@ export async function moderateContent(
           message: 'Your content has been removed for violating community guidelines.',
           reportId,
           createdAt: FieldValue.serverTimestamp(),
-          campusId: 'ub-buffalo'
+          campusId: CURRENT_CAMPUS_ID
         });
 
         // Update user violations
@@ -223,7 +224,7 @@ export async function getPendingReports(limit = 50) {
   try {
     const snapshot = await dbAdmin
       .collection('reports')
-      .where('campusId', '==', 'ub-buffalo')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('status', 'in', ['pending', 'reviewing'])
       .orderBy('priority', 'desc')
       .orderBy('createdAt', 'desc')
@@ -253,19 +254,19 @@ export async function getModerationStats() {
     // Get counts in parallel
     const [pending, reviewing, resolvedToday] = await Promise.all([
       dbAdmin.collection('reports')
-        .where('campusId', '==', 'ub-buffalo')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'pending')
         .count()
         .get(),
 
       dbAdmin.collection('reports')
-        .where('campusId', '==', 'ub-buffalo')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'reviewing')
         .count()
         .get(),
 
       dbAdmin.collection('reports')
-        .where('campusId', '==', 'ub-buffalo')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'resolved')
         .where('resolvedAt', '>=', today)
         .count()
@@ -292,3 +293,4 @@ export async function getModerationStats() {
     };
   }
 }
+import 'server-only';

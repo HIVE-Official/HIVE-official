@@ -23,7 +23,6 @@ export const requestBuilderRole = functions.https.onCall(async (data, context) =
   functions.logger.log(`User ${uid} is requesting builder role for space ${spaceId}.`);
 
   const spaceRef = db.collection('spaces').doc(spaceId);
-  const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(uid);
 
   return db.runTransaction(async (transaction) => {
     const spaceDoc = await transaction.get(spaceRef);
@@ -36,12 +35,29 @@ export const requestBuilderRole = functions.https.onCall(async (data, context) =
       throw new functions.https.HttpsError("failed-precondition", "This space is not dormant and cannot be claimed.");
     }
 
-    const memberDoc = await transaction.get(memberRef);
-    if (!memberDoc.exists) {
-      throw new functions.https.HttpsError("failed-precondition", "You must be a member of the space to request the builder role.");
+    // Check flat membership first
+    const flatMembershipQuery = db
+      .collection('spaceMembers')
+      .where('spaceId', '==', spaceId)
+      .where('userId', '==', uid)
+      .where('isActive', '==', true)
+      .limit(1);
+    const flatMembershipSnap = await transaction.get(flatMembershipQuery);
+
+    let existingRole: string | undefined;
+    if (!flatMembershipSnap.empty) {
+      existingRole = flatMembershipSnap.docs[0].data().role as string | undefined;
+    } else {
+      // Fallback to nested membership
+      const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(uid);
+      const memberDoc = await transaction.get(memberRef);
+      if (!memberDoc.exists) {
+        throw new functions.https.HttpsError("failed-precondition", "You must be a member of the space to request the builder role.");
+      }
+      existingRole = memberDoc.data()?.role as string | undefined;
     }
 
-    if (memberDoc.data()?.role === "builder" || memberDoc.data()?.role === "admin") {
+    if (existingRole === "builder" || existingRole === "admin") {
       throw new functions.https.HttpsError("already-exists",
         "User is already a builder or admin in this space.");
     }
@@ -56,10 +72,18 @@ export const requestBuilderRole = functions.https.onCall(async (data, context) =
     }
 
     // Update the user's role claim to pending
-    transaction.update(memberRef, {
-      roleRequest: 'pending',
-      roleRequestTimestamp: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    if (!flatMembershipSnap.empty) {
+      transaction.update(flatMembershipSnap.docs[0].ref, {
+        roleRequest: 'pending',
+        roleRequestTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    } else {
+      const memberRef = db.collection('spaces').doc(spaceId).collection('members').doc(uid);
+      transaction.update(memberRef, {
+        roleRequest: 'pending',
+        roleRequestTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
 
     return {
       status: "success",

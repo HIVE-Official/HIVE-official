@@ -1,63 +1,90 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+"use server";
+
 import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from 'firebase-admin/auth';
-import * as admin from 'firebase-admin';
-import { getAuthTokenFromRequest } from "@/lib/auth";
+import * as admin from "firebase-admin";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { requireSpaceMembership } from "@/lib/space-security";
+import { HttpStatus } from "@/lib/api-response-types";
 
 const CreateCommentSchema = z.object({
   content: z.string().min(1).max(1000),
-  parentCommentId: z.string().optional(), // For nested replies
+  parentCommentId: z.string().optional(),
 });
 
-const db = dbAdmin;
+async function ensureSpaceMembership(spaceId: string, userId: string) {
+  const membership = await requireSpaceMembership(spaceId, userId);
+  if (!membership.ok) {
+    return {
+      ok: false as const,
+      status: membership.status,
+      message: membership.error,
+    };
+  }
 
-// GET /api/spaces/[spaceId]/posts/[postId]/comments - Get comments for a post
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
+  const spaceData = membership.space;
+  if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+    return {
+      ok: false as const,
+      status: HttpStatus.FORBIDDEN,
+      message: "Access denied for this campus",
+    };
+  }
+
+  return { ok: true as const };
+}
+
+async function ensurePostExists(spaceId: string, postId: string) {
+  const postDoc = await dbAdmin
+    .collection("spaces")
+    .doc(spaceId)
+    .collection("posts")
+    .doc(postId)
+    .get();
+  if (!postDoc.exists) {
+    return { ok: false as const, status: 404, message: "Post not found" };
+  }
+
+  const postData = postDoc.data();
+  if (!postData) {
+    return { ok: false as const, status: 404, message: "Post data missing" };
+  }
+  if (postData.campusId && postData.campusId !== CURRENT_CAMPUS_ID) {
+    return { ok: false as const, status: HttpStatus.FORBIDDEN, message: "Access denied for this campus" };
+  }
+
+  return { ok: true as const, postDoc, postData };
+}
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; postId: string }> },
+  respond,
+) => {
   try {
     const { spaceId, postId } = await params;
-    
-    // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const userId = getUserId(request);
+
+    const membership = await ensureSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.message, code, { status: membership.status });
     }
 
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    const post = await ensurePostExists(spaceId, postId);
+    if (!post.ok) {
+      return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
     }
 
-    // Verify post exists
-    const postDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
-
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Get comments with nested replies
-    const commentsSnapshot = await db
+    const commentsSnapshot = await dbAdmin
       .collection("spaces")
       .doc(spaceId)
       .collection("posts")
@@ -66,14 +93,14 @@ export async function GET(
       .orderBy("createdAt", "asc")
       .get();
 
-    const comments = [];
-    const commentMap = new Map();
+    const commentMap = new Map<string, any>();
+    const rootComments: any[] = [];
 
-    // First pass: create all comments
     for (const doc of commentsSnapshot.docs) {
       const data = doc.data();
-      
-      // Get author info
+      if (data.campusId && data.campusId !== CURRENT_CAMPUS_ID) {
+        continue;
+      }
       const authorDoc = await dbAdmin.collection("users").doc(data.authorId).get();
       const authorData = authorDoc.exists ? authorDoc.data() : null;
 
@@ -81,29 +108,31 @@ export async function GET(
         id: doc.id,
         content: data.content,
         authorId: data.authorId,
-        author: authorData ? {
-          id: authorData.id || data.authorId,
-          fullName: authorData.fullName || "Unknown User",
-          handle: authorData.handle || "unknown",
-          photoURL: authorData.photoURL
-        } : {
-          id: data.authorId,
-          fullName: "Unknown User",
-          handle: "unknown"
-        },
+        author: authorData
+          ? {
+              id: authorDoc.id,
+              fullName: authorData.fullName || "Unknown User",
+              handle: authorData.handle || "unknown",
+              photoURL: authorData.photoURL || null,
+            }
+          : {
+              id: data.authorId,
+              fullName: "Unknown User",
+              handle: "unknown",
+              photoURL: null,
+            },
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
         parentCommentId: data.parentCommentId || null,
         replies: [],
         reactions: data.reactions || { heart: 0 },
-        isEdited: data.isEdited || false,
-        isDeleted: data.isDeleted || false
+        isEdited: Boolean(data.isEdited),
+        isDeleted: Boolean(data.isDeleted),
       };
 
       commentMap.set(doc.id, comment);
     }
 
-    // Second pass: nest replies
     for (const comment of commentMap.values()) {
       if (comment.parentCommentId) {
         const parent = commentMap.get(comment.parentCommentId);
@@ -111,147 +140,128 @@ export async function GET(
           parent.replies.push(comment);
         }
       } else {
-        comments.push(comment);
+        rootComments.push(comment);
       }
     }
 
-    return NextResponse.json(ApiResponseHelper.success({
-      comments,
-      total: comments.length
-    }));
-
-  } catch (error: any) {
-    logger.error("Error fetching comments:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch comments", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.success({
+      comments: rootComments,
+      total: rootComments.length,
+    });
+  } catch (error) {
+    logger.error(
+      "Error fetching comments at /api/spaces/[spaceId]/posts/[postId]/comments",
+      error instanceof Error ? error : new Error(String(error)),
+    );
+    return respond.error("Failed to fetch comments", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});
 
-// POST /api/spaces/[spaceId]/posts/[postId]/comments - Create a comment
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; postId: string }> }
-) {
-  try {
-    const { spaceId, postId } = await params;
-    
-    // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const POST = withAuthValidationAndErrors(
+  CreateCommentSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string; postId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId, postId } = await params;
+      const userId = getUserId(request);
 
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
+      const membership = await ensureSpaceMembership(spaceId, userId);
+      if (!membership.ok) {
+        const code =
+          membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+        return respond.error(membership.message, code, { status: membership.status });
+      }
 
-    // Parse request body
-    const body = await request.json();
-    const { content, parentCommentId } = CreateCommentSchema.parse(body);
+      const post = await ensurePostExists(spaceId, postId);
+      if (!post.ok) {
+        return respond.error(post.message, "RESOURCE_NOT_FOUND", { status: post.status });
+      }
 
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
+      if (body.parentCommentId) {
+        const parentDoc = await dbAdmin
+          .collection("spaces")
+          .doc(spaceId)
+          .collection("posts")
+          .doc(postId)
+          .collection("comments")
+          .doc(body.parentCommentId)
+          .get();
+        if (!parentDoc.exists) {
+          return respond.error("Parent comment not found", "RESOURCE_NOT_FOUND", {
+            status: HttpStatus.NOT_FOUND,
+          });
+        }
+      }
 
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+      const userDoc = await dbAdmin.collection("users").doc(userId).get();
+      const userData = userDoc.exists ? userDoc.data() : null;
 
-    // Verify post exists
-    const postDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .get();
+      const now = new Date();
+      const commentData = {
+        authorId: userId,
+        content: body.content,
+        parentCommentId: body.parentCommentId || null,
+        createdAt: now,
+        updatedAt: now,
+        reactions: { heart: 0 },
+        reactedUsers: { heart: [] as string[] },
+        isEdited: false,
+        isDeleted: false,
+        campusId: CURRENT_CAMPUS_ID,
+      };
 
-    if (!postDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Post not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // If replying to a comment, verify parent comment exists
-    if (parentCommentId) {
-      const parentCommentDoc = await db
+      const commentRef = await dbAdmin
         .collection("spaces")
         .doc(spaceId)
         .collection("posts")
         .doc(postId)
         .collection("comments")
-        .doc(parentCommentId)
-        .get();
+        .add(commentData);
 
-      if (!parentCommentDoc.exists) {
-        return NextResponse.json(ApiResponseHelper.error("Parent comment not found", "NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-      }
-    }
+      await dbAdmin
+        .collection("spaces")
+        .doc(spaceId)
+        .collection("posts")
+        .doc(postId)
+        .update({
+          replyCount: admin.firestore.FieldValue.increment(1),
+          commentCount: admin.firestore.FieldValue.increment(1),
+          lastActivity: now,
+          updatedAt: now,
+        });
 
-    // Get user info
-    const userDoc = await dbAdmin.collection("users").doc(decodedToken.uid).get();
-    const userData = userDoc.exists ? userDoc.data() : null;
-
-    // Create comment
-    const commentData = {
-      content,
-      authorId: decodedToken.uid,
-      spaceId,
-      postId,
-      parentCommentId: parentCommentId || null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      reactions: { heart: 0 },
-      isEdited: false,
-      isDeleted: false
-    };
-
-    const commentRef = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .collection("comments")
-      .add(commentData);
-
-    // Update post reply count and activity for hot threads
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("posts")
-      .doc(postId)
-      .update({
-        replyCount: admin.firestore.FieldValue.increment(1),
-        commentCount: admin.firestore.FieldValue.increment(1), // For hot threads filtering
-        lastActivity: new Date(), // For hot threads sorting
-        updatedAt: new Date()
+      return respond.created({
+        id: commentRef.id,
+        ...commentData,
+        author: userData
+          ? {
+              id: userId,
+              fullName: userData.fullName || "Unknown User",
+              handle: userData.handle || "unknown",
+              photoURL: userData.photoURL || null,
+            }
+          : {
+              id: userId,
+              fullName: "Unknown User",
+              handle: "unknown",
+              photoURL: null,
+            },
+        replies: [],
       });
-
-    const comment = {
-      id: commentRef.id,
-      ...commentData,
-      author: userData ? {
-        id: userData.id || decodedToken.uid,
-        fullName: userData.fullName || "Unknown User",
-        handle: userData.handle || "unknown",
-        photoURL: userData.photoURL
-      } : {
-        id: decodedToken.uid,
-        fullName: "Unknown User",
-        handle: "unknown"
-      },
-      replies: []
-    };
-
-    logger.info(`Comment created: ${commentRef.id} in post ${postId} by user ${decodedToken.uid}`);
-
-    return NextResponse.json(ApiResponseHelper.success(comment), { status: HttpStatus.CREATED });
-
-  } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid comment data", "VALIDATION_ERROR", error.errors), { status: HttpStatus.BAD_REQUEST });
+    } catch (error) {
+      logger.error(
+        "Error creating comment at /api/spaces/[spaceId]/posts/[postId]/comments",
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return respond.error("Failed to create comment", "INTERNAL_ERROR", {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
     }
-
-    logger.error("Error creating comment:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to create comment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+  },
+);

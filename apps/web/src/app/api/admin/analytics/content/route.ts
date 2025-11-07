@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withSecureAuth(async (request) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '7d';
@@ -122,4 +116,4 @@ export const GET = withAuthAndErrors(async (context) => {
       { status: 500 }
     );
   }
-});
+}, { requireAdmin: true });

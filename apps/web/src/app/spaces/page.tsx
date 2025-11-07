@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge, Grid, useToast } from '@hive/ui';
-import { Search, Plus, Users, TrendingUp, Shield, Sparkles, UserCheck, Lock } from 'lucide-react';
+import { Button, Input, Grid, SpaceCard } from '@hive/ui';
+import { useToast } from '@/hooks/use-toast';
+import { Search, Plus, Users, Shield, Sparkles, UserCheck, Lock } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 import { SpacesErrorBoundary } from '@/components/error-boundaries';
-import { SpacesLoadingSkeleton } from '@/components/spaces/spaces-loading-skeleton';
+import { SpacesDiscoverySkeleton } from '@hive/ui';
 
 // SPEC.md compliant space discovery sections
 const DISCOVERY_SECTIONS = {
@@ -65,7 +66,7 @@ interface SpaceRecommendation {
 export default function SpacesDirectoryPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const { showToast } = useToast();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -88,26 +89,25 @@ export default function SpacesDirectoryPage() {
       setLoading(true);
 
       // SPEC.md: Fetch recommendations based on behavioral algorithm
-      const response = await api.get('/api/spaces/recommended');
+      const res = await secureApiFetch('/api/spaces/recommended', { method: 'GET' });
+      const response = await res.json();
 
-      setPanicReliefSpaces(response.panicRelief || []);
-      setFriendSpaces(response.whereYourFriendsAre || []);
-      setInsiderSpaces(response.insiderAccess || []);
+      setPanicReliefSpaces(response?.panicRelief || []);
+      setFriendSpaces(response?.whereYourFriendsAre || []);
+      setInsiderSpaces(response?.insiderAccess || []);
 
       // Load category spaces
       if (selectedCategory !== 'all') {
-        const categoryResponse = await api.get('/api/spaces', {
-          params: {
-            category: selectedCategory,
-            limit: 20
-          }
-        });
-        setCategorySpaces(categoryResponse.spaces || []);
+        const params = new URLSearchParams({ category: String(selectedCategory), limit: '20' });
+        const catRes = await secureApiFetch(`/api/spaces?${params.toString()}`, { method: 'GET' });
+        const categoryResponse = await catRes.json();
+        setCategorySpaces(categoryResponse?.spaces || []);
       }
     } catch (error) {
       console.error('Failed to load space recommendations:', error);
-      showToast({
-        message: 'Failed to load space recommendations. Please try again.',
+      toast({
+        title: 'Failed to load recommendations',
+        description: 'Please try again.',
         type: 'error',
         duration: 5000
       });
@@ -124,23 +124,23 @@ export default function SpacesDirectoryPage() {
 
     try {
       setLoading(true);
-      const response = await api.get('/api/spaces/search', {
-        params: {
-          q: searchQuery,
-          limit: 20
-        }
+      const res = await secureApiFetch('/api/spaces/search', {
+        method: 'POST',
+        body: JSON.stringify({ q: searchQuery, limit: 20 })
       });
+      const response = await res.json();
 
       // Display search results in all sections
-      const spaces = response.spaces || [];
+      const spaces = response?.spaces || [];
       setPanicReliefSpaces(spaces.slice(0, 5));
       setFriendSpaces(spaces.slice(5, 10));
       setInsiderSpaces(spaces.slice(10, 15));
       setCategorySpaces(spaces.slice(15));
     } catch (error) {
       console.error('Search failed:', error);
-      showToast({
-        message: 'Search failed. Please try again.',
+      toast({
+        title: 'Search failed',
+        description: 'Please try again.',
         type: 'error',
         duration: 5000
       });
@@ -151,17 +151,23 @@ export default function SpacesDirectoryPage() {
 
   const handleJoinSpace = async (spaceId: string) => {
     try {
-      await api.post(`/api/spaces/${spaceId}/join`);
-      showToast({
-        message: 'Successfully joined space!',
+      const res = await secureApiFetch(`/api/spaces/join`, {
+        method: 'POST',
+        body: JSON.stringify({ spaceId }),
+      });
+      if (!res.ok) throw new Error(`Join failed: ${res.status}`);
+      toast({
+        title: 'Joined space',
+        description: 'Welcome aboard!',
         type: 'success',
         duration: 3000
       });
       router.push(`/spaces/${spaceId}`);
     } catch (error) {
       console.error('Failed to join space:', error);
-      showToast({
-        message: 'Failed to join space. Please try again.',
+      toast({
+        title: 'Failed to join space',
+        description: 'Please try again.',
         type: 'error',
         duration: 5000
       });
@@ -169,7 +175,7 @@ export default function SpacesDirectoryPage() {
   };
 
   if (loading) {
-    return <SpacesLoadingSkeleton />;
+    return <SpacesDiscoverySkeleton />;
   }
 
   return (
@@ -186,7 +192,7 @@ export default function SpacesDirectoryPage() {
             <div className="flex items-center gap-3 flex-1 max-w-2xl">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <HiveInput
+                <Input
                   placeholder="Search spaces, clubs, communities..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -195,21 +201,21 @@ export default function SpacesDirectoryPage() {
                 />
               </div>
 
-              <HiveButton
+              <Button
                 onClick={() => router.push('/spaces/browse')}
                 variant="outline"
                 className="border-gray-700"
               >
                 Browse All
-              </HiveButton>
+              </Button>
 
-              <HiveButton
+              <Button
                 onClick={() => router.push('/spaces/create')}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 <Plus className="w-4 h-4 lg:mr-2" />
                 <span className="hidden lg:inline">Create Space</span>
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -357,12 +363,12 @@ export default function SpacesDirectoryPage() {
                 ? `No spaces matching "${searchQuery}"`
                 : "Be the first to create a space!"}
             </p>
-            <HiveButton
+            <Button
               onClick={() => router.push('/spaces/create')}
               className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
             >
               Create the First Space
-            </HiveButton>
+            </Button>
           </div>
         )}
       </div>
@@ -371,137 +377,4 @@ export default function SpacesDirectoryPage() {
   );
 }
 
-// SPEC.md compliant Space Card
-function SpaceCard({
-  space,
-  onJoin,
-  onClick,
-  showFriends = false,
-  showExclusive = false
-}: {
-  space: SpaceRecommendation;
-  onJoin: () => void;
-  onClick: () => void;
-  showFriends?: boolean;
-  showExclusive?: boolean;
-}) {
-  const activityColors = {
-    very_active: 'bg-green-500',
-    active: 'bg-blue-500',
-    moderate: 'bg-yellow-500',
-    quiet: 'bg-gray-500'
-  };
-
-  return (
-    <HiveCard
-      className="bg-gray-900/50 border-gray-800 hover:border-[var(--hive-brand-primary)] transition-all cursor-pointer group"
-      onClick={onClick}
-    >
-      {/* Banner */}
-      <div className="h-24 bg-gradient-to-br from-hive-gold/20 to-purple-600/20 relative">
-        {space.bannerImage && (
-          <img src={space.bannerImage} alt="" className="w-full h-full object-cover" />
-        )}
-
-        {/* Online indicator */}
-        {space.onlineCount > 0 && (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur rounded-full px-2 py-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-xs text-white">{space.onlineCount} online</span>
-          </div>
-        )}
-
-        {/* Join Policy Badge */}
-        {space.joinPolicy !== 'open' && (
-          <div className="absolute top-2 left-2">
-            <Badge className="bg-black/60 text-white">
-              {space.joinPolicy === 'approval' ? 'Approval Required' : 'Invite Only'}
-            </Badge>
-          </div>
-        )}
-      </div>
-
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1">
-            <h3 className="font-bold text-white group-hover:text-[var(--hive-brand-primary)] transition-colors">
-              {space.name}
-            </h3>
-            <p className="text-sm text-gray-400 line-clamp-2 mt-1">
-              {space.description}
-            </p>
-          </div>
-
-          {/* Activity Level */}
-          <div className={`w-2 h-2 rounded-full ${activityColors[space.activityLevel]}`} />
-        </div>
-
-        {/* Metrics */}
-        <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
-          <div className="flex items-center gap-1">
-            <Users className="w-4 h-4" />
-            <span>{space.memberCount}</span>
-          </div>
-
-          {showFriends && space.friendsInSpace > 0 && (
-            <div className="flex items-center gap-1 text-green-400">
-              <UserCheck className="w-4 h-4" />
-              <span>{space.friendsInSpace} friends</span>
-            </div>
-          )}
-
-          {space.mutualConnections > 0 && (
-            <div className="flex items-center gap-1">
-              <TrendingUp className="w-4 h-4" />
-              <span>{space.mutualConnections} mutual</span>
-            </div>
-          )}
-        </div>
-
-        {/* Behavioral Score Indicator */}
-        <div className="flex items-center justify-between">
-          <div className="flex gap-1">
-            {/* Anxiety Relief */}
-            <div
-              className="h-1 bg-red-400 rounded-full transition-all"
-              style={{ width: `${space.anxietyReliefScore * 60}px` }}
-            />
-            {/* Social Proof */}
-            <div
-              className="h-1 bg-green-400 rounded-full transition-all"
-              style={{ width: `${space.socialProofScore * 60}px` }}
-            />
-            {/* Insider Access */}
-            {showExclusive && (
-              <div
-                className="h-1 bg-purple-400 rounded-full transition-all"
-                style={{ width: `${space.insiderAccessScore * 60}px` }}
-              />
-            )}
-          </div>
-
-          {/* Join Button */}
-          <HiveButton
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onJoin();
-            }}
-            className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
-          >
-            Join
-          </HiveButton>
-        </div>
-
-        {/* 70% Completion Rate Indicator */}
-        {space.joinToActiveRate >= 0.7 && (
-          <div className="mt-2 pt-2 border-t border-gray-800">
-            <p className="text-xs text-green-400">
-              ✓ {Math.round(space.joinToActiveRate * 100)}% become active members
-            </p>
-          </div>
-        )}
-      </div>
-    </HiveCard>
-  );
-}
+// SpaceCard is now provided by @hive/ui

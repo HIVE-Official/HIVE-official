@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { isAdminEmail } from './src/lib/admin/roles';
 import { checkRateLimit, RATE_LIMITS } from './src/lib/rate-limiter';
 import { getSession, clearSessionCookie } from './src/lib/session';
 import { auditLogger, AuditEvent, auditAdminAccess, auditSecurityEvent } from './src/lib/audit-logger';
@@ -112,9 +113,20 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // SPEC: NO HANDLE in URLs - profiles use user ID
   // Profile URLs remain as /profile/[id] - no redirect needed
 
-  // Remove /profile -> /settings (when editing own profile)
-  if (pathname === '/profile' || pathname === '/profile/edit') {
-    return NextResponse.redirect(new URL('/settings', request.url));
+  // Profile routing: make /profile resolve to the viewer's public profile
+  if (pathname === '/profile') {
+    if (hasSession && session?.userId) {
+      return NextResponse.redirect(new URL(`/profile/${session.userId}`, request.url));
+    }
+    // No session: route to login preserving intent
+    const loginUrl = new URL('/auth/login', request.url);
+    loginUrl.searchParams.set('from', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Allow /profile/edit to pass through to the app route for E2E/profile editing
+  if (pathname === '/profile/edit') {
+    return NextResponse.next();
   }
 
   // Old space ID pattern -> new slug pattern
@@ -192,11 +204,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       // ADMIN ROUTE PROTECTION - REAL SECURITY WITH JWT
       const isAdminRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin');
       if (isAdminRoute) {
-        const ADMIN_EMAILS = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'];
         const userEmail = session.email;
 
         // Check if user is admin (session must have isAdmin flag)
-        if (!session.isAdmin || !userEmail || !ADMIN_EMAILS.includes(userEmail)) {
+        if (!session.isAdmin || !userEmail || !isAdminEmail(userEmail)) {
           console.error(`[SECURITY] Unauthorized admin access attempt by ${userEmail || 'unknown'}`);
 
           // Log the security event

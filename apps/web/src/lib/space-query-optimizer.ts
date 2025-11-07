@@ -142,3 +142,4 @@ export function getSpaceCacheStats() {
     entries: Array.from(spaceTypeCache.keys())
   };
 }
+import 'server-only';

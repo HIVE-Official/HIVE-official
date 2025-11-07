@@ -1,3 +1,4 @@
+import 'server-only';
 // Temporary stub for firebase-admin utilities
 // TODO: Use proper firebase-admin from @hive/core
 

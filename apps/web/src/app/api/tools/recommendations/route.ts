@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import * as admin from 'firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import {
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
 
 interface RecommendationContext {
   userId: string;
@@ -53,12 +56,13 @@ interface RecommendationResponse {
 }
 
 // GET - Get personalized tool recommendations
-export async function GET(request: NextRequest) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond
+) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    const userId = getUserId(request);
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category') ?? undefined;
@@ -66,7 +70,7 @@ export async function GET(request: NextRequest) {
     const includeInstalled = searchParams.get('includeInstalled') === 'true';
 
     // Get user context
-    const context = await buildUserContext(user.uid);
+    const context = await buildUserContext(userId);
 
     // Generate recommendations
     const recommendations = await generateRecommendations(context, {
@@ -75,16 +79,16 @@ export async function GET(request: NextRequest) {
       includeInstalled
     });
 
-    return NextResponse.json(recommendations);
+    return respond.success(recommendations);
 
   } catch (error) {
     logger.error(
       `Error generating recommendations at /api/tools/recommendations`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to generate recommendations", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to generate recommendations", "INTERNAL_ERROR", { status: 500 });
   }
-}
+});
 
 // Helper function to build user context
 async function buildUserContext(userId: string): Promise<RecommendationContext> {
@@ -110,12 +114,20 @@ async function buildUserContext(userId: string): Promise<RecommendationContext> 
     .where('status', '==', 'active')
     .get();
 
-  const spaceIds = spaceMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
+  const spaceIds = [] as string[];
+  for (const doc of spaceMembershipsSnapshot.docs) {
+    const sid = doc.data().spaceId;
+    const sDoc = await adminDb.collection('spaces').doc(sid).get();
+    if (sDoc.exists && (sDoc.data()?.campusId === CURRENT_CAMPUS_ID)) {
+      spaceIds.push(sid);
+    }
+  }
 
   // Get installed tools
   const installationsSnapshot = await adminDb
     .collection('toolInstallations')
     .where('installerId', '==', userId)
+    .where('campusId', '==', CURRENT_CAMPUS_ID)
     .where('status', '==', 'active')
     .get();
 
@@ -161,10 +173,20 @@ async function generateRecommendations(
   }
 
   const marketplaceSnapshot = await marketplaceQuery.get();
-  const allTools = marketplaceSnapshot.docs.map(doc => ({
+  const allToolsRaw = marketplaceSnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   } as { id: string; toolId?: string; [key: string]: any }));
+
+  // Filter to current campus by checking underlying tool's campusId
+  const allTools = [] as { id: string; toolId?: string; [key: string]: any }[];
+  for (const t of allToolsRaw) {
+    if (!t.toolId) continue;
+    const tDoc = await adminDb.collection('tools').doc(t.toolId).get();
+    if (tDoc.exists && (tDoc.data()?.campusId === CURRENT_CAMPUS_ID)) {
+      allTools.push(t);
+    }
+  }
 
   // Filter out installed tools if requested
   const availableTools = includeInstalled 

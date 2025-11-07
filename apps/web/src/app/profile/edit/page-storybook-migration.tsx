@@ -13,8 +13,8 @@ import {
   FormControl,
   FormMessage,
   FormDescription,
-  InputEnhanced as Input,
-  TextareaEnhanced as Textarea,
+  Input,
+  Textarea,
   Button,
   Card,
   Avatar,
@@ -558,7 +558,7 @@ export default function ProfileEditPageStorybook() {
  * 
  * AFTER (@hive/ui components):
  * - FormField component with automatic accessibility
- * - InputEnhanced with sophisticated interactions
+ * - Input with sophisticated interactions
  * - HiveModal with liquid motion animations
  * - Consistent design tokens throughout
  * - Built-in validation and error states

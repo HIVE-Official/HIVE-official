@@ -1,3 +1,4 @@
+import 'server-only';
 // Temporary stub for auth utilities
 // TODO: Implement proper server-side auth
 

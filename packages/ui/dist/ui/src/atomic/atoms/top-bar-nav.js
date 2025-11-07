@@ -91,17 +91,16 @@ const topBarNavLabelVariants = cva("transition-all duration-200 font-medium", {
         weight: "normal"
     }
 });
-const TopBarNav = React.forwardRef(({ className, variant, size, responsive, icon, label, href, badge, isActive, labelVisibility = "desktop", labelWeight = "normal", iconState = "default", children, asChild = false, ...props }, ref) => {
+const TopBarNav = React.forwardRef(({ className, variant, size, responsive, icon, label, href, badge, isActive, labelVisibility = "desktop", labelWeight = "normal", iconState = "default", children, 
+// asChild not used in this implementation
+...props }, ref) => {
     const activeVariant = isActive ? "active" : variant;
     const activeIconState = isActive ? "active" : iconState;
     const commonClassName = cn(topBarNavVariants({ variant: activeVariant, size, responsive }), "group relative", className);
     const content = (_jsxs(_Fragment, { children: [icon && (_jsx("span", { className: cn(topBarNavIconVariants({ size, state: activeIconState })), children: icon })), label && (_jsx("span", { className: cn(topBarNavLabelVariants({ visibility: labelVisibility, weight: labelWeight })), children: label })), badge && (_jsx("span", { className: cn("absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1", "bg-destructive text-destructive-foreground text-xs font-bold rounded-full", "flex items-center justify-center", "shadow-lg shadow-destructive/25", "border border-background", "z-10"), children: typeof badge === 'number' && badge > 99 ? '99+' : badge })), children] }));
     if (href) {
-        // Extract only valid anchor props from button props
-        const { 
-        // Remove button-specific props
-        type, form, formAction, formEncType, formMethod, formNoValidate, formTarget, autoFocus, disabled, name, value, onToggle, // This is the problematic prop
-        ...anchorProps } = props;
+        const drop = new Set(['type', 'form', 'formAction', 'formEncType', 'formMethod', 'formNoValidate', 'formTarget', 'autoFocus', 'disabled', 'name', 'value', 'onToggle']);
+        const anchorProps = Object.fromEntries(Object.entries(props).filter(([k]) => !drop.has(k)));
         return (_jsx("a", { href: href, className: commonClassName, ref: ref, ...anchorProps, children: content }));
     }
     return (_jsx("button", { className: commonClassName, ref: ref, ...props, children: content }));

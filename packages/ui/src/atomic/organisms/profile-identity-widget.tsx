@@ -1,234 +1,193 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card } from '../atoms/card';
-import { Avatar } from '../atoms/avatar';
-import { Badge } from '../atoms/badge';
-import { Button } from '../atoms/button';
+import * as React from "react";
+import { Camera, GraduationCap, MapPin, Users } from "lucide-react";
+
+import { cn } from "../../lib/utils";
+import { Card } from "../atoms/card";
+import { Avatar, AvatarImage, AvatarFallback } from "../atoms/avatar";
+import { Badge } from "../atoms/badge";
+import { Button } from "../atoms/button";
 import {
-  Camera,
-  MapPin,
-  GraduationCap,
-  Sparkles,
-  CheckCircle,
-  Users,
-  Activity
-} from 'lucide-react';
-import type { UIProfile } from './profile-types';
-import { PresenceIndicator, type PresenceStatus } from '../atoms/presence-indicator';
-import { PrivacyControl, type PrivacyLevel } from '../molecules/privacy-control';
+  PresenceIndicator,
+  type PresenceStatus,
+} from "../atoms/presence-indicator";
+import {
+  PrivacyControl,
+  type PrivacyLevel,
+} from "../molecules/privacy-control";
+import type { UIProfile } from "./profile-types";
+
+const presenceText = (status?: PresenceStatus, lastSeen?: Date | null) => {
+  if (status === "online") return "Online now";
+  if (status === "away") return "Away";
+  if (!lastSeen) return "Offline";
+  const diff = Date.now() - lastSeen.getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return lastSeen.toLocaleDateString();
+};
 
 export interface ProfileIdentityWidgetProps {
   profile: UIProfile;
   isOwnProfile?: boolean;
-  onEditPhoto?: () => void;
   presenceStatus?: PresenceStatus;
-  lastSeen?: Date;
+  lastSeen?: Date | string | null;
+  campusLabel?: string;
+  completionPercentage?: number;
+  onEditPhoto?: () => void;
   privacyLevel?: PrivacyLevel;
   onPrivacyChange?: (level: PrivacyLevel) => void;
   className?: string;
 }
 
-/**
- * Profile Identity Widget - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - Luxury minimalism with gold accent
- * - 8px grid system
- * - Black/Gold/White/Gray palette only
- * - 5 states: default, hover, focus, active, disabled
- * - Mobile-first with 44px touch targets
- */
-export const ProfileIdentityWidget: React.FC<ProfileIdentityWidgetProps> = ({
+export function ProfileIdentityWidget({
   profile,
   isOwnProfile = false,
-  onEditPhoto,
-  presenceStatus = 'offline',
+  presenceStatus = "offline",
   lastSeen,
-  privacyLevel = 'public',
+  campusLabel = profile.academic.campusId?.replace(/-/g, " ") ?? "UB",
+  completionPercentage = profile.metadata?.completionPercentage ?? 0,
+  onEditPhoto,
+  privacyLevel = profile.widgets?.myActivity?.level as PrivacyLevel | undefined,
   onPrivacyChange,
-  className = ''
-}) => {
-  const completionPercentage = profile.metadata?.completionPercentage || 0;
-  const isVerified = profile.verification?.facultyVerified;
+  className,
+}: ProfileIdentityWidgetProps) {
+  const displayName = profile.identity.fullName || "Student";
+  const initials = React.useMemo(() => {
+    return displayName
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "UB";
+  }, [displayName]);
 
-  // SPEC: No handle display - use name and academic info
-  const displayName = profile.identity.fullName || 'Anonymous Student';
-  const academicInfo = profile.academic;
-  const yearLabel = academicInfo.academicYear?.charAt(0).toUpperCase() +
-                    academicInfo.academicYear?.slice(1) || '';
+  const parsedLastSeen = React.useMemo(() => {
+    if (!lastSeen) return null;
+    if (lastSeen instanceof Date) return lastSeen;
+    const parsed = new Date(lastSeen);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }, [lastSeen]);
+
+  const academicYear = profile.academic.academicYear
+    ? profile.academic.academicYear.charAt(0).toUpperCase() + profile.academic.academicYear.slice(1)
+    : undefined;
+
+  const housing = profile.academic.housing;
 
   return (
     <Card
-      className={`
-        relative overflow-hidden
-        bg-black border border-white/8
-        p-8 space-y-6
-        transition-all duration-300
-        hover:border-white/16
-        ${className}
-      `}
+      className={cn(
+        "relative overflow-hidden border-[color-mix(in_srgb,var(--hive-border-default,#2d3145) 65%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary,#10111c) 90%,transparent)] p-6",
+        className,
+      )}
     >
-      {/* Luxury Gold Accent Line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FFD700] to-transparent opacity-60" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color-mix(in_srgb,var(--hive-brand-primary,#facc15) 75%,transparent)] to-transparent" />
 
-      {/* Privacy Control - Only for own profile */}
-      {isOwnProfile && onPrivacyChange && (
-        <div className="absolute top-4 right-4 z-10">
+      {isOwnProfile && onPrivacyChange ? (
+        <div className="absolute right-4 top-4">
           <PrivacyControl
-            level={privacyLevel}
+            level={privacyLevel ?? "public"}
             onLevelChange={onPrivacyChange}
             compact
-            className="backdrop-blur-sm"
           />
         </div>
-      )}
+      ) : null}
 
-      {/* Profile Photo Section */}
-      <div className="flex items-start gap-6">
-        <div className="relative group">
-          <Avatar
-            size="xl"
-            className="w-24 h-24 border-2 border-white/8 group-hover:border-[#FFD700]/40 transition-all duration-300"
-          >
-            {profile.identity.avatarUrl && (
-              <img
-                src={profile.identity.avatarUrl}
-                alt={displayName}
-                className="w-full h-full object-cover"
-              />
+      <div className="flex flex-col gap-5 md:flex-row md:items-center">
+        <div className="relative">
+          <Avatar className="h-24 w-24 border-2 border-[color-mix(in_srgb,var(--hive-brand-primary,#facc15) 28%,transparent)]">
+            {profile.identity.avatarUrl ? (
+              <AvatarImage src={profile.identity.avatarUrl} alt={displayName} />
+            ) : (
+              <AvatarFallback>{initials}</AvatarFallback>
             )}
           </Avatar>
-
-          {/* Edit Photo Overlay - Only for own profile */}
-          {isOwnProfile && (
-            <button
-              onClick={onEditPhoto}
-              className="
-                absolute inset-0
-                bg-black/60 opacity-0
-                group-hover:opacity-100
-                transition-opacity duration-300
-                rounded-full
-                flex items-center justify-center
-                min-h-[44px] min-w-[44px]
-              "
-              aria-label="Change profile photo"
-            >
-              <Camera className="w-5 h-5 text-white" />
-            </button>
-          )}
-
-          {/* Presence Indicator */}
-          <div className="absolute -bottom-1 -right-1 z-10">
-            <PresenceIndicator
-              status={presenceStatus}
-              size="lg"
-              lastSeen={lastSeen}
-            />
+          <div className="absolute -right-2 -bottom-2">
+            <PresenceIndicator status={presenceStatus} lastActiveAt={parsedLastSeen ?? undefined} />
           </div>
-
-          {/* Verification Badge */}
-          {isVerified && (
-            <div className="absolute -top-1 -right-1">
-              <div className="bg-[#FFD700] rounded-full p-1">
-                <CheckCircle className="w-4 h-4 text-black" />
-              </div>
-            </div>
-          )}
+          {isOwnProfile && onEditPhoto ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEditPhoto}
+              className="absolute inset-0 hidden items-center justify-center rounded-full bg-black/60 text-xs text-white backdrop-blur-sm transition-opacity hover:bg-black/70 md:flex"
+            >
+              <Camera className="mr-1 h-3.5 w-3.5" aria-hidden />
+              Edit
+            </Button>
+          ) : null}
         </div>
 
-        {/* Identity Information */}
-        <div className="flex-1 space-y-3">
-          <div>
-            <h2 className="text-2xl font-semibold text-white">
-              {displayName}
-            </h2>
-
-            {/* Academic Status */}
-            <div className="flex items-center gap-2 mt-1">
-              <GraduationCap className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-300">
-                {yearLabel} {academicInfo.major && `• ${academicInfo.major}`}
-                {academicInfo.graduationYear && ` '${String(academicInfo.graduationYear).slice(-2)}`}
-              </span>
-            </div>
-
-            {/* Location/Housing */}
-            {academicInfo.housing && (
-              <div className="flex items-center gap-2 mt-1">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                <span className="text-sm text-gray-300">
-                  {academicInfo.housing}
-                </span>
-              </div>
-            )}
+        <div className="flex-1 space-y-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="text-2xl font-semibold text-[var(--hive-text-primary,#f7f7ff)]">{displayName}</h2>
+            <Badge variant="primary" className="uppercase tracking-[0.32em]">
+              {campusLabel}
+            </Badge>
           </div>
-
-          {/* Profile Stats Row */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-300">
-                {profile.social?.connections?.connectionIds?.length || 0} connections
+          <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--hive-text-secondary,#c0c2cc)]">
+            {academicYear ? (
+              <span className="inline-flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" aria-hidden />
+                {academicYear}
               </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-300">
-                {profile.social?.mutualSpaces?.length || 0} spaces
+            ) : null}
+            {profile.academic.major ? (
+              <span>{profile.academic.major}</span>
+            ) : null}
+            {profile.academic.graduationYear ? (
+              <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.28em] text-[color-mix(in_srgb,var(--hive-text-muted,#8e90a2) 90%,transparent)]">
+                Class of {profile.academic.graduationYear}
               </span>
+            ) : null}
+          </div>
+          {housing ? (
+            <div className="flex items-center gap-2 text-xs text-[var(--hive-text-muted,#8e90a2)]">
+              <MapPin className="h-4 w-4" aria-hidden />
+              {housing}
             </div>
+          ) : null}
+          {profile.personal?.bio ? (
+            <p className="max-w-xl text-sm text-[var(--hive-text-secondary,#c0c2cc)]">
+              {profile.personal.bio}
+            </p>
+          ) : null}
+          <div className="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.32em] text-[color-mix(in_srgb,var(--hive-text-muted,#8e90a2) 95%,transparent)]">
+            <span>{presenceText(presenceStatus, parsedLastSeen)}</span>
+            <span aria-hidden>•</span>
+            <span>
+              {(profile.social?.connections?.connectionIds?.length ?? 0) +
+                (profile.social?.connections?.friendIds?.length ?? 0)}{' '}
+              connections
+            </span>
+            <span aria-hidden>•</span>
+            <span>{profile.social?.mutualSpaces?.length ?? 0} shared spaces</span>
           </div>
         </div>
       </div>
 
-      {/* Bio Section */}
-      {profile.personal?.bio && (
-        <div className="pt-4 border-t border-white/8">
-          <p className="text-sm text-gray-300 leading-relaxed">
-            {profile.personal.bio}
-          </p>
-        </div>
-      )}
-
-      {/* Profile Completion Indicator (Psychology Hook) */}
-      {isOwnProfile && completionPercentage < 70 && (
-        <div className="pt-4 border-t border-white/8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-400">
-              Profile Strength
-            </span>
-            <span className="text-xs text-[#FFD700] font-medium">
-              {completionPercentage}% Complete
-            </span>
+      {isOwnProfile ? (
+        <div className="mt-6">
+          <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[var(--hive-text-muted,#8e90a2)]">
+            <span>Profile completeness</span>
+            <span className="text-[var(--hive-brand-primary,#facc15)]">{Math.round(completionPercentage)}%</span>
           </div>
-
-          <div className="relative h-2 bg-gray-900 rounded-full overflow-hidden">
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--hive-background-tertiary,#141522) 75%,transparent)]">
             <div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#FFD700]/60 to-[#FFD700] transition-all duration-500"
-              style={{ width: `${completionPercentage}%` }}
+              className="h-full rounded-full bg-[color-mix(in_srgb,var(--hive-brand-primary,#facc15) 90%,transparent)] transition-[width] duration-500"
+              style={{ width: `${Math.min(100, Math.max(0, completionPercentage))}%` }}
             />
           </div>
-
-          {completionPercentage < 50 && (
-            <p className="text-xs text-gray-400 mt-2">
-              Complete your profile to unlock all features
-            </p>
-          )}
         </div>
-      )}
-
-      {/* Current Vibe/Status */}
-      {profile.personal?.currentVibe && (
-        <div className="flex items-center gap-2 pt-4 border-t border-white/8">
-          <Sparkles className="w-4 h-4 text-[#FFD700]" />
-          <span className="text-sm text-gray-300">
-            {profile.personal.currentVibe}
-          </span>
-        </div>
-      )}
+      ) : null}
     </Card>
   );
-};
+}

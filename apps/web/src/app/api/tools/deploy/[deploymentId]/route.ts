@@ -1,318 +1,347 @@
-import { NextRequest, NextResponse } from 'next/server';
-// Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
+"use server";
+
+import { z } from "zod";
+import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/structured-logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { getPlacementFromDeploymentDoc } from "@/lib/tool-placement";
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
 
-// GET - Get specific deployment details
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ deploymentId: string }> }
-) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const { deploymentId } = await params;
-    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
-
-    if (!deploymentDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() } as { id: string; toolId?: string; [key: string]: any };
-
-    // Check access permissions
-    if (!await canUserManageDeployment(user.uid, deployment)) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Get tool details
-    if (!deployment.toolId) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid deployment: missing toolId", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
-    }
-    const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
-    const toolData = toolDoc.exists ? toolDoc.data() : null;
-
-    // Get execution context
-    const executionContext = generateExecutionContext(deployment, user.uid);
-
-    return NextResponse.json({
-      deployment,
-      toolData,
-      executionContext
-    });
-  } catch (error) {
-    logger.error(
-      `Error fetching deployment at /api/tools/deploy/[deploymentId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+async function loadDeployment(deploymentId: string) {
+  const doc = await dbAdmin.collection("deployedTools").doc(deploymentId).get();
+  if (!doc.exists) {
+    return { ok: false as const, status: 404, message: "Deployment not found" };
   }
+
+  const data = doc.data();
+  if (!data) {
+    return { ok: false as const, status: 400, message: "Invalid deployment data" };
+  }
+
+  if (data.campusId && data.campusId !== CURRENT_CAMPUS_ID) {
+    return { ok: false as const, status: 403, message: "Access denied for this campus" };
+  }
+
+  return { ok: true as const, doc, data };
 }
 
-// PUT - Update deployment configuration
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ deploymentId: string }> }
+async function canUserManageDeployment(
+  userId: string,
+  deployment: FirebaseFirestore.DocumentData,
 ) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const { deploymentId } = await params;
-    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
-
-    if (!deploymentDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const deployment = deploymentDoc.data();
-    if (!deployment) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid deployment data", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Check access permissions
-    if (!await canUserManageDeployment(user.uid, deployment)) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = await request.json();
-    const { config, permissions, settings, status, position } = body;
-
-    // Prepare update data
-    const updateData: any = {
-      updatedAt: new Date().toISOString()
-    };
-
-    if (config !== undefined) {
-      updateData.config = config;
-    }
-
-    if (permissions) {
-      updateData.permissions = {
-        ...deployment.permissions,
-        ...permissions
-      };
-    }
-
-    if (settings) {
-      updateData.settings = {
-        ...deployment.settings,
-        ...settings
-      };
-    }
-
-    if (status && ['active', 'paused', 'disabled'].includes(status)) {
-      updateData.status = status;
-    }
-
-    if (position !== undefined && typeof position === 'number') {
-      updateData.position = position;
-    }
-
-    // Update deployment
-    await dbAdmin.collection('deployedTools').doc(deploymentId).update(updateData);
-
-    // Log activity event
-    await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
-      type: 'tool_interaction',
-      toolId: deployment.toolId,
-      spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
-      metadata: {
-        action: 'deployment_updated',
-        deploymentId,
-        changes: Object.keys(body)
-      },
-      timestamp: new Date().toISOString(),
-      date: new Date().toISOString().split('T')[0]
-    });
-
-    // Fetch updated deployment
-    const updatedDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
-    const updatedDeployment = { id: updatedDoc.id, ...updatedDoc.data() };
-
-    return NextResponse.json({
-      deployment: updatedDeployment,
-      message: 'Deployment updated successfully'
-    });
-  } catch (error) {
-    logger.error(
-      `Error updating deployment at /api/tools/deploy/[deploymentId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to update deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  if (deployment.deployedBy === userId) {
+    return true;
   }
-}
 
-// DELETE - Remove deployment
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ deploymentId: string }> }
-) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const { deploymentId } = await params;
-    const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
-
-    if (!deploymentDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const deployment = deploymentDoc.data();
-    if (!deployment) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid deployment data", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Check access permissions - only deployer or space admin can remove
-    if (deployment.deployedBy !== user.uid) {
-      if (deployment.deployedTo === 'space') {
-        // Check if user is space admin
-        const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
-        if (!spaceDoc.exists) {
-          return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-        }
-        
-        const spaceData = spaceDoc.data();
-        if (!spaceData || spaceData.ownerId !== user.uid) {
-          return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-        }
-      } else {
-        return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-      }
-    }
-
-    // Delete deployment
-    await dbAdmin.collection('deployedTools').doc(deploymentId).delete();
-
-    // Update tool deployment count
-    const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
-    if (toolDoc.exists) {
-      const toolData = toolDoc.data();
-      if (toolData) {
-        await dbAdmin.collection('tools').doc(deployment.toolId).update({
-          deploymentCount: Math.max(0, (toolData.deploymentCount || 1) - 1)
-        });
-      }
-    }
-
-    // Log activity event
-    await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
-      type: 'tool_interaction',
-      toolId: deployment.toolId,
-      spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
-      metadata: {
-        action: 'deployment_removed',
-        deploymentId,
-        deployedTo: deployment.deployedTo,
-        surface: deployment.surface
-      },
-      timestamp: new Date().toISOString(),
-      date: new Date().toISOString().split('T')[0]
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Deployment removed successfully'
-    });
-  } catch (error) {
-    logger.error(
-      `Error removing deployment at /api/tools/deploy/[deploymentId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to remove deployment", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+  if (deployment.deployedTo === "profile") {
+    return deployment.targetId === userId;
   }
-}
 
-// Helper function to check deployment management permissions
-async function canUserManageDeployment(userId: string, deployment: any): Promise<boolean> {
-  try {
-    // User deployed this tool
-    if (deployment.deployedBy === userId) {
+  if (deployment.deployedTo === "space") {
+    const spaceDoc = await dbAdmin.collection("spaces").doc(deployment.targetId).get();
+    if (!spaceDoc.exists) {
+      return false;
+    }
+
+    const spaceData = spaceDoc.data();
+    if (!spaceData) {
+      return false;
+    }
+
+    if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+      return false;
+    }
+
+    if (spaceData.ownerId === userId) {
       return true;
     }
 
-    // Profile deployment - only owner can manage
-    if (deployment.deployedTo === 'profile') {
-      return deployment.targetId === userId;
+    const membershipSnapshot = await dbAdmin
+      .collection("members")
+      .where("userId", "==", userId)
+      .where("spaceId", "==", deployment.targetId)
+      .where("status", "==", "active")
+      .limit(1)
+      .get();
+
+    if (membershipSnapshot.empty) {
+      return false;
     }
 
-    // Space deployment - check space permissions
-    if (deployment.deployedTo === 'space') {
-      const spaceDoc = await dbAdmin.collection('spaces').doc(deployment.targetId).get();
-      if (!spaceDoc.exists) {
-        return false;
-      }
-
-      const spaceData = spaceDoc.data();
-      if (!spaceData) {
-        return false;
-      }
-      
-      // Space owner can manage all deployments
-      if (spaceData.ownerId === userId) {
-        return true;
-      }
-
-      // Check member role
-      const membershipSnapshot = await dbAdmin
-        .collection('members')
-        .where('userId', '==', userId)
-        .where('spaceId', '==', deployment.targetId)
-        .where('status', '==', 'active')
-        .get();
-      
-      if (!membershipSnapshot.empty) {
-        const memberData = membershipSnapshot.docs[0].data();
-        return ['admin', 'moderator', 'builder'].includes(memberData.role);
-      }
-    }
-
-    return false;
-  } catch (error) {
-    logger.error(
-      `Error checking deployment management permissions at /api/tools/deploy/[deploymentId]`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return false;
+    const memberData = membershipSnapshot.docs[0].data();
+    return ["admin", "moderator", "builder"].includes(memberData.role);
   }
+
+  return false;
 }
 
-// Helper function to generate execution context
-function generateExecutionContext(deployment: any, userId: string): any {
-  const basePermissions = {
-    canRead: deployment.permissions.canView,
-    canWrite: deployment.permissions.canEdit,
-    canExecute: deployment.permissions.canInteract
+function buildExecutionContext(
+  deployment: FirebaseFirestore.DocumentData & { id?: string },
+  userId: string,
+) {
+  const permissions = {
+    canRead: Boolean(deployment.permissions?.canView),
+    canWrite: Boolean(deployment.permissions?.canEdit),
+    canExecute: Boolean(deployment.permissions?.canInteract),
   };
 
-  // Enhanced permissions for deployer
   if (deployment.deployedBy === userId) {
-    basePermissions.canWrite = true;
-    basePermissions.canExecute = true;
+    permissions.canWrite = true;
+    permissions.canExecute = true;
   }
 
   return {
-    deploymentId: deployment.id || '',
+    deploymentId: deployment.id ?? "",
     toolId: deployment.toolId,
     userId,
     targetType: deployment.deployedTo,
     targetId: deployment.targetId,
     surface: deployment.surface,
-    permissions: basePermissions,
-    environment: deployment.status === 'active' ? 'production' : 'preview',
+    permissions,
+    environment: deployment.status === "active" ? "production" : "preview",
     config: deployment.config || {},
-    settings: deployment.settings || {}
+    settings: deployment.settings || {},
   };
 }
+
+const UpdateDeploymentSchema = z.object({
+  config: z.record(z.any()).optional(),
+  permissions: z
+    .object({
+      canInteract: z.boolean().optional(),
+      canView: z.boolean().optional(),
+      canEdit: z.boolean().optional(),
+      allowedRoles: z.array(z.string()).optional(),
+    })
+    .optional(),
+  settings: z
+    .object({
+      showInDirectory: z.boolean().optional(),
+      allowSharing: z.boolean().optional(),
+      collectAnalytics: z.boolean().optional(),
+      notifyOnInteraction: z.boolean().optional(),
+    })
+    .optional(),
+  status: z.enum(["active", "paused", "disabled"]).optional(),
+  position: z.number().optional(),
+});
+
+type UpdateDeploymentInput = z.infer<typeof UpdateDeploymentSchema>;
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ deploymentId: string }> },
+  respond,
+) => {
+  const userId = getUserId(request);
+  const { deploymentId } = await params;
+
+  const deploymentResult = await loadDeployment(deploymentId);
+  if (!deploymentResult.ok) {
+    return respond.error(deploymentResult.message, "RESOURCE_NOT_FOUND", {
+      status: deploymentResult.status,
+    });
+  }
+
+  const { doc, data } = deploymentResult;
+
+  if (!(await canUserManageDeployment(userId, data))) {
+    return respond.error("Access denied", "FORBIDDEN", { status: 403 });
+  }
+
+  const placement = await getPlacementFromDeploymentDoc(doc);
+
+  const toolDoc = await dbAdmin.collection("tools").doc(data.toolId).get();
+  const toolData = toolDoc.exists ? toolDoc.data() : null;
+  if (toolData?.campusId && toolData.campusId !== CURRENT_CAMPUS_ID) {
+    return respond.error("Access denied", "FORBIDDEN", { status: 403 });
+  }
+
+  const deployment = { id: doc.id, ...data };
+  const executionContext = buildExecutionContext(deployment, userId);
+
+  return respond.success({
+    deployment,
+    toolData,
+    executionContext,
+    placement: placement?.snapshot?.data() ?? null,
+  });
+});
+
+export const PUT = withAuthValidationAndErrors(
+  UpdateDeploymentSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ deploymentId: string }> },
+    payload: UpdateDeploymentInput,
+    respond,
+  ) => {
+    const userId = getUserId(request);
+    const { deploymentId } = await params;
+
+    const deploymentResult = await loadDeployment(deploymentId);
+    if (!deploymentResult.ok) {
+      return respond.error(deploymentResult.message, "RESOURCE_NOT_FOUND", {
+        status: deploymentResult.status,
+      });
+    }
+
+    const { doc, data } = deploymentResult;
+
+    if (!(await canUserManageDeployment(userId, data))) {
+      return respond.error("Access denied", "FORBIDDEN", { status: 403 });
+    }
+
+    const placementContext = await getPlacementFromDeploymentDoc(doc);
+    const updatedAtIso = new Date().toISOString();
+    const updateData: Record<string, unknown> = {
+      updatedAt: updatedAtIso,
+    };
+
+    if (payload.config !== undefined) {
+      updateData.config = payload.config;
+    }
+
+    if (payload.permissions) {
+      updateData.permissions = {
+        ...data.permissions,
+        ...payload.permissions,
+      };
+    }
+
+    if (payload.settings) {
+      updateData.settings = {
+        ...data.settings,
+        ...payload.settings,
+      };
+    }
+
+    if (payload.status) {
+      updateData.status = payload.status;
+    }
+
+    if (payload.position !== undefined) {
+      updateData.position = payload.position;
+    }
+
+    await doc.ref.update(updateData);
+
+    if (placementContext) {
+      const placementUpdates: Record<string, unknown> = {
+        updatedAt: new Date(),
+      };
+      if (payload.config !== undefined) {
+        placementUpdates.config = payload.config;
+      }
+      if (payload.permissions) {
+        placementUpdates.permissions = {
+          ...placementContext.snapshot?.data()?.permissions,
+          ...payload.permissions,
+        };
+      }
+      if (payload.settings) {
+        placementUpdates.settings = {
+          ...placementContext.snapshot?.data()?.settings,
+          ...payload.settings,
+        };
+      }
+      if (payload.status) {
+        placementUpdates.status = payload.status;
+      }
+      if (payload.position !== undefined) {
+        placementUpdates.position = payload.position;
+      }
+      await placementContext.ref.update(placementUpdates);
+    }
+
+    await dbAdmin.collection("activityEvents").add({
+      userId,
+      campusId: CURRENT_CAMPUS_ID,
+      type: "tool_interaction",
+      toolId: data.toolId,
+      spaceId: data.deployedTo === "space" ? data.targetId : undefined,
+      metadata: {
+        action: "deployment_updated",
+        deploymentId,
+        changes: Object.keys(payload),
+      },
+      timestamp: updatedAtIso,
+      date: updatedAtIso.split("T")[0],
+    });
+
+    const updatedDoc = await doc.ref.get();
+    return respond.success({
+      deployment: { id: updatedDoc.id, ...updatedDoc.data() },
+      message: "Deployment updated successfully",
+    });
+  },
+);
+
+export const DELETE = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ deploymentId: string }> },
+  respond,
+) => {
+  const userId = getUserId(request);
+  const { deploymentId } = await params;
+
+  const deploymentResult = await loadDeployment(deploymentId);
+  if (!deploymentResult.ok) {
+    return respond.error(deploymentResult.message, "RESOURCE_NOT_FOUND", {
+      status: deploymentResult.status,
+    });
+  }
+
+  const { doc, data } = deploymentResult;
+
+  const ownsDeployment = data.deployedBy === userId;
+  const canManage = await canUserManageDeployment(userId, data);
+
+  if (!ownsDeployment && !canManage) {
+    return respond.error("Access denied", "FORBIDDEN", { status: 403 });
+  }
+
+  const placementContext = await getPlacementFromDeploymentDoc(doc);
+
+  await doc.ref.delete();
+  if (placementContext) {
+    await placementContext.ref.delete();
+  }
+
+  const toolDoc = await dbAdmin.collection("tools").doc(data.toolId).get();
+  if (toolDoc.exists) {
+    const toolData = toolDoc.data();
+    if (toolData) {
+      await toolDoc.ref.update({
+        deploymentCount: Math.max(0, (toolData.deploymentCount || 1) - 1),
+      });
+    }
+  }
+
+  const timestamp = new Date().toISOString();
+  await dbAdmin.collection("activityEvents").add({
+    userId,
+    campusId: CURRENT_CAMPUS_ID,
+    type: "tool_interaction",
+    toolId: data.toolId,
+    spaceId: data.deployedTo === "space" ? data.targetId : undefined,
+    metadata: {
+      action: "deployment_removed",
+      deploymentId,
+      deployedTo: data.deployedTo,
+      surface: data.surface ?? null,
+    },
+    timestamp,
+    date: timestamp.split("T")[0],
+  });
+
+  return respond.success({
+    success: true,
+    message: "Deployment removed successfully",
+  });
+});

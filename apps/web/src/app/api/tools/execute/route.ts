@@ -1,9 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
 // Use admin SDK methods since we're in an API route
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
+import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { getPlacementFromDeploymentDoc } from '@/lib/tool-placement';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import {
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { z } from "zod";
 
 // Deployment data interface
 interface DeploymentData {
@@ -78,79 +84,104 @@ interface ToolExecutionResult {
   }>;
 }
 
+const ToolExecutionSchema = z.object({
+  deploymentId: z.string(),
+  action: z.string(),
+  elementId: z.string().optional(),
+  data: z.record(z.any()).optional(),
+  context: z.record(z.any()).optional(),
+});
+
 // POST - Execute tool action
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const body = await request.json();
-    const { deploymentId, action, elementId, data, context } = body as ToolExecutionRequest;
-
-    if (!deploymentId || !action) {
-      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+export const POST = withAuthValidationAndErrors(
+  ToolExecutionSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context,
+    body,
+    respond
+  ) => {
+    try {
+      const userId = getUserId(request);
+      const { deploymentId, action, elementId, data, context } = body;
 
     // Get deployment details
     const deploymentDoc = await dbAdmin.collection('deployedTools').doc(deploymentId).get();
     if (!deploymentDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Deployment not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Deployment not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const deployment = { id: deploymentDoc.id, ...deploymentDoc.data() } as DeploymentData;
+    // Enforce campus isolation
+    if ((deployment as any)?.campusId && (deployment as any).campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
+    }
+    const placementContext = await getPlacementFromDeploymentDoc(deploymentDoc);
+    const placementData = placementContext?.snapshot?.data() as (Record<string, any> | undefined);
 
     // Check if deployment is active
-    if (deployment.status !== 'active') {
-      return NextResponse.json(ApiResponseHelper.error("Tool deployment is not active", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    const deploymentStatus = placementData?.status || deployment.status;
+    if (deploymentStatus !== 'active') {
+        return respond.error("Tool deployment is not active", "FORBIDDEN", { status: 403 });
     }
 
     // Check user permissions
-    if (!await canUserExecuteTool(user.uid, deployment)) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (!await canUserExecuteTool(userId, deployment, placementData)) {
+        return respond.error("Insufficient permissions", "FORBIDDEN", { status: 403 });
     }
 
     // Get tool details
     if (!deployment.toolId) {
-      return NextResponse.json(ApiResponseHelper.error("Invalid deployment: missing toolId", "INVALID_DATA"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("Invalid deployment: missing toolId", "INVALID_DATA", { status: 400 });
     }
     const toolDoc = await dbAdmin.collection('tools').doc(deployment.toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const tool = toolDoc.data() as ToolData;
+    if ((tool as any)?.campusId && (tool as any).campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
+    }
     if (!tool) {
-      return NextResponse.json(ApiResponseHelper.error("Tool data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool data not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     // Execute tool action
     const executionResult = await executeToolAction({
       deployment,
       tool,
-      user: { uid: user.uid },
+        user: { uid: userId },
       action,
       elementId,
       data: data || {},
-      context: context || {}
+        context: context || {},
+        placementContext
     });
 
     // Update deployment usage stats
+    const nowIso = new Date().toISOString();
     await dbAdmin.collection('deployedTools').doc(deploymentId).update({
       usageCount: (deployment.usageCount || 0) + 1,
-      lastUsed: new Date().toISOString()
+      lastUsed: nowIso
     });
+
+    if (placementContext) {
+      await placementContext.ref.update({
+        usageCount: admin.firestore.FieldValue.increment(1),
+        lastUsedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
 
     // Update tool usage stats
     await dbAdmin.collection('tools').doc(deployment.toolId).update({
       useCount: (tool.useCount || 0) + 1,
-      lastUsedAt: new Date().toISOString()
+      lastUsedAt: nowIso
     });
 
     // Log activity event
     await dbAdmin.collection('activityEvents').add({
-      userId: user.uid,
+        userId,
       type: 'tool_interaction',
       toolId: deployment.toolId,
       spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
@@ -163,12 +194,13 @@ export async function POST(request: NextRequest) {
         surface: deployment.surface
       },
       timestamp: new Date().toISOString(),
-      date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        campusId: CURRENT_CAMPUS_ID,
     });
 
     // Generate feed content if requested and successful
     if (executionResult.success && executionResult.feedContent) {
-      await generateFeedContent(deployment, tool, user.uid, executionResult.feedContent);
+      await generateFeedContent(deployment, tool, userId, executionResult.feedContent);
     }
 
     // Send notifications if any
@@ -176,7 +208,7 @@ export async function POST(request: NextRequest) {
       await processNotifications(deployment, executionResult.notifications);
     }
 
-    return NextResponse.json({
+      return respond.success({
       result: executionResult,
       deploymentId,
       timestamp: new Date().toISOString()
@@ -186,37 +218,45 @@ export async function POST(request: NextRequest) {
       `Error executing tool at /api/tools/execute`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to execute tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      return respond.error("Failed to execute tool", "INTERNAL_ERROR", { status: 500 });
   }
-}
+  }
+);
 
 // Helper function to check tool execution permissions
-async function canUserExecuteTool(userId: string, deployment: DeploymentData): Promise<boolean> {
+async function canUserExecuteTool(
+  userId: string,
+  deployment: DeploymentData,
+  placement?: Record<string, any>
+): Promise<boolean> {
   try {
-    // Check deployment permissions
-    if (!deployment.permissions?.canInteract) {
+    const permissionConfig = placement?.permissions || deployment.permissions;
+    if (permissionConfig?.canInteract === false) {
       return false;
     }
 
-    // Profile deployments - only owner can execute
-    if (deployment.deployedTo === 'profile') {
-      return deployment.targetId === userId;
+    const targetType = placement?.targetType || deployment.deployedTo;
+    const targetId = placement?.targetId || deployment.targetId;
+
+    if (targetType === 'profile') {
+      return targetId === userId;
     }
 
-    // Space deployments - check membership and role
-    if (deployment.deployedTo === 'space') {
+    if (targetType === 'space') {
       const membershipQuery = dbAdmin.collection('members')
         .where('userId', '==', userId)
-        .where('spaceId', '==', deployment.targetId)
-        .where('status', '==', 'active');
+        .where('spaceId', '==', targetId)
+        .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
       const membershipSnapshot = await membershipQuery.get();
-      
+
       if (membershipSnapshot.empty) {
         return false;
       }
 
       const memberData = membershipSnapshot.docs[0].data() as { role: string; [key: string]: unknown };
-      return deployment.permissions?.allowedRoles?.includes(memberData.role) || false;
+      const allowedRoles = permissionConfig?.allowedRoles || deployment.permissions?.allowedRoles;
+      return allowedRoles?.includes(memberData.role) || false;
     }
 
     return false;
@@ -238,14 +278,26 @@ async function executeToolAction(params: {
   elementId?: string;
   data: Record<string, unknown>;
   context: Record<string, unknown>;
+  placementContext?: Awaited<ReturnType<typeof getPlacementFromDeploymentDoc>> | null;
 }): Promise<ToolExecutionResult> {
-  const { deployment, tool, user, action, elementId, data } = params;
+  const { deployment, tool, user, action, elementId, data, placementContext } = params;
 
   try {
     // Get or create tool state
     const stateId = `${deployment.id}_${user.uid}`;
-    const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
-    const currentState = stateDoc.exists ? (stateDoc.data() as { state?: Record<string, unknown> })?.state || {} : {};
+    let currentState: Record<string, unknown> = {};
+
+    let placementStateRef: admin.firestore.DocumentReference<admin.firestore.DocumentData> | null = null;
+    if (placementContext) {
+      placementStateRef = placementContext.ref.collection('state').doc(user.uid);
+      const stateSnapshot = await placementStateRef.get();
+      if (stateSnapshot.exists) {
+        currentState = (stateSnapshot.data()?.state as Record<string, unknown>) || {};
+      }
+    } else {
+      const stateDoc = await dbAdmin.collection('toolStates').doc(stateId).get();
+      currentState = stateDoc.exists ? (stateDoc.data() as { state?: Record<string, unknown> })?.state || {} : {};
+    }
 
     // Find the target element if elementId is provided
     let targetElement = null;
@@ -300,13 +352,45 @@ async function executeToolAction(params: {
 
     // Save updated state if action was successful
     if (result.success && result.state) {
-      await dbAdmin.collection('toolStates').doc(stateId).set({
+      const statePayload = {
         deploymentId: deployment.id,
         toolId: tool.id || deployment.toolId,
         userId: user.uid,
         state: result.state,
-        updatedAt: new Date().toISOString()
-      });
+        updatedAt: new Date().toISOString(),
+        campusId: CURRENT_CAMPUS_ID,
+      };
+
+      if (placementStateRef) {
+        await placementStateRef.set(statePayload, { merge: true });
+      }
+
+      await dbAdmin.collection('toolStates').doc(stateId).set(statePayload);
+    }
+
+    if (result.success && placementContext && action.startsWith('submit')) {
+      const submissionRecord = {
+        userId: user.uid,
+        actionName: action,
+        elementId: elementId || null,
+        payload: data || {},
+        response: result.data || {},
+        metadata: {},
+        submittedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+
+      await placementContext.ref
+        .collection('responses')
+        .doc(user.uid)
+        .set(submissionRecord, { merge: true });
+
+      await placementContext.ref.set(
+        {
+          responseCount: admin.firestore.FieldValue.increment(1),
+          lastResponseAt: admin.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
     }
 
     return result;
@@ -546,6 +630,7 @@ async function generateFeedContent(deployment: DeploymentData, tool: ToolData, u
       await dbAdmin.collection('posts').add({
         authorId: userId,
         spaceId: deployment.targetId,
+        campusId: CURRENT_CAMPUS_ID,
         type: 'tool_generated',
         toolId: deployment.toolId,
         content: feedContent.content,
@@ -580,6 +665,7 @@ async function processNotifications(deployment: DeploymentData, notifications: T
         deploymentId: deployment.id,
         toolId: deployment.toolId,
         spaceId: deployment.deployedTo === 'space' ? deployment.targetId : undefined,
+        campusId: CURRENT_CAMPUS_ID,
         createdAt: new Date().toISOString(),
         read: false
       });

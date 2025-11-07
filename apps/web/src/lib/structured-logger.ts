@@ -19,7 +19,7 @@ export interface LogContext {
   spaceId?: string;
   action?: string;
   metadata?: Record<string, unknown>;
-  error?: Error | AppError;
+  error?: unknown;
   user?: Partial<HiveUser>;
   space?: Partial<Space>;
   post?: Partial<Post>;
@@ -77,12 +77,12 @@ class StructuredLogger {
 
     // In development, output to console with color coding
     if (this.isDevelopment) {
-      const level = logObject.level;
+      const level = String((logObject as any).level ?? 'INFO');
       const color = this.getConsoleColor(level);
 
       // eslint-disable-next-line no-console
       console.log(
-        `%c[${level}]%c ${logObject.message}`,
+        `%c[${level}]%c ${(logObject as any).message}`,
         `color: ${color}; font-weight: bold`,
         'color: inherit',
         logObject
@@ -135,35 +135,45 @@ class StructuredLogger {
     }
   }
 
-  error(message: string, error?: Error, context?: LogContext): void {
+  error(message: string, errorOrContext?: Error | LogContext | string, context?: LogContext): void {
     if (this.shouldLog(LogLevel.ERROR)) {
+      const err = errorOrContext instanceof Error ? errorOrContext : undefined;
+      let ctx = (errorOrContext && !(errorOrContext instanceof Error)) ? errorOrContext as LogContext : context;
+      if (typeof errorOrContext === 'string') {
+        ctx = { ...(ctx || {}), message: errorOrContext };
+      }
       const errorContext = {
-        ...context,
-        error: error ? {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
+        ...ctx,
+        error: err ? {
+          name: err.name,
+          message: err.message,
+          stack: err.stack,
         } : undefined,
       };
       this.output(this.formatMessage(LogLevel.ERROR, message, errorContext));
     }
   }
 
-  critical(message: string, error?: Error, context?: LogContext): void {
+  critical(message: string, errorOrContext?: Error | LogContext | string, context?: LogContext): void {
     if (this.shouldLog(LogLevel.CRITICAL)) {
+      const err = errorOrContext instanceof Error ? errorOrContext : undefined;
+      let ctx = (errorOrContext && !(errorOrContext instanceof Error)) ? errorOrContext as LogContext : context;
+      if (typeof errorOrContext === 'string') {
+        ctx = { ...(ctx || {}), message: errorOrContext };
+      }
       const errorContext = {
-        ...context,
-        error: error ? {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
+        ...ctx,
+        error: err ? {
+          name: err.name,
+          message: err.message,
+          stack: err.stack,
         } : undefined,
       };
       this.output(this.formatMessage(LogLevel.CRITICAL, message, errorContext));
 
       // Critical errors should also trigger alerts in production
       if (!this.isDevelopment) {
-        this.triggerAlert(message, error);
+        this.triggerAlert(message, err);
       }
     }
   }
@@ -254,11 +264,11 @@ export const logInfo = (message: string, context?: LogContext) =>
 export const logWarn = (message: string, context?: LogContext) =>
   logger.warn(message, context);
 
-export const logError = (message: string, error?: Error, context?: LogContext) =>
-  logger.error(message, error, context);
+export const logError = (message: string, errorOrContext?: Error | LogContext, context?: LogContext) =>
+  logger.error(message, errorOrContext as any, context);
 
-export const logCritical = (message: string, error?: Error, context?: LogContext) =>
-  logger.critical(message, error, context);
+export const logCritical = (message: string, errorOrContext?: Error | LogContext, context?: LogContext) =>
+  logger.critical(message, errorOrContext as any, context);
 
 export const logEvent = (eventName: string, properties?: Record<string, any>) =>
   logger.logEvent(eventName, properties);
@@ -274,38 +284,39 @@ export const logApiRequest = (
 // Security event logging
 export const logSecurityEvent = (
   eventType: string,
-  message: string,
-  context?: LogContext & {
+  messageOrContext: string | (LogContext & {
     severity?: 'low' | 'medium' | 'high' | 'critical';
     ipAddress?: string;
     userAgent?: string;
     endpoint?: string;
-  }
+  })
 ) => {
+  const ctx = typeof messageOrContext === 'string' ? { message: messageOrContext } : messageOrContext;
   const securityContext = {
-    ...context,
+    ...ctx,
     action: `security_${eventType}`,
     metadata: {
-      ...context?.metadata,
+      ...ctx?.metadata,
       securityEvent: true,
       eventType,
-      severity: context?.severity || 'medium',
+      severity: (ctx as any)?.severity || 'medium',
     },
   };
 
-  const level = context?.severity === 'critical' ? LogLevel.CRITICAL :
-               context?.severity === 'high' ? LogLevel.ERROR :
-               context?.severity === 'medium' ? LogLevel.WARN :
+  const level = (ctx as any)?.severity === 'critical' ? LogLevel.CRITICAL :
+               (ctx as any)?.severity === 'high' ? LogLevel.ERROR :
+               (ctx as any)?.severity === 'medium' ? LogLevel.WARN :
                LogLevel.INFO;
+  const messageText = typeof messageOrContext === 'string' ? messageOrContext : (ctx as any)?.message || eventType;
 
   if (level === LogLevel.CRITICAL) {
-    logger.critical(`Security Event: ${message}`, undefined, securityContext);
+    logger.critical(`Security Event: ${messageText}`, undefined, securityContext);
   } else if (level === LogLevel.ERROR) {
-    logger.error(`Security Event: ${message}`, undefined, securityContext);
+    logger.error(`Security Event: ${messageText}`, undefined, securityContext);
   } else if (level === LogLevel.WARN) {
-    logger.warn(`Security Event: ${message}`, securityContext);
+    logger.warn(`Security Event: ${messageText}`, securityContext);
   } else {
-    logger.info(`Security Event: ${message}`, securityContext);
+    logger.info(`Security Event: ${messageText}`, securityContext);
   }
 };
 
@@ -314,8 +325,8 @@ export const createRequestLogger = (requestId: string, userId?: string) => {
   return {
     log: (message: string, context?: LogContext) =>
       logger.info(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
-    error: (message: string, error?: Error, context?: LogContext) =>
-      logger.error(message, error, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
+    error: (message: string, errorOrContext?: Error | LogContext, context?: LogContext) =>
+      logger.error(message, errorOrContext as any, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
     warn: (message: string, context?: LogContext) =>
       logger.warn(message, { ...context, metadata: { ...context?.metadata, requestId }, userId }),
     debug: (message: string, context?: LogContext) =>

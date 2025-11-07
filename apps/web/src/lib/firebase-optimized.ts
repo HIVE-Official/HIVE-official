@@ -1,3 +1,4 @@
+import 'client-only';
 /**
  * Optimized Firebase imports to reduce bundle size
  * Only import what we actually use

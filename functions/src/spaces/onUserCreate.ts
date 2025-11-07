@@ -19,7 +19,7 @@ interface NewSpaceData {
   name: string;
   name_lowercase: string;
   description: string;
-  memberCount: number;
+  metrics: { memberCount: number; activeMembers?: number };
   schoolId: string;
   type: SpaceType;
   tags: SpaceTag[];
@@ -54,7 +54,7 @@ const createSpaceIfNeeded = async (
       type === "major"
         ? `Connect with fellow ${name} students, share resources, and collaborate on projects.`
         : `Community space for ${name} residents.`,
-    memberCount: 0,
+    metrics: { memberCount: 0, activeMembers: 0 },
     schoolId,
     type,
     tags: [
@@ -103,7 +103,8 @@ const addUserToSpace = (
   });
 
   transaction.update(spaceRef, {
-    memberCount: firestore().FieldValue.increment(1),
+    'metrics.memberCount': firestore().FieldValue.increment(1),
+    'metrics.activeMembers': firestore().FieldValue.increment(1),
   });
 };
 

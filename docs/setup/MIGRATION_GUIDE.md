@@ -25,27 +25,20 @@ We've consolidated HIVE's design system to eliminate component duplication and p
 
 ### **✅ IMMEDIATE MIGRATION (Primary Components)**
 
-| Old Import | New Import | Notes |
-|------------|------------|-------|
-| `import { HiveButton } from '@hive/ui'` | `import { Button } from '@hive/ui'` | Now uses atomic enhanced with zero hardcoded values |
-| `import { HiveInput } from '@hive/ui'` | `import { Input } from '@hive/ui'` | Enhanced with proper semantic tokens |
-| `import { HiveCard } from '@hive/ui'` | `import { Card } from '@hive/ui'` | Atomic molecule implementation |
-| `import { HiveSelect } from '@hive/ui'` | `import { Select } from '@hive/ui'` | Enhanced with CVA variants |
-| `import { HiveTextarea } from '@hive/ui'` | `import { Textarea } from '@hive/ui'` | Zero hardcoded values |
-| `import { HiveSwitch } from '@hive/ui'` | `import { Switch } from '@hive/ui'` | Perfect token usage |
+Replace the legacy HIVE-prefixed atoms with the canonical atomic exports below:
 
-### **⚠️ DEPRECATED (Available but with warnings)**
+| Replace legacy export | With new atomic export | Notes |
+|-----------------------|------------------------|-------|
+| button (legacy HIVE version) | `import { Button } from '@hive/ui'` | Includes brand/gradient variants and loading states |
+| input (legacy HIVE version) | `import { Input } from '@hive/ui'` | Supports labels, helper text, icons, clear actions |
+| card (legacy HIVE version) | `import { Card } from '@hive/ui'` | Atomic molecule implementation |
+| select (legacy HIVE version) | `import { Select } from '@hive/ui'` | Enhanced CVA variants with semantic tokens |
+| textarea (legacy HIVE version) | `import { Textarea } from '@hive/ui'` | Adds auto-resize and helper messaging |
+| switch (legacy HIVE version) | `import { Switch } from '@hive/ui'` | Token-aligned interactions |
 
-These still work but will show deprecation warnings:
+### **⚠️ REMOVED DUPLICATES**
 
-```typescript
-// DEPRECATED - Will be removed
-import { HiveButton } from '@hive/ui';  
-import { Button } from '@hive/ui';  // UI version
-
-// USE INSTEAD
-import { Button } from '@hive/ui';  // Atomic enhanced version
-```
+All HIVE-prefixed duplicates have been deleted. If you still spot one, swap it for the atomic counterpart listed above.
 
 ### **🏗️ SPECIALIZED COMPONENTS (Keep Using)**
 
@@ -68,17 +61,6 @@ import {
 
 ### **Step 1: Update Component Imports**
 
-**Before:**
-```typescript
-import { 
-  HiveButton,
-  HiveInput, 
-  HiveCard,
-  Button,  // UI version
-  Input    // UI version
-} from '@hive/ui';
-```
-
 **After:**
 ```typescript
 import { 
@@ -92,32 +74,20 @@ import {
 
 Most props remain the same, but some have been standardized:
 
-**Before:**
-```typescript
-<HiveButton variant="primary" size="lg">
-  Click me
-</HiveButton>
-
-<HiveInput placeholder="Enter text" />
-```
-
 **After:**
 ```typescript
-<Button variant="primary" size="lg">
+<Button variant="primary" size="lg" leftIcon={<Icon />} disabled={isLoading}>
   Click me
 </Button>
 
-<Input placeholder="Enter text" />
+<Input label="Email" placeholder="name@campus.edu" helperText="We'll never share your address" />
 ```
 
 ### **Step 3: Remove Deprecated Imports**
 
 Check for any remaining deprecated imports and replace them:
 
-```bash
-# Search for deprecated imports
-grep -r "HiveButton\|HiveInput\|HiveCard" src/
-```
+Use a targeted search (e.g. `rg "Hive"` inside your routes/components) and replace any lingering HIVE-prefixed atoms with the canonical versions.
 
 ---
 
@@ -188,12 +158,9 @@ import { ProfileSystem, Navigation } from '@hive/ui';
 Most props remain the same, but some standardizations:
 
 ```typescript
-// Before (various naming)
-<HiveButton color="primary" />
+// Standardized API across the app
 <Button variant="primary" />
-
-// After (standardized)
-<Button variant="primary" />
+<Button variant="brand" loading leftIcon={<Sparkles />} />
 ```
 
 ---

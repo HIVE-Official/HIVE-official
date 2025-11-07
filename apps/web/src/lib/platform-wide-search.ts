@@ -269,12 +269,10 @@ export class HivePlatformSearchEngine {
    */
   private async searchSpaces(query: SearchQuery): Promise<SearchResult[]> {
     try {
-      const response = await fetch('/api/spaces/search', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch('/api/spaces/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: query.query,
           filters: query.filters,
@@ -298,12 +296,10 @@ export class HivePlatformSearchEngine {
    */
   private async searchTools(query: SearchQuery): Promise<SearchResult[]> {
     try {
-      const response = await fetch('/api/tools/search', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch('/api/tools/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: query.query,
           filters: query.filters,
@@ -327,12 +323,10 @@ export class HivePlatformSearchEngine {
    */
   private async searchFeed(query: SearchQuery): Promise<SearchResult[]> {
     try {
-      const response = await fetch('/api/feed/search', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const response = await secureApiFetch('/api/feed/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await this.getAuthToken()}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: query.query,
           filters: query.filters,

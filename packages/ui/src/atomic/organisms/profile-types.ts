@@ -1,24 +1,19 @@
-/**
- * Profile UI Types
- * Simplified interfaces for UI components that adapt from ProfileSystem
- */
+import type { ProfileSystem } from "@hive/core/types/profile-system";
 
-import type { ProfileSystem } from '@hive/core';
+export interface ProfileWidgetPrivacy {
+  level: "public" | "connections" | "private" | "ghost" | string;
+}
 
-/**
- * Simplified profile for UI components
- * Adapts the complex ProfileSystem to simpler UI needs
- */
 export interface UIProfile {
   identity: {
     id: string;
     fullName: string;
-    email: string;
-    avatarUrl?: string;
+    email?: string;
+    avatarUrl?: string | null;
     bio?: string;
   };
   academic: {
-    campusId: 'ub-buffalo';
+    campusId: string;
     major?: string;
     academicYear?: string;
     graduationYear?: number;
@@ -33,15 +28,15 @@ export interface UIProfile {
   };
   social?: {
     connections?: {
-      connectionIds: string[];
-      friendIds: string[];
+      connectionIds?: string[];
+      friendIds?: string[];
       strength?: Record<string, number>;
     };
     mutualSpaces?: string[];
   };
   privacy?: {
-    level: string;
-    widgets?: Record<string, { level: string }>;
+    level?: string;
+    widgets?: Record<string, ProfileWidgetPrivacy>;
   };
   verification?: {
     facultyVerified?: boolean;
@@ -57,75 +52,77 @@ export interface UIProfile {
     updatedAt?: Date;
     lastActiveAt?: Date;
   };
-  widgets?: Record<string, { level: string }>;
+  widgets?: Record<string, ProfileWidgetPrivacy>;
 }
 
-/**
- * Convert ProfileSystem to UIProfile
- */
 export function specProfileToUIProfile(profile: ProfileSystem): UIProfile {
-  // Extract first photo URL from carousel if available
   const avatarUrl = profile.identity.photoCarousel?.photos?.[0]?.url;
+  const majors = profile.identity.academic.majors?.join(", ") || undefined;
+  const createdAt = profile.createdAt instanceof Date ? profile.createdAt : new Date(profile.createdAt as any);
+  const updatedAt = profile.updatedAt instanceof Date ? profile.updatedAt : new Date(profile.updatedAt as any);
+  const personalData =
+    (profile as unknown as {
+      personal?: {
+        bio?: string;
+        interests?: string[];
+        currentVibe?: string;
+        lookingFor?: string[];
+      };
+    }).personal ?? {};
 
-  // Combine major arrays into single string
-  const majorString = profile.identity.academic.majors?.join(', ') || '';
+  const widgetPrivacy: Record<string, ProfileWidgetPrivacy> = {
+    myActivity: { level: profile.privacy.availabilityBroadcast.campus ? "public" : "private" },
+    mySpaces: { level: profile.privacy.discoveryParticipation ? "public" : "private" },
+    myConnections: { level: profile.privacy.visibilityLevel },
+  };
 
   return {
     identity: {
       id: profile.userId,
       fullName: profile.identity.academic.name,
-      email: `${profile.handle}@buffalo.edu`, // Construct email from handle
-      avatarUrl: avatarUrl,
-      bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined
+      email: profile.handle ? `${profile.handle}@buffalo.edu` : undefined,
+      avatarUrl,
+      bio: personalData.bio,
     },
     academic: {
-      campusId: 'ub-buffalo',
-      major: majorString,
+      campusId: profile.campusId,
+      major: majors,
       academicYear: profile.identity.academic.year,
       graduationYear: profile.identity.academic.graduationYear,
-      housing: undefined, // Not available in ProfileSystem
-      pronouns: profile.identity.academic.pronouns
+      pronouns: profile.identity.academic.pronouns,
     },
     personal: {
-      bio: profile.presence.vibe !== '😮‍💨 Surviving' ? profile.presence.vibe : undefined,
-      interests: [], // Not directly available in ProfileSystem
-      currentVibe: profile.presence.vibe,
-      lookingFor: []
+      bio: personalData.bio,
+      interests: personalData.interests ?? [],
+      currentVibe: profile.presence?.currentActivity?.context ?? profile.presence?.vibe,
+      lookingFor: personalData.lookingFor ?? [],
     },
     social: {
       connections: {
-        connectionIds: profile.connections.connections?.map(c => c.userId) || [],
-        friendIds: profile.connections.friends?.map(f => f.userId) || [],
-        strength: {}
+        connectionIds: profile.connections.connections?.map((connection) => connection.userId) ?? [],
+        friendIds: profile.connections.friends?.map((friend) => friend.userId) ?? [],
+        strength: {},
       },
-      mutualSpaces: [] // Would need to be calculated
+      mutualSpaces: [],
     },
     privacy: {
       level: profile.privacy.visibilityLevel,
-      widgets: {
-        myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-        mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-        myConnections: { level: profile.privacy.visibilityLevel }
-      }
+      widgets: widgetPrivacy,
     },
     verification: {
-      facultyVerified: false, // Not available in ProfileSystem
-      emailVerified: true, // Assumed true for ProfileSystem
+      facultyVerified: false,
+      emailVerified: true,
       profileVerified: profile.isSetupComplete,
-      accountStatus: profile.isSetupComplete ? 'active' : 'incomplete',
-      userType: 'student', // Default for ProfileSystem
-      onboardingCompleted: profile.isSetupComplete
+      accountStatus: profile.isSetupComplete ? "active" : "incomplete",
+      userType: "student",
+      onboardingCompleted: profile.isSetupComplete,
     },
     metadata: {
       completionPercentage: profile.completeness,
-      createdAt: profile.createdAt instanceof Date ? profile.createdAt : profile.createdAt.toDate(),
-      updatedAt: profile.updatedAt instanceof Date ? profile.updatedAt : profile.updatedAt.toDate(),
-      lastActiveAt: profile.presence.lastActive
+      createdAt,
+      updatedAt,
+      lastActiveAt: profile.presence?.lastActive,
     },
-    widgets: {
-      myActivity: { level: profile.privacy.availabilityBroadcast.campus ? 'public' : 'private' },
-      mySpaces: { level: profile.privacy.discoveryParticipation ? 'public' : 'private' },
-      myConnections: { level: profile.privacy.visibilityLevel }
-    }
+    widgets: widgetPrivacy,
   };
 }

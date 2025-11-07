@@ -2,14 +2,14 @@
   "name": "@hive/ui",
   "version": "0.0.0",
   "private": true,
-  "main": "./dist/ui/index.js",
-  "types": "./dist/ui/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.js",
-      "default": "./dist/ui/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./lib/utils": {
       "types": "./dist/src/lib/utils.d.ts",
@@ -23,6 +23,24 @@
       "require": "./dist/src/components/framer-motion-proxy.js",
       "default": "./dist/src/components/framer-motion-proxy.js"
     },
+    "./components/hivelab/visual-tool-composer": {
+      "types": "./dist/src/components/hivelab/visual-tool-composer.d.ts",
+      "import": "./dist/src/components/hivelab/visual-tool-composer.js",
+      "require": "./dist/src/components/hivelab/visual-tool-composer.js",
+      "default": "./dist/src/components/hivelab/visual-tool-composer.js"
+    },
+    "./components/hivelab/element-renderers": {
+      "types": "./dist/src/components/hivelab/element-renderers.d.ts",
+      "import": "./dist/src/components/hivelab/element-renderers.js",
+      "require": "./dist/src/components/hivelab/element-renderers.js",
+      "default": "./dist/src/components/hivelab/element-renderers.js"
+    },
+    "./lib/hivelab/element-system": {
+      "types": "./dist/src/lib/hivelab/element-system.d.ts",
+      "import": "./dist/src/lib/hivelab/element-system.js",
+      "require": "./dist/src/lib/hivelab/element-system.js",
+      "default": "./dist/src/lib/hivelab/element-system.js"
+    },
     "./styles.css": {
       "style": "./dist/styles.css",
       "default": "./dist/styles.css"
@@ -31,12 +49,18 @@
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
   "scripts": {
-    "dev": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
-    "build": "npx tsc && cp ./src/styles.css ./dist/styles.css && node fix-imports.cjs",
-    "build-storybook": "node ../../node_modules/storybook/bin/index.cjs build --disable-telemetry",
-    "storybook": "node ../../node_modules/storybook/bin/index.cjs dev -p 6006",
-    "lint": "npx eslint . --max-warnings 15",
+    "dev": "node scripts/prepare-storybook.cjs && storybook dev -p 6006",
+    "build": "npx tsc -p tsconfig.build.json && npm run build:css && node fix-imports.cjs",
+    "build:css": "node scripts/build-css.cjs",
+    "build-storybook": "node scripts/prepare-storybook.cjs && storybook build --disable-telemetry",
+    "storybook": "node scripts/prepare-storybook.cjs && storybook dev -p 6006",
+    "storybook-6008": "node scripts/prepare-storybook.cjs && storybook dev -p 6008",
+    "lint": "npx eslint . --max-warnings 0",
+    "typecheck:strict": "npx tsc -p tsconfig.strict.json --noEmit",
     "clean": "rm -rf dist",
     "audit:components": "tsx src/scripts/component-audit.ts",
     "audit:watch": "tsx --watch src/scripts/component-audit.ts",
@@ -44,7 +68,7 @@
     "story:validate": "tsx src/scripts/story-validator.ts",
     "story:comprehensive": "npm run story:generate && npm run storybook",
     "visual:test": "npm run build-storybook && npx chromatic --project-token=<your-project-token>",
-    "quality:check": "npm run audit:components && npm run story:validate && npm run lint"
+    "quality:check": "npm run audit:components && npm run story:validate && npm run lint && npm run typecheck:strict"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -62,7 +86,6 @@
     "@storybook/react": "8.4.7",
     "@storybook/react-vite": "8.4.7",
     "@storybook/test": "8.4.7",
-    "@tailwindcss/postcss": "^4.1.13",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20.19.0",
@@ -72,7 +95,7 @@
     "eslint": "^9.28.0",
     "eslint-plugin-storybook": "^0.11.1",
     "storybook": "8.4.7",
-    "tailwindcss": "^4.0.0",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.18.2",
     "vite": "^5.4.19"
@@ -105,6 +128,7 @@
     "class-variance-authority": "^0.7.0",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "geist": "^1.5.1",
     "framer-motion": "^11.11.17",
     "lodash": "^4.17.21",
     "lucide-react": "^0.411.0",

@@ -1,10 +1,8 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react()],
   test: {
     globals: true,
     environment: 'jsdom',
@@ -22,6 +20,7 @@ export default defineConfig({
       '@hive/utilities': path.resolve(__dirname, '../../packages/utilities/src'),
       '@hive/validation': path.resolve(__dirname, '../../packages/validation/src'),
       '@hive/auth-logic': path.resolve(__dirname, '../../packages/auth-logic/src'),
+      'server-only': path.resolve(__dirname, './src/test/utils/server-only.ts'),
     },
   },
 }); 

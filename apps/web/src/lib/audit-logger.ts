@@ -332,3 +332,4 @@ export async function getAuditLogs(
   const snapshot = await query.get();
   return snapshot.docs.map(doc => doc.data() as AuditLogEntry);
 }
+import 'server-only';

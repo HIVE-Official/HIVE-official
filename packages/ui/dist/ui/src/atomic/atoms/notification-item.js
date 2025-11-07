@@ -13,9 +13,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { Clock, Users, Heart, Trash2, ExternalLink, AlertCircle, Sparkles, MessageCircle, Trophy, Eye } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
-const MotionDiv = React.forwardRef(({ animate, transition, initial, whileHover, whileTap, layoutId, className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
+const MotionDiv = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
 MotionDiv.displayName = 'MotionDiv';
-const MotionButton = React.forwardRef(({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (_jsx("button", { ref: ref, className: className, ...props, children: children })));
+const MotionButton = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("button", { ref: ref, className: className, ...props, children: children })));
 MotionButton.displayName = 'MotionButton';
 // HIVE Easing
 const HIVE_EASING = {
@@ -24,7 +24,6 @@ const HIVE_EASING = {
     silk: [0.16, 1, 0.3, 1]
 };
 export const NotificationItem = ({ notification, isProcessing = false, onMarkAsRead, onDelete, onNavigate, index = 0, className, }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const [showActions, setShowActions] = useState(false);
     // Get notification icon based on type and category
     const getNotificationIcon = () => {
@@ -46,13 +45,13 @@ export const NotificationItem = ({ notification, isProcessing = false, onMarkAsR
     };
     // Get behavioral messaging
     const getBehavioralMessage = () => {
-        const { category, type, metadata } = notification;
+        const { category, metadata } = notification;
         // "Someone needs you" framing
         if (category === 'someone_needs_you') {
             return {
                 prefix: "🆘",
                 emphasis: "needs your help",
-                context: metadata?.urgencyLevel === 'immediate' ? "Right now" : "Today"
+                context: metadata?.['urgencyLevel'] === 'immediate' ? "Right now" : "Today"
             };
         }
         // Social proof framing
@@ -60,7 +59,7 @@ export const NotificationItem = ({ notification, isProcessing = false, onMarkAsR
             return {
                 prefix: "🏆",
                 emphasis: "You're recognized!",
-                context: metadata?.exclusivityText || "Top contributor"
+                context: metadata?.['exclusivityText'] || "Top contributor"
             };
         }
         // Insider knowledge framing
@@ -105,13 +104,7 @@ export const NotificationItem = ({ notification, isProcessing = false, onMarkAsR
             duration: 0.3,
             delay: index * 0.05,
             ease: HIVE_EASING.silk
-        }, onMouseEnter: () => {
-            setIsHovered(true);
-            setShowActions(true);
-        }, onMouseLeave: () => {
-            setIsHovered(false);
-            setShowActions(false);
-        }, onClick: handleClick, whileHover: { x: 2 }, children: [!notification.isRead && (_jsx(MotionDiv, { className: "absolute left-0 top-4 w-2 h-2 bg-hive-brand-primary rounded-full", animate: { scale: [1, 1.2, 1] }, transition: { duration: 2, repeat: Infinity, ease: "easeInOut" } })), _jsxs("div", { className: "flex gap-3", children: [_jsx("div", { className: "flex-shrink-0", children: notification.metadata?.avatarUrl ? (_jsx("img", { src: notification.metadata.avatarUrl, alt: notification.metadata.senderName || 'User', className: "w-8 h-8 rounded-full border border-hive-border-default" })) : (_jsx("div", { className: "w-8 h-8 rounded-full bg-gradient-to-br from-hive-background-tertiary to-hive-background-secondary border border-hive-border-default flex items-center justify-center", children: getNotificationIcon() })) }), _jsxs("div", { className: "flex-1 min-w-0", children: [behavioralMessage && (_jsxs("div", { className: "flex items-center gap-2 mb-1", children: [_jsx("span", { className: "text-xs", children: behavioralMessage.prefix }), _jsx("span", { className: "text-xs text-hive-brand-primary font-medium", children: behavioralMessage.emphasis }), _jsx("span", { className: "text-xs text-hive-text-tertiary", children: behavioralMessage.context })] })), _jsx("h4", { className: cn('font-medium text-sm mb-1 font-sans', notification.isRead ? 'text-hive-text-secondary' : 'text-hive-text-primary'), children: notification.title }), _jsx("p", { className: cn('text-sm mb-2 font-sans line-clamp-2', notification.isRead ? 'text-hive-text-tertiary' : 'text-hive-text-secondary'), children: notification.message }), notification.socialProofText && (_jsxs("p", { className: "text-xs text-hive-brand-secondary mb-2 font-sans", children: ["\uD83D\uDCAA ", notification.socialProofText] })), notification.exclusivityText && (_jsxs("p", { className: "text-xs text-hive-brand-primary mb-2 font-sans", children: ["\u2B50 ", notification.exclusivityText] })), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2 text-xs text-hive-text-tertiary font-sans", children: [_jsx(Clock, { className: "w-3 h-3" }), _jsx("span", { children: getTimeDisplay() }), notification.priority === 'urgent' && (_jsx("span", { className: "px-1.5 py-0.5 bg-hive-status-error/20 text-hive-status-error rounded text-xs font-medium", children: "Urgent" })), notification.priority === 'high' && (_jsx("span", { className: "px-1.5 py-0.5 bg-hive-brand-primary/20 text-hive-brand-primary rounded text-xs font-medium", children: "High" }))] }), notification.actionText && notification.actionUrl && (_jsxs(MotionButton, { className: "text-xs text-hive-brand-primary hover:text-hive-brand-secondary font-medium flex items-center gap-1 transition-colors", onClick: (e) => {
+        }, onMouseEnter: () => setShowActions(true), onMouseLeave: () => setShowActions(false), onClick: handleClick, whileHover: { x: 2 }, children: [!notification.isRead && (_jsx(MotionDiv, { className: "absolute left-0 top-4 w-2 h-2 bg-hive-brand-primary rounded-full", animate: { scale: [1, 1.2, 1] }, transition: { duration: 2, repeat: Infinity, ease: "easeInOut" } })), _jsxs("div", { className: "flex gap-3", children: [_jsx("div", { className: "flex-shrink-0", children: notification.metadata?.avatarUrl ? (_jsx("img", { src: notification.metadata.avatarUrl, alt: notification.metadata.senderName || 'User', className: "w-8 h-8 rounded-full border border-hive-border-default" })) : (_jsx("div", { className: "w-8 h-8 rounded-full bg-gradient-to-br from-hive-background-tertiary to-hive-background-secondary border border-hive-border-default flex items-center justify-center", children: getNotificationIcon() })) }), _jsxs("div", { className: "flex-1 min-w-0", children: [behavioralMessage && (_jsxs("div", { className: "flex items-center gap-2 mb-1", children: [_jsx("span", { className: "text-xs", children: behavioralMessage.prefix }), _jsx("span", { className: "text-xs text-hive-brand-primary font-medium", children: behavioralMessage.emphasis }), _jsx("span", { className: "text-xs text-hive-text-tertiary", children: behavioralMessage.context })] })), _jsx("h4", { className: cn('font-medium text-sm mb-1 font-sans', notification.isRead ? 'text-hive-text-secondary' : 'text-hive-text-primary'), children: notification.title }), _jsx("p", { className: cn('text-sm mb-2 font-sans line-clamp-2', notification.isRead ? 'text-hive-text-tertiary' : 'text-hive-text-secondary'), children: notification.message }), notification.socialProofText && (_jsxs("p", { className: "text-xs text-hive-brand-secondary mb-2 font-sans", children: ["\uD83D\uDCAA ", notification.socialProofText] })), notification.exclusivityText && (_jsxs("p", { className: "text-xs text-hive-brand-primary mb-2 font-sans", children: ["\u2B50 ", notification.exclusivityText] })), _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { className: "flex items-center gap-2 text-xs text-hive-text-tertiary font-sans", children: [_jsx(Clock, { className: "w-3 h-3" }), _jsx("span", { children: getTimeDisplay() }), notification.priority === 'urgent' && (_jsx("span", { className: "px-1.5 py-0.5 bg-hive-status-error/20 text-hive-status-error rounded text-xs font-medium", children: "Urgent" })), notification.priority === 'high' && (_jsx("span", { className: "px-1.5 py-0.5 bg-hive-brand-primary/20 text-hive-brand-primary rounded text-xs font-medium", children: "High" }))] }), notification.actionText && notification.actionUrl && (_jsxs(MotionButton, { className: "text-xs text-hive-brand-primary hover:text-hive-brand-secondary font-medium flex items-center gap-1 transition-colors", onClick: (e) => {
                                             e.stopPropagation();
                                             if (onNavigate && notification.actionUrl) {
                                                 onNavigate(notification.actionUrl);

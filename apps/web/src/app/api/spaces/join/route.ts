@@ -34,6 +34,7 @@ export const POST = withAuthValidationAndErrors(
     const existingMembershipQuery = dbAdmin.collection('spaceMembers')
       .where('spaceId', '==', spaceId)
       .where('userId', '==', userId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1);
 
     const existingMembershipSnapshot = await existingMembershipQuery.get();

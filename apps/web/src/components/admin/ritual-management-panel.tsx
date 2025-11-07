@@ -149,7 +149,7 @@ const RITUAL_TEMPLATES = [
     type: 'competition',
     description: 'Spaces compete for the most active community',
     icon: 'rocket',
-    color: '#8b5cf6',
+    color: 'var(--hive-status-info)',
     duration: '1_week',
     targetMetric: 'space_activity',
     rewards: ['Top space gets featured placement', 'Custom space badge']
@@ -160,7 +160,7 @@ const RITUAL_TEMPLATES = [
     type: 'collective',
     description: 'Unite night owls in late-night solidarity',
     icon: 'moon',
-    color: '#1e40af',
+    color: 'var(--hive-status-info)',
     duration: '3_days',
     targetMetric: 'posts_after_midnight',
     rewards: ['Unlock night mode theme', 'Night owl badge']
@@ -171,7 +171,7 @@ const RITUAL_TEMPLATES = [
     type: 'challenge',
     description: 'Maintain daily study group participation',
     icon: 'flame',
-    color: '#dc2626',
+    color: 'var(--hive-status-error)',
     duration: '2_weeks',
     targetMetric: 'daily_study_posts',
     rewards: ['Priority study room booking', 'Academic achievement badge']
@@ -182,7 +182,7 @@ const RITUAL_TEMPLATES = [
     type: 'competition',
     description: 'March Madness-style tournament for spaces',
     icon: 'trophy',
-    color: '#f59e0b',
+    color: 'var(--hive-status-warning)',
     duration: '2_weeks',
     targetMetric: 'bracket_votes',
     rewards: ['Winning space becomes default for new users', 'Championship banner']
@@ -193,7 +193,7 @@ const RITUAL_TEMPLATES = [
     type: 'social',
     description: 'Help new students find their community',
     icon: 'heart',
-    color: '#ec4899',
+    color: 'var(--hive-brand-primary)',
     duration: '1_week',
     targetMetric: 'welcomes_given',
     rewards: ['Mentor badge', 'Early access to events']
@@ -221,8 +221,8 @@ export function RitualManagementPanel() {
     type: 'competition',
     duration: '1_week',
     icon: 'trophy',
-    color: '#f59e0b',
-    accentColor: '#d97706',
+    color: 'var(--hive-status-warning)',
+    accentColor: 'var(--hive-status-warning)',
     mechanics: {
       scoringType: 'points',
       targetMetric: 'posts',
@@ -404,8 +404,8 @@ export function RitualManagementPanel() {
       type: 'competition',
       duration: '1_week',
       icon: 'trophy',
-      color: '#f59e0b',
-      accentColor: '#d97706',
+      color: 'var(--hive-status-warning)',
+      accentColor: 'var(--hive-status-warning)',
       mechanics: {
         scoringType: 'points',
         targetMetric: 'posts',

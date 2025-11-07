@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { featureFlagService, UserFeatureContext, HIVE_FEATURE_FLAGS } from '@/lib/feature-flags';
 import { dbAdmin } from '@/lib/firebase-admin';
 
@@ -142,7 +143,8 @@ async function buildUserContext(userId: string): Promise<UserFeatureContext> {
     // Get user's spaces
     const membershipsQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
     
     const membershipsSnapshot = await membershipsQuery.get();
     const spaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);

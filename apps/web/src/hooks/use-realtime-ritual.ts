@@ -229,10 +229,11 @@ export function useRealtimeRitual(ritualId: string | null) {
     unsubscribersRef.current.set('milestones', unsubscribeMilestones);
 
     // 4. Listen to recent ritual activity
+    const { getCurrentCampusId } = await import('@/lib/campus-isolation');
     const recentActivityQuery = query(
       collection(db, 'ritual_action_completions'),
       where('ritualId', '==', ritualId),
-      where('campusId', '==', 'ub-buffalo'),
+      where('campusId', '==', getCurrentCampusId()),
       orderBy('completedAt', 'desc'),
       limit(10)
     );

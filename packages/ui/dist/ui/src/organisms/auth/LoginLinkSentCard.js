@@ -1,0 +1,10 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Loader2 } from "lucide-react";
+import { HiveButton, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle } from "../../atoms";
+export function LoginLinkSentCard({ email, canResend = true, resendCountdownMs, devMagicLink, error, isSubmitting, onResend, onUseDifferentEmail, }) {
+    const seconds = resendCountdownMs ? Math.ceil(resendCountdownMs / 1000) : 0;
+    return (_jsxs(HiveCard, { children: [_jsxs(HiveCardHeader, { children: [_jsx(HiveCardTitle, { children: "Check your inbox" }), _jsxs("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: ["We sent a magic link to ", email, "."] })] }), _jsxs(HiveCardContent, { className: "space-y-4", children: [devMagicLink && (_jsxs("div", { className: "rounded-xl border border-[var(--hive-brand-primary)]/40 bg-[var(--hive-brand-primary)]/10 px-4 py-3 text-sm", children: [_jsx("p", { className: "mb-2 text-[var(--hive-brand-primary)] font-medium", children: "Development link" }), _jsx("a", { href: devMagicLink, className: "break-all text-[var(--hive-brand-primary)] hover:underline", children: devMagicLink })] })), error && (_jsx("div", { className: "rounded-lg border border-[var(--hive-status-error)]/40 bg-[var(--hive-status-error)]/10 px-4 py-2 text-sm text-[var(--hive-status-error)]", children: error })), _jsx(HiveButton, { type: "button", className: "w-full", disabled: !canResend || isSubmitting, onClick: onResend, children: isSubmitting ? (_jsxs("span", { className: "flex items-center justify-center gap-2", children: [_jsx(Loader2, { className: "h-4 w-4 animate-spin" }), " Sending\u2026"] })) : canResend ? ("Send another link") : (`Resend available in ${seconds}s`) }), _jsx(HiveButton, { type: "button", variant: "ghost", className: "w-full", onClick: onUseDifferentEmail, children: "Use a different email" })] })] }));
+}
+export default LoginLinkSentCard;
+//# sourceMappingURL=LoginLinkSentCard.js.map

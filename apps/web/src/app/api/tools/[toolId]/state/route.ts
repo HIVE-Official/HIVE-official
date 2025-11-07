@@ -4,6 +4,7 @@ import { z } from "zod";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Schema for tool state update requests
 const ToolStateSchema = z.object({
@@ -28,6 +29,12 @@ export const GET = withAuthAndErrors(async (
   }
 
     const db = dbAdmin;
+    // Enforce campus isolation: verify space and tool belong to campus
+    const toolDoc = await db.collection('tools').doc(toolId).get();
+    const spaceDoc = await db.collection('spaces').doc(spaceId).get();
+    if (!toolDoc.exists || !spaceDoc.exists || (toolDoc.data()?.campusId !== CURRENT_CAMPUS_ID) || (spaceDoc.data()?.campusId !== CURRENT_CAMPUS_ID)) {
+      return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
+    }
     
     // Get tool state document
     const stateDoc = await db
@@ -98,6 +105,7 @@ export const POST = withAuthValidationAndErrors(
       .collection("tool_deployments")
       .where("toolId", "==", toolId)
       .where("spaceId", "==", spaceId)
+      .where("campusId", "==", CURRENT_CAMPUS_ID)
       .where("isActive", "==", true)
       .limit(1)
       .get();
@@ -113,6 +121,7 @@ export const POST = withAuthValidationAndErrors(
       toolId,
       spaceId,
       userId,
+      campusId: CURRENT_CAMPUS_ID,
       metadata: {
         ...state.metadata,
         updatedAt: new Date().toISOString(),
@@ -134,6 +143,7 @@ export const POST = withAuthValidationAndErrors(
     await analyticsDoc.set({
       toolId,
       spaceId,
+      campusId: CURRENT_CAMPUS_ID,
       lastUsed: admin.firestore.FieldValue.serverTimestamp(),
       usageCount: admin.firestore.FieldValue.increment(1),
       activeUsers: admin.firestore.FieldValue.arrayUnion(userId),
@@ -167,6 +177,12 @@ export const DELETE = withAuthAndErrors(async (
   }
 
     const db = dbAdmin;
+    // Enforce campus isolation: verify space and tool belong to campus
+    const toolDoc = await db.collection('tools').doc(toolId).get();
+    const spaceDoc = await db.collection('spaces').doc(spaceId).get();
+    if (!toolDoc.exists || !spaceDoc.exists || (toolDoc.data()?.campusId !== CURRENT_CAMPUS_ID) || (spaceDoc.data()?.campusId !== CURRENT_CAMPUS_ID)) {
+      return respond.error("Access denied for this campus", "FORBIDDEN", { status: 403 });
+    }
     
     // Delete tool state document
     const stateDocId = `${toolId}_${spaceId}_${userId}`;

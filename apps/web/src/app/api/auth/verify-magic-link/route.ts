@@ -12,6 +12,7 @@ import { enforceRateLimit } from "@/lib/secure-rate-limiter";
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { createSession, setSessionCookie } from "@/lib/session";
+import { isAdminEmail } from '@/lib/admin/roles';
 
 /**
  * PRODUCTION-SAFE magic link verification
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
             userId,
             email,
             campusId: schoolId || 'test-university',
-            isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+            isAdmin: isAdminEmail(email)
           });
 
           const response = NextResponse.json({
@@ -142,7 +143,7 @@ export async function POST(request: NextRequest) {
 
           // Set signed session cookie
           setSessionCookie(response, sessionToken, {
-            isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+            isAdmin: isAdminEmail(email)
           });
 
           // Also set dev-mode flag
@@ -258,6 +259,7 @@ export async function POST(request: NextRequest) {
         id: userRecord.uid,
         email,
         schoolId,
+        campusId: schoolId || 'ub-buffalo',
         emailVerified: true,
         createdAt: now,
         updatedAt: now,
@@ -277,7 +279,7 @@ export async function POST(request: NextRequest) {
         userId: userRecord.uid,
         email,
         campusId: schoolId || 'ub-buffalo',
-        isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+        isAdmin: isAdminEmail(email)
       });
 
       const response = NextResponse.json({
@@ -288,7 +290,7 @@ export async function POST(request: NextRequest) {
 
       // Set signed session cookie
       return setSessionCookie(response, sessionToken, {
-        isAdmin: ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email)
+        isAdmin: isAdminEmail(email)
       });
     } else {
       // Existing user - they can proceed to app
@@ -298,8 +300,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Check if user should be granted admin permissions
-      const ADMIN_EMAILS = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'];
-      if (ADMIN_EMAILS.includes(email)) {
+      if (isAdminEmail(email)) {
         try {
           // Check if they already have admin claims
           const currentClaims = userRecord.customClaims || {};
@@ -310,7 +311,7 @@ export async function POST(request: NextRequest) {
             });
 
             // Determine role
-            const role = email === 'jwrhineh@buffalo.edu' ? 'super_admin' : 'admin';
+            const role = (email && email.toLowerCase() === 'jwrhineh@buffalo.edu') ? 'super_admin' : 'admin';
             const permissions = role === 'super_admin' ? ['all'] : [
               'read', 'write', 'delete', 'moderate',
               'manage_users', 'manage_spaces', 'feature_flags'
@@ -351,7 +352,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Create signed JWT session
-      const isAdmin = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'].includes(email);
+      const isAdmin = isAdminEmail(email);
       const sessionToken = await createSession({
         userId: userRecord.uid,
         email,

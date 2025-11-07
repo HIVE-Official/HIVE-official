@@ -5,6 +5,7 @@ import { Card } from '@hive/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Button } from '@hive/ui';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface CampusExpansionData {
   overview: {
@@ -103,7 +104,7 @@ export default function CampusExpansionDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/admin/campus-expansion');
+      const response = await secureApiFetch('/api/admin/campus-expansion');
       if (response.ok) {
         const result = await response.json();
         setData(result);
@@ -119,7 +120,7 @@ export default function CampusExpansionDashboard() {
   const handleAction = async (action: string, params?: any) => {
     setActiveAction(action);
     try {
-      const response = await fetch('/api/admin/campus-expansion', {
+      const response = await secureApiFetch('/api/admin/campus-expansion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, ...params })

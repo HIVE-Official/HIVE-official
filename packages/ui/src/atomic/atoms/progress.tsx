@@ -13,10 +13,12 @@ const progressVariants = cva(
         sm: "h-2",
         lg: "h-6",
         xl: "h-8",
+        xs: "h-1.5",
       },
       variant: {
         default: "bg-[var(--hive-background-tertiary)]",
         secondary: "bg-[var(--hive-background-secondary)]",
+        primary: "bg-[var(--hive-brand-primary-bg,#191c2d)]",
         success: "bg-[var(--hive-status-success)]/20",
         warning: "bg-[var(--hive-status-warning)]/20",
         error: "bg-[var(--hive-status-error)]/20",
@@ -45,11 +47,20 @@ const progressIndicatorVariants = cva(
         none: "",
         pulse: "animate-pulse",
         indeterminate: "animate-bounce",
+        bounce: "animate-bounce",
+        spin: "animate-spin",
       },
+      gradient: {
+        none: "",
+        subtle: "bg-gradient-to-r from-current to-current/80",
+        vibrant: "bg-gradient-to-r from-current via-current/90 to-current",
+        hive: "bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)]",
+      }
     },
     defaultVariants: {
       variant: "default",
       animation: "none",
+      gradient: "none",
     },
   }
 )
@@ -64,6 +75,11 @@ export interface ProgressProps
   formatValue?: (value: number, max: number) => string
   indicatorVariant?: VariantProps<typeof progressIndicatorVariants>["variant"]
   animation?: VariantProps<typeof progressIndicatorVariants>["animation"]
+  label?: string
+  showLabel?: boolean
+  showPercentage?: boolean
+  gradient?: VariantProps<typeof progressIndicatorVariants>["gradient"]
+  indicatorClassName?: string
 }
 
 const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
@@ -78,6 +94,11 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
     formatValue,
     indicatorVariant,
     animation,
+    label,
+    showLabel = false,
+    showPercentage = false,
+    gradient,
+    indicatorClassName,
     ...props
   }, ref) => {
     const percentage = indeterminate ? 100 : Math.min(Math.max((value / max) * 100, 0), 100)
@@ -92,15 +113,17 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       : defaultFormatValue(value, max)
 
     return (
-      <div className="w-full">
-        {showValue && (
+      <div className="w-full space-y-2">
+        {(showValue || showLabel || showPercentage) && (
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-[var(--hive-text-primary)]">
-              Progress
+              {label ?? "Progress"}
             </span>
-            <span className="text-sm text-[var(--hive-text-secondary)]">
-              {indeterminate ? "Loading..." : displayValue}
-            </span>
+            {showValue || showPercentage ? (
+              <span className="text-sm text-[var(--hive-text-secondary)]">
+                {indeterminate ? "Loading..." : displayValue}
+              </span>
+            ) : null}
           </div>
         )}
         <div
@@ -117,8 +140,10 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
             className={cn(
               progressIndicatorVariants({
                 variant: indicatorVariant || "default",
-                animation: indeterminate ? "indeterminate" : animation
-              })
+                animation: indeterminate ? "indeterminate" : animation,
+                gradient: gradient || "none",
+              }),
+              indicatorClassName
             )}
             style={{
               transform: indeterminate

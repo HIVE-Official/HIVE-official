@@ -1,14 +1,17 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
+import { MotionDiv } from "../../shells/motion-safe";
 declare const selectVariants: (props?: {
-    variant?: "default" | "destructive" | "success";
-    size?: "default" | "sm" | "lg";
+    variant?: "success" | "default" | "destructive" | "subtle";
+    size?: "sm" | "lg" | "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const selectContentVariants: (props?: {
     position?: "item-aligned" | "popper";
+    appearance?: "default";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const selectItemVariants: (props?: {
     variant?: "default" | "destructive";
+    appearance?: "default" | "subtle";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface SelectProps extends VariantProps<typeof selectVariants> {
     value?: string;
@@ -27,9 +30,10 @@ export interface SelectValueProps extends React.HTMLAttributes<HTMLSpanElement> 
     placeholder?: string;
 }
 declare const SelectValue: React.ForwardRefExoticComponent<SelectValueProps & React.RefAttributes<HTMLSpanElement>>;
-export interface SelectContentProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof selectContentVariants> {
+type MotionDivProps = React.ComponentProps<typeof MotionDiv>;
+export interface SelectContentProps extends MotionDivProps, VariantProps<typeof selectContentVariants> {
 }
-declare const SelectContent: React.ForwardRefExoticComponent<SelectContentProps & React.RefAttributes<HTMLDivElement>>;
+declare const SelectContent: React.ForwardRefExoticComponent<Omit<SelectContentProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
 export interface SelectItemProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof selectItemVariants> {
     value: string;
     disabled?: boolean;

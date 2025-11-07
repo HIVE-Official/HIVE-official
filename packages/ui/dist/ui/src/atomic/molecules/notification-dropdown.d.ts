@@ -1,41 +1,31 @@
-/**
- * 🎯 HIVE Notification Dropdown Component
- *
- * Behavioral Psychology Implementation:
- * - "Someone needs you" framing (relief amplifier)
- * - Social proof messaging
- * - Variable reward scheduling through urgency
- * - 70% completion target optimization
- * - Effortless competence positioning
- */
-import React from 'react';
-import { HiveNotification } from '../../types/notifications';
-export interface NotificationDropdownProps {
-    /** Array of notifications */
-    notifications: HiveNotification[];
-    /** Unread count */
-    unreadCount: number;
-    /** Loading state */
-    loading?: boolean;
-    /** Error state */
-    error?: string | null;
-    /** Dropdown open state */
-    isOpen: boolean;
-    /** Close dropdown handler */
-    onClose: () => void;
-    /** Mark notification as read */
-    onMarkAsRead: (notificationId: string) => Promise<void>;
-    /** Mark all as read */
-    onMarkAllAsRead: () => Promise<void>;
-    /** Delete notification */
-    onDeleteNotification: (notificationId: string) => Promise<void>;
-    /** Clear all notifications */
-    onClearAll: () => Promise<void>;
-    /** Navigation handler */
-    onNavigate?: (url: string) => void;
-    /** Custom className */
-    className?: string;
+import * as React from "react";
+export interface NotificationListItem {
+    id: string;
+    title: string;
+    message?: string;
+    type?: string;
+    category?: string;
+    priority?: "low" | "medium" | "high" | "urgent";
+    isRead?: boolean;
+    timestamp?: Date | string | number | {
+        toDate: () => Date;
+    };
+    actionUrl?: string;
+    actionText?: string;
+    metadata?: Record<string, unknown>;
 }
-export declare const NotificationDropdown: React.FC<NotificationDropdownProps>;
+export interface NotificationDropdownProps extends React.HTMLAttributes<HTMLDivElement> {
+    notifications: NotificationListItem[];
+    unreadCount?: number;
+    loading?: boolean;
+    error?: string | null;
+    onNavigate?: (url: string, notification: NotificationListItem) => void;
+    onMarkAsRead?: (id: string) => void | Promise<void>;
+    onMarkAllAsRead?: () => void | Promise<void>;
+    onClearAll?: () => void | Promise<void>;
+    emptyState?: React.ReactNode;
+    heading?: string;
+}
+export declare const NotificationDropdown: React.ForwardRefExoticComponent<NotificationDropdownProps & React.RefAttributes<HTMLDivElement>>;
 export default NotificationDropdown;
 //# sourceMappingURL=notification-dropdown.d.ts.map

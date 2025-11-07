@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../../lib/utils"
 
@@ -55,6 +56,9 @@ interface TabsContextValue {
   value: string
   onValueChange: (value: string) => void
   variant?: "default" | "underline" | "pills"
+  registerRef: (val: string, el: HTMLButtonElement | null) => void
+  listRef: React.MutableRefObject<HTMLDivElement | null>
+  getRef: (val: string) => HTMLButtonElement | null
 }
 
 const TabsContext = React.createContext<TabsContextValue | null>(null)
@@ -86,10 +90,18 @@ function Tabs({
     onValueChange?.(newValue)
   }, [isControlled, onValueChange])
 
+  const triggerRefs = React.useRef(new Map<string, HTMLButtonElement | null>())
+  const listRef = React.useRef<HTMLDivElement | null>(null)
+
   const contextValue = React.useMemo(() => ({
     value: currentValue,
     onValueChange: handleValueChange,
     variant,
+    registerRef: (val: string, el: HTMLButtonElement | null) => {
+      triggerRefs.current.set(val, el)
+    },
+    listRef,
+    getRef: (val: string) => triggerRefs.current.get(val) ?? null,
   }), [currentValue, handleValueChange, variant])
 
   return (
@@ -109,14 +121,55 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
   ({ className, variant, ...props }, ref) => {
     const context = React.useContext(TabsContext)
     const actualVariant = variant || context?.variant || "default"
+    const shouldReduce = useReducedMotion()
+    const [indicator, setIndicator] = React.useState<{ left: number; width: number } | null>(null)
+
+    React.useLayoutEffect(() => {
+      if (!context || actualVariant !== "underline") return
+      const recalc = () => {
+        const listEl = context.listRef.current
+        const activeEl = context.getRef(context.value)
+        if (!listEl || !activeEl) return
+        const listRect = listEl.getBoundingClientRect()
+        const elRect = activeEl.getBoundingClientRect()
+        setIndicator({ left: elRect.left - listRect.left, width: elRect.width })
+      }
+      recalc()
+      const onResize = () => recalc()
+      window.addEventListener("resize", onResize)
+      const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(recalc) : undefined
+      if (ro && context.listRef.current) ro.observe(context.listRef.current)
+      return () => {
+        window.removeEventListener("resize", onResize)
+        ro?.disconnect()
+      }
+    }, [context, actualVariant, context?.value])
 
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          if (ref) {
+            if (typeof ref === "function") ref(node)
+            else (ref as any).current = node
+          }
+          if (context) context.listRef.current = node as HTMLDivElement
+        }}
         role="tablist"
-        className={cn(tabsListVariants({ variant: actualVariant }), className)}
+        className={cn("relative", tabsListVariants({ variant: actualVariant }), className)}
         {...props}
-      />
+      >
+        {actualVariant === "underline" && indicator && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 h-[2px] rounded bg-[var(--hive-brand-primary)]"
+            initial={false}
+            animate={{ x: indicator.left, width: indicator.width }}
+            transition={{ duration: shouldReduce ? 0 : 0.18, ease: [0.16, 1, 0.3, 1] }}
+            style={{ left: 0 }}
+          />
+        )}
+        {props.children}
+      </div>
     )
   }
 )
@@ -139,9 +192,23 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
 
     const isActive = context.value === value
 
+    const localRef = React.useRef<HTMLButtonElement | null>(null)
+
+    React.useLayoutEffect(() => {
+      if (!context) return
+      context.registerRef(value, localRef.current)
+      return () => context.registerRef(value, null)
+    }, [context, value])
+
     return (
       <button
-        ref={ref}
+        ref={(node) => {
+          localRef.current = node
+          if (ref) {
+            if (typeof ref === "function") ref(node)
+            else (ref as any).current = node
+          }
+        }}
         role="tab"
         aria-selected={isActive}
         data-state={isActive ? "active" : "inactive"}

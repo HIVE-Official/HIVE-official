@@ -80,7 +80,7 @@ const SettingsSection = ({ title, description, children }: {
     <div className="mb-4">
       <h3 className="text-lg font-semibold text-white">{title}</h3>
       {description && (
-        <p className="text-sm text-[#A1A1AA] mt-1">{description}</p>
+        <p className="text-sm text-hive-text-tertiary mt-1">{description}</p>
       )}
     </div>
     {children}
@@ -97,7 +97,7 @@ const ToggleSwitch = ({ enabled, onToggle, label, description }: {
     <div className="flex-1">
       <div className="text-white font-medium text-sm">{label}</div>
       {description && (
-        <div className="text-xs text-[#A1A1AA] mt-1">{description}</div>
+        <div className="text-xs text-hive-text-tertiary mt-1">{description}</div>
       )}
     </div>
     <button
@@ -155,7 +155,7 @@ export default function ToolSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A]">
+    <div className="min-h-screen bg-gradient-to-br from-hive-background-primary via-hive-background-tertiary to-hive-background-secondary">
       {/* Header */}
       <div className="border-b border-[rgba(255,255,255,0.1)] bg-[rgba(0,0,0,0.8)] backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -165,7 +165,7 @@ export default function ToolSettingsPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
+                className="text-hive-text-tertiary hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -174,7 +174,7 @@ export default function ToolSettingsPage() {
                 <h1 className="text-xl font-semibold text-white">
                   {settings.name} Settings
                 </h1>
-                <p className="text-sm text-[#A1A1AA]">
+                <p className="text-sm text-hive-text-tertiary">
                   {hasChanges ? '• Unsaved changes' : '• All changes saved'}
                 </p>
               </div>
@@ -184,7 +184,7 @@ export default function ToolSettingsPage() {
               <Button
                 size="sm"
                 onClick={handleSave}
-                className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover"
                 disabled={!hasChanges}
               >
                 <Save className="h-4 w-4 mr-2" />
@@ -203,7 +203,7 @@ export default function ToolSettingsPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Tool Name</label>
+              <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Tool Name</label>
               <input
                 type="text"
                 value={settings.name}
@@ -213,7 +213,7 @@ export default function ToolSettingsPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Description</label>
+              <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Description</label>
               <textarea
                 value={settings.description}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSettings({ description: e.target.value })}
@@ -224,7 +224,7 @@ export default function ToolSettingsPage() {
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Category</label>
+                <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Category</label>
                 <select
                   value={settings.metadata.category}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateSettings({
@@ -242,7 +242,7 @@ export default function ToolSettingsPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Version</label>
+                <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Version</label>
                 <input
                   type="text"
                   value={settings.metadata.version}
@@ -255,7 +255,7 @@ export default function ToolSettingsPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Tags</label>
+              <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Tags</label>
               <input
                 type="text"
                 value={settings.metadata.tags.join(', ')}
@@ -265,7 +265,7 @@ export default function ToolSettingsPage() {
                 placeholder="polling, engagement, voting"
                 className="w-full p-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-lg text-white focus:border-[var(--hive-brand-primary)]/50 focus:outline-none"
               />
-              <p className="text-xs text-[#A1A1AA] mt-1">Separate tags with commas</p>
+              <p className="text-xs text-hive-text-tertiary mt-1">Separate tags with commas</p>
             </div>
           </div>
         </SettingsSection>
@@ -277,7 +277,7 @@ export default function ToolSettingsPage() {
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#A1A1AA] mb-2">Privacy Level</label>
+              <label className="block text-sm font-medium text-hive-text-tertiary mb-2">Privacy Level</label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {[
                   { value: 'personal', icon: Lock, label: 'Personal', desc: 'Only you can use this tool' },
@@ -299,7 +299,7 @@ export default function ToolSettingsPage() {
                         <IconComponent className="h-5 w-5" />
                         <span className="font-medium">{option.label}</span>
                       </div>
-                      <p className="text-xs text-[#A1A1AA]">{option.desc}</p>
+                      <p className="text-xs text-hive-text-tertiary">{option.desc}</p>
                     </button>
                   );
                 })}
@@ -404,15 +404,15 @@ export default function ToolSettingsPage() {
           <Grid columns={3} gap={4}>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
               <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.installCount}</div>
-              <div className="text-sm text-[#A1A1AA]">Total Installs</div>
+              <div className="text-sm text-hive-text-tertiary">Total Installs</div>
             </div>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
               <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.activeSpaces}</div>
-              <div className="text-sm text-[#A1A1AA]">Active Spaces</div>
+              <div className="text-sm text-hive-text-tertiary">Active Spaces</div>
             </div>
             <div className="text-center p-4 bg-[rgba(255,255,255,0.02)] rounded-lg">
               <div className="text-2xl font-bold text-[var(--hive-brand-primary)] mb-1">{settings.usage.totalUsage}</div>
-              <div className="text-sm text-[#A1A1AA]">Total Usage</div>
+              <div className="text-sm text-hive-text-tertiary">Total Usage</div>
             </div>
           </Grid>
         </SettingsSection>
@@ -467,7 +467,7 @@ export default function ToolSettingsPage() {
               <AlertTriangle className="h-6 w-6 text-red-400 flex-shrink-0 mt-1" />
               <div className="flex-1">
                 <h4 className="text-white font-semibold mb-2">Delete Tool</h4>
-                <p className="text-sm text-[#A1A1AA] mb-4">
+                <p className="text-sm text-hive-text-tertiary mb-4">
                   Once you delete this tool, there is no going back. This will permanently remove the tool from all spaces and users who have installed it.
                 </p>
                 {!showDeleteConfirm ? (
@@ -489,7 +489,7 @@ export default function ToolSettingsPage() {
                     <Button
                       onClick={() => setShowDeleteConfirm(false)}
                       variant="outline"
-                      className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA]"
+                      className="border-white/20 text-hive-text-tertiary"
                     >
                       Cancel
                     </Button>

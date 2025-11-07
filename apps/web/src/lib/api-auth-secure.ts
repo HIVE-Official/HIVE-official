@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DecodedIdToken } from 'firebase-admin/auth';
 import { authAdmin } from './firebase-admin';
+import { isAdminEmail } from './admin/roles';
 import { logger } from './logger';
 import {
   checkRedisRateLimit,
@@ -20,6 +21,7 @@ import {
   enforceCampusIsolation,
   sanitizeInput
 } from './security-middleware';
+import { getSession, validateCSRF } from './session';
 
 interface ApiAuthOptions {
   requireAdmin?: boolean;
@@ -37,11 +39,11 @@ interface ApiAuthOptions {
  * Returns a function that handles the request
  * NO DEV BYPASSES - EVER
  */
-export function withSecureAuth(
-  handler: (request: NextRequest, token: DecodedIdToken) => Promise<NextResponse>,
+export function withSecureAuth<T extends any[]>(
+  handler: (request: NextRequest, token: DecodedIdToken, ...args: T) => Promise<NextResponse>,
   options: ApiAuthOptions = {}
 ) {
-  return async (request: NextRequest): Promise<NextResponse> => {
+  return async (request: NextRequest, ...args: T): Promise<NextResponse> => {
     // CRITICAL: Block all dev bypasses in production
     blockDevBypassesInProduction();
 
@@ -94,43 +96,74 @@ export function withSecureAuth(
         return handler(request, {} as DecodedIdToken);
       }
 
-      // 4. Validate authentication token
+      // 4. Validate authentication via header or secure session cookie
       const authHeader = request.headers.get('authorization');
-      if (!authHeader?.startsWith('Bearer ')) {
-        logger.warn('Missing or invalid auth header', {
-          url: request.url,
-          hasHeader: !!authHeader,
-          headerStart: authHeader?.substring(0, 10)
-        });
+      let decodedToken: DecodedIdToken | null = null;
+      let authMode: 'header' | 'cookie' | 'none' = 'none';
 
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401, headers: getSecurityHeaders() }
-        );
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.replace('Bearer ', '');
+        // Prefer Firebase header auth when supplied
+        try {
+          decodedToken = await authAdmin.verifyIdToken(token);
+          authMode = 'header';
+        } catch (error) {
+          logger.error('Token verification failed', {
+            error,
+            url: request.url
+          });
+          return NextResponse.json(
+            { error: 'Invalid authentication token' },
+            { status: 401, headers: getSecurityHeaders() }
+          );
+        }
+      } else {
+        // Fallback: verify secure HttpOnly session cookie
+        const session = await getSession(request);
+        if (session) {
+          decodedToken = {
+            // Minimal shape to satisfy downstream use (uid/email checks)
+            uid: session.userId,
+            email: session.email,
+          } as unknown as DecodedIdToken;
+          authMode = 'cookie';
+        } else {
+          logger.warn('Missing authentication (no header or valid session cookie)', {
+            url: request.url
+          });
+          return NextResponse.json(
+            { error: 'Authentication required' },
+            { status: 401, headers: getSecurityHeaders() }
+          );
+        }
       }
 
-      const token = authHeader.replace('Bearer ', '');
+      // 5. Admin CSRF enforcement for mutating requests
+      if (requireAdmin && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
+        const session = await getSession(request);
+        const csrf = request.headers.get('x-csrf-token');
 
-      // 5. Verify Firebase token
-      let decodedToken: DecodedIdToken;
-      try {
-        decodedToken = await authAdmin.verifyIdToken(token);
-      } catch (error) {
-        logger.error('Token verification failed', {
-          error,
-          url: request.url
-        });
+        if (!session || !session.isAdmin) {
+          logger.warn('Admin mutation without valid admin session', { url: request.url });
+          return NextResponse.json(
+            { error: 'Admin session required' },
+            { status: 403, headers: getSecurityHeaders() }
+          );
+        }
 
-        return NextResponse.json(
-          { error: 'Invalid authentication token' },
-          { status: 401, headers: getSecurityHeaders() }
-        );
+        if (!validateCSRF(session, csrf)) {
+          logger.warn('Invalid CSRF token for admin mutation', { url: request.url });
+          return NextResponse.json(
+            { error: 'Invalid CSRF token' },
+            { status: 403, headers: getSecurityHeaders() }
+          );
+        }
       }
 
       // 6. User-based rate limiting
-      if (rateLimit) {
+      if (rateLimit && decodedToken) {
         const userLimitResult = await checkUserRateLimit(
-          decodedToken.uid,
+          decodedToken.uid as unknown as string,
           rateLimit.type
         );
 
@@ -149,16 +182,12 @@ export function withSecureAuth(
       }
 
       // 7. Check admin requirements
-      if (requireAdmin) {
-        const adminEmails = [
-          'jwrhineh@buffalo.edu',
-          'noahowsh@gmail.com'
-        ];
-
-        if (!adminEmails.includes(decodedToken.email || '')) {
+      if (requireAdmin && decodedToken) {
+        // For cookie-based sessions, decodedToken.email may be present via session mapping
+        if (!isAdminEmail((decodedToken as any).email || '')) {
           logger.warn('Non-admin attempted admin access', {
             userId: decodedToken.uid,
-            email: decodedToken.email,
+            email: (decodedToken as any).email,
             url: request.url
           });
 
@@ -170,17 +199,42 @@ export function withSecureAuth(
       }
 
       // 8. Campus isolation check
-      if (campusId && !enforceCampusIsolation(decodedToken, campusId)) {
-        logger.warn('Campus isolation violation', {
-          userId: decodedToken.uid,
-          expectedCampus: campusId,
-          userEmail: decodedToken.email
-        });
+      if (campusId) {
+        if (authMode === 'header') {
+          const tokenAny = decodedToken as unknown as { email?: string; campusId?: string; schoolId?: string };
+          const userCampusId =
+            tokenAny?.campusId ||
+            tokenAny?.schoolId ||
+            (tokenAny?.email?.toLowerCase().endsWith('@buffalo.edu') ? 'ub-buffalo' : undefined) ||
+            'unknown';
 
-        return NextResponse.json(
-          { error: 'Access denied for this campus' },
-          { status: 403, headers: getSecurityHeaders() }
-        );
+          if (!enforceCampusIsolation(userCampusId, campusId)) {
+            logger.warn('Campus isolation violation', {
+              userId: decodedToken?.uid,
+              expectedCampus: campusId,
+              userEmail: (decodedToken as any)?.email,
+              userCampus: userCampusId
+            });
+            return NextResponse.json(
+              { error: 'Access denied for this campus' },
+              { status: 403, headers: getSecurityHeaders() }
+            );
+          }
+        } else if (authMode === 'cookie') {
+          // For cookie-based sessions, validate campus directly from session cookie
+          const session = await getSession(request);
+          if (!session || session.campusId !== campusId) {
+            logger.warn('Campus isolation violation (cookie auth)', {
+              userId: session?.userId,
+              sessionCampus: session?.campusId,
+              expectedCampus: campusId
+            });
+            return NextResponse.json(
+              { error: 'Access denied for this campus' },
+              { status: 403, headers: getSecurityHeaders() }
+            );
+          }
+        }
       }
 
       // 9. Input sanitization if body exists
@@ -196,7 +250,7 @@ export function withSecureAuth(
             body: JSON.stringify(sanitized)
           });
 
-          return handler(sanitizedRequest, decodedToken);
+          return handler(sanitizedRequest, decodedToken, ...args);
         } catch (error) {
           logger.error('Request body processing failed', {
             error,
@@ -211,7 +265,7 @@ export function withSecureAuth(
       }
 
       // 10. Execute handler with authenticated context
-      return handler(request, decodedToken);
+      return handler(request, decodedToken as DecodedIdToken, ...args);
 
     } catch (error) {
       logger.error('Auth middleware error', {
@@ -226,3 +280,4 @@ export function withSecureAuth(
     }
   };
 }
+import 'server-only';

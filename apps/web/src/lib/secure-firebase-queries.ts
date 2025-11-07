@@ -150,6 +150,7 @@ export async function validateSecureSpaceMembership(
 ): Promise<{
   isValid: boolean;
   membership?: admin.firestore.DocumentData;
+  membershipRef?: admin.firestore.DocumentReference<admin.firestore.DocumentData>;
   space?: admin.firestore.DocumentData;
   error?: string;
 }> {
@@ -173,11 +174,13 @@ export async function validateSecureSpaceMembership(
       return { isValid: false, error: 'User is not a member of this space' };
     }
 
-    const membershipData = membershipSnapshot.docs[0].data();
+    const membershipDoc = membershipSnapshot.docs[0];
+    const membershipData = membershipDoc.data();
 
     return {
       isValid: true,
       membership: membershipData,
+      membershipRef: membershipDoc.ref,
       space: spaceValidation.space
     };
   } catch (error) {
@@ -316,3 +319,4 @@ export async function getSecureUserData(userId: string): Promise<{
     return { isValid: false, error: 'User validation failed' };
   }
 }
+import 'server-only';

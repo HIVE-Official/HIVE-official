@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Post creation schema
 const CreatePostSchema = z.object({
@@ -61,7 +62,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       isDeleted: false,
-      campusId: 'ub-buffalo', // UB-only for vBETA
+      campusId: CURRENT_CAMPUS_ID,
       engagement: {
         likes: 0,
         comments: 0,

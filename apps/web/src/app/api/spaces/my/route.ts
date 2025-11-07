@@ -2,6 +2,7 @@ import { z } from "zod";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { type Space } from '@hive/core';
 import { logger } from "@/lib/logger";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 
 const updateSpacePreferencesSchema = z.object({
@@ -99,13 +100,15 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       });
     }
 
-    // Get user's memberships using collectionGroup
-    const membershipsQuery = dbAdmin.collectionGroup('members')
+    // Get user's memberships using flat collection
+    let membershipsQuery: any = dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', userId)
-      .limit(50); // Limit for performance
-      
-    const membershipsSnapshot = await membershipsQuery.get();
-    
+      .where('isActive', '==', true)
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
+
+    const membershipsSnapshot = await membershipsQuery.limit(200).get();
+
     if (membershipsSnapshot.empty) {
       logger.info('📊 No memberships found for user', { userId, endpoint: '/api/spaces/my' });
       return respond.success({
@@ -121,16 +124,16 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       });
     }
 
-    logger.info('📊 Foundmemberships for user', { membershipsSnapshot, userId, endpoint: '/api/spaces/my' });
+    logger.info('📊 Found memberships for user', { count: membershipsSnapshot.size, userId, endpoint: '/api/spaces/my' });
 
     // Extract space IDs and membership data
     const membershipData = new Map<string, any>();
     const spaceIds: string[] = [];
 
-    membershipsSnapshot.docs.forEach(doc => {
+    membershipsSnapshot.docs.forEach((doc: any) => {
       const membership = doc.data();
-      const spaceId = doc.ref.parent.parent?.id;
-      
+      if (membership.campusId && membership.campusId !== CURRENT_CAMPUS_ID) return;
+      const spaceId = membership.spaceId;
       if (spaceId) {
         spaceIds.push(spaceId);
         membershipData.set(spaceId, {
@@ -143,75 +146,43 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       }
     });
 
-    // Fetch space details for each membership
-    const spaces: any[] = [];
-    const spaceTypes = ['student_organizations', 'university_organizations', 'greek_life', 'campus_living', 'hive_exclusive', 'cohort'];
+    // Fetch space details from flat spaces collection
+    const spacePromises = spaceIds.map(id => dbAdmin.collection('spaces').doc(id).get());
+    const spaceSnapshots = await Promise.all(spacePromises);
 
-    for (const spaceType of spaceTypes) {
-      try {
-        const spacesSnapshot = await dbAdmin.collection('spaces')
-          .doc(spaceType)
-          .collection('spaces')
-          .get();
-          
-        spacesSnapshot.docs.forEach(doc => {
-          const spaceId = doc.id;
-          if (spaceIds.includes(spaceId)) {
-            const spaceData = doc.data();
-            const membership = membershipData.get(spaceId);
-            
-            spaces.push({
-              id: spaceId,
-              name: spaceData.name,
-              description: spaceData.description,
-              type: spaceType,
-              status: spaceData.status || 'activated', // All active in V1
-              memberCount: spaceData.metrics?.memberCount || 0,
-              tags: spaceData.tags || [],
-              bannerUrl: spaceData.bannerUrl,
-              isPrivate: spaceData.isPrivate || false,
-              createdAt: spaceData.createdAt,
-              updatedAt: spaceData.updatedAt,
-              
-              // Membership-specific data
-              membershipRole: membership?.role || 'member',
-              lastVisited: membership?.lastVisited || new Date(),
-              notifications: membership?.notifications || 0,
-              pinned: membership?.pinned || false,
-              
-              // Production-safe activity data (empty until real integration)
-              activity: {
-                newPosts: 0,
-                newEvents: 0,
-                newMembers: 0
-              },
-              
-              // Production-safe widget data (empty until real integration)
-              widgets: {
-                posts: {
-                  recentCount: 0,
-                  lastActivity: null
-                },
-                events: {
-                  upcomingCount: 0,
-                  nextEvent: null
-                },
-                members: {
-                  activeCount: spaceData.metrics?.memberCount || 0,
-                  recentJoins: 0
-                },
-                tools: {
-                  availableCount: 0
-                }
-              }
-            });
-          }
-        });
-      } catch (error) {
-        logger.error('❌ Error fetching spaces for type', { spaceType, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/my' });
-        // Continue with other types even if one fails
-      }
-    }
+    const spaces: any[] = spaceSnapshots
+      .filter(snap => snap.exists)
+      .map(snap => {
+        const spaceData = snap.data()!;
+        const membership = membershipData.get(snap.id);
+        return {
+          id: snap.id,
+          name: spaceData.name,
+          description: spaceData.description,
+          type: spaceData.type,
+          status: spaceData.status || 'activated',
+          memberCount: spaceData.metrics?.memberCount || spaceData.memberCount || 0,
+          tags: spaceData.tags || [],
+          bannerUrl: spaceData.bannerUrl,
+          isPrivate: spaceData.isPrivate || false,
+          createdAt: spaceData.createdAt,
+          updatedAt: spaceData.updatedAt,
+          // Membership-specific data
+          membershipRole: membership?.role || 'member',
+          lastVisited: membership?.lastVisited || new Date(),
+          notifications: membership?.notifications || 0,
+          pinned: membership?.pinned || false,
+          // Production-safe activity data (empty until real integration)
+          activity: { newPosts: 0, newEvents: 0, newMembers: 0 },
+          // Production-safe widget data (empty until real integration)
+          widgets: {
+            posts: { recentCount: 0, lastActivity: null },
+            events: { upcomingCount: 0, nextEvent: null },
+            members: { activeCount: spaceData.metrics?.memberCount || 0, recentJoins: 0 },
+            tools: { availableCount: 0 },
+          },
+        };
+      });
 
     // Sort spaces by last visited (most recent first)
     spaces.sort((a, b) => new Date(b.lastVisited).getTime() - new Date(a.lastVisited).getTime());
@@ -259,20 +230,16 @@ export const PATCH = withAuthValidationAndErrors(
     const userId = getUserId(request);
 
     // Find the space's membership document
-    const membershipsQuery = dbAdmin.collectionGroup('members')
+    // Find membership document in flat collection
+    const membershipSnapshot = await dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', userId)
-      .limit(50);
-      
-    const membershipsSnapshot = await membershipsQuery.get();
-    
-    let membershipRef = null;
-    for (const doc of membershipsSnapshot.docs) {
-      const spaceIdFromRef = doc.ref.parent.parent?.id;
-      if (spaceIdFromRef === spaceId) {
-        membershipRef = doc.ref;
-        break;
-      }
-    }
+      .where('spaceId', '==', spaceId)
+      .where('isActive', '==', true)
+      .limit(1)
+      .get();
+
+    const membershipRef = membershipSnapshot.empty ? null : membershipSnapshot.docs[0].ref;
 
     if (!membershipRef) {
       return respond.error("Membership not found", "RESOURCE_NOT_FOUND", { status: 404 });

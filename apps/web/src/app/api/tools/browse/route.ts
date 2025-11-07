@@ -1,64 +1,75 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { dbAdmin as adminDb } from "@/lib/firebase-admin";
-import { getCurrentUser } from "@/lib/auth-server";
+"use server";
+
+import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
-import * as admin from 'firebase-admin';
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import {
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
 
-// GET /api/tools/browse - Browse and discover tools
-export async function GET(request: NextRequest) {
+const VALID_STATUSES = new Set(["draft", "published", "archived"]);
+
+const DEFAULT_LIMIT = 50;
+const MAX_LIMIT = 100;
+
+function parseInteger(value: string | null, fallback: number) {
+  if (!value) return fallback;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+}
+
+function normalizeText(value: unknown) {
+  return typeof value === "string" ? value : "";
+}
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond,
+) => {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-    const status = searchParams.get("status");
-    const category = searchParams.get("category");
-    const type = searchParams.get("type");
+    const viewerId = getUserId(request);
+    const searchParams = request.nextUrl.searchParams;
+
+    const requestedUserId = searchParams.get("userId") ?? undefined;
+    const statusParam = searchParams.get("status") ?? undefined;
+    const category = searchParams.get("category") ?? undefined;
+    const type = searchParams.get("type") ?? undefined;
     const featured = searchParams.get("featured") === "true";
-    const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100);
-    const offset = parseInt(searchParams.get("offset") || "0");
-    const search = searchParams.get("search");
+    const limit = Math.min(
+      parseInteger(searchParams.get("limit"), DEFAULT_LIMIT),
+      MAX_LIMIT,
+    );
+    const offset = parseInteger(searchParams.get("offset"), 0);
+    const search = searchParams.get("search") ?? undefined;
 
-    // For user-specific queries, verify auth
-    let currentUser = null;
-    if (userId) {
-      try {
-        currentUser = await getCurrentUser(request);
-        if (!currentUser) {
-          return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-        }
-      } catch (error) {
-        return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
+    let query = dbAdmin
+      .collection("tools")
+      .where("campusId", "==", CURRENT_CAMPUS_ID);
 
-    // Build base query
-    let query: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
-
-    // Filter by user if specified
-    if (userId && currentUser) {
-      // If requesting own tools, show all. If requesting other's tools, show only public
-      if (userId === currentUser.uid) {
-        query = query.where("ownerId", "==", userId);
+    if (requestedUserId) {
+      if (requestedUserId === viewerId) {
+        query = query.where("ownerId", "==", requestedUserId);
       } else {
         query = query
-          .where("ownerId", "==", userId)
+          .where("ownerId", "==", requestedUserId)
           .where("isPublic", "==", true)
           .where("status", "==", "published");
       }
     } else {
-      // Public browsing - only show public published tools
       query = query
         .where("isPublic", "==", true)
         .where("status", "==", "published");
     }
 
-    // Apply additional filters
-    if (status && ["draft", "published", "archived"].includes(status)) {
-      // Only allow status filtering for user's own tools
-      if (userId && currentUser && userId === currentUser.uid) {
-        query = query.where("status", "==", status);
-      }
+    if (
+      statusParam &&
+      VALID_STATUSES.has(statusParam) &&
+      requestedUserId === viewerId
+    ) {
+      query = query.where("status", "==", statusParam);
     }
 
     if (category && category !== "all") {
@@ -73,47 +84,56 @@ export async function GET(request: NextRequest) {
       query = query.where("metadata.featured", "==", true);
     }
 
-    // Default ordering by creation date (newest first)
     query = query.orderBy("createdAt", "desc");
 
-    // Apply pagination
     if (offset > 0) {
-      const offsetQuery = await query.limit(offset).get();
-      if (!offsetQuery.empty) {
-        const lastDoc = offsetQuery.docs[offsetQuery.docs.length - 1];
+      const offsetSnapshot = await query.limit(offset).get();
+      if (!offsetSnapshot.empty) {
+        const lastDoc = offsetSnapshot.docs[offsetSnapshot.docs.length - 1];
         query = query.startAfter(lastDoc);
       }
     }
-    
-    query = query.limit(limit);
 
+    query = query.limit(limit);
     const snapshot = await query.get();
-    
-    // Process tools and enrich with user info
+
     const tools = await Promise.all(
       snapshot.docs.map(async (doc) => {
         const toolData = doc.data();
-        
-        // Get creator info
+
         let createdByName = "Anonymous";
         try {
-          const userDoc = await adminDb.collection("users").doc(toolData.ownerId).get();
-          if (userDoc.exists) {
-            const userData = userDoc.data();
-            createdByName = userData?.displayName || userData?.name || `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || "Anonymous";
+          const ownerDoc = await dbAdmin
+            .collection("users")
+            .doc(toolData.ownerId)
+            .get();
+          if (ownerDoc.exists) {
+            const ownerData = ownerDoc.data();
+            createdByName =
+              normalizeText(ownerData?.displayName) ||
+              normalizeText(ownerData?.name) ||
+              `${normalizeText(ownerData?.firstName)} ${normalizeText(
+                ownerData?.lastName,
+              )}`.trim() ||
+              "Anonymous";
           }
         } catch (error) {
-          logger.warn('Failed to get user info for', { toolDataOwnerId: toolData.ownerId, data: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/tools/browse'  });
+          logger.warn("Failed to fetch tool creator", {
+            toolOwnerId: toolData.ownerId,
+            error: error instanceof Error ? error : new Error(String(error)),
+            endpoint: "/api/tools/browse",
+          });
         }
 
-        // Apply search filter (done post-query for flexibility)
         if (search) {
-          const searchLower = search.toLowerCase();
-          const matchesSearch = 
-            (toolData.name?.toLowerCase() || '').includes(searchLower) ||
-            toolData.description.toLowerCase().includes(searchLower) ||
-            (toolData.tags || []).some((tag: string) => tag.toLowerCase().includes(searchLower));
-          
+          const queryLower = search.toLowerCase();
+          const matchesSearch =
+            toolData.name?.toLowerCase().includes(queryLower) ||
+            toolData.description?.toLowerCase().includes(queryLower) ||
+            (toolData.tags || []).some((tag: string) =>
+              tag.toLowerCase().includes(queryLower),
+            );
+
           if (!matchesSearch) {
             return null;
           }
@@ -123,48 +143,50 @@ export async function GET(request: NextRequest) {
           id: doc.id,
           ...toolData,
           createdByName,
-          // Ensure stats exist with defaults
           stats: {
             views: 0,
             uses: 0,
             likes: 0,
             installs: 0,
             shares: 0,
-            ...toolData.stats
+            ...toolData.stats,
           },
-          // Ensure metadata exists with defaults
           metadata: {
             version: "1.0.0",
             difficulty: "beginner",
             featured: false,
             toolType: toolData.type || "visual",
-            ...toolData.metadata
+            ...toolData.metadata,
           },
-          // Ensure arrays exist
           tags: toolData.tags || [],
           collaborators: toolData.collaborators || [],
-          // Format dates
-          createdAt: toolData.createdAt?.toDate?.()?.toISOString() || toolData.createdAt,
-          updatedAt: toolData.updatedAt?.toDate?.()?.toISOString() || toolData.updatedAt,
+          createdAt:
+            toolData.createdAt?.toDate?.()?.toISOString() ||
+            toolData.createdAt,
+          updatedAt:
+            toolData.updatedAt?.toDate?.()?.toISOString() ||
+            toolData.updatedAt,
         };
-      })
+      }),
     );
 
-    // Filter out null results from search filtering
-    const filteredTools = tools.filter(tool => tool !== null);
+    const filteredTools = tools.filter(
+      (tool): tool is NonNullable<typeof tool> => tool !== null,
+    );
 
-    // Get total count for pagination (approximate for performance)
     let total = filteredTools.length;
     if (offset === 0) {
       try {
-        let countQuery: admin.firestore.Query<admin.firestore.DocumentData> = adminDb.collection("tools");
-        
-        if (userId && currentUser) {
-          if (userId === currentUser.uid) {
-            countQuery = countQuery.where("ownerId", "==", userId);
+        let countQuery = dbAdmin
+          .collection("tools")
+          .where("campusId", "==", CURRENT_CAMPUS_ID);
+
+        if (requestedUserId) {
+          if (requestedUserId === viewerId) {
+            countQuery = countQuery.where("ownerId", "==", requestedUserId);
           } else {
             countQuery = countQuery
-              .where("ownerId", "==", userId)
+              .where("ownerId", "==", requestedUserId)
               .where("isPublic", "==", true)
               .where("status", "==", "published");
           }
@@ -177,29 +199,30 @@ export async function GET(request: NextRequest) {
         const countSnapshot = await countQuery.count().get();
         total = countSnapshot.data().count;
       } catch (error) {
-        logger.warn(
-      `Failed to get total count at /api/tools/browse`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-        // Fallback to current batch size
-        total = filteredTools.length;
+        logger.warn("Failed to count tools for browse", {
+          error: error instanceof Error ? error : new Error(String(error)),
+          endpoint: "/api/tools/browse",
+        });
       }
     }
 
-    return NextResponse.json({
+    return respond.success({
       tools: filteredTools,
       pagination: {
         total,
         limit,
         offset,
         hasMore: filteredTools.length === limit,
-        returned: filteredTools.length
-      } });
+        returned: filteredTools.length,
+      },
+    });
   } catch (error) {
     logger.error(
-      `Error browsing tools at /api/tools/browse`,
-      error instanceof Error ? error : new Error(String(error))
+      "Error browsing tools",
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to browse tools", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to browse tools", "INTERNAL_ERROR", {
+      status: 500,
+    });
   }
-}
+});

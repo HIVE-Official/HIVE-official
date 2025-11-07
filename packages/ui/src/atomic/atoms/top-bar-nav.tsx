@@ -133,7 +133,7 @@ const TopBarNav = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, TopBar
     labelWeight = "normal",
     iconState = "default",
     children,
-    asChild = false,
+    // asChild not used in this implementation
     ...props
   }, ref) => {
     const activeVariant = isActive ? "active" : variant
@@ -177,15 +177,8 @@ const TopBarNav = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, TopBar
     )
 
     if (href) {
-      // Extract only valid anchor props from button props
-      const {
-        // Remove button-specific props
-        type, form, formAction, formEncType, formMethod, formNoValidate, formTarget,
-        autoFocus, disabled, name, value,
-        onToggle, // This is the problematic prop
-        ...anchorProps
-      } = props as any;
-
+      const drop = new Set(['type','form','formAction','formEncType','formMethod','formNoValidate','formTarget','autoFocus','disabled','name','value','onToggle'])
+      const anchorProps = Object.fromEntries(Object.entries(props as any).filter(([k]) => !drop.has(k)))
       return (
         <a
           href={href}

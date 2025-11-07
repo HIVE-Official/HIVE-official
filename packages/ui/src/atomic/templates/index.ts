@@ -1,9 +1,14 @@
-/**
- * Template Exports
- * Page-level layouts and compositions
- */
+export { FeedLoadingSkeleton } from "./feed-loading-skeleton";
+export type { FeedLoadingSkeletonProps } from "./feed-loading-skeleton";
 
-export { ProfileViewLayout } from './profile-view-layout';
+export { FeedPageLayout } from "./feed-page-layout";
+export type { FeedPageLayoutProps } from "./feed-page-layout";
 
-// Types
-export type { ProfileViewLayoutProps } from './profile-view-layout';
+export { SpaceBoardTemplate } from "./space-board-template";
+export type { SpaceBoardTemplateProps, PinnedPost } from "./space-board-template";
+
+export { RitualsPageLayout } from "./rituals-page-layout";
+export type { RitualsPageLayoutProps, RitualData } from "./rituals-page-layout";
+
+export { RitualDetailLayout } from "./ritual-detail-layout";
+export type { RitualDetailLayoutProps } from "./ritual-detail-layout";

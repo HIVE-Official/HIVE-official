@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Privacy settings interface
 interface PrivacySettings {
@@ -204,6 +205,7 @@ async function updateSpaceVisibility(userId: string, settings: PrivacySettings) 
     const membershipsSnapshot = await dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
     
     // Update visibility in each space membership

@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Real-time tool update interfaces
 interface ToolUpdateEvent {
@@ -471,7 +472,8 @@ async function verifyToolUpdatePermission(
       const memberQuery = dbAdmin.collection('members')
         .where('userId', '==', userId)
         .where('spaceId', '==', spaceId)
-        .where('status', '==', 'active');
+        .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
 
       const memberSnapshot = await memberQuery.get();
       if (!memberSnapshot.empty) {
@@ -519,7 +521,8 @@ async function verifyToolAccess(
           const memberQuery = dbAdmin.collection('members')
             .where('userId', '==', userId)
             .where('spaceId', '==', deployment.spaceId)
-            .where('status', '==', 'active');
+            .where('status', '==', 'active')
+            .where('campusId', '==', CURRENT_CAMPUS_ID);
           
           const memberSnapshot = await memberQuery.get();
           return !memberSnapshot.empty;
@@ -532,7 +535,8 @@ async function verifyToolAccess(
       const memberQuery = dbAdmin.collection('members')
         .where('userId', '==', userId)
         .where('spaceId', '==', spaceId)
-        .where('status', '==', 'active');
+        .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID);
       
       const memberSnapshot = await memberQuery.get();
       return !memberSnapshot.empty;
@@ -600,7 +604,8 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
     const memberQuery = dbAdmin.collection('members')
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);

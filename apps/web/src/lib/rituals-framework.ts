@@ -298,6 +298,7 @@ export class RitualFramework {
   async createRitual(ritual: Omit<Ritual, 'id' | 'createdAt' | 'updatedAt' | 'version'>): Promise<string> {
     const ritualDoc = {
       ...ritual,
+      campusId: this.resolveCampusId((ritual.universities && ritual.universities[0]) || 'buffalo'),
       createdAt: new Date(),
       updatedAt: new Date(),
       version: 1,
@@ -342,7 +343,7 @@ export class RitualFramework {
   /**
    * Register user participation in a ritual
    */
-  async joinRitual(ritualId: string, userId: string, entryPoint = 'direct'): Promise<boolean> {
+  async joinRitual(ritualId: string, userId: string, entryPoint = 'direct', deviceType: 'web' | 'mobile' | 'desktop' = 'web'): Promise<boolean> {
     const ritual = await this.getRitual(ritualId);
     if (!ritual || ritual.status !== 'active') return false;
     
@@ -358,6 +359,7 @@ export class RitualFramework {
     const participation: Omit<RitualParticipation, 'id'> = {
       ritualId,
       userId,
+      campusId: this.resolveCampusId((ritual.universities && ritual.universities[0]) || 'buffalo'),
       status: 'joined',
       joinedAt: new Date(),
       lastActiveAt: new Date(),
@@ -370,7 +372,7 @@ export class RitualFramework {
       badgesAwarded: [],
       featuresUnlocked: [],
       entryPoint,
-      deviceType: 'web', // TODO: Detect device type
+      deviceType,
       completionQuality: 0
     };
     
@@ -388,8 +390,7 @@ export class RitualFramework {
   async recordAction(
     ritualId: string, 
     userId: string, 
-    actionId: string, 
-    _metadata: Record<string, any> = {}
+    actionId: string
   ): Promise<void> {
     const participation = await this.getUserParticipation(ritualId, userId);
     if (!participation) throw new Error('User not participating in ritual');
@@ -456,15 +457,61 @@ export class RitualFramework {
   /**
    * Check if user meets ritual prerequisites
    */
-  private async checkUserEligibility(_userId: string, _ritual: Ritual): Promise<boolean> {
-    // TODO: Implement eligibility checking based on:
-    // - Space memberships
-    // - Account age
-    // - Completed rituals
-    // - Academic status
-    // - Required features
-    
-    return true; // Simplified for now
+  private async checkUserEligibility(userId: string, ritual: Ritual): Promise<boolean> {
+    try {
+      // Fetch user doc
+      const userDoc = await dbAdmin.collection('users').doc(userId).get();
+      const userData = userDoc.exists ? userDoc.data() || {} : {};
+
+      // 1) Account age check
+      if (ritual.prerequisites?.accountAge && userData?.createdAt) {
+        const created = userData.createdAt?.toDate?.() || new Date(userData.createdAt);
+        const days = Math.floor((Date.now() - created.getTime()) / (1000 * 60 * 60 * 24));
+        if (days < ritual.prerequisites.accountAge) return false;
+      }
+
+      // 2) Minimum space memberships
+      if (ritual.prerequisites?.minSpaceMemberships) {
+        const memberships = await dbAdmin.collection('members')
+          .where('userId', '==', userId)
+          .where('status', '==', 'active')
+          .get();
+        if (memberships.size < ritual.prerequisites.minSpaceMemberships) return false;
+      }
+
+      // 3) Completed rituals prerequisite
+      if (ritual.prerequisites?.completedRituals && ritual.prerequisites.completedRituals.length > 0) {
+        const completedSnap = await dbAdmin.collection('ritual_participation')
+          .where('userId', '==', userId)
+          .where('status', '==', 'completed')
+          .get();
+        const completedIds = new Set(completedSnap.docs.map(d => d.data().ritualId));
+        for (const req of ritual.prerequisites.completedRituals) {
+          if (!completedIds.has(req)) return false;
+        }
+      }
+
+      // 4) Academic status
+      if (ritual.prerequisites?.academicStatus && ritual.prerequisites.academicStatus.length > 0) {
+        const status = (userData?.academicStatus || '').toString().toLowerCase();
+        const allowed = ritual.prerequisites.academicStatus.map((s: string) => s.toLowerCase());
+        if (status && !allowed.includes(status)) return false;
+      }
+
+      // 5) Required features (user-level unlocks)
+      if (ritual.prerequisites?.requiredFeatures && ritual.prerequisites.requiredFeatures.length > 0) {
+        const { featureRevealSystem } = await import('./feature-reveal-system');
+        for (const featureId of ritual.prerequisites.requiredFeatures) {
+          const hasAccess = await featureRevealSystem.hasFeatureAccess(featureId, userId);
+          if (!hasAccess) return false;
+        }
+      }
+
+      return true;
+    } catch {
+      // On error, be permissive rather than blocking
+      return true;
+    }
   }
   
   /**
@@ -513,27 +560,63 @@ export class RitualFramework {
   /**
    * Initialize participation tracking when ritual starts
    */
-  private async initializeParticipationTracking(_ritualId: string, _universities: string[]): Promise<void> {
-    // TODO: Calculate eligible participants per university
-    // Update campus states with realistic totalEligible numbers
+  private async initializeParticipationTracking(ritualId: string, universities: string[]): Promise<void> {
+    // Calculate eligible participants per university and update campus state
+    for (const uni of universities) {
+      const campusId = this.resolveCampusId(uni);
+      // Count eligible users by campusId
+      const usersSnap = await dbAdmin.collection('users')
+        .where('campusId', '==', campusId)
+        .get();
+
+      const ref = dbAdmin.collection('campus_ritual_states').doc(`${ritualId}_${uni}`);
+      await ref.set({
+        ritualId,
+        university: uni,
+        totalEligible: usersSnap.size,
+        startedAt: new Date(),
+        updatedAt: new Date()
+      }, { merge: true });
+    }
   }
   
   /**
    * Send campus-wide ritual start notifications
    */
   private async broadcastRitualStart(ritualId: string, ritual: Ritual): Promise<void> {
-    // TODO: Integrate with notification system
+    // Minimal campus announcement record
+    const title = `Ritual started: ${ritual.title}`;
+    const message = ritual.tagline || ritual.description || 'A new campus ritual has begun.';
+
+    for (const uni of ritual.universities) {
+      await dbAdmin.collection('announcements').add({
+        type: 'system_announcement',
+        title,
+        message,
+        ritualId,
+        university: uni,
+        campusId: this.resolveCampusId(uni),
+        createdAt: new Date(),
+        priority: 'normal'
+      });
+    }
   }
   
   /**
    * Update campus participation counters
    */
   private async updateCampusParticipation(
-    _ritualId: string, 
-    _universities: string[], 
-    _action: 'joined' | 'completed'
+    ritualId: string, 
+    universities: string[], 
+    action: 'joined' | 'completed'
   ): Promise<void> {
-    // TODO: Update campus state counters
+    for (const uni of universities) {
+      const docRef = dbAdmin.collection('campus_ritual_states').doc(`${ritualId}_${uni}`);
+      const update: Record<string, any> = { updatedAt: new Date() };
+      if (action === 'joined') update.totalParticipants = (await docRef.get()).data()?.totalParticipants || 0 + 1;
+      if (action === 'completed') update.totalCompleted = (await docRef.get()).data()?.totalCompleted || 0 + 1;
+      await docRef.set(update, { merge: true });
+    }
   }
   
   /**
@@ -557,21 +640,89 @@ export class RitualFramework {
   /**
    * Award rewards to user for ritual completion
    */
-  private async awardRitualRewards(_ritualId: string, _userId: string): Promise<void> {
-    // TODO: Implement reward system
-    // - Award badges
-    // - Unlock features
-    // - Grant special access
+  private async awardRitualRewards(ritualId: string, userId: string): Promise<void> {
+    const ritual = await this.getRitual(ritualId);
+    if (!ritual) return;
+
+    // Record rewards for the user
+    for (const reward of ritual.rewards || []) {
+      // For now, award all completion-gated rewards upon completion
+      if (reward.requiresCompletion) {
+        await dbAdmin.collection('user_rewards').add({
+          userId,
+          ritualId,
+          rewardId: reward.id,
+          type: reward.type,
+          awardedAt: new Date(),
+          metadata: { name: reward.name, rarity: reward.rarity }
+        });
+
+        // If reward is a feature, unlock at user scope
+        if (reward.type === 'feature') {
+          const { featureRevealSystem } = await import('./feature-reveal-system');
+          await featureRevealSystem.unlockFeature(reward.id, 'user', userId, { unlockedBy: 'ritual', sourceId: ritualId });
+        }
+      }
+    }
   }
   
   /**
    * Check and trigger milestone achievements
    */
-  private async checkMilestones(_ritualId: string): Promise<void> {
-    // TODO: Check if any milestones have been reached
-    // - Calculate participation thresholds
-    // - Trigger celebrations
-    // - Unlock features
+  private async checkMilestones(ritualId: string): Promise<void> {
+    // Check simple milestone thresholds based on participant counts and average progress
+    const ritual = await this.getRitual(ritualId);
+    if (!ritual) return;
+
+    // Aggregate participation
+    const partsSnap = await dbAdmin.collection('ritual_participation')
+      .where('ritualId', '==', ritualId)
+      .get();
+    const participantCount = partsSnap.size;
+    let avgProgress = 0;
+    if (participantCount > 0) {
+      const sum = partsSnap.docs.reduce((acc, d) => acc + (d.data().progressPercentage || 0), 0);
+      avgProgress = sum / participantCount;
+    }
+
+    // Update subcollection milestones if present
+    const milestonesSnap = await dbAdmin.collection('rituals').doc(ritualId).collection('milestones').get();
+    for (const mDoc of milestonesSnap.docs) {
+      const m = mDoc.data();
+      if (!m.isReached) {
+        const reachedByParticipants = typeof m.participantThreshold === 'number' && participantCount >= m.participantThreshold;
+        const reachedByProgress = typeof m.progressThreshold === 'number' && avgProgress >= m.progressThreshold;
+        if (reachedByParticipants || reachedByProgress) {
+          await mDoc.ref.set({
+            isReached: true,
+            reachedAt: new Date(),
+            participantsCompleted: participantCount
+          }, { merge: true });
+        }
+      }
+    }
+
+    // Optionally check feature unlocks via campus participation
+    const { featureRevealSystem } = await import('./feature-reveal-system');
+    for (const uni of ritual.universities) {
+      const campusRef = dbAdmin.collection('campus_ritual_states').doc(`${ritualId}_${uni}`);
+      const state = (await campusRef.get()).data() as any | undefined;
+      if (state && state.totalEligible > 0) {
+        const participationRate = (state.totalParticipants / state.totalEligible) * 100;
+        await featureRevealSystem.checkRitualFeatureUnlocks(ritualId, uni, {
+          totalParticipants: state.totalParticipants || 0,
+          totalEligible: state.totalEligible || 0,
+          participationRate
+        });
+      }
+    }
+  }
+
+  private resolveCampusId(university: string): string {
+    // Simple mapping for UB; extend as multi-campus rolls out
+    const u = university.toLowerCase();
+    if (u.includes('buffalo') || u.includes('ub')) return 'ub-buffalo';
+    return university;
   }
 }
 

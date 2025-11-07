@@ -1,22 +1,17 @@
-/**
- * Profile UI Types
- * Simplified interfaces for UI components that adapt from ProfileSystem
- */
-import type { ProfileSystem } from '@hive/core';
-/**
- * Simplified profile for UI components
- * Adapts the complex ProfileSystem to simpler UI needs
- */
+import type { ProfileSystem } from "@hive/core/types/profile-system";
+export interface ProfileWidgetPrivacy {
+    level: "public" | "connections" | "private" | "ghost" | string;
+}
 export interface UIProfile {
     identity: {
         id: string;
         fullName: string;
-        email: string;
-        avatarUrl?: string;
+        email?: string;
+        avatarUrl?: string | null;
         bio?: string;
     };
     academic: {
-        campusId: 'ub-buffalo';
+        campusId: string;
         major?: string;
         academicYear?: string;
         graduationYear?: number;
@@ -31,17 +26,15 @@ export interface UIProfile {
     };
     social?: {
         connections?: {
-            connectionIds: string[];
-            friendIds: string[];
+            connectionIds?: string[];
+            friendIds?: string[];
             strength?: Record<string, number>;
         };
         mutualSpaces?: string[];
     };
     privacy?: {
-        level: string;
-        widgets?: Record<string, {
-            level: string;
-        }>;
+        level?: string;
+        widgets?: Record<string, ProfileWidgetPrivacy>;
     };
     verification?: {
         facultyVerified?: boolean;
@@ -57,12 +50,7 @@ export interface UIProfile {
         updatedAt?: Date;
         lastActiveAt?: Date;
     };
-    widgets?: Record<string, {
-        level: string;
-    }>;
+    widgets?: Record<string, ProfileWidgetPrivacy>;
 }
-/**
- * Convert ProfileSystem to UIProfile
- */
 export declare function specProfileToUIProfile(profile: ProfileSystem): UIProfile;
 //# sourceMappingURL=profile-types.d.ts.map

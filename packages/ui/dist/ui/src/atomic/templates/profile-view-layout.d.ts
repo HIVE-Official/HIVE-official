@@ -1,19 +1,18 @@
-import React from 'react';
-import type { UIProfile } from '../organisms/profile-types';
-import type { PrivacyLevel } from '../molecules/privacy-control';
+import { type ProfileActivityItem, type ProfileSpaceItem, type ProfileConnectionItem } from "../organisms/profile-widgets";
+import type { ProfileSystem } from "@hive/core/types/profile-system";
+import type { PrivacyLevel } from "../molecules/privacy-control";
 export interface ProfileViewLayoutProps {
-    profile: UIProfile;
+    profile: ProfileSystem;
     isOwnProfile?: boolean;
-    activities?: any[];
-    spaces?: any[];
-    connections?: any[];
+    activities?: ProfileActivityItem[];
+    spaces?: ProfileSpaceItem[];
+    connections?: ProfileConnectionItem[];
     isSpaceLeader?: boolean;
     hasHiveLabAccess?: boolean;
     toolsCreated?: number;
     leadingSpaces?: Array<{
         id: string;
         name: string;
-        memberCount: number;
     }>;
     onEditPhoto?: () => void;
     onPrivacyChange?: (widget: string, level: PrivacyLevel) => void;
@@ -22,15 +21,5 @@ export interface ProfileViewLayoutProps {
     onOpenHiveLab?: () => void;
     className?: string;
 }
-/**
- * Profile View Layout - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - 8px grid system with responsive columns
- * - Mobile: 1 column
- * - Tablet: 2 columns
- * - Desktop: 3 columns
- * - Luxury minimalism with careful spacing
- */
-export declare const ProfileViewLayout: React.FC<ProfileViewLayoutProps>;
+export declare function ProfileViewLayout({ profile, isOwnProfile, activities, spaces, connections, isSpaceLeader, hasHiveLabAccess, toolsCreated, leadingSpaces, onEditPhoto, onPrivacyChange, onStepClick, onRequestHiveLabAccess, onOpenHiveLab, className, }: ProfileViewLayoutProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=profile-view-layout.d.ts.map

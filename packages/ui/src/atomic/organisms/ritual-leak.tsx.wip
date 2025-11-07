@@ -1,0 +1,301 @@
+'use client';
+
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Card } from '../atoms/card';
+import { Button } from '../atoms/button';
+import { Badge } from '../atoms/badge';
+import { Textarea } from '../atoms/textarea';
+import { Eye, EyeOff, Send, Clock, Users, Lock, Unlock } from 'lucide-react';
+import type { LeakConfig } from '@hive/core';
+
+export interface LeakSubmission {
+  id: string;
+  content: string;
+  submittedAt: string;
+  isRevealed: boolean;
+}
+
+export interface RitualLeakProps {
+  config: LeakConfig;
+  submissions: LeakSubmission[];
+  hasUserSubmitted: boolean;
+  isRevealed: boolean;
+  revealsAt?: string;
+  onSubmit?: (content: string) => Promise<void>;
+  className?: string;
+}
+
+/**
+ * Leak Renderer
+ *
+ * Anonymous content submission with countdown reveal
+ * Students submit anonymously, content revealed at ritual end
+ */
+export const RitualLeak: React.FC<RitualLeakProps> = ({
+  config,
+  submissions,
+  hasUserSubmitted,
+  isRevealed,
+  revealsAt,
+  onSubmit,
+  className,
+}) => {
+  const [content, setContent] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const timeUntilReveal = React.useMemo(() => {
+    if (!revealsAt || isRevealed) return null;
+    const now = Date.now();
+    const reveals = new Date(revealsAt).getTime();
+    const diff = reveals - now;
+    if (diff <= 0) return 'Revealing soon...';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `Reveals in ${days}d ${hours % 24}h`;
+    }
+    if (hours > 0) return `Reveals in ${hours}h ${minutes}m`;
+    return `Reveals in ${minutes}m`;
+  }, [revealsAt, isRevealed]);
+
+  const handleSubmit = async () => {
+    if (!onSubmit || isSubmitting || !content.trim() || hasUserSubmitted) return;
+
+    setIsSubmitting(true);
+    try {
+      await onSubmit(content.trim());
+      setContent('');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const canSubmit = content.trim().length > 0 && !hasUserSubmitted && !isRevealed;
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      {/* Hero Card */}
+      <Card className="overflow-hidden border-purple-500/20 bg-gradient-to-br from-purple-900/20 via-[var(--hive-background-secondary)] to-black p-0">
+        <div className="relative overflow-hidden bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-6 py-8">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/20 backdrop-blur-sm">
+              {isRevealed ? (
+                <Unlock className="h-8 w-8 text-purple-400" />
+              ) : (
+                <Lock className="h-8 w-8 text-purple-400" />
+              )}
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <Badge variant="outline" className="border-purple-400/40 bg-purple-500/10 text-xs uppercase tracking-[0.16em] text-purple-400">
+                {isRevealed ? 'Revealed' : 'Anonymous'}
+              </Badge>
+
+              <h2 className="text-2xl font-bold text-white">{config.prompt || 'Share Your Secret'}</h2>
+              <p className="max-w-2xl text-white/70">
+                {config.description || 'Submit anonymously. All submissions revealed when the ritual ends.'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Section */}
+        <div className="space-y-4 border-t border-white/10 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-white/80">
+              <Users className="h-5 w-5" />
+              <span className="text-2xl font-bold">{submissions.length}</span>
+              <span className="text-sm text-white/60">Submissions</span>
+            </div>
+
+            {!isRevealed && timeUntilReveal && (
+              <div className="flex items-center gap-2 text-purple-400">
+                <Clock className="h-5 w-5" />
+                <span className="font-semibold">{timeUntilReveal}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Submission Form */}
+          {!isRevealed && !hasUserSubmitted && onSubmit && (
+            <div className="space-y-3">
+              <Textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={config.placeholder || "Type your anonymous submission..."}
+                className="min-h-[120px] resize-none border-purple-500/20 bg-black/30 text-white placeholder:text-white/40 focus:border-purple-500/40"
+                maxLength={config.characterLimit || 500}
+              />
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-white/50">
+                  {content.length} / {config.characterLimit || 500}
+                </span>
+
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!canSubmit || isSubmitting}
+                  size="sm"
+                  className="bg-purple-500 text-white hover:bg-purple-600"
+                >
+                  {isSubmitting ? (
+                    'Submitting...'
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Submit Anonymously
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* User Already Submitted */}
+          {!isRevealed && hasUserSubmitted && (
+            <Card className="border-purple-500/20 bg-purple-500/10 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500/20">
+                  <EyeOff className="h-5 w-5 text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-white">Submission Received</p>
+                  <p className="text-sm text-white/70">
+                    Your anonymous submission will be revealed {timeUntilReveal?.toLowerCase()}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Revealed State */}
+          {isRevealed && (
+            <Card className="border-purple-500/20 bg-purple-500/10 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500">
+                  <Eye className="h-5 w-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-white">All Submissions Revealed</p>
+                  <p className="text-sm text-white/70">
+                    {submissions.length} anonymous submissions from the campus
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+      </Card>
+
+      {/* Submissions Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+            {isRevealed ? (
+              <>
+                <Eye className="h-5 w-5" />
+                All Submissions
+              </>
+            ) : (
+              <>
+                <EyeOff className="h-5 w-5" />
+                Preview
+              </>
+            )}
+          </h3>
+        </div>
+
+        {submissions.length === 0 ? (
+          <Card className="border-white/10 bg-white/5 p-8 text-center">
+            <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/10">
+              <Lock className="h-8 w-8 text-purple-400/60" />
+            </div>
+            <p className="text-white/60">No submissions yet. Be the first to share!</p>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {submissions.map((submission, index) => (
+              <SubmissionCard
+                key={submission.id}
+                submission={submission}
+                index={index}
+                isRevealed={isRevealed}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Privacy Notice */}
+      <Card className="border-white/10 bg-white/5 p-4">
+        <div className="flex items-start gap-3 text-sm text-white/80">
+          <Lock className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
+          <div className="space-y-1">
+            <p className="font-medium text-white">Anonymous Submissions</p>
+            <p className="text-white/60">
+              All submissions are completely anonymous. Your identity is never stored or revealed, even to admins.
+              Content is moderated for safety but remains anonymous.
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+interface SubmissionCardProps {
+  submission: LeakSubmission;
+  index: number;
+  isRevealed: boolean;
+}
+
+const SubmissionCard: React.FC<SubmissionCardProps> = ({ submission, index, isRevealed }) => {
+  return (
+    <Card className={cn(
+      'border p-4 transition-all',
+      isRevealed
+        ? 'border-purple-500/20 bg-[var(--hive-background-secondary)]'
+        : 'border-white/10 bg-white/5 opacity-50'
+    )}>
+      <div className="flex items-start gap-3">
+        {/* Anonymous Avatar */}
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-purple-500/20 font-bold text-purple-400">
+          #{index + 1}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 space-y-2">
+          {isRevealed ? (
+            <p className="whitespace-pre-wrap text-white">{submission.content}</p>
+          ) : (
+            <div className="space-y-1">
+              <div className="h-4 w-full rounded bg-white/10" />
+              <div className="h-4 w-4/5 rounded bg-white/10" />
+              <div className="h-4 w-3/5 rounded bg-white/10" />
+            </div>
+          )}
+
+          {/* Timestamp (only when revealed) */}
+          {isRevealed && (
+            <div className="flex items-center gap-1.5 text-xs text-white/50">
+              <Clock className="h-3.5 w-3.5" />
+              <span>Submitted {new Date(submission.submittedAt).toLocaleDateString()}</span>
+            </div>
+          )}
+
+          {/* Locked State */}
+          {!isRevealed && (
+            <div className="flex items-center gap-2 text-xs text-purple-400">
+              <Lock className="h-3.5 w-3.5" />
+              <span>Reveals when ritual ends</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+};

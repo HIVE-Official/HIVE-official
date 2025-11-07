@@ -26,7 +26,7 @@ import {
 import { useSession } from "../../hooks/use-session";
 // import { useCalendarData } from "../../hooks/use-calendar-data";
 import { ErrorBoundary } from "../../components/error-boundary";
-import { CalendarLoadingSkeleton } from "../../components/calendar/calendar-loading-skeleton";
+import { CalendarLoadingSkeleton } from "@hive/ui";
 import { EventDetailsModal } from "../../components/events/event-details-modal";
 import { CreateEventModal } from "../../components/events/create-event-modal";
 
@@ -119,8 +119,8 @@ export default function CalendarPage() {
             endTime: String(eventData.endDate || ''),
             location: String(eventData.location || ''),
             type: eventData.type === 'personal' ? 'event' : (eventData.type as CalendarEvent['type']) || 'event',
-            color: eventData.type === 'personal' ? '#3B82F6' : 
-                  eventData.type === 'space' ? '#10B981' : '#F59E0B',
+            color: eventData.type === 'personal' ? 'var(--hive-status-info)' : 
+                  eventData.type === 'space' ? 'var(--hive-status-success)' : 'var(--hive-status-warning)',
             source: eventData.type === 'personal' ? 'hive' : (eventData.source as CalendarEvent['source']) || 'hive',
             rsvpStatus: eventData.canEdit ? 'going' : 'interested',
             space: eventData.spaceName ? { 
@@ -577,10 +577,10 @@ export default function CalendarPage() {
                      eventData.type === 'social' ? 'event' :
                      eventData.type === 'professional' ? 'meeting' :
                      eventData.type === 'recreational' ? 'event' : 'personal',
-              color: eventData.type === 'academic' ? '#3B82F6' : 
-                     eventData.type === 'social' ? '#EC4899' :
-                     eventData.type === 'professional' ? '#10B981' :
-                     eventData.type === 'recreational' ? '#F59E0B' : '#8B5CF6',
+              color: eventData.type === 'academic' ? 'var(--hive-status-info)' : 
+                     eventData.type === 'social' ? 'var(--hive-brand-primary)' :
+                     eventData.type === 'professional' ? 'var(--hive-status-success)' :
+                     eventData.type === 'recreational' ? 'var(--hive-status-warning)' : 'var(--hive-status-info)',
               source: 'hive',
               attendees: [],
               rsvpStatus: 'going',

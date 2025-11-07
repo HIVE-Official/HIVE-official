@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { getFirestore } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import type { Tool } from '../../../packages/core/src/domain/creation/tool';
-import { validateElementConfig } from './validation';
+import { validateElementConfig } from '../../../packages/core/src/domain/creation/elements';
 
 const CreateToolSchema = z.object({
   name: z.string().min(3, 'Tool name must be at least 3 characters long.'),

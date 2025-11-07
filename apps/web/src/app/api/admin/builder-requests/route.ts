@@ -6,6 +6,8 @@ import * as admin from 'firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * Admin Builder Request Management API
@@ -38,34 +40,9 @@ async function isAdmin(userId: string): Promise<boolean> {
  * Review (approve/reject) a builder request
  * POST /api/admin/builder-requests
  */
-export async function POST(request: NextRequest) {
+export const POST = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     // Parse and validate request body
     const body = await request.json();
@@ -81,7 +58,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Builder request not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
     }
 
-    const requestData = requestDoc.data();
+    const requestData = requestDoc.data() as any;
 
     if (requestData?.status !== 'pending') {
       return NextResponse.json(
@@ -201,40 +178,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(ApiResponseHelper.error("Failed to review builder request", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });
 
 /**
  * Get pending builder requests for admin review
  * GET /api/admin/builder-requests
  */
-export async function GET(request: NextRequest) {
+export const GET = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     const url = new URL(request.url);
     const status = url.searchParams.get('status') || 'pending';
@@ -248,29 +200,59 @@ export async function GET(request: NextRequest) {
 
     const requestsSnapshot = await query.get();
 
-    const requests = requestsSnapshot.docs.map(doc => {
-      const data = doc.data();
+    // Filter by campus: use request.campusId if present; otherwise check target space
+    const requests = (await Promise.all(requestsSnapshot.docs.map(async (doc) => {
+      const data = doc.data() as any;
+      // quick path: campusId on request
+      if (data.campusId && data.campusId !== CURRENT_CAMPUS_ID) return null;
+      if (!data.campusId && data.spaceType && data.spaceId) {
+        try {
+          const spaceDoc = await dbAdmin
+            .collection('spaces')
+            .doc(data.spaceType)
+            .collection('spaces')
+            .doc(data.spaceId)
+            .get();
+          if (!spaceDoc.exists || (spaceDoc.data()?.campusId && spaceDoc.data()!.campusId !== CURRENT_CAMPUS_ID)) {
+            return null;
+          }
+        } catch {
+          return null;
+        }
+      }
       return {
         id: doc.id,
         ...data,
         submittedAt: data.submittedAt?.toDate?.()?.toISOString(),
         reviewedAt: data.reviewedAt?.toDate?.()?.toISOString(),
         expiresAt: data.expiresAt?.toDate?.()?.toISOString(),
-        // Calculate time since submission
-        hoursWaiting: data.submittedAt ? 
-          Math.floor((Date.now() - data.submittedAt.toDate().getTime()) / (1000 * 60 * 60)) : 0
+        hoursWaiting: data.submittedAt ? Math.floor((Date.now() - data.submittedAt.toDate().getTime()) / (1000 * 60 * 60)) : 0
       };
-    });
+    }))).filter(Boolean) as any[];
 
     // Get summary statistics
+    // Summary limited to current campus
     const allRequestsSnapshot = await dbAdmin.collection('builderRequests').get();
-    const allRequests = allRequestsSnapshot.docs.map(doc => doc.data());
+    const allRequestsRaw = allRequestsSnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) }));
+    const allRequests = await Promise.all(allRequestsRaw.map(async (r) => {
+      if (r.campusId) return r.campusId === CURRENT_CAMPUS_ID ? r : null;
+      if (r.spaceType && r.spaceId) {
+        try {
+          const sd = await dbAdmin.collection('spaces').doc(r.spaceType).collection('spaces').doc(r.spaceId).get();
+          return sd.exists && (sd.data()?.campusId === CURRENT_CAMPUS_ID) ? r : null;
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    }));
+    const allRequestsFiltered = allRequests.filter(Boolean) as any[];
     
     const summary = {
-      total: allRequests.length,
-      pending: allRequests.filter(r => r.status === 'pending').length,
-      approved: allRequests.filter(r => r.status === 'approved').length,
-      rejected: allRequests.filter(r => r.status === 'rejected').length,
+      total: allRequestsFiltered.length,
+      pending: allRequestsFiltered.filter(r => r.status === 'pending').length,
+      approved: allRequestsFiltered.filter(r => r.status === 'approved').length,
+      rejected: allRequestsFiltered.filter(r => r.status === 'rejected').length,
       urgentCount: requests.filter(r => r.hoursWaiting >= 20).length, // Close to 24hr deadline
       averageWaitTime: requests.length > 0 ? 
         Math.round(requests.reduce((sum, r) => sum + r.hoursWaiting, 0) / requests.length) : 0
@@ -292,4 +274,18 @@ export async function GET(request: NextRequest) {
     logger.error('Get builder requests error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });
+    // Enforce campus isolation: verify the request's target space is on current campus
+    try {
+      const spaceRef = dbAdmin
+        .collection('spaces')
+        .doc(requestData.spaceType)
+        .collection('spaces')
+        .doc(requestData.spaceId);
+      const spaceDoc = await spaceRef.get();
+      if (!spaceDoc.exists || (spaceDoc.data()?.campusId && spaceDoc.data()!.campusId !== CURRENT_CAMPUS_ID)) {
+        return NextResponse.json(ApiResponseHelper.error('Access denied - campus mismatch', 'FORBIDDEN'), { status: HttpStatus.FORBIDDEN });
+      }
+    } catch (e) {
+      return NextResponse.json(ApiResponseHelper.error('Failed to validate space campus', 'INTERNAL_ERROR'), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    }

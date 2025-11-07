@@ -6,6 +6,7 @@ export interface FeatureFlags {
     enableAdvancedBuilder: boolean;
     enableCollaborativeEditing: boolean;
     enableRealTimeNotifications: boolean;
+    adminDashboard: boolean;
     spaces: 'enabled';
     tools: 'enabled';
     analytics: 'enabled';

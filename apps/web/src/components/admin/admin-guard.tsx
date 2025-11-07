@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSimpleAuth } from '@/components/auth/simple-auth-provider';
-
-const ADMIN_EMAILS = ['jwrhineh@buffalo.edu', 'noahowsh@gmail.com'];
+import { isAdminEmail } from '@/lib/admin/roles';
 
 interface AdminGuardProps {
   children: React.ReactNode;
@@ -33,7 +32,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
       }
 
       // Check if user email is in admin list
-      if (!user.email || !ADMIN_EMAILS.includes(user.email)) {
+      if (!user.email || !isAdminEmail(user.email)) {
         console.error(`[SECURITY] Unauthorized admin access attempt by ${user.email}`);
         router.push('/?error=admin_forbidden');
         return;

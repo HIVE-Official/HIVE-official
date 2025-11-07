@@ -205,3 +205,4 @@ export async function releaseHandleReservation(handle: string): Promise<void> {
     // Don't throw - this is cleanup, should not break the main flow
   }
 }
+import 'server-only';

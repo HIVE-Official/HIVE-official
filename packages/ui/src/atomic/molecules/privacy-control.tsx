@@ -1,29 +1,56 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { cn } from '../../lib/utils';
-import { Eye, EyeOff, Users, Globe, Lock, Ghost } from 'lucide-react';
+import * as React from "react";
+import { Users, Globe, Lock, Ghost } from "lucide-react";
+
+import { cn } from "../../lib/utils";
+import { Button } from "../atoms/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '../atoms/select';
-import { Button } from '../atoms/button';
+  SelectValue,
+} from "../atoms/select";
 
-/**
- * SPEC-COMPLIANT PRIVACY CONTROL
- *
- * Per SPEC.md:
- * - Three-tier privacy system: Visible, Private, Ghost
- * - Per-widget granular controls
- * - Psychological safety through perceived control
- *
- * Behavioral Design: Giving control reduces anxiety about sharing
- */
+type PrivacyLevel = "public" | "connections" | "private" | "ghost";
 
-export type PrivacyLevel = 'public' | 'connections' | 'private' | 'ghost';
+const PRIVACY_LEVELS: Array<{
+  value: PrivacyLevel;
+  label: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone: string;
+}> = [
+  {
+    value: "public",
+    label: "Public",
+    description: "Visible to everyone at UB",
+    icon: Globe,
+    tone: "text-emerald-400",
+  },
+  {
+    value: "connections",
+    label: "Connections",
+    description: "Only your connections can view",
+    icon: Users,
+    tone: "text-sky-400",
+  },
+  {
+    value: "private",
+    label: "Private",
+    description: "Only you can view",
+    icon: Lock,
+    tone: "text-amber-400",
+  },
+  {
+    value: "ghost",
+    label: "Ghost",
+    description: "Hidden across Hive",
+    icon: Ghost,
+    tone: "text-purple-400",
+  },
+];
 
 export interface PrivacyControlProps {
   level: PrivacyLevel;
@@ -34,48 +61,20 @@ export interface PrivacyControlProps {
   className?: string;
 }
 
-const privacyLevels = [
-  {
-    value: 'public' as const,
-    label: 'Public',
-    icon: Globe,
-    description: 'Everyone can see this',
-    color: 'text-green-500'
-  },
-  {
-    value: 'connections' as const,
-    label: 'Connections',
-    icon: Users,
-    description: 'Only your connections can see',
-    color: 'text-blue-500'
-  },
-  {
-    value: 'private' as const,
-    label: 'Private',
-    icon: Lock,
-    description: 'Only you can see',
-    color: 'text-orange-500'
-  },
-  {
-    value: 'ghost' as const,
-    label: 'Ghost',
-    icon: Ghost,
-    description: 'Hidden from everyone',
-    color: 'text-purple-500'
-  }
-];
-
-export const PrivacyControl: React.FC<PrivacyControlProps> = ({
+export function PrivacyControl({
   level,
   onLevelChange,
   widgetName,
   compact = false,
   showDescription = false,
-  className
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const currentLevel = privacyLevels.find(l => l.value === level) || privacyLevels[0];
-  const Icon = currentLevel.icon;
+  className,
+}: PrivacyControlProps) {
+  const current = React.useMemo(
+    () => PRIVACY_LEVELS.find((item) => item.value === level) ?? PRIVACY_LEVELS[0],
+    [level],
+  );
+
+  const Icon = current.icon;
 
   if (compact) {
     return (
@@ -83,182 +82,148 @@ export const PrivacyControl: React.FC<PrivacyControlProps> = ({
         variant="ghost"
         size="sm"
         onClick={() => {
-          // Cycle through privacy levels
-          const currentIndex = privacyLevels.findIndex(l => l.value === level);
-          const nextIndex = (currentIndex + 1) % privacyLevels.length;
-          onLevelChange(privacyLevels[nextIndex].value);
+          const index = PRIVACY_LEVELS.findIndex((item) => item.value === level);
+          const next = PRIVACY_LEVELS[(index + 1) % PRIVACY_LEVELS.length];
+          onLevelChange(next.value);
         }}
-        className={cn(
-          'gap-1 h-7 px-2',
-          currentLevel.color,
-          'hover:bg-white/5',
-          className
-        )}
+        className={cn("h-8 gap-1 px-2 text-xs", current.tone, className)}
       >
-        <Icon className="h-3 w-3" />
-        <span className="text-xs">{currentLevel.label}</span>
+        <Icon className="h-3.5 w-3.5" aria-hidden />
+        <span>{current.label}</span>
       </Button>
     );
   }
 
   return (
-    <div className={cn('space-y-2', className)}>
-      {widgetName && (
-        <label className="text-sm text-gray-400">
-          Privacy for {widgetName}
-        </label>
-      )}
-
-      <Select value={level} onValueChange={(v) => onLevelChange(v as PrivacyLevel)}>
-        <SelectTrigger
-          className={cn(
-            'w-full bg-black/40 border-gray-800',
-            'hover:border-gray-600 transition-colors'
-          )}
-        >
+    <div className={cn("space-y-2", className)}>
+      {widgetName ? (
+        <span className="text-xs uppercase tracking-[0.28em] text-[color-mix(in_srgb,var(--hive-text-muted,#8e90a2) 90%,transparent)]">
+          {widgetName}
+        </span>
+      ) : null}
+      <Select value={level} onValueChange={(value) => onLevelChange(value as PrivacyLevel)}>
+        <SelectTrigger className="w-full bg-[color-mix(in_srgb,var(--hive-background-secondary,#10111c) 88%,transparent)]">
           <SelectValue>
             <div className="flex items-center gap-2">
-              <Icon className={cn('h-4 w-4', currentLevel.color)} />
-              <span>{currentLevel.label}</span>
+              <Icon className={cn("h-4 w-4", current.tone)} aria-hidden />
+              <span>{current.label}</span>
             </div>
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-black border-gray-800">
-          {privacyLevels.map((privLevel) => {
-            const LevelIcon = privLevel.icon;
+        <SelectContent className="bg-[color-mix(in_srgb,var(--hive-background-primary,#090a14) 96%,transparent)] border-[color-mix(in_srgb,var(--hive-border-default,#242736) 75%,transparent)]">
+          {PRIVACY_LEVELS.map((item) => {
+            const ItemIcon = item.icon;
             return (
               <SelectItem
-                key={privLevel.value}
-                value={privLevel.value}
-                className="hover:bg-gray-900"
+                key={item.value}
+                value={item.value}
+                className="flex cursor-pointer gap-2 px-3"
               >
-                <div className="flex items-center gap-2">
-                  <LevelIcon className={cn('h-4 w-4', privLevel.color)} />
-                  <div className="flex flex-col">
-                    <span className="text-white">{privLevel.label}</span>
-                    {showDescription && (
-                      <span className="text-xs text-gray-500">
-                        {privLevel.description}
-                      </span>
-                    )}
-                  </div>
+                <ItemIcon className={cn("h-4 w-4", item.tone)} aria-hidden />
+                <div className="flex flex-col text-left">
+                  <span className="text-sm text-[var(--hive-text-primary,#f7f7ff)]">{item.label}</span>
+                  {showDescription ? (
+                    <span className="text-xs text-[var(--hive-text-muted,#9194a8)]">
+                      {item.description}
+                    </span>
+                  ) : null}
                 </div>
               </SelectItem>
             );
           })}
         </SelectContent>
       </Select>
-
-      {/* Privacy explanation */}
-      {showDescription && currentLevel && (
-        <p className="text-xs text-gray-500">
-          {currentLevel.description}
-        </p>
-      )}
+      {showDescription ? (
+        <p className="text-xs text-[var(--hive-text-muted,#9194a8)]">{current.description}</p>
+      ) : null}
     </div>
   );
-};
+}
 
-/**
- * Bulk privacy controls for managing multiple widgets at once
- */
+export interface BulkPrivacyControlWidget {
+  id: string;
+  name: string;
+  level: PrivacyLevel;
+}
+
 export interface BulkPrivacyControlProps {
-  widgets: Array<{
-    id: string;
-    name: string;
-    level: PrivacyLevel;
-  }>;
-  onBulkChange: (updates: Record<string, PrivacyLevel>) => void;
+  widgets: BulkPrivacyControlWidget[];
+  onBulkChange: (levels: Record<string, PrivacyLevel>) => void;
   className?: string;
 }
 
-export const BulkPrivacyControl: React.FC<BulkPrivacyControlProps> = ({
-  widgets,
-  onBulkChange,
-  className
-}) => {
-  const [updates, setUpdates] = useState<Record<string, PrivacyLevel>>({});
+export function BulkPrivacyControl({ widgets, onBulkChange, className }: BulkPrivacyControlProps) {
+  const [pending, setPending] = React.useState<Record<string, PrivacyLevel>>({});
 
-  const handleWidgetChange = (widgetId: string, level: PrivacyLevel) => {
-    setUpdates(prev => ({
-      ...prev,
-      [widgetId]: level
-    }));
+  const applyAll = (level: PrivacyLevel) => {
+    const updates = widgets.reduce<Record<string, PrivacyLevel>>((acc, widget) => {
+      acc[widget.id] = level;
+      return acc;
+    }, {});
+    setPending(updates);
+    onBulkChange(updates);
   };
 
-  const handleApplyAll = (level: PrivacyLevel) => {
-    const allUpdates = widgets.reduce((acc, widget) => ({
-      ...acc,
-      [widget.id]: level
-    }), {});
-    setUpdates(allUpdates);
-    onBulkChange(allUpdates);
+  const updateWidget = (widgetId: string, level: PrivacyLevel) => {
+    setPending((prev) => ({ ...prev, [widgetId]: level }));
   };
 
-  const handleSave = () => {
-    if (Object.keys(updates).length > 0) {
-      onBulkChange(updates);
-      setUpdates({});
-    }
-  };
+  const hasChanges = Object.keys(pending).length > 0;
 
   return (
-    <div className={cn('space-y-4', className)}>
-      {/* Quick actions */}
-      <div className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
-        <span className="text-sm text-gray-400">Set all widgets to:</span>
+    <div className={cn("space-y-4", className)}>
+      <div className="flex items-center justify-between rounded-2xl border border-[color-mix(in_srgb,var(--hive-border-default,#2b2e3f) 70%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary,#10111c) 88%,transparent)] p-3">
+        <span className="text-xs uppercase tracking-[0.32em] text-[var(--hive-text-muted,#8d90a2)]">
+          Set all widgets to
+        </span>
         <div className="flex gap-2">
-          {privacyLevels.map(level => {
-            const Icon = level.icon;
+          {PRIVACY_LEVELS.map((item) => {
+            const ItemIcon = item.icon;
             return (
               <Button
-                key={level.value}
-                size="sm"
+                key={item.value}
                 variant="ghost"
-                onClick={() => handleApplyAll(level.value)}
-                className={cn(
-                  'gap-1',
-                  level.color,
-                  'hover:bg-white/5'
-                )}
+                size="sm"
+                onClick={() => applyAll(item.value)}
+                className={cn("gap-1 px-2", item.tone)}
               >
-                <Icon className="h-3 w-3" />
-                <span className="text-xs">{level.label}</span>
+                <ItemIcon className="h-3.5 w-3.5" aria-hidden />
+                <span className="text-xs">{item.label}</span>
               </Button>
             );
           })}
         </div>
       </div>
 
-      {/* Individual widget controls */}
       <div className="space-y-3">
-        {widgets.map(widget => {
-          const currentLevel = updates[widget.id] || widget.level;
-          return (
-            <div
-              key={widget.id}
-              className="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-gray-800"
-            >
-              <span className="text-sm text-white">{widget.name}</span>
-              <PrivacyControl
-                level={currentLevel}
-                onLevelChange={(level) => handleWidgetChange(widget.id, level)}
-                compact
-              />
-            </div>
-          );
-        })}
+        {widgets.map((widget) => (
+          <div
+            key={widget.id}
+            className="flex items-center justify-between rounded-2xl border border-[color-mix(in_srgb,var(--hive-border-default,#2b2e3f) 70%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary,#10111c) 82%,transparent)] p-3"
+          >
+            <span className="text-sm text-[var(--hive-text-primary,#f7f7ff)]">{widget.name}</span>
+            <PrivacyControl
+              level={pending[widget.id] ?? widget.level}
+              onLevelChange={(value) => updateWidget(widget.id, value)}
+              compact
+            />
+          </div>
+        ))}
       </div>
 
-      {/* Save button */}
-      {Object.keys(updates).length > 0 && (
+      {hasChanges ? (
         <Button
-          onClick={handleSave}
-          className="w-full bg-hive-brand-gold text-black hover:bg-hive-brand-gold/90"
+          onClick={() => {
+            onBulkChange(pending);
+            setPending({});
+          }}
+          className="w-full"
         >
-          Save Privacy Settings
+          Save privacy settings
         </Button>
-      )}
+      ) : null}
     </div>
   );
-};
+}
+
+export type { PrivacyLevel };

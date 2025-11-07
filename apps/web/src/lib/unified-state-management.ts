@@ -10,6 +10,7 @@ import { subscribeWithSelector, devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { type User, type Space, type Post, type Tool } from '@hive/core';
 import { getPlatformIntegration, type FeedItem, type PlatformNotification } from './platform-integration';
+import { secureApiFetch } from './secure-auth-utils';
 
 // ===== STATE INTERFACES =====
 
@@ -218,14 +219,14 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         updateFeedItem: (id, updates) => set((state) => {
-          const index = state.feedItems.findIndex(item => item.id === id);
+          const index = state.feedItems.findIndex((item: any) => item.id === id);
           if (index !== -1) {
             Object.assign(state.feedItems[index], updates);
           }
         }),
 
         removeFeedItem: (id) => set((state) => {
-          state.feedItems = state.feedItems.filter(item => item.id !== id);
+          state.feedItems = state.feedItems.filter((item: any) => item.id !== id);
         }),
 
         // Spaces Actions
@@ -238,14 +239,14 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         updateUserSpace: (id, updates) => set((state) => {
-          const index = state.userSpaces.findIndex(space => space.id === id);
+          const index = state.userSpaces.findIndex((space: any) => space.id === id);
           if (index !== -1) {
             Object.assign(state.userSpaces[index], updates);
           }
         }),
 
         removeUserSpace: (id) => set((state) => {
-          state.userSpaces = state.userSpaces.filter(space => space.id !== id);
+          state.userSpaces = state.userSpaces.filter((space: any) => space.id !== id);
         }),
 
         // Tools Actions
@@ -258,14 +259,14 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         updateUserTool: (id, updates) => set((state) => {
-          const index = state.userTools.findIndex(tool => tool.id === id);
+          const index = state.userTools.findIndex((tool: any) => tool.id === id);
           if (index !== -1) {
             Object.assign(state.userTools[index], updates);
           }
         }),
 
         removeUserTool: (id) => set((state) => {
-          state.userTools = state.userTools.filter(tool => tool.id !== id);
+          state.userTools = state.userTools.filter((tool: any) => tool.id !== id);
         }),
 
         // Notifications Actions
@@ -278,14 +279,14 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
         }),
 
         markNotificationRead: (id) => set((state) => {
-          const notification = state.notifications.find(n => n.id === id);
+          const notification = state.notifications.find((n: any) => n.id === id);
           if (notification) {
             notification.metadata.read = true;
           }
         }),
 
         removeNotification: (id) => set((state) => {
-          state.notifications = state.notifications.filter(n => n.id !== id);
+          state.notifications = state.notifications.filter((n: any) => n.id !== id);
         }),
 
         // UI Actions
@@ -407,14 +408,14 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
               // Apply actual data
               switch (update.type) {
                 case 'create_post': {
-                  const feedIndex = state.feedItems.findIndex(item => item.id === update.tempId);
+                  const feedIndex = state.feedItems.findIndex((item: any) => item.id === update.tempId);
                   if (feedIndex !== -1) {
                     state.feedItems[feedIndex] = actualData;
                   }
                   break;
                 }
                 case 'join_space': {
-                  const spaceIndex = state.userSpaces.findIndex(space => space.id === update.tempId);
+                  const spaceIndex = state.userSpaces.findIndex((space: any) => space.id === update.tempId);
                   if (spaceIndex !== -1) {
                     state.userSpaces[spaceIndex] = actualData;
                   }
@@ -442,7 +443,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           if (!state.user) return;
 
           // Check cache first
-          const cacheKey = `feed_${state.user.uid}`;
+          const cacheKey = `feed_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -456,7 +457,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setError('feed', null);
 
             const integration = getPlatformIntegration();
-            const feedData = await integration.getUnifiedFeedData(state.user.uid, {
+            const feedData = await integration.getUnifiedFeedData(state.user.id, {
               limit: 20,
               sources: ['feed', 'spaces', 'tools', 'profile']
             });
@@ -477,7 +478,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           
           if (!state.user) return;
 
-          const cacheKey = `spaces_${state.user.uid}`;
+          const cacheKey = `spaces_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -490,11 +491,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setSpacesLoading(true);
             state.setError('spaces', null);
 
-            const response = await fetch('/api/profile/spaces/actions', {
-              headers: {
-                'Authorization': `Bearer ${await getAuthToken()}`
-              }
-            });
+            const response = await secureApiFetch('/api/profile/spaces/actions');
 
             if (!response.ok) {
               throw new Error('Failed to fetch spaces');
@@ -519,7 +516,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
           
           if (!state.user) return;
 
-          const cacheKey = `tools_${state.user.uid}`;
+          const cacheKey = `tools_${state.user.id}`;
           if (!force) {
             const cachedData = state.getCacheItem(cacheKey);
             if (cachedData) {
@@ -532,11 +529,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setToolsLoading(true);
             state.setError('tools', null);
 
-            const response = await fetch('/api/tools/personal', {
-              headers: {
-                'Authorization': `Bearer ${await getAuthToken()}`
-              }
-            });
+            const response = await secureApiFetch('/api/tools/personal');
 
             if (!response.ok) {
               throw new Error('Failed to fetch tools');
@@ -565,11 +558,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
             state.setProfileLoading(true);
             state.setError('profile', null);
 
-            const response = await fetch('/api/profile/dashboard', {
-              headers: {
-                'Authorization': `Bearer ${await getAuthToken()}`
-              }
-            });
+            const response = await secureApiFetch('/api/profile/dashboard');
 
             if (!response.ok) {
               throw new Error('Failed to fetch profile');
@@ -623,7 +612,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
                   type: 'post',
                   sourceSlice: 'feed',
                   sourceId: `temp_${action.id}`,
-                  userId: state.user?.uid || '',
+                  userId: state.user?.id || '',
                   content: action.data,
                   metadata: {
                     visibility: 'public',
@@ -718,7 +707,7 @@ export const useUnifiedStore = create<UnifiedAppState & UnifiedAppActions>()(
 
             case 'tool_interaction':
               if (update.data.type === 'tool_deployed') {
-                const tool = state.userTools.find(t => t.id === update.data.toolId);
+                const tool = state.userTools.find((t: any) => t.id === update.data.toolId);
                 if (tool) {
                   state.updateUserTool(tool.id, {
                     // deploymentCount: (tool.deploymentCount || 0) + 1
@@ -824,7 +813,7 @@ export const useNotificationsState = () => {
   const markNotificationRead = useUnifiedStore(state => state.markNotificationRead);
   const removeNotification = useUnifiedStore(state => state.removeNotification);
 
-  const unreadCount = notifications.filter(n => !n.metadata.read).length;
+  const unreadCount = notifications.filter((n: any) => !n.metadata.read).length;
 
   return {
     notifications,

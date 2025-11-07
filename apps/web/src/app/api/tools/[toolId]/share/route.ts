@@ -1,10 +1,14 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "firebase-admin/firestore";
-import { dbAdmin } from "@/lib/firebase-admin";
+"use server";
+
+import * as admin from "firebase-admin";
 import { z } from "zod";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { dbAdmin as adminDb } from "@/lib/firebase-admin";
+import {
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import {
   ToolSchema,
   canUserViewTool,
@@ -13,249 +17,213 @@ import {
   createToolDefaults,
 } from "@hive/core";
 
-const db = getFirestore();
+const ShareLinkActionSchema = ShareToolSchema.extend({
+  action: z.literal("create_share_link"),
+});
 
-// POST /api/tools/[toolId]/share - Create share link or fork tool
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+const ForkActionSchema = z.object({
+  action: z.literal("fork"),
+  spaceId: z.string().optional(),
+  name: z.string().optional(),
+});
 
-    const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
+const ShareActionSchema = z.discriminatedUnion("action", [
+  ShareLinkActionSchema,
+  ForkActionSchema,
+]);
 
+type ShareAction = z.infer<typeof ShareActionSchema>;
+
+async function loadTool(toolId: string) {
+  const toolDoc = await adminDb.collection("tools").doc(toolId).get();
+  if (!toolDoc.exists) {
+    return { ok: false as const, status: 404, message: "Tool not found" };
+  }
+
+  const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
+
+  if (
+    (tool as any)?.campusId &&
+    (tool as any).campusId !== CURRENT_CAMPUS_ID
+  ) {
+    return {
+      ok: false as const,
+      status: 403,
+      message: "Access denied for this campus",
+    };
+  }
+
+  return { ok: true as const, tool, toolRef: toolDoc.ref };
+}
+
+async function validateSpaceAccess(spaceId: string, userId: string) {
+  const spaceDoc = await adminDb.collection("spaces").doc(spaceId).get();
+  if (!spaceDoc.exists) {
+    return { ok: false as const, message: "Space not found", status: 404 };
+  }
+
+  const spaceData = spaceDoc.data();
+  if (spaceData?.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+    return { ok: false as const, message: "Access denied for this campus", status: 403 };
+  }
+
+  const userRole = spaceData?.members?.[userId]?.role;
+  if (!["builder", "admin"].includes(userRole)) {
+    return {
+      ok: false as const,
+      message: "Insufficient permissions to create tools in this space",
+      status: 403,
+    };
+  }
+
+  return { ok: true as const, spaceData };
+}
+
+export const POST = withAuthValidationAndErrors(
+  ShareActionSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ toolId: string }> },
+    payload: ShareAction,
+    respond,
+  ) => {
+    const userId = getUserId(request);
     const { toolId } = await params;
-    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
 
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+    const toolResult = await loadTool(toolId);
+    if (!toolResult.ok) {
+      return respond.error(toolResult.message, "RESOURCE_NOT_FOUND", {
+        status: toolResult.status,
+      });
     }
 
-    const originalTool = ToolSchema.parse({
-      id: toolDoc.id,
-      ...toolDoc.data() });
+    const { tool, toolRef } = toolResult;
 
-    // Check if user can view this tool
-    if (!canUserViewTool(originalTool, userId)) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    if (!canUserViewTool(tool, userId)) {
+      return respond.error("Access denied", "FORBIDDEN", { status: 403 });
     }
 
-    const body = await request.json();
-    const { action, ...shareData } = body;
-
-    if (action === "create_share_link") {
-      // Create or update share token
-      const shareToken = originalTool.shareToken || generateShareToken();
-      const validatedShareData = ShareToolSchema.parse(shareData);
-
-      await toolDoc.ref.update({
-        shareToken,
-        isPublic: validatedShareData.permission === "view",
-        updatedAt: new Date() });
-
-      // Track analytics event
-      await dbAdmin.collection("analytics_events").add({
-        eventType: "tool_shared",
-        userId: userId,
-        toolId: toolId,
-        spaceId: originalTool.spaceId || null,
-        timestamp: new Date(),
-        metadata: {
-          shareType: "link",
-          permission: validatedShareData.permission,
-          hasExpiration: !!validatedShareData.expiresAt,
-        } });
-
-      return NextResponse.json({
-        shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tools/shared/${shareToken}`,
-        shareToken,
-        permission: validatedShareData.permission,
-        expiresAt: validatedShareData.expiresAt });
-    } else if (action === "fork") {
-      // Fork the tool - create a copy owned by the current user
-      const { spaceId, name } = shareData;
-
-      // Validate space access if forking to a space
-      if (spaceId) {
-        const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
-        if (!spaceDoc.exists) {
-          return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-        }
-
-        const spaceData = spaceDoc.data();
-        const userRole = spaceData?.members?.[userId]?.role;
-
-        if (!["builder", "admin"].includes(userRole)) {
-          return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to create tools in this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-        }
-      }
-
-      // Create fork data
-      const forkData = {
-        name: name || `${originalTool.name} (Copy)`,
-        description: `Forked from ${originalTool.name}`,
-        spaceId: spaceId || undefined,
-        isSpaceTool: !!spaceId,
-        config: originalTool.config,
-        metadata: {
-          ...originalTool.metadata,
-          tags: [...(originalTool.metadata.tags || []), "forked"],
-        },
-      };
-
-      const toolDefaults = createToolDefaults(userId, forkData);
+    if (payload.action === "create_share_link") {
+      const shareToken =
+        (tool as any).shareToken || generateShareToken(toolId, userId);
       const now = new Date();
 
-      const forkedTool = {
-        ...toolDefaults,
-        elements: originalTool.elements.map((element) => ({
-          ...element,
-          id: `${element.id}_${Date.now()}`, // Ensure unique IDs in the fork
-        })),
-        originalToolId: toolId,
-        createdAt: now,
+      await toolRef.update({
+        shareToken,
+        isPublic: payload.permission === "view",
         updatedAt: now,
-      };
+      });
 
-      // Save forked tool
-      const forkedToolRef = await dbAdmin.collection("tools").add(forkedTool);
+      await adminDb.collection("analytics_events").add({
+        eventType: "tool_shared",
+        userId,
+        toolId,
+        spaceId: (tool as any).spaceId || null,
+        campusId: CURRENT_CAMPUS_ID,
+        timestamp: now.toISOString(),
+        metadata: {
+          shareType: "link",
+          permission: payload.permission,
+          hasExpiration: Boolean(payload.expiresAt),
+        },
+      });
 
-      // Create initial version for fork
-      const initialVersion = {
-        version: "1.0.0",
-        changelog: `Forked from ${originalTool.name}`,
-        createdAt: now,
-        createdBy: userId,
-        isStable: false,
-      };
+      return respond.success({
+        shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tools/shared/${shareToken}`,
+        shareToken,
+        permission: payload.permission,
+        expiresAt: payload.expiresAt,
+      });
+    }
 
-      await forkedToolRef
-        .collection("versions")
-        .doc("1.0.0")
-        .set(initialVersion);
+    if (payload.spaceId) {
+      const spaceAccess = await validateSpaceAccess(payload.spaceId, userId);
+      if (!spaceAccess.ok) {
+        return respond.error(spaceAccess.message, "FORBIDDEN", {
+          status: spaceAccess.status,
+        });
+      }
+    }
 
-      // Update original tool's fork count
-      await toolDoc.ref.update({
-        forkCount: (originalTool.forkCount || 0) + 1 });
+    const forkDefaults = {
+      name: payload.name || `${tool.name} (Copy)`,
+      description: `Forked from ${tool.name}`,
+      spaceId: payload.spaceId || undefined,
+      isSpaceTool: Boolean(payload.spaceId),
+      config: tool.config,
+      metadata: {
+        ...tool.metadata,
+        tags: [...(tool.metadata?.tags || []), "forked"],
+      },
+    };
 
-      // Track analytics events
-      await Promise.all([
-        dbAdmin.collection("analytics_events").add({
-          eventType: "tool_forked",
-          userId: userId,
-          toolId: forkedToolRef.id,
-          spaceId: spaceId || null,
-          timestamp: now,
-          metadata: {
-            originalToolId: toolId,
-            originalToolName: originalTool.name,
-            elementsCount: originalTool.elements.length,
-          },
-        }),
-        dbAdmin.collection("analytics_events").add({
-          eventType: "tool_fork_source",
-          userId: originalTool.ownerId,
-          toolId: toolId,
-          spaceId: originalTool.spaceId || null,
-          timestamp: now,
-          metadata: {
-            forkedBy: userId,
-            forkedToolId: forkedToolRef.id,
-            newForkCount: (originalTool.forkCount || 0) + 1,
-          },
-        }),
-      ]);
+    const baseDefaults = { ...createToolDefaults(), ownerId: userId };
+    const now = new Date();
 
-      const result = {
+    const forkedTool = {
+      ...baseDefaults,
+      ...forkDefaults,
+      elements: tool.elements.map((element: any) => ({
+        ...element,
+        id: `${element.id}_${Date.now()}`,
+      })),
+      originalToolId: toolId,
+      createdAt: now,
+      updatedAt: now,
+      campusId: CURRENT_CAMPUS_ID,
+    };
+
+    const forkedToolRef = await adminDb.collection("tools").add(forkedTool);
+
+    await forkedToolRef.collection("versions").doc("1.0.0").set({
+      version: "1.0.0",
+      changelog: `Forked from ${tool.name}`,
+      createdAt: now,
+      createdBy: userId,
+      isStable: false,
+    });
+
+    await toolRef.update({
+      forkCount: (tool as any).forkCount
+        ? ((tool as any).forkCount as number) + 1
+        : 1,
+    });
+
+    await Promise.all([
+      adminDb.collection("analytics_events").add({
+        eventType: "tool_forked",
+        userId,
+        toolId: forkedToolRef.id,
+        spaceId: payload.spaceId || null,
+        campusId: CURRENT_CAMPUS_ID,
+        timestamp: now.toISOString(),
+        metadata: {
+          originalToolId: toolId,
+          originalToolName: tool.name,
+          elementsCount: tool.elements.length,
+        },
+      }),
+      adminDb.collection("analytics_events").add({
+        eventType: "tool_fork_source",
+        userId: tool.ownerId,
+        toolId,
+        spaceId: (tool as any).spaceId || null,
+        campusId: CURRENT_CAMPUS_ID,
+        timestamp: now.toISOString(),
+        metadata: {
+          forkedBy: userId,
+          forkedToolId: forkedToolRef.id,
+          newForkCount: ((tool as any).forkCount || 0) + 1,
+        },
+      }),
+    ]);
+
+    return respond.created(
+      {
         id: forkedToolRef.id,
         ...forkedTool,
-      };
-
-      return NextResponse.json(result, { status: HttpStatus.CREATED });
-    } else {
-      return NextResponse.json(
-        { error: 'Invalid action. Must be "create_share_link" or "fork"' },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-  } catch (error) {
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid share data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to share tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
-
-// GET /api/tools/[toolId]/share - Get sharing information
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ toolId: string }> }
-) {
-  try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    const decodedToken = await getAuth().verifyIdToken(token);
-    const userId = decodedToken.uid;
-
-    const { toolId } = await params;
-    const toolDoc = await dbAdmin.collection("tools").doc(toolId).get();
-
-    if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const tool = ToolSchema.parse({ id: toolDoc.id, ...toolDoc.data() });
-
-    // Only owner can see sharing details
-    if (tool.ownerId !== userId) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Get fork information
-    const forksSnapshot = await db
-      .collection("tools")
-      .where("originalToolId", "==", toolId)
-      .orderBy("createdAt", "desc")
-      .limit(10)
-      .get();
-
-    const forks = forksSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      name: doc.data().name,
-      ownerId: doc.data().ownerId,
-      createdAt: doc.data().createdAt,
-      spaceId: doc.data().spaceId,
-    }));
-
-    return NextResponse.json({
-      isPublic: tool.isPublic,
-      shareToken: tool.shareToken,
-      shareUrl: tool.shareToken
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/tools/shared/${tool.shareToken}`
-        : null,
-      forkCount: tool.forkCount || 0,
-      forks,
-      viewCount: tool.viewCount || 0,
-      useCount: tool.useCount || 0 });
-  } catch (error) {
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch sharing information", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
+      },
+      { message: "Tool forked successfully" },
+    );
+  },
+);

@@ -1,28 +1,14 @@
-import React from 'react';
-export interface CompletionStep {
+export interface ProfileCompletionStep {
     id: string;
-    label: string;
-    description: string;
-    icon: React.ElementType;
-    completed: boolean;
-    points: number;
-    action?: () => void;
+    title: string;
+    description?: string;
 }
 export interface ProfileCompletionCardProps {
     completionPercentage: number;
-    completedSteps: string[];
+    completedSteps?: string[];
+    steps?: ProfileCompletionStep[];
     onStepClick?: (stepId: string) => void;
     className?: string;
 }
-/**
- * Profile Completion Card - DESIGN_SPEC Compliant with Behavioral Psychology
- *
- * Psychology Principles:
- * - 70% completion target for habit formation
- * - Variable rewards at strategic points
- * - Social proof through completion stats
- * - Loss aversion with "almost there" messaging
- * - Gamification without being obvious
- */
-export declare const ProfileCompletionCard: React.FC<ProfileCompletionCardProps>;
+export declare function ProfileCompletionCard({ completionPercentage, completedSteps, steps, onStepClick, className, }: ProfileCompletionCardProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=profile-completion-card.d.ts.map

@@ -34,11 +34,10 @@ const hiveCardVariants = cva(
 export interface HiveCardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof hiveCardVariants> {
-  asChild?: boolean
 }
 
 const HiveCard = React.forwardRef<HTMLDivElement, HiveCardProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, ...props }, ref) => {
     return (
       <div
         ref={ref}

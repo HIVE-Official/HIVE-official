@@ -5,6 +5,8 @@ import { getAuth } from 'firebase-admin/auth';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * Admin Space Analytics API
@@ -17,6 +19,34 @@ const ADMIN_USER_IDS = [
   'test-user', // For development
   // Add real admin user IDs here
 ];
+
+interface MemberDoc {
+  id: string;
+  role?: string;
+  joinedAt?: string;
+}
+
+interface SpaceDoc {
+  id: string;
+  type: string;
+  name?: string;
+  status?: string;
+  hasBuilders?: boolean;
+  isArchived?: boolean;
+  isPrivate?: boolean;
+  description?: string;
+  tags?: string[];
+  campusId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  activatedAt?: string;
+  memberCount?: number;
+  actualMemberCount: number;
+  builderCount: number;
+  adminCount: number;
+  healthScore: number;
+  members?: MemberDoc[];
+}
 
 interface SpaceAnalytics {
   overview: {
@@ -111,7 +141,7 @@ async function isAdmin(userId: string): Promise<boolean> {
 /**
  * Calculate space health score based on various metrics
  */
-function calculateHealthScore(space: any, members: any[]): number {
+function calculateHealthScore(space: Partial<SpaceDoc>, members: MemberDoc[]): number {
   let score = 0;
 
   // Member count (0-40 points)
@@ -141,41 +171,16 @@ function calculateHealthScore(space: any, members: any[]): number {
  * Get comprehensive space analytics
  * GET /api/admin/spaces/analytics
  */
-export async function GET(request: NextRequest) {
+export const GET = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    let adminUserId: string;
-    
-    // Handle test tokens in development
-    if (token === 'test-token') {
-      adminUserId = 'test-user';
-    } else {
-      try {
-        const auth = getAuth();
-        const decodedToken = await auth.verifyIdToken(token);
-        adminUserId = decodedToken.uid;
-      } catch (authError) {
-        return NextResponse.json(ApiResponseHelper.error("Invalid or expired token", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-      }
-    }
-
-    // Check if user is admin
-    if (!(await isAdmin(adminUserId))) {
-      return NextResponse.json(ApiResponseHelper.error("Admin access required", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
+    const adminUserId = token?.uid || 'unknown';
 
     logger.info('👑 Admin requesting space analytics', { adminUserId });
 
     // Get all spaces across all types
     const spaceTypes = ['campus_living', 'fraternity_and_sorority', 'hive_exclusive', 'student_organizations', 'university_organizations'];
-    const allSpaces: any[] = [];
-    const spacesByType: Record<string, any[]> = {};
+    const allSpaces: SpaceDoc[] = [];
+    const spacesByType: Record<string, SpaceDoc[]> = {};
 
     // Fetch spaces from all types
     for (const type of spaceTypes) {
@@ -188,14 +193,32 @@ export async function GET(request: NextRequest) {
 
         const spaces = await Promise.all(
           spacesSnapshot.docs.map(async (doc) => {
-            const spaceData = {
+            const raw = doc.data() as Record<string, unknown>;
+            const spaceData: SpaceDoc = {
               id: doc.id,
-              type: type,
-              ...doc.data(),
-              createdAt: doc.data().createdAt?.toDate?.()?.toISOString(),
-              updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString(),
-              activatedAt: doc.data().activatedAt?.toDate?.()?.toISOString()
+              type,
+              name: (raw.name as string) || undefined,
+              status: (raw.status as string) || undefined,
+              hasBuilders: Boolean(raw.hasBuilders),
+              isArchived: Boolean(raw.isArchived),
+              isPrivate: Boolean(raw.isPrivate),
+              description: (raw.description as string) || undefined,
+              tags: (raw.tags as string[]) || undefined,
+              campusId: (raw.campusId as string) || undefined,
+              createdAt: (raw.createdAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString(),
+              updatedAt: (raw.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString(),
+              activatedAt: (raw.activatedAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString(),
+              memberCount: (raw.memberCount as number) || 0,
+              actualMemberCount: 0,
+              builderCount: 0,
+              adminCount: 0,
+              healthScore: 0,
+              members: [],
             };
+            // Enforce campus isolation
+            if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
+              return null;
+            }
 
             // Get members for this space
             try {
@@ -207,33 +230,33 @@ export async function GET(request: NextRequest) {
                 .collection('members')
                 .get();
 
-              const members = membersSnapshot.docs.map(memberDoc => ({
+              const members: MemberDoc[] = membersSnapshot.docs.map(memberDoc => ({
                 id: memberDoc.id,
-                ...memberDoc.data(),
-                joinedAt: memberDoc.data().joinedAt?.toDate?.()?.toISOString()
-              }));
+                ...(memberDoc.data() as Record<string, unknown>),
+                joinedAt: (memberDoc.data().joinedAt as { toDate?: () => Date } | undefined)?.toDate?.()?.toISOString()
+              })) as MemberDoc[];
 
-              (spaceData as any).actualMemberCount = members.length;
-              (spaceData as any).builderCount = members.filter((m: any) => m.role === 'builder').length;
-              (spaceData as any).adminCount = members.filter((m: any) => m.role === 'admin').length;
-              (spaceData as any).healthScore = calculateHealthScore(spaceData, members);
-              (spaceData as any).members = members;
+              spaceData.actualMemberCount = members.length;
+              spaceData.builderCount = members.filter((m: MemberDoc) => m.role === 'builder').length;
+              spaceData.adminCount = members.filter((m: MemberDoc) => m.role === 'admin').length;
+              spaceData.healthScore = calculateHealthScore(spaceData, members);
+              spaceData.members = members;
 
             } catch (memberError) {
               logger.error('Error fetching membersfor space', { spaceId: doc.id, error: memberError instanceof Error ? memberError : new Error(String(memberError))});
-              (spaceData as any).actualMemberCount = (spaceData as any).memberCount || 0;
-              (spaceData as any).builderCount = 0;
-              (spaceData as any).adminCount = 0;
-              (spaceData as any).healthScore = 0;
-              (spaceData as any).members = [];
+              spaceData.actualMemberCount = spaceData.memberCount || 0;
+              spaceData.builderCount = 0;
+              spaceData.adminCount = 0;
+              spaceData.healthScore = 0;
+              spaceData.members = [];
             }
 
             return spaceData;
           })
         );
-
-        spacesByType[type] = spaces;
-        allSpaces.push(...spaces);
+        const filteredSpaces = spaces.filter(Boolean) as SpaceDoc[];
+        spacesByType[type] = filteredSpaces;
+        allSpaces.push(...filteredSpaces);
       } catch (error) {
         logger.error('Error fetching spaces for type', { type, error: error instanceof Error ? error : new Error(String(error))});
         spacesByType[type] = [];
@@ -269,7 +292,7 @@ export async function GET(request: NextRequest) {
         }).length,
         membersJoinedLast7Days: allSpaces.reduce((sum, s) => {
           if (!s.members) return sum;
-          return sum + s.members.filter((m: any) => {
+          return sum + s.members.filter((m: MemberDoc) => {
             if (!m.joinedAt) return false;
             const joinedDate = new Date(m.joinedAt);
             const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -278,7 +301,7 @@ export async function GET(request: NextRequest) {
         }, 0),
         buildersAddedLast7Days: allSpaces.reduce((sum, s) => {
           if (!s.members) return sum;
-          return sum + s.members.filter((m: any) => {
+          return sum + s.members.filter((m: MemberDoc) => {
             if (m.role !== 'builder' || !m.joinedAt) return false;
             const joinedDate = new Date(m.joinedAt);
             const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -375,4 +398,4 @@ export async function GET(request: NextRequest) {
     logger.error('Admin spaces analytics error', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(ApiResponseHelper.error("Failed to get space analytics", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-}
+}, { requireAdmin: true });

@@ -63,8 +63,8 @@ export function WaitlistForm() {
           // Success State
           <div className="text-center space-y-2">
             <div className="text-4xl">🎉</div>
-            <h3 className="text-xl font-bold text-white">You're on the list!</h3>
-            <p className="text-sm text-white/70">We'll let you know when HIVE launches at UB.</p>
+            <h3 className="text-xl font-bold text-white">You’re on the list!</h3>
+            <p className="text-sm text-white/70">We’ll let you know when HIVE launches at UB.</p>
           </div>
         ) : (
           // Form State

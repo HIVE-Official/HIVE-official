@@ -8,6 +8,7 @@ exports.getProfileRepository = getProfileRepository;
 exports.getSpaceRepository = getSpaceRepository;
 exports.getFeedRepository = getFeedRepository;
 exports.getRitualRepository = getRitualRepository;
+exports.getRitualConfigRepository = getRitualConfigRepository;
 exports.getConnectionRepository = getConnectionRepository;
 exports.initializeRepositories = initializeRepositories;
 exports.resetRepositories = resetRepositories;
@@ -16,12 +17,14 @@ const profile_repository_1 = require("./firebase/profile.repository");
 const space_repository_1 = require("./firebase/space.repository");
 const feed_repository_1 = require("./firebase/feed.repository");
 const ritual_repository_1 = require("./firebase/ritual.repository");
+const ritual_config_repository_1 = require("./firebase/ritual-config.repository");
 const connection_repository_1 = require("./firebase/connection.repository");
 // Singleton instances
 let profileRepo = null;
 let spaceRepo = null;
 let feedRepo = null;
 let ritualRepo = null;
+let ritualConfigRepo = null;
 let connectionRepo = null;
 /**
  * Get or create ProfileRepository instance
@@ -59,6 +62,12 @@ function getRitualRepository() {
     }
     return ritualRepo;
 }
+function getRitualConfigRepository() {
+    if (!ritualConfigRepo) {
+        ritualConfigRepo = new ritual_config_repository_1.FirebaseRitualConfigRepository();
+    }
+    return ritualConfigRepo;
+}
 /**
  * Get or create ConnectionRepository instance
  */
@@ -80,6 +89,8 @@ function initializeRepositories(config) {
         feedRepo = config.feed;
     if (config.ritual)
         ritualRepo = config.ritual;
+    if (config.ritualConfig)
+        ritualConfigRepo = config.ritualConfig;
     if (config.connection)
         connectionRepo = config.connection;
 }
@@ -91,6 +102,7 @@ function resetRepositories() {
     spaceRepo = null;
     feedRepo = null;
     ritualRepo = null;
+    ritualConfigRepo = null;
     connectionRepo = null;
 }
 //# sourceMappingURL=factory.js.map

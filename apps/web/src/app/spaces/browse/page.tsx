@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiveButton, HiveCard, HiveInput, Badge, Grid } from '@hive/ui';
+import { Button, HiveCard, Input, Badge, Grid } from '@hive/ui';
 import {
   Search,
   Filter,
@@ -15,7 +15,7 @@ import {
   X
 } from 'lucide-react';
 import { useAuth } from '@hive/auth-logic';
-import { api } from '@/lib/api-client';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 // SPEC.md categories
 const CATEGORIES = {
@@ -87,10 +87,9 @@ export default function SpacesBrowsePage() {
   const loadInitialSpaces = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/spaces', {
-        params: { limit: 20 }
-      });
-      setResults(response.spaces || []);
+      const res = await secureApiFetch('/api/spaces?limit=20', { method: 'GET' });
+      const response = await res.json();
+      setResults(response?.spaces || []);
     } catch (error) {
       console.error('Failed to load initial spaces:', error);
     } finally {
@@ -109,15 +108,17 @@ export default function SpacesBrowsePage() {
       setHasSearched(true);
 
       // SPEC.md: Text search with fuzzy matching
-      const response = await api.get('/api/spaces/search', {
-        params: {
+      const res = await secureApiFetch('/api/spaces/search', {
+        method: 'POST',
+        body: JSON.stringify({
           q: searchQuery,
           ...filters,
           limit: 50
-        }
+        })
       });
+      const response = await res.json();
 
-      setResults(response.spaces || []);
+      setResults(response?.spaces || []);
     } catch (error) {
       console.error('Search failed:', error);
     } finally {
@@ -155,7 +156,7 @@ export default function SpacesBrowsePage() {
             <div className="flex-1 flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <HiveInput
+                <Input
                   placeholder="Search by name, description, or tags..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -164,14 +165,14 @@ export default function SpacesBrowsePage() {
                 />
               </div>
 
-              <HiveButton
+              <Button
                 onClick={handleSearch}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-yellow-400"
               >
                 Search
-              </HiveButton>
+              </Button>
 
-              <HiveButton
+              <Button
                 onClick={() => setShowFilters(!showFilters)}
                 variant="outline"
                 className={`border-gray-700 relative ${showFilters ? 'bg-gray-800' : ''}`}
@@ -182,7 +183,7 @@ export default function SpacesBrowsePage() {
                     {activeFilterCount}
                   </span>
                 )}
-              </HiveButton>
+              </Button>
             </div>
           </div>
 
@@ -192,14 +193,14 @@ export default function SpacesBrowsePage() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-white">Filters</h3>
                 {activeFilterCount > 0 && (
-                  <HiveButton
+                  <Button
                     size="sm"
                     variant="ghost"
                     onClick={clearFilters}
                     className="text-red-400 hover:text-red-300"
                   >
                     Clear all
-                  </HiveButton>
+                  </Button>
                 )}
               </div>
 
@@ -420,7 +421,7 @@ function SpaceSearchCard({
 
         {/* Join Button */}
         <div className="flex-shrink-0">
-          <HiveButton
+          <Button
             size="sm"
             className="bg-[var(--hive-brand-primary)]/20 text-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)] hover:text-black"
             onClick={(e) => {
@@ -429,7 +430,7 @@ function SpaceSearchCard({
             }}
           >
             View
-          </HiveButton>
+          </Button>
         </div>
       </div>
     </HiveCard>

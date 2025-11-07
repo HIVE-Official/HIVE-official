@@ -1,11 +1,19 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import ErrorProvider from '../components/error-provider';
 import createFirebaseAuthIntegration from '../lib/firebase-auth-integration';
 import { SimpleAuthProvider } from '../components/auth/simple-auth-provider';
+import { ToastProvider } from '@/hooks/use-toast';
+import { logger } from '@/lib/structured-logger';
+
+// Load Devtools only in development and on the client
+const ReactQueryDevtools = dynamic(
+  () => import('@tanstack/react-query-devtools').then(m => m.ReactQueryDevtools),
+  { ssr: false }
+);
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -23,7 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       try {
         return createFirebaseAuthIntegration();
       } catch (error) {
-        console.warn('Firebase auth integration failed to initialize:', error);
+        logger.warn('Firebase auth integration failed to initialize', error as Error, { component: 'providers' });
         return undefined;
       }
     }
@@ -36,10 +44,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
         <SimpleAuthProvider>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ToastProvider>
+            {children}
+            {process.env.NODE_ENV !== 'production' ? (
+              <ReactQueryDevtools initialIsOpen={false} />
+            ) : null}
+          </ToastProvider>
         </SimpleAuthProvider>
       </ErrorProvider>
     </QueryClientProvider>
   );
-} 
+}

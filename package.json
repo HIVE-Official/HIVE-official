@@ -4,32 +4,42 @@
   "private": true,
   "packageManager": "pnpm@9.1.1",
   "engines": {
-    "pnpm": ">=9.1.1"
-  },
-  "engines": {
     "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "pnpm": ">=9.1.1"
   },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --filter=@hive/ui --filter=web",
+    "lint:fix": "pnpm -w run lint:web --fix || true",
     "lint:quick": "turbo run lint --filter=!web",
-    "lint:web": "eslint apps/web --max-warnings 50",
+    "lint:web": "eslint --config apps/web/eslint.config.mjs apps/web/src --max-warnings 50",
     "lint:packages": "turbo run lint --filter=!web",
+    "lint:tokens": "node scripts/lint-tokens.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "cleanup:backups": "find . -type f \\! -path './node_modules/*' \\! -path './.pnpm-store/*' \\! -path './.git/*' \\! -path './apps/web/.next/*' \\! -path './packages/ui/storybook-static/*' \\! -path './packages/ui/dist/*' \\! -path './apps/web/storybook-static/*' \\( -name '*.bak' -o -name '*.bak2' -o -name '*.backup' -o -name '*.backup.*' \\) -print -delete",
+    "cleanup:reports": "rm -f apps/web/lint-report.txt apps/web/lint-full-report.txt apps/web/build-output.txt || true",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:rules": "npm --prefix firebase test",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
     "clean:node": "rm -rf node_modules && pnpm install",
     "clean:build": "turbo run clean && rm -rf apps/*/node_modules packages/*/node_modules",
     "storybook": "turbo run storybook",
+    "storybook:dev": "pnpm --filter @hive/ui storybook",
+    "storybook:dev:6008": "pnpm --filter @hive/ui run storybook-6008",
+    "storybook:build": "pnpm --filter @hive/ui build-storybook",
+    "storybook:clean": "node packages/ui/scripts/prepare-storybook.cjs && node scripts/clear-caches.cjs",
     "build-storybook": "turbo run build-storybook",
     "fix:memory": "node fix-syntax-errors.js",
     "build:production": "turbo run build",
     "lint:ci": "turbo run lint",
     "indexes:deploy": "node scripts/deploy-firestore-indexes.js",
-    "indexes:validate": "node scripts/validate-firestore-indexes.js"
+    "indexes:validate": "node scripts/validate-firestore-indexes.js",
+    "seed:emulator": "pnpm tsx scripts/seed-emulator.ts",
+    "seed:emulator:heavy": "SEED_POSTS=1200 pnpm tsx scripts/seed-emulator.ts"
   },
   "dependencies": {
     "lucide-react": "^0.411.0",
@@ -37,10 +47,16 @@
     "vitest": "^3.2.4"
   },
   "devDependencies": {
+    "prettier": "^3.3.3",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint-plugin-import": "^2.29.1",
+    "flag": "^5.0.1",
     "glob": "^11.0.3",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3"
   },
   "workspaces": [
     "apps/*",

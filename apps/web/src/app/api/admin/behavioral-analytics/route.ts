@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withSecureAuth(async (request) => {
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '7d';
@@ -61,7 +55,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching behavioral analytics', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching behavioral analytics', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -72,7 +66,7 @@ export const GET = withAuthAndErrors(async (context) => {
       error: 'Using mock data due to analytics collection not fully implemented'
     });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Calculate completion rates across the user journey

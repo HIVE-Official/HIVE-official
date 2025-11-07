@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from 'framer-motion';
 import { CheckCircle, Sparkles, ArrowRight, Heart, Users, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
+import { HiveCard, Button, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveCompletionStepProps {
@@ -80,10 +80,10 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
         className="space-y-4"
       >
         <h2 className="text-4xl font-bold text-[var(--hive-text-primary)]">
-          Welcome to HIVE, {firstName}! 🎉
+          Welcome in, {firstName}.
         </h2>
         <p className="text-lg text-[var(--hive-text-secondary)] max-w-md mx-auto">
-          You're all set to discover your campus community and never panic alone.
+          Your UB feed is live—rituals, spaces, and people are ready now.
         </p>
       </motion.div>
 
@@ -150,25 +150,21 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
       >
         <HiveCard className="p-[var(--hive-spacing-6)]">
           <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4">
-            What's next?
+            Up next
           </h3>
 
           <div className="space-y-3 text-sm text-[var(--hive-text-secondary)]">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-              <span>Discover spaces that match your interests</span>
+              <span>Follow the spaces that feel like home</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-              <span>Connect with students in your major</span>
+              <span>Share a quick hello in tonight’s ritual</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-              <span>Never miss campus events again</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-              <span>Join your first campus ritual</span>
+              <span>Keep UB news and events in one thread</span>
             </div>
           </div>
         </HiveCard>
@@ -202,12 +198,12 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
             </a>
           </p>
           <p>
-            We'll keep your campus data secure and never share it with other schools.
+            We keep campus data locked to UB and off third-party trackers.
           </p>
         </div>
 
         {/* Completion Button */}
-        <HiveButton
+        <Button
           onClick={handleComplete}
           disabled={isCompleting}
           variant="primary"
@@ -230,7 +226,7 @@ export function HiveCompletionStep({ data, updateData, onNext }: HiveCompletionS
               <ArrowRight className="w-5 h-5" />
             </div>
           )}
-        </HiveButton>
+        </Button>
       </motion.div>
     </motion.div>
   );

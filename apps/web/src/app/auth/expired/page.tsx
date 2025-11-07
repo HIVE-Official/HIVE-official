@@ -7,11 +7,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 // Temporarily using temp-stubs to avoid SSG useRef errors
-// import { HiveButton, HiveCard, HiveLogo, HiveInput, HiveModal, HiveModalContent } from '@hive/ui';
-const HiveButton = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
+// import { Button, HiveCard, HiveLogo, Input, HiveModal, HiveModalContent } from '@hive/ui';
+const Button = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
 const HiveCard = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg ${className}`} {...props}>{children}</div>;
 const HiveLogo = ({ size = "default", variant = "gradient", showText = false, ...props }: any) => <div className="flex items-center gap-2" {...props}><div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center"><span className="text-black font-bold text-sm">H</span></div>{showText && <span className="font-bold text-white">HIVE</span>}</div>;
-const HiveInput = ({ type = "text", className = "", ...props }: any) => <input type={type} className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`} {...props} />;
+const Input = ({ type = "text", className = "", ...props }: any) => <input type={type} className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`} {...props} />;
 const HiveModal = ({ children, open, onOpenChange, size = "default", ...props }: any) => open ? <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => onOpenChange && onOpenChange(false)} {...props}>{children}</div> : null;
 const HiveModalContent = ({ children, className = "", ...props }: any) => <div className={`relative bg-gray-900 rounded-lg p-6 max-w-md mx-4 ${className}`} onClick={(e) => e.stopPropagation()} {...props}>{children}</div>;
 import { Clock, AlertTriangle, ArrowLeft, RefreshCw, Mail, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
@@ -218,9 +218,9 @@ export default function ExpiredPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-white flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-hive-background-primary text-hive-text-primary flex flex-col relative overflow-hidden">
       {/* Premium background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0B] via-[#0F0F10] to-[#0A0A0B]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-hive-background-primary via-hive-background-tertiary to-hive-background-primary" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.015)_0%,transparent_50%),radial-gradient(circle_at_70%_60%,rgba(255,215,0,0.025)_0%,transparent_50%)]" />
 
       {/* Floating glass orbs */}
@@ -228,9 +228,7 @@ export default function ExpiredPage() {
       <div className="absolute bottom-40 right-[15%] w-40 h-40 bg-gradient-to-l from-[var(--hive-brand-primary)]/[0.02] to-white/[0.01] rounded-full blur-3xl" />
 
       {/* Header */}
-      <div
-        className="relative z-10 border-b border-white/[0.08] backdrop-blur-xl"
-      >
+      <div className="relative z-10 border-b border-hive-border-default backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <Link
@@ -257,7 +255,7 @@ export default function ExpiredPage() {
         <div className="w-full max-w-md">
           <div
           >
-            <div className="text-center mb-10">
+            <div className="text-center mb-10 text-hive-text-primary">
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-[var(--hive-brand-primary)]/10 rounded-full">
                 <Clock className="w-8 h-8 text-[var(--hive-brand-primary)]" />
               </div>
@@ -267,14 +265,14 @@ export default function ExpiredPage() {
               </p>
             </div>
 
-            <HiveCard className="p-8 bg-white/[0.02] border-white/[0.08] shadow-2xl backdrop-blur-xl">
+            <HiveCard className="p-8 bg-white/5 border-hive-border-default shadow-2xl backdrop-blur-xl">
               {/* Security Info Box */}
               <div className="p-4 mb-6 bg-[var(--hive-brand-primary)]/[0.08] border border-[var(--hive-brand-primary)]/20 rounded-xl">
                 <div className="flex gap-3">
                   <ShieldAlert className="w-5 h-5 text-[var(--hive-brand-primary)] mt-0.5 flex-shrink-0" />
                   <div className="space-y-1">
                     <p className="text-sm text-[var(--hive-brand-primary)] font-medium">For your security</p>
-                    <p className="text-xs text-white/60">
+                  <p className="text-xs text-hive-text-secondary">
                       Magic links expire after 1 hour. This keeps your account safe.
                     </p>
                   </div>
@@ -287,7 +285,7 @@ export default function ExpiredPage() {
                   <label className="block text-sm font-medium text-white/80 mb-2">
                     Your email address
                   </label>
-                  <HiveInput
+                  <Input
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
@@ -298,7 +296,7 @@ export default function ExpiredPage() {
                   />
                 </div>
               ) : (
-                <div className="mb-6 p-4 bg-white/[0.02] rounded-xl border border-white/[0.08]">
+                <div className="mb-6 p-4 bg-white/5 rounded-xl border border-hive-border-default">
                   <p className="text-sm text-white/60 mb-1">Resending to:</p>
                   <p className="text-white font-medium break-all">{email}</p>
                   <button
@@ -335,12 +333,12 @@ export default function ExpiredPage() {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <HiveButton
+                <Button
                   onClick={handleResendLink}
                   disabled={isResending || countdown > 0 || (!email && !schoolId)}
                   variant="default"
                   size="lg"
-                  className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold disabled:opacity-50"
+                className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-hive-brand-on-gold font-semibold disabled:opacity-50"
                 >
                   {isResending ? (
                     <>
@@ -358,23 +356,23 @@ export default function ExpiredPage() {
                       Send new magic link
                     </>
                   )}
-                </HiveButton>
+                </Button>
 
                 <Link href="/auth/login" className="block">
-                  <HiveButton
+                  <Button
                     variant="ghost"
                     size="lg"
                     className="w-full text-white/60 hover:text-white hover:bg-white/[0.05]"
                   >
                     Start over with new login
-                  </HiveButton>
+                  </Button>
                 </Link>
               </div>
 
               {/* Progress Indicator for Countdown */}
               {countdown > 0 && (
                 <div className="mt-4">
-                  <div className="w-full bg-white/[0.05] rounded-full h-1 overflow-hidden">
+                  <div className="w-full bg-white/10 rounded-full h-1 overflow-hidden">
                     <div
                       className="h-full bg-[var(--hive-brand-primary)]/50"
                     />
@@ -384,7 +382,7 @@ export default function ExpiredPage() {
             </HiveCard>
 
             {/* Support Link */}
-            <p className="text-center text-sm text-white/40 mt-8">
+            <p className="text-center text-sm text-hive-text-tertiary mt-8">
               Still having trouble?{' '}
               <a
                 href="mailto:support@hive.college"
@@ -403,7 +401,7 @@ export default function ExpiredPage() {
         onOpenChange={() => setResendSuccess(false)}
         size="sm"
       >
-        <HiveModalContent className="bg-[#0F0F10] border-white/[0.08] backdrop-blur-2xl">
+        <HiveModalContent className="bg-hive-background-secondary border-hive-border-default backdrop-blur-2xl">
           <div
             className="text-center space-y-6"
           >
@@ -421,7 +419,7 @@ export default function ExpiredPage() {
               <p className="text-[var(--hive-brand-primary)] font-semibold break-all">
                 {email}
               </p>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-hive-text-tertiary">
                 The link will expire in 1 hour
               </p>
             </div>
@@ -432,18 +430,18 @@ export default function ExpiredPage() {
                 <p className="text-xs text-[var(--hive-brand-primary)] font-medium mb-2">
                   🛠️ Development Mode - Magic Link:
                 </p>
-                <HiveButton
+                <Button
                   variant="default"
                   size="sm"
                   className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black text-xs"
                   onClick={() => window.location.href = devMagicLink}
                 >
                   Use Dev Magic Link
-                </HiveButton>
+                </Button>
               </HiveCard>
             )}
 
-            <HiveButton
+            <Button
               variant="default"
               size="lg"
               className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black font-semibold"
@@ -457,7 +455,7 @@ export default function ExpiredPage() {
               }}
             >
               Got it
-            </HiveButton>
+            </Button>
           </div>
         </HiveModalContent>
       </HiveModal>

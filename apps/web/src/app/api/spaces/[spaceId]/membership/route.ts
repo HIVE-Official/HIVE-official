@@ -1,130 +1,81 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { z } from "zod";
-import { getAuth } from "firebase-admin/auth";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+"use server";
 
-const membershipQuerySchema = z.object({
+import { z } from "zod";
+import { dbAdmin } from "@/lib/firebase-admin";
+import {
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { logger } from "@/lib/logger";
+import { requireSpaceMembership } from "@/lib/space-security";
+import { HttpStatus } from "@/lib/api-response-types";
+
+const MembershipQuerySchema = z.object({
   limit: z.coerce.number().min(1).max(100).default(50),
   offset: z.coerce.number().min(0).default(0),
-  role: z.enum(["creator", "admin", "member"]).optional() });
+  role: z.enum(["owner", "admin", "moderator", "member", "guest"]).optional(),
+});
 
-/**
- * Get space membership details including member list
- * Returns paginated member list with user details and membership info
- */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string }> }
-) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string }> },
+  respond,
+) => {
   try {
     const { spaceId } = await params;
+    const userId = getUserId(request);
+    const queryParams = MembershipQuerySchema.parse(
+      Object.fromEntries(request.nextUrl.searchParams.entries()),
+    );
 
-    // Parse query parameters
-    const url = new URL(request.url);
-    const queryParams = Object.fromEntries(url.searchParams.entries());
-    const { limit, offset, role } = membershipQuerySchema.parse(queryParams);
-
-    // Verify the requesting user is authenticated
-    const authHeader = request.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Authorization header required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
-    const token = authHeader.substring(7);
-
-    let requestingUserId;
-
-    // Handle dev tokens in development mode
-    if (process.env.NODE_ENV === 'development' && token.startsWith('dev_token_')) {
-      requestingUserId = token.replace('dev_token_', '');
-      // Handle session token format
-      if (requestingUserId.includes('_')) {
-        requestingUserId = requestingUserId.split('_')[0];
-      }
-    } else {
-      const auth = getAuth();
-      const decodedToken = await auth.verifyIdToken(token);
-      requestingUserId = decodedToken.uid;
-    }
-
-    // Get space from flat collection structure
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-
-    if (!spaceDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Space not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const spaceData = spaceDoc.data();
-
-    if (!spaceData) {
-      return NextResponse.json(ApiResponseHelper.error("Space data not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    // Check if requesting user is a member of this space using flat spaceMembers collection
-    const requestingUserMemberQuery = await dbAdmin
-      .collection("spaceMembers")
-      .where("spaceId", "==", spaceId)
-      .where("userId", "==", requestingUserId)
-      .where("isActive", "==", true)
-      .limit(1)
-      .get();
-
-    if (requestingUserMemberQuery.empty) {
-      return NextResponse.json(ApiResponseHelper.error("Access denied: Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const requestingUserMembership = requestingUserMemberQuery.docs[0].data();
-
-    if (!requestingUserMembership) {
-      return NextResponse.json(ApiResponseHelper.error("Membership data not found", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Build members query using flat spaceMembers collection
     let membersQuery = dbAdmin
       .collection("spaceMembers")
       .where("spaceId", "==", spaceId)
-      .where("isActive", "==", true);
+      .where("isActive", "==", true)
+      .where("campusId", "==", CURRENT_CAMPUS_ID);
 
-    // Add role filter if specified
-    if (role) {
-      membersQuery = membersQuery.where("role", "==", role);
+    if (queryParams.role) {
+      membersQuery = membersQuery.where("role", "==", queryParams.role);
     }
 
-    // Get members with pagination
-    const membersSnapshot = await membersQuery
-      .limit(limit)
-      .offset(offset)
-      .get();
+    membersQuery = membersQuery
+      .orderBy("joinedAt", "desc")
+      .offset(queryParams.offset)
+      .limit(queryParams.limit);
 
-    // Get total count for pagination
-    const totalMembersSnapshot = await dbAdmin
+    const membersSnapshot = await membersQuery.get();
+
+    const totalSnapshot = await dbAdmin
       .collection("spaceMembers")
       .where("spaceId", "==", spaceId)
       .where("isActive", "==", true)
+      .where("campusId", "==", CURRENT_CAMPUS_ID)
       .get();
 
-    const totalCount = totalMembersSnapshot.size;
-
-    // Fetch user details for each member
     const memberPromises = membersSnapshot.docs.map(async (memberDoc) => {
       const memberData = memberDoc.data();
-      const userId = memberData.userId;
+      const memberId = memberData.userId || memberDoc.id;
 
       try {
-        // Get user profile
-        const userDoc = await dbAdmin.collection("users").doc(userId).get();
+        const userDoc = await dbAdmin.collection("users").doc(memberId).get();
         const userData = userDoc.exists ? userDoc.data() : null;
 
         return {
-          userId,
+          userId: memberId,
           membership: {
             role: memberData.role,
             joinedAt: memberData.joinedAt,
             joinMethod: memberData.joinMethod,
-            joinReason: memberData.joinReason,
+           joinReason: memberData.joinReason,
           },
           profile: userData
             ? {
@@ -138,9 +89,12 @@ export async function GET(
             : null,
         };
       } catch (error) {
-        logger.error('Error fetching user', { userId, error: error instanceof Error ? error : new Error(String(error)), endpoint: '/api/spaces/[spaceId]/membership' });
+        logger.error("Error fetching user profile", {
+          memberId,
+          error: error instanceof Error ? error : new Error(String(error)),
+        });
         return {
-          userId,
+          userId: memberId,
           membership: {
             role: memberData.role,
             joinedAt: memberData.joinedAt,
@@ -154,76 +108,63 @@ export async function GET(
 
     const members = await Promise.all(memberPromises);
 
-    // Group members by role for better organization
-    const membersByRole = members.reduce(
-      (acc, member) => {
-        const role = member.membership.role;
-        if (!acc[role]) {
-          acc[role] = [];
-        }
-        acc[role].push(member);
-        return acc;
-      },
-      {} as Record<string, typeof members>
+    const membersByRole = members.reduce((acc, member) => {
+      const memberRole = member.membership.role;
+      if (!acc[memberRole]) {
+        acc[memberRole] = [];
+      }
+      acc[memberRole].push(member);
+      return acc;
+    }, {} as Record<string, typeof members>);
+
+    const roleCounts = Object.entries(membersByRole).reduce(
+      (acc, [role, entries]) => ({
+        ...acc,
+        [role]: entries.length,
+      }),
+      {} as Record<string, number>,
     );
 
-    // Calculate role counts
-    const roleCounts = Object.keys(membersByRole).reduce(
-      (acc, role) => {
-        acc[role] = membersByRole[role].length;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
-    return NextResponse.json({
-      success: true,
+    return respond.success({
       space: {
         id: spaceId,
-        name: spaceData.name,
-        description: spaceData.description,
-        type: spaceData.type,
-        subType: spaceData.subType,
-        memberCount: spaceData.memberCount || 0,
+        name: membership.space.name,
+        description: membership.space.description,
+        type: membership.space.type,
+        memberCount: membership.space.memberCount || 0,
       },
       requestingUser: {
-        userId: requestingUserId,
-        role: requestingUserMembership.role,
-        joinedAt: requestingUserMembership.joinedAt,
+        userId,
+        role: membership.membership.role,
+        joinedAt: membership.membership.joinedAt,
       },
       members,
       membersByRole,
       pagination: {
-        limit,
-        offset,
-        totalCount,
-        hasMore: offset + limit < totalCount,
-        nextOffset: offset + limit < totalCount ? offset + limit : null,
+        limit: queryParams.limit,
+        offset: queryParams.offset,
+        totalCount: totalSnapshot.size,
+        hasMore: queryParams.offset + queryParams.limit < totalSnapshot.size,
+        nextOffset:
+          queryParams.offset + queryParams.limit < totalSnapshot.size
+            ? queryParams.offset + queryParams.limit
+            : null,
       },
       roleCounts: {
         ...roleCounts,
-        total: totalCount,
+        total: totalSnapshot.size,
       },
       filters: {
-        role: role || null,
-      } });
-  } catch (error: any) {
+        role: queryParams.role ?? null,
+      },
+    });
+  } catch (error) {
     logger.error(
-      `Get space membership error at /api/spaces/[spaceId]/membership`,
-      error instanceof Error ? error : new Error(String(error))
+      "Get space membership error at /api/spaces/[spaceId]/membership",
+      error instanceof Error ? error : new Error(String(error)),
     );
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid query parameters", details: error.errors },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    if (error.code === "auth/id-token-expired") {
-      return NextResponse.json(ApiResponseHelper.error("Token expired", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Internal server error", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Internal server error", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});

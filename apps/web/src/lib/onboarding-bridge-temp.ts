@@ -5,20 +5,24 @@
 
 import { useCallback } from 'react';
 import { useAuth } from "@hive/auth-logic";
+import { secureApiFetch } from "@/lib/secure-auth-utils";
+import type { AcademicLevel, LivingSituation } from "@/app/onboarding/components/types";
 
 export interface OnboardingData {
   fullName: string;
-  userType: 'student' | 'alumni' | 'faculty';
+  userType: "student" | "alumni" | "faculty";
   firstName?: string;
   lastName?: string;
   major: string;
-  academicLevel?: string;
+  academicLevel?: AcademicLevel;
   graduationYear: number;
   handle: string;
   avatarUrl?: string;
   interests?: string[];
   builderRequestSpaces?: string[];
   consentGiven: boolean;
+  bio?: string;
+  livingSituation?: LivingSituation;
 }
 
 export interface OnboardingResult {
@@ -57,16 +61,12 @@ export function useOnboardingBridge() {
         throw new Error('User consent is required to complete onboarding');
       }
 
-      // Make direct API call to complete onboarding
-      const response = await fetch('/api/auth/complete-onboarding', {
+      // Make authenticated API call to complete onboarding (cookies included)
+      const response = await secureApiFetch('/api/auth/complete-onboarding', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await unifiedAuth.getAuthToken?.() || ''}`,
-        },
-        body: JSON.stringify(onboardingData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(onboardingData)
       });
-
       const result = await response.json();
 
       if (!response.ok) {

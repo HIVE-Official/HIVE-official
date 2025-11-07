@@ -2,13 +2,17 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, UserPlus, UserCheck, UserX, Send, Clock, X, MessageCircle, Sparkles } from 'lucide-react';
+import { Users, UserPlus, UserCheck, UserX, Send, Clock, 
+// Check,
+X, MessageCircle, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
 import { Button } from '../atoms/button.js';
 import { Avatar } from '../atoms/avatar.js';
 import { Badge } from '../atoms/badge.js';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../atoms/tabs.js';
-export const FriendRequestManager = ({ userId, onAcceptRequest, onRejectRequest, onCancelRequest, onSendRequest, className = '' }) => {
+export const FriendRequestManager = ({ 
+// userId & onSendRequest may be handled internally in future; not directly used here
+onAcceptRequest, onRejectRequest, onCancelRequest, className = '' }) => {
     const [receivedRequests, setReceivedRequests] = useState([]);
     const [sentRequests, setSentRequests] = useState([]);
     const [loading, setLoading] = useState(true);

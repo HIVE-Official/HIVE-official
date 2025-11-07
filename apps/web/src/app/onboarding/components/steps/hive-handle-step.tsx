@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { AtSign, Check, X, Loader2, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput } from "@hive/ui";
+import { Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveHandleStepProps {
@@ -222,7 +222,7 @@ export function HiveHandleStep({ data, updateData, onNext }: HiveHandleStepProps
         transition={{ delay: 0.3 }}
       >
         <div className="space-y-3">
-          <HiveInput
+          <Input
             id="handle"
             type="text"
             label="Handle"

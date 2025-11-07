@@ -1,14 +1,14 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const navigationShellVariants: (props?: {
-    variant?: "default" | "glass" | "solid" | "floating";
-    blur?: "none" | "sm" | "lg" | "xl" | "md";
+    variant?: "default" | "solid" | "glass" | "floating";
+    blur?: "sm" | "md" | "lg" | "xl" | "none";
 } & import("class-variance-authority/types").ClassProp) => string;
 declare const navigationContentVariants: (props?: {
-    maxWidth?: "sm" | "lg" | "xl" | "2xl" | "md" | "full";
+    maxWidth?: "sm" | "md" | "lg" | "xl" | "full" | "2xl";
     spacing?: "normal" | "loose" | "tight";
 } & import("class-variance-authority/types").ClassProp) => string;
-export interface NavigationItem {
+export interface ShellNavItem {
     id: string;
     label: string;
     icon: React.ReactNode;
@@ -18,7 +18,7 @@ export interface NavigationItem {
     tier: 1 | 2 | 3;
 }
 export interface NavigationShellProps extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof navigationShellVariants> {
-    items: NavigationItem[];
+    items: ShellNavItem[];
     currentPath?: string;
     onSearch?: (query: string) => void;
     searchPlaceholder?: string;

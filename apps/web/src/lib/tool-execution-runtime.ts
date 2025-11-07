@@ -141,8 +141,14 @@ class SafeExecutionEnvironment {
       // UI utilities
       ui: {
         showToast: (message: string, type: 'success' | 'error' | 'info' = 'info') => {
-          // TODO: Integration with toast system
+          // Log for execution trace
           this.logs.push(`[TOAST:${type}] ${message}`);
+          // Bridge to app toast system if available (non-blocking)
+          try {
+            if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+              window.dispatchEvent(new CustomEvent('hive:toast', { detail: { title: message, type } }));
+            }
+          } catch {}
         },
         showModal: (title: string, content: string) => {
           // TODO: Integration with modal system

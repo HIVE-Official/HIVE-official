@@ -1,106 +1,126 @@
-import { NextRequest, NextResponse } from 'next/server';
-// Use admin SDK methods since we're in an API route
-import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+"use server";
 
-// Conflict detection for scheduling
+import { dbAdmin } from "@/lib/firebase-admin";
+import { logger } from "@/lib/logger";
+import {
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { z } from "zod";
+
 interface ConflictEvent {
   id: string;
   title: string;
   startDate: string;
   endDate: string;
-  type: 'personal' | 'space';
+  type: "personal" | "space";
   spaceName?: string;
-  severity: 'overlap' | 'adjacent' | 'close';
+  severity: "overlap" | "adjacent" | "close";
 }
 
-// POST - Check for conflicts with proposed event time
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+const ConflictCheckSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+  excludeEventId: z.string().optional(),
+});
+
+function detectConflict(
+  proposedStart: Date,
+  proposedEnd: Date,
+  eventStart: Date,
+  eventEnd: Date,
+  bufferStart: Date,
+  bufferEnd: Date,
+): "overlap" | "adjacent" | "close" | null {
+  if (proposedStart < eventEnd && proposedEnd > eventStart) {
+    return "overlap";
+  }
+
+  if (
+    proposedEnd.getTime() === eventStart.getTime() ||
+    proposedStart.getTime() === eventEnd.getTime()
+  ) {
+    return "adjacent";
+  }
+
+  if (bufferStart < eventEnd && bufferEnd > eventStart) {
+    return "close";
+  }
+
+  return null;
+}
+
+async function listUserSpaceIds(userId: string) {
+  const membershipsSnapshot = await dbAdmin
+    .collection("members")
+    .where("userId", "==", userId)
+    .where("status", "==", "active")
+    .get();
+
+  const spaceIds: string[] = [];
+  for (const membership of membershipsSnapshot.docs) {
+    const spaceId = membership.data().spaceId;
+    if (!spaceId) continue;
+    const spaceDoc = await dbAdmin.collection("spaces").doc(spaceId).get();
+    if (spaceDoc.exists && spaceDoc.data()?.campusId === CURRENT_CAMPUS_ID) {
+      spaceIds.push(spaceId);
     }
+  }
 
-    const body = await request.json();
-    const { startDate, endDate, excludeEventId } = body;
+  return spaceIds;
+}
 
-    if (!startDate || !endDate) {
-      return NextResponse.json(ApiResponseHelper.error("Missing required fields", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
+export const POST = withAuthValidationAndErrors(
+  ConflictCheckSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context,
+    body,
+    respond,
+  ) => {
+    try {
+      const userId = getUserId(request);
+      const { startDate, endDate, excludeEventId } = body;
 
-    const proposedStart = new Date(startDate);
-    const proposedEnd = new Date(endDate);
+      const proposedStart = new Date(startDate);
+      const proposedEnd = new Date(endDate);
 
-    if (proposedStart >= proposedEnd) {
-      return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    // Add buffer time for conflict detection (15 minutes before/after)
-    const bufferMs = 15 * 60 * 1000;
-    const bufferStart = new Date(proposedStart.getTime() - bufferMs);
-    const bufferEnd = new Date(proposedEnd.getTime() + bufferMs);
-
-    const conflicts: ConflictEvent[] = [];
-
-    // Check personal events
-    const personalEventsSnapshot = await dbAdmin.collection('personalEvents')
-      .where('userId', '==', user.uid)
-      .orderBy('startDate', 'asc')
-      .get();
-    personalEventsSnapshot.docs.forEach(doc => {
-      const eventData = doc.data();
-      
-      // Skip if this is the event being updated
-      if (excludeEventId && doc.id === excludeEventId) {
-        return;
+      if (proposedStart >= proposedEnd) {
+        return respond.error(
+          "End date must be after start date",
+          "INVALID_INPUT",
+          { status: 400 },
+        );
       }
 
-      const eventStart = new Date(eventData.startDate);
-      const eventEnd = new Date(eventData.endDate);
+      const bufferMs = 15 * 60 * 1000;
+      const bufferStart = new Date(proposedStart.getTime() - bufferMs);
+      const bufferEnd = new Date(proposedEnd.getTime() + bufferMs);
 
-      const conflict = detectConflict(
-        proposedStart, proposedEnd,
-        eventStart, eventEnd,
-        bufferStart, bufferEnd
-      );
+      const conflicts: ConflictEvent[] = [];
 
-      if (conflict) {
-        conflicts.push({
-          id: doc.id,
-          title: eventData.title,
-          startDate: eventData.startDate,
-          endDate: eventData.endDate,
-          type: 'personal',
-          severity: conflict
-        });
-      }
-    });
-
-    // Check space events from user's memberships
-    const membershipsSnapshot = await dbAdmin.collection('members')
-      .where('userId', '==', user.uid)
-      .where('status', '==', 'active')
-      .get();
-    const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
-
-    if (userSpaceIds.length > 0) {
-      const spaceEventsSnapshot = await dbAdmin.collection('events')
-        .where('spaceId', 'in', userSpaceIds)
-        .where('state', '==', 'published')
-        .orderBy('startDate', 'asc')
+      const personalEventsSnapshot = await dbAdmin
+        .collection("personalEvents")
+        .where("userId", "==", userId)
+        .orderBy("startDate", "asc")
         .get();
-      spaceEventsSnapshot.docs.forEach(doc => {
+
+      for (const doc of personalEventsSnapshot.docs) {
+        if (excludeEventId && doc.id === excludeEventId) continue;
+
         const eventData = doc.data();
         const eventStart = new Date(eventData.startDate);
         const eventEnd = new Date(eventData.endDate);
 
         const conflict = detectConflict(
-          proposedStart, proposedEnd,
-          eventStart, eventEnd,
-          bufferStart, bufferEnd
+          proposedStart,
+          proposedEnd,
+          eventStart,
+          eventEnd,
+          bufferStart,
+          bufferEnd,
         );
 
         if (conflict) {
@@ -109,65 +129,79 @@ export async function POST(request: NextRequest) {
             title: eventData.title,
             startDate: eventData.startDate,
             endDate: eventData.endDate,
-            type: 'space',
-            spaceName: eventData.spaceName,
-            severity: conflict
+            type: "personal",
+            severity: conflict,
           });
         }
+      }
+
+      const userSpaceIds = await listUserSpaceIds(userId);
+
+      if (userSpaceIds.length > 0) {
+        const spaceEventsSnapshot = await dbAdmin
+          .collection("events")
+          .where("spaceId", "in", userSpaceIds)
+          .where("state", "==", "published")
+          .orderBy("startDate", "asc")
+          .get();
+
+        for (const doc of spaceEventsSnapshot.docs) {
+          if (excludeEventId && doc.id === excludeEventId) continue;
+
+          const eventData = doc.data();
+          const eventStart = new Date(eventData.startDate);
+          const eventEnd = new Date(eventData.endDate);
+
+          const conflict = detectConflict(
+            proposedStart,
+            proposedEnd,
+            eventStart,
+            eventEnd,
+            bufferStart,
+            bufferEnd,
+          );
+
+          if (conflict) {
+            conflicts.push({
+              id: doc.id,
+              title: eventData.title,
+              startDate: eventData.startDate,
+              endDate: eventData.endDate,
+              type: "space",
+              spaceName: eventData.spaceName,
+              severity: conflict,
+            });
+          }
+        }
+      }
+
+      conflicts.sort((a, b) => {
+        const severityOrder = { overlap: 0, adjacent: 1, close: 2 };
+        const severityDiff =
+          severityOrder[a.severity] - severityOrder[b.severity];
+        if (severityDiff !== 0) return severityDiff;
+        return (
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        );
+      });
+
+      return respond.success({
+        conflicts,
+        hasConflicts: conflicts.length > 0,
+        severityCount: {
+          overlap: conflicts.filter((c) => c.severity === "overlap").length,
+          adjacent: conflicts.filter((c) => c.severity === "adjacent").length,
+          close: conflicts.filter((c) => c.severity === "close").length,
+        },
+      });
+    } catch (error) {
+      logger.error(
+        "Error checking conflicts at /api/calendar/conflicts",
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return respond.error("Failed to check conflicts", "INTERNAL_ERROR", {
+        status: 500,
       });
     }
-
-    // Sort conflicts by severity and start time
-    conflicts.sort((a, b) => {
-      const severityOrder = { 'overlap': 0, 'adjacent': 1, 'close': 2 };
-      const severityDiff = severityOrder[a.severity] - severityOrder[b.severity];
-      if (severityDiff !== 0) return severityDiff;
-      
-      return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
-    });
-
-    return NextResponse.json({ 
-      conflicts,
-      hasConflicts: conflicts.length > 0,
-      severityCount: {
-        overlap: conflicts.filter(c => c.severity === 'overlap').length,
-        adjacent: conflicts.filter(c => c.severity === 'adjacent').length,
-        close: conflicts.filter(c => c.severity === 'close').length
-      }
-    });
-  } catch (error) {
-    logger.error(
-      `Error checking conflicts at /api/calendar/conflicts`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to check conflicts", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
-
-// Helper function to detect conflict type
-function detectConflict(
-  proposedStart: Date,
-  proposedEnd: Date,
-  eventStart: Date,
-  eventEnd: Date,
-  bufferStart: Date,
-  bufferEnd: Date
-): 'overlap' | 'adjacent' | 'close' | null {
-  // Direct overlap
-  if (proposedStart < eventEnd && proposedEnd > eventStart) {
-    return 'overlap';
-  }
-
-  // Adjacent events (within buffer time)
-  if (proposedEnd.getTime() === eventStart.getTime() || 
-      proposedStart.getTime() === eventEnd.getTime()) {
-    return 'adjacent';
-  }
-
-  // Close events (within buffer time)
-  if (bufferStart < eventEnd && bufferEnd > eventStart) {
-    return 'close';
-  }
-
-  return null;
-}
+  },
+);

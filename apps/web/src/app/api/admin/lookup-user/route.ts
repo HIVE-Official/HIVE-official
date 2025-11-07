@@ -2,7 +2,9 @@ import { z } from "zod";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { logger } from "@/lib/logger";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import { withSecureAuth } from '@/lib/api-auth-secure';
+import { NextResponse } from 'next/server';
 
 // Validation schema
 const lookupUserSchema = z.object({
@@ -33,8 +35,8 @@ interface FirestoreUserData {
   updatedAt?: Date;
 }
 
-export const POST = withAdminAuthAndErrors(
-  async (request: AuthenticatedRequest, context: any, respond: any) => {
+export const POST = withSecureAuth(
+  async (request, token) => {
     // Validate request body
     const body = await request.json();
     const validation = lookupUserSchema.safeParse(body);
@@ -44,7 +46,7 @@ export const POST = withAdminAuthAndErrors(
     }
 
     const { query } = validation.data;
-    const currentUserId = getUserId(request);
+    const currentUserId = token?.uid || 'unknown';
     const db = getFirestore();
 
     let userData: UserData | null = null;
@@ -101,6 +103,10 @@ export const POST = withAdminAuthAndErrors(
           const userDoc = await db.collection("users").doc(userData.uid).get();
           if (userDoc.exists) {
             const docData = userDoc.data();
+            if (docData?.campusId && docData.campusId !== CURRENT_CAMPUS_ID) {
+              // Hide users from other campuses
+              userData = null;
+            } else {
             firestoreData = {
               fullName: docData?.fullName,
               handle: docData?.handle,
@@ -110,6 +116,7 @@ export const POST = withAdminAuthAndErrors(
               createdAt: docData?.createdAt?.toDate(),
               updatedAt: docData?.updatedAt?.toDate(),
             };
+            }
           }
         } else {
           // If not found by email/UID, try searching Firestore by handle or name
@@ -118,6 +125,7 @@ export const POST = withAdminAuthAndErrors(
           // Search by handle
           const handleQuery = await usersRef
             .where("handle", "==", query)
+            .where('campusId', '==', CURRENT_CAMPUS_ID)
             .limit(1)
             .get();
           if (!handleQuery.empty) {
@@ -167,10 +175,13 @@ export const POST = withAdminAuthAndErrors(
     });
 
     // Return combined data
-    return respond.success({
-      found: userData !== null || firestoreData !== null,
-      auth: userData,
-      profile: firestoreData
+    return NextResponse.json({
+      success: true,
+      data: {
+        found: userData !== null || firestoreData !== null,
+        auth: userData,
+        profile: firestoreData
+      }
     });
-  }
+  }, { requireAdmin: true }
 );

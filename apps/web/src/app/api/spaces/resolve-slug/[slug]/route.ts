@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { withAuthAndErrors, type AuthenticatedRequest } from '@/lib/middleware';
 
 export async function GET(
@@ -20,7 +21,7 @@ export async function GET(
     const slugSnapshot = await dbAdmin
       .collection('spaces')
       .where('slug', '==', slug)
-      .where('campusId', '==', 'ub-buffalo')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1)
       .get();
 
@@ -42,7 +43,7 @@ export async function GET(
 
     if (idSnapshot.exists) {
       const spaceData = idSnapshot.data();
-      if (spaceData && spaceData.campusId === 'ub-buffalo') {
+      if (spaceData && spaceData.campusId === CURRENT_CAMPUS_ID) {
         return NextResponse.json({
           spaceId: idSnapshot.id,
           slug: spaceData.slug || slug,

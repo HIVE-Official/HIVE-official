@@ -10,7 +10,8 @@
 
 export interface SecureAuthHeaders extends Record<string, string> {
   'Content-Type': string;
-  'Authorization': string;
+  // Optional: omitted in production when using HttpOnly cookies
+  'Authorization'?: string;
   'X-Hive-Client': string;
 }
 
@@ -70,23 +71,10 @@ export function getSecureAuthHeaders(): SecureAuthHeaders {
     }
   }
 
-  // PRODUCTION MODE: Standard JWT token validation
-  const token = localStorage.getItem('hive_session_token');
-
-  // SECURITY: Validate token presence and format
-  if (!token || typeof token !== 'string' || token.length < 32) {
-    throw new Error('HIVE_AUTH_REQUIRED: Please log in to continue');
-  }
-
-  // SECURITY: Basic token format validation (should be JWT-like)
-  if (!token.includes('.') || token.split('.').length !== 3) {
-    localStorage.removeItem('hive_session_token'); // Clear invalid token
-    throw new Error('HIVE_AUTH_INVALID: Session corrupted, please log in again');
-  }
-
+  // PRODUCTION MODE: Prefer secure HttpOnly session cookie
+  // Do NOT rely on localStorage tokens in production.
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`,
     'X-Hive-Client': 'web-app-v1'
   };
 }
@@ -104,13 +92,23 @@ export async function secureApiFetch(
 ): Promise<Response> {
   try {
     const headers = getSecureAuthHeaders();
+
+    // Attempt to include CSRF token if present (admin APIs)
+    let csrfHeaders: Record<string, string> = {};
+    if (typeof document !== 'undefined') {
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (csrfMeta) csrfHeaders['X-CSRF-Token'] = csrfMeta;
+    }
     
     return fetch(url, {
       ...options,
       headers: {
         ...headers,
-        ...options.headers
-      }
+        ...csrfHeaders,
+        ...(options.headers as Record<string, string> | undefined)
+      },
+      // Always include cookies for same-site API calls
+      credentials: 'include'
     });
   } catch (error) {
     // SECURITY: Log auth failures for monitoring
@@ -126,12 +124,27 @@ export async function secureApiFetch(
  * @returns {boolean} True if user is properly authenticated
  */
 export function isAuthenticated(): boolean {
-  try {
-    getSecureAuthHeaders();
-    return true;
-  } catch {
-    return false;
+  // Client-side hints only; server validates real auth via HttpOnly cookies.
+  if (typeof window === 'undefined') return false;
+
+  if (process.env.NODE_ENV === 'development') {
+    // Dev: allow based on explicit dev session markers only.
+    const cookies = document.cookie.split(';').map(c => c.trim());
+    const sessionCookie = cookies.find(c => c.startsWith('session-token='));
+    const devModeCookie = cookies.find(c => c.startsWith('dev-mode='));
+    if (sessionCookie && devModeCookie) return true;
+
+    const sessionJson = localStorage.getItem('hive_session');
+    if (sessionJson) {
+      try {
+        const session = JSON.parse(sessionJson);
+        if (session.developmentMode) return true;
+      } catch {}
+    }
   }
+
+  // Production: never infer auth from localStorage; rely on server session only.
+  return false;
 }
 
 /**

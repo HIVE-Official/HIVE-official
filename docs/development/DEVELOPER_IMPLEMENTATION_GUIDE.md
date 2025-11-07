@@ -69,37 +69,15 @@ const useComponentState = () => {
 **Location:** `packages/ui/src/components/ui/`
 
 ```typescript
-// packages/ui/src/components/ui/hive-button.tsx
-interface HiveButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  loading?: boolean;
-  children: React.ReactNode;
-}
-
-export const HiveButton = ({ variant = 'primary', size = 'md', loading, children, ...props }: HiveButtonProps) => {
-  return (
-    <button 
-      className={cn(
-        'inline-flex items-center justify-center rounded-md font-medium transition-colors',
-        {
-          'bg-yellow-500 hover:bg-yellow-600 text-black': variant === 'primary',
-          'bg-gray-800 hover:bg-gray-700 text-white': variant === 'secondary',
-        },
-        {
-          'h-8 px-3 text-sm': size === 'sm',
-          'h-10 px-4': size === 'md',
-          'h-12 px-6 text-lg': size === 'lg',
-        }
-      )}
-      disabled={loading}
-      {...props}
-    >
-      {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {children}
-    </button>
-  );
-};
+// packages/ui/src/atomic/atoms/button.tsx
+<Button
+  variant="brand"
+  size="lg"
+  leftIcon={<Sparkles className="h-4 w-4" />}
+  loading={isSubmitting}
+>
+  Continue
+</Button>;
 ```
 
 ### **03. Authentication System → Next.js Pages**
@@ -121,7 +99,15 @@ apps/web/src/app/onboarding/page.tsx
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { HiveButton, HiveInput, HiveCard } from '@hive/ui';
+import {
+  Button,
+  Input,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from '@hive/ui';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -129,10 +115,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate @buffalo.edu email
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!email.endsWith('@buffalo.edu')) {
       setError('Please use your UB email address');
       return;
@@ -154,43 +138,48 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <HiveCard className="w-full max-w-md">
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-white">Welcome to HIVE</h1>
-            <p className="text-gray-400">Connect with your UB community</p>
-          </div>
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl text-white">Welcome to HIVE</CardTitle>
+          <CardDescription className="text-gray-400">
+            Connect with your UB community
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input
+              type="email"
+              label="UB Email"
+              placeholder="your.name@buffalo.edu"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
 
-          <HiveInput
-            type="email"
-            placeholder="your.name@buffalo.edu"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Keep it secure"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
 
-          <HiveInput
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+            {error ? (
+              <div className="text-sm text-red-400">{error}</div>
+            ) : null}
 
-          {error && (
-            <div className="text-red-400 text-sm">{error}</div>
-          )}
-
-          <HiveButton 
-            type="submit" 
-            variant="primary" 
-            className="w-full"
-            loading={loading}
-          >
-            Sign In
-          </HiveButton>
-        </form>
-      </HiveCard>
+            <Button
+              type="submit"
+              variant="brand"
+              className="w-full"
+              loading={loading}
+            >
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

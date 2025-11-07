@@ -23,12 +23,13 @@ export interface CalendarApiEvent {
  */
 export const fetchCalendarEvents = async (): Promise<CalendarApiEvent[]> => {
   try {
-    const response = await fetch('/api/calendar');
+    const { secureApiFetch } = await import('./secure-auth-utils');
+    const response = await secureApiFetch('/api/calendar');
     if (!response.ok) throw new Error('Failed to fetch events');
     const data = await response.json();
     return data.events || [];
   } catch (error) {
-    console.error('Failed to fetch calendar events:', error);
+    logger.error('Failed to fetch calendar events', error as Error, { component: 'calendar-api', action: 'fetch_events' });
     return [];
   }
 };
@@ -38,7 +39,8 @@ export const fetchCalendarEvents = async (): Promise<CalendarApiEvent[]> => {
  */
 export const createCalendarEvent = async (event: Omit<CalendarApiEvent, 'id'>): Promise<CalendarApiEvent> => {
   try {
-    const response = await fetch('/api/calendar', {
+    const { secureApiFetch } = await import('./secure-auth-utils');
+    const response = await secureApiFetch('/api/calendar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(event),
@@ -51,7 +53,7 @@ export const createCalendarEvent = async (event: Omit<CalendarApiEvent, 'id'>): 
     
     return response.json();
   } catch (error) {
-    console.error('Failed to create calendar event:', error);
+    logger.error('Failed to create calendar event', error as Error, { component: 'calendar-api', action: 'create_event' });
     throw error;
   }
 };
@@ -61,7 +63,8 @@ export const createCalendarEvent = async (event: Omit<CalendarApiEvent, 'id'>): 
  */
 export const updateCalendarEvent = async (id: string, event: Partial<CalendarApiEvent>): Promise<CalendarApiEvent> => {
   try {
-    const response = await fetch(`/api/calendar/${id}`, {
+    const { secureApiFetch } = await import('./secure-auth-utils');
+    const response = await secureApiFetch(`/api/calendar/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(event),
@@ -74,7 +77,7 @@ export const updateCalendarEvent = async (id: string, event: Partial<CalendarApi
     
     return response.json();
   } catch (error) {
-    console.error('Failed to update calendar event:', error);
+    logger.error('Failed to update calendar event', error as Error, { component: 'calendar-api', action: 'update_event', id });
     throw error;
   }
 };
@@ -84,7 +87,8 @@ export const updateCalendarEvent = async (id: string, event: Partial<CalendarApi
  */
 export const deleteCalendarEvent = async (id: string): Promise<void> => {
   try {
-    const response = await fetch(`/api/calendar/${id}`, {
+    const { secureApiFetch } = await import('./secure-auth-utils');
+    const response = await secureApiFetch(`/api/calendar/${id}`, {
       method: 'DELETE',
     });
     
@@ -93,7 +97,7 @@ export const deleteCalendarEvent = async (id: string): Promise<void> => {
       throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
     }
   } catch (error) {
-    console.error('Failed to delete calendar event:', error);
+    logger.error('Failed to delete calendar event', error as Error, { component: 'calendar-api', action: 'delete_event', id });
     throw error;
   }
 };
@@ -166,7 +170,7 @@ export const connectCalendarService = async (type: 'google' | 'outlook'): Promis
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(`Failed to connect ${type} calendar:`, error);
+    logger.error(`Failed to connect ${type} calendar`, error as Error, { component: 'calendar-api', action: 'connect_calendar', type });
     // Return not implemented for now - can be implemented when OAuth flow is ready
     return { success: false, redirectUrl: '' };
   }
@@ -191,8 +195,9 @@ export const syncCalendarService = async (connectionId: string): Promise<{ succe
       lastSync: new Date(data.lastSync || Date.now())
     };
   } catch (error) {
-    console.error('Failed to sync calendar:', error);
+    logger.error('Failed to sync calendar', error as Error, { component: 'calendar-api', action: 'sync_calendar', connectionId });
     // Return not implemented for now - can be implemented when sync API is ready
     return { success: false, lastSync: new Date() };
   }
 };
+import { logger } from './structured-logger';

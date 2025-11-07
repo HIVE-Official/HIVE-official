@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Internal membership data structure
 interface MembershipData {
@@ -91,19 +92,27 @@ export async function GET(request: NextRequest) {
     const timeRange = searchParams.get('timeRange') || 'week'; // week, month, all
 
     // Fetch user's memberships
-    const membershipsSnapshot = await dbAdmin.collection('members')
+    const membershipsSnapshot = await dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', user.uid)
-      .orderBy('lastActivity', 'desc')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .orderBy('joinedAt', 'desc')
       .get();
-    const memberships: MembershipData[] = membershipsSnapshot.docs.map(doc => {
+    const memberships: MembershipData[] = membershipsSnapshot.docs.map((doc) => {
       const data = doc.data();
+      const joinedAt =
+        data.joinedAt?.toDate?.()?.toISOString() ||
+        (typeof data.joinedAt === 'string' ? data.joinedAt : new Date().toISOString());
+      const lastActivity =
+        data.lastActive?.toDate?.()?.toISOString() ||
+        (typeof data.lastActive === 'string' ? data.lastActive : joinedAt);
       return {
-        id: data.spaceId || doc.id, // Use spaceId from data or fallback to doc id
+        id: data.spaceId || doc.id,
         role: data.role || 'member',
-        status: data.status || 'active',
-        joinedAt: data.joinedAt || new Date().toISOString(),
-        lastActivity: data.lastActivity || new Date().toISOString(),
-        ...data
+        status: data.isActive === false ? 'inactive' : 'active',
+        joinedAt,
+        lastActivity,
+        ...data,
       };
     });
 
@@ -118,6 +127,10 @@ export async function GET(request: NextRequest) {
 
           const spaceData = spaceDoc.data();
           if (!spaceData) {
+            return null;
+          }
+          // Enforce campus isolation
+          if (spaceData.campusId && spaceData.campusId !== CURRENT_CAMPUS_ID) {
             return null;
           }
           
@@ -140,8 +153,12 @@ export async function GET(request: NextRequest) {
             spaceId: membership.id,
             spaceName: spaceData.name || 'Unknown Space',
             spaceDescription: spaceData.description || '',
-            spaceType: spaceData.type || 'general',
-            memberCount: spaceData.memberCount || 0,
+            spaceType: spaceData.type || spaceData.category || 'general',
+            memberCount:
+              spaceData.metrics?.memberCount ??
+              spaceData.memberCount ??
+              spaceData.metrics?.activeMembers ??
+              0,
             role: (membership.role || 'member') as 'member' | 'moderator' | 'admin' | 'builder',
             status: (membership.status || 'active') as 'active' | 'inactive' | 'pending',
             joinedAt: membership.joinedAt || new Date().toISOString(),
@@ -207,6 +224,7 @@ async function getSpaceActivityForUser(userId: string, spaceId: string, timeRang
     const activitySnapshot = await dbAdmin.collection('activityEvents')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('date', '>=', startDateStr)
       .where('date', '<=', endDateStr)
       .get();
@@ -264,42 +282,8 @@ async function getSpaceNotifications(userId: string, spaceId: string) {
 
 // Helper function to get quick stats
 async function getSpaceQuickStats(userId: string, spaceId: string) {
-  try {
-    // Get user's posts in this space
-    const postsSnapshot = await dbAdmin.collection('posts')
-      .where('authorId', '==', userId)
-      .where('spaceId', '==', spaceId)
-      .get();
-    const myPosts = postsSnapshot.docs.length;
-
-    // Get user's tools deployed in this space
-    const toolsSnapshot = await dbAdmin.collection('deployedTools')
-      .where('creatorId', '==', userId)
-      .where('spaceId', '==', spaceId)
-      .get();
-    const myTools = toolsSnapshot.docs.length;
-
-    // Get user's interactions in this space (simplified)
-    const interactionsSnapshot = await dbAdmin.collection('activityEvents')
-      .where('userId', '==', userId)
-      .where('spaceId', '==', spaceId)
-      .where('type', '==', 'social_interaction')
-      .limit(100) // Limit for performance
-      .get();
-    const myInteractions = interactionsSnapshot.docs.length;
-
-    return {
-      myPosts,
-      myTools,
-      myInteractions
-    };
-  } catch (error) {
-    logger.error(
-      `Error getting quick stats at /api/profile/spaces`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return { myPosts: 0, myTools: 0, myInteractions: 0 };
-  }
+  // Quick stats are currently disabled pending unified analytics pipeline
+  return { myPosts: 0, myTools: 0, myInteractions: 0 };
 }
 
 // Helper function to generate space activity summary

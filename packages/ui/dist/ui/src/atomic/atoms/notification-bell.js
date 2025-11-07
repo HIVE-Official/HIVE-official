@@ -13,11 +13,11 @@ import React, { useState, useEffect } from 'react';
 import { Bell, BellRing } from 'lucide-react';
 import { cn } from '../../lib/utils.js';
 // Create motion components (these should match the shell's motion implementation)
-const MotionDiv = React.forwardRef(({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
+const MotionDiv = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
 MotionDiv.displayName = 'MotionDiv';
-const MotionButton = React.forwardRef(({ animate, transition, initial, whileHover, whileTap, className, children, ...props }, ref) => (_jsx("button", { ref: ref, className: className, ...props, children: children })));
+const MotionButton = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("button", { ref: ref, className: className, ...props, children: children })));
 MotionButton.displayName = 'MotionButton';
-const MotionSpan = React.forwardRef(({ animate, transition, initial, layoutId, className, children, ...props }, ref) => (_jsx("span", { ref: ref, className: className, ...props, children: children })));
+const MotionSpan = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("span", { ref: ref, className: className, ...props, children: children })));
 MotionSpan.displayName = 'MotionSpan';
 // HIVE Easing Curves
 const HIVE_EASING = {
@@ -35,6 +35,7 @@ export const NotificationBell = ({ unreadCount = 0, loading = false, hasError = 
             const timer = setTimeout(() => setHasNewNotification(false), 2000);
             return () => clearTimeout(timer);
         }
+        return undefined;
     }, [unreadCount, loading]);
     const sizeClasses = {
         sm: 'w-5 h-5',

@@ -1,5 +1,5 @@
-import { Landing } from "../components/landing/Landing";
+import PreLaunch from "../components/landing/PreLaunch";
 
 export default function HomePage(): JSX.Element {
-  return <Landing />;
+  return <PreLaunch />;
 }

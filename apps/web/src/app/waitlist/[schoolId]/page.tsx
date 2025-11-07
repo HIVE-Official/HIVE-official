@@ -1,4 +1,5 @@
-'use client';
+// Server component: fetches data with firebase-admin on the server
+import 'server-only';
 
 import { notFound } from "next/navigation";
 import {
@@ -17,9 +18,9 @@ import { WaitlistForm } from "./components/waitlist-form";
 export const dynamic = 'force-dynamic';
 
 type WaitlistPageProps = {
-  params: Promise<{
+  params: {
     schoolId: string;
-  }>;
+  };
 };
 
 async function getSchool(schoolId: string): Promise<School | null> {
@@ -35,7 +36,7 @@ async function getSchool(schoolId: string): Promise<School | null> {
 }
 
 export default async function WaitlistPage({ params }: WaitlistPageProps) {
-  const { schoolId } = await params;
+  const { schoolId } = params;
   const school = await getSchool(schoolId);
 
   if (!school) {

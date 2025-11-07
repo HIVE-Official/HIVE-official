@@ -5,6 +5,7 @@ import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 import { withAuth, ApiResponse } from '@/lib/api-auth-middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Personal event type for calendar tool
 interface PersonalEvent {
@@ -54,6 +55,7 @@ async function fetchUserCalendarEvents(userId: string): Promise<CalendarEvent[]>
     const membershipSnapshot = await dbAdmin
       .collection('members')
       .where('userId', '==', userId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
 
     const spaceIds = membershipSnapshot.docs.map(doc => doc.data().spaceId);
@@ -246,6 +248,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       const membershipsSnapshot = await dbAdmin.collection('members')
         .where('userId', '==', userId)
         .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .get();
       const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
@@ -253,6 +256,7 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
         // Fetch space events from user's spaces
         let spaceEventsQuery = dbAdmin.collection('events')
           .where('spaceId', 'in', userSpaceIds)
+          .where('campusId', '==', CURRENT_CAMPUS_ID)
           .where('state', '==', 'published');
         
         if (startDate) {

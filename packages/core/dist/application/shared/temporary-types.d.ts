@@ -1,3 +1,5 @@
+import type { Tool as DomainTool } from '../../domain/creation/tool';
+import type { ElementInstance as DomainElementInstance } from '../../domain/creation/elements';
 /**
  * Temporary type exports for backward compatibility
  * These re-export from proper domain models
@@ -243,36 +245,8 @@ export interface User {
         interests?: string[];
     };
 }
-export interface Tool {
-    id: string;
-    name: string;
-    description: string;
-    creatorId: string;
-    version: string;
-    elements: ElementInstance[];
-    settings: ToolSettings;
-    analytics?: ToolAnalytics;
-    permissions: ToolPermissions;
-    createdAt: Date | any;
-    updatedAt?: Date | any;
-    publishedAt?: Date | any;
-    campusId: string;
-}
-export interface ElementInstance {
-    id: string;
-    type: string;
-    config: any;
-    position: {
-        x: number;
-        y: number;
-    };
-    size?: {
-        width: number;
-        height: number;
-    };
-    style?: any;
-    data?: any;
-}
+export type Tool = DomainTool;
+export type ElementInstance = DomainElementInstance;
 export interface Element {
     id: string;
     type: string;
@@ -282,60 +256,7 @@ export interface Element {
     defaultConfig: any;
     schema?: any;
 }
-export interface ToolSettings {
-    isPublic: boolean;
-    allowComments: boolean;
-    allowSharing: boolean;
-    requireAuth: boolean;
-    maxUsers?: number;
-}
-export interface ToolAnalytics {
-    views: number;
-    uses: number;
-    shares: number;
-    rating?: number;
-    reviews?: number;
-}
-export interface ToolPermissions {
-    canEdit: string[];
-    canView: string[];
-    canShare: string[];
-    canDelete: string[];
-}
-export declare const ToolSchema: {
-    parse: (data: any) => any;
-    safeParse: (data: any) => {
-        success: boolean;
-        data: any;
-    };
-};
-export declare const CreateToolSchema: {
-    parse: (data: any) => any;
-    safeParse: (data: any) => {
-        success: boolean;
-        data: any;
-    };
-};
-export declare const UpdateToolSchema: {
-    parse: (data: any) => any;
-    safeParse: (data: any) => {
-        success: boolean;
-        data: any;
-    };
-};
-export declare const ShareToolSchema: {
-    parse: (data: any) => any;
-    safeParse: (data: any) => {
-        success: boolean;
-        data: any;
-    };
-};
-export declare function canUserEditTool(tool: Tool, userId: string): boolean;
-export declare function canUserViewTool(tool: Tool, userId: string): boolean;
-export declare function getNextVersion(currentVersion: string): string;
-export declare function determineChangeType(changes: any): 'major' | 'minor' | 'patch';
-export declare function validateToolStructure(tool: any): boolean;
-export declare function validateElementConfig(element: any): boolean;
-export declare function generateShareToken(toolId: string, userId: string): string;
-export declare function createToolDefaults(): Partial<Tool>;
+export { ElementType, ElementInstanceSchema, validateElementConfig, } from '../../domain/creation/elements';
+export { ToolSchema, CreateToolSchema, UpdateToolSchema, ShareToolSchema, ToolStatus, ToolConfigSchema, ToolMetadataSchema, ToolVersionSchema, createToolDefaults, generateShareToken, canUserEditTool, canUserViewTool, getNextVersion, determineChangeType, validateToolStructure, } from '../../domain/creation/tool';
+export { PlacedToolSchema, PlacementTargetType, PlacementPermissionsSchema, PlacementSettingsSchema, getPlacementCollectionPath, getPlacementDocPath, encodePlacementCompositeId, decodePlacementCompositeId, tryDecodePlacementCompositeId, PLACED_TOOL_COLLECTION_NAME, } from '../../domain/creation/placement';
 //# sourceMappingURL=temporary-types.d.ts.map

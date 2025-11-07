@@ -1,22 +1,38 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+interface IndexRecommendation {
+  type: 'create' | 'drop' | 'modify';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  indexName: string;
+  fields: Array<string | Record<string, string>>;
+  reason: string;
+  estimatedImpact: string;
+}
+
+interface IndexUsage { used: number; unused: number; total: number }
+interface IndexCollectionAnalysis { name: string; indexes: Array<{ name: string; used: boolean }>; usage: IndexUsage; recommendations: IndexRecommendation[] }
+interface IndexAnalysis { total: number; used: number; unused: number; missing: number; collections: Record<string, IndexCollectionAnalysis>; recommendations: IndexRecommendation[] }
+
+interface QueryPattern { pattern: string; count: number; avgDuration: number; p95Duration: number; collection?: string }
+interface QueryStats { totalQueries: number; avgDuration: number; queries: QueryPattern[] }
+interface QueryPerformance { averageTime: number; slowQueries: QueryPattern[]; queryStats: Record<string, QueryStats>; bottlenecks: Array<{ collection: string; type: string; severity: string; description: string; recommendation: string }> }
+
+interface CollectionStats { name: string; documentCount: number; estimatedSize: number; averageDocumentSize: number; growthRate: number; readFrequency: number; writeFrequency: number; hotspots: Array<{ field: string; concentration: number; reason: string }> }
+interface CollectionsOverview { total: number; details: Record<string, CollectionStats>; totalDocuments: number; totalSize: number; growth: Record<string, number> }
+
+interface Trends { queryTimes: Array<{ time: string; avgTime: number; p95Time: number }>; indexUsage: Array<{ time: string; hitRate: number; missRate: number }>; collectionGrowth: Array<{ time: string; documentsAdded: number; sizeIncrease: number }>; errorRates: Array<{ time: string; errorRate: number; timeouts: number }> }
+
+export const GET = withSecureAuth(async (request, token) => {
 
   const { searchParams } = new URL(request.url);
   const analysis = searchParams.get('analysis') || 'full'; // 'full', 'indexes', 'queries', 'performance'
   const collection = searchParams.get('collection') || undefined; // Specific collection analysis
 
   try {
-    logger.info('Performing database optimization analysis', { userId: auth.userId, analysis, collection });
+    logger.info('Performing database optimization analysis', { userId: token?.uid || 'unknown', analysis, collection });
 
     // Get comprehensive database optimization data
     const [
@@ -68,7 +84,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing database optimization analysis', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error performing database optimization analysis', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -80,14 +96,9 @@ export const GET = withAuthAndErrors(async (context) => {
       error: 'Using mock data - Database optimization API not fully implemented'
     });
   }
-});
+}, { requireAdmin: true });
 
-export const POST = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const POST = withSecureAuth(async (request, token) => {
 
   try {
     const body = await request.json();
@@ -100,16 +111,16 @@ export const POST = withAuthAndErrors(async (context) => {
     let result;
     switch (action) {
       case 'create_index':
-        result = await createOptimizedIndex(collection, indexName, indexFields, auth.userId);
+        result = await createOptimizedIndex(collection, indexName, indexFields, token?.uid || 'unknown');
         break;
       case 'drop_index':
-        result = await dropUnusedIndex(collection, indexName, auth.userId);
+        result = await dropUnusedIndex(collection, indexName, token?.uid || 'unknown');
         break;
       case 'analyze_collection':
-        result = await performCollectionAnalysis(collection, auth.userId);
+        result = await performCollectionAnalysis(collection, token?.uid || 'unknown');
         break;
       case 'optimize_queries':
-        result = await optimizeSlowQueries(collection, auth.userId);
+        result = await optimizeSlowQueries(collection, token?.uid || 'unknown');
         break;
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
@@ -118,7 +129,7 @@ export const POST = withAuthAndErrors(async (context) => {
     logger.info('Database optimization action performed', {
       action,
       collection,
-      userId: auth.userId,
+      userId: token?.uid || 'unknown',
       result: result.success
     });
 
@@ -129,32 +140,32 @@ export const POST = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error performing database optimization action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error performing database optimization action', { error: error instanceof Error ? error : new Error(String(error)) });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Analyze database indexes
  */
-async function getIndexAnalysis(collection?: string) {
+async function getIndexAnalysis(collection?: string): Promise<IndexAnalysis> {
   try {
     // Get all collections to analyze
     const collections = collection ? [collection] : ['users', 'spaces', 'posts', 'rituals', 'admin_logs'];
-    const analysis = {
+    const analysis: IndexAnalysis = {
       total: 0,
       used: 0,
       unused: 0,
       missing: 0,
-      collections: {} as Record<string, any>,
-      recommendations: [] as any[]
+      collections: {},
+      recommendations: []
     };
 
     for (const collectionName of collections) {
       const collectionRef = dbAdmin.collection(collectionName);
 
       // Simulate index analysis - in production this would use Firebase Admin SDK monitoring
-      const collectionAnalysis = {
+      const collectionAnalysis: IndexCollectionAnalysis = {
         name: collectionName,
         indexes: await getCollectionIndexes(collectionName),
         usage: await getIndexUsage(collectionName),
@@ -180,14 +191,14 @@ async function getIndexAnalysis(collection?: string) {
 /**
  * Get query performance metrics
  */
-async function getQueryPerformance(collection?: string) {
+async function getQueryPerformance(collection?: string): Promise<QueryPerformance> {
   try {
     const collections = collection ? [collection] : ['users', 'spaces', 'posts', 'rituals'];
-    const performance = {
+    const performance: QueryPerformance = {
       averageTime: 0,
-      slowQueries: [] as any[],
-      queryStats: {} as Record<string, any>,
-      bottlenecks: [] as any[]
+      slowQueries: [],
+      queryStats: {},
+      bottlenecks: []
     };
 
     for (const collectionName of collections) {
@@ -196,14 +207,14 @@ async function getQueryPerformance(collection?: string) {
       performance.queryStats[collectionName] = queryStats;
 
       // Identify slow queries (>1000ms)
-      const slowQueries = queryStats.queries.filter((q: any) => q.avgDuration > 1000);
-      performance.slowQueries.push(...slowQueries.map((q: any) => ({
+      const slowQueries = queryStats.queries.filter((q) => q.avgDuration > 1000);
+      performance.slowQueries.push(...slowQueries.map((q) => ({
         ...q,
         collection: collectionName
       })));
 
       // Calculate average time
-      const totalTime = queryStats.queries.reduce((sum: number, q: any) => sum + q.avgDuration, 0);
+      const totalTime = queryStats.queries.reduce((sum: number, q: QueryPattern) => sum + q.avgDuration, 0);
       performance.averageTime += totalTime / queryStats.queries.length || 0;
     }
 
@@ -223,15 +234,15 @@ async function getQueryPerformance(collection?: string) {
 /**
  * Get collection statistics
  */
-async function getCollectionStatistics(collection?: string) {
+async function getCollectionStatistics(collection?: string): Promise<CollectionsOverview> {
   try {
     const collections = collection ? [collection] : ['users', 'spaces', 'posts', 'rituals', 'admin_logs'];
-    const stats = {
+    const stats: CollectionsOverview = {
       total: collections.length,
-      details: {} as Record<string, any>,
+      details: {},
       totalDocuments: 0,
       totalSize: 0,
-      growth: {} as Record<string, number>
+      growth: {}
     };
 
     for (const collectionName of collections) {
@@ -245,7 +256,7 @@ async function getCollectionStatistics(collection?: string) {
       const estimatedSize = documentCount * getAverageDocumentSize(collectionName);
       const growthRate = await calculateGrowthRate(collectionName);
 
-      const collectionStats = {
+      const collectionStats: CollectionStats = {
         name: collectionName,
         documentCount,
         estimatedSize,
@@ -273,9 +284,9 @@ async function getCollectionStatistics(collection?: string) {
 /**
  * Generate optimization suggestions
  */
-async function generateOptimizationSuggestions(collection?: string) {
+async function generateOptimizationSuggestions(collection?: string): Promise<IndexRecommendation[]> {
   try {
-    const suggestions = [];
+    const suggestions: IndexRecommendation[] = [];
 
     // Index optimization suggestions
     const indexSuggestions = await generateIndexSuggestions(collection);
@@ -307,14 +318,14 @@ async function generateOptimizationSuggestions(collection?: string) {
 /**
  * Get performance trends
  */
-async function getPerformanceTrends() {
+async function getPerformanceTrends(): Promise<Trends> {
   try {
     const now = new Date();
-    const trends = {
-      queryTimes: [] as any[],
-      indexUsage: [] as any[],
-      collectionGrowth: [] as any[],
-      errorRates: [] as any[]
+    const trends: Trends = {
+      queryTimes: [],
+      indexUsage: [],
+      collectionGrowth: [],
+      errorRates: []
     };
 
     // Generate trend data for the last 24 hours
@@ -359,7 +370,7 @@ async function getPerformanceTrends() {
 /**
  * Database optimization actions
  */
-async function createOptimizedIndex(collection: string, indexName: string, fields: any, userId: string) {
+async function createOptimizedIndex(collection: string, indexName: string, fields: Array<string | Record<string, string>>, userId: string) {
   try {
     // Log the optimization action
     await dbAdmin.collection('admin_logs').add({
@@ -547,7 +558,7 @@ function generateIndexRecommendations(collection: string) {
   return recommendations[collection as keyof typeof recommendations] || [];
 }
 
-async function analyzeQueryPerformance(collection: string) {
+async function analyzeQueryPerformance(collection: string): Promise<QueryStats> {
   // Simulate query performance data
   return {
     totalQueries: Math.floor(Math.random() * 10000 + 5000),
@@ -569,7 +580,7 @@ async function analyzeQueryPerformance(collection: string) {
   };
 }
 
-function identifyPerformanceBottlenecks(queryStats: Record<string, any>) {
+function identifyPerformanceBottlenecks(queryStats: Record<string, QueryStats>) {
   const bottlenecks = [];
 
   for (const [collection, stats] of Object.entries(queryStats)) {
@@ -682,7 +693,7 @@ async function generatePerformanceSuggestions(collection?: string) {
   ];
 }
 
-function calculateOptimizationScore(data: any) {
+function calculateOptimizationScore(data: { indexAnalysis: IndexAnalysis; queryPerformance: QueryPerformance; collectionStats: CollectionsOverview }) {
   const { indexAnalysis, queryPerformance, collectionStats } = data;
 
   let score = 100;
@@ -710,7 +721,7 @@ function calculateOptimizationScore(data: any) {
   return Math.max(Math.round(score), 0);
 }
 
-function suggestIndexForQuery(query: any) {
+function suggestIndexForQuery(query: QueryPattern) {
   // Analyze query pattern and suggest optimal index
   const fields = extractQueryFields(query.pattern);
   return {

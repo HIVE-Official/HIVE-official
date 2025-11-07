@@ -472,3 +472,4 @@ export async function runScheduledRSSImports(): Promise<ImportResult[]> {
     throw error;
   }
 }
+import 'server-only';

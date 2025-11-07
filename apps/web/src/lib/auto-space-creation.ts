@@ -242,12 +242,10 @@ export async function createAndJoinSpaces(
   };
 
   try {
-    const response = await fetch('/api/spaces/auto-create', {
+    const { secureApiFetch } = await import('./secure-auth-utils');
+    const response = await secureApiFetch('/api/spaces/auto-create', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sessionToken}`
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(config)
     });
 
@@ -284,9 +282,8 @@ export async function getRecommendedSpaces(
   const filteredSpaces = [];
   for (const space of recommended) {
     try {
-      const membershipResponse = await fetch(`/api/spaces/${space.id}/membership`, {
-        headers: { 'Authorization': `Bearer ${sessionToken}` }
-      });
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      const membershipResponse = await secureApiFetch(`/api/spaces/${space.id}/membership`);
       
       if (!membershipResponse.ok) {
         // Not a member, include in recommendations

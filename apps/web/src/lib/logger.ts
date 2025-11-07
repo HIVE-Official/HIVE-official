@@ -150,7 +150,6 @@ interface LogContext {
   totalEntries?: number;
   totalSpaces?: number;
   membershipCount?: number;
-  connectionCount?: number;
   friendCount?: number;
   detectCount?: number;
   postsChecked?: number;
@@ -331,7 +330,6 @@ interface LogContext {
   fromSpaceId?: string;
   graduationYearsLength?: number;
   handle?: string;
-  id?: string;
   isDevelopmentUser?: boolean;
   major?: string;
   matchingSpace?: any;
@@ -350,7 +348,6 @@ interface LogContext {
   result?: any;
   ritualCount?: number;
   ritualDataName?: string;
-  ritualId?: string;
   sourceId?: string;
   sourceType?: string;
   spaceConfig?: any;
@@ -367,7 +364,6 @@ interface LogContext {
   timeRange?: string;
   toolDataOwnerId?: string;
   toolRefId?: string;
-  type?: string;
   UB_MAJORSLength?: number;
   userSpaceIds?: any;
   userUid?: string;
@@ -504,19 +500,61 @@ class Logger {
     // }
   }
 
-  debug(message: string, context?: LogContext): void {
+  // Flexible logger methods accept overloaded signatures:
+  // - (message)
+  // - (message, context)
+  // - (message, error)
+  // - (message, context, error)
+  // - (message, error, context)
+  // - (contextOnly)
+  private parseArgs(level: LogLevel, a?: unknown, b?: unknown, c?: unknown): { message: string; context?: LogContext; error?: Error } {
+    // If only a single object is provided and it's not a string, treat as context-only
+    if (typeof a !== 'string' && a && b === undefined && c === undefined) {
+      const ctx = a as LogContext;
+      const message = (ctx.message || ctx.action || 'log');
+      // Remove message from context to avoid duplication
+      const { message: _m, ...rest } = ctx as any;
+      return { message, context: rest };
+    }
+
+    const message = (typeof a === 'string') ? a : 'log';
+    let context: LogContext | undefined;
+    let error: Error | undefined;
+
+    // Determine second/third args flexibly
+    const candidates = [b, c];
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+      if (candidate instanceof Error) {
+        error = candidate;
+      } else if (typeof candidate === 'object') {
+        context = { ...(context || {}), ...(candidate as LogContext) };
+      } else if (typeof candidate === 'string') {
+        // Attach arbitrary string into context.message for compatibility
+        context = { ...(context || {}), message: candidate };
+      }
+    }
+
+    return { message, context, error };
+  }
+
+  debug(a?: unknown, b?: unknown): void {
+    const { message, context } = this.parseArgs('debug', a, b);
     this.log(this.createLogEntry('debug', message, context));
   }
 
-  info(message: string, context?: LogContext): void {
+  info(a?: unknown, b?: unknown): void {
+    const { message, context } = this.parseArgs('info', a, b);
     this.log(this.createLogEntry('info', message, context));
   }
 
-  warn(message: string, context?: LogContext, error?: Error): void {
+  warn(a?: unknown, b?: unknown, c?: unknown): void {
+    const { message, context, error } = this.parseArgs('warn', a, b, c);
     this.log(this.createLogEntry('warn', message, context, error));
   }
 
-  error(message: string, context?: LogContext, error?: Error): void {
+  error(a?: unknown, b?: unknown, c?: unknown): void {
+    const { message, context, error } = this.parseArgs('error', a, b, c);
     this.log(this.createLogEntry('error', message, context, error));
   }
 

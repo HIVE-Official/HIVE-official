@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  HiveButton,
+  Button,
   Alert,
   AlertDescription,
   Select,
@@ -34,6 +34,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface ContentReport {
   id: string;
@@ -104,9 +105,9 @@ export function RealTimeModeration() {
   const loadModerationData = async () => {
     try {
       const [reportsRes, statsRes, rulesRes] = await Promise.all([
-        fetch('/api/admin/moderation/reports'),
-        fetch('/api/admin/moderation/stats'),
-        fetch('/api/admin/moderation/rules')
+        secureApiFetch('/api/admin/moderation/reports'),
+        secureApiFetch('/api/admin/moderation/stats'),
+        secureApiFetch('/api/admin/moderation/rules')
       ]);
 
       if (reportsRes.ok) {
@@ -132,7 +133,7 @@ export function RealTimeModeration() {
 
   const handleReportAction = async (reportId: string, action: string, notes?: string) => {
     try {
-      const response = await fetch(`/api/admin/moderation/reports/${reportId}/action`, {
+      const response = await secureApiFetch(`/api/admin/moderation/reports/${reportId}/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, notes })
@@ -260,9 +261,9 @@ export function RealTimeModeration() {
               <Badge className="bg-green-500/20 text-green-400">
                 {autoModRules.filter(r => r.enabled).length} Active
               </Badge>
-              <HiveButton size="sm" variant="outline">
+              <Button size="sm" variant="outline">
                 Configure Rules
-              </HiveButton>
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -379,7 +380,7 @@ export function RealTimeModeration() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <HiveButton
+                      <Button
                         size="sm"
                         variant="ghost"
                         onClick={(e) => {
@@ -388,8 +389,8 @@ export function RealTimeModeration() {
                         }}
                       >
                         <XCircle className="w-4 h-4" />
-                      </HiveButton>
-                      <HiveButton
+                      </Button>
+                      <Button
                         size="sm"
                         variant="ghost"
                         onClick={(e) => {
@@ -398,8 +399,8 @@ export function RealTimeModeration() {
                         }}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </HiveButton>
-                      <HiveButton
+                      </Button>
+                      <Button
                         size="sm"
                         variant="ghost"
                         onClick={(e) => {
@@ -408,7 +409,7 @@ export function RealTimeModeration() {
                         }}
                       >
                         <MoreHorizontal className="w-4 h-4" />
-                      </HiveButton>
+                      </Button>
                     </div>
                   </div>
                 </div>

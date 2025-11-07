@@ -1,21 +1,29 @@
 import { dbAdmin } from "@/lib/firebase-admin";
-import type { School } from "@hive/core";
 import { NextResponse } from "next/server";
 import { currentEnvironment } from "@/lib/env";
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus as _HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+
+// Local response type aligned with our Firestore shape
+type SchoolSummary = {
+  id: string;
+  name: string;
+  domain: string;
+  status?: string;
+  waitlistCount?: number;
+};
 
 export async function GET() {
   try {
     // PRODUCTION: Always use Firebase database
     const schoolsSnapshot = await dbAdmin.collection("schools").get();
     const schools = schoolsSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as School
+      (doc) => ({ id: doc.id, ...doc.data() } as SchoolSummary)
     );
     
     // In development, always include test university at the top
     if (currentEnvironment === 'development') {
-      const testUniversity: School = {
+      const testUniversity: SchoolSummary = {
         id: "test-university",
         name: "Test University (Development)",
         domain: "test.edu",
@@ -41,7 +49,7 @@ export async function GET() {
     }
 
     // Development fallback only
-    const devSchools: School[] = [
+    const devSchools: SchoolSummary[] = [
       {
         id: "test-university",
         name: "Test University (Development)",

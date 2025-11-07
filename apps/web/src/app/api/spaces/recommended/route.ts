@@ -2,12 +2,13 @@ import { withAuthAndErrors, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from "@/lib/firebase-admin";
 import { logger } from "@/lib/logger";
 import type { Space } from "@hive/core";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 /**
  * SPEC.md Behavioral Psychology Algorithm:
  * Score = (AnxietyRelief × 0.4) + (SocialProof × 0.3) + (InsiderAccess × 0.3)
  */
-interface BehavioralSpace extends Space {
+type BehavioralSpace = any & {
   anxietyReliefScore: number;
   socialProofScore: number;
   insiderAccessScore: number;
@@ -15,7 +16,7 @@ interface BehavioralSpace extends Space {
   joinToActiveRate: number;
   mutualConnections: number;
   friendsInSpace: number;
-}
+};
 
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
   const userId = request.user.uid;
@@ -49,7 +50,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     // Get all spaces with campus isolation
     const spacesSnapshot = await dbAdmin
       .collection('spaces')
-      .where('campusId', '==', 'ub-buffalo')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('isActive', '==', true)
       .limit(100)
       .get();
@@ -58,7 +59,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     // Calculate behavioral scores for each space
     for (const spaceDoc of spacesSnapshot.docs) {
-      const spaceData = spaceDoc.data() as Space;
+      const spaceData = spaceDoc.data() as any;
 
       // Get member data for social proof calculation
       const membersSnapshot = await dbAdmin

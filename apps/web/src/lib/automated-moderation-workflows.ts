@@ -8,6 +8,7 @@ import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from './structured-logger';
 import { contentModerationService } from './content-moderation-service';
 import { sseRealtimeService } from './sse-realtime-service';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 export interface AutomatedWorkflow {
   id: string;
@@ -175,6 +176,7 @@ export class AutomatedModerationWorkflows {
   private async findMatchingReports(workflow: AutomatedWorkflow, windowStart: Date): Promise<any[]> {
     try {
       let query = dbAdmin.collection('contentReports')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('createdAt', '>=', windowStart.toISOString())
         .where('status', 'in', ['pending', 'under_review']);
 
@@ -323,7 +325,10 @@ export class AutomatedModerationWorkflows {
     }
 
     // Store batch results
-    await dbAdmin.collection('moderationBatches').doc(batchId).set(batch);
+    await dbAdmin.collection('moderationBatches').doc(batchId).set({
+      ...batch,
+      campusId: CURRENT_CAMPUS_ID
+    });
     this.processingQueue.delete(batchId);
   }
 
@@ -417,7 +422,10 @@ export class AutomatedModerationWorkflows {
       createdAt: new Date().toISOString()
     };
 
-    await dbAdmin.collection('delayedModerationActions').doc(scheduledAction.id).set(scheduledAction);
+    await dbAdmin.collection('delayedModerationActions').doc(scheduledAction.id).set({
+      ...scheduledAction,
+      campusId: CURRENT_CAMPUS_ID
+    });
   }
 
   /**
@@ -438,7 +446,10 @@ export class AutomatedModerationWorkflows {
       checkAfter: this.calculateEscalationCheckTime(escalation)
     };
 
-    await dbAdmin.collection('escalationRules').doc(escalationRecord.id).set(escalationRecord);
+    await dbAdmin.collection('escalationRules').doc(escalationRecord.id).set({
+      ...escalationRecord,
+      campusId: CURRENT_CAMPUS_ID
+    });
   }
 
   /**
@@ -448,6 +459,7 @@ export class AutomatedModerationWorkflows {
     try {
       const now = new Date();
       const dueActions = await dbAdmin.collection('delayedModerationActions')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'scheduled')
         .where('executeAt', '<=', now.toISOString())
         .get();
@@ -497,6 +509,7 @@ export class AutomatedModerationWorkflows {
     try {
       const now = new Date();
       const activeEscalations = await dbAdmin.collection('escalationRules')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'active')
         .where('checkAfter', '<=', now.toISOString())
         .get();
@@ -550,6 +563,7 @@ export class AutomatedModerationWorkflows {
   // Helper methods
   private async getActiveWorkflows(): Promise<AutomatedWorkflow[]> {
     const snapshot = await dbAdmin.collection('automatedWorkflows')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('isActive', '==', true)
       .orderBy('priority', 'desc')
       .get();
@@ -567,6 +581,8 @@ export class AutomatedModerationWorkflows {
     for (const reportId of reportIds) {
       const doc = await dbAdmin.collection('contentReports').doc(reportId).get();
       if (doc.exists) {
+        const d = doc.data();
+        if (d && (d as any).campusId && (d as any).campusId !== CURRENT_CAMPUS_ID) continue;
         reports.push({ id: doc.id, ...doc.data() });
       }
     }
@@ -575,6 +591,7 @@ export class AutomatedModerationWorkflows {
 
   private async getActiveModerators(): Promise<any[]> {
     const snapshot = await dbAdmin.collection('users')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('role', 'in', ['admin', 'moderator'])
       .where('isActive', '==', true)
       .get();
@@ -731,7 +748,10 @@ export class AutomatedModerationWorkflows {
       updatedAt: new Date().toISOString()
     };
 
-    await dbAdmin.collection('automatedWorkflows').doc(workflow.id).set(workflow);
+    await dbAdmin.collection('automatedWorkflows').doc(workflow.id).set({
+      ...workflow,
+      campusId: CURRENT_CAMPUS_ID
+    });
     
     logger.info('Automated workflow created', { workflowId: workflow.id });
     return workflow.id;
@@ -765,8 +785,12 @@ export class AutomatedModerationWorkflows {
    * Get workflow statistics
    */
   async getWorkflowStatistics(): Promise<any> {
-    const workflows = await dbAdmin.collection('automatedWorkflows').get();
-    const batches = await dbAdmin.collection('moderationBatches').get();
+    const workflows = await dbAdmin.collection('automatedWorkflows')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .get();
+    const batches = await dbAdmin.collection('moderationBatches')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .get();
     
     const stats = {
       totalWorkflows: workflows.size,
@@ -798,6 +822,7 @@ export class AutomatedModerationWorkflows {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     
     const oldBatches = await dbAdmin.collection('moderationBatches')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('completedAt', '<=', thirtyDaysAgo.toISOString())
       .get();
 
@@ -823,3 +848,4 @@ export class AutomatedModerationWorkflows {
 
 // Export singleton instance
 export const automatedModerationWorkflows = new AutomatedModerationWorkflows();
+import 'server-only';

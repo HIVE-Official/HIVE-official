@@ -60,20 +60,26 @@ export declare const prdSemantic: {
     };
     readonly interactive: {
         readonly hover: "rgba(255, 255, 255, 0.04)";
-        readonly focus: "#FFD700";
+        readonly focus: "rgba(255, 255, 255, 0.20)";
         readonly active: "rgba(255, 255, 255, 0.08)";
         readonly disabled: "#404040";
+    };
+    readonly gold: {
+        readonly cta: "#FFD700";
+        readonly achievement: "#FFD700";
+        readonly online: "#FFD700";
+        readonly featured: "#FFD700";
     };
     readonly status: {
         readonly success: "#00D46A";
         readonly warning: "#FFB800";
         readonly error: "#FF3737";
-        readonly info: "#FFD700";
+        readonly info: "#FFFFFF";
     };
     readonly border: {
         readonly default: "rgba(255, 255, 255, 0.08)";
         readonly hover: "rgba(255, 255, 255, 0.16)";
-        readonly focus: "#FFD700";
+        readonly focus: "rgba(255, 255, 255, 0.40)";
         readonly strong: "#404040";
     };
 };
@@ -94,7 +100,7 @@ export declare const migrationMapping: {
     readonly 'hive-bronze': "#FFD700";
     readonly 'hive-emerald': "#00D46A";
     readonly 'hive-ruby': "#FF3737";
-    readonly 'hive-sapphire': "#FFD700";
+    readonly 'hive-sapphire': "#FFFFFF";
     readonly 'hive-citrine': "#FFB800";
 };
 export declare const prdCSSVariables: string;
@@ -121,22 +127,28 @@ export declare const prdTailwindColors: {
         success: "#00D46A";
         warning: "#FFB800";
         error: "#FF3737";
-        info: "#FFD700";
+        info: "#FFFFFF";
     };
     'hive-border': {
         default: "rgba(255, 255, 255, 0.08)";
         hover: "rgba(255, 255, 255, 0.16)";
-        focus: "#FFD700";
+        focus: "rgba(255, 255, 255, 0.40)";
         strong: "#404040";
     };
 };
 export declare const prdColorGuidelines: {
-    readonly primary: "Use hive-brand-primary for primary actions and navigation";
-    readonly secondary: "Use hive-brand-secondary (gold) sparingly for special emphasis";
-    readonly backgrounds: "Layer backgrounds from primary → secondary → tertiary for depth";
-    readonly text: "Use primary for main content, secondary for supporting text";
-    readonly interactive: "Use subtle hover states to maintain clean aesthetic";
-    readonly borders: "Prefer default borders, use strong only for emphasis";
+    readonly default: "Black/white/gray for 95% of the UI - clean, minimal, professional";
+    readonly gold: "ONLY for: Primary CTAs, achievements, online presence, featured badges";
+    readonly interactive: "Use grayscale for hovers/focus - NOT gold (avoid visual noise)";
+    readonly backgrounds: "Layer backgrounds from primary (#000) → secondary (#171717) → tertiary (#262626)";
+    readonly text: "White primary, gray secondary - high contrast for readability";
+    readonly borders: "Subtle white borders - NO gold borders except special badges";
+    readonly focus: "White glow for focus rings - save gold for dopamine hits";
+    readonly buttons: "Default buttons are white-on-black, gold ONLY for primary CTAs";
+};
+export declare const goldUsageRules: {
+    readonly allowed: readonly ["Primary CTA buttons (Join Space, Create Tool, Start Ritual)", "Achievement moments (Ritual complete, level unlocked)", "Online presence indicator (147 students online)", "Featured content badges (Featured Tool, Hot Space)"];
+    readonly forbidden: readonly ["Focus rings (use white glow instead)", "Hover states (use grayscale instead)", "All borders (use white/gray instead)", "Secondary buttons (use outline variant)", "Decorative elements (keep minimal)"];
 };
 export type PRDColorToken = keyof typeof prdColors;
 export type PRDSemanticToken = keyof typeof prdSemantic;

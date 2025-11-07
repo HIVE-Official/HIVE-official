@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalContent, HiveModalFooter } from './hive-modal';
-import { HiveButton } from './hive-button';
+import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalFooter } from './hive-modal';
+import { Button } from './button';
 
 export interface HiveConfirmModalProps {
   open: boolean;
@@ -47,20 +47,20 @@ export function HiveConfirmModal({
 
       <HiveModalFooter>
         <div className="flex justify-end space-x-3">
-          <HiveButton
+          <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
             {cancelText}
-          </HiveButton>
-          <HiveButton
+          </Button>
+          <Button
             variant={variant === 'danger' ? 'destructive' : 'brand'}
             onClick={handleConfirm}
             disabled={isLoading}
           >
             {isLoading ? 'Loading...' : confirmText}
-          </HiveButton>
+          </Button>
         </div>
       </HiveModalFooter>
     </HiveModal>

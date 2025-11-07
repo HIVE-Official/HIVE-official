@@ -1,0 +1,277 @@
+'use client';
+
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Card } from '../atoms/card';
+import { Button } from '../atoms/button';
+import { Badge } from '../atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../atoms/avatar';
+import { Trophy, Star, Crown, Users, Clock, Check } from 'lucide-react';
+import type { FoundingClassConfig } from '@hive/core';
+
+export interface FoundingMember {
+  id: string;
+  name: string;
+  handle: string;
+  avatarUrl?: string;
+  joinedAt: string;
+  badgeNumber: number; // Their position in founding class (1-N)
+}
+
+export interface RitualFoundingClassProps {
+  config: FoundingClassConfig;
+  members: FoundingMember[];
+  currentUser?: {
+    id: string;
+    isMember: boolean;
+    badgeNumber?: number;
+  };
+  onJoin?: () => Promise<void>;
+  className?: string;
+}
+
+/**
+ * Founding Class Renderer
+ *
+ * Displays exclusive founding member wall with badge numbers
+ * First N users get permanent "Founding Class" status
+ */
+export const RitualFoundingClass: React.FC<RitualFoundingClassProps> = ({
+  config,
+  members,
+  currentUser,
+  onJoin,
+  className,
+}) => {
+  const [isJoining, setIsJoining] = React.useState(false);
+
+  const spotsRemaining = config.limit - config.currentCount;
+  const isUserMember = currentUser?.isMember || false;
+  const isFull = config.currentCount >= config.limit;
+
+  const handleJoin = async () => {
+    if (!onJoin || isJoining || isUserMember || isFull) return;
+
+    setIsJoining(true);
+    try {
+      await onJoin();
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  // Sort members by badge number
+  const sortedMembers = React.useMemo(() => {
+    return [...members].sort((a, b) => a.badgeNumber - b.badgeNumber);
+  }, [members]);
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      {/* Hero Card */}
+      <Card className="overflow-hidden border-[var(--hive-brand-primary)]/20 bg-gradient-to-br from-[var(--hive-brand-primary)]/10 via-[var(--hive-background-secondary)] to-black p-0">
+        <div className="relative overflow-hidden bg-gradient-to-r from-[var(--hive-brand-primary)]/20 to-transparent px-6 py-8">
+          <div className="absolute right-0 top-0 h-full w-1/2 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTIwIDEwbDIgNmg2bC01IDRsMiA2LTUtNC01IDQgMi02LTUtNGg2eiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-20" />
+
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--hive-brand-primary)] shadow-[0_0_30px_rgba(255,215,0,0.3)]">
+              <Crown className="h-8 w-8 text-black" />
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <Badge className="bg-[var(--hive-brand-primary)] text-black font-bold uppercase tracking-[0.16em]">
+                Exclusive
+              </Badge>
+
+              <h2 className="text-2xl font-bold text-white">Founding Class</h2>
+              <p className="max-w-2xl text-white/70">
+                Join the exclusive founding class and earn a permanent badge. Only {config.limit} spots available.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Section */}
+        <div className="space-y-4 p-6">
+          {/* Spots Remaining */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-2xl font-bold text-white">
+                {spotsRemaining} / {config.limit}
+              </p>
+              <p className="text-sm text-white/60">Spots Remaining</p>
+            </div>
+
+            {isUserMember && currentUser?.badgeNumber && (
+              <div className="text-right">
+                <div className="mb-1 flex items-center justify-end gap-2">
+                  <Trophy className="h-5 w-5 text-[var(--hive-brand-primary)]" />
+                  <p className="text-2xl font-bold text-[var(--hive-brand-primary)]">
+                    #{currentUser.badgeNumber}
+                  </p>
+                </div>
+                <p className="text-sm text-white/60">Your Badge Number</p>
+              </div>
+            )}
+          </div>
+
+          {/* Join CTA */}
+          {!isUserMember && !isFull && onJoin && (
+            <Button
+              onClick={handleJoin}
+              disabled={isJoining}
+              size="lg"
+              className="w-full bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90 font-bold"
+            >
+              {isJoining ? (
+                <>Joining...</>
+              ) : (
+                <>
+                  <Star className="mr-2 h-5 w-5" />
+                  Join Founding Class
+                </>
+              )}
+            </Button>
+          )}
+
+          {!isUserMember && isFull && (
+            <Card className="border-white/10 bg-white/5 p-4 text-center">
+              <p className="text-white/80">
+                All {config.limit} founding class spots have been claimed
+              </p>
+            </Card>
+          )}
+
+          {isUserMember && (
+            <Card className="border-[var(--hive-brand-primary)]/20 bg-[var(--hive-brand-primary)]/10 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--hive-brand-primary)]">
+                  <Check className="h-6 w-6 text-black" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-white">You're in the Founding Class!</p>
+                  <p className="text-sm text-white/70">
+                    Badge #{currentUser?.badgeNumber} · Earned {new Date().toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+      </Card>
+
+      {/* Member Wall */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+            <Users className="h-5 w-5" />
+            Founding Members ({members.length})
+          </h3>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {sortedMembers.map((member) => (
+            <MemberCard
+              key={member.id}
+              member={member}
+              isCurrentUser={currentUser?.id === member.id}
+            />
+          ))}
+
+          {/* Empty Slots */}
+          {spotsRemaining > 0 &&
+            Array.from({ length: Math.min(spotsRemaining, 6) }).map((_, i) => (
+              <EmptySlotCard
+                key={`empty-${i}`}
+                slotNumber={config.currentCount + i + 1}
+              />
+            ))}
+        </div>
+      </div>
+
+      {/* Rewards Section */}
+      {config.rewards && config.rewards.length > 0 && (
+        <Card className="border-white/10 bg-white/5 p-6">
+          <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-white/60">
+            <Trophy className="h-4 w-4" />
+            Founding Class Rewards
+          </h4>
+          <div className="space-y-2">
+            {config.rewards.map((reward, i) => (
+              <div key={i} className="flex items-start gap-3 text-white/80">
+                <Star className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--hive-brand-primary)]" />
+                <p className="text-sm">{reward}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+interface MemberCardProps {
+  member: FoundingMember;
+  isCurrentUser: boolean;
+}
+
+const MemberCard: React.FC<MemberCardProps> = ({ member, isCurrentUser }) => {
+  return (
+    <Card className={cn(
+      'overflow-hidden border-white/10 bg-[var(--hive-background-secondary)] p-4 transition-all hover:border-[var(--hive-brand-primary)]/40',
+      isCurrentUser && 'border-[var(--hive-brand-primary)]/40 bg-[var(--hive-brand-primary)]/5'
+    )}>
+      <div className="flex items-center gap-3">
+        {/* Badge Number */}
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--hive-brand-primary)] font-bold text-black">
+          #{member.badgeNumber}
+        </div>
+
+        {/* Avatar */}
+        <Avatar className="h-10 w-10">
+          <AvatarImage src={member.avatarUrl} alt={member.name} />
+          <AvatarFallback className="bg-white/10 text-white">
+            {member.name.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="truncate font-semibold text-white">{member.name}</p>
+            {isCurrentUser && (
+              <Badge variant="outline" className="border-[var(--hive-brand-primary)] text-[var(--hive-brand-primary)] text-xs">
+                You
+              </Badge>
+            )}
+          </div>
+          <p className="truncate text-sm text-white/60">@{member.handle}</p>
+        </div>
+      </div>
+
+      {/* Joined Time */}
+      <div className="mt-3 flex items-center gap-1.5 text-xs text-white/50">
+        <Clock className="h-3.5 w-3.5" />
+        <span>Joined {new Date(member.joinedAt).toLocaleDateString()}</span>
+      </div>
+    </Card>
+  );
+};
+
+interface EmptySlotCardProps {
+  slotNumber: number;
+}
+
+const EmptySlotCard: React.FC<EmptySlotCardProps> = ({ slotNumber }) => {
+  return (
+    <Card className="overflow-hidden border-dashed border-white/10 bg-white/5 p-4 opacity-60">
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <div className="mb-2 flex h-10 w-10 mx-auto items-center justify-center rounded-lg border-2 border-dashed border-white/20 font-bold text-white/40">
+            #{slotNumber}
+          </div>
+          <p className="text-xs text-white/40">Available</p>
+        </div>
+      </div>
+    </Card>
+  );
+};

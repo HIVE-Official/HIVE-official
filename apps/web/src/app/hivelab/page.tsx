@@ -1,278 +1,217 @@
-"use client";
+'use client';
 
 // Force dynamic rendering to avoid SSG issues
 export const dynamic = 'force-dynamic';
 
-import { useState, useCallback } from 'react';
-import { VisualToolComposer } from '@/components/tools/visual-tool-composer';
-
-// Define a simple Tool type for the builder
-interface Tool {
-  id: string;
-  name: string;
-  description: string;
-}
-import { PageContainer } from "@/components/temp-stubs";
-import { Zap, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft, Wrench } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@hive/auth-logic';
+import {
+  HiveLabExperience,
+  hiveLabOverviewMock,
+  hiveLabModeCopy,
+  Skeleton,
+} from '@hive/ui';
+import type { ToolComposition, HiveLabView } from '@hive/ui';
+import { apiClient } from '@/lib/api-client';
+import { DeployModalProvider } from './DeployModalProvider';
+import { logger } from '@/lib/logger';
 
 export default function HiveLabPage() {
-  const [mode, setMode] = useState<'overview' | 'visual' | 'template' | 'wizard'>('overview');
-  const [, setCurrentTool] = useState<Tool | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [isMobileBlocked, setIsMobileBlocked] = useState(false);
 
-  // Handle tool saving
-  const handleToolSave = useCallback((tool: Tool) => {
-    // Handle async operation without returning promise
-    (async () => {
-      try {
-        // In a real app, this would save to the backend
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        alert(`Tool "${tool.name}" saved successfully!`);
-        setCurrentTool(tool);
-      } catch (error) {
-        alert('Failed to save tool. Please try again.');
+  // Get initial mode from URL query param (e.g., /hivelab?mode=visual)
+  const initialMode = useMemo(() => {
+    const mode = searchParams.get('mode');
+    if (mode && ['overview', 'visual', 'template', 'wizard', 'marketplace', 'analytics', 'code'].includes(mode)) {
+      return mode as HiveLabView;
+    }
+    return 'overview';
+  }, [searchParams]);
+
+  // Guard: Visual builder is desktop-first. If small viewport, fallback to overview and notify.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isSmall = window.matchMedia('(max-width: 768px)').matches;
+    if (isSmall && initialMode === 'visual') {
+      setIsMobileBlocked(true);
+      // Fire toast event if ToastProvider is mounted
+      window.dispatchEvent(
+        new CustomEvent('hive:toast', {
+          detail: {
+            title: 'Open on desktop for best experience',
+            description: 'HiveLab visual builder is optimized for larger screens. Showing overview instead.',
+            type: 'info',
+            duration: 4500,
+          },
+        })
+      );
+    } else {
+      setIsMobileBlocked(false);
+    }
+  }, [initialMode]);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      logger.warn('HiveLab: User not authenticated, redirecting to login');
+      router.push('/auth/login?redirect=/hivelab');
+    }
+  }, [user, authLoading, router]);
+
+  // Handle tool save with real Firebase integration
+  const handleToolSave = useCallback(async (composition: ToolComposition) => {
+    if (!user) {
+      logger.error('HiveLab: Cannot save tool - user not authenticated');
+      alert('Please sign in to save tools');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      logger.info('HiveLab: Saving tool', { toolName: composition.name, userId: user.uid });
+
+      // Map composition to API payload (EnhancedCreateToolSchema)
+      const payload = {
+        name: composition.name,
+        description: composition.description || '',
+        type: 'visual' as const,
+        status: 'draft' as const,
+        // Persist placed elements directly
+        elements: composition.elements || [],
+        // Store full composition under config for future restores
+        config: { composition },
+        // Future: spaceId when deploying directly to a space
+        // campus is derived server-side from session
+      };
+
+      const response = await apiClient.post('/api/tools', payload);
+
+      if (response.ok) {
+        const data = await response.json();
+        logger.info('HiveLab: Tool saved successfully', { toolId: data?.tool?.id || data.id });
+        // Toast success (ToastProvider bridge)
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('hive:toast', {
+              detail: {
+                title: 'Tool saved',
+                description: `"${composition.name}" saved to your tools`,
+                type: 'success',
+                duration: 3500,
+              },
+            })
+          );
+        }
+
+        // Optionally redirect to tool detail page
+        // router.push(`/tools/${data.id}`);
+      } else {
+        throw new Error('Failed to save tool');
       }
-    })();
-  }, []);
+    } catch (error) {
+      logger.error('HiveLab: Failed to save tool', { error });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('hive:toast', {
+            detail: {
+              title: 'Save failed',
+              description: 'Something went wrong. Please try again.',
+              type: 'error',
+              duration: 4500,
+            },
+          })
+        );
+      }
+    } finally {
+      setSaving(false);
+    }
+  }, [user, router]);
 
-  // Handle tool preview
-  const handleToolPreview = useCallback((tool: Tool) => {
-    // Preview is handled within the VisualToolBuilder
-  }, []);
+  // Handle tool preview with analytics tracking
+  const handleToolPreview = useCallback((composition: ToolComposition) => {
+    logger.info('HiveLab: Tool preview', {
+      toolName: composition.name,
+      elementCount: composition.elements?.length || 0,
+      userId: user?.uid,
+    });
 
-  // Handle mode selection
-  const handleModeSelect = useCallback((selectedMode: 'visual' | 'template' | 'wizard') => {
-    setMode(selectedMode);
-  }, []);
+    // TODO: Track preview event in analytics
+    // trackEvent('hivelab_tool_preview', { toolName: composition.name });
+  }, [user]);
 
-  if (mode === 'visual') {
+  // Handle mode change with URL updates
+  const handleModeChange = useCallback((mode: HiveLabView) => {
+    logger.info('HiveLab: Mode changed', { mode, userId: user?.uid });
+
+    // Update URL query param without full page reload
+    const params = new URLSearchParams(searchParams.toString());
+    if (mode === 'overview') {
+      params.delete('mode');
+    } else {
+      params.set('mode', mode);
+    }
+    const newUrl = params.toString() ? `/hivelab?${params.toString()}` : '/hivelab';
+    router.replace(newUrl, { scroll: false });
+
+    // TODO: Track mode change in analytics
+    // trackEvent('hivelab_mode_change', { mode });
+  }, [router, searchParams, user]);
+
+  // Show loading state while checking authentication
+  if (authLoading) {
     return (
-      <div className="h-screen flex flex-col">
-        <div className="border-b border-[var(--hive-border-default)] bg-[var(--hive-background-primary)] px-4 py-2">
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setMode('overview')}
-              className="flex items-center space-x-2 text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm">Back to HiveLab</span>
-            </button>
-            <span className="text-[var(--hive-text-tertiary)]">|</span>
-            <span className="text-sm text-[var(--hive-text-primary)]">Visual Builder</span>
-          </div>
-        </div>
-        <div className="flex-1">
-          <VisualToolComposer
-            onSave={async (composition) => {
-              // Convert composition to Tool for the handler
-              const tool = {
-                id: composition.id,
-                name: composition.name,
-                description: composition.description
-              };
-              handleToolSave(tool);
-            }}
-            onPreview={(composition) => {
-              const tool = {
-                id: composition.id,
-                name: composition.name,
-                description: composition.description
-              };
-              handleToolPreview(tool);
-            }}
-            onCancel={() => {}}
-            userId="current-user"
-          />
+      <div className="min-h-screen bg-hive-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Skeleton className="h-12 w-64 mx-auto" />
+          <Skeleton className="h-96 w-full max-w-4xl mx-auto" />
         </div>
       </div>
     );
   }
+
+  // Don't render if not authenticated (will redirect in useEffect)
+  if (!user) {
+    return null;
+  }
+
+  const overviewConfig = useMemo(() => {
+    return {
+      ...hiveLabOverviewMock,
+      hero: {
+        ...hiveLabOverviewMock.hero,
+        title: 'HiveLab',
+        description:
+          'Visual tool composer for campus utilities. Build with elements, deploy to spaces, solve real problems collaboratively.',
+      },
+      // TODO: Fetch real stats from API
+      // stats: await fetchHiveLabStats(),
+    };
+  }, []);
+
+  // If mobile and visual requested, force overview but show notice
+  const resolvedInitialMode = isMobileBlocked && initialMode === 'visual' ? 'overview' : initialMode;
+
+  const currentToolId = searchParams.get('toolId') || undefined;
+
   return (
-    <PageContainer title="HiveLAB" maxWidth="xl">
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center">
-              <Zap className="w-8 h-8 text-[var(--hive-background-primary)]" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold text-[var(--hive-text-primary)] mb-2">
-              HiveLAB
-            </h1>
-            <p className="text-lg text-[var(--hive-text-secondary)] max-w-2xl mx-auto">
-              Visual tool composer for campus utilities. Build with elements, deploy to spaces, solve real problems collaboratively.
-            </p>
-            <div className="flex items-center justify-center space-x-4 mt-4">
-              <div className="flex items-center space-x-2 text-sm text-[var(--hive-text-secondary)]">
-                <Code className="w-4 h-4 text-blue-400" />
-                <span>No code required</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-[var(--hive-text-secondary)]">
-                <Users className="w-4 h-4 text-green-400" />
-                <span>Deploy to spaces</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-[var(--hive-text-secondary)]">
-                <Palette className="w-4 h-4 text-purple-400" />
-                <span>Element composition</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Visual Builder - Element System */}
-          <div 
-            onClick={() => handleModeSelect('visual')}
-            className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-yellow-400/50 transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-yellow-400/20 flex items-center justify-center">
-                <Palette className="w-5 h-5 text-yellow-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Element Builder</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-              Compose campus tools from visual elements - inputs, displays, filters, actions
-            </p>
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="text-xs bg-blue-400/20 text-blue-400 px-2 py-1 rounded">8 Elements</div>
-              <div className="text-xs bg-green-400/20 text-green-400 px-2 py-1 rounded">Drag & Drop</div>
-            </div>
-            <div className="text-xs text-yellow-400 font-medium">🎭 Most Unique HIVE Feature</div>
-          </div>
-
-          {/* Code Editor */}
-          <div className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-[var(--hive-border-hover)] transition-all duration-200 cursor-pointer">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-blue-400/20 flex items-center justify-center">
-                <Code className="w-5 h-5 text-blue-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Code Editor</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)]">
-              Advanced development environment for custom solutions
-            </p>
-          </div>
-
-          {/* Database Tools */}
-          <div className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-[var(--hive-border-hover)] transition-all duration-200 cursor-pointer">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-green-400/20 flex items-center justify-center">
-                <Database className="w-5 h-5 text-green-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Database Tools</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)]">
-              Manage data structures and integrations
-            </p>
-          </div>
-
-          {/* Analytics */}
-          <div className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-[var(--hive-border-hover)] transition-all duration-200 cursor-pointer">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-purple-400/20 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-purple-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Analytics</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)]">
-              Track usage and performance of your tools
-            </p>
-          </div>
-
-          {/* Templates */}
-          <div className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-[var(--hive-border-hover)] transition-all duration-200 cursor-pointer">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-orange-400/20 flex items-center justify-center">
-                <Wrench className="w-5 h-5 text-orange-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Templates</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)]">
-              Start with pre-built solutions for common use cases
-            </p>
-          </div>
-
-          {/* Collaboration */}
-          <div className="group p-6 rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)] hover:border-[var(--hive-border-hover)] transition-all duration-200 cursor-pointer">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-pink-400/20 flex items-center justify-center">
-                <Users className="w-5 h-5 text-pink-400" />
-              </div>
-              <h3 className="font-semibold text-[var(--hive-text-primary)]">Collaboration</h3>
-            </div>
-            <p className="text-sm text-[var(--hive-text-secondary)]">
-              Work together on tools and share with your community
-            </p>
-          </div>
-        </div>
-
-        {/* Element System Showcase */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-[var(--hive-text-primary)]">Available Elements</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Input Elements */}
-            <div className="p-4 rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)]">
-              <div className="w-8 h-8 bg-blue-400/20 rounded-lg flex items-center justify-center mb-3">
-                <Code className="w-4 h-4 text-blue-400" />
-              </div>
-              <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">Input Elements</h4>
-              <p className="text-xs text-[var(--hive-text-secondary)]">Text fields, buttons, selectors</p>
-            </div>
-            
-            {/* Display Elements */}
-            <div className="p-4 rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)]">
-              <div className="w-8 h-8 bg-green-400/20 rounded-lg flex items-center justify-center mb-3">
-                <BarChart3 className="w-4 h-4 text-green-400" />
-              </div>
-              <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">Display Elements</h4>
-              <p className="text-xs text-[var(--hive-text-secondary)]">Charts, lists, data views</p>
-            </div>
-            
-            {/* Filter Elements */}
-            <div className="p-4 rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)]">
-              <div className="w-8 h-8 bg-purple-400/20 rounded-lg flex items-center justify-center mb-3">
-                <Wrench className="w-4 h-4 text-purple-400" />
-              </div>
-              <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">Filter Elements</h4>
-              <p className="text-xs text-[var(--hive-text-secondary)]">Search, date range, categories</p>
-            </div>
-            
-            {/* Action Elements */}
-            <div className="p-4 rounded-lg border border-[var(--hive-border-default)] bg-[var(--hive-bg-secondary)]">
-              <div className="w-8 h-8 bg-orange-400/20 rounded-lg flex items-center justify-center mb-3">
-                <Zap className="w-4 h-4 text-orange-400" />
-              </div>
-              <h4 className="font-medium text-[var(--hive-text-primary)] mb-1">Action Elements</h4>
-              <p className="text-xs text-[var(--hive-text-secondary)]">Submit, share, export, notify</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="space-y-4">
-          <div className="p-8 rounded-xl border border-[var(--hive-border-default)] bg-gradient-to-br from-[var(--hive-bg-secondary)] to-[var(--hive-background-primary)] text-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-6">
-              <Rocket className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-[var(--hive-text-primary)] mb-2">Build Your First Tool</h3>
-            <p className="text-[var(--hive-text-secondary)] mb-6 max-w-md mx-auto">
-              Join the community of campus builders creating solutions that matter. No code required - just drag, drop, and deploy to your spaces.
-            </p>
-            <button
-              onClick={() => handleModeSelect('visual')}
-              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-            >
-              Start Building →
-            </button>
-          </div>
-        </div>
-      </div>
-    </PageContainer>
+    <DeployModalProvider toolId={currentToolId}>
+      <HiveLabExperience
+        initialMode={resolvedInitialMode}
+        overviewConfig={overviewConfig}
+        modeCopy={hiveLabModeCopy}
+        userId={user.uid}
+        onModeChange={handleModeChange}
+        composerProps={{
+          userId: user.uid,
+          onSave: handleToolSave,
+          onPreview: handleToolPreview,
+        }}
+      />
+    </DeployModalProvider>
   );
 }

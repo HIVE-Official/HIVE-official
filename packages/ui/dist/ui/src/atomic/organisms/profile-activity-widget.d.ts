@@ -1,31 +1,20 @@
-import React from 'react';
-import { type PrivacyLevel } from '../molecules/privacy-control';
-export interface ActivityItem {
+import { type PrivacyLevel } from "../molecules/privacy-control";
+export type ProfileActivityType = "post" | "comment" | "connection" | "space_join" | "ritual" | "other";
+export interface ProfileActivityItem {
     id: string;
-    type: 'post' | 'comment' | 'connection' | 'space_join';
+    type?: ProfileActivityType;
     title: string;
-    description?: string;
-    timestamp: Date;
-    spaceId?: string;
     spaceName?: string;
+    timestamp: string | number | Date;
     engagementCount?: number;
 }
-export interface MyActivityWidgetProps {
-    activities: ActivityItem[];
+export interface ProfileActivityWidgetProps {
+    activities: ProfileActivityItem[];
     isOwnProfile?: boolean;
     privacyLevel?: PrivacyLevel;
     onPrivacyChange?: (level: PrivacyLevel) => void;
     onViewAll?: () => void;
     className?: string;
 }
-/**
- * My Activity Widget - DESIGN_SPEC Compliant
- *
- * Design Principles:
- * - 8px grid system for spacing
- * - Monochrome with gold accents for key interactions
- * - Subtle hover states with white/4 overlay
- * - Mobile-optimized with 44px touch targets
- */
-export declare const MyActivityWidget: React.FC<MyActivityWidgetProps>;
+export declare function ProfileActivityWidget({ activities, isOwnProfile, privacyLevel, onPrivacyChange, onViewAll, className, }: ProfileActivityWidgetProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=profile-activity-widget.d.ts.map

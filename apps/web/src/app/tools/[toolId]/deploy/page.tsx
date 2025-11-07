@@ -394,7 +394,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => setStep('confirm')}
-          className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover"
         >
           Review Deployment
         </Button>
@@ -469,11 +469,11 @@ export default function ToolDeployPage() {
           <Button
             onClick={handleDeploy}
             disabled={isLoading}
-            className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255] flex items-center gap-2"
+            className="bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover flex items-center gap-2"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0A0A0A]" />
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-brand-on-gold)]" />
                 Deploying...
               </>
             ) : (
@@ -513,7 +513,7 @@ export default function ToolDeployPage() {
         </Button>
         <Button
           onClick={() => ToolNavigation.toAnalytics(toolId)}
-          className="bg-[var(--hive-brand-primary)] text-[#0A0A0A] hover:bg-[#FFE255]"
+          className="bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover"
         >
           View Analytics
         </Button>

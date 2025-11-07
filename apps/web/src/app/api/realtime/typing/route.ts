@@ -4,8 +4,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
-import { realtimeService } from '@/lib/firebase-realtime';
 
 // Typing indicator interfaces
 interface TypingIndicator {
@@ -68,8 +68,7 @@ export async function POST(request: NextRequest) {
     // Store typing indicator in Firestore for persistence
     await dbAdmin.collection('typingIndicators').doc(typingIndicator.id).set(typingIndicator);
 
-    // Send typing indicator to Firebase Realtime Database
-    await realtimeService.setTypingIndicator(spaceId, user.uid, true);
+    // Realtime DB typing indicator disabled for server build stability
 
     // Broadcast typing indicator to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'start');
@@ -161,8 +160,7 @@ export async function DELETE(request: NextRequest) {
     // Remove typing indicator from Firestore
     await dbAdmin.collection('typingIndicators').doc(typingId).delete();
 
-    // Remove typing indicator from Firebase Realtime Database
-    await realtimeService.setTypingIndicator(spaceId, user.uid, false);
+    // Realtime DB typing indicator disabled for server build stability
 
     // Broadcast typing stop to channel via WebSocket system
     await broadcastTypingIndicator(typingIndicator, 'stop');
@@ -242,7 +240,8 @@ async function verifyChannelAccess(userId: string, channelId: string, spaceId: s
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {

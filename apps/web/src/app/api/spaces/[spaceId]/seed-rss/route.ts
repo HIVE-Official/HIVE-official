@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { requireSpaceMembership } from '@/lib/space-security';
+import { HttpStatus } from '@/lib/api-response-types';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 /**
  * RSS Feed Seeding for Spaces
@@ -43,24 +45,19 @@ export const POST = withAuthAndErrors(async (
   const { spaceId } = await params;
 
   try {
-    // Get space data to determine category
-    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
-    if (!spaceDoc.exists) {
-      return respond.error("Space not found", "NOT_FOUND", { status: 404 });
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
-    const spaceData = spaceDoc.data()!;
-
-    // Check if user is space leader
-    const memberDoc = await dbAdmin
-      .collection('spaces')
-      .doc(spaceId)
-      .collection('members')
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists || !['owner', 'leader'].includes(memberDoc.data()?.role)) {
-      return respond.error("Only space leaders can seed RSS content", "FORBIDDEN", { status: 403 });
+    const spaceData = membership.space;
+    const membershipRole = membership.membership.role as string | undefined;
+    if (!['owner', 'admin', 'moderator', 'builder', 'leader'].includes(membershipRole || '')) {
+      return respond.error("Only space leaders can seed RSS content", "FORBIDDEN", {
+        status: HttpStatus.FORBIDDEN,
+      });
     }
 
     // Get appropriate RSS feeds for space category
@@ -92,7 +89,8 @@ export const POST = withAuthAndErrors(async (
             isEdited: false,
             isDeleted: false,
             isRSSSeeded: true, // Mark as RSS content
-            rssSource: feedUrl
+            rssSource: feedUrl,
+            campusId: CURRENT_CAMPUS_ID,
           };
 
           const postRef = await dbAdmin
@@ -155,7 +153,9 @@ export const POST = withAuthAndErrors(async (
 
   } catch (error) {
     logger.error('Error seeding RSS content', { error: error instanceof Error ? error : new Error(String(error)), spaceId, userId });
-    return respond.error("Failed to seed RSS content", "INTERNAL_ERROR", { status: 500 });
+    return respond.error("Failed to seed RSS content", "INTERNAL_ERROR", {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
 });
 

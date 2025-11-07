@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 import {
   HiveCard,
-  HiveButton,
-  HiveInput,
+  Button,
+  Input,
   Label,
   Select,
   SelectContent,
@@ -301,7 +301,7 @@ export function SpaceCreationPanel() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="name" className="text-white">Space Name *</Label>
-                <HiveInput
+                <Input
                   id="name"
                   value={formData.name || ''}
                   onChange={(e) => updateFormData('name', e.target.value)}
@@ -312,7 +312,7 @@ export function SpaceCreationPanel() {
 
               <div>
                 <Label htmlFor="handle" className="text-white">URL Handle *</Label>
-                <HiveInput
+                <Input
                   id="handle"
                   value={formData.handle || ''}
                   onChange={(e) => updateFormData('handle', e.target.value.toLowerCase().replace(/\s+/g, '-'))}
@@ -381,7 +381,7 @@ export function SpaceCreationPanel() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-white">Department</Label>
-                  <HiveInput
+                  <Input
                     value={formData.departmentId || ''}
                     onChange={(e) => updateFormData('departmentId', e.target.value)}
                     placeholder="e.g., Computer Science"
@@ -391,7 +391,7 @@ export function SpaceCreationPanel() {
 
                 <div>
                   <Label className="text-white">Course Number</Label>
-                  <HiveInput
+                  <Input
                     value={formData.courseNumber || ''}
                     onChange={(e) => updateFormData('courseNumber', e.target.value)}
                     placeholder="e.g., CSE 442"
@@ -405,7 +405,7 @@ export function SpaceCreationPanel() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-white">Building Name *</Label>
-                  <HiveInput
+                  <Input
                     value={formData.buildingName || ''}
                     onChange={(e) => updateFormData('buildingName', e.target.value)}
                     placeholder="e.g., Ellicott Complex"
@@ -415,7 +415,7 @@ export function SpaceCreationPanel() {
 
                 <div>
                   <Label className="text-white">Floor/Section</Label>
-                  <HiveInput
+                  <Input
                     value={formData.floorNumber || ''}
                     onChange={(e) => updateFormData('floorNumber', e.target.value)}
                     placeholder="e.g., 3rd Floor"
@@ -429,7 +429,7 @@ export function SpaceCreationPanel() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-white">Chapter Name *</Label>
-                  <HiveInput
+                  <Input
                     value={formData.chapterName || ''}
                     onChange={(e) => updateFormData('chapterName', e.target.value)}
                     placeholder="e.g., Alpha Phi"
@@ -439,7 +439,7 @@ export function SpaceCreationPanel() {
 
                 <div>
                   <Label className="text-white">National Organization</Label>
-                  <HiveInput
+                  <Input
                     value={formData.nationalOrg || ''}
                     onChange={(e) => updateFormData('nationalOrg', e.target.value)}
                     placeholder="e.g., Alpha Phi International"
@@ -522,7 +522,7 @@ export function SpaceCreationPanel() {
                 </div>
 
                 {formData.enableRssFeed && (
-                  <HiveInput
+                  <Input
                     value={formData.rssUrl || ''}
                     onChange={(e) => updateFormData('rssUrl', e.target.value)}
                     placeholder="RSS feed URL"
@@ -545,7 +545,7 @@ export function SpaceCreationPanel() {
 
             {/* Create Button */}
             <div className="flex justify-end gap-3">
-              <HiveButton
+              <Button
                 variant="outline"
                 onClick={() => setFormData({
                   category: 'student_organizations',
@@ -557,9 +557,9 @@ export function SpaceCreationPanel() {
                 disabled={creating}
               >
                 Reset Form
-              </HiveButton>
+              </Button>
 
-              <HiveButton
+              <Button
                 onClick={handleCreateSpace}
                 disabled={creating || !formData.name || !formData.handle || !formData.description}
                 className="bg-[var(--hive-brand-primary)] text-black hover:bg-[var(--hive-brand-primary)]/90"
@@ -575,7 +575,7 @@ export function SpaceCreationPanel() {
                     Create Space
                   </span>
                 )}
-              </HiveButton>
+              </Button>
             </div>
           </div>
         </div>

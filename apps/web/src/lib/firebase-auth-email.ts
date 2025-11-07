@@ -195,3 +195,4 @@ export async function isFirebaseEmailAuthEnabled(): Promise<boolean> {
     return true;
   }
 }
+import 'server-only';

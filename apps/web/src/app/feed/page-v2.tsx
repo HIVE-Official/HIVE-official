@@ -21,8 +21,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { FeedErrorBoundary } from '@/components/error-boundaries';
-import { PostCard } from '@/components/social/post-card';
-import { RitualStoriesStrip } from '@/components/feed/ritual-stories-strip';
+import { PostCard } from '@hive/ui';
+import { RitualFeedIntegration } from '@/components/feed/ritual-feed-integration';
 import { useRealtimeFeed } from '@/hooks/use-realtime-feed-v2';
 import { useToast } from '@/hooks/use-toast';
 import { useFeedConfig } from '@/lib/feed-config';
@@ -60,9 +60,9 @@ export default function FeedPageV2() {
   const handleLike = useCallback(async (postId: string) => {
     if (!user?.uid) {
       toast({
-        title: 'Authentication Required',
+        title: 'Authentication required',
         description: 'Please sign in to like posts',
-        variant: 'destructive'
+        type: 'error'
       });
       return;
     }
@@ -75,16 +75,17 @@ export default function FeedPageV2() {
     // TODO: Implement like action with CQRS command
     toast({
       title: 'Post liked!',
-      description: 'Your reaction has been recorded'
+      description: 'Your reaction has been recorded',
+      type: 'success'
     });
   }, [user, hasEngaged, engagementStartTime, toast]);
 
   const handleComment = useCallback(async (postId: string, content: string) => {
     if (!user?.uid) {
       toast({
-        title: 'Authentication Required',
+        title: 'Authentication required',
         description: 'Please sign in to comment',
-        variant: 'destructive'
+        type: 'error'
       });
       return;
     }
@@ -92,16 +93,17 @@ export default function FeedPageV2() {
     // TODO: Implement comment action with CQRS command
     toast({
       title: 'Comment added!',
-      description: 'Your comment has been posted'
+      description: 'Your comment has been posted',
+      type: 'success'
     });
   }, [user, toast]);
 
   const handleShare = useCallback(async (postId: string) => {
     if (!user?.uid) {
       toast({
-        title: 'Authentication Required',
+        title: 'Authentication required',
         description: 'Please sign in to share posts',
-        variant: 'destructive'
+        type: 'error'
       });
       return;
     }
@@ -109,7 +111,8 @@ export default function FeedPageV2() {
     // TODO: Implement share action with CQRS command
     toast({
       title: 'Post shared!',
-      description: 'The post has been shared to your profile'
+      description: 'The post has been shared to your profile',
+      type: 'success'
     });
   }, [user, toast]);
 
@@ -194,10 +197,7 @@ export default function FeedPageV2() {
       <div className="min-h-screen bg-hive-background">
         {/* Rituals Strip (if enabled) */}
         {feedConfig?.features?.ritualsEnabled && (
-          <RitualStoriesStrip
-            rituals={[]}  // TODO: Load rituals
-            onRitualClick={(ritual) => window.location.href = `/rituals/${ritual.id}`}
-          />
+          <RitualFeedIntegration maxBanners={1} position="top" />
         )}
 
         {/* Header */}

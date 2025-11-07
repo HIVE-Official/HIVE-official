@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withAdminAuth } from '@/lib/admin-middleware';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { adminActivityLogger } from '@/lib/admin-activity-logger';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -10,8 +10,7 @@ import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes as _Err
  * DELETE - Cleanup old logs
  */
 
-export async function GET(request: NextRequest) {
-  return withAdminAuth(request, async (request, _admin) => {
+export const GET = withSecureAuth(async (request: NextRequest) => {
     try {
       const url = new URL(request.url);
       const filters = {
@@ -42,11 +41,9 @@ export async function GET(request: NextRequest) {
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
-  });
-}
+}, { requireAdmin: true });
 
-export async function DELETE(request: NextRequest) {
-  return withAdminAuth(request, async (request, _admin) => {
+export const DELETE = withSecureAuth(async (request: NextRequest) => {
     try {
       const body = await request.json();
       const { daysOld = 90 } = body;
@@ -63,5 +60,4 @@ export async function DELETE(request: NextRequest) {
         { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
-  });
-}
+}, { requireAdmin: true });

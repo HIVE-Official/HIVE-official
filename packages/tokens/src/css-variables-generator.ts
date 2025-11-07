@@ -55,6 +55,10 @@ export function generateCSSVariables(): string {
     cssVariables.push(`  --hive-border-${key}: ${value};`);
   });
 
+  // Legacy border aliases for compatibility with existing components
+  cssVariables.push('  --hive-border-primary: var(--hive-border-default);');
+  cssVariables.push('  --hive-border-secondary: var(--hive-border-strong);');
+
   // Overlay Colors
   cssVariables.push('\n  /* HIVE Overlay Colors */');
   Object.entries(overlay).forEach(([key, value]) => {

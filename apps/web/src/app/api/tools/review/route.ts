@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/auth-server';
 import { z } from 'zod';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import {
+  withAuthValidationAndErrors,
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
 
 const ReviewActionSchema = z.object({
   requestId: z.string(),
@@ -16,53 +20,41 @@ const ReviewActionSchema = z.object({
   })).optional()
 });
 
-interface ReviewAction {
-  requestId: string;
-  action: 'approve' | 'reject' | 'request_changes';
-  reviewedBy: string;
-  reviewedAt: string;
-  notes?: string;
-  changes?: Array<{
-    type: 'content' | 'functionality' | 'privacy' | 'performance';
-    description: string;
-    priority: 'high' | 'medium' | 'low';
-  }>;
-}
-
 // POST - Review tool publish request (Admin only)
-export async function POST(request: NextRequest) {
-  try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+export const POST = withAuthValidationAndErrors(
+  ReviewActionSchema,
+  async (
+    request: AuthenticatedRequest,
+    _context,
+    validatedData,
+    respond
+  ) => {
+    try {
+      const reviewerId = getUserId(request);
 
     // Check if user is admin/reviewer
-    const userDoc = await adminDb.collection('users').doc(user.uid).get();
+    const userDoc = await adminDb.collection('users').doc(reviewerId).get();
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+        return respond.error("Insufficient permissions", "FORBIDDEN", { status: 403 });
     }
-
-    const body = await request.json();
-    const validatedData = ReviewActionSchema.parse(body);
 
     // Get publish request
     const requestDoc = await adminDb.collection('publishRequests').doc(validatedData.requestId).get();
     if (!requestDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Publish request not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Publish request not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const requestData = requestDoc.data();
     if (requestData?.status !== 'pending' && requestData?.status !== 'changes_requested') {
-      return NextResponse.json(ApiResponseHelper.error("Request has already been reviewed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
+        return respond.error("Request has already been reviewed", "INVALID_INPUT", { status: 400 });
     }
 
     // Get tool details
     const toolDoc = await adminDb.collection('tools').doc(requestData?.toolId).get();
     if (!toolDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Tool not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
+        return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
     }
 
     const toolData = toolDoc.data();
@@ -72,7 +64,7 @@ export async function POST(request: NextRequest) {
     const updatedRequest = {
       status: validatedData.action === 'approve' ? 'approved' : 
               validatedData.action === 'reject' ? 'rejected' : 'changes_requested',
-      reviewedBy: user.uid,
+        reviewedBy: reviewerId,
       reviewedAt: now.toISOString(),
       reviewNotes: validatedData.notes,
       requestedChanges: validatedData.changes
@@ -118,6 +110,7 @@ export async function POST(request: NextRequest) {
             reviews: 0,
             favorites: 0
           },
+          campusId: CURRENT_CAMPUS_ID,
           publishedAt: now.toISOString(),
           featured: false,
           verified: true
@@ -154,13 +147,14 @@ export async function POST(request: NextRequest) {
       },
       recipients: [requestData?.requestedBy],
       createdAt: now.toISOString(),
-      read: false
+      read: false,
+      campusId: CURRENT_CAMPUS_ID,
     });
 
     // Log activity
     await adminDb.collection('analytics_events').add({
       eventType: 'tool_review_completed',
-      userId: user.uid,
+        userId: reviewerId,
       toolId: requestData?.toolId,
       reviewAction: validatedData.action,
       timestamp: now.toISOString(),
@@ -169,10 +163,11 @@ export async function POST(request: NextRequest) {
         requestedBy: requestData?.requestedBy,
         hasNotes: !!validatedData.notes,
         changesRequested: validatedData.changes?.length || 0
-      }
+      },
+      campusId: CURRENT_CAMPUS_ID,
     });
 
-    return NextResponse.json({
+      return respond.success({
       message: `Tool review completed - ${validatedData.action}`,
       status: updatedRequest.status,
       reviewId: validatedData.requestId
@@ -183,32 +178,26 @@ export async function POST(request: NextRequest) {
       `Error reviewing tool at /api/tools/review`,
       error instanceof Error ? error : new Error(String(error))
     );
-    
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        error: 'Invalid review data',
-        details: error.errors
-      }, { status: HttpStatus.BAD_REQUEST });
-    }
-
-    return NextResponse.json(ApiResponseHelper.error("Failed to review tool", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      return respond.error("Failed to review tool", "INTERNAL_ERROR", { status: 500 });
   }
-}
+  }
+);
 
 // GET - Get pending review requests (Admin only)
-export async function GET(request: NextRequest) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond
+) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    const reviewerId = getUserId(request);
 
     // Check if user is admin/reviewer
-    const userDoc = await adminDb.collection('users').doc(user.uid).get();
+    const userDoc = await adminDb.collection('users').doc(reviewerId).get();
     const userData = userDoc.data();
     
     if (!userData?.roles?.includes('admin') && !userData?.roles?.includes('tool_reviewer')) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+      return respond.error("Insufficient permissions", "FORBIDDEN", { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -219,6 +208,7 @@ export async function GET(request: NextRequest) {
     const requestsSnapshot = await adminDb
       .collection('publishRequests')
       .where('status', '==', status)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .orderBy('requestedAt', 'desc')
       .limit(limitParam)
       .get();
@@ -232,7 +222,7 @@ export async function GET(request: NextRequest) {
       
       // Get tool details
       const toolDoc = await adminDb.collection('tools').doc(requestData.toolId).get();
-      const toolData = toolDoc.exists ? toolDoc.data() : null;
+      const toolData = toolDoc.exists && toolDoc.data()?.campusId === CURRENT_CAMPUS_ID ? toolDoc.data() : null;
 
       // Get requester details
       const userDoc = await adminDb.collection('users').doc(requestData.requestedBy).get();
@@ -255,7 +245,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({
+    return respond.success({
       requests,
       count: requests.length,
       status
@@ -266,6 +256,6 @@ export async function GET(request: NextRequest) {
       `Error fetching review requests at /api/tools/review`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch review requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to fetch review requests", "INTERNAL_ERROR", { status: 500 });
   }
-}
+});

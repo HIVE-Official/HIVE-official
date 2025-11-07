@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  GraduationCap,
-  Search,
-  ChevronDown,
-  Check,
-  BookOpen,
-  User,
-  Home,
-} from "lucide-react";
+import { ChevronDown, Check, BookOpen, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveInput, HiveCard } from "@hive/ui";
-import { UB_MAJORS } from "@hive/core";
-import type { HiveOnboardingData } from "../hive-onboarding-wizard";
+import {
+  HiveCard,
+  CommandDialog,
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@hive/ui";
+import { Skeleton, LiveRegion } from "@hive/ui";
+import type {
+  AcademicLevel,
+  HiveOnboardingData,
+  LivingSituation,
+} from "../hive-onboarding-wizard";
 
 interface HiveAcademicsStepProps {
   data: HiveOnboardingData;
@@ -20,47 +25,123 @@ interface HiveAcademicsStepProps {
   onNext: () => void;
 }
 
-type AcademicLevel = "undergraduate" | "graduate" | "doctoral";
-type LivingSituation = "on-campus" | "off-campus" | "commuter" | "not-sure";
+const FALLBACK_MAJORS = [
+  "Computer Science",
+  "Business Administration",
+  "Biology",
+  "Psychology",
+  "Mechanical Engineering",
+  "Nursing",
+];
 
 export function HiveAcademicsStep({
   data,
   updateData,
   onNext,
 }: HiveAcademicsStepProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [isMajorPickerOpen, setIsMajorPickerOpen] = useState(false);
   const [academicLevel, setAcademicLevel] = useState<AcademicLevel | null>(
-    null
+    data.academicLevel ?? null
   );
   const [showValidationError, setShowValidationError] = useState(false);
-  const [bio, setBio] = useState(data.bio || "");
+  const [bio, setBio] = useState(data.bio ?? "");
   const [livingSituation, setLivingSituation] = useState<LivingSituation | null>(
-    data.livingSituation as LivingSituation || null
+    data.livingSituation ?? null
   );
 
   const currentYear = new Date().getFullYear();
-  const graduationYears = Array.from({ length: 7 }, (_, i) =>
-    (currentYear + i).toString().slice(-2)
-  );
-  const yearOptions = graduationYears.map((year) => ({
-    value: `'${year}`,
-    label: `'${year}`,
-  }));
+  const [catalog, setCatalog] = useState<null | { majors?: string[]; yearRange?: { startYear: number; endYear: number } }>(null);
+  const [isCatalogLoading, setIsCatalogLoading] = useState<boolean>(true);
+  const [a11yMessage, setA11yMessage] = useState<string | null>(null);
 
-  // Filter majors based on academic level and search query
-  const filteredMajors = UB_MAJORS.filter((major) => {
-    const matchesSearch =
-      major.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      major.school.toLowerCase().includes(searchQuery.toLowerCase());
+  const academicLevelOptions: Array<{ value: AcademicLevel; label: string; icon: string }> = [
+    { value: "undergraduate", label: "Undergraduate", icon: "🎓" },
+    { value: "graduate", label: "Graduate", icon: "📚" },
+    { value: "doctoral", label: "Doctoral", icon: "🔬" },
+  ];
 
-    // For now, show all majors regardless of level - can be enhanced later with level-specific filtering
-    return matchesSearch;
+  const livingSituationOptions: Array<{
+    value: LivingSituation;
+    label: string;
+    icon: string;
+    desc: string;
+  }> = [
+    { value: "on-campus", label: "On-campus", icon: "🏫", desc: "Dorms & residence halls" },
+    { value: "off-campus", label: "Off-campus", icon: "🏠", desc: "Apartments & houses" },
+    { value: "commuter", label: "Commuter", icon: "🚗", desc: "Living at home" },
+    { value: "not-sure", label: "Not sure yet", icon: "🤔", desc: "Still deciding" },
+  ];
+
+  // Attempt to load server-controlled majors and year range
+  useEffect(() => {
+    let mounted = true;
+    const campusId = (() => {
+      try {
+        const raw = window.sessionStorage.getItem('start.campus');
+        if (!raw) return null;
+        const campus = JSON.parse(raw);
+        return campus?.id || null;
+      } catch { return null; }
+    })();
+    const qs = campusId ? `?campusId=${encodeURIComponent(campusId)}` : '';
+    setIsCatalogLoading(true);
+    setA11yMessage('Loading majors from catalog');
+    fetch(`/api/onboarding/catalog${qs}`, { credentials: 'include' })
+      .then(r => r.json())
+      .then(json => {
+        const d = json?.data || json;
+        if (mounted) {
+          setCatalog({ majors: d?.majors, yearRange: d?.yearRange });
+          setA11yMessage('Majors loaded');
+        }
+      })
+      .catch(() => { if (mounted) setA11yMessage('Using fallback majors'); })
+      .finally(() => { if (mounted) setIsCatalogLoading(false); });
+    return () => { mounted = false; };
+  }, []);
+
+  const majorCatalog = useMemo(() => {
+    const source = catalog?.majors && catalog.majors.length ? catalog.majors : FALLBACK_MAJORS;
+    return Array.from(new Set(source)).sort((a, b) => a.localeCompare(b));
+  }, [catalog?.majors]);
+
+  const majorGroups = useMemo(() => {
+    return majorCatalog.reduce<Array<{ heading: string; majors: string[] }>>((groups, major) => {
+      const letter = major.charAt(0).toUpperCase();
+      const existing = groups.find((group) => group.heading === letter);
+      if (existing) {
+        existing.majors.push(major);
+      } else {
+        groups.push({ heading: letter, majors: [major] });
+      }
+      return groups;
+    }, []).map((group) => ({
+      heading: group.heading,
+      majors: group.majors.sort((a, b) => a.localeCompare(b)),
+    }));
+  }, [majorCatalog]);
+
+  const yrStart = catalog?.yearRange?.startYear ?? currentYear;
+  const yrEnd = catalog?.yearRange?.endYear ?? (currentYear + 6);
+  const yearOptions = Array.from({ length: Math.max(1, yrEnd - yrStart + 1) }, (_, i) => {
+    const full = yrStart + i;
+    const short = String(full).slice(-2);
+    return { value: `'${short}`, label: `'${short}` };
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAcademicLevelSelect = (level: AcademicLevel) => {
+    setAcademicLevel(level);
+    setShowValidationError(false);
+    updateData({ academicLevel: level });
+  };
+
+  const handleLivingSituationSelect = (value: LivingSituation) => {
+    setLivingSituation(value);
+    updateData({ livingSituation: value });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!academicLevel) {
       setShowValidationError(true);
       return;
@@ -72,11 +153,10 @@ export function HiveAcademicsStep({
 
   const selectMajor = (major: string) => {
     updateData({ major });
-    setShowDropdown(false);
-    setSearchQuery("");
+    setIsMajorPickerOpen(false);
   };
 
-  const selectedMajorInfo = UB_MAJORS.find((m) => m.name === data.major);
+  const selectedMajorName = data.major ?? "";
 
   return (
     <motion.div
@@ -84,27 +164,20 @@ export function HiveAcademicsStep({
       animate={{ y: 0, opacity: 1 }}
       className="space-y-[var(--hive-spacing-8)] py-[var(--hive-spacing-6)]"
     >
+      {/* Screen-reader announcements for async loading */}
+      <LiveRegion message={a11yMessage} politeness="polite" className="sr-only" />
       {/* Header */}
-      <div className="text-center space-y-[var(--hive-spacing-4)]">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mx-auto w-16 h-16 bg-[var(--hive-brand-primary)]/20 backdrop-blur-xl rounded-full flex items-center justify-center"
-        >
-          <GraduationCap className="w-8 h-8 text-[var(--hive-brand-primary)]" />
-        </motion.div>
-
+      <div className="text-center space-y-[var(--hive-spacing-3)]">
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15 }}
         >
-          <h2 className="text-2xl font-bold text-[var(--hive-text-primary)]">
-            Academic & Bio Info
+          <h2 className="text-2xl font-semibold text-[var(--hive-text-primary)]">
+            Academics & bio
           </h2>
           <p className="text-[var(--hive-text-secondary)] mt-2">
-            Help us connect you with the right Spaces, classmates, and communities.
+            Lock in your major, year, and living setup so the UB feed feels as sharp as you are.
           </p>
         </motion.div>
       </div>
@@ -124,18 +197,11 @@ export function HiveAcademicsStep({
             <span className="text-[var(--hive-brand-primary)]">*</span>
           </label>
           <div className="grid grid-cols-3 gap-[var(--hive-spacing-3)]">
-            {[
-              { value: "undergraduate", label: "Undergraduate", icon: "🎓" },
-              { value: "graduate", label: "Graduate", icon: "📚" },
-              { value: "doctoral", label: "Doctoral", icon: "🔬" },
-            ].map((level) => (
+            {academicLevelOptions.map((level) => (
               <motion.button
                 key={level.value}
                 type="button"
-                onClick={() => {
-                  setAcademicLevel(level.value as AcademicLevel);
-                  setShowValidationError(false);
-                }}
+                onClick={() => handleAcademicLevelSelect(level.value)}
                 className={cn(
                   "relative p-4 rounded-xl border transition-all duration-200 text-center hover:scale-[1.02] active:scale-[0.98]",
                   academicLevel === level.value
@@ -175,86 +241,75 @@ export function HiveAcademicsStep({
           </AnimatePresence>
         </div>
 
-        {/* Major Selection using HiveInput */}
+        {/* Major Selection using Input */}
         <div className="space-y-[var(--hive-spacing-3)]">
-          <HiveInput
-            label="Major *"
-            placeholder="Search for your major..."
-            value={data.major || searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const value = e.target.value;
-              if (data.major) {
-                // If they start typing, clear the selected major
-                updateData({ major: "" });
-                setSearchQuery(value);
-              } else {
-                setSearchQuery(value);
-              }
-              setShowDropdown(value.length > 0);
-            }}
-            onFocus={() => {
-              setFocusedField("major");
-              if (!data.major && searchQuery.length > 0) setShowDropdown(true);
-            }}
-            onBlur={() => {
-              setFocusedField(null);
-              setTimeout(() => setShowDropdown(false), 200);
-            }}
-            variant="default"
-            size="lg"
-            className="w-full"
-          />
+          <label className="block text-sm font-medium text-[var(--hive-text-primary)]">
+            Major <span className="text-[var(--hive-brand-primary)]">*</span>
+          </label>
+          {isCatalogLoading ? (
+            <div className="space-y-3" role="status" aria-live="polite">
+              <Skeleton className="h-10 w-full rounded-xl" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ) : (
+          <button
+            type="button"
+            onClick={() => setIsMajorPickerOpen(true)}
+            className={cn(
+              "w-full rounded-xl border border-[var(--hive-border-primary)]/40 bg-[linear-gradient(140deg,rgba(255,255,255,0.03),rgba(11,12,18,0.9))]",
+              "px-4 py-3 text-left transition hover:border-[var(--hive-brand-primary)]/50 hover:shadow-[0_12px_36px_rgba(14,16,24,0.45)]",
+              "flex items-center justify-between gap-3 text-sm text-[var(--hive-text-primary)]"
+            )}
+            aria-haspopup="dialog"
+            aria-expanded={isMajorPickerOpen}
+          >
+            <div>
+              <div className="font-medium">
+                {selectedMajorName || "Search majors"}
+              </div>
+              <div className="text-xs text-[var(--hive-text-muted)]">
+                {selectedMajorName ? "Tap to switch" : "Pull from the official UB catalog"}
+              </div>
+            </div>
+            <Search className="h-4 w-4 text-[var(--hive-text-muted)]" aria-hidden />
+          </button>
+          )}
 
-          {/* Dropdown */}
-          <AnimatePresence>
-            {showDropdown &&
-              searchQuery.length > 0 &&
-              filteredMajors.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="relative z-50"
-                >
-                  <div className="absolute w-full mt-2 max-h-60 overflow-y-auto bg-[var(--hive-background-primary)] border-2 border-[var(--hive-brand-primary)]/30 rounded-xl shadow-2xl backdrop-blur-md">
-                    {filteredMajors.map((major, index) => (
-                      <motion.button
-                        key={major.name}
-                        type="button"
-                        onClick={() => selectMajor(major.name)}
-                        className="w-full text-left px-4 py-3 hover:bg-[var(--hive-brand-primary)]/10 text-[var(--hive-text-primary)] transition-all duration-200 border-b border-[var(--hive-border-primary)]/20 last:border-b-0 hover:border-[var(--hive-brand-primary)]/30"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        whileHover={{
-                          x: 4,
-                          backgroundColor:
-                            "var(--hive-brand-primary, #D4AF37)/10",
-                        }}
+          <CommandDialog open={isMajorPickerOpen} onOpenChange={setIsMajorPickerOpen}>
+            <Command>
+              <CommandInput placeholder="Search majors..." autoFocus />
+              <CommandList>
+                <CommandEmpty>Nothing matched. Try another keyword.</CommandEmpty>
+                {majorGroups.map((group) => (
+                  <CommandGroup key={group.heading} heading={group.heading}>
+                    {group.majors.map((major) => (
+                      <CommandItem
+                        key={major}
+                        value={major}
+                        onSelect={selectMajor}
                       >
-                        <div className="font-medium text-sm text-[var(--hive-text-primary)]">
-                          {major.name}
+                        <div className="flex w-full items-center justify-between">
+                          <span>{major}</span>
+                          {selectedMajorName === major && (
+                            <Check className="h-4 w-4 text-[var(--hive-brand-primary)]" aria-hidden />
+                          )}
                         </div>
-                        <div className="text-xs text-[var(--hive-brand-primary)]">
-                          {major.school}
-                        </div>
-                      </motion.button>
+                      </CommandItem>
                     ))}
-                  </div>
-                </motion.div>
-              )}
-          </AnimatePresence>
+                  </CommandGroup>
+                ))}
+              </CommandList>
+            </Command>
+          </CommandDialog>
 
-          {/* Selected Major Info */}
-          {selectedMajorInfo && (
+          {selectedMajorName && !isCatalogLoading && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-sm text-[var(--hive-text-secondary)] flex items-center gap-[var(--hive-spacing-2)]"
             >
               <Check className="w-4 h-4 text-[var(--hive-status-success)]" />
-              <span>{selectedMajorInfo.school}</span>
+              <span>{selectedMajorName}</span>
             </motion.div>
           )}
         </div>
@@ -271,8 +326,8 @@ export function HiveAcademicsStep({
                   ? `'${data.graduationYear.toString().slice(-2)}`
                   : ""
               }
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                const year = e.target.value.replace("'", "");
+              onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                const year = event.target.value.replace("'", "");
                 const fullYear = parseInt(`20${year}`);
                 updateData({ graduationYear: fullYear });
               }}
@@ -307,8 +362,8 @@ export function HiveAcademicsStep({
           <div className="relative">
             <textarea
               value={bio}
-              onChange={(e) => {
-                const value = e.target.value.slice(0, 200);
+              onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+                const value = event.target.value.slice(0, 200);
                 setBio(value);
                 updateData({ bio: value });
               }}
@@ -321,7 +376,7 @@ export function HiveAcademicsStep({
             </div>
           </div>
           <p className="text-xs text-[var(--hive-text-muted)]">
-            Share a bit about yourself - your interests, goals, or what you're looking for in your college experience.
+            Share a bit about yourself - your interests, goals, or what you&apos;re looking for in your college experience.
           </p>
         </div>
 
@@ -331,19 +386,11 @@ export function HiveAcademicsStep({
             Living Situation <span className="text-[var(--hive-text-muted)] text-xs">(Helps with matching)</span>
           </label>
           <div className="grid grid-cols-2 gap-[var(--hive-spacing-3)]">
-            {[
-              { value: "on-campus", label: "On-campus", icon: "🏫", desc: "Dorms & residence halls" },
-              { value: "off-campus", label: "Off-campus", icon: "🏠", desc: "Apartments & houses" },
-              { value: "commuter", label: "Commuter", icon: "🚗", desc: "Living at home" },
-              { value: "not-sure", label: "Not sure yet", icon: "🤔", desc: "Still deciding" },
-            ].map((option) => (
+            {livingSituationOptions.map((option) => (
               <motion.button
                 key={option.value}
                 type="button"
-                onClick={() => {
-                  setLivingSituation(option.value as LivingSituation);
-                  updateData({ livingSituation: option.value });
-                }}
+                onClick={() => handleLivingSituationSelect(option.value)}
                 className={cn(
                   "relative p-4 rounded-xl border transition-all duration-200 text-left hover:scale-[1.02] active:scale-[0.98]",
                   livingSituation === option.value

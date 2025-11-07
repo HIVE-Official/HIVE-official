@@ -1,46 +1,21 @@
 // Tailwind CSS Configuration Extension for HIVE Design Tokens
-import { colors, semantic, overlay, shadows } from './colors';
+import { overlay, shadows } from './colors';
+import { prdTailwindColors } from './colors-prd-aligned';
 import { typography } from './typography';
 import { spacing, layoutSizes } from './spacing';
 import { radius } from './radius';
 // Generate Tailwind color palette from design tokens
 export const hiveTailwindColors = {
-    // Core HIVE Colors
-    void: colors.void,
-    obsidian: colors.obsidian,
-    charcoal: colors.charcoal,
-    graphite: colors.graphite,
-    slate: colors.slate,
-    steel: colors.steel,
-    // Luxury Grays
-    platinum: colors.platinum,
-    silver: colors.silver,
-    mercury: colors.mercury,
-    pewter: colors.pewter,
-    smoke: colors.smoke,
-    // Premium Gold
-    gold: colors.gold,
-    champagne: colors.champagne,
-    amber: colors.amber,
-    bronze: colors.bronze,
-    // Status Colors
-    emerald: colors.emerald,
-    ruby: colors.ruby,
-    sapphire: colors.sapphire,
-    citrine: colors.citrine,
-    // Glass Effects
+    // PRD-aligned semantic colors
+    ...prdTailwindColors,
+    // Glass/overlay effects from legacy until replaced by PRD counterparts
     glass: overlay.glass,
     'glass-medium': overlay['glass-medium'],
     'glass-strong': overlay['glass-strong'],
-    // Gold Effects
     'gold-subtle': overlay['gold-subtle'],
     'gold-medium': overlay['gold-medium'],
     'gold-strong': overlay['gold-strong'],
     'gold-glow': overlay['gold-glow'],
-    // Semantic Colors
-    ...semantic,
-    // Gray scale for compatibility
-    gray: colors.gray,
 };
 // Generate Tailwind spacing from design tokens
 export const hiveTailwindSpacing = {

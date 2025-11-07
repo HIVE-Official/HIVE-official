@@ -1,5 +1,5 @@
 /* Import HIVE Design System Tokens - Single Source of Truth */
-@import "../../tokens/hive-tokens-generated.css";
+@import "./tokens.css";
 
 @tailwind base;
 @tailwind components;
@@ -30,6 +30,9 @@
     --border: var(--hive-border-primary);
     --input: var(--hive-border-primary);
     --ring: var(--hive-interactive-focus);
+
+    /* Ensure brand surfaces use legible text (no white-on-gold) */
+    --hive-brand-primary-text: #05070d;
   }
 
   /* === GLOBAL STYLES === */

@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
-import { isAdmin } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 const AlgorithmConfigSchema = z.object({
   temporalWeights: z.object({
@@ -82,16 +81,12 @@ const DEFAULT_CONFIG = {
  * GET /api/admin/feed-algorithm
  * Get current algorithm configuration
  */
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = getUserId(request);
+export const GET = withSecureAuth(async (request, token) => {
+  const userId = token?.uid || 'unknown';
 
   logger.info('🔧 Loading feed algorithm config', { userId });
 
-  // Check admin permissions
-  const isAdminUser = await isAdmin(userId);
-  if (!isAdminUser) {
-    return respond.error('Admin access required', 'ADMIN_REQUIRED', { status: 403 });
-  }
+  // Admin enforced by withSecureAuth
 
   try {
     // Get algorithm config from Firestore
@@ -111,40 +106,32 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     // Validate config structure
     const validatedConfig = AlgorithmConfigSchema.parse(config);
 
-    return respond.success({
+    return new Response(JSON.stringify({
+      success: true,
       config: validatedConfig,
       lastUpdated: lastUpdated.toISOString(),
       isDefault: !configDoc.exists,
       updatedBy: configDoc.data()?.updatedBy || 'system'
-    });
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 
   } catch (error: any) {
     logger.error('Error loading algorithm config', error instanceof Error ? error : new Error(String(error)), { userId });
 
     // Return default config if there's an error
-    return respond.success({
-      config: DEFAULT_CONFIG,
-      lastUpdated: new Date().toISOString(),
-      isDefault: true,
-      updatedBy: 'system'
-    });
+    return new Response(JSON.stringify({ success: true, config: DEFAULT_CONFIG, lastUpdated: new Date().toISOString(), isDefault: true, updatedBy: 'system' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * POST /api/admin/feed-algorithm
  * Update algorithm configuration
  */
-export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = getUserId(request);
+export const POST = withSecureAuth(async (request, token) => {
+  const userId = token?.uid || 'unknown';
 
   logger.info('🔧 Updating feed algorithm config', { userId });
 
-  // Check admin permissions
-  const isAdminUser = await isAdmin(userId);
-  if (!isAdminUser) {
-    return respond.error('Admin access required', 'ADMIN_REQUIRED', { status: 403 });
-  }
+  // Admin enforced by withSecureAuth
 
   try {
     const body = await request.json();
@@ -181,26 +168,27 @@ export const POST = withAuthAndErrors(async (request: AuthenticatedRequest, cont
       userId
     });
 
-    return respond.success({
+    return new Response(JSON.stringify({
+      success: true,
       config: validatedConfig,
       lastUpdated: configData.lastUpdated.toISOString(),
       updatedBy: adminName,
       version: configData.version,
       message: 'Algorithm configuration updated successfully'
-    });
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       logger.warn('Invalid algorithm config provided', {
         userId
       });
-      return respond.error('Invalid configuration format', 'VALIDATION_ERROR', { status: 400, details: error.errors });
+      return new Response(JSON.stringify({ success: false, error: 'Invalid configuration format', details: error.errors }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
 
     logger.error('Error updating algorithm config', error instanceof Error ? error : new Error(String(error)), { userId });
-    return respond.error('Failed to update algorithm configuration', 'UPDATE_ERROR', { status: 500 });
+    return new Response(JSON.stringify({ success: false, error: 'Failed to update algorithm configuration' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
-});
+}, { requireAdmin: true });
 
 
 /**

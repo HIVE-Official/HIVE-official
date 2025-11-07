@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { withAuth } from '@/lib/api-auth-middleware';
 
 const mySpacesQuerySchema = z.object({
@@ -22,9 +23,13 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
     
     const userId = authContext.userId;
 
-    // Get user's space memberships using collectionGroup query for nested structure
-    let membershipQuery = dbAdmin.collectionGroup('members')
-      .where('__name__', '==', userId); // Match document ID (userId)
+    // Get user's space memberships using flat collection
+    let membershipQuery: any = dbAdmin
+      .collection('spaceMembers')
+      .where('userId', '==', userId);
+    
+    // Enforce campus isolation
+    membershipQuery = membershipQuery.where('campusId', '==', CURRENT_CAMPUS_ID);
 
     if (!includeInactive) {
       membershipQuery = membershipQuery.where('isActive', '==', true);
@@ -46,20 +51,22 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       });
     }
 
-    // Extract space IDs and roles from nested collection structure
+    // Extract space IDs and roles from flat collection
     const spaceIds: string[] = [];
-    const membershipData: Record<string, { role: string; joinedAt: any; permissions: string[] }> = {};
+    const membershipData: Record<string, { role: string; joinedAt: any; permissions: string[]; isFavorite?: boolean; isPinned?: boolean }> = {};
 
-    membershipsSnapshot.docs.forEach(doc => {
+    membershipsSnapshot.docs.forEach((doc: any) => {
       const data = doc.data();
-      // In nested structure, the space ID is the parent document ID
-      const spaceId = doc.ref.parent.parent?.id;
+      if (data.campusId && data.campusId !== CURRENT_CAMPUS_ID) return;
+      const spaceId = data.spaceId;
       if (spaceId) {
         spaceIds.push(spaceId);
         membershipData[spaceId] = {
           role: data.role,
           joinedAt: data.joinedAt,
-          permissions: data.permissions || []
+          permissions: data.permissions || [],
+          isFavorite: data.isFavorite || false,
+          isPinned: data.isPinned || false,
         };
       }
     });
@@ -119,8 +126,8 @@ export const GET = withAuth(async (request: NextRequest, authContext) => {
       .sort(sortByActivity)
       .slice(0, 5);
 
-    // TODO: Get favorited spaces from user preferences
-    const favorited: any[] = [];
+    // Favorited and pinned spaces based on membership flags
+    const favorited = spaces.filter(s => membershipData[s.id]?.isFavorite);
 
     const categorizedSpaces = {
       joined: joined.sort(sortByActivity),

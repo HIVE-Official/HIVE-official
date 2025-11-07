@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from "lucide-react";
-import { HiveButton, HiveLogo } from "@hive/ui";
+import { Button, HiveLogo } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveWelcomeStepProps {
@@ -47,7 +47,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           Welcome to <span className="text-[var(--hive-brand-primary)]">HIVE</span>
         </h2>
         <p className="text-lg text-[var(--hive-text-secondary)] max-w-md mx-auto">
-          Your digital campus awaits
+          UB’s digital commons. Student-run. Built for tonight.
         </p>
       </motion.div>
 
@@ -59,8 +59,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
         className="space-y-[var(--hive-spacing-6)]"
       >
         <p className="text-[var(--hive-text-muted)] max-w-lg mx-auto">
-          We'll walk you through a few quick steps to set up your profile. 
-          This should only take a couple of minutes.
+          A few quick questions and you’re in the feed.
         </p>
 
         <motion.div
@@ -69,7 +68,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
           transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
           className="flex justify-center"
         >
-          <HiveButton
+          <Button
             variant="default"
             size="lg"
             onClick={onNext}
@@ -79,7 +78,7 @@ export function HiveWelcomeStep({ onNext }: HiveWelcomeStepProps) {
             aria-label="Start the onboarding process"
           >
             Get Started
-          </HiveButton>
+          </Button>
         </motion.div>
       </motion.div>
     </motion.div>

@@ -310,3 +310,4 @@ export const notifyPerformanceWarning = (metric: string, value: string, threshol
     data: { metric, value, threshold },
   });
 };
+import 'server-only';

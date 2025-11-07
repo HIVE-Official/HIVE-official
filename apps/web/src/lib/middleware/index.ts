@@ -54,6 +54,8 @@ export {
   type ApiResponse
 } from './response';
 
+export { withAdminCampusIsolation } from './withAdminCampusIsolation';
+
 // Combined middleware wrappers
 import { withAuth, withAdminAuth, type AuthenticatedHandler } from './auth';
 import { withErrorHandling, type ApiHandler } from './error-handler';

@@ -1,22 +1,17 @@
 export declare const motion: {
     readonly easing: {
-        readonly liquid: "cubic-bezier(0.23, 1, 0.32, 1)";
-        readonly magnetic: "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-        readonly silk: "cubic-bezier(0.16, 1, 0.3, 1)";
-        readonly steel: "cubic-bezier(0.34, 1.56, 0.64, 1)";
-        readonly molten: "cubic-bezier(0.19, 1, 0.22, 1)";
+        readonly default: "cubic-bezier(0.23, 1, 0.32, 1)";
+        readonly reveal: "cubic-bezier(0.23, 1, 0.32, 1)";
         readonly snap: "cubic-bezier(0.25, 0.1, 0.25, 1)";
-        readonly orchestrated: "cubic-bezier(0.215, 0.61, 0.355, 1)";
+        readonly interactive: "cubic-bezier(0.25, 0.1, 0.25, 1)";
+        readonly dramatic: "cubic-bezier(0.165, 0.84, 0.44, 1)";
+        readonly layout: "cubic-bezier(0.165, 0.84, 0.44, 1)";
+        readonly liquid: "cubic-bezier(0.23, 1, 0.32, 1)";
+        readonly magnetic: "cubic-bezier(0.23, 1, 0.32, 1)";
+        readonly silk: "cubic-bezier(0.23, 1, 0.32, 1)";
+        readonly easeOut: "cubic-bezier(0.23, 1, 0.32, 1)";
+        readonly spring: "cubic-bezier(0.25, 0.1, 0.25, 1)";
         readonly cinematic: "cubic-bezier(0.165, 0.84, 0.44, 1)";
-        readonly cascade: "cubic-bezier(0.19, 1, 0.22, 1)";
-        readonly toolSnap: "cubic-bezier(0.68, -0.6, 0.32, 1.6)";
-        readonly toolFloat: "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-        readonly toolPlant: "cubic-bezier(0.34, 1.56, 0.64, 1)";
-        readonly easeIn: "cubic-bezier(0.4, 0, 1, 1)";
-        readonly easeOut: "cubic-bezier(0, 0, 0.2, 1)";
-        readonly easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)";
-        readonly spring: "cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-        readonly bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)";
     };
     readonly duration: {
         readonly instant: "0.1s";

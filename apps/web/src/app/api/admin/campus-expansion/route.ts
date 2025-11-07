@@ -1,21 +1,33 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from '@/lib/logger';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+// Minimal DTOs for metrics used below
+interface UserStats { total: number; active: number; new: number; verified: number }
+interface SpaceStats { total: number; active: number; growth: number }
+interface EngagementStats { dailyActiveUsers: number; weeklyActiveUsers: number; monthlyActiveUsers: number; averageSessionDuration: number; postsPerDay: number; retention: { day1: number; day7: number; day30: number } }
+interface PerformanceStats { averageResponseTime: number; errorRate: number; uptime: number; supportTickets: { total: number; resolved: number; averageResolutionTime: number } }
+interface CampusOverview {
+  campusId: string;
+  name: string;
+  launchDate: string;
+  status: string;
+  students: UserStats;
+  spaces: SpaceStats;
+  engagement: EngagementStats;
+  performance: PerformanceStats;
+  healthScore: number;
+}
+interface PipelineCampus { id: string; status?: string; readinessScore?: number; priority?: number; name?: string; campusId?: string; estimatedStudents?: number; [key: string]: unknown }
+
+export const GET = withSecureAuth(async (request, token) => {
 
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action') || 'overview'; // 'overview', 'campuses', 'expansion-plan', 'metrics'
 
   try {
-    logger.info('Fetching campus expansion data', { userId: auth.userId, action });
+    logger.info('Fetching campus expansion data', { userId: token?.uid || 'unknown', action });
 
     // Get comprehensive campus expansion data
     const [
@@ -64,7 +76,7 @@ export const GET = withAuthAndErrors(async (context) => {
     });
 
   } catch (error) {
-    logger.error('Error fetching campus expansion data', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
+    logger.error('Error fetching campus expansion data', { error: error instanceof Error ? error : new Error(String(error)) });
 
     // Return mock data for development
     return NextResponse.json({
@@ -75,14 +87,9 @@ export const GET = withAuthAndErrors(async (context) => {
       error: 'Using mock data - Campus expansion API not fully implemented'
     });
   }
-});
+}, { requireAdmin: true });
 
-export const POST = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const POST = withSecureAuth(async (request, token) => {
 
   try {
     const body = await request.json();
@@ -95,19 +102,19 @@ export const POST = withAuthAndErrors(async (context) => {
     let result;
     switch (action) {
       case 'add_campus_to_pipeline':
-        result = await addCampusToPipeline(data, auth.userId);
+        result = await addCampusToPipeline(data, token?.uid || 'unknown');
         break;
       case 'update_campus_status':
-        result = await updateCampusStatus(campusId, data, auth.userId);
+        result = await updateCampusStatus(campusId, data, token?.uid || 'unknown');
         break;
       case 'assess_campus_readiness':
-        result = await assessCampusReadiness(campusId, auth.userId);
+        result = await assessCampusReadiness(campusId, token?.uid || 'unknown');
         break;
       case 'deploy_campus_infrastructure':
-        result = await deployCampusInfrastructure(campusId, data, auth.userId);
+        result = await deployCampusInfrastructure(campusId, data, token?.uid || 'unknown');
         break;
       case 'generate_expansion_report':
-        result = await generateExpansionReport(auth.userId);
+        result = await generateExpansionReport(token?.uid || 'unknown');
         break;
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
@@ -115,7 +122,7 @@ export const POST = withAuthAndErrors(async (context) => {
 
     logger.info('Campus expansion action performed', {
       action,
-      userId: auth.userId,
+      userId: token?.uid || 'unknown',
       metadata: {
         campusId,
         result: result.success
@@ -132,7 +139,7 @@ export const POST = withAuthAndErrors(async (context) => {
     logger.error('Error performing campus expansion action', { error: error instanceof Error ? error : new Error(String(error)), userId: auth.userId });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Get metrics for current campus (UB Buffalo)
@@ -184,8 +191,8 @@ async function getExpansionPipeline() {
     const pipelineSnap = await pipelineQuery.get();
     const pipeline = pipelineSnap.docs.map(doc => ({
       id: doc.id,
-      ...doc.data()
-    })) as Array<{ id: string; status?: string; readinessScore?: number; [key: string]: any }>;
+      ...(doc.data() as Record<string, unknown>)
+    })) as PipelineCampus[];
 
     // Categorize by status
     const categorized = {
@@ -296,15 +303,15 @@ async function getScalingPlan() {
 /**
  * Campus expansion actions
  */
-async function addCampusToPipeline(campusData: any, userId: string) {
+async function addCampusToPipeline(campusData: Record<string, unknown>, userId: string) {
   try {
     const newCampus = {
       ...campusData,
       addedBy: userId,
       addedAt: new Date(),
       status: 'identified',
-      priority: campusData.priority || 50,
-      estimatedStudents: campusData.estimatedStudents || 0,
+      priority: (campusData as { priority?: number }).priority || 50,
+      estimatedStudents: (campusData as { estimatedStudents?: number }).estimatedStudents || 0,
       marketSize: calculateMarketSize(campusData),
       readinessScore: 0
     };
@@ -334,7 +341,7 @@ async function addCampusToPipeline(campusData: any, userId: string) {
   }
 }
 
-async function updateCampusStatus(campusId: string, updateData: any, userId: string) {
+async function updateCampusStatus(campusId: string, updateData: Partial<{ status: string }> & Record<string, unknown>, userId: string) {
   try {
     const campusRef = dbAdmin.collection('campus_expansion').doc(campusId);
 
@@ -348,7 +355,7 @@ async function updateCampusStatus(campusId: string, updateData: any, userId: str
     await dbAdmin.collection('admin_logs').add({
       action: 'campus_status_updated',
       campusId,
-      newStatus: updateData.status,
+      newStatus: (updateData as { status?: string }).status,
       userId,
       timestamp: new Date(),
       level: 'info'
@@ -356,8 +363,8 @@ async function updateCampusStatus(campusId: string, updateData: any, userId: str
 
     return {
       success: true,
-      message: `Campus status updated to ${updateData.status}`,
-      nextSteps: generateNextSteps(updateData.status)
+      message: `Campus status updated to ${(updateData as { status?: string }).status}`,
+      nextSteps: generateNextSteps((updateData as { status?: string }).status || '')
     };
 
   } catch (error) {
@@ -396,7 +403,7 @@ async function assessCampusReadiness(campusId: string, userId: string) {
   }
 }
 
-async function deployCampusInfrastructure(campusId: string, deploymentData: any, userId: string) {
+async function deployCampusInfrastructure(campusId: string, deploymentData: Record<string, unknown>, userId: string) {
   try {
     // Create campus-specific infrastructure
     const infrastructure = await createCampusInfrastructure(campusId, deploymentData);
@@ -553,7 +560,7 @@ async function getPerformanceStatistics(campusId: string) {
   };
 }
 
-function calculateCampusHealth(users: any, spaces: any, engagement: any, performance: any) {
+function calculateCampusHealth(users: UserStats, spaces: SpaceStats, engagement: EngagementStats, performance: PerformanceStats) {
   const userHealth = (users.active / users.total) * 100 || 0;
   const spaceHealth = (spaces.active / spaces.total) * 100 || 0;
   const engagementHealth = Math.min(engagement.retention.day7, 100);
@@ -562,10 +569,10 @@ function calculateCampusHealth(users: any, spaces: any, engagement: any, perform
   return Math.round((userHealth + spaceHealth + engagementHealth + performanceHealth) / 4);
 }
 
-function calculateReadinessScore(readiness: any) {
+function calculateReadinessScore(readiness: Record<string, Record<string, number>>) {
   const categories = Object.values(readiness);
-  const totalScore = categories.reduce((sum: number, category: any) => {
-    const categoryScore = Object.values(category).reduce((catSum: number, score: any) => catSum + score, 0) / Object.keys(category).length;
+  const totalScore = categories.reduce((sum: number, category: Record<string, number>) => {
+    const categoryScore = Object.values(category).reduce((catSum: number, score: number) => catSum + score, 0) / Object.keys(category).length;
     return sum + categoryScore;
   }, 0);
 
@@ -625,7 +632,7 @@ function assessComplianceRequirements() {
   };
 }
 
-function extractLessonsLearned(campusData: any) {
+function extractLessonsLearned(_campusData: unknown) {
   return [
     'Strong academic partnerships drive initial adoption',
     'Peer-to-peer discovery is the primary growth driver',
@@ -634,7 +641,7 @@ function extractLessonsLearned(campusData: any) {
   ];
 }
 
-function identifySuccessFactors(campusData: any) {
+function identifySuccessFactors(_campusData: unknown) {
   return [
     'High user engagement in academic spaces',
     'Strong retention in study groups',
@@ -643,7 +650,7 @@ function identifySuccessFactors(campusData: any) {
   ];
 }
 
-function identifyChallenges(campusData: any) {
+function identifyChallenges(_campusData: unknown) {
   return [
     'Competing with established social platforms',
     'Seasonal usage patterns during exams/breaks',
@@ -652,11 +659,11 @@ function identifyChallenges(campusData: any) {
   ];
 }
 
-function calculateTAM(campuses: any[]) {
+function calculateTAM(campuses: Array<Record<string, unknown>>) {
   return campuses.reduce((total, campus) => total + (campus.estimatedStudents || 0), 0) * 20; // $20 LTV per student
 }
 
-function calculateMarketSize(campusData: any) {
+function calculateMarketSize(campusData: Record<string, unknown>) {
   return (campusData.estimatedStudents || 0) * 20; // $20 LTV per student
 }
 
@@ -690,7 +697,7 @@ async function performReadinessAssessment(campusId: string) {
   };
 }
 
-function generateReadinessRecommendations(assessment: any) {
+function generateReadinessRecommendations(assessment: Record<string, Record<string, number>>) {
   const recommendations = [];
 
   if (assessment.technical < 80) {
@@ -709,7 +716,7 @@ function generateReadinessRecommendations(assessment: any) {
   return recommendations;
 }
 
-async function createCampusInfrastructure(campusId: string, config: any) {
+async function createCampusInfrastructure(campusId: string, config: Record<string, unknown>) {
   // Simulate infrastructure creation
   return {
     database: `campus_${campusId}_db`,
@@ -728,7 +735,7 @@ async function setupDataIsolation(campusId: string) {
   };
 }
 
-async function configureCampusSettings(campusId: string, settings: any) {
+async function configureCampusSettings(campusId: string, settings: Record<string, unknown>) {
   // Store campus-specific settings
   return dbAdmin.collection('campus_settings').doc(campusId).set({
     ...settings,
@@ -778,7 +785,7 @@ async function generateExpansionRecommendations() {
   ];
 }
 
-function identifyExpansionRisks(campuses: any[]) {
+function identifyExpansionRisks(campuses: Array<Record<string, unknown>>) {
   return [
     {
       risk: 'Technical complexity scaling',
@@ -801,7 +808,7 @@ function identifyExpansionRisks(campuses: any[]) {
   ];
 }
 
-function generateNextActions(activeCampuses: any[]) {
+function generateNextActions(activeCampuses: Array<Record<string, unknown>>) {
   return [
     'Complete readiness assessment for top 3 pipeline campuses',
     'Finalize multi-tenant architecture implementation',
@@ -811,7 +818,7 @@ function generateNextActions(activeCampuses: any[]) {
   ];
 }
 
-function calculateRevenueProjection(campuses: any[]) {
+function calculateRevenueProjection(campuses: Array<Record<string, unknown>>) {
   return campuses.reduce((total, campus) => {
     const students = campus.estimatedStudents || 0;
     const penetration = 0.15; // 15% market penetration
@@ -828,7 +835,7 @@ function isWithinDays(date: Date, days: number) {
   return diffDays <= days;
 }
 
-function groupBy(array: any[], key: string) {
+function groupBy<T extends Record<string, unknown>>(array: T[], key: string) {
   return array.reduce((groups, item) => {
     const value = item[key] || 'Unknown';
     groups[value] = (groups[value] || 0) + 1;

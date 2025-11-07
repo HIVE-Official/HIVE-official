@@ -48,3 +48,4 @@ export async function createNotification(notificationData: {
 }
 
 export type { HiveNotification };
+import 'server-only';

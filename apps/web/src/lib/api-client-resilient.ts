@@ -1,5 +1,85 @@
 import { HivePlatformErrorHandler, ErrorCategory } from './error-resilience-system';
 
+// Lightweight DTOs for common API responses
+export interface SpacesListItem {
+  id: string;
+  name: string;
+  category?: string;
+  imageUrl?: string;
+  memberCount?: number;
+}
+
+export interface SpacesListResponse {
+  spaces: SpacesListItem[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface SpaceMember {
+  userId: string;
+  role: 'admin' | 'member';
+  joinedAt?: string;
+}
+
+export interface SpaceMembersResponse {
+  members: SpaceMember[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface SpaceEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startTime?: string;
+  endTime?: string;
+  isSoldOut?: boolean;
+}
+
+export interface SpaceEventsResponse {
+  events: SpaceEvent[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface ToolListItem {
+  id: string;
+  name: string;
+  summary?: string;
+  category?: string;
+}
+
+export interface ToolsListResponse {
+  tools: ToolListItem[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface ToolAnalyticsResponse {
+  deployments: number;
+  usage: number;
+  ratings: Array<{ value: number; count: number }>;
+}
+
+export interface FeedListResponse<T = unknown> {
+  items: T[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface UsersListItem {
+  id: string;
+  name?: string;
+  handle?: string;
+  avatarUrl?: string;
+}
+
+export interface UsersListResponse {
+  users: UsersListItem[];
+  total: number;
+  hasMore: boolean;
+}
+
 // Resilient API Client with built-in error handling, retries, and fallbacks
 export class ResilientHiveApiClient {
   private baseUrl: string;
@@ -40,6 +120,7 @@ export class ResilientHiveApiClient {
       async () => {
         const response = await fetch(url, {
           ...options,
+          credentials: 'include',
           headers: {
             ...this.defaultHeaders,
             ...options.headers
@@ -67,7 +148,7 @@ export class ResilientHiveApiClient {
   }
 
   // Spaces API with resilience
-  async getSpaces(params: { limit?: number; offset?: number } = {}): Promise<any> {
+  async getSpaces(params: { limit?: number; offset?: number } = {}): Promise<SpacesListResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -77,25 +158,25 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async getSpace(spaceId: string): Promise<any> {
+  async getSpace(spaceId: string): Promise<SpacesListItem | null> {
     return this.request(`/spaces/${spaceId}`, {}, {
       fallback: null
     });
   }
 
-  async joinSpace(spaceId: string): Promise<any> {
+  async joinSpace(spaceId: string): Promise<{ success: true } | { success: false; error: string }> {
     return this.request(`/spaces/${spaceId}/join`, {
       method: 'POST'
     });
   }
 
-  async leaveSpace(spaceId: string): Promise<any> {
+  async leaveSpace(spaceId: string): Promise<{ success: true } | { success: false; error: string }> {
     return this.request(`/spaces/${spaceId}/leave`, {
       method: 'POST'
     });
   }
 
-  async getSpaceMembers(spaceId: string, params: { limit?: number; offset?: number } = {}): Promise<any> {
+  async getSpaceMembers(spaceId: string, params: { limit?: number; offset?: number } = {}): Promise<SpaceMembersResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -105,7 +186,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async getSpaceEvents(spaceId: string, params: { limit?: number; upcoming?: boolean } = {}): Promise<any> {
+  async getSpaceEvents(spaceId: string, params: { limit?: number; upcoming?: boolean } = {}): Promise<SpaceEventsResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -115,14 +196,14 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async createSpaceEvent(spaceId: string, eventData: any): Promise<any> {
+  async createSpaceEvent(spaceId: string, eventData: Partial<SpaceEvent>): Promise<{ id: string } & SpaceEvent> {
     return this.request(`/spaces/${spaceId}/events`, {
       method: 'POST',
       body: JSON.stringify(eventData)
     });
   }
 
-  async getSpaceTools(spaceId: string, params: { limit?: number; category?: string } = {}): Promise<any> {
+  async getSpaceTools(spaceId: string, params: { limit?: number; category?: string } = {}): Promise<ToolsListResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -132,7 +213,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async deployToolToSpace(spaceId: string, deploymentData: any): Promise<any> {
+  async deployToolToSpace(spaceId: string, deploymentData: Record<string, unknown>): Promise<{ success: boolean; deploymentId?: string; error?: string }> {
     return this.request(`/spaces/${spaceId}/tools`, {
       method: 'POST',
       body: JSON.stringify(deploymentData)
@@ -145,7 +226,7 @@ export class ResilientHiveApiClient {
     offset?: number; 
     category?: string; 
     verified?: boolean 
-  } = {}): Promise<any> {
+  } = {}): Promise<ToolsListResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -155,20 +236,20 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async getTool(toolId: string): Promise<any> {
+  async getTool(toolId: string): Promise<ToolListItem | null> {
     return this.request(`/tools/${toolId}`, {}, {
       fallback: null
     });
   }
 
-  async deployTool(toolId: string, config: any): Promise<any> {
+  async deployTool(toolId: string, config: Record<string, unknown>): Promise<{ success: boolean; deploymentId?: string; error?: string }> {
     return this.request(`/tools/${toolId}/deploy`, {
       method: 'POST',
       body: JSON.stringify(config)
     });
   }
 
-  async getToolAnalytics(toolId: string): Promise<any> {
+  async getToolAnalytics(toolId: string): Promise<ToolAnalyticsResponse> {
     return this.request(`/tools/${toolId}/analytics`, {}, {
       fallback: { deployments: 0, usage: 0, ratings: [] }
     });
@@ -180,7 +261,7 @@ export class ResilientHiveApiClient {
     offset?: number; 
     spaceId?: string; 
     type?: string 
-  } = {}): Promise<any> {
+  } = {}): Promise<FeedListResponse> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -190,20 +271,20 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async createPost(postData: any): Promise<any> {
+  async createPost(postData: Record<string, unknown>): Promise<{ id: string }> {
     return this.request('/feed/posts', {
       method: 'POST',
       body: JSON.stringify(postData)
     });
   }
 
-  async likePost(postId: string): Promise<any> {
+  async likePost(postId: string): Promise<{ success: boolean }> {
     return this.request(`/feed/posts/${postId}/like`, {
       method: 'POST'
     });
   }
 
-  async commentOnPost(postId: string, comment: string): Promise<any> {
+  async commentOnPost(postId: string, comment: string): Promise<{ id: string; content: string }> {
     return this.request(`/feed/posts/${postId}/comments`, {
       method: 'POST',
       body: JSON.stringify({ content: comment })
@@ -211,7 +292,7 @@ export class ResilientHiveApiClient {
   }
 
   // Search API with resilience and intelligent fallbacks
-  async searchSpaces(query: string, filters: any = {}): Promise<any> {
+  async searchSpaces(query: string, filters: Record<string, unknown> = {}): Promise<SpacesListResponse> {
     return this.request('/spaces/search', {
       method: 'POST',
       body: JSON.stringify({ query, ...filters })
@@ -220,7 +301,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async searchTools(query: string, filters: any = {}): Promise<any> {
+  async searchTools(query: string, filters: Record<string, unknown> = {}): Promise<ToolsListResponse> {
     return this.request('/tools/search', {
       method: 'POST',
       body: JSON.stringify({ query, ...filters })
@@ -229,7 +310,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async searchFeed(query: string, filters: any = {}): Promise<any> {
+  async searchFeed(query: string, filters: Record<string, unknown> = {}): Promise<FeedListResponse> {
     return this.request('/feed/search', {
       method: 'POST',
       body: JSON.stringify({ query, ...filters })
@@ -238,7 +319,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async searchUsers(query: string, filters: any = {}): Promise<any> {
+  async searchUsers(query: string, filters: Record<string, unknown> = {}): Promise<UsersListResponse> {
     return this.request('/users/search', {
       method: 'POST',
       body: JSON.stringify({ query, ...filters })
@@ -248,28 +329,28 @@ export class ResilientHiveApiClient {
   }
 
   // Profile API with resilience
-  async getProfile(userId?: string): Promise<any> {
+  async getProfile(userId?: string): Promise<Record<string, unknown> | null> {
     const endpoint = userId ? `/profile/${userId}` : '/profile';
     return this.request(endpoint, {}, {
       fallback: null
     });
   }
 
-  async updateProfile(profileData: any): Promise<any> {
+  async updateProfile(profileData: Record<string, unknown>): Promise<{ success: boolean }> {
     return this.request('/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData)
     });
   }
 
-  async getProfileSpaces(userId?: string): Promise<any> {
+  async getProfileSpaces(userId?: string): Promise<SpacesListResponse> {
     const endpoint = userId ? `/profile/${userId}/spaces` : '/profile/spaces';
     return this.request(endpoint, {}, {
       fallback: { spaces: [], total: 0 }
     });
   }
 
-  async getProfileTools(userId?: string): Promise<any> {
+  async getProfileTools(userId?: string): Promise<ToolsListResponse> {
     const endpoint = userId ? `/profile/${userId}/tools` : '/profile/tools';
     return this.request(endpoint, {}, {
       fallback: { tools: [], total: 0 }
@@ -281,7 +362,7 @@ export class ResilientHiveApiClient {
     start?: string; 
     end?: string; 
     spaceId?: string 
-  } = {}): Promise<any> {
+  } = {}): Promise<{ events: Array<Record<string, unknown>> }> {
     const query = new URLSearchParams(
       Object.entries(params).map(([k, v]) => [k, String(v)])
     ).toString();
@@ -291,7 +372,7 @@ export class ResilientHiveApiClient {
     });
   }
 
-  async createCalendarEvent(eventData: any): Promise<any> {
+  async createCalendarEvent(eventData: Record<string, unknown>): Promise<{ id: string }> {
     return this.request('/calendar/events', {
       method: 'POST',
       body: JSON.stringify(eventData)
@@ -299,14 +380,14 @@ export class ResilientHiveApiClient {
   }
 
   // Enhanced methods with offline support and cache
-  async getSpacesWithOfflineSupport(): Promise<any> {
+  async getSpacesWithOfflineSupport(): Promise<SpacesListResponse> {
     return this.apiWrapper(
       () => this.getSpaces(),
       {}
     );
   }
 
-  async getFeedWithOfflineSupport(): Promise<any> {
+  async getFeedWithOfflineSupport(): Promise<FeedListResponse> {
     return this.apiWrapper(
       () => this.getFeed(),
       {}
@@ -324,7 +405,7 @@ export class ResilientHiveApiClient {
   }
 
   // Health check with circuit breaker monitoring
-  async healthCheck(): Promise<{ status: string; circuitBreakers: any }> {
+  async healthCheck(): Promise<{ status: string; circuitBreakers: Record<string, unknown> }> {
     try {
       const _health = await this.request('/health', {}, { timeout: 5000, retries: 1 });
       return {

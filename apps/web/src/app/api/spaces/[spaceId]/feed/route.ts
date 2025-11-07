@@ -3,6 +3,9 @@ import { type Post } from "@hive/core";
 import { logger } from "@/lib/structured-logger";
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
 import { z } from 'zod';
+import { requireSpaceMembership } from "@/lib/space-security";
+import { HttpStatus } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 const GetActivityFeedSchema = z.object({
   limit: z.coerce.number().min(1).max(50).default(20),
@@ -40,7 +43,9 @@ export const GET = withAuthAndErrors(async (
   const { spaceId } = await params;
 
   if (!spaceId) {
-    return respond.error("Space ID is required", "INVALID_INPUT", { status: 400 });
+    return respond.error("Space ID is required", "INVALID_INPUT", {
+      status: HttpStatus.BAD_REQUEST,
+    });
   }
 
     const { searchParams } = new URL(request.url);
@@ -52,16 +57,10 @@ export const GET = withAuthAndErrors(async (
     const activityTypes = types ? types.split(',') : ['post', 'event', 'member_join', 'tool_deploy', 'event_rsvp'];
     const sinceDate = since ? new Date(since) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Default: last 7 days
 
-    // Check if user is member of the space
-    const memberDoc = await dbAdmin
-      .collection('spaces')
-      .doc(spaceId)
-      .collection('members')
-      .doc(userId)
-      .get();
-
-    if (!memberDoc.exists) {
-      return respond.error("Not a member of this space", "FORBIDDEN", { status: 403 });
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code = membership.status === HttpStatus.NOT_FOUND ? "RESOURCE_NOT_FOUND" : "FORBIDDEN";
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
     const activities: ActivityItem[] = [];
@@ -80,6 +79,9 @@ export const GET = withAuthAndErrors(async (
 
         for (const postDoc of postsSnapshot.docs) {
           const postData = postDoc.data();
+          if (postData.campusId && postData.campusId !== CURRENT_CAMPUS_ID) {
+            continue;
+          }
           
           // Get author info
           let author = { id: postData.authorId, name: 'Unknown User', avatar: undefined, handle: undefined };
@@ -138,6 +140,9 @@ export const GET = withAuthAndErrors(async (
 
         for (const eventDoc of eventsSnapshot.docs) {
           const eventData = eventDoc.data();
+          if (eventData.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+            continue;
+          }
           
           // Get organizer info
           let organizer = { id: eventData.organizerId, name: 'Unknown User', avatar: undefined, handle: undefined };
@@ -197,6 +202,9 @@ export const GET = withAuthAndErrors(async (
 
         for (const memberDoc of membersSnapshot.docs) {
           const memberData = memberDoc.data();
+          if (memberData.campusId && memberData.campusId !== CURRENT_CAMPUS_ID) {
+            continue;
+          }
           
           // Get member info
           let member = { id: memberDoc.id, name: 'Unknown User', avatar: undefined, handle: undefined };

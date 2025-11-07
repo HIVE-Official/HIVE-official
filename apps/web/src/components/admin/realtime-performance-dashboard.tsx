@@ -28,6 +28,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useRealtimePerformance } from '@/hooks/use-realtime-performance';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
 interface SystemMetrics {
   totalConnections: number;
@@ -83,7 +84,7 @@ export function RealtimePerformanceDashboard() {
   const fetchSystemMetrics = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/realtime/metrics?includeConnections=true');
+      const response = await secureApiFetch('/api/realtime/metrics?includeConnections=true');
       if (response.ok) {
         const data = await response.json();
         setSystemMetrics(data.metrics.current);
@@ -96,7 +97,7 @@ export function RealtimePerformanceDashboard() {
 
   const handleOptimizationToggle = async () => {
     try {
-      const response = await fetch('/api/realtime/metrics', {
+      const response = await secureApiFetch('/api/realtime/metrics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +121,7 @@ export function RealtimePerformanceDashboard() {
 
   const handleForceHealthCheck = async () => {
     try {
-      await fetch('/api/realtime/metrics', {
+      await secureApiFetch('/api/realtime/metrics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'force_health_check' })

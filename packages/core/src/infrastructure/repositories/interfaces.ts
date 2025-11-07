@@ -10,6 +10,7 @@ import { EnhancedRitual } from '../../domain/rituals/aggregates/enhanced-ritual'
 import { EnhancedSpace } from '../../domain/spaces/aggregates/enhanced-space';
 import { EnhancedFeed } from '../../domain/feed/enhanced-feed';
 import { Participation } from '../../domain/rituals/entities/participation';
+import { RitualPhase, RitualUnion, RitualArchetype } from '../../domain/rituals/archetypes';
 
 // Base repository interface
 export interface IRepository<T> {
@@ -95,6 +96,14 @@ export interface IRitualRepository extends IRepository<EnhancedRitual> {
   subscribeToActiveRituals(campusId: string, callback: (rituals: EnhancedRitual[]) => void): () => void;
 }
 
+export interface IRitualConfigRepository extends IRepository<RitualUnion> {
+  findByCampus(campusId: string, options?: { phases?: RitualPhase[] }): Promise<Result<RitualUnion[]>>;
+  findActive(campusId: string, referenceDate?: Date): Promise<Result<RitualUnion[]>>;
+  findBySlug(slug: string, campusId: string): Promise<Result<RitualUnion>>;
+  findByArchetype(archetype: RitualArchetype, campusId: string): Promise<Result<RitualUnion[]>>;
+  findActiveByArchetype(archetype: RitualArchetype, campusId: string, referenceDate?: Date): Promise<Result<RitualUnion[]>>;
+}
+
 // Unit of Work for transaction management
 export interface IUnitOfWork {
   profiles: IProfileRepository;
@@ -102,6 +111,7 @@ export interface IUnitOfWork {
   spaces: ISpaceRepository;
   feeds: IFeedRepository;
   rituals: IRitualRepository;
+  ritualConfigs?: IRitualConfigRepository;
 
   begin(): Promise<void>;
   commit(): Promise<void>;

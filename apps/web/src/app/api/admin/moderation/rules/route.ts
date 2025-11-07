@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withAdminCampusIsolation(async (request) => {
 
   try {
     // Mock auto-moderation rules

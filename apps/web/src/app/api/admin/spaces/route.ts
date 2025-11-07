@@ -3,8 +3,9 @@ import { z } from 'zod';
 import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withSecureAuth } from '@/lib/api-auth-secure';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 /**
  * Admin Space Management API
@@ -44,8 +45,8 @@ const spaceCreateSchema = z.object({
  * Get spaces with filtering and pagination
  * GET /api/admin/spaces
  */
-export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const adminUserId = getUserId(request);
+export const GET = withSecureAuth(async (request, token) => {
+  const adminUserId = token?.uid || 'unknown';
 
   // Parse query parameters
   const url = new URL(request.url);
@@ -70,6 +71,7 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
           .collection('spaces')
           .doc(type)
           .collection('spaces')
+          .where('campusId', '==', CURRENT_CAMPUS_ID)
           .get();
 
         const spaces = spacesSnapshot.docs.map(doc => ({
@@ -189,7 +191,8 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
       }, {} as Record<string, any>)
     };
 
-  return respond.success({
+  return NextResponse.json({
+    success: true,
     spaces: spacesWithDetails,
     pagination: {
       limit,
@@ -205,14 +208,14 @@ export const GET = withAdminAuthAndErrors(async (request: AuthenticatedRequest, 
     },
     summary
   });
-});
+}, { requireAdmin: true });
 
 /**
  * Create new space or update existing space
  * POST /api/admin/spaces
  */
-export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const adminUserId = getUserId(request);
+export const POST = withSecureAuth(async (request, token) => {
+  const adminUserId = token?.uid || 'unknown';
   const body = await request.json();
   const action = body.action || 'create';
 
@@ -248,7 +251,8 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
 
       logger.info('👑 Admin created space', { adminUserId, spaceId: spaceRef.id });
 
-    return respond.success({
+    return NextResponse.json({
+      success: true,
       message: 'Space created successfully',
       spaceId: spaceRef.id,
       spaceType,
@@ -287,7 +291,8 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
 
       logger.info('👑 Adminupdated space', { adminUserId, spaceId });
 
-    return respond.success({
+    return NextResponse.json({
+      success: true,
       message: 'Space updated successfully',
       spaceId,
       spaceType,
@@ -297,18 +302,18 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
   }
 
   // Handle unknown action
-  return respond.error(`Unknown action: ${action}`, "INVALID_INPUT", { status: 400 });
-});
+  return NextResponse.json({ success: false, error: `Unknown action: ${action}` }, { status: 400 });
+}, { requireAdmin: true });
 
 /**
  * Space actions (activate, deactivate, archive, delete)
  * DELETE /api/admin/spaces
  */
-export const DELETE = withAdminAuthAndErrors(
-  async (request: AuthenticatedRequest, context, respond) => {
+export const DELETE = withSecureAuth(
+  async (request, token) => {
     const body = await request.json();
     const { spaceId, spaceType, action, reason } = spaceActionSchema.parse(body);
-    const adminUserId = getUserId(request);
+    const adminUserId = token?.uid || 'unknown';
 
     const spaceRef = dbAdmin
       .collection('spaces')
@@ -382,7 +387,8 @@ export const DELETE = withAdminAuthAndErrors(
 
     logger.info('👑 Admin performedon space', {  action, spaceId  });
 
-  return respond.success({
+  return NextResponse.json({
+    success: true,
     message: actionMessage,
     action,
     spaceId,
@@ -392,7 +398,7 @@ export const DELETE = withAdminAuthAndErrors(
     timestamp: new Date().toISOString()
   });
   }
-);
+ , { requireAdmin: true });
 
 /**
  * Calculate space health score based on activity and engagement

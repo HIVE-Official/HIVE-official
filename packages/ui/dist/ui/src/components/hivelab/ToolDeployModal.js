@@ -1,0 +1,60 @@
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import * as React from 'react';
+import { Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../atomic/atoms/index.js';
+import { ArrowLeft, CheckCircle, Rocket, Settings, Shield, Users as UsersIcon, User as UserIcon } from 'lucide-react';
+export function ToolDeployModal({ open, onOpenChange, toolName, availableTargets, onDeploy, initialConfig }) {
+    const [step, setStep] = React.useState('target');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [error, setError] = React.useState(null);
+    const [deploymentConfig, setDeploymentConfig] = React.useState(() => ({
+        targetType: initialConfig?.targetType ?? 'profile',
+        targetId: initialConfig?.targetId ?? (availableTargets[0]?.id || ''),
+        surface: initialConfig?.surface,
+        permissions: initialConfig?.permissions ?? { canInteract: true, canView: true, canEdit: false },
+        settings: initialConfig?.settings ?? { showInDirectory: true, allowSharing: true, collectAnalytics: true, notifyOnInteraction: false },
+    }));
+    React.useEffect(() => {
+        if (!open) {
+            setStep('target');
+            setIsLoading(false);
+            setError(null);
+        }
+    }, [open]);
+    const handleTargetSelect = (target) => {
+        setDeploymentConfig(prev => ({ ...prev, targetType: target.type, targetId: target.id }));
+        setStep('config');
+    };
+    const handleConfigUpdate = (updates) => {
+        setDeploymentConfig(prev => ({ ...prev, ...updates, permissions: { ...prev.permissions, ...updates.permissions }, settings: { ...prev.settings, ...updates.settings } }));
+    };
+    const handleDeploy = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            await onDeploy(deploymentConfig);
+            setStep('success');
+        }
+        catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to deploy tool');
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+    const renderTargetSelection = () => (_jsxs("div", { className: "space-y-4", children: [_jsxs("div", { children: [_jsx("h3", { className: "text-base font-semibold text-[var(--hive-text-primary)]", children: "Select Deployment Target" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Choose where you want to deploy this tool" })] }), _jsx("div", { className: "grid gap-3", children: availableTargets.map((target) => (_jsx(Card, { className: "p-4 cursor-pointer transition-colors hover:bg-[var(--hive-background-secondary)] border-[var(--hive-border-primary)]", onClick: () => handleTargetSelect(target), children: _jsxs("div", { className: "flex items-start gap-3", children: [_jsx("div", { className: "w-8 h-8 bg-[var(--hive-background-secondary)] rounded-lg flex items-center justify-center text-hive-text-secondary", children: target.type === 'profile' ? _jsx(UserIcon, { className: "h-4 w-4" }) : _jsx(UsersIcon, { className: "h-4 w-4" }) }), _jsxs("div", { className: "flex-1", children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)]", children: target.name }), target.description && (_jsx("div", { className: "text-sm text-[var(--hive-text-secondary)]", children: target.description }))] }), _jsx(ArrowLeft, { className: "h-4 w-4 text-[var(--hive-text-secondary)] rotate-180" })] }) }, target.id))) })] }));
+    const spaceSurfaces = [
+        { id: 'tools', name: 'Tools Gallery', description: 'Main tools section' },
+        { id: 'pinned', name: 'Pinned', description: 'Pinned at top of space' },
+        { id: 'posts', name: 'Posts Feed', description: 'Within the posts feed' },
+        { id: 'events', name: 'Events', description: 'Events section' },
+    ];
+    const renderConfiguration = () => (_jsxs("div", { className: "space-y-6", children: [deploymentConfig.targetType === 'space' && (_jsxs(Card, { className: "p-4", children: [_jsxs("h4", { className: "font-semibold text-[var(--hive-text-primary)] mb-2 flex items-center gap-2", children: [_jsx(Settings, { className: "h-4 w-4" }), " Surface Location"] }), _jsx("div", { className: "grid gap-2", children: spaceSurfaces.map((s) => (_jsxs("label", { className: "flex items-center gap-3 p-2 rounded-lg border border-[var(--hive-border-primary)] cursor-pointer hover:bg-[var(--hive-background-secondary)]", children: [_jsx("input", { type: "radio", name: "surface", value: s.id, checked: deploymentConfig.surface === s.id, onChange: (e) => handleConfigUpdate({ surface: e.target.value }) }), _jsxs("div", { children: [_jsx("div", { className: "font-medium text-[var(--hive-text-primary)]", children: s.name }), _jsx("div", { className: "text-sm text-[var(--hive-text-secondary)]", children: s.description })] })] }, s.id))) })] })), _jsxs(Card, { className: "p-4", children: [_jsxs("h4", { className: "font-semibold text-[var(--hive-text-primary)] mb-2 flex items-center gap-2", children: [_jsx(Settings, { className: "h-4 w-4" }), " Deployment Settings"] }), _jsxs("div", { className: "space-y-3", children: [_jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.settings.showInDirectory, onChange: (e) => handleConfigUpdate({ settings: { ...deploymentConfig.settings, showInDirectory: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Show in directory" })] }), _jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.settings.allowSharing, onChange: (e) => handleConfigUpdate({ settings: { ...deploymentConfig.settings, allowSharing: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Allow sharing" })] }), _jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.settings.collectAnalytics, onChange: (e) => handleConfigUpdate({ settings: { ...deploymentConfig.settings, collectAnalytics: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Collect analytics" })] }), _jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.settings.notifyOnInteraction, onChange: (e) => handleConfigUpdate({ settings: { ...deploymentConfig.settings, notifyOnInteraction: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Notify on interaction" })] })] })] }), _jsxs(Card, { className: "p-4", children: [_jsxs("h4", { className: "font-semibold text-[var(--hive-text-primary)] mb-2 flex items-center gap-2", children: [_jsx(Shield, { className: "h-4 w-4" }), " Permissions"] }), _jsxs("div", { className: "space-y-3", children: [_jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.permissions.canView, onChange: (e) => handleConfigUpdate({ permissions: { ...deploymentConfig.permissions, canView: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Can view" })] }), _jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.permissions.canInteract, onChange: (e) => handleConfigUpdate({ permissions: { ...deploymentConfig.permissions, canInteract: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Can interact" })] }), _jsxs("label", { className: "flex items-center gap-2", children: [_jsx("input", { type: "checkbox", checked: deploymentConfig.permissions.canEdit, onChange: (e) => handleConfigUpdate({ permissions: { ...deploymentConfig.permissions, canEdit: e.target.checked } }) }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Can edit" })] })] })] }), _jsxs("div", { className: "flex gap-2 justify-between", children: [_jsx(Button, { variant: "secondary", onClick: () => setStep('target'), children: "Back" }), _jsx(Button, { onClick: () => setStep('confirm'), className: "bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover", children: "Review" })] })] }));
+    const renderConfirmation = () => {
+        const target = availableTargets.find(t => t.id === deploymentConfig.targetId);
+        return (_jsxs("div", { className: "space-y-4", children: [_jsxs(Card, { className: "p-4", children: [_jsx("h4", { className: "font-semibold text-[var(--hive-text-primary)] mb-2", children: "Deployment Summary" }), _jsxs("div", { className: "space-y-2 text-sm", children: [_jsxs("div", { className: "flex justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-secondary)]", children: "Tool:" }), _jsx("span", { className: "text-[var(--hive-text-primary)] font-medium", children: toolName })] }), _jsxs("div", { className: "flex justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-secondary)]", children: "Target:" }), _jsx("span", { className: "text-[var(--hive-text-primary)] font-medium", children: target?.name })] }), _jsxs("div", { className: "flex justify-between", children: [_jsx("span", { className: "text-[var(--hive-text-secondary)]", children: "Visibility:" }), _jsx("span", { className: "text-[var(--hive-text-primary)] font-medium", children: deploymentConfig.settings.showInDirectory ? 'Public' : 'Private' })] })] })] }), error && (_jsx("div", { className: "p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm", children: error })), _jsxs("div", { className: "flex gap-2 justify-between", children: [_jsx(Button, { variant: "secondary", onClick: () => setStep('config'), children: "Back" }), _jsx(Button, { onClick: handleDeploy, disabled: isLoading, className: "bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover flex items-center gap-2", children: isLoading ? (_jsxs(_Fragment, { children: [_jsx("div", { className: "animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--hive-brand-on-gold)]" }), "Deploying..."] })) : (_jsxs(_Fragment, { children: [_jsx(Rocket, { className: "h-4 w-4" }), "Deploy Tool"] })) })] })] }));
+    };
+    const renderSuccess = () => (_jsxs("div", { className: "text-center space-y-3", children: [_jsx("div", { className: "w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto", children: _jsx(CheckCircle, { className: "h-6 w-6 text-green-400" }) }), _jsx("div", { className: "text-[var(--hive-text-primary)] font-semibold", children: "Tool Deployed Successfully" }), _jsx("p", { className: "text-sm text-[var(--hive-text-secondary)]", children: "Your tool is now live and accessible." }), _jsx(Button, { onClick: () => onOpenChange(false), className: "bg-[var(--hive-brand-primary)] text-hive-brand-on-gold hover:bg-hive-brand-hover", children: "Close" })] }));
+    return (_jsx(Dialog, { open: open, onOpenChange: onOpenChange, children: _jsxs(DialogContent, { className: "max-w-xl", children: [_jsxs(DialogHeader, { children: [_jsx(DialogTitle, { children: "Deploy Tool" }), _jsx(DialogDescription, { children: "Select a target and confirm deployment" })] }), step === 'target' && renderTargetSelection(), step === 'config' && renderConfiguration(), step === 'confirm' && renderConfirmation(), step === 'success' && renderSuccess(), _jsx(DialogFooter, { className: "justify-between", children: step !== 'target' && step !== 'success' ? (_jsxs(Button, { variant: "ghost", onClick: () => setStep('target'), children: [_jsx(ArrowLeft, { className: "h-4 w-4 mr-2" }), "Start Over"] })) : _jsx("span", {}) })] }) }));
+}
+ToolDeployModal.displayName = 'ToolDeployModal';
+//# sourceMappingURL=ToolDeployModal.js.map

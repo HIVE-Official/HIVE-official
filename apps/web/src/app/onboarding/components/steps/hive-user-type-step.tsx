@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { GraduationCap, Users, ArrowRight, Mail, CheckCircle, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HiveCard, HiveButton, HiveInput } from "@hive/ui";
+import { HiveCard, Button, Input } from "@hive/ui";
 import type { HiveOnboardingData } from "../hive-onboarding-wizard";
 
 interface HiveUserTypeStepProps {
@@ -105,29 +105,26 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-3xl font-bold text-[var(--hive-brand-primary)] mb-4">
-            ⚡ Jacob, get on it! ⚡
+          <h2 className="text-3xl font-bold text-[var(--hive-text-primary)] mb-4">
+            Alumni access is almost ready.
           </h2>
           <p className="text-[var(--hive-text-secondary)] text-lg mb-8">
-            We're building something special for alumni. Stay tuned for updates!
+            Drop your email and we’ll invite you the moment the UB alumni hub opens.
           </p>
           
           <HiveCard className="p-[var(--hive-spacing-6)] mb-8">
-            <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-4">
-              What's Coming for Alumni
-            </h3>
             <div className="space-y-[var(--hive-spacing-3)] text-sm text-[var(--hive-text-secondary)]">
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-                <span>Connect with fellow alumni</span>
+                <span>Reconnect with campus life in one feed</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-                <span>Mentor current students</span>
+                <span>Share mentorship moments with current students</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-[var(--hive-brand-primary)] rounded-full" />
-                <span>Stay connected with campus life</span>
+                <span>Access curated rituals, events, and spotlights</span>
               </div>
             </div>
           </HiveCard>
@@ -146,12 +143,12 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     Join the Waitlist
                   </h3>
                   <p className="text-sm text-[var(--hive-text-secondary)]">
-                    Be the first to know when HIVE alumni access is available.
+                    Be the first to know when the alumni experience ships.
                   </p>
                 </div>
                 
                 <div className="space-y-4">
-                  <HiveInput
+                  <Input
                     type="email"
                     placeholder="Enter your email address"
                     value={waitlistEmail}
@@ -160,7 +157,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     size="lg"
                   />
                   
-                  <HiveButton
+                  <Button
                     onClick={submitWaitlist}
                     disabled={!waitlistEmail.trim() || !waitlistEmail.includes('@') || isSubmittingWaitlist}
                     variant="default"
@@ -169,7 +166,7 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
                     leftIcon={isSubmittingWaitlist ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}><Mail className="w-4 h-4" /></motion.div> : <Mail className="w-4 h-4" />}
                   >
                     {isSubmittingWaitlist ? "Adding to waitlist..." : "Join Waitlist"}
-                  </HiveButton>
+                  </Button>
                 </div>
               </HiveCard>
             </motion.div>
@@ -183,26 +180,26 @@ export function HiveUserTypeStep({ data, updateData, onNext }: HiveUserTypeStepP
               <HiveCard className="p-[var(--hive-spacing-6)] mb-8 text-center">
                 <CheckCircle className="w-12 h-12 text-[var(--hive-status-success)] mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-[var(--hive-text-primary)] mb-2">
-                  You're on the list!
+                  You’re on the list.
                 </h3>
-                <p className="text-sm text-[var(--hive-text-secondary)] mb-4">
-                  We'll notify you at <strong>{waitlistEmail}</strong> when alumni access is ready.
+                <p className="text-sm text-[var(--hive-text-secondary)] mb-2">
+                  We’ll email <strong>{waitlistEmail}</strong> as soon as alumni spaces unlock.
                 </p>
                 <div className="text-xs text-[var(--hive-text-muted)]">
-                  Thank you for your interest in HIVE Alumni!
+                  Thanks for helping shape the UB network.
                 </div>
               </HiveCard>
             </motion.div>
           )}
           
-          <HiveButton
+          <Button
             variant="secondary"
             size="lg"
             onClick={() => setSelectedType(null)}
             leftIcon={<ArrowRight className="w-4 h-4 rotate-180" />}
           >
             Go Back
-          </HiveButton>
+          </Button>
         </motion.div>
       </motion.div>
     );

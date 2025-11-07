@@ -1,0 +1,40 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hive/core": ["./src/types/core-stub.d.ts"],
+      "@hive/core/*": ["./src/types/core-stub.d.ts"]
+    }
+  },
+  "include": [
+    "src/atomic/atoms/button.tsx",
+    "src/atomic/atoms/hive-card.tsx",
+    "src/atomic/atoms/hive-input.tsx",
+    "src/atomic/atoms/label.tsx",
+    "src/atomic/atoms/hive-logo.tsx",
+    "src/atomic/atoms/skeleton.tsx",
+    "src/components/ui/input-otp.tsx",
+    "src/molecules/countdown.tsx"
+  ],
+  "exclude": [
+    "src/atomic/organisms/**",
+    "src/atomic/templates/**",
+    "src/atomic/molecules/**",
+    "src/shells/**",
+    "src/navigation/**",
+    "src/providers/**",
+    "src/hooks/**"
+  ]
+}

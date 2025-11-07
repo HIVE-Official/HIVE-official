@@ -7,6 +7,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { logger } from '@/lib/logger';
 import { sseRealtimeService } from '@/lib/sse-realtime-service';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Content types that can be reported
 export type ContentType = 
@@ -247,8 +248,11 @@ export class ContentModerationService {
         updatedAt: new Date().toISOString()
       };
 
-      // Store report
-      await dbAdmin.collection('contentReports').doc(reportId).set(report);
+      // Store report with campus isolation metadata
+      await dbAdmin.collection('contentReports').doc(reportId).set({
+        ...report,
+        campusId: CURRENT_CAMPUS_ID
+      });
 
       // Trigger AI analysis
       const aiAnalysis = await this.performAIAnalysis(report);
@@ -354,6 +358,7 @@ export class ContentModerationService {
   ): Promise<ContentReport[]> {
     try {
       let query = dbAdmin.collection('contentReports')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', 'in', ['pending', 'under_review'])
         .orderBy('severity', 'desc')
         .orderBy('createdAt', 'asc')
@@ -649,6 +654,17 @@ export class ContentModerationService {
     const doc = await dbAdmin.collection(collection).doc(contentId).get();
     const data = doc.data();
     
+    // Enforce campus isolation if content carries campus metadata
+    if (data && (data as any).campusId && (data as any).campusId !== CURRENT_CAMPUS_ID) {
+      logger.error('SECURITY: Cross-campus content access blocked', {
+        contentId,
+        contentType,
+        contentCampus: (data as any).campusId,
+        currentCampus: CURRENT_CAMPUS_ID
+      });
+      throw new Error('Access denied - campus mismatch');
+    }
+
     return {
       ownerId: data?.userId || data?.authorId || data?.createdBy || 'unknown',
       content: data || {}
@@ -772,6 +788,7 @@ export class ContentModerationService {
 
   private async getActiveRules(): Promise<ModerationRule[]> {
     const snapshot = await dbAdmin.collection('moderationRules')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('isActive', '==', true)
       .orderBy('priority', 'desc')
       .get();
@@ -836,6 +853,7 @@ export class ContentModerationService {
 
   private async getReporterHistory(reporterId: string) {
     const snapshot = await dbAdmin.collection('contentReports')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('reporterId', '==', reporterId)
       .get();
     
@@ -859,3 +877,4 @@ export class ContentModerationService {
 
 // Export singleton instance
 export const contentModerationService = new ContentModerationService();
+import 'server-only';

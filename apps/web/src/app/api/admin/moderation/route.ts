@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
 import { contentModerationService } from '@/lib/content-moderation-service';
 import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 import { z } from 'zod';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 /**
  * Admin Moderation API
@@ -45,18 +46,10 @@ const ModerationRuleSchema = z.object({
 });
 
 // GET - Get moderation queue
-export async function GET(request: NextRequest) {
+export const GET = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin/moderator
-    const hasModeratorAccess = await checkModeratorPermissions(user.uid);
+    const hasModeratorAccess = await checkModeratorPermissions(token?.uid || '');
     if (!hasModeratorAccess) {
       return NextResponse.json(
         ApiResponseHelper.error('Moderator access required', 'FORBIDDEN'),
@@ -75,7 +68,7 @@ export async function GET(request: NextRequest) {
     // Get moderation queue
     let reports = await contentModerationService.getModerationQueue(
       queueId || undefined,
-      assignedTo === 'me' ? user.uid : assignedTo || undefined,
+      assignedTo === 'me' ? (token?.uid || '') : assignedTo || undefined,
       limit
     );
 
@@ -116,21 +109,13 @@ export async function GET(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // POST - Process moderation action
-export async function POST(request: NextRequest) {
+export const POST = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin/moderator
-    const hasModeratorAccess = await checkModeratorPermissions(user.uid);
+    const hasModeratorAccess = await checkModeratorPermissions(token?.uid || '');
     if (!hasModeratorAccess) {
       return NextResponse.json(
         ApiResponseHelper.error('Moderator access required', 'FORBIDDEN'),
@@ -154,7 +139,7 @@ export async function POST(request: NextRequest) {
     // Process the moderation action
     await contentModerationService.processModerationAction(
       reportId,
-      user.uid,
+      token?.uid || 'unknown',
       action,
       reason,
       notes
@@ -163,7 +148,7 @@ export async function POST(request: NextRequest) {
     // Log moderator action
     logger.info('Moderation action processed', {
       reportId,
-      moderatorId: user.uid,
+      moderatorId: token?.uid || 'unknown',
       action,
       reason: reason.substring(0, 100) // Log first 100 chars of reason
     });
@@ -175,7 +160,7 @@ export async function POST(request: NextRequest) {
         reportId,
         action,
         processedAt: new Date().toISOString(),
-        processedBy: user.uid
+        processedBy: token?.uid || 'unknown'
       }
     });
 
@@ -194,21 +179,13 @@ export async function POST(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // PUT - Update moderation rules (admin only)
-export async function PUT(request: NextRequest) {
+export const PUT = withAdminCampusIsolation(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Authentication required', 'UNAUTHORIZED'),
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
     // Check if user is admin
-    const isAdmin = await checkAdminPermissions(user.uid);
+    const isAdmin = await checkAdminPermissions(token?.uid || '');
     if (!isAdmin) {
       return NextResponse.json(
         ApiResponseHelper.error('Admin access required', 'FORBIDDEN'),
@@ -229,7 +206,7 @@ export async function PUT(request: NextRequest) {
         );
       }
 
-      await updateModerationRule(ruleId, validation.data, user.uid);
+      await updateModerationRule(ruleId, validation.data, token?.uid || 'unknown');
       
       return NextResponse.json({
         success: true,
@@ -246,7 +223,7 @@ export async function PUT(request: NextRequest) {
         );
       }
 
-      const newRuleId = await createModerationRule(validation.data, user.uid);
+      const newRuleId = await createModerationRule(validation.data, token?.uid || 'unknown');
       
       return NextResponse.json({
         success: true,
@@ -262,7 +239,7 @@ export async function PUT(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+});
 
 // Helper function to check moderator permissions
 async function checkModeratorPermissions(userId: string): Promise<boolean> {
@@ -272,6 +249,8 @@ async function checkModeratorPermissions(userId: string): Promise<boolean> {
     if (!userDoc.exists) return false;
     
     const userData = userDoc.data();
+    // Enforce campus isolation for moderator/admin roles
+    if (userData?.campusId !== CURRENT_CAMPUS_ID) return false;
     return userData?.role === 'admin' || 
            userData?.role === 'moderator' || 
            userData?.permissions?.includes('moderate_content');
@@ -289,6 +268,8 @@ async function checkAdminPermissions(userId: string): Promise<boolean> {
     if (!userDoc.exists) return false;
     
     const userData = userDoc.data();
+    // Enforce campus isolation for admin role
+    if (userData?.campusId !== CURRENT_CAMPUS_ID) return false;
     return userData?.role === 'admin' || userData?.permissions?.includes('admin');
   } catch (error) {
     logger.error('Error checking admin permissions', { error: error instanceof Error ? error : new Error(String(error)), userId });
@@ -305,12 +286,15 @@ async function getQueueStatistics() {
 
     const [pendingReports, todayReports, resolvedToday] = await Promise.all([
       dbAdmin.collection('contentReports')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', 'in', ['pending', 'under_review'])
         .get(),
       dbAdmin.collection('contentReports')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('createdAt', '>=', todayStart.toISOString())
         .get(),
       dbAdmin.collection('contentReports')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('status', '==', 'resolved')
         .where('updatedAt', '>=', todayStart.toISOString())
         .get()

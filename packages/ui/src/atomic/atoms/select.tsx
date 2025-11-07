@@ -2,21 +2,24 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { ChevronDown } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { MotionDiv, AnimatePresence } from "../../shells/motion-safe"
 
 const selectVariants = cva(
-  "flex h-10 w-full items-center justify-between rounded-md border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-3 py-2 text-sm text-[var(--hive-text-primary)] ring-offset-background placeholder:text-[var(--hive-text-placeholder)] focus:outline-none focus:ring-2 focus:ring-[var(--hive-interactive-focus)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex w-full items-center justify-between gap-2 rounded-[32px] border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-5 py-2.5 text-sm text-[var(--hive-text-primary)] transition-[border,background,box-shadow] duration-200 ease-out placeholder:text-[var(--hive-text-muted)] focus:outline-none focus-visible:border-[var(--hive-border-focus)] focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-0 focus-visible:shadow-[0_0_28px_rgba(255,255,255,0.15)] disabled:cursor-not-allowed disabled:opacity-60",
   {
     variants: {
       variant: {
-        default: "border-[var(--hive-border-default)]",
-        destructive: "border-[var(--hive-status-error)] focus:ring-[var(--hive-status-error)]",
-        success: "border-[var(--hive-status-success)] focus:ring-[var(--hive-status-success)]",
+        default: "hover:border-[var(--hive-border-primary)]",
+        subtle: "border-[var(--hive-border-subtle)] bg-[var(--hive-background-primary)]",
+        destructive: "border-[var(--hive-status-error)] focus-visible:ring-[color-mix(in_srgb,var(--hive-status-error) 90%,transparent)] focus-visible:shadow-[0_0_0_1px_var(--hive-status-error),0_0_32px_rgba(239,68,68,0.28)]",
+        success: "border-[var(--hive-status-success)] focus-visible:ring-[color-mix(in_srgb,var(--hive-status-success) 80%,transparent)] focus-visible:shadow-[0_0_0_1px_var(--hive-status-success),0_0_32px_rgba(16,185,129,0.24)]",
       },
       size: {
-        default: "h-10 px-3 py-2",
-        sm: "h-9 px-3 text-xs",
-        lg: "h-11 px-4 text-base",
+        sm: "h-9 px-3 text-sm",
+        default: "h-11 px-4 text-sm",
+        lg: "h-12 px-5 text-base",
       },
     },
     defaultVariants: {
@@ -27,31 +30,40 @@ const selectVariants = cva(
 )
 
 const selectContentVariants = cva(
-  "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-[var(--hive-border-default)] bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] shadow-md",
+  "relative z-50 min-w-[12rem] overflow-hidden rounded-2xl border border-[var(--hive-border-default)] bg-[color-mix(in_srgb,var(--hive-background-primary) 92%,transparent)] shadow-[0_24px_60px_rgba(0,0,0,0.45)]",
   {
     variants: {
       position: {
         "item-aligned": "",
         popper: "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
       },
+      appearance: {
+        default: "text-[var(--hive-text-primary)]",
+      },
     },
     defaultVariants: {
       position: "popper",
+      appearance: "default",
     },
   }
 )
 
 const selectItemVariants = cva(
-  "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-[var(--hive-background-secondary)] focus:text-[var(--hive-text-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+  "relative flex w-full cursor-default select-none items-center rounded-lg py-2.5 pl-8 pr-3 text-sm outline-none transition-colors duration-150 data-[disabled]:pointer-events-none data-[disabled]:opacity-30",
   {
     variants: {
       variant: {
         default: "",
         destructive: "text-[var(--hive-status-error)] focus:text-[var(--hive-status-error)]",
       },
+      appearance: {
+        default: "focus:bg-[color-mix(in_srgb,var(--hive-background-tertiary) 40%,transparent)] focus:text-[var(--hive-text-primary)]",
+        subtle: "focus:bg-[color-mix(in_srgb,var(--hive-background-secondary) 55%,transparent)] focus:text-[var(--hive-text-primary)]",
+      }
     },
     defaultVariants: {
       variant: "default",
+      appearance: "default",
     },
   }
 )
@@ -153,21 +165,13 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
         {...props}
       >
         {children}
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 15 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4 opacity-50"
-        >
-          <path
-            d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819L7.5 8.63638L10.0682 6.06819C10.244 5.89245 10.244 5.60753 10.0682 5.43179C9.89245 5.25605 9.60753 5.25605 9.43179 5.43179L7.5 7.36362L5.56821 5.43179C5.39247 5.25605 5.10755 5.25605 4.93179 5.43179Z"
-            fill="currentColor"
-            fillRule="evenodd"
-            clipRule="evenodd"
-          />
-        </svg>
+        <ChevronDown
+          aria-hidden
+          className={cn(
+            "h-4 w-4 text-[var(--hive-text-tertiary)] transition-transform duration-200",
+            context.open && "rotate-180"
+          )}
+        />
       </button>
     )
   }
@@ -199,31 +203,39 @@ const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
 )
 SelectValue.displayName = "SelectValue"
 
+type MotionDivProps = React.ComponentProps<typeof MotionDiv>
 export interface SelectContentProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends MotionDivProps,
     VariantProps<typeof selectContentVariants> {}
 
+const SELECT_EASING = [0.23, 1, 0.32, 1] as const
+
 const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
-  ({ className, children, position, ...props }, ref) => {
+  ({ className, children, position, appearance, ...props }, ref) => {
     const context = React.useContext(SelectContext)
 
     if (!context) {
       throw new Error("SelectContent must be used within Select")
     }
 
-    if (!context.open) {
-      return null
-    }
-
     return (
-      <div
-        ref={ref}
-        role="listbox"
-        className={cn(selectContentVariants({ position }), className)}
-        {...props}
-      >
-        {children}
-      </div>
+      <AnimatePresence>
+        {context.open ? (
+          <MotionDiv
+            key="select-content"
+            ref={ref}
+            role="listbox"
+            initial={{ opacity: 0, y: -8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.96 }}
+            transition={{ duration: 0.18, ease: SELECT_EASING }}
+            className={cn(selectContentVariants({ position, appearance }), className)}
+            {...props}
+          >
+            {children}
+          </MotionDiv>
+        ) : null}
+      </AnimatePresence>
     )
   }
 )
@@ -237,7 +249,7 @@ export interface SelectItemProps
 }
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-  ({ className, children, value, disabled, variant, ...props }, ref) => {
+  ({ className, children, value, disabled, variant, appearance, ...props }, ref) => {
     const context = React.useContext(SelectContext)
 
     if (!context) {
@@ -252,7 +264,11 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         role="option"
         aria-selected={isSelected}
         data-disabled={disabled}
-        className={cn(selectItemVariants({ variant }), className)}
+        className={cn(
+          selectItemVariants({ variant, appearance }),
+          isSelected && "text-[var(--hive-brand-primary)]",
+          className
+        )}
         onClick={disabled ? undefined : () => context.onValueChange(value)}
         {...props}
       >

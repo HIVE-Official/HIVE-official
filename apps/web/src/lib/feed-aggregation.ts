@@ -433,3 +433,4 @@ export async function getLatestAggregatedContent(
   // Filter to only content newer than last update
   return items.filter(item => item.timestamp > lastUpdateTime.getTime()).slice(0, limit);
 }
+import 'server-only';

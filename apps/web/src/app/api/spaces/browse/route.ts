@@ -194,6 +194,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
         const membershipQuery = dbAdmin.collection('spaceMembers')
           .where('userId', '==', userId)
           .where('isActive', '==', true)
+          .where('campusId', '==', 'ub-buffalo')
           .limit(100); // Increased limit for performance
           
         const membershipsSnapshot = await membershipQuery.get();

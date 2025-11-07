@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
+import * as admin from 'firebase-admin';
 import { ritualFramework } from '@/lib/rituals-framework';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuth } from '@/lib/api-auth-middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Join ritual schema
 const JoinRitualSchema = z.object({
@@ -53,8 +55,11 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       });
     }
 
-    // Check if ritual exists and is active
-    const ritualDoc = await dbAdmin.collection('rituals').doc(ritualId).get();
+    // Check if ritual exists and is active (prefer v2, fallback to legacy)
+    const v2Ref = dbAdmin.collection('rituals_v2').doc(ritualId);
+    const v2Snap = await v2Ref.get();
+    const legacyRef = dbAdmin.collection('rituals').doc(ritualId);
+    const ritualDoc = v2Snap.exists ? v2Snap : await legacyRef.get();
     if (!ritualDoc.exists) {
       return NextResponse.json(
         ApiResponseHelper.error("Ritual not found", "RITUAL_NOT_FOUND"),
@@ -62,8 +67,15 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       );
     }
 
-    const ritual = { id: ritualDoc.id, ...ritualDoc.data() };
-    if ((ritual as any).status !== 'active') {
+    const ritual = { id: ritualDoc.id, ...ritualDoc.data() } as any;
+    if (ritual.campusId !== CURRENT_CAMPUS_ID) {
+      return NextResponse.json(
+        ApiResponseHelper.error("Access denied for this campus", "FORBIDDEN"),
+        { status: HttpStatus.FORBIDDEN }
+      );
+    }
+    const isActive = ritual.phase ? ritual.phase === 'active' : ritual.status === 'active';
+    if (!isActive) {
       return NextResponse.json(
         ApiResponseHelper.error("Ritual is not currently active", "RITUAL_NOT_ACTIVE"),
         { status: HttpStatus.BAD_REQUEST }
@@ -74,6 +86,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const existingParticipation = await dbAdmin.collection('ritual_participation')
       .where('ritualId', '==', ritualId)
       .where('userId', '==', userId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1)
       .get();
 
@@ -85,7 +98,10 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     }
 
     // Use ritual framework to join
-    const success = await ritualFramework.joinRitual(ritualId, userId, entryPoint);
+    const ua = request.headers.get('user-agent') || '';
+    const isMobile = /mobile|iphone|android|ipad/i.test(ua);
+    const deviceType = isMobile ? 'mobile' : 'desktop';
+    const success = await ritualFramework.joinRitual(ritualId, userId, entryPoint, deviceType);
     
     if (!success) {
       return NextResponse.json(
@@ -98,6 +114,7 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
     const participationSnapshot = await dbAdmin.collection('ritual_participation')
       .where('ritualId', '==', ritualId)
       .where('userId', '==', userId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .limit(1)
       .get();
 
@@ -120,6 +137,13 @@ export const POST = withAuth(async (request: NextRequest, authContext) => {
       participationId: participation?.id,
       endpoint: '/api/rituals/join' 
     });
+
+    // Mirror v2 metrics if present
+    if (v2Snap.exists) {
+      try {
+        await v2Ref.update({ 'metrics.participants': admin.firestore.FieldValue.increment(1), updatedAt: new Date() });
+      } catch {}
+    }
 
     return NextResponse.json({
       success: true,

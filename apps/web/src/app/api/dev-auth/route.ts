@@ -8,7 +8,7 @@ import { currentEnvironment } from '@/lib/env';
 import { NextResponse } from 'next/server';
 
 // Conditionally import dev-auth-helper only in development
-let handleDevAuth: any = null;
+let handleDevAuth: ((request: NextRequest) => Promise<Response> | Response) | null = null;
 
 if (process.env.NODE_ENV !== 'production') {
   const devAuthHelper = require('@/lib/dev-auth-helper');
@@ -26,6 +26,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(ApiResponseHelper.error("Development authentication not available in production", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
   }
 
+  if (!handleDevAuth) {
+    return NextResponse.json(ApiResponseHelper.error("Dev auth handler unavailable", "SERVICE_UNAVAILABLE"), { status: HttpStatus.SERVICE_UNAVAILABLE });
+  }
   return handleDevAuth(request);
 }
 

@@ -1,21 +1,26 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cn } from "../../lib/utils"
-import { useWelcomeMat, type WelcomeMatStep } from "../../hooks/use-welcome-mat"
-// Modal components will be refactored to use universal modal system
-import { Button } from "../atoms/button"
-import { Badge } from "../atoms/badge"
-import { Progress } from "../atoms/progress"
+import * as React from "react";
+import { cn } from "../../lib/utils";
+import { useWelcomeMat } from "../../hooks/use-welcome-mat";
+import { Button } from "../atoms/button";
+import { Badge } from "../atoms/badge";
+import { Progress } from "../atoms/progress";
 
-export interface WelcomeMatProps {
-  className?: string
-  onDismiss?: () => void
-  userName?: string
+export interface WelcomeMatProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Optional callback fired when the welcome mat is dismissed.
+   * If not provided the underlying welcome mat hook will close the flow.
+   */
+  onDismiss?: () => void;
+  /**
+   * Optional user name to personalize copy.
+   */
+  userName?: string;
 }
 
-const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
-  ({ className, ...props }, ref) => {
+export const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
+  ({ className, onDismiss, userName, ...props }, ref) => {
     const {
       isOpen,
       currentStep,
@@ -28,80 +33,88 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
       previousStep,
       skipStep,
       completeStep,
-    } = useWelcomeMat()
+    } = useWelcomeMat();
 
-    const currentStepData = currentFlow?.steps[currentStep]
-    const isFirstStep = currentStep === 0
-    const isLastStep = currentStep === totalSteps - 1
-    const progressPercentage = totalSteps > 0 ? ((currentStep + 1) / totalSteps) * 100 : 0
+    const currentStepData = currentFlow?.steps[currentStep];
+    const isFirstStep = currentStep === 0;
+    const isLastStep = totalSteps > 0 && currentStep === totalSteps - 1;
+    const progressPercentage =
+      totalSteps > 0 ? ((currentStep + 1) / totalSteps) * 100 : 0;
+
+    const dismiss = React.useCallback(() => {
+      onDismiss?.();
+      closeFlow();
+    }, [closeFlow, onDismiss]);
 
     const handleNext = React.useCallback(async () => {
-      if (!currentStepData) return
+      if (!currentStepData) return;
 
-      // Run validation if present
       if (currentStepData.validation) {
         try {
-          const isValid = await currentStepData.validation()
-          if (!isValid) {
-            return
-          }
+          const isValid = await currentStepData.validation();
+          if (!isValid) return;
         } catch (error) {
-          console.error("WelcomeMat: Step validation failed:", error)
-          return
+          console.error("WelcomeMat: validation failure", error);
+          return;
         }
       }
 
-      // Run action if present
       if (currentStepData.action) {
         try {
-          await currentStepData.action.handler()
+          await currentStepData.action.handler();
         } catch (error) {
-          console.error("WelcomeMat: Step action failed:", error)
-          return
+          console.error("WelcomeMat: action failure", error);
+          return;
         }
       }
 
-      // Complete the step and move to next
-      completeStep()
-    }, [currentStepData, completeStep])
+      completeStep();
+    }, [completeStep, currentStepData]);
 
     const handleSkip = React.useCallback(() => {
-      if (!currentStepData || !currentStepData.canSkip) return
-      skipStep()
-    }, [currentStepData, skipStep])
+      if (!currentStepData?.canSkip || currentStepData.required) return;
+      skipStep();
+    }, [currentStepData, skipStep]);
 
-    const handleClose = React.useCallback(() => {
-      closeFlow()
-    }, [closeFlow])
-
-    // Highlight target element if specified
     React.useEffect(() => {
-      if (!currentStepData?.target) return
+      if (!currentStepData?.target) return;
 
-      const targetElement = document.querySelector(currentStepData.target)
-      if (!targetElement) return
+      const targetElement = document.querySelector(currentStepData.target);
+      if (!targetElement) return;
 
-      // Add highlight class
-      targetElement.classList.add('welcome-mat-highlight')
-
-      // Cleanup
-      return () => {
-        targetElement.classList.remove('welcome-mat-highlight')
-      }
-    }, [currentStepData?.target])
+      targetElement.classList.add("welcome-mat-highlight");
+      return () => targetElement.classList.remove("welcome-mat-highlight");
+    }, [currentStepData?.target]);
 
     if (!isOpen || !currentFlow || !currentStepData) {
-      return null
+      return null;
     }
 
+    const hasCompleted = completedSteps.has(currentStepData.id);
+    const hasSkipped = skippedSteps.has(currentStepData.id);
+
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ display: isOpen ? 'flex' : 'none' }}>
-        <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
-        <div className={cn("relative bg-[var(--hive-background-secondary)] border border-[var(--hive-border)] rounded-lg shadow-xl max-w-lg", className)} {...props}>
-          <div className="p-6 border-b border-[var(--hive-border)]">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-full bg-[var(--hive-brand-primary-bg)] text-[var(--hive-brand-primary)]">
+      <div
+        ref={ref}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-mat-title"
+        className={cn(
+          "fixed inset-0 z-[60] flex items-center justify-center p-4",
+          className,
+        )}
+        {...props}
+      >
+        <div
+          className="absolute inset-0 bg-black/50 transition-opacity"
+          aria-hidden="true"
+          onClick={dismiss}
+        />
+        <div className="relative z-10 flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[var(--hive-border)] bg-[var(--hive-background-elevated)] shadow-hive-level4">
+          <header className="border-b border-[var(--hive-border)] px-6 py-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--hive-brand-primary-bg)] text-[var(--hive-brand-primary)]">
                   <svg
                     width="20"
                     height="20"
@@ -111,17 +124,21 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    aria-hidden="true"
                   >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 </div>
-                <div>
-                  <h2 className="text-xl font-semibold">{currentStepData.title}</h2>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Badge variant="outline" className="text-xs">
-                      {currentFlow.name}
-                    </Badge>
-                    <span className="text-xs text-[var(--hive-text-secondary)]">
+                <div className="space-y-1">
+                  <p
+                    id="welcome-mat-title"
+                    className="text-lg font-semibold text-[var(--hive-text-primary)]"
+                  >
+                    {currentStepData.title}
+                  </p>
+                  <div className="flex items-center gap-2 text-xs text-[var(--hive-text-secondary)]">
+                    <Badge variant="outline">{currentFlow.name}</Badge>
+                    <span>
                       Step {currentStep + 1} of {totalSteps}
                     </span>
                   </div>
@@ -129,9 +146,9 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
               </div>
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={handleClose}
-                className="shrink-0"
+                size="icon"
+                aria-label="Close welcome tour"
+                onClick={dismiss}
               >
                 <svg
                   width="16"
@@ -142,79 +159,71 @@ const WelcomeMat = React.forwardRef<HTMLDivElement, WelcomeMatProps>(
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </Button>
             </div>
-
-            {/* Progress bar */}
             <div className="mt-4">
-              <Progress value={progressPercentage} className="h-2" />
+              <Progress value={progressPercentage} aria-hidden="true" />
             </div>
-          </div>
+            {userName ? (
+              <p className="mt-2 text-sm text-[var(--hive-text-secondary)]">
+                Welcome back, {userName}. Let&rsquo;s finish getting you set up.
+              </p>
+            ) : null}
+          </header>
 
-          <div className="px-6 py-4">
-            <div className="text-base text-[var(--hive-text-secondary)]">
-              {currentStepData.description}
-            </div>
-
-            {currentStepData.content && (
-              <div className="mt-4">
+          <div className="space-y-4 px-6 py-5 text-sm text-[var(--hive-text-secondary)]">
+            <p>{currentStepData.description}</p>
+            {currentStepData.content ? (
+              <div className="rounded-xl border border-dashed border-[var(--hive-border)] bg-[var(--hive-background-secondary)] p-4 text-[var(--hive-text-secondary)]">
                 {currentStepData.content}
               </div>
+            ) : null}
+            {(hasCompleted || hasSkipped) && (
+              <p className="text-xs text-[var(--hive-text-tertiary)]">
+                {hasCompleted
+                  ? "You marked this step as complete."
+                  : hasSkipped
+                    ? "You skipped this step. You can return later if needed."
+                    : null}
+              </p>
             )}
           </div>
 
-          <div className="flex items-center justify-end space-x-2 p-6 border-t border-[var(--hive-border)]">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center space-x-2">
-                {!isFirstStep && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={previousStep}
-                  >
-                    Previous
-                  </Button>
-                )}
-                {currentStepData.canSkip && !currentStepData.required && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleSkip}
-                  >
-                    Skip
-                  </Button>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                {isLastStep ? (
-                  <Button
-                    variant="default"
-                    onClick={handleNext}
-                  >
-                    {currentStepData.action?.label || "Complete"}
-                  </Button>
-                ) : (
-                  <Button
-                    variant="default"
-                    onClick={handleNext}
-                  >
-                    {currentStepData.action?.label || "Next"}
-                  </Button>
-                )}
-              </div>
+          <footer className="flex flex-col gap-3 border-t border-[var(--hive-border)] px-6 py-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-2">
+              {!isFirstStep && (
+                <Button variant="outline" size="sm" onClick={previousStep}>
+                  Previous
+                </Button>
+              )}
+              {currentStepData.canSkip && !currentStepData.required && (
+                <Button variant="ghost" size="sm" onClick={handleSkip}>
+                  Skip
+                </Button>
+              )}
             </div>
-          </div>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={dismiss}>
+                Dismiss
+              </Button>
+              <Button variant="default" size="sm" onClick={handleNext}>
+                {isLastStep
+                  ? currentStepData.action?.label || "Complete"
+                  : currentStepData.action?.label || "Next"}
+              </Button>
+            </div>
+          </footer>
         </div>
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-WelcomeMat.displayName = "WelcomeMat"
+WelcomeMat.displayName = "WelcomeMat";
 
-export { WelcomeMat }
+export default WelcomeMat;

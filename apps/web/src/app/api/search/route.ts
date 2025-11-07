@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { logger } from "@/lib/structured-logger";
 import { ApiResponseHelper as _ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
 
@@ -9,8 +10,15 @@ interface SearchResult {
   type: 'space' | 'tool' | 'person' | 'event' | 'post' | 'navigation';
   category: string;
   url: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   relevanceScore: number;
+}
+
+type SearchCategory = 'spaces' | 'tools' | 'people' | 'events' | 'posts';
+
+interface SearchIndexItem extends Omit<SearchResult, 'relevanceScore' | 'category'> {
+  category: SearchCategory;
+  keywords: string[];
 }
 
 // Mock data for comprehensive search
@@ -198,8 +206,8 @@ const MOCK_SEARCH_DATA = {
 };
 
 function calculateRelevanceScore(
-  item: any, 
-  query: string, 
+  item: SearchIndexItem,
+  query: string,
   category?: string
 ): number {
   let score = 0;
@@ -218,7 +226,7 @@ function calculateRelevanceScore(
   }
   
   // Keyword matches
-  const keywordMatches = item.keywords?.filter((keyword: string) => 
+  const keywordMatches = item.keywords?.filter((keyword: string) =>
     keyword.toLowerCase().includes(lowercaseQuery)
   ).length || 0;
   score += keywordMatches * 20;
@@ -230,11 +238,13 @@ function calculateRelevanceScore(
   
   // Metadata-based scoring
   if (item.metadata) {
-    if (item.metadata.rating) {
-      score += item.metadata.rating; // Higher rated items get slight boost
+    const rating = (item.metadata as { rating?: number } | undefined)?.rating;
+    if (typeof rating === 'number') {
+      score += rating; // Higher rated items get slight boost
     }
-    if (item.metadata.memberCount) {
-      score += Math.min(item.metadata.memberCount / 100, 5); // Popular spaces get boost
+    const memberCount = (item.metadata as { memberCount?: number } | undefined)?.memberCount;
+    if (typeof memberCount === 'number') {
+      score += Math.min(memberCount / 100, 5); // Popular spaces get boost
     }
   }
   
@@ -247,6 +257,8 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('q')?.trim();
     const category = searchParams.get('category');
     const limit = parseInt(searchParams.get('limit') || '20');
+    // Carry campus context even in mock search responses
+    const campusId = (searchParams.get('campusId') || CURRENT_CAMPUS_ID).toLowerCase();
 
     if (!query) {
       return NextResponse.json({
@@ -257,7 +269,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    let allItems: any[] = [];
+    let allItems: SearchIndexItem[] = [];
 
     // Collect items based on category filter
     if (!category || category === 'all') {
@@ -290,7 +302,7 @@ export async function GET(request: NextRequest) {
 
     // Filter and score results
     const results: SearchResult[] = allItems
-      .map(item => ({
+      .map((item) => ({
         ...item,
         relevanceScore: calculateRelevanceScore(item, query, category ?? undefined)
       }))
@@ -304,6 +316,7 @@ export async function GET(request: NextRequest) {
       totalCount: results.length,
       query,
       category: category || null,
+      campusId,
       suggestions: query.length > 2 ? [
         `${query} in spaces`,
         `${query} tools`,

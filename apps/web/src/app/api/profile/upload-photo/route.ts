@@ -3,6 +3,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
 
 // In-memory store for development mode profile data (shared with profile route)
@@ -79,9 +80,12 @@ export const POST = withAuthAndErrors(async (
 
     // Update user document with new avatar URL
     const userRef = dbAdmin.collection('users').doc(userId);
+    const currentUserDoc = await userRef.get();
+    const currentCampus = (currentUserDoc.exists ? currentUserDoc.data()?.campusId : null) || CURRENT_CAMPUS_ID;
     await userRef.update({
       avatarUrl: downloadURL,
       profilePhoto: downloadURL, // For compatibility
+      campusId: currentCampus,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 

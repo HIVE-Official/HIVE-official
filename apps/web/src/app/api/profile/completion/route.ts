@@ -2,6 +2,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus } from "@/lib/api-response-types";
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 interface ProfileCompletionCheck {
   isComplete: boolean;
@@ -71,6 +72,9 @@ export const GET = withAuthAndErrors(async (
     }
 
     const userData = userDoc.data();
+    if (userData?.campusId && userData.campusId !== CURRENT_CAMPUS_ID) {
+      return respond.error("User profile not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    }
     
     // Check completion status (get email from userData since middleware doesn't provide it)
     const completion = checkProfileCompletion(userData, userData?.email || '');

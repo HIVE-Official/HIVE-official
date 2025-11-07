@@ -10,10 +10,12 @@ const progressVariants = cva("relative h-4 w-full overflow-hidden rounded-full b
             sm: "h-2",
             lg: "h-6",
             xl: "h-8",
+            xs: "h-1.5",
         },
         variant: {
             default: "bg-[var(--hive-background-tertiary)]",
             secondary: "bg-[var(--hive-background-secondary)]",
+            primary: "bg-[var(--hive-brand-primary-bg,#191c2d)]",
             success: "bg-[var(--hive-status-success)]/20",
             warning: "bg-[var(--hive-status-warning)]/20",
             error: "bg-[var(--hive-status-error)]/20",
@@ -38,23 +40,33 @@ const progressIndicatorVariants = cva("h-full w-full flex-1 bg-[var(--hive-brand
             none: "",
             pulse: "animate-pulse",
             indeterminate: "animate-bounce",
+            bounce: "animate-bounce",
+            spin: "animate-spin",
         },
+        gradient: {
+            none: "",
+            subtle: "bg-gradient-to-r from-current to-current/80",
+            vibrant: "bg-gradient-to-r from-current via-current/90 to-current",
+            hive: "bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)]",
+        }
     },
     defaultVariants: {
         variant: "default",
         animation: "none",
+        gradient: "none",
     },
 });
-const Progress = React.forwardRef(({ className, value = 0, max = 100, size, variant, indeterminate = false, showValue = false, formatValue, indicatorVariant, animation, ...props }, ref) => {
+const Progress = React.forwardRef(({ className, value = 0, max = 100, size, variant, indeterminate = false, showValue = false, formatValue, indicatorVariant, animation, label, showLabel = false, showPercentage = false, gradient, indicatorClassName, ...props }, ref) => {
     const percentage = indeterminate ? 100 : Math.min(Math.max((value / max) * 100, 0), 100);
     const defaultFormatValue = React.useCallback((val, maxVal) => `${Math.round((val / maxVal) * 100)}%`, []);
     const displayValue = formatValue
         ? formatValue(value, max)
         : defaultFormatValue(value, max);
-    return (_jsxs("div", { className: "w-full", children: [showValue && (_jsxs("div", { className: "flex justify-between items-center mb-2", children: [_jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: "Progress" }), _jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: indeterminate ? "Loading..." : displayValue })] })), _jsx("div", { ref: ref, role: "progressbar", "aria-valuemin": 0, "aria-valuemax": max, "aria-valuenow": indeterminate ? undefined : value, "aria-label": indeterminate ? "Loading" : `Progress: ${displayValue}`, className: cn(progressVariants({ size, variant }), className), ...props, children: _jsx("div", { className: cn(progressIndicatorVariants({
+    return (_jsxs("div", { className: "w-full space-y-2", children: [(showValue || showLabel || showPercentage) && (_jsxs("div", { className: "flex justify-between items-center mb-2", children: [_jsx("span", { className: "text-sm font-medium text-[var(--hive-text-primary)]", children: label ?? "Progress" }), showValue || showPercentage ? (_jsx("span", { className: "text-sm text-[var(--hive-text-secondary)]", children: indeterminate ? "Loading..." : displayValue })) : null] })), _jsx("div", { ref: ref, role: "progressbar", "aria-valuemin": 0, "aria-valuemax": max, "aria-valuenow": indeterminate ? undefined : value, "aria-label": indeterminate ? "Loading" : `Progress: ${displayValue}`, className: cn(progressVariants({ size, variant }), className), ...props, children: _jsx("div", { className: cn(progressIndicatorVariants({
                         variant: indicatorVariant || "default",
-                        animation: indeterminate ? "indeterminate" : animation
-                    })), style: {
+                        animation: indeterminate ? "indeterminate" : animation,
+                        gradient: gradient || "none",
+                    }), indicatorClassName), style: {
                         transform: indeterminate
                             ? "translateX(-100%)"
                             : `translateX(-${100 - percentage}%)`,

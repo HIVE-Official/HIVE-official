@@ -10,4 +10,26 @@ export { FriendRequestManager } from "./friend-request-manager.js";
 export { PrivacyControl, BulkPrivacyControl } from "./privacy-control.js";
 export { NotificationDropdown } from "./notification-dropdown.js";
 export { NotificationToastManager, useNotificationToasts } from "./notification-toast-manager.js";
+// Critical molecules for launch
+export * from "./search-bar.js";
+export * from "./notification-card.js";
+export * from "./stat-card.js";
+export * from "./user-avatar-group.js";
+export * from "./action-bar.js";
+export * from "./tag-list.js";
+export * from "./kpi-delta.js";
+export * from "./empty-state-compact.js";
+export * from "./micro-components.js";
+export * from "./navigation-primitives.js";
+export * from "./breadcrumbs.js";
+export * from "./pagination.js";
+export * from "./progress-steps.js";
+export * from "./dropdown-menu.js";
+export * from "./header-bar.js";
+export * from "./description-list.js";
+export * from "./progress-list.js";
+export * from "./table.js";
+export * from "./rail-widget.js";
+export * from "./now-card.js";
+export * from "./today-drawer.js";
 //# sourceMappingURL=index.js.map

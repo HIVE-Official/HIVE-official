@@ -22,7 +22,7 @@ const hiveCardVariants = cva("rounded-lg border bg-card text-card-foreground sha
         size: "default",
     },
 });
-const HiveCard = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+const HiveCard = React.forwardRef(({ className, variant, size, ...props }, ref) => {
     return (_jsx("div", { ref: ref, className: cn(hiveCardVariants({ variant, size, className })), ...props }));
 });
 HiveCard.displayName = "HiveCard";

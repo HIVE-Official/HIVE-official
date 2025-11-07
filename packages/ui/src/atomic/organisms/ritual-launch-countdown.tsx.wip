@@ -1,0 +1,216 @@
+'use client';
+
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Card } from '../atoms/card';
+import { Badge } from '../atoms/badge';
+import { Rocket, Clock, Zap, Star, Calendar } from 'lucide-react';
+import type { LaunchCountdownConfig } from '@hive/core';
+
+export interface RitualLaunchCountdownProps {
+  config: LaunchCountdownConfig;
+  launchDate: string;
+  isLaunched: boolean;
+  className?: string;
+}
+
+/**
+ * Launch Countdown Renderer
+ *
+ * Simple countdown timer with anticipation build-up
+ * Shows time remaining until feature/event launch
+ */
+export const RitualLaunchCountdown: React.FC<RitualLaunchCountdownProps> = ({
+  config,
+  launchDate,
+  isLaunched,
+  className,
+}) => {
+  const [timeRemaining, setTimeRemaining] = React.useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
+
+  // Update countdown every second
+  React.useEffect(() => {
+    if (isLaunched) {
+      setTimeRemaining(null);
+      return;
+    }
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const launch = new Date(launchDate).getTime();
+      const diff = launch - now;
+
+      if (diff <= 0) {
+        setTimeRemaining(null);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      setTimeRemaining({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [launchDate, isLaunched]);
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      {/* Hero Card */}
+      <Card className="overflow-hidden border-[var(--hive-brand-primary)]/30 bg-gradient-to-br from-[var(--hive-brand-primary)]/10 via-[var(--hive-background-secondary)] to-black p-0">
+        <div className="relative overflow-hidden bg-gradient-to-r from-[var(--hive-brand-primary)]/20 to-orange-500/20 px-6 py-8">
+          {/* Animated Stars Background */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTIwIDEwbDIgNmg2bC01IDRsMiA2LTUtNC01IDQgMi02LTUtNGg2eiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3N0YXJzKSIvPjwvc3ZnPg==')] opacity-40" />
+
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--hive-brand-primary)] to-orange-500 shadow-[0_0_30px_rgba(255,215,0,0.3)]">
+              {isLaunched ? (
+                <Zap className="h-8 w-8 text-black" />
+              ) : (
+                <Rocket className="h-8 w-8 text-black" />
+              )}
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <Badge className="bg-[var(--hive-brand-primary)] text-black font-bold uppercase tracking-[0.16em]">
+                {isLaunched ? 'Live Now' : 'Coming Soon'}
+              </Badge>
+
+              <h2 className="text-2xl font-bold text-white">{config.title || 'Something Big is Coming'}</h2>
+              <p className="max-w-2xl text-white/70">
+                {config.description || 'Get ready for an exciting new feature launching soon!'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Countdown Section */}
+        <div className="p-6">
+          {!isLaunched && timeRemaining ? (
+            <div className="space-y-6">
+              {/* Big Countdown Numbers */}
+              <div className="grid grid-cols-4 gap-4">
+                <CountdownUnit value={timeRemaining.days} label="Days" />
+                <CountdownUnit value={timeRemaining.hours} label="Hours" />
+                <CountdownUnit value={timeRemaining.minutes} label="Minutes" />
+                <CountdownUnit value={timeRemaining.seconds} label="Seconds" />
+              </div>
+
+              {/* Launch Date */}
+              <div className="flex items-center justify-center gap-2 text-sm text-white/60">
+                <Calendar className="h-4 w-4" />
+                <span>
+                  Launches {new Date(launchDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                </span>
+              </div>
+            </div>
+          ) : (
+            // Launched State
+            <Card className="border-[var(--hive-brand-primary)]/20 bg-gradient-to-br from-[var(--hive-brand-primary)]/10 to-orange-500/10 p-8">
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--hive-brand-primary)] shadow-[0_0_40px_rgba(255,215,0,0.4)]">
+                  <Zap className="h-10 w-10 text-black" />
+                </div>
+                <h3 className="mb-2 text-2xl font-bold text-white">It's Live! 🎉</h3>
+                <p className="text-white/70">
+                  {config.launchMessage || 'The wait is over. Check it out now!'}
+                </p>
+              </div>
+            </Card>
+          )}
+        </div>
+      </Card>
+
+      {/* Teaser Content */}
+      {!isLaunched && config.teaserPoints && config.teaserPoints.length > 0 && (
+        <Card className="border-white/10 bg-[var(--hive-background-secondary)] p-6">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
+            <Star className="h-5 w-5 text-[var(--hive-brand-primary)]" />
+            What to Expect
+          </h3>
+          <div className="space-y-3">
+            {config.teaserPoints.map((point, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[var(--hive-brand-primary)]/20 text-xs font-bold text-[var(--hive-brand-primary)]">
+                  {i + 1}
+                </div>
+                <p className="text-white/80">{point}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Launch Info */}
+      {isLaunched && config.launchUrl && (
+        <Card className="border-[var(--hive-brand-primary)]/20 bg-[var(--hive-brand-primary)]/5 p-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="font-semibold text-white">Ready to try it?</p>
+              <p className="text-sm text-white/70">Check out the new feature now</p>
+            </div>
+            <a
+              href={config.launchUrl}
+              className="inline-flex items-center gap-2 rounded-lg bg-[var(--hive-brand-primary)] px-6 py-3 font-bold text-black transition-all hover:bg-[var(--hive-brand-primary)]/90 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+            >
+              <Zap className="h-5 w-5" />
+              Try Now
+            </a>
+          </div>
+        </Card>
+      )}
+
+      {/* Anticipation Message */}
+      {!isLaunched && (
+        <Card className="border-white/10 bg-white/5 p-4">
+          <div className="flex items-start gap-3 text-sm text-white/80">
+            <Clock className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--hive-brand-primary)]" />
+            <div className="space-y-1">
+              <p className="font-medium text-white">Mark Your Calendar</p>
+              <p className="text-white/60">
+                Set a reminder so you don't miss the launch. This is going to be big!
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+interface CountdownUnitProps {
+  value: number;
+  label: string;
+}
+
+const CountdownUnit: React.FC<CountdownUnitProps> = ({ value, label }) => {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="mb-2 flex h-20 w-full items-center justify-center rounded-xl bg-gradient-to-br from-[var(--hive-brand-primary)]/20 to-orange-500/20 border border-[var(--hive-brand-primary)]/30">
+        <span className="text-4xl font-bold text-white tabular-nums">
+          {value.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-xs font-semibold uppercase tracking-wider text-white/60">
+        {label}
+      </span>
+    </div>
+  );
+};

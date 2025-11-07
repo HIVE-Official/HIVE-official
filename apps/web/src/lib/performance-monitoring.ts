@@ -334,7 +334,8 @@ export class HivePerformanceCollector {
     if (typeof window !== 'undefined') {
       // Browser environment - send to analytics endpoint
       try {
-        await fetch('/api/analytics/metrics', {
+        const { secureApiFetch } = await import('./secure-auth-utils');
+        await secureApiFetch('/api/analytics/metrics', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -589,7 +590,8 @@ class PerformanceMonitor {
   private async sendToAnalytics(metric: PerformanceMetric) {
     try {
       // Send to your analytics service
-      await fetch('/api/analytics/performance', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      await secureApiFetch('/api/analytics/performance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,6 @@
+"use client";
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 // Define SearchableItem locally since it might not be exported
 interface SearchableItem {
   id: string;
@@ -19,7 +21,7 @@ interface SearchAPI {
 }
 
 // Mock search functions - replace with actual API calls
-const createMockSearchAPI = (): SearchAPI => ({
+const createMockSearchAPI = (navigate: (url: string) => void): SearchAPI => ({
   spaces: async (_query: string): Promise<SearchableItem[]> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -33,7 +35,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'spaces',
         type: 'space' as const,
         keywords: ['computer', 'science', 'programming', 'coding', 'tech'],
-        action: () => window.location.href = '/spaces/cs-majors',
+        action: () => navigate('/spaces/cs-majors'),
         metadata: { memberCount: 234, status: 'active' }
       },
       {
@@ -44,7 +46,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'spaces',
         type: 'space' as const,
         keywords: ['study', 'groups', 'academic', 'learning'],
-        action: () => window.location.href = '/spaces/study-groups',
+        action: () => navigate('/spaces/study-groups'),
         metadata: { memberCount: 156, status: 'active' }
       },
       {
@@ -55,7 +57,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'spaces',
         type: 'space' as const,
         keywords: ['greek', 'fraternity', 'sorority', 'social'],
-        action: () => window.location.href = '/spaces/greek-life',
+        action: () => navigate('/spaces/greek-life'),
         metadata: { memberCount: 89, status: 'active' }
       }
     ];
@@ -79,7 +81,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'tools',
         type: 'tool' as const,
         keywords: ['poll', 'vote', 'survey', 'feedback'],
-        action: () => window.location.href = '/tools/poll-maker',
+        action: () => navigate('/tools/poll-maker'),
         metadata: { rating: 4.8, creator: 'HIVE Team' }
       },
       {
@@ -90,7 +92,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'tools',
         type: 'tool' as const,
         keywords: ['timer', 'pomodoro', 'focus', 'study', 'productivity'],
-        action: () => window.location.href = '/tools/study-timer',
+        action: () => navigate('/tools/study-timer'),
         metadata: { rating: 4.6, creator: 'Focus Labs' }
       },
       {
@@ -101,7 +103,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'tools',
         type: 'tool' as const,
         keywords: ['grade', 'gpa', 'calculator', 'academic'],
-        action: () => window.location.href = '/tools/grade-calculator',
+        action: () => navigate('/tools/grade-calculator'),
         metadata: { rating: 4.9, creator: 'Academic Tools' }
       }
     ];
@@ -125,7 +127,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'people',
         type: 'person' as const,
         keywords: ['sarah', 'chen', 'cs', 'computer', 'science'],
-        action: () => window.location.href = '/profile/sarah-chen'
+        action: () => navigate('/profile/sarah-chen')
       },
       {
         id: 'user-alex-kim',
@@ -135,7 +137,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'people',
         type: 'person' as const,
         keywords: ['alex', 'kim', 'engineering', 'events'],
-        action: () => window.location.href = '/profile/alex-kim'
+        action: () => navigate('/profile/alex-kim')
       },
       {
         id: 'user-jamie-rivera',
@@ -145,7 +147,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'people',
         type: 'person' as const,
         keywords: ['jamie', 'rivera', 'business', 'builder'],
-        action: () => window.location.href = '/profile/jamie-rivera'
+        action: () => navigate('/profile/jamie-rivera')
       }
     ];
 
@@ -168,7 +170,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'events',
         type: 'event' as const,
         keywords: ['career', 'fair', 'jobs', 'networking', 'employers'],
-        action: () => window.location.href = '/events/career-fair-2024',
+        action: () => navigate('/events/career-fair-2024'),
         metadata: { date: 'March 15, 2024' }
       },
       {
@@ -179,7 +181,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'events',
         type: 'event' as const,
         keywords: ['hackathon', 'coding', 'programming', 'competition'],
-        action: () => window.location.href = '/events/hive-hackathon',
+        action: () => navigate('/events/hive-hackathon'),
         metadata: { date: 'April 20-22, 2024' }
       },
       {
@@ -190,7 +192,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'events',
         type: 'event' as const,
         keywords: ['study', 'calculus', 'math', 'midterm'],
-        action: () => window.location.href = '/events/calculus-study',
+        action: () => navigate('/events/calculus-study'),
         metadata: { date: 'Tomorrow, 7 PM' }
       }
     ];
@@ -214,7 +216,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'posts',
         type: 'post' as const,
         keywords: ['internship', 'tips', 'application', 'career'],
-        action: () => window.location.href = '/posts/internship-tips',
+        action: () => navigate('/posts/internship-tips'),
         metadata: { date: '2 hours ago' }
       },
       {
@@ -225,7 +227,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'posts',
         type: 'post' as const,
         keywords: ['study', 'spots', 'campus', 'quiet'],
-        action: () => window.location.href = '/posts/study-spots',
+        action: () => navigate('/posts/study-spots'),
         metadata: { date: '1 day ago' }
       },
       {
@@ -236,7 +238,7 @@ const createMockSearchAPI = (): SearchAPI => ({
         category: 'posts',
         type: 'post' as const,
         keywords: ['tool', 'scheduler', 'course', 'planning'],
-        action: () => window.location.href = '/posts/course-scheduler-tool',
+        action: () => navigate('/posts/course-scheduler-tool'),
         metadata: { date: '3 days ago' }
       }
     ];
@@ -250,7 +252,8 @@ const createMockSearchAPI = (): SearchAPI => ({
 });
 
 export function useEnhancedCommandPalette() {
-  const [searchAPI] = useState(createMockSearchAPI());
+  const router = useRouter();
+  const [searchAPI] = useState(() => createMockSearchAPI((url) => router.push(url)));
 
   const handleSearch = useCallback(async (
     query: string, 

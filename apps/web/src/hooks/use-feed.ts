@@ -2,7 +2,41 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@hive/auth-logic';
+import { secureApiFetch } from '@/lib/secure-auth-utils';
 
+// Attachment types
+export interface Attachment {
+  id: string;
+  type: 'image' | 'video' | 'file' | 'link';
+  url: string;
+  thumbnailUrl?: string;
+  alt?: string;
+  filename?: string;
+  size?: number;
+}
+
+// Tool metadata for tool posts
+export interface ToolMetadata {
+  name: string;
+  summary?: string;
+  description?: string;
+  category?: string;
+  featured?: boolean;
+  installs?: number;
+  activeUsers?: number;
+  ratingLabel?: string;
+  tags?: string[];
+  updatedAt?: string;
+}
+
+// Announcement metadata for system posts
+export interface AnnouncementMetadata {
+  title: string;
+  variant?: 'ritual' | 'announcement' | 'urgent';
+  actionLabel?: string;
+}
+
+// Base Post interface
 export interface Post {
   id: string;
   content: string;
@@ -21,12 +55,12 @@ export interface Post {
   visibility: 'public' | 'space' | 'private';
   spaceId?: string;
   spaceName?: string;
-  attachments?: any[];
+  attachments?: Attachment[];
   mentions?: string[];
   tags?: string[];
-  poll?: any;
-  event?: any;
-  location?: any;
+  poll?: Record<string, unknown>;
+  event?: Record<string, unknown>;
+  location?: Record<string, unknown>;
   engagement: {
     likes: number;
     comments: number;
@@ -35,10 +69,14 @@ export interface Post {
     hasLiked: boolean;
     hasBookmarked: boolean;
   };
-  reactions?: any;
-  comments?: any[];
+  reactions?: Record<string, number>;
+  comments?: Array<Record<string, unknown>>;
   isPinned?: boolean;
   isEdited?: boolean;
+
+  // Type-specific metadata
+  tool?: ToolMetadata;
+  announcement?: AnnouncementMetadata;
 }
 
 export interface FeedState {
@@ -92,22 +130,21 @@ export function useFeed(options: FeedOptions = {}) {
     }));
 
     try {
+      // Map types -> single 'type' param for API (fallback to 'all')
+      let qType: string | undefined;
+      if (options.types && options.types.length === 1) {
+        const t = options.types[0];
+        qType = t === 'my_spaces' ? 'spaces' : t;
+      }
+
       const params = new URLSearchParams({
         limit: String(options.limit || 20),
         ...(options.spaceId && { spaceId: options.spaceId }),
-        ...(options.userId && { userId: options.userId }),
-        ...(options.sortBy && { sortBy: options.sortBy }),
-        ...(options.types && { types: options.types.join(',') }),
-        ...(!reset && { offset: String(feedState.posts.length) }),
+        ...(qType && { type: qType }),
+        ...(!reset && { cursor: feedState.posts[feedState.posts.length - 1]?.id || '' }),
       });
 
-      const authToken = getAuthToken ? await getAuthToken() : '';
-      const response = await fetch(`/api/feed?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await secureApiFetch(`/api/feed?${params}`, { method: 'GET' });
 
       if (!response.ok) {
         throw new Error(`Feed load failed: ${response.status}`);
@@ -169,12 +206,9 @@ export function useFeed(options: FeedOptions = {}) {
   }) => {
     if (!user) throw new Error('Authentication required');
 
-    const response = await fetch('/api/social/posts', {
+    const response = await secureApiFetch('/api/social/posts', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${getAuthToken ? await getAuthToken() : ''}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(postData),
     });
 
@@ -253,12 +287,9 @@ export function useFeed(options: FeedOptions = {}) {
     }));
 
     try {
-      const response = await fetch('/api/social/interactions', {
+      const response = await secureApiFetch('/api/social/interactions', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${getAuthToken ? await getAuthToken() : ''}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(interaction),
       });
 

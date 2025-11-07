@@ -1,5 +1,6 @@
 // Template Deployment System - Bridge between campus templates and working tools
 import { ToolComposition } from './element-system';
+import { secureApiFetch } from './secure-auth-utils';
 import { CampusToolTemplate, CAMPUS_TOOL_TEMPLATES } from './campus-tools-templates';
 
 export interface DeploymentRequest {
@@ -85,7 +86,7 @@ export class TemplateDeploymentService {
    */
   static async getDeployedTool(deploymentId: string): Promise<DeployedTool | null> {
     try {
-      const response = await fetch(`/api/tools/deploy/${deploymentId}`);
+      const response = await secureApiFetch(`/api/tools/deploy/${deploymentId}`);
       if (!response.ok) return null;
       return await response.json();
     } catch {
@@ -98,7 +99,7 @@ export class TemplateDeploymentService {
    */
   static async getUserDeployedTools(userId: string): Promise<DeployedTool[]> {
     try {
-      const response = await fetch(`/api/tools/personal?userId=${userId}`);
+      const response = await secureApiFetch(`/api/tools/personal?userId=${userId}`);
       if (!response.ok) return [];
       const data = await response.json();
       return data.deployedTools || [];
@@ -111,7 +112,7 @@ export class TemplateDeploymentService {
    * Execute a deployed tool action
    */
   static async executeToolAction(deploymentId: string, action: string, payload: any) {
-    const response = await fetch('/api/tools/execute', {
+    const response = await secureApiFetch('/api/tools/execute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -163,7 +164,7 @@ export class TemplateDeploymentService {
    * Save deployed tool to backend
    */
   private static async saveDeployedTool(deployedTool: DeployedTool): Promise<void> {
-    const response = await fetch('/api/tools/deploy', {
+    const response = await secureApiFetch('/api/tools/deploy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(deployedTool)
@@ -192,7 +193,7 @@ export class TemplateDeploymentService {
     };
 
     // Post to user's feed
-    await fetch('/api/feed', {
+    await secureApiFetch('/api/feed', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -229,7 +230,7 @@ export class TemplateDeploymentService {
    * Notify space members about new tool
    */
   private static async notifySpace(deployedTool: DeployedTool, spaceId: string): Promise<void> {
-    await fetch('/api/spaces/notifications', {
+    await secureApiFetch('/api/spaces/notifications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

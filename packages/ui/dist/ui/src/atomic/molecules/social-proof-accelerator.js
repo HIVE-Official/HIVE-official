@@ -59,8 +59,8 @@ const mockTrendingSpaces = [
     },
 ];
 export const SocialProofAccelerator = ({ className, variant = 'dashboard', showTrending = true, showAttractive = true, showInsider = true, }) => {
-    const [activityData, setActivityData] = useState(mockActivityData);
-    const [trendingSpaces, setTrendingSpaces] = useState(mockTrendingSpaces);
+    const [activityData] = useState(mockActivityData);
+    const [trendingSpaces] = useState(mockTrendingSpaces);
     const [currentTime, setCurrentTime] = useState(new Date());
     // Update time every minute for relative timestamps
     useEffect(() => {

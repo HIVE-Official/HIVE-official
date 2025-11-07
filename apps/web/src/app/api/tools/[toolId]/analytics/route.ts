@@ -1,461 +1,140 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { dbAdmin as adminDb } from '@/lib/firebase-admin';
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from '@/lib/middleware';
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import type { NextRequest } from 'next/server';
+import { withAuthAndErrors, type AuthenticatedRequest, getUserId } from '@/lib/middleware';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import { ApiResponseHelper } from '@/lib/api-response-types';
 
-interface AnalyticsQuery {
-  toolId: string;
-  startDate?: string;
-  endDate?: string;
-  granularity?: 'hour' | 'day' | 'week' | 'month';
-  metrics?: string[];
-  groupBy?: string[];
-}
-
-interface ToolAnalytics {
-  overview: {
-    totalUsage: number;
-    uniqueUsers: number;
-    averageSessionDuration: number;
-    totalInstallations: number;
-    activeInstallations: number;
-    averageRating: number;
-    totalReviews: number;
-    conversionRate: number;
-  };
-  usage: {
-    timeSeriesData: Array<{
-      date: string;
-      usage: number;
-      uniqueUsers: number;
-      sessionDuration: number;
-    }>;
-    topActions: Array<{
-      action: string;
-      count: number;
-      percentage: number;
-    }>;
-    topSpaces: Array<{
-      spaceId: string;
-      spaceName: string;
-      usage: number;
-      users: number;
-    }>;
-  };
-  performance: {
-    averageLoadTime: number;
-    errorRate: number;
-    crashRate: number;
-    popularFeatures: Array<{
-      feature: string;
-      usage: number;
-      retention: number;
-    }>;
-  };
-  audience: {
-    userRetention: {
-      day1: number;
-      day7: number;
-      day30: number;
-    };
-    demographics: {
-      byUserType: Array<{ type: string; count: number; percentage: number; }>;
-      byInstitution: Array<{ institution: string; count: number; percentage: number; }>;
-      byGeoLocation: Array<{ location: string; count: number; percentage: number; }>;
-    };
-    engagementMetrics: {
-      averageSessionsPerUser: number;
-      averageTimePerSession: number;
-      bounceRate: number;
-    };
-  };
-  revenue: {
-    totalRevenue: number;
-    monthlyRecurringRevenue: number;
-    averageRevenuePerUser: number;
-    lifetimeValue: number;
-    churnRate: number;
-  };
-}
-
-// GET - Get tool analytics
+// GET /api/tools/[toolId]/analytics
 export const GET = withAuthAndErrors(async (
   request: AuthenticatedRequest,
   { params }: { params: Promise<{ toolId: string }> },
-  respond
+  respond,
 ) => {
   const userId = getUserId(request);
   const { toolId } = await params;
-  const { searchParams } = new URL(request.url);
 
-  // Get tool details and check ownership
-  const toolDoc = await adminDb.collection('tools').doc(toolId).get();
+  // Ensure tool exists and campus matches
+  const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
   if (!toolDoc.exists) {
-    return respond.error("Tool not found", "RESOURCE_NOT_FOUND", { status: 404 });
+    return respond.error('Tool not found', 'RESOURCE_NOT_FOUND', { status: 404 });
+  }
+  const tool = toolDoc.data();
+  if (tool?.campusId && tool.campusId !== CURRENT_CAMPUS_ID) {
+    return respond.error('Access denied for this campus', 'FORBIDDEN', { status: 403 });
   }
 
-  const toolData = toolDoc.data();
+  // Time range
+  const url = new URL(request.url);
+  const range = (url.searchParams.get('range') as '7d' | '30d' | '90d') || '7d';
+  const days = range === '90d' ? 90 : range === '30d' ? 30 : 7;
+  const since = new Date();
+  since.setDate(since.getDate() - days);
 
-  // Check permissions (owner, or admin)
-  const userDoc = await adminDb.collection('users').doc(userId).get();
-  const userData = userDoc.data();
-  const isAdmin = userData?.roles?.includes('admin');
-
-  if (toolData?.ownerId !== userId && !isAdmin) {
-    return respond.error("Insufficient permissions to view analytics", "FORBIDDEN", { status: 403 });
-  }
-
-  const startDate = searchParams.get('startDate') || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  const endDate = searchParams.get('endDate') || new Date().toISOString();
-  const granularity = (searchParams.get('granularity') as any) || 'day';
-
-  // Generate analytics data
-  const analytics = await generateToolAnalytics({
-    toolId,
-    startDate,
-    endDate,
-    granularity
-  });
-
-  return respond.success({
-    toolId,
-    toolName: toolData?.name,
-    period: { startDate, endDate, granularity },
-    analytics,
-    generatedAt: new Date().toISOString()
-  });
-});
-
-// Helper function to generate analytics data
-async function generateToolAnalytics(query: AnalyticsQuery): Promise<ToolAnalytics> {
-  const { toolId, startDate, endDate } = query;
-
-  // Get usage events
-  const usageEventsSnapshot = await adminDb
+  // Fetch events for this tool in range
+  const eventsSnapshot = await dbAdmin
     .collection('analytics_events')
     .where('toolId', '==', toolId)
-    .where('timestamp', '>=', startDate)
-    .where('timestamp', '<=', endDate)
-    .orderBy('timestamp', 'desc')
+    .where('timestamp', '>=', since)
     .get();
 
-  const usageEvents = usageEventsSnapshot.docs.map(doc => doc.data());
+  const events = eventsSnapshot.docs.map((d) => d.data() as any);
 
-  // Get installations
-  const installationsSnapshot = await adminDb
-    .collection('toolInstallations')
+  // Build daily usage map
+  const dailyMap = new Map<string, { usage: number; users: Set<string> }>();
+  for (let i = 0; i < days; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - (days - 1 - i));
+    const key = d.toISOString().slice(0, 10);
+    dailyMap.set(key, { usage: 0, users: new Set() });
+  }
+
+  let totalUsage = 0;
+  const activeUsersSet = new Set<string>();
+  for (const ev of events) {
+    const ts = ev.timestamp ? new Date(ev.timestamp) : new Date();
+    const key = ts.toISOString().slice(0, 10);
+    if (!dailyMap.has(key)) continue;
+    const bucket = dailyMap.get(key)!;
+    bucket.usage += 1;
+    if (ev.userId) {
+      bucket.users.add(ev.userId);
+      activeUsersSet.add(ev.userId);
+    }
+    totalUsage += 1;
+  }
+
+  const daily = Array.from(dailyMap.entries()).map(([date, v]) => ({ date, usage: v.usage, users: v.users.size }));
+
+  // Spaces usage from deployments
+  const depSnapshot = await dbAdmin
+    .collection('deployedTools')
     .where('toolId', '==', toolId)
+    .where('status', '==', 'active')
     .get();
+  const spaces: Array<{ name: string; usage: number; members: number }> = [];
+  for (const d of depSnapshot.docs) {
+    const dep = d.data() as any;
+    if (dep.deployedTo === 'space') {
+      const spaceDoc = await dbAdmin.collection('spaces').doc(dep.targetId).get();
+      const name = spaceDoc.exists ? (spaceDoc.data() as any)?.name || 'Space' : 'Space';
+      const members = spaceDoc.exists ? Object.keys((spaceDoc.data() as any)?.members || {}).length : 0;
+      spaces.push({ name, usage: dep.usageCount || 0, members });
+    }
+  }
+  spaces.sort((a, b) => b.usage - a.usage);
 
-  const installations = installationsSnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  } as { id: string; status?: string; [key: string]: any }));
+  // Feature usage (best-effort from event metadata)
+  const featureMap = new Map<string, number>();
+  for (const ev of events) {
+    const feature = ev.metadata?.feature || ev.feature;
+    if (!feature) continue;
+    featureMap.set(feature, (featureMap.get(feature) || 0) + 1);
+  }
+  const features = Array.from(featureMap.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([feature, count]) => ({ feature, usage: count, percentage: 0 }));
 
-  // Get reviews
-  const reviewsSnapshot = await adminDb
+  const featuresTotal = features.reduce((s, f) => s + f.usage, 0) || 1;
+  for (const f of features) f.percentage = Math.round((f.usage / featuresTotal) * 100);
+
+  // Reviews for ratings + comments
+  const reviewsSnapshot = await dbAdmin
     .collection('toolReviews')
     .where('toolId', '==', toolId)
+    .where('campusId', '==', CURRENT_CAMPUS_ID)
     .where('status', '==', 'published')
     .get();
 
-  const reviews = reviewsSnapshot.docs.map(doc => doc.data());
-
-  // Calculate overview metrics
-  const totalUsage = usageEvents.filter(e => e.eventType === 'tool_interaction').length;
-  const uniqueUsers = new Set(usageEvents.map(e => e.userId)).size;
-  const sessionEvents = usageEvents.filter(e => e.duration);
-  const averageSessionDuration = sessionEvents.length > 0 
-    ? sessionEvents.reduce((sum, e) => sum + (e.duration || 0), 0) / sessionEvents.length 
-    : 0;
-  const totalInstallations = installations.length;
-  const activeInstallations = installations.filter(i => i.status === 'active').length;
+  const reviews = reviewsSnapshot.docs.map((d) => d.data() as any);
   const totalReviews = reviews.length;
-  const averageRating = totalReviews > 0
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
-    : 0;
+  const avgRating = totalReviews > 0 ? Math.round((reviews.reduce((s, r) => s + (r.rating || 0), 0) / totalReviews) * 10) / 10 : 0;
+  const ratingsDist: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  for (const r of reviews) ratingsDist[r.rating] = (ratingsDist[r.rating] || 0) + 1;
 
-  // Calculate time series data
-  const timeSeriesData = generateTimeSeries(usageEvents, query.granularity || 'day');
+  const recentComments = reviews
+    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    .slice(0, 5)
+    .map((r) => ({ user: r.userId || 'User', comment: r.title || r.content || '', rating: r.rating || 0, date: r.createdAt || '' }));
 
-  // Calculate top actions
-  const actionCounts = usageEvents
-    .filter(e => e.metadata?.action)
-    .reduce((acc, e) => {
-      const action = e.metadata.action;
-      acc[action] = (acc[action] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-  const topActions = Object.entries(actionCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 10)
-    .map(([action, count]) => ({
-      action,
-      count,
-      percentage: (count / totalUsage) * 100
-    }));
-
-  // Calculate top spaces
-  const spaceCounts = usageEvents
-    .filter(e => e.spaceId)
-    .reduce((acc, e) => {
-      const spaceId = e.spaceId;
-      if (!acc[spaceId]) {
-        acc[spaceId] = { usage: 0, users: new Set() };
-      }
-      acc[spaceId].usage++;
-      acc[spaceId].users.add(e.userId);
-      return acc;
-    }, {} as Record<string, { usage: number; users: Set<string> }>);
-
-  const topSpaces = await Promise.all(
-    Object.entries(spaceCounts)
-      .sort(([, a], [, b]) => b.usage - a.usage)
-      .slice(0, 10)
-      .map(async ([spaceId, data]) => {
-        const spaceDoc = await adminDb.collection('spaces').doc(spaceId).get();
-        const spaceName = spaceDoc.exists ? spaceDoc.data()?.name : 'Unknown Space';
-        
-        return {
-          spaceId,
-          spaceName,
-          usage: data.usage,
-          users: data.users.size
-        };
-      })
-  );
-
-  // Calculate performance metrics
-  const performanceEvents = usageEvents.filter(e => e.metadata?.loadTime || e.metadata?.error);
-  const loadTimes = performanceEvents
-    .filter(e => e.metadata?.loadTime)
-    .map(e => e.metadata.loadTime);
-  const averageLoadTime = loadTimes.length > 0
-    ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length
-    : 0;
-  
-  const errorEvents = usageEvents.filter(e => e.metadata?.error);
-  const errorRate = totalUsage > 0 ? (errorEvents.length / totalUsage) * 100 : 0;
-
-  // Calculate user retention
-  const userRetention = calculateUserRetention(usageEvents);
-
-  // Calculate demographics
-  const demographics = await calculateDemographics(usageEvents);
-
-  // Calculate engagement metrics
-  const userSessions = usageEvents.reduce((acc, e) => {
-    if (!acc[e.userId]) {
-      acc[e.userId] = [];
-    }
-    acc[e.userId].push(e);
-    return acc;
-  }, {} as Record<string, any[]>);
-
-  const averageSessionsPerUser = Object.keys(userSessions).length > 0
-    ? Object.values(userSessions).reduce((sum, sessions) => sum + sessions.length, 0) / Object.keys(userSessions).length
-    : 0;
-
-  const sessionsWithDuration = Object.values(userSessions)
-    .flat()
-    .filter(e => e.duration);
-  const averageTimePerSession = sessionsWithDuration.length > 0
-    ? sessionsWithDuration.reduce((sum, e) => sum + (e.duration || 0), 0) / sessionsWithDuration.length
-    : 0;
-
-  return {
+  const payload = {
     overview: {
       totalUsage,
-      uniqueUsers,
-      averageSessionDuration,
-      totalInstallations,
-      activeInstallations,
-      averageRating: Math.round(averageRating * 10) / 10,
-      totalReviews,
-      conversionRate: totalInstallations > 0 ? (activeInstallations / totalInstallations) * 100 : 0
+      activeUsers: activeUsersSet.size,
+      avgRating,
+      downloads: (tool?.installCount || 0),
     },
     usage: {
-      timeSeriesData,
-      topActions,
-      topSpaces
+      daily,
+      spaces,
+      features,
     },
-    performance: {
-      averageLoadTime: Math.round(averageLoadTime),
-      errorRate: Math.round(errorRate * 100) / 100,
-      crashRate: 0, // TODO: Implement crash tracking
-      popularFeatures: [] // TODO: Implement feature tracking
+    feedback: {
+      ratings: [1, 2, 3, 4, 5].reverse().map((r) => ({ rating: r, count: ratingsDist[r] || 0 })),
+      comments: recentComments,
     },
-    audience: {
-      userRetention,
-      demographics,
-      engagementMetrics: {
-        averageSessionsPerUser: Math.round(averageSessionsPerUser * 10) / 10,
-        averageTimePerSession: Math.round(averageTimePerSession),
-        bounceRate: 0 // TODO: Calculate bounce rate
-      }
-    },
-    revenue: {
-      totalRevenue: 0, // TODO: Implement revenue tracking
-      monthlyRecurringRevenue: 0,
-      averageRevenuePerUser: 0,
-      lifetimeValue: 0,
-      churnRate: 0
-    }
   };
-}
 
-// Helper function to generate time series data
-function generateTimeSeries(events: any[], granularity: string) {
-  const groupedData = events.reduce((acc, event) => {
-    const date = new Date(event.timestamp);
-    let key: string;
-    
-    switch (granularity) {
-      case 'hour':
-        key = date.toISOString().substring(0, 13) + ':00:00.000Z';
-        break;
-      case 'week': {
-        const weekStart = new Date(date);
-        weekStart.setDate(date.getDate() - date.getDay());
-        key = weekStart.toISOString().split('T')[0];
-        break;
-      }
-      case 'month':
-        key = date.toISOString().substring(0, 7) + '-01';
-        break;
-      default: // day
-        key = date.toISOString().split('T')[0];
-    }
+  return respond.success(payload);
+});
 
-    if (!acc[key]) {
-      acc[key] = {
-        date: key,
-        usage: 0,
-        uniqueUsers: new Set(),
-        sessionDurations: []
-      };
-    }
-
-    acc[key].usage++;
-    acc[key].uniqueUsers.add(event.userId);
-    if (event.duration) {
-      acc[key].sessionDurations.push(event.duration);
-    }
-
-    return acc;
-  }, {} as Record<string, any>);
-
-  return Object.values(groupedData)
-    .map((data: any) => ({
-      date: data.date,
-      usage: data.usage,
-      uniqueUsers: data.uniqueUsers.size,
-      sessionDuration: data.sessionDurations.length > 0
-        ? data.sessionDurations.reduce((sum: number, d: number) => sum + d, 0) / data.sessionDurations.length
-        : 0
-    }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
-// Helper function to calculate user retention
-function calculateUserRetention(events: any[]) {
-  const userFirstUsage = events.reduce((acc, event) => {
-    if (!acc[event.userId] || new Date(event.timestamp) < new Date(acc[event.userId])) {
-      acc[event.userId] = event.timestamp;
-    }
-    return acc;
-  }, {} as Record<string, string>);
-
-  const userLastUsage = events.reduce((acc, event) => {
-    if (!acc[event.userId] || new Date(event.timestamp) > new Date(acc[event.userId])) {
-      acc[event.userId] = event.timestamp;
-    }
-    return acc;
-  }, {} as Record<string, string>);
-
-  const now = new Date();
-  const totalUsers = Object.keys(userFirstUsage).length;
-
-  if (totalUsers === 0) {
-    return { day1: 0, day7: 0, day30: 0 };
-  }
-
-  const day1Retention = Object.entries(userFirstUsage)
-    .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage as string);
-      const lastDate = new Date(userLastUsage[userId]);
-      const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-      return daysDiff >= 1;
-    }).length;
-
-  const day7Retention = Object.entries(userFirstUsage)
-    .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage as string);
-      const lastDate = new Date(userLastUsage[userId]);
-      const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-      return daysDiff >= 7;
-    }).length;
-
-  const day30Retention = Object.entries(userFirstUsage)
-    .filter(([userId, firstUsage]) => {
-      const firstDate = new Date(firstUsage as string);
-      const lastDate = new Date(userLastUsage[userId]);
-      const daysDiff = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-      return daysDiff >= 30;
-    }).length;
-
-  return {
-    day1: Math.round((day1Retention / totalUsers) * 100),
-    day7: Math.round((day7Retention / totalUsers) * 100),
-    day30: Math.round((day30Retention / totalUsers) * 100)
-  };
-}
-
-// Helper function to calculate demographics
-async function calculateDemographics(events: any[]) {
-  const uniqueUsers = [...new Set(events.map(e => e.userId))];
-  
-  // Get user details
-  const userPromises = uniqueUsers.map(async (userId) => {
-    const userDoc = await adminDb.collection('users').doc(userId).get();
-    return userDoc.exists ? { id: userId, ...userDoc.data() } : null;
-  });
-
-  const users = (await Promise.all(userPromises)).filter(Boolean) as Array<{ id: string; userType?: string; institution?: string; [key: string]: any }>;
-
-  // Calculate by user type
-  const userTypeCounts = users.reduce((acc, user) => {
-    const type = user?.userType || 'unknown';
-    acc[type] = (acc[type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const byUserType = Object.entries(userTypeCounts).map(([type, count]) => ({
-    type,
-    count,
-    percentage: Math.round((count / users.length) * 100)
-  }));
-
-  // Calculate by institution
-  const institutionCounts = users.reduce((acc, user) => {
-    const institution = user?.institution || 'unknown';
-    acc[institution] = (acc[institution] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const byInstitution = Object.entries(institutionCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 10)
-    .map(([institution, count]) => ({
-      institution,
-      count,
-      percentage: Math.round((count / users.length) * 100)
-    }));
-
-  return {
-    byUserType,
-    byInstitution,
-    byGeoLocation: [] // TODO: Implement geo tracking
-  };
-}

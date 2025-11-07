@@ -88,7 +88,7 @@
 
   /* Gradient text for hype */
   .hype-text {
-    background: linear-gradient(135deg, #FFD700, #FF6B6B, #FFD700);
+    background: linear-gradient(135deg, var(--hive-brand-primary), var(--hive-brand-hover), var(--hive-brand-primary));
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -112,15 +112,15 @@
 
   /* Meme-worthy borders */
   .chaos-border {
-    border: 2px dashed #FFD700;
+    border: 2px dashed var(--hive-brand-primary);
     border-radius: 0.5rem;
   }
 
   /* "no cap" shadow (authentic) */
   .no-cap-shadow {
     box-shadow:
-      4px 4px 0px #FFD700,
-      8px 8px 0px rgba(255, 215, 0, 0.3);
+      4px 4px 0px var(--hive-brand-primary),
+      8px 8px 0px color-mix(in srgb, var(--hive-brand-primary) 30%, transparent);
   }
 
   /* Tilted for that chaotic energy */

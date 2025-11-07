@@ -30,8 +30,8 @@ export {
 export { EnhancedAppShell } from "./src/components/shell/enhanced-app-shell";
 
 // === BASIC HIVE COMPONENTS ===
-export { HiveButton, HiveButton as Button } from "./src/components/hive-button";
-export { HiveInput, HiveSearchInput } from "./src/components/hive-input";
+export { Button, buttonVariants } from "./src/atomic/atoms/button";
+export { Input, inputVariants } from "./src/atomic/atoms/input";
 export { HiveSelect, hiveSelectVariants, type HiveSelectProps } from "./src/components/hive-select";
 export { HiveComingSoonModal } from "./src/components/hive-coming-soon-modal";
 export { HiveModal } from "./src/components/hive-modal";
@@ -39,15 +39,9 @@ export { HiveLogo } from "./src/components/hive-logo";
 export { HiveBadge, HiveBadge as Badge } from "./src/components/hive-badge";
 
 // === PROGRESS COMPONENTS ===
-export { 
-  Progress as HiveProgress,
+export {
   Progress,
   CircularProgress,
-  LoadingProgress,
-  SuccessProgress,
-  ErrorProgress,
-  CircularSpinner,
-  type ProgressProps as HiveProgressProps,
   type ProgressProps
 } from "./src/atomic/atoms/progress";
 
@@ -55,19 +49,12 @@ export {
 export { SchoolSearchInput } from "./src/components/welcome/school-search-input";
 
 // === BASIC ATOMS ===
-// Export only working enhanced components - Button is exported above as HiveButton
-export { 
-  Button as AtomicButton,
-  buttonVariants,
-} from "./src/atomic/atoms/button-enhanced";
+export { Button as AtomicButton } from "./src/atomic/atoms/button";
 
 // Layout components for compatibility
 export { Stack } from "./src/components/elements/stack";
 
-export {
-  Input,
-  inputVariants,
-} from "./src/atomic/atoms/input-enhanced";
+export { Input, inputVariants } from "./src/atomic/atoms/input";
 
 export {
   Switch,
@@ -126,6 +113,38 @@ export {
   Alert,
   AlertDescription
 } from "./src/components/ui/alert";
+
+// === HIVE LAB EXPERIENCE ===
+export * from "./src/atomic/templates";
+
+// === HIVE LAB SYSTEM ===
+export {
+  VisualToolComposer,
+  type VisualToolComposerProps,
+} from "./src/components/hivelab/visual-tool-composer";
+export {
+  renderElement,
+  SearchInputElement,
+  FilterSelectorElement,
+  ResultListElement,
+  DatePickerElement,
+  UserSelectorElement,
+  TagCloudElement,
+  MapViewElement,
+  ChartDisplayElement,
+  FormBuilderElement,
+  NotificationCenterElement,
+} from "./src/components/hivelab/element-renderers";
+export {
+  ElementRegistry,
+  ElementEngine,
+  CORE_ELEMENTS,
+  TOOL_TEMPLATES,
+  initializeElementSystem,
+  type ElementDefinition,
+  type ToolComposition,
+  type ElementProps,
+} from "./src/lib/hivelab/element-system";
 
 // === STYLES ===
 // Note: CSS is imported separately in consuming applications

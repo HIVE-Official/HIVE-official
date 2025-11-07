@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@hive/auth-logic";
-import { HiveButton } from "@hive/ui";
+import { Button } from "@hive/ui";
 import { AuthLayout } from "../../../components/auth/auth-layout";
 import { AuthStatus } from "../../../components/auth/auth-status";
 
@@ -165,7 +165,7 @@ function VerifyPageContent() {
             <div className="space-y-3">
               {error?.includes("expired") || error?.includes("used") ? (
                 <>
-                  <HiveButton
+                  <Button
                     variant="default"
                     size="lg"
                     className="w-full bg-[var(--hive-brand-primary)] hover:bg-[var(--hive-brand-primary)]/90 text-black"
@@ -176,25 +176,25 @@ function VerifyPageContent() {
                     }}
                   >
                     Get a new magic link
-                  </HiveButton>
-                  <HiveButton
+                  </Button>
+                  <Button
                     variant="ghost"
                     size="lg"
                     className="w-full text-white/60 hover:text-white"
                     onClick={() => router.push("/auth/login")}
                   >
                     Start over
-                  </HiveButton>
+                  </Button>
                 </>
               ) : (
-                <HiveButton
+                <Button
                   variant="secondary"
                   size="lg"
                   className="w-full"
                   onClick={() => router.push("/auth/login")}
                 >
                   Try again
-                </HiveButton>
+                </Button>
               )}
             </div>
           }

@@ -2,6 +2,10 @@ import { z } from "zod";
 import { dbAdmin as adminDb } from "@/lib/firebase-admin";
 import { logger } from "@/lib/structured-logger";
 import { withAuthAndErrors, withAuthValidationAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { ToolSchema, createToolDefaults as coreCreateToolDefaults, PlacementTargetType } from "@hive/core";
+import { createPlacementDocument, buildPlacementCompositeId } from "@/lib/tool-placement";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
+import { rateLimit } from "@/lib/rate-limit-redis";
 
 // Define tool schemas locally (not in core package)
 const CreateToolSchema = z.object({
@@ -13,17 +17,17 @@ const CreateToolSchema = z.object({
   config: z.any().optional(),
 });
 
-const createToolDefaults = {
+const localToolDefaults = {
   status: 'draft' as const,
   type: 'visual' as const,
   config: {},
 };
 
 // Rate limiting: 10 tool creations per hour per user
-// // const createToolLimiter = rateLimit({
-//   windowMs: 60 * 60 * 1000, // 1 hour
-//   max: 10, // 10 requests per hour
-// });
+const createToolLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // 10 requests per hour
+});
 
 // GET /api/tools - List user's tools
 export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
@@ -39,6 +43,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
   let query = adminDb
     .collection("tools")
     .where("ownerId", "==", userId)
+    .where("campusId", "==", CURRENT_CAMPUS_ID)
     .orderBy("updatedAt", "desc");
 
     // Filter by space if provided
@@ -61,7 +66,9 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
     }));
 
     // Get total count for pagination
-    const countQuery = adminDb.collection("tools").where("ownerId", "==", userId);
+    const countQuery = adminDb.collection("tools")
+      .where("ownerId", "==", userId)
+      .where("campusId", "==", CURRENT_CAMPUS_ID);
     const countSnapshot = await countQuery.count().get();
     const total = countSnapshot.data().count;
 
@@ -93,7 +100,7 @@ export const POST = withAuthValidationAndErrors(
 
     // Rate limiting
     try {
-      // await createToolLimiter.check(); // Check rate limit for this user
+      await createToolLimiter.check(userId); // Check rate limit for this user
     } catch {
       return respond.error("Too many tool creations. Please try again later.", "UNKNOWN_ERROR", { status: 429 });
     }
@@ -143,13 +150,17 @@ export const POST = withAuthValidationAndErrors(
     }
 
     // Create tool document
-    const toolData = createToolDefaults(userId, validatedData);
+    const toolData = { ...coreCreateToolDefaults(), ownerId: userId, ...validatedData } as any;
     const now = new Date();
 
     const tool = {
       ...toolData,
-      elements: templateElements, // Use template elements if available
-      config: { ...toolData.config, ...templateConfig, ...validatedData.config }, // Merge configs
+      campusId: CURRENT_CAMPUS_ID,
+      // Use client-provided elements when present; otherwise fall back to template
+      elements: (validatedData as any).elements && Array.isArray((validatedData as any).elements)
+        ? (validatedData as any).elements
+        : templateElements,
+      config: { ...(toolData.config || {}), ...templateConfig, ...(validatedData.config || {}) }, // Merge configs
       metadata: {
         ...toolData.metadata,
         templateId: validatedData.templateId,
@@ -176,30 +187,63 @@ export const POST = withAuthValidationAndErrors(
 
     await toolRef.collection("versions").doc("1.0.0").set(initialVersion);
 
-    // If this is for a specific space, also add to space's tools collection
     if (validatedData.spaceId && validatedData.spaceId !== 'personal') {
       try {
-        const spaceToolRef = adminDb
-          .collection('spaces')
-          .doc(validatedData.spaceId)
-          .collection('tools')
-          .doc(toolRef.id);
-          
-        await spaceToolRef.set({
+        const placementRecord = {
           toolId: toolRef.id,
-          name: validatedData.name,
-          description: validatedData.description,
-          createdBy: userId,
+          targetType: 'space' as PlacementTargetType,
+          targetId: validatedData.spaceId,
+          surface: 'tools',
+          status: 'draft',
+          position: 0,
+          config: {},
+          permissions: {
+            canInteract: true,
+            canView: true,
+            canEdit: false,
+            allowedRoles: ['builder', 'moderator', 'admin', 'member'],
+          },
+          settings: {
+            showInDirectory: true,
+            allowSharing: true,
+            collectAnalytics: true,
+            notifyOnInteraction: false,
+          },
           createdAt: now,
-          type: validatedData.type,
-          status: 'draft'
+          createdBy: userId,
+          updatedAt: now,
+          usageCount: 0,
+          metadata: {
+            createdFrom: 'tool_builder',
+          },
+        };
+
+        const placement = await createPlacementDocument('space', validatedData.spaceId, placementRecord);
+        const compositeId = buildPlacementCompositeId('space', validatedData.spaceId, placement.id);
+
+        await adminDb.collection('deployedTools').doc(compositeId).set({
+          toolId: toolRef.id,
+          deployedBy: userId,
+          deployedTo: 'space',
+          targetId: validatedData.spaceId,
+          surface: 'tools',
+          permissions: placementRecord.permissions,
+          status: 'draft',
+          deployedAt: now.toISOString(),
+          usageCount: 0,
+          settings: placementRecord.settings,
+          placementPath: placement.path,
+          placementId: placement.id,
+          targetType: 'space',
+          creatorId: userId,
+          spaceId: validatedData.spaceId,
+          profileId: null,
         });
       } catch (error) {
         logger.warn(
-      `Failed to add tool to space collection at /api/tools`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-        // Don't fail the whole operation
+          `Failed to create placement for tool at /api/tools`,
+          error instanceof Error ? error : new Error(String(error))
+        );
       }
     }
 

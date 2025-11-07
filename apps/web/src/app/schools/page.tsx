@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton } from '@hive/ui';
+import { Button } from '@hive/ui';
 import { SchoolsPageHeader } from '../../components/temp-stubs';
 
 
@@ -350,8 +350,7 @@ export default function SchoolsPage() {
 
   if (!isMounted) {
     return (
-      <div className="relative min-h-screen overflow-hidden hive-font-sans bg-hive-background-primary text-hive-text-primary" 
-           style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}>
+      <div className="relative min-h-screen overflow-hidden hive-font-sans bg-hive-background-primary text-hive-text-primary">
         <div className="flex items-center justify-center min-h-screen">
           <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
         </div>
@@ -362,8 +361,7 @@ export default function SchoolsPage() {
   return (
     <React.Fragment>
       <motion.div 
-        className="relative min-h-screen overflow-hidden hive-font-sans bg-hive-background-primary text-hive-text-primary" 
-        style={{ backgroundColor: '#0A0A0B', color: '#F5F5F7' }}
+        className="relative min-h-screen overflow-hidden hive-font-sans bg-hive-background-primary text-hive-text-primary"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
@@ -380,10 +378,10 @@ export default function SchoolsPage() {
       {/* Main Content */}
       <div className="relative z-10 max-w-6xl mx-auto p-6 py-12">
         <div className="text-center mb-16">
-          <h1 className="hive-font-sans text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6" style={{ color: '#F5F5F7' }}>
+          <h1 className="hive-font-sans text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6 text-hive-text-primary">
             Find your campus
           </h1>
-          <p className="hive-font-sans text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-8" style={{ color: '#9A9AA1' }}>
+          <p className="hive-font-sans text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-8 text-hive-text-tertiary">
             Join the students building the future of campus life at your university
           </p>
 
@@ -408,7 +406,7 @@ export default function SchoolsPage() {
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
               <div className="w-6 h-6 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
             </div>
-            <p className="hive-font-sans text-sm" style={{ color: '#9A9AA1' }}>
+            <p className="hive-font-sans text-sm text-hive-text-tertiary">
               Loading universities...
             </p>
           </div>
@@ -453,7 +451,7 @@ export default function SchoolsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center hive-gap-md mb-3">
-                      <h3 className="hive-font-sans text-lg font-semibold tracking-tight" style={{ color: '#F5F5F7' }}>
+                      <h3 className="hive-font-sans text-lg font-semibold tracking-tight text-hive-text-primary">
                         {school.name}
                       </h3>
                       {school.isActive && (
@@ -468,7 +466,7 @@ export default function SchoolsPage() {
                       )}
                     </div>
                     
-                    <div className="flex items-center hive-gap-md hive-font-sans text-sm" style={{ color: '#9A9AA1' }}>
+                    <div className="flex items-center hive-gap-md hive-font-sans text-sm text-hive-text-tertiary">
                       <div className="flex items-center hive-gap-xs">
                         <MapPin className="w-4 h-4" />
                         <span className="font-medium">{school.location}</span>
@@ -488,7 +486,7 @@ export default function SchoolsPage() {
                       </div>
                     ) : (
                       <div className="text-center">
-                        <div className="hive-font-sans text-sm font-medium" style={{ color: '#C1C1C4' }}>
+                        <div className="hive-font-sans text-sm font-medium text-hive-text-secondary">
                           {isBlurred ? 'Coming Soon' : (school.isComingSoon ? 'Coming Soon' : 'Join Waitlist')}
                         </div>
                       </div>
@@ -513,10 +511,10 @@ export default function SchoolsPage() {
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-6 h-6 text-white/40" />
             </div>
-            <h3 className="hive-font-sans text-lg font-semibold mb-2" style={{ color: '#F5F5F7' }}>
+            <h3 className="hive-font-sans text-lg font-semibold mb-2 text-hive-text-primary">
               No universities found
             </h3>
-            <p className="hive-font-sans text-sm leading-relaxed" style={{ color: '#9A9AA1' }}>
+            <p className="hive-font-sans text-sm leading-relaxed text-hive-text-tertiary">
               Try adjusting your search or check back later for more campuses
             </p>
           </div>
@@ -525,15 +523,15 @@ export default function SchoolsPage() {
         {/* Call to Action */}
         <div className="text-center">
           <div className="hive-glass-strong p-8 rounded-xl max-w-2xl mx-auto" style={{ border: '1px solid rgba(255, 191, 0, 0.3)' }}>
-            <h3 className="hive-font-sans text-xl md:text-2xl font-bold mb-4 tracking-tight" style={{ color: '#F5F5F7' }}>
+            <h3 className="hive-font-sans text-xl md:text-2xl font-bold mb-4 tracking-tight text-hive-text-primary">
               Don&apos;t see your university?
             </h3>
-            <p className="hive-font-sans text-base mb-6 leading-relaxed" style={{ color: '#9A9AA1' }}>
+            <p className="hive-font-sans text-base mb-6 leading-relaxed text-hive-text-tertiary">
               We&apos;re expanding to more campuses every month. Join our general waitlist to be notified when HIVE arrives at your school.
             </p>
-            <HiveButton variant="default" size="lg" className="px-8 py-3">
+            <Button variant="default" size="lg" className="px-8 py-3">
               Join General Waitlist
-            </HiveButton>
+            </Button>
           </div>
         </div>
       </div>

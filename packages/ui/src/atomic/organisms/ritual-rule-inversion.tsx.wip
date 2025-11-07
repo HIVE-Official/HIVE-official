@@ -1,0 +1,256 @@
+'use client';
+
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Card } from '../atoms/card';
+import { Badge } from '../atoms/badge';
+import { AlertTriangle, Clock, Shield, Ban, CheckCircle } from 'lucide-react';
+import type { RuleInversionConfig } from '@hive/core';
+
+export interface RitualRuleInversionProps {
+  config: RuleInversionConfig;
+  isActive: boolean;
+  endsAt?: string;
+  className?: string;
+}
+
+/**
+ * Rule Inversion Renderer
+ *
+ * Displays platform-wide rule changes/suspensions
+ * Shows which rules are temporarily inverted or suspended
+ */
+export const RitualRuleInversion: React.FC<RitualRuleInversionProps> = ({
+  config,
+  isActive,
+  endsAt,
+  className,
+}) => {
+  const timeRemaining = React.useMemo(() => {
+    if (!isActive || !endsAt) return null;
+    const now = Date.now();
+    const ends = new Date(endsAt).getTime();
+    const diff = ends - now;
+    if (diff <= 0) return 'Ended';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `${days}d ${hours % 24}h left`;
+    }
+    if (hours > 0) return `${hours}h ${minutes}m left`;
+    return `${minutes}m left`;
+  }, [isActive, endsAt]);
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      {/* Alert Banner */}
+      <Card className="overflow-hidden border-red-500/30 bg-gradient-to-br from-red-900/20 via-[var(--hive-background-secondary)] to-black p-0">
+        <div className="relative overflow-hidden bg-gradient-to-r from-red-500/20 to-orange-500/20 px-6 py-6">
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/20 backdrop-blur-sm">
+              <AlertTriangle className="h-8 w-8 text-red-400" />
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="border-red-400/40 bg-red-500/10 text-xs uppercase tracking-[0.16em] text-red-400">
+                  {isActive ? 'Active Now' : 'Scheduled'}
+                </Badge>
+                {isActive && timeRemaining && (
+                  <span className="flex items-center gap-1.5 text-xs text-red-400">
+                    <Clock className="h-3.5 w-3.5" />
+                    {timeRemaining}
+                  </span>
+                )}
+              </div>
+
+              <h2 className="text-2xl font-bold text-white">Rule Inversion Active</h2>
+              <p className="max-w-2xl text-white/80">
+                {config.description || 'Some platform rules are temporarily suspended or inverted. See details below.'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Banner */}
+        {isActive && (
+          <div className="border-t border-red-500/20 bg-red-950/30 px-6 py-3">
+            <div className="flex items-center gap-2 text-sm text-red-300">
+              <Shield className="h-4 w-4" />
+              <span className="font-medium">
+                Platform rules are temporarily modified. Normal rules resume when this ritual ends.
+              </span>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Suspended Rules */}
+      {config.suspendedRules && config.suspendedRules.length > 0 && (
+        <Card className="border-red-500/20 bg-[var(--hive-background-secondary)] p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Ban className="h-5 w-5 text-red-400" />
+            <h3 className="text-lg font-bold text-white">Suspended Rules</h3>
+          </div>
+
+          <div className="space-y-3">
+            {config.suspendedRules.map((rule, i) => (
+              <RuleCard
+                key={i}
+                rule={rule}
+                status="suspended"
+                isActive={isActive}
+              />
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Inverted Rules */}
+      {config.invertedRules && config.invertedRules.length > 0 && (
+        <Card className="border-orange-500/20 bg-[var(--hive-background-secondary)] p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-orange-400" />
+            <h3 className="text-lg font-bold text-white">Inverted Rules</h3>
+          </div>
+
+          <div className="space-y-3">
+            {config.invertedRules.map((rule, i) => (
+              <RuleCard
+                key={i}
+                rule={rule}
+                status="inverted"
+                isActive={isActive}
+              />
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* New Temporary Rules */}
+      {config.temporaryRules && config.temporaryRules.length > 0 && (
+        <Card className="border-blue-500/20 bg-[var(--hive-background-secondary)] p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Shield className="h-5 w-5 text-blue-400" />
+            <h3 className="text-lg font-bold text-white">Temporary Rules</h3>
+          </div>
+
+          <div className="space-y-3">
+            {config.temporaryRules.map((rule, i) => (
+              <RuleCard
+                key={i}
+                rule={rule}
+                status="temporary"
+                isActive={isActive}
+              />
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Safety Notice */}
+      <Card className="border-white/10 bg-white/5 p-4">
+        <div className="flex items-start gap-3 text-sm text-white/80">
+          <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
+          <div className="space-y-1">
+            <p className="font-medium text-white">Community Guidelines Still Apply</p>
+            <p className="text-white/60">
+              Even during rule inversions, core safety policies remain in effect. Harassment, hate speech,
+              and illegal content are never allowed.
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+interface RuleCardProps {
+  rule: {
+    name: string;
+    description: string;
+    normalBehavior?: string;
+    modifiedBehavior?: string;
+  };
+  status: 'suspended' | 'inverted' | 'temporary';
+  isActive: boolean;
+}
+
+const RuleCard: React.FC<RuleCardProps> = ({ rule, status, isActive }) => {
+  const statusConfig = {
+    suspended: {
+      color: 'red',
+      icon: Ban,
+      label: 'Suspended',
+      bgClass: 'bg-red-950/30',
+      borderClass: 'border-red-500/20',
+      iconClass: 'text-red-400',
+    },
+    inverted: {
+      color: 'orange',
+      icon: AlertTriangle,
+      label: 'Inverted',
+      bgClass: 'bg-orange-950/30',
+      borderClass: 'border-orange-500/20',
+      iconClass: 'text-orange-400',
+    },
+    temporary: {
+      color: 'blue',
+      icon: Shield,
+      label: 'New Rule',
+      bgClass: 'bg-blue-950/30',
+      borderClass: 'border-blue-500/20',
+      iconClass: 'text-blue-400',
+    },
+  };
+
+  const config = statusConfig[status];
+  const Icon = config.icon;
+
+  return (
+    <Card className={cn(
+      'border p-4',
+      config.borderClass,
+      config.bgClass,
+      !isActive && 'opacity-50'
+    )}>
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-black/40">
+          <Icon className={cn('h-5 w-5', config.iconClass)} />
+        </div>
+
+        <div className="flex-1 space-y-2">
+          <div className="flex items-start justify-between gap-2">
+            <h4 className="font-semibold text-white">{rule.name}</h4>
+            <Badge
+              variant="outline"
+              className={cn(
+                'flex-shrink-0 text-xs',
+                config.borderClass,
+                config.iconClass
+              )}
+            >
+              {config.label}
+            </Badge>
+          </div>
+
+          <p className="text-sm text-white/70">{rule.description}</p>
+
+          {status === 'inverted' && rule.normalBehavior && rule.modifiedBehavior && (
+            <div className="mt-3 space-y-2 rounded-lg bg-black/30 p-3 text-xs">
+              <div className="flex items-start gap-2">
+                <span className="flex-shrink-0 font-medium text-white/60">Normal:</span>
+                <span className="text-white/80">{rule.normalBehavior}</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="flex-shrink-0 font-medium text-orange-400">Inverted:</span>
+                <span className="text-white">{rule.modifiedBehavior}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+};

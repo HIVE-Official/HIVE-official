@@ -1,173 +1,199 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { z } from 'zod';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from '@/lib/logger';
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from '@/lib/middleware';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import { requireSpaceMembership } from '@/lib/space-security';
 
 const RSVPSchema = z.object({
-  status: z.enum(['going', 'maybe', 'not_going']) });
+  status: z.enum(['going', 'maybe', 'not_going']),
+});
 
-const db = dbAdmin;
+async function loadEvent(spaceId: string, eventId: string) {
+  const eventDoc = await dbAdmin
+    .collection('spaces')
+    .doc(spaceId)
+    .collection('events')
+    .doc(eventId)
+    .get();
 
-// POST /api/spaces/[spaceId]/events/[eventId]/rsvp - RSVP to an event
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; eventId: string }> }
-) {
-  try {
-    const { spaceId, eventId } = await params;
-    
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+  if (!eventDoc.exists) {
+    return { ok: false as const, status: HttpStatus.NOT_FOUND, message: 'Event not found' };
+  }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
+  const eventData = eventDoc.data();
+  if (!eventData) {
+    return { ok: false as const, status: HttpStatus.NOT_FOUND, message: 'Event data missing' };
+  }
 
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Check if event exists
-    const eventDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .get();
-
-    if (!eventDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const eventData = eventDoc.data()!;
-
-    // Check if RSVP deadline has passed
-    if (eventData.rsvpDeadline && new Date() > eventData.rsvpDeadline.toDate()) {
-      return NextResponse.json(ApiResponseHelper.error("RSVP deadline has passed", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-    }
-
-    const body = (await request.json()) as unknown;
-    const { status } = RSVPSchema.parse(body);
-
-    // Check if event is at capacity for 'going' status
-    if (status === 'going' && eventData.maxAttendees) {
-      const currentRsvpSnapshot = await db
-        .collection("spaces")
-        .doc(spaceId)
-        .collection("events")
-        .doc(eventId)
-        .collection("rsvps")
-        .where("status", "==", "going")
-        .get();
-
-      if (currentRsvpSnapshot.size >= eventData.maxAttendees) {
-        return NextResponse.json(ApiResponseHelper.error("Event is at full capacity", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-      }
-    }
-
-    // Create or update RSVP
-    const rsvpData = {
-      userId: decodedToken.uid,
+  if (eventData.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+    logger.error('SECURITY: Cross-campus event RSVP attempt blocked', {
       eventId,
       spaceId,
-      status,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .collection("rsvps")
-      .doc(decodedToken.uid)
-      .set(rsvpData, { merge: true });
-
-    // Get updated attendee count
-    const updatedRsvpSnapshot = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .collection("rsvps")
-      .where("status", "==", "going")
-      .get();
-
-    return NextResponse.json({
-      success: true,
-      rsvp: rsvpData,
-      currentAttendees: updatedRsvpSnapshot.size });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid RSVP data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    logger.error(
-      `Error creating RSVP at /api/spaces/[spaceId]/events/[eventId]/rsvp`,
-      error instanceof Error ? error : new Error(String(error))
-    );
-    return NextResponse.json(ApiResponseHelper.error("Failed to RSVP to event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+      eventCampusId: eventData.campusId,
+      currentCampusId: CURRENT_CAMPUS_ID,
+    });
+    return { ok: false as const, status: HttpStatus.FORBIDDEN, message: 'Access denied' };
   }
+
+  return { ok: true as const, eventDoc, eventData };
 }
 
-// GET /api/spaces/[spaceId]/events/[eventId]/rsvp - Get user's RSVP status
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; eventId: string }> }
-) {
+export const POST = withAuthValidationAndErrors(
+  RSVPSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string; eventId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId, eventId } = await params;
+      const userId = getUserId(request);
+
+      const membership = await requireSpaceMembership(spaceId, userId);
+      if (!membership.ok) {
+        const code =
+          membership.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+        return respond.error(membership.error, code, { status: membership.status });
+      }
+
+      const load = await loadEvent(spaceId, eventId);
+      if (!load.ok) {
+        const code = load.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+        return respond.error(load.message, code, { status: load.status });
+      }
+
+      if (load.eventData.rsvpDeadline) {
+        const deadline =
+          load.eventData.rsvpDeadline instanceof Date
+            ? load.eventData.rsvpDeadline
+            : load.eventData.rsvpDeadline.toDate?.() ?? new Date(load.eventData.rsvpDeadline);
+        if (deadline && new Date() > deadline) {
+          return respond.error('RSVP deadline has passed', 'INVALID_INPUT', {
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }
+      }
+
+      if (body.status === 'going' && load.eventData.maxAttendees) {
+        const currentGoing = await dbAdmin
+          .collection('spaces')
+          .doc(spaceId)
+          .collection('events')
+          .doc(eventId)
+          .collection('rsvps')
+          .where('status', '==', 'going')
+          .get();
+
+        if (currentGoing.size >= load.eventData.maxAttendees) {
+          return respond.error('Event is at full capacity', 'INVALID_INPUT', {
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }
+      }
+
+      const rsvpRef = dbAdmin
+        .collection('spaces')
+        .doc(spaceId)
+        .collection('events')
+        .doc(eventId)
+        .collection('rsvps')
+        .doc(userId);
+
+      const existing = await rsvpRef.get();
+      const timestamp = new Date();
+      const rsvpData = {
+        userId,
+        eventId,
+        spaceId,
+        status: body.status,
+        campusId: CURRENT_CAMPUS_ID,
+        updatedAt: timestamp,
+        ...(existing.exists ? {} : { createdAt: timestamp }),
+      };
+
+      await rsvpRef.set(rsvpData, { merge: true });
+
+      const updatedCount = await dbAdmin
+        .collection('spaces')
+        .doc(spaceId)
+        .collection('events')
+        .doc(eventId)
+        .collection('rsvps')
+        .where('status', '==', 'going')
+        .get();
+
+      return respond.success({
+        rsvp: rsvpData,
+        currentAttendees: updatedCount.size,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return respond.error('Invalid RSVP data', 'VALIDATION_ERROR', {
+          status: HttpStatus.BAD_REQUEST,
+          details: error.errors,
+        });
+      }
+
+      logger.error(
+        `Error creating RSVP at /api/spaces/[spaceId]/events/[eventId]/rsvp`,
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return respond.error('Failed to RSVP to event', 'INTERNAL_ERROR', {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
+);
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; eventId: string }> },
+  respond,
+) => {
   try {
     const { spaceId, eventId } = await params;
-    
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const userId = getUserId(request);
+
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
+    const load = await loadEvent(spaceId, eventId);
+    if (!load.ok) {
+      const code = load.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(load.message, code, { status: load.status });
+    }
 
-    // Get user's RSVP
-    const rsvpDoc = await db
-      .collection("spaces")
+    const rsvpDoc = await dbAdmin
+      .collection('spaces')
       .doc(spaceId)
-      .collection("events")
+      .collection('events')
       .doc(eventId)
-      .collection("rsvps")
-      .doc(decodedToken.uid)
+      .collection('rsvps')
+      .doc(userId)
       .get();
 
     const rsvpStatus = rsvpDoc.exists ? rsvpDoc.data()?.status : null;
 
-    return NextResponse.json({
-      userRSVP: rsvpStatus });
+    return respond.success({ userRSVP: rsvpStatus });
   } catch (error) {
     logger.error(
       `Error fetching RSVP status at /api/spaces/[spaceId]/events/[eventId]/rsvp`,
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch RSVP status", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error('Failed to fetch RSVP status', 'INTERNAL_ERROR', {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});

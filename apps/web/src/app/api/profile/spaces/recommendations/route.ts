@@ -28,6 +28,15 @@ interface SpaceRecommendation {
   recommendationType: 'similar_interests' | 'friend_activity' | 'trending' | 'new_spaces' | 'academic_match';
 }
 
+function getSpaceMemberCount(space: any): number {
+  return (
+    space.metrics?.memberCount ??
+    space.memberCount ??
+    space.metrics?.activeMembers ??
+    0
+  );
+}
+
 // GET - Get space recommendations for user with security
 export const GET = withProfileSecurity(async (request: NextRequest) => {
   try {
@@ -56,12 +65,16 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
     const type = searchParams.get('type') || 'all'; // all, similar_interests, trending, new_spaces
 
     // Get user's current memberships
-    const currentMembershipsQuery = dbAdmin.collection('members')
+    const currentMembershipsQuery = dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', user.uid)
-      .where('status', '==', 'active');
+      .where('campusId', '==', campusId)
+      .where('isActive', '==', true);
 
     const currentMembershipsSnapshot = await currentMembershipsQuery.get();
-    const currentSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
+    const currentSpaceIds = currentMembershipsSnapshot.docs
+      .map((doc) => doc.data().spaceId)
+      .filter(Boolean);
 
     // Get user profile for interest matching
     const userDoc = await dbAdmin.collection('users').doc(user.uid).get();
@@ -71,7 +84,7 @@ export const GET = withProfileSecurity(async (request: NextRequest) => {
     const allSpacesQuery = dbAdmin.collection('spaces')
       .where('campusId', '==', campusId)
       .where('status', '==', 'active')
-      .orderBy('memberCount', 'desc')
+      .orderBy('metrics.memberCount', 'desc')
       .limit(100); // Limit for performance
 
     const allSpacesSnapshot = await allSpacesQuery.get();
@@ -198,7 +211,7 @@ async function generateInterestBasedRecommendations(
           spaceName: space.name,
           spaceDescription: space.description,
           spaceType: space.type || 'general',
-          memberCount: space.memberCount || 0,
+          memberCount: getSpaceMemberCount(space),
           isActive: space.status === 'active',
           matchScore: Math.min(100, matchScore * 10),
           matchReasons,
@@ -220,7 +233,7 @@ async function generateTrendingRecommendations(
   currentSpaceIds: string[]
 ): Promise<SpaceRecommendation[]> {
   return availableSpaces
-    .filter(space => space.memberCount > 10) // Only spaces with decent activity
+    .filter(space => getSpaceMemberCount(space) > 10) // Only spaces with decent activity
     .sort((a, b) => (b.recentActivity || 0) - (a.recentActivity || 0))
     .slice(0, 5)
     .map(space => ({
@@ -228,7 +241,7 @@ async function generateTrendingRecommendations(
       spaceName: space.name,
       spaceDescription: space.description,
       spaceType: space.type || 'general',
-      memberCount: space.memberCount || 0,
+      memberCount: getSpaceMemberCount(space),
       isActive: space.status === 'active',
       matchScore: Math.min(100, (space.recentActivity || 0) / 10),
       matchReasons: ['Trending on campus', 'High recent activity'],
@@ -249,17 +262,24 @@ async function generateNewSpaceRecommendations(
   
   return availableSpaces
     .filter(space => {
-      const createdAt = new Date(space.createdAt);
+      const createdAt = space.createdAt?.toDate?.() || (space.createdAt ? new Date(space.createdAt) : null);
+      if (!createdAt) {
+        return false;
+      }
       return createdAt > oneWeekAgo;
     })
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort((a, b) => {
+      const aDate = a.createdAt?.toDate?.() || (a.createdAt ? new Date(a.createdAt) : 0);
+      const bDate = b.createdAt?.toDate?.() || (b.createdAt ? new Date(b.createdAt) : 0);
+      return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
+    })
     .slice(0, 3)
     .map(space => ({
       spaceId: space.id,
       spaceName: space.name,
       spaceDescription: space.description,
       spaceType: space.type || 'general',
-      memberCount: space.memberCount || 0,
+      memberCount: getSpaceMemberCount(space),
       isActive: space.status === 'active',
       matchScore: 60,
       matchReasons: ['New space', 'Recently created'],
@@ -278,17 +298,21 @@ async function generateFriendActivityRecommendations(
 ): Promise<SpaceRecommendation[]> {
   try {
     // Get user's current space memberships to find "friends" (other members)
-    const currentMembershipsQuery = dbAdmin.collection('members')
+    const currentMembershipsQuery = dbAdmin
+      .collection('spaceMembers')
       .where('userId', '==', userId)
-      .where('status', '==', 'active');
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .where('isActive', '==', true);
 
     const currentMembershipsSnapshot = await currentMembershipsQuery.get();
     const userSpaceIds = currentMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
 
     // Get other members from user's spaces
-    const friendsQuery = dbAdmin.collection('members')
+    const friendsQuery = dbAdmin
+      .collection('spaceMembers')
       .where('spaceId', 'in', userSpaceIds.slice(0, 10)) // Limit for performance
-      .where('status', '==', 'active');
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .where('isActive', '==', true);
 
     const friendsSnapshot = await friendsQuery.get();
     const potentialFriendIds = [...new Set(friendsSnapshot.docs
@@ -309,12 +333,16 @@ async function generateFriendActivityRecommendations(
     }
 
     // Get spaces where friends are active
-    const friendMembershipsQuery = dbAdmin.collection('members')
+    const friendMembershipsQuery = dbAdmin
+      .collection('spaceMembers')
       .where('userId', 'in', friendIds.slice(0, 10)) // Limit for performance
-      .where('status', '==', 'active');
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
+      .where('isActive', '==', true);
 
     const friendMembershipsSnapshot = await friendMembershipsQuery.get();
-    const friendSpaceIds = friendMembershipsSnapshot.docs.map(doc => doc.data().spaceId);
+    const friendSpaceIds = friendMembershipsSnapshot.docs
+      .map(doc => doc.data().spaceId)
+      .filter(Boolean);
 
     // Count common members per space
     const spaceFriendCounts: Record<string, number> = {};
@@ -332,7 +360,7 @@ async function generateFriendActivityRecommendations(
         spaceName: space.name,
         spaceDescription: space.description,
         spaceType: space.type || 'general',
-        memberCount: space.memberCount || 0,
+        memberCount: getSpaceMemberCount(space),
         isActive: space.status === 'active',
         matchScore: Math.min(100, spaceFriendCounts[space.id] * 15),
         matchReasons: [`${spaceFriendCounts[space.id]} people you know are members`],
@@ -367,8 +395,8 @@ async function generateAcademicRecommendations(
 
   return availableSpaces
     .filter(space => {
-      const spaceName = space.name.toLowerCase();
-      const spaceDescription = space.description.toLowerCase();
+      const spaceName = (space.name || '').toLowerCase();
+      const spaceDescription = (space.description || '').toLowerCase();
       const spaceType = space.type?.toLowerCase();
       
       // Check for academic relevance
@@ -389,8 +417,8 @@ async function generateAcademicRecommendations(
     })
     .map(space => {
       const matchReasons = [];
-      const spaceName = space.name.toLowerCase();
-      const spaceDescription = space.description.toLowerCase();
+      const spaceName = (space.name || '').toLowerCase();
+      const spaceDescription = (space.description || '').toLowerCase();
       
       if (userMajor && (spaceName.includes(userMajor) || spaceDescription.includes(userMajor))) {
         matchReasons.push(`Matches your major: ${userData.major}`);
@@ -409,7 +437,7 @@ async function generateAcademicRecommendations(
         spaceName: space.name,
         spaceDescription: space.description,
         spaceType: space.type || 'general',
-        memberCount: space.memberCount || 0,
+        memberCount: getSpaceMemberCount(space),
         isActive: space.status === 'active',
         matchScore: matchReasons.length * 25,
         matchReasons,

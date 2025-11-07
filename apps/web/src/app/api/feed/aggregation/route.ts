@@ -4,11 +4,12 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 
 // Content aggregation interfaces
 interface ContentSource {
   id: string;
-  type: 'tool_interactions' | 'space_events' | 'user_posts' | 'builder_announcements' | 'rss_feeds' | 'system_notifications';
+  type: 'tool_interactions' | 'space_events' | 'user_posts' | 'builder_announcements' | 'rss_feeds' | 'system_notifications' | 'ritual_updates';
   spaceId?: string;
   priority: number; // 0-100
   isActive: boolean;
@@ -24,8 +25,8 @@ interface AggregatedContentItem {
   sourceType: ContentSource['type'];
   spaceId?: string;
   spaceName?: string;
-  content: any;
-  contentType: 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import';
+  content: unknown;
+  contentType: 'tool_generated' | 'tool_enhanced' | 'space_event' | 'builder_announcement' | 'rss_import' | 'ritual_update';
   priority: number;
   qualityScore: number;
   relevanceScore: number;
@@ -40,7 +41,7 @@ interface AggregatedContentItem {
   metadata: {
     aggregatedAt: string;
     processingTime: number;
-    validationResults: any;
+    validationResults: unknown;
     crossReferences: string[];
   };
 }
@@ -202,6 +203,7 @@ async function getUserAccessibleSpaces(userId: string): Promise<string[]> {
     const membershipsSnapshot = await dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .get();
     return membershipsSnapshot.docs.map(doc => doc.data().spaceId);
   } catch (error) {
@@ -290,6 +292,19 @@ async function getActiveContentSources(spaceIds: string[]): Promise<ContentSourc
     };
     sources.push(systemNotificationsSource);
 
+    // Ritual updates, campus/system-wide
+    const ritualUpdatesSource: ContentSource = {
+      id: 'ritual_updates',
+      type: 'ritual_updates',
+      priority: 85,
+      isActive: true,
+      refreshInterval: 10,
+      lastRefresh: new Date().toISOString(),
+      contentCount: 0,
+      qualityScore: 85
+    };
+    sources.push(ritualUpdatesSource);
+
     return sources.filter(source => source.isActive);
   } catch (error) {
     logger.error(
@@ -365,6 +380,9 @@ async function aggregateFromSource(
       case 'system_notifications':
         return await aggregateSystemNotifications(source, config, timeWindow);
       
+      case 'ritual_updates':
+        return await aggregateRitualUpdates(source, config, timeWindow);
+      
       default:
         return [];
     }
@@ -383,6 +401,7 @@ async function aggregateToolInteractions(
   try {
     const postsSnapshot = await dbAdmin.collection('posts')
       .where('spaceId', '==', source.spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('type', '==', 'tool_generated')
       .where('createdAt', '>=', timeWindow.toISOString())
       .orderBy('createdAt', 'desc')
@@ -391,7 +410,7 @@ async function aggregateToolInteractions(
     const items: AggregatedContentItem[] = [];
 
     for (const postDoc of postsSnapshot.docs) {
-      const post = { id: postDoc.id, ...postDoc.data() } as any;
+      const post = { id: postDoc.id, ...(postDoc.data() as Record<string, unknown>) } as unknown as PostLike;
       
       // Calculate quality and relevance scores
       const qualityScore = calculateContentQuality(post, 'tool_generated');
@@ -439,6 +458,7 @@ async function aggregateSpaceEvents(
   try {
     const eventsSnapshot = await dbAdmin.collection('events')
       .where('spaceId', '==', source.spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('state', '==', 'published')
       .where('createdAt', '>=', timeWindow.toISOString())
       .orderBy('startDate', 'asc')
@@ -447,7 +467,7 @@ async function aggregateSpaceEvents(
     const items: AggregatedContentItem[] = [];
 
     for (const eventDoc of eventsSnapshot.docs) {
-      const event = { id: eventDoc.id, ...eventDoc.data() } as any;
+      const event = { id: eventDoc.id, ...(eventDoc.data() as Record<string, unknown>) } as unknown as { id: string; createdAt: string };
       
       const qualityScore = calculateContentQuality(event, 'space_event');
       const relevanceScore = calculateRelevanceScore(event, source);
@@ -486,6 +506,8 @@ async function aggregateSpaceEvents(
 }
 
 // Helper function to aggregate user posts
+interface PostLike { id: string; type?: string; createdAt: string; engagement?: { views?: number; likes?: number; comments?: number; shares?: number; toolInteractions?: number } }
+
 async function aggregateUserPosts(
   source: ContentSource,
   config: AggregationConfig,
@@ -494,6 +516,7 @@ async function aggregateUserPosts(
   try {
     const postsSnapshot = await dbAdmin.collection('posts')
       .where('spaceId', '==', source.spaceId)
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('type', 'in', ['tool_enhanced', 'user_post'])
       .where('createdAt', '>=', timeWindow.toISOString())
       .orderBy('createdAt', 'desc')
@@ -502,7 +525,7 @@ async function aggregateUserPosts(
     const items: AggregatedContentItem[] = [];
 
     for (const postDoc of postsSnapshot.docs) {
-      const post = { id: postDoc.id, ...postDoc.data() } as any;
+      const post = { id: postDoc.id, ...(postDoc.data() as Record<string, unknown>) } as unknown as PostLike;
       
       const contentType = post.type === 'tool_enhanced' ? 'tool_enhanced' : 'tool_generated';
       const qualityScore = calculateContentQuality(post, contentType);
@@ -558,7 +581,7 @@ async function aggregateBuilderAnnouncements(
     const items: AggregatedContentItem[] = [];
 
     for (const announcementDoc of announcementsSnapshot.docs) {
-      const announcement = { id: announcementDoc.id, ...announcementDoc.data() } as any;
+      const announcement = { id: announcementDoc.id, ...(announcementDoc.data() as Record<string, unknown>) } as unknown as PostLike;
       
       const qualityScore = calculateContentQuality(announcement, 'builder_announcement');
       const relevanceScore = calculateRelevanceScore(announcement, source);
@@ -605,15 +628,107 @@ async function aggregateSystemNotifications(
   return [];
 }
 
+// Helper function to aggregate ritual updates (participation + campus milestones)
+async function aggregateRitualUpdates(
+  source: ContentSource,
+  config: AggregationConfig,
+  timeWindow: Date
+): Promise<AggregatedContentItem[]> {
+  const items: AggregatedContentItem[] = [];
+
+  try {
+    // Participation updates
+    const participationSnapshot = await dbAdmin.collection('ritual_participation')
+      .where('lastActiveAt', '>=', timeWindow.toISOString())
+      .orderBy('lastActiveAt', 'desc')
+      .limit(config.maxItemsPerSource)
+      .get();
+
+    for (const doc of participationSnapshot.docs) {
+      const p = { id: doc.id, ...(doc.data() as Record<string, unknown>) } as { id: string; ritualId?: string; userId?: string; status?: string; progressPercentage?: number; lastActiveAt?: string };
+      items.push({
+        id: `ritual_participation_${doc.id}`,
+        sourceId: source.id,
+        sourceType: source.type,
+        spaceId: undefined,
+        content: {
+          type: 'ritual_participation',
+          ritualId: p.ritualId,
+          userId: p.userId,
+          status: p.status,
+          progressPercentage: p.progressPercentage,
+          createdAt: p.lastActiveAt
+        },
+        contentType: 'ritual_update',
+        priority: source.priority,
+        qualityScore: 70,
+        relevanceScore: 65,
+        timestamp: p.lastActiveAt || new Date().toISOString(),
+        engagement: { views: 0, likes: 0, comments: 0, shares: 0, toolInteractions: 0 },
+        metadata: {
+          aggregatedAt: new Date().toISOString(),
+          processingTime: 0,
+          validationResults: null,
+          crossReferences: []
+        }
+      });
+    }
+
+    // Campus ritual state updates (milestones/participation)
+    const campusSnapshot = await dbAdmin.collection('campus_ritual_states')
+      .where('updatedAt', '>=', timeWindow.toISOString())
+      .limit(config.maxItemsPerSource)
+      .get();
+
+    for (const doc of campusSnapshot.docs) {
+      const s = { id: doc.id, ...(doc.data() as Record<string, unknown>) } as { id: string; ritualId?: string; university?: string; totalParticipants?: number; totalEligible?: number; updatedAt?: string };
+      items.push({
+        id: `campus_ritual_${doc.id}`,
+        sourceId: source.id,
+        sourceType: source.type,
+        spaceId: undefined,
+        content: {
+          type: 'campus_ritual_state',
+          ritualId: s.ritualId,
+          university: s.university,
+          totalParticipants: s.totalParticipants,
+          totalEligible: s.totalEligible,
+          createdAt: s.updatedAt
+        },
+        contentType: 'ritual_update',
+        priority: source.priority,
+        qualityScore: 80,
+        relevanceScore: 70,
+        timestamp: s.updatedAt || new Date().toISOString(),
+        engagement: { views: 0, likes: 0, comments: 0, shares: 0, toolInteractions: 0 },
+        metadata: {
+          aggregatedAt: new Date().toISOString(),
+          processingTime: 0,
+          validationResults: null,
+          crossReferences: []
+        }
+      });
+    }
+
+    return items;
+  } catch (error) {
+    logger.error(
+      `Error aggregating ritual updates at /api/feed/aggregation`,
+      error instanceof Error ? error : new Error(String(error))
+    );
+    return items;
+  }
+}
+
 // Helper function to calculate content quality
-function calculateContentQuality(content: any, contentType: string): number {
+function calculateContentQuality(content: { type?: string; title?: string; content?: string; metadata?: Record<string, unknown>; toolId?: string }, contentType: string): number {
   let quality = 50; // Base quality
 
   switch (contentType) {
     case 'tool_generated':
       quality += 30;
       if (content.toolId) quality += 10;
-      if (content.metadata?.elementCount > 3) quality += 10;
+      if ((content.metadata?.elementCount as number | undefined) && (content.metadata.elementCount as number) > 3) quality += 10;
       break;
     
     case 'tool_enhanced':
@@ -631,6 +746,12 @@ function calculateContentQuality(content: any, contentType: string): number {
       quality += 25;
       if (content.isPinned) quality += 10;
       break;
+
+    case 'ritual_update':
+      quality += 20;
+      if (content.type === 'campus_ritual_state') quality += 10;
+      if (typeof content.progressPercentage === 'number' && content.progressPercentage >= 80) quality += 10;
+      break;
   }
 
   // Content completeness factors
@@ -642,7 +763,7 @@ function calculateContentQuality(content: any, contentType: string): number {
 }
 
 // Helper function to calculate relevance score
-function calculateRelevanceScore(content: any, source: ContentSource): number {
+function calculateRelevanceScore(content: { engagement?: { likes?: number; comments?: number; shares?: number }; createdAt?: string }, source: ContentSource): number {
   let relevance = 50; // Base relevance
 
   // Source priority factor
@@ -761,7 +882,7 @@ function generateAggregationAnalytics(
   sources: ContentSource[],
   aggregated: AggregatedContentItem[],
   processed: AggregatedContentItem[]
-): any {
+): { totalSources: number; activeSources: number; totalAggregated: number; totalProcessed: number; processingEfficiency: number; averageQuality: number; averageRelevance: number; contentTypeDistribution: Record<string, number>; sourceAnalytics: Array<{ sourceId: string; sourceType: ContentSource['type']; spaceId?: string; itemCount: number; averageQuality: number; averageRelevance: number }> } {
   const sourceAnalytics = sources.map(source => {
     const sourceItems = aggregated.filter(item => item.sourceId === source.id);
     return {
@@ -793,7 +914,7 @@ function generateAggregationAnalytics(
 }
 
 // Helper function to log aggregation metrics
-async function logAggregationMetrics(userId: string, metrics: any): Promise<void> {
+async function logAggregationMetrics(userId: string, metrics: Record<string, unknown>): Promise<void> {
   try {
     await dbAdmin.collection('aggregationMetrics').add({
       userId,
@@ -810,7 +931,7 @@ async function logAggregationMetrics(userId: string, metrics: any): Promise<void
 }
 
 // Helper function to get source metrics
-async function getSourceMetrics(spaceId: string): Promise<any> {
+async function getSourceMetrics(spaceId: string): Promise<{ spaceId: string; lastRefresh: string; totalContent: number; qualityTrend: string; refreshRate: string }> {
   // Simplified implementation - would calculate metrics over time
   return {
     spaceId,
@@ -822,7 +943,7 @@ async function getSourceMetrics(spaceId: string): Promise<any> {
 }
 
 // Helper function to get aggregation metrics
-async function getAggregationMetrics(userId: string): Promise<any> {
+async function getAggregationMetrics(userId: string): Promise<{ totalAggregations: number; averageProcessingTime: number; averageQuality: number; totalItemsProcessed: number; lastAggregation: string } | null> {
   try {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);

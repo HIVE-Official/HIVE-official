@@ -577,3 +577,4 @@ export const coreFeatures: Omit<Feature, 'id' | 'createdAt'>[] = [
  * Global feature reveal system instance
  */
 export const featureRevealSystem = new FeatureRevealSystem();
+import 'server-only';

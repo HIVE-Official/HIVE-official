@@ -6,43 +6,17 @@ export interface SpaceActionResult {
   error?: string;
 }
 
-/**
- * Get auth token from session (utility for space actions)
- * WARNING: This is a temporary utility - should use useAuth in components
- */
-async function getAuthTokenFromSession(): Promise<string> {
-  // This is a temporary utility function for non-component contexts
-  // Components should use useAuth().getAuthToken() instead
-  try {
-    const sessionJson = window.localStorage.getItem('hive_session');
-    if (sessionJson) {
-      const session = JSON.parse(sessionJson);
-      if (!session.token) {
-        throw new Error('No valid authentication token found');
-      }
-      return session.token;
-    }
-    throw new Error('No session found');
-  } catch (error) {
-    throw new Error('Authentication required');
-  }
-}
+// Use consolidated secure fetch that includes cookies and optional CSRF
+import { secureApiFetch } from './secure-auth-utils';
 
 /**
  * Join a space
  */
 export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const authToken = await getAuthTokenFromSession();
-    
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
-    };
-
-    const response = await fetch('/api/spaces/join', {
+    const response = await secureApiFetch('/api/spaces/join', {
       method: 'POST',
-      headers,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ spaceId })
     });
 
@@ -74,16 +48,9 @@ export async function joinSpace(spaceId: string): Promise<SpaceActionResult> {
  */
 export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const authToken = await getAuthTokenFromSession();
-    
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
-    };
-
-    const response = await fetch('/api/spaces/leave', {
+    const response = await secureApiFetch('/api/spaces/leave', {
       method: 'POST',
-      headers,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ spaceId })
     });
 
@@ -115,16 +82,9 @@ export async function leaveSpace(spaceId: string): Promise<SpaceActionResult> {
  */
 export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    
-    const authToken = await getAuthTokenFromSession();
-    headers.Authorization = `Bearer ${authToken}`;
-
-    const response = await fetch('/api/spaces/my', {
+    const response = await secureApiFetch('/api/spaces/my', {
       method: 'PATCH',
-      headers,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         spaceId, 
         action: currentlyPinned ? 'unpin' : 'pin'
@@ -159,16 +119,9 @@ export async function toggleSpacePin(spaceId: string, currentlyPinned: boolean):
  */
 export async function markSpaceVisited(spaceId: string): Promise<SpaceActionResult> {
   try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-    
-    const authToken = await getAuthTokenFromSession();
-    headers.Authorization = `Bearer ${authToken}`;
-
-    const response = await fetch('/api/spaces/my', {
+    const response = await secureApiFetch('/api/spaces/my', {
       method: 'PATCH',
-      headers,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         spaceId, 
         action: 'mark_visited'

@@ -5,7 +5,8 @@ import * as admin from 'firebase-admin';
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
-import { withAdminAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
+import { withSecureAuth } from '@/lib/api-auth-secure';
+import { NextResponse } from 'next/server';
 
 /**
  * Admin Bulk Space Operations API
@@ -68,9 +69,9 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
         .doc(type)
         .collection('spaces')
         .doc(spaceId);
-        
+
       const spaceDoc = await spaceRef.get();
-      if (spaceDoc.exists) {
+      if (spaceDoc.exists && spaceDoc.data()?.campusId === CURRENT_CAMPUS_ID) {
         return {
           spaceDoc,
           spaceType: type,
@@ -89,9 +90,9 @@ async function getSpaceInfo(spaceId: string): Promise<{ spaceDoc: any, spaceType
  * Execute bulk space operations
  * POST /api/admin/spaces/bulk
  */
-export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
+export const POST = withSecureAuth(async (request, token) => {
   const startTime = Date.now();
-  const adminUserId = getUserId(request); // Guaranteed to be an admin user
+  const adminUserId = token?.uid || 'unknown'; // Guaranteed to be an admin user
 
   try {
     // Parse and validate request body
@@ -292,7 +293,8 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
 
     logger.info('👑 Bulk completed: /successful in ms', { action,  result: result.executionTime  });
 
-    return respond.success({
+    return NextResponse.json({
+      success: true,
       message: `Bulk ${action} completed`,
       result,
       summary: {
@@ -308,26 +310,18 @@ export const POST = withAdminAuthAndErrors(async (request: AuthenticatedRequest,
     logger.error('Bulk operation error', { error: error instanceof Error ? error : new Error(String(error))});
 
     if (error instanceof z.ZodError) {
-      return respond.error(
-        'Invalid request data',
-        "INVALID_INPUT",
-        {
-          status: 400,
-          details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
-        }
+      return NextResponse.json(
+        { success: false, error: 'Invalid request data', details: error.errors.map(e => `${e.path.join('.')}: ${e.message}`) },
+        { status: 400 }
       );
     }
 
-    return respond.error(
-      'Bulk operation failed',
-      "INTERNAL_ERROR",
-      {
-        status: 500,
-        details: { executionTime: Date.now() - startTime }
-      }
+    return NextResponse.json(
+      { success: false, error: 'Bulk operation failed', details: { executionTime: Date.now() - startTime } },
+      { status: 500 }
     );
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Log individual bulk action for audit trail

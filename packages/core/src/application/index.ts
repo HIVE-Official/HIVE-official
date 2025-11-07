@@ -66,4 +66,24 @@ export type {
   LeaderboardEntry
 } from './ritual-participation.service';
 
+export {
+  RitualEngineService
+} from './rituals/ritual-engine.service';
+
+export type {
+  UpsertRitualInput,
+  TransitionOptions
+} from './rituals/ritual-engine.service';
+
+export {
+  toFeedBanner,
+  toDetailView,
+} from './rituals/ritual-presenter';
+
+export type {
+  RitualFeedBanner,
+  RitualDetailView,
+  RitualDetailStatus,
+} from './rituals/ritual-presenter';
+
 // Service Factory temporarily removed - will be rebuilt with proper DDD structure

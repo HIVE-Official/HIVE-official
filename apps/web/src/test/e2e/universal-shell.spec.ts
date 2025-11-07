@@ -113,7 +113,7 @@ test.describe('Universal Shell', () => {
     await expect(notificationBell).toBeVisible();
 
     // Check for notification badge
-    const badge = await notificationBell.locator('.bg-\\[\\#FFD700\\]');
+    const badge = await notificationBell.locator('.bg-\\[var\\(--hive-brand-primary\\)\\]');
     // Badge might or might not be present depending on state
     if (await badge.isVisible()) {
       await expect(badge).toHaveCSS('background-color', 'rgb(255, 215, 0)');
@@ -144,7 +144,7 @@ test.describe('Universal Shell', () => {
 
   test('should maintain consistent branding colors', async ({ page }) => {
     // Check gold color usage
-    const goldElements = await page.locator('.bg-\\[\\#FFD700\\], .text-\\[\\#FFD700\\]');
+    const goldElements = await page.locator('.bg-\\[var\\(--hive-brand-primary\\)\\], .text-\\[var\\(--hive-brand-primary\\)\\]');
     const count = await goldElements.count();
 
     // Should have at least one gold element (logo or active nav)
@@ -201,7 +201,7 @@ test.describe('Universal Components', () => {
 
   test('should render universal buttons with correct styles', async ({ page }) => {
     // Find a primary button (like Create Post)
-    const primaryButton = await page.locator('button.bg-\\[\\#FFD700\\]').first();
+    const primaryButton = await page.locator('button.bg-\\[var\\(--hive-brand-primary\\)\\]').first();
     if (await primaryButton.isVisible()) {
       // Check gold background
       await expect(primaryButton).toHaveCSS('background-color', 'rgb(255, 215, 0)');

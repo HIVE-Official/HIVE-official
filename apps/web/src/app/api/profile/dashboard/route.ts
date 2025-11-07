@@ -1,6 +1,7 @@
 import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware/index";
 import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 /**
  * Get profile dashboard data
@@ -244,7 +245,7 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       // Get spaces the user is not a member of for recommendations
       const allSpacesSnapshot = await dbAdmin
         .collection('spaces')
-        .where('campusId', '==', 'ub-buffalo')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .where('isActive', '==', true)
         .orderBy('memberCount', 'desc') // Order by popularity
         .limit(10) // Reduced from 20 to improve performance

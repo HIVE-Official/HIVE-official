@@ -1,0 +1,162 @@
+import { BarChart3, Code, Grid, Palette, Rocket, Users, Wand2, Workflow, Zap } from 'lucide-react';
+export const hiveLabOverviewMock = {
+    hero: {
+        eyebrow: 'UB Innovation Studio',
+        title: 'HiveLab — build campus tools that actually ship',
+        description: 'Wire up drag-and-drop elements, launch to your spaces, and watch student-made utilities spread across campus overnight.',
+        icon: Zap,
+        supportingBadges: [
+            { id: 'nocode', label: 'No code required', icon: Code },
+            { id: 'deploy', label: 'Deploy to spaces', icon: Rocket },
+            { id: 'students', label: 'Student-led releases', icon: Users },
+        ],
+    },
+    stats: [
+        {
+            id: 'tools',
+            label: 'Campus Tools',
+            value: '128 live',
+            description: 'Across 34 UB spaces this semester',
+            icon: Palette,
+        },
+        {
+            id: 'deployments',
+            label: 'Deployments',
+            value: '482',
+            description: 'Space & profile drops in the past 30 days',
+            icon: Workflow,
+        },
+        {
+            id: 'students',
+            label: 'Students Served',
+            value: '7.8k',
+            description: 'UB students interacting with HiveLab tools',
+            icon: Users,
+        },
+    ],
+    quickActions: [
+        {
+            id: 'visual',
+            title: 'Visual Builder',
+            description: 'Drag campus elements, connect data, and preview the experience before you ship.',
+            icon: Palette,
+            mode: 'visual',
+            tags: [
+                { label: 'Drag & Drop', tone: 'info' },
+                { label: '8 Elements', tone: 'accent' },
+            ],
+            highlight: 'Most popular path',
+        },
+        {
+            id: 'templates',
+            title: 'Template Studio',
+            description: 'Start from UB-proven patterns — feedback forms, rush signup, dorm delivery, and more.',
+            icon: Grid,
+            mode: 'template',
+            tags: [{ label: 'Fast Launch', tone: 'success' }],
+        },
+        {
+            id: 'wizard',
+            title: 'Guided Wizard',
+            description: 'Answer a few questions, pick data sources, and we wire the workflow automatically.',
+            icon: Wand2,
+            mode: 'wizard',
+            tags: [{ label: 'Beta', tone: 'warning' }],
+        },
+        {
+            id: 'analytics',
+            title: 'Tool Analytics',
+            description: 'Track installs, retention, and who is actually using the thing you shipped.',
+            icon: BarChart3,
+            mode: 'analytics',
+            tags: [{ label: 'Insights', tone: 'info' }],
+        },
+        {
+            id: 'marketplace',
+            title: 'HiveLab Exchange',
+            description: 'Browse student-built utilities, remix their configs, and deploy with campus isolation.',
+            icon: Rocket,
+            mode: 'marketplace',
+        },
+        {
+            id: 'coder',
+            title: 'Advanced Code Mode',
+            description: 'Drop into TypeScript when you need logic beyond what the element system handles.',
+            icon: Code,
+            mode: 'code',
+        },
+    ],
+    elementCategories: [
+        {
+            id: 'inputs',
+            title: 'Inputs',
+            description: 'Collect RSVPs, feedback, and interest forms with real-time validation.',
+            icon: Workflow,
+            accent: 'blue',
+            stat: '4 input primitives',
+        },
+        {
+            id: 'display',
+            title: 'Displays',
+            description: 'Show dynamic lists, charts, and live status for your space operations.',
+            icon: BarChart3,
+            accent: 'green',
+            stat: '6 display modules',
+        },
+        {
+            id: 'filters',
+            title: 'Filters',
+            description: 'Slice data by roles, dates, and rush lists to keep teams focused.',
+            icon: Grid,
+            accent: 'purple',
+            stat: 'Smart query pipes',
+        },
+        {
+            id: 'actions',
+            title: 'Actions',
+            description: 'Trigger notifications, announcements, and follow-ups without leaving the builder.',
+            icon: Zap,
+            accent: 'orange',
+            stat: 'Workflow-ready',
+        },
+    ],
+    callToAction: {
+        title: 'Launch your first HiveLab tool in under 10 minutes',
+        description: 'Pick a template, tune your content, wire up approvals, and drop it right into your space. No code, no deploy fatigue.',
+        buttonLabel: 'Start Building',
+        annotation: 'Built with UB student teams',
+    },
+};
+export const hiveLabModeCopy = {
+    template: {
+        badge: 'Shipping soon',
+        title: 'Template Studio is almost ready',
+        description: 'We are codifying UB starter kits—rush recruitment, events, interest funnels—so you can launch with one click.',
+        helper: 'QA and moderation are wrapping up before we flip the switch.',
+    },
+    wizard: {
+        badge: 'Beta',
+        title: 'Guided Wizard in limited beta',
+        description: 'Answer a few questions and we auto-wire the workflow. Early campus leaders are helping tune the flows.',
+        helper: 'Ping the HiveLab team if you want to pilot this experience.',
+    },
+    marketplace: {
+        badge: 'Roadmap',
+        title: 'HiveLab Exchange',
+        description: 'Browse and remix student-made utilities across UB. Marketplace access opens once safety rails finish QA.',
+        helper: 'Expect the first drop right after the spring tool review.',
+    },
+    analytics: {
+        badge: 'Roadmap',
+        title: 'Tool analytics dashboard',
+        description: 'Usage, installs, and retention analytics anchor here. Telemetry is threading into the campus pipeline now.',
+        helper: 'We will announce access as soon as dashboards stabilize.',
+    },
+    code: {
+        badge: 'Invite only',
+        title: 'Advanced code mode',
+        description: 'Drop into TypeScript for custom logic, validations, and integrations. We are hardening the sandbox before broad access.',
+        helper: 'Invite-only while we finish the security review.',
+    },
+};
+//# sourceMappingURL=hivelab-mock-data.js.map

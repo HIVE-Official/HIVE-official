@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Visibility check interface
 interface VisibilityCheck {
@@ -209,10 +210,12 @@ async function getSharedSpaces(viewerId: string, targetId: string): Promise<stri
       dbAdmin.collection('members')
         .where('userId', '==', viewerId)
         .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .get(),
       dbAdmin.collection('members')
         .where('userId', '==', targetId)
         .where('status', '==', 'active')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .get()
     ]);
 

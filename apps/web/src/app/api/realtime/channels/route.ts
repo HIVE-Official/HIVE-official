@@ -4,6 +4,7 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Chat channel interfaces
 interface ChatChannel {
@@ -428,7 +429,8 @@ async function verifyChannelCreatePermission(userId: string, spaceId: string): P
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {
@@ -470,7 +472,8 @@ async function getSpaceMembers(spaceId: string): Promise<string[]> {
   try {
     const memberQuery = dbAdmin.collection('members')
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return memberSnapshot.docs.map(doc => doc.data().userId);
@@ -523,7 +526,8 @@ async function verifySpaceAccess(userId: string, spaceId: string): Promise<boole
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('spaceId', '==', spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     return !memberSnapshot.empty;
@@ -577,7 +581,8 @@ async function verifyChannelModifyPermission(userId: string, channel: ChatChanne
     const memberQuery = dbAdmin.collection('members')
       .where('userId', '==', userId)
       .where('spaceId', '==', channel.spaceId)
-      .where('status', '==', 'active');
+      .where('status', '==', 'active')
+      .where('campusId', '==', CURRENT_CAMPUS_ID);
 
     const memberSnapshot = await memberQuery.get();
     if (memberSnapshot.empty) {

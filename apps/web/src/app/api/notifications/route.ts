@@ -198,10 +198,11 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json(ApiResponseHelper.error("Unauthorized access to notification", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
     }
 
-    // Update notification
-    const updates: any = { isRead };
+    // Update notification with explicit shape
+    const updates: Partial<HiveNotification> = { isRead } as Partial<HiveNotification>;
     if (isRead && !notificationData?.readAt) {
-      updates.readAt = new Date().toISOString();
+      // Extend payload with readAt without widening type to any
+      (updates as Record<string, unknown>).readAt = new Date().toISOString();
     }
     
     await notificationRef.update(updates);
@@ -221,4 +222,3 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(ApiResponseHelper.error("Failed to update notification", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
-

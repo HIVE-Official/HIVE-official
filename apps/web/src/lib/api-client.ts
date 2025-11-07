@@ -4,12 +4,14 @@
  */
 
 import { auth } from './firebase';
+import { logger } from './structured-logger';
 
 // RequestInit is a standard Web API type
 type RequestInitType = globalThis.RequestInit;
 
 interface ApiOptions extends RequestInitType {
   skipAuth?: boolean;
+  suppressToast?: boolean;
 }
 
 class ApiClient {
@@ -32,7 +34,7 @@ class ApiClient {
             // Return dev token format that backend expects
             return `dev_token_${userData.uid || userData.id || 'debug-user'}`;
           } catch (e) {
-            console.error('Failed to parse dev user data:', e);
+            logger.error('Failed to parse dev user data', e as Error, { component: 'api-client', action: 'parse_dev_user' });
           }
         }
 
@@ -45,7 +47,7 @@ class ApiClient {
               return `dev_token_${session.userId}`;
             }
           } catch (e) {
-            console.error('Failed to parse session data:', e);
+            logger.error('Failed to parse session data', e as Error, { component: 'api-client', action: 'parse_session' });
           }
         }
       }
@@ -57,7 +59,7 @@ class ApiClient {
 
       return null;
     } catch (error) {
-      console.error('Failed to get auth token:', error);
+      logger.error('Failed to get auth token', error as Error, { component: 'api-client', action: 'get_auth_token' });
       return null;
     }
   }
@@ -66,7 +68,7 @@ class ApiClient {
    * Make an authenticated API request
    */
   async fetch(url: string, options: ApiOptions = {}): Promise<Response> {
-    const { skipAuth = false, headers = {}, ...restOptions } = options;
+    const { skipAuth = false, suppressToast = false, headers = {}, ...restOptions } = options;
 
     // Build headers
     const requestHeaders: Record<string, string> = {
@@ -80,15 +82,50 @@ class ApiClient {
       if (token) {
         requestHeaders['Authorization'] = `Bearer ${token}`;
       } else {
-        console.warn('No auth token available for API request:', url);
+        logger.warn('No auth token available for API request', { component: 'api-client', action: 'missing_auth_token', url });
       }
     }
 
     // Make the request
-    return fetch(url, {
+    const start = performance.now?.() ?? Date.now();
+    const response = await fetch(url, {
       ...restOptions,
       headers: requestHeaders,
+      // Always include cookies for same-origin API calls per web auth policy
+      credentials: 'include',
     });
+    const duration = (performance.now?.() ?? Date.now()) - start;
+
+    // Basic centralized error handling with optional toasts
+    if (!response.ok && !suppressToast) {
+      try {
+        const status = response.status;
+        const title = status >= 500
+          ? 'Server error'
+          : status === 401
+            ? 'Please sign in'
+            : status === 403
+              ? 'Permission denied'
+              : 'Request failed';
+        const description = `${status} ${response.statusText}`;
+
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('hive:toast', {
+            detail: { title, description, type: status >= 500 ? 'error' : 'warning' }
+          }));
+        }
+
+        logger.warn('API request failed', {
+          component: 'api-client',
+          action: 'api_error',
+          url,
+          status,
+          duration: `${Math.round(duration)}ms`
+        });
+      } catch {}
+    }
+
+    return response;
   }
 
   /**

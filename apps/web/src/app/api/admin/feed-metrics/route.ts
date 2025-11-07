@@ -1,22 +1,18 @@
 import { dbAdmin } from '@/lib/firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
 import { logger } from "@/lib/structured-logger";
-import { withAuthAndErrors, getUserId, type AuthenticatedRequest } from "@/lib/middleware";
-import { isAdmin } from '@/lib/admin-auth';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * GET /api/admin/feed-metrics
  * Get real-time feed algorithm performance metrics
  */
-export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, context, respond) => {
-  const userId = getUserId(request);
+export const GET = withSecureAuth(async (request, token) => {
+  const userId = token?.uid || 'unknown';
 
   logger.info('📊 Loading feed metrics', { userId });
 
-  // Check admin permissions
-  const isAdminUser = await isAdmin(userId);
-  if (!isAdminUser) {
-    return respond.error('Admin access required', 'ADMIN_REQUIRED', { status: 403 });
-  }
+  // Admin enforced by withSecureAuth
 
   try {
     // Get metrics from multiple sources
@@ -38,19 +34,15 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       }
     };
 
-    return respond.success({ metrics });
+    return new Response(JSON.stringify({ success: true, metrics }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 
   } catch (error: any) {
     logger.error('Error loading feed metrics', error instanceof Error ? error : new Error(String(error)), { userId});
 
     // Return mock metrics if there's an error
-    return respond.success({
-      metrics: getMockMetrics(),
-      isMock: true,
-      error: 'Unable to load real metrics, showing mock data'
-    });
+    return new Response(JSON.stringify({ success: true, metrics: getMockMetrics(), isMock: true, error: 'Unable to load real metrics, showing mock data' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
-});
+}, { requireAdmin: true });
 
 /**
  * Get algorithm performance metrics
@@ -73,7 +65,9 @@ async function getPerformanceMetrics() {
       .limit(1000)
       .get();
 
-    const requests = recentRequests.docs.map(doc => doc.data());
+    let requests = recentRequests.docs.map(doc => doc.data() as any);
+    // Enforce campus isolation when campusId field is present
+    requests = requests.filter(r => !('campusId' in r) || r.campusId === CURRENT_CAMPUS_ID);
 
     if (requests.length === 0) {
       return {
@@ -130,6 +124,7 @@ async function getEngagementMetrics() {
     // In production, this would come from analytics tracking
     const engagementData = await dbAdmin.collection('analytics')
       .where('type', '==', 'feed_interaction')
+      .where('campusId', '==', CURRENT_CAMPUS_ID)
       .where('timestamp', '>=', since)
       .limit(1000)
       .get();
@@ -202,11 +197,12 @@ async function getContentDistributionMetrics() {
     const [eventsQuery, postsQuery] = await Promise.all([
       dbAdmin.collectionGroup('events')
         .where('createdAt', '>=', since)
-        .where('campusId', '==', 'ub-buffalo')
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .get(),
       dbAdmin.collectionGroup('posts')
         .where('createdAt', '>=', since)
         .where('isDeleted', '==', false)
+        .where('campusId', '==', CURRENT_CAMPUS_ID)
         .get()
     ]);
 
@@ -269,4 +265,3 @@ function getMockMetrics() {
     }
   };
 }
-

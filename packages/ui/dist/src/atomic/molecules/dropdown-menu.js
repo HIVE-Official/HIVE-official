@@ -1,0 +1,4 @@
+"use client";
+import { ContextMenu as DropdownMenu, ContextMenuTrigger as DropdownMenuTrigger, ContextMenuContent as DropdownMenuContent, ContextMenuItem as DropdownMenuItem, ContextMenuCheckboxItem as DropdownMenuCheckboxItem, ContextMenuSub as DropdownMenuSub, ContextMenuSubTrigger as DropdownMenuSubTrigger, ContextMenuSubContent as DropdownMenuSubContent, ContextMenuLabel as DropdownMenuLabel, ContextMenuSeparator as DropdownMenuSeparator, ContextMenuShortcut as DropdownMenuShortcut, } from "../atoms/context-menu";
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, };
+//# sourceMappingURL=dropdown-menu.js.map

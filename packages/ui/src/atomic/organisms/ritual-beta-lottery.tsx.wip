@@ -1,0 +1,326 @@
+'use client';
+
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Card } from '../atoms/card';
+import { Button } from '../atoms/button';
+import { Badge } from '../atoms/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../atoms/avatar';
+import { Ticket, Trophy, Sparkles, Clock, Users, PartyPopper, Check } from 'lucide-react';
+import type { BetaLotteryConfig } from '@hive/core';
+
+export interface BetaWinner {
+  id: string;
+  name: string;
+  handle: string;
+  avatarUrl?: string;
+  wonAt: string;
+}
+
+export interface RitualBetaLotteryProps {
+  config: BetaLotteryConfig;
+  totalEntries: number;
+  winners: BetaWinner[];
+  hasUserEntered: boolean;
+  isUserWinner: boolean;
+  isDrawn: boolean;
+  drawsAt?: string;
+  onEnter?: () => Promise<void>;
+  className?: string;
+}
+
+/**
+ * Beta Lottery Renderer
+ *
+ * Random selection for beta access or exclusive features
+ * Users enter lottery, winners drawn at ritual end
+ */
+export const RitualBetaLottery: React.FC<RitualBetaLotteryProps> = ({
+  config,
+  totalEntries,
+  winners,
+  hasUserEntered,
+  isUserWinner,
+  isDrawn,
+  drawsAt,
+  onEnter,
+  className,
+}) => {
+  const [isEntering, setIsEntering] = React.useState(false);
+
+  const timeUntilDraw = React.useMemo(() => {
+    if (!drawsAt || isDrawn) return null;
+    const now = Date.now();
+    const draws = new Date(drawsAt).getTime();
+    const diff = draws - now;
+    if (diff <= 0) return 'Drawing soon...';
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `Drawing in ${days}d ${hours % 24}h`;
+    }
+    if (hours > 0) return `Drawing in ${hours}h ${minutes}m`;
+    return `Drawing in ${minutes}m`;
+  }, [drawsAt, isDrawn]);
+
+  const handleEnter = async () => {
+    if (!onEnter || isEntering || hasUserEntered || isDrawn) return;
+
+    setIsEntering(true);
+    try {
+      await onEnter();
+    } finally {
+      setIsEntering(false);
+    }
+  };
+
+  const winChance = config.winnerCount > 0 && totalEntries > 0
+    ? Math.min(100, (config.winnerCount / totalEntries) * 100)
+    : 0;
+
+  return (
+    <div className={cn('space-y-6', className)}>
+      {/* Hero Card */}
+      <Card className="overflow-hidden border-blue-500/20 bg-gradient-to-br from-blue-900/20 via-[var(--hive-background-secondary)] to-black p-0">
+        <div className="relative overflow-hidden bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-6 py-8">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9InRpY2tldHMiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDUiIHJ4PSI0Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3RpY2tldHMpIi8+PC9zdmc+')] opacity-30" />
+
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+              {isDrawn ? (
+                <Trophy className="h-8 w-8 text-white" />
+              ) : (
+                <Ticket className="h-8 w-8 text-white" />
+              )}
+            </div>
+
+            <div className="flex-1 space-y-2">
+              <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold uppercase tracking-[0.16em]">
+                {isDrawn ? 'Winners Announced' : 'Open Now'}
+              </Badge>
+
+              <h2 className="text-2xl font-bold text-white">{config.title || 'Beta Access Lottery'}</h2>
+              <p className="max-w-2xl text-white/70">
+                {config.description || 'Enter for a chance to get exclusive early access. Winners drawn randomly.'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Section */}
+        <div className="space-y-4 p-6">
+          {/* Entry Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-blue-400" />
+                <p className="text-2xl font-bold text-white">{totalEntries}</p>
+              </div>
+              <p className="text-sm text-white/60">Total Entries</p>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-blue-400" />
+                <p className="text-2xl font-bold text-white">{config.winnerCount}</p>
+              </div>
+              <p className="text-sm text-white/60">Winners</p>
+            </div>
+          </div>
+
+          {/* Win Chance */}
+          {!isDrawn && totalEntries > 0 && (
+            <div className="rounded-lg bg-blue-950/30 p-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-white/70">Your odds:</span>
+                <span className="font-bold text-blue-400">
+                  {winChance.toFixed(1)}% chance to win
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Time Until Draw */}
+          {!isDrawn && timeUntilDraw && (
+            <div className="flex items-center justify-center gap-2 text-sm text-blue-400">
+              <Clock className="h-4 w-4" />
+              <span className="font-semibold">{timeUntilDraw}</span>
+            </div>
+          )}
+
+          {/* Entry CTA */}
+          {!isDrawn && !hasUserEntered && onEnter && (
+            <Button
+              onClick={handleEnter}
+              disabled={isEntering}
+              size="lg"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 font-bold"
+            >
+              {isEntering ? (
+                'Entering...'
+              ) : (
+                <>
+                  <Ticket className="mr-2 h-5 w-5" />
+                  Enter Lottery
+                </>
+              )}
+            </Button>
+          )}
+
+          {/* User Entered */}
+          {!isDrawn && hasUserEntered && (
+            <Card className="border-blue-500/20 bg-blue-500/10 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/20">
+                  <Check className="h-6 w-6 text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-white">You're Entered!</p>
+                  <p className="text-sm text-white/70">
+                    Winners will be announced {timeUntilDraw?.toLowerCase() || 'soon'}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* User Won */}
+          {isDrawn && isUserWinner && (
+            <Card className="border-[var(--hive-brand-primary)]/30 bg-gradient-to-br from-[var(--hive-brand-primary)]/10 to-orange-500/10 p-6">
+              <div className="text-center">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--hive-brand-primary)] shadow-[0_0_40px_rgba(255,215,0,0.4)]">
+                  <PartyPopper className="h-10 w-10 text-black" />
+                </div>
+                <h3 className="mb-2 text-2xl font-bold text-white">You Won! 🎉</h3>
+                <p className="text-white/70">
+                  Congratulations! Check your email for beta access instructions.
+                </p>
+              </div>
+            </Card>
+          )}
+
+          {/* User Lost */}
+          {isDrawn && hasUserEntered && !isUserWinner && (
+            <Card className="border-white/10 bg-white/5 p-4">
+              <div className="text-center text-white/70">
+                <p className="mb-1 font-semibold text-white">Not selected this time</p>
+                <p className="text-sm">Thanks for entering! Watch for future opportunities.</p>
+              </div>
+            </Card>
+          )}
+        </div>
+      </Card>
+
+      {/* Winners List */}
+      {isDrawn && winners.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+              <Trophy className="h-5 w-5 text-[var(--hive-brand-primary)]" />
+              Winners ({winners.length})
+            </h3>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {winners.map((winner, index) => (
+              <WinnerCard
+                key={winner.id}
+                winner={winner}
+                position={index + 1}
+                isCurrentUser={isUserWinner && winner.id === winner.id}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Prize Info */}
+      {config.prizes && config.prizes.length > 0 && (
+        <Card className="border-blue-500/20 bg-[var(--hive-background-secondary)] p-6">
+          <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-white/60">
+            <Sparkles className="h-4 w-4" />
+            What You'll Win
+          </h4>
+          <div className="space-y-2">
+            {config.prizes.map((prize, i) => (
+              <div key={i} className="flex items-start gap-3 text-white/80">
+                <Trophy className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-400" />
+                <p className="text-sm">{prize}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* Fair Play Notice */}
+      <Card className="border-white/10 bg-white/5 p-4">
+        <div className="flex items-start gap-3 text-sm text-white/80">
+          <Ticket className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+          <div className="space-y-1">
+            <p className="font-medium text-white">Fair & Random Selection</p>
+            <p className="text-white/60">
+              Winners are selected using a cryptographically secure random algorithm. Each entry has an equal chance.
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+interface WinnerCardProps {
+  winner: BetaWinner;
+  position: number;
+  isCurrentUser: boolean;
+}
+
+const WinnerCard: React.FC<WinnerCardProps> = ({ winner, position, isCurrentUser }) => {
+  return (
+    <Card className={cn(
+      'overflow-hidden border p-4 transition-all',
+      isCurrentUser
+        ? 'border-[var(--hive-brand-primary)]/40 bg-[var(--hive-brand-primary)]/5'
+        : 'border-blue-500/20 bg-[var(--hive-background-secondary)] hover:border-blue-500/40'
+    )}>
+      <div className="flex items-center gap-3">
+        {/* Position Badge */}
+        <div className={cn(
+          'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg font-bold',
+          position <= 3
+            ? 'bg-[var(--hive-brand-primary)] text-black'
+            : 'bg-blue-500/20 text-blue-400'
+        )}>
+          #{position}
+        </div>
+
+        {/* Avatar */}
+        <Avatar className="h-10 w-10">
+          <AvatarImage src={winner.avatarUrl} alt={winner.name} />
+          <AvatarFallback className="bg-white/10 text-white">
+            {winner.name.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="truncate font-semibold text-white">{winner.name}</p>
+            {isCurrentUser && (
+              <Badge variant="outline" className="border-[var(--hive-brand-primary)] text-[var(--hive-brand-primary)] text-xs">
+                You
+              </Badge>
+            )}
+          </div>
+          <p className="truncate text-sm text-white/60">@{winner.handle}</p>
+        </div>
+      </div>
+
+      {/* Won Time */}
+      <div className="mt-3 flex items-center gap-1.5 text-xs text-white/50">
+        <Trophy className="h-3.5 w-3.5" />
+        <span>Won {new Date(winner.wonAt).toLocaleDateString()}</span>
+      </div>
+    </Card>
+  );
+};

@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import { withAuthAndErrors } from '@/lib/api-wrapper';
-import { requireAdminRole } from '@/lib/admin-auth';
+import { withAdminCampusIsolation } from '@/lib/middleware/withAdminCampusIsolation';
 import { getPendingReports, moderateContent } from '@/lib/admin-moderation-actions';
 
-export const GET = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const GET = withAdminCampusIsolation(async (request) => {
 
   try {
     // Try to get real reports first
@@ -106,12 +100,7 @@ export const GET = withAuthAndErrors(async (context) => {
 });
 
 // Handle moderation actions
-export const POST = withAuthAndErrors(async (context) => {
-  const { request, auth } = context;
-  if (!auth?.userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  await requireAdminRole(auth.userId);
+export const POST = withAdminCampusIsolation(async (request, token) => {
 
   try {
     const { reportId, action, notes } = await request.json();
@@ -134,7 +123,7 @@ export const POST = withAuthAndErrors(async (context) => {
 
     // Perform real moderation action
     const result = await moderateContent(
-      auth.userId,
+      token?.uid || 'unknown',
       reportId,
       action as any,
       notes

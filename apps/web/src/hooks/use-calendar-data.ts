@@ -101,14 +101,14 @@ export const useCalendarData = (options: UseCalendarDataOptions = {}): UseCalend
               name: 'Google',
               type: 'google',
               status: 'disconnected', // Default to disconnected until user connects
-              color: '#4285f4'
+              color: 'var(--hive-status-info)'
             },
             {
               id: 'university',
               name: 'University',
               type: 'university',
               status: 'disconnected', // Default to disconnected until user connects
-              color: '#ffd700'
+              color: 'var(--hive-brand-primary)'
             }
           ],
           conflicts: [], // TODO: Implement conflict detection

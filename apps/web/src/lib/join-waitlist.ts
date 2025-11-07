@@ -35,3 +35,4 @@ export async function joinWaitlist(email: string, schoolId: string): Promise<{ s
 
   return { success: true };
 }
+import 'server-only';

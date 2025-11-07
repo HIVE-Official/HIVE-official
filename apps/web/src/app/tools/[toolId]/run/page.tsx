@@ -134,7 +134,7 @@ const SAMPLE_INSTANCES: ElementInstance[] = [
       value: 65,
       max: 100,
       showPercentage: true,
-      color: '#FFD700'
+      color: 'var(--hive-brand-primary)'
     },
     position: { x: 20, y: 500 },
     parentId: undefined,
@@ -171,9 +171,9 @@ const SAMPLE_TOOL: Tool = {
   status: 'published',
   elements: SAMPLE_INSTANCES,
   config: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: 'var(--hive-background-secondary)',
     theme: 'dark' as const,
-    primaryColor: '#FFD700',
+    primaryColor: 'var(--hive-brand-primary)',
     allowMultipleSubmissions: true,
     requireAuthentication: false,
     showProgressBar: true,
@@ -283,7 +283,7 @@ export default function ToolRunPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-hive-background-primary via-hive-background-tertiary to-hive-background-secondary flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--hive-brand-primary)] mx-auto mb-4"></div>
           <p className="text-white">Loading tool...</p>
@@ -294,11 +294,11 @@ export default function ToolRunPage() {
 
   if (error || !toolData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-hive-background-primary via-hive-background-tertiary to-hive-background-secondary flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="h-8 w-8 text-red-400 mx-auto mb-4" />
           <p className="text-white mb-2">Failed to load tool</p>
-          <p className="text-[#A1A1AA] text-sm">{error}</p>
+          <p className="text-hive-text-tertiary text-sm">{error}</p>
           <Button 
             onClick={() => router.back()} 
             className="mt-4"
@@ -314,7 +314,7 @@ export default function ToolRunPage() {
   const { tool, instances, permissions } = toolData;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0A0A] via-[#0F0F0F] to-[#1A1A1A]">
+    <div className="min-h-screen bg-gradient-to-br from-hive-background-primary via-hive-background-tertiary to-hive-background-secondary">
       {/* Header */}
       <div className="border-b border-[rgba(255,255,255,0.1)] bg-[rgba(0,0,0,0.8)] backdrop-blur-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -324,7 +324,7 @@ export default function ToolRunPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => router.back()}
-                className="text-[#A1A1AA] hover:text-white"
+                className="text-hive-text-tertiary hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -333,7 +333,7 @@ export default function ToolRunPage() {
                 <h1 className="text-xl font-semibold text-white">
                   {tool.name} - Live Tool
                 </h1>
-                <p className="text-sm text-[#A1A1AA]">
+                <p className="text-sm text-hive-text-tertiary">
                   {tool.description} • Running v{tool.currentVersion}
                 </p>
               </div>
@@ -344,7 +344,7 @@ export default function ToolRunPage() {
                 size="sm"
                 variant="secondary"
                 onClick={() => router.push(`/tools/${tool.id}/settings`)}
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-hive-text-tertiary hover:text-white"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
@@ -353,7 +353,7 @@ export default function ToolRunPage() {
               <Button
                 size="sm"
                 variant="secondary"
-                className="border-[rgba(255,255,255,0.2)] text-[#A1A1AA] hover:text-white"
+                className="border-[rgba(255,255,255,0.2)] text-hive-text-tertiary hover:text-white"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
@@ -374,11 +374,11 @@ export default function ToolRunPage() {
                     <Zap className="h-8 w-8 text-hive-obsidian" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">Tool Runtime</h3>
-                  <p className="text-[#A1A1AA] mb-4">
+                  <p className="text-hive-text-tertiary mb-4">
                     Live tool runtime is coming soon. This will provide an interactive environment 
                     for running and testing your tools.
                   </p>
-                  <div className="space-y-2 text-sm text-[#A1A1AA]">
+                  <div className="space-y-2 text-sm text-hive-text-tertiary">
                     <p>Tool: {tool.name}</p>
                     <p>Version: {tool.currentVersion}</p>
                     <p>Elements: {instances.length}</p>
@@ -395,19 +395,19 @@ export default function ToolRunPage() {
               <h3 className="font-semibold text-white mb-3">Tool Information</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[#A1A1AA]">Version:</span>
+                  <span className="text-hive-text-tertiary">Version:</span>
                   <span className="text-white">{tool.currentVersion}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#A1A1AA]">Elements:</span>
+                  <span className="text-hive-text-tertiary">Elements:</span>
                   <span className="text-white">{instances.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#A1A1AA]">Rating:</span>
+                  <span className="text-hive-text-tertiary">Rating:</span>
                   <span className="text-white">{tool.rating || 0}/5</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#A1A1AA]">Usage:</span>
+                  <span className="text-hive-text-tertiary">Usage:</span>
                   <span className="text-white">{tool.useCount || 0} times</span>
                 </div>
               </div>
@@ -446,16 +446,16 @@ export default function ToolRunPage() {
               </h3>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {actionLog.length === 0 ? (
-                  <p className="text-xs text-[#A1A1AA] text-center py-4">
+                  <p className="text-xs text-hive-text-tertiary text-center py-4">
                     No actions yet. Interact with the tool to see logs.
                   </p>
                 ) : (
                   actionLog.map((log, index) => (
                     <div key={index} className="text-xs border-l-2 border-[var(--hive-brand-primary)]/30 pl-2">
-                      <div className="text-[#A1A1AA]">{log.time}</div>
+                      <div className="text-hive-text-tertiary">{log.time}</div>
                       <div className="text-white font-mono">{log.action}</div>
                       {log.data && (
-                        <div className="text-[#A1A1AA] mt-1">
+                        <div className="text-hive-text-tertiary mt-1">
                           {JSON.stringify(log.data, null, 2)}
                         </div>
                       )}
@@ -503,19 +503,19 @@ export default function ToolRunPage() {
                 Live Tool Features
               </h3>
               <div className="space-y-2 mb-3">
-                <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
+                <div className="flex items-center gap-2 text-xs text-hive-text-tertiary">
                   <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   State automatically saves
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
+                <div className="flex items-center gap-2 text-xs text-hive-text-tertiary">
                   <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Real-time element interactions
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
+                <div className="flex items-center gap-2 text-xs text-hive-text-tertiary">
                   <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Conditional logic execution
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
+                <div className="flex items-center gap-2 text-xs text-hive-text-tertiary">
                   <div className="w-1 h-1 bg-[var(--hive-brand-primary)] rounded-full"></div>
                   Works offline with sync
                 </div>

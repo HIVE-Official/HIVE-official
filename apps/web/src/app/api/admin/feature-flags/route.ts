@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth-server';
 import { logger } from '@/lib/logger';
 import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
 import { featureFlagService, FeatureFlag as _FeatureFlag } from '@/lib/feature-flags';
+import { withSecureAuth } from '@/lib/api-auth-secure';
 
 /**
  * Admin Feature Flags Management API
@@ -10,30 +10,13 @@ import { featureFlagService, FeatureFlag as _FeatureFlag } from '@/lib/feature-f
  */
 
 // GET - List all feature flags (admin only)
-export async function GET(request: NextRequest) {
+export const GET = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Unauthorized', 'UNAUTHORIZED'), 
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
-    // TODO: Add proper admin check
-    // For now, allowing all authenticated users for development
-    // if (!await isAdmin(user.uid)) {
-    //   return NextResponse.json(
-    //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
-    //     { status: HttpStatus.FORBIDDEN }
-    //   );
-    // }
-
     const flags = await featureFlagService.getAllFeatureFlags();
-    
-    logger.info('Admin feature flags retrieved', { 
-      adminUserId: user.uid, 
-      flagCount: flags.length 
+
+    logger.info('Admin feature flags retrieved', {
+      adminUserId: token?.uid || 'unknown',
+      flagCount: flags.length
     });
 
     return NextResponse.json({
@@ -45,31 +28,15 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     logger.error('Error getting admin feature flags', { error: error instanceof Error ? error : new Error(String(error))});
     return NextResponse.json(
-      ApiResponseHelper.error('Failed to get feature flags', 'INTERNAL_ERROR'), 
+      ApiResponseHelper.error('Failed to get feature flags', 'INTERNAL_ERROR'),
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { requireAdmin: true });
 
 // POST - Create a new feature flag (admin only)
-export async function POST(request: NextRequest) {
+export const POST = withSecureAuth(async (request: NextRequest, token) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(
-        ApiResponseHelper.error('Unauthorized', 'UNAUTHORIZED'), 
-        { status: HttpStatus.UNAUTHORIZED }
-      );
-    }
-
-    // TODO: Add proper admin check
-    // if (!await isAdmin(user.uid)) {
-    //   return NextResponse.json(
-    //     ApiResponseHelper.error('Admin access required', 'FORBIDDEN'), 
-    //     { status: HttpStatus.FORBIDDEN }
-    //   );
-    // }
-
     const body = await request.json();
     const { 
       id, 
@@ -121,11 +88,11 @@ export async function POST(request: NextRequest) {
       analytics
     };
 
-    await featureFlagService.setFeatureFlag(flagData, user.uid);
+    await featureFlagService.setFeatureFlag(flagData, token?.uid || 'unknown');
     
     logger.info('Feature flag created', { 
       flagId: id, 
-      adminUserId: user.uid, 
+      adminUserId: token?.uid || 'unknown', 
       category, 
       enabled 
     });
@@ -143,4 +110,4 @@ export async function POST(request: NextRequest) {
       { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
-}
+}, { requireAdmin: true });

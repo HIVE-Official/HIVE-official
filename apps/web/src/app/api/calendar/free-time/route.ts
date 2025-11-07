@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { dbAdmin } from '@/lib/firebase-admin';
-import { getCurrentUser } from '@/lib/server-auth';
 import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
+import {
+  withAuthAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from "@/lib/middleware";
+import { CURRENT_CAMPUS_ID } from "@/lib/secure-firebase-queries";
 
 // Free time slot interface
 interface FreeTimeSlot {
@@ -14,12 +17,13 @@ interface FreeTimeSlot {
 }
 
 // GET - Find free time slots
-export async function GET(request: NextRequest) {
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  _context,
+  respond
+) => {
   try {
-    const user = await getCurrentUser(request);
-    if (!user) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
+    const userId = getUserId(request);
 
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate') || new Date().toISOString().split('T')[0];
@@ -42,7 +46,7 @@ export async function GET(request: NextRequest) {
       const dateStr = currentDate.toISOString().split('T')[0];
       
       // Get all events for this day
-      const dayEvents = await getEventsForDate(user.uid, dateStr);
+      const dayEvents = await getEventsForDate(userId, dateStr);
       
       // Sort events by start time
       dayEvents.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
@@ -64,7 +68,7 @@ export async function GET(request: NextRequest) {
     const groupedSlots = groupSlotsByDate(freeTimeSlots);
     const suggestions = generateSuggestions(freeTimeSlots, minDuration);
 
-    return NextResponse.json({
+    return respond.success({
       freeTimeSlots: groupedSlots,
       suggestions,
       totalSlots: freeTimeSlots.length,
@@ -80,9 +84,9 @@ export async function GET(request: NextRequest) {
       `Error finding free time at /api/calendar/free-time`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to find free time", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.error("Failed to find free time", "INTERNAL_ERROR", { status: 500 });
   }
-}
+});
 
 // Helper function to get events for a specific date
 async function getEventsForDate(userId: string, dateStr: string): Promise<any[]> {
@@ -110,8 +114,18 @@ async function getEventsForDate(userId: string, dateStr: string): Promise<any[]>
   const membershipsSnapshot = await dbAdmin.collection('members')
     .where('userId', '==', userId)
     .where('status', '==', 'active')
+    .where('campusId', '==', CURRENT_CAMPUS_ID)
     .get();
-  const userSpaceIds = membershipsSnapshot.docs.map(doc => doc.data().spaceId);
+
+  const userSpaceIds: string[] = [];
+  for (const membership of membershipsSnapshot.docs) {
+    const spaceId = membership.data().spaceId;
+    if (!spaceId) continue;
+    const spaceDoc = await dbAdmin.collection('spaces').doc(spaceId).get();
+    if (spaceDoc.exists && spaceDoc.data()?.campusId === CURRENT_CAMPUS_ID) {
+      userSpaceIds.push(spaceId);
+    }
+  }
 
   if (userSpaceIds.length > 0) {
     const spaceEventsSnapshot = await dbAdmin.collection('events')

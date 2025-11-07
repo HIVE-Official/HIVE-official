@@ -19,6 +19,8 @@ const badgeVariants = cva(
           "bg-[var(--hive-status-warning)] text-[var(--hive-status-warning-text)] hover:bg-[var(--hive-status-warning)]/80",
         outline:
           "bg-transparent text-[var(--hive-text-primary)] border-[var(--hive-border-strong)]",
+        pill:
+          "bg-[color-mix(in_srgb,var(--hive-background-secondary) 85%,transparent)] text-[var(--hive-text-secondary)] border-[color-mix(in_srgb,var(--hive-border-default) 60%,transparent)]",
         // University class year variants
         freshman:
           "bg-green-100 text-green-800 border-green-300 hover:bg-green-200",
@@ -48,9 +50,17 @@ const badgeVariants = cva(
         leadership:
           "bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200",
       },
+      tone: {
+        default: "",
+        muted:
+          "bg-[color-mix(in_srgb,var(--hive-background-tertiary) 85%,transparent)] text-[var(--hive-text-secondary)] border-[color-mix(in_srgb,var(--hive-border-default) 60%,transparent)]",
+        contrast:
+          "bg-[var(--hive-text-primary)] text-[var(--hive-background-primary)] border-transparent shadow-[0_8px_20px_rgba(0,0,0,0.32)]",
+      },
     },
     defaultVariants: {
       variant: "default",
+      tone: "default",
     },
   }
 )
@@ -59,9 +69,9 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, tone, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant, tone }), className)} {...props} />
   )
 }
 

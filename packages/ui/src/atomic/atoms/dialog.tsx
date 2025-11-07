@@ -18,7 +18,9 @@ export const Dialog = HiveModal;
 
 // DialogContent wraps the entire modal content
 export const DialogContent = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-  return <>{children}</>;
+  const props: { className?: string } = {}
+  if (className !== undefined) props.className = className
+  return <HiveModalContent {...props}>{children}</HiveModalContent>;
 };
 
 // DialogHeader maps to HiveModalHeader
@@ -34,7 +36,7 @@ export const DialogDescription = HiveModalDescription;
 export const DialogFooter = HiveModalFooter;
 
 // DialogTrigger is a button that opens the dialog
-export const DialogTrigger = ({ children, asChild, ...props }: {
+export const DialogTrigger = ({ children, asChild: _asChild, ..._props }: {
   children: React.ReactNode;
   asChild?: boolean;
   [key: string]: any;

@@ -16,6 +16,8 @@
 - [x] Block dev-auth-helper in production
 - [x] Enforce .edu email validation (was only logging)
 - [x] Add UB-specific domain validation (@buffalo.edu only)
+- [x] Eliminate localStorage-based auth fallbacks in production
+- [x] Centralize client networking via secure fetch with cookies + CSRF
 - [ ] Test authentication flow end-to-end in production
 
 ### 3. ✅ Campus Isolation

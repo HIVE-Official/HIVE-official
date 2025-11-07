@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { dbAdmin } from '@/lib/firebase-admin';
 import * as admin from 'firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
+import { getAuth, type DecodedIdToken } from 'firebase-admin/auth';
 import { getAuthTokenFromRequest } from '@/lib/auth';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
@@ -194,19 +194,45 @@ function getClientIp(request: NextRequest): string {
 }
 
 // Helper function to check if user is admin
-function isAdmin(decodedToken: any): boolean {
-  return decodedToken.customClaims?.role === 'admin' || decodedToken.customClaims?.admin === true;
+function isAdmin(decodedToken: DecodedIdToken): boolean {
+  const claims = (decodedToken as unknown as { customClaims?: Record<string, unknown> }).customClaims;
+  return claims?.role === 'admin' || claims?.admin === true;
+}
+
+// Metric shape persisted in analytics_metrics
+interface StoredMetric {
+  id?: string;
+  type: string;
+  value: number;
+  timestamp: Date | string;
+  receivedAt?: Date | string;
+  labels?: Record<string, string>;
+  userId?: string | null;
+  spaceId?: string;
+}
+
+// Aggregation bucket shape
+interface AggregationBucket {
+  type: string;
+  period: 'hourly' | 'daily';
+  key: string;
+  count: number;
+  sum: number;
+  min: number;
+  max: number;
+  average?: number;
+  timestamp: Date;
 }
 
 // Helper function to aggregate metrics for real-time dashboards
-async function aggregateMetrics(metrics: any[]): Promise<void> {
+async function aggregateMetrics(metrics: StoredMetric[]): Promise<void> {
   try {
     const aggregatesRef = dbAdmin.collection('analytics_aggregates');
     const now = new Date();
     const hourlyKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}`;
     const dailyKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
-    const aggregations: Record<string, any> = {};
+    const aggregations: Record<string, AggregationBucket> = {};
 
     for (const metric of metrics) {
       const baseKey = `${metric.type}`;
@@ -226,7 +252,7 @@ async function aggregateMetrics(metrics: any[]): Promise<void> {
         };
       }
       
-      const hourlyAgg = aggregations[hourlyAggKey];
+      const hourlyAgg = aggregations[hourlyAggKey]!;
       hourlyAgg.count++;
       hourlyAgg.sum += metric.value;
       hourlyAgg.min = Math.min(hourlyAgg.min, metric.value);
@@ -247,7 +273,7 @@ async function aggregateMetrics(metrics: any[]): Promise<void> {
         };
       }
       
-      const dailyAgg = aggregations[dailyAggKey];
+      const dailyAgg = aggregations[dailyAggKey]!;
       dailyAgg.count++;
       dailyAgg.sum += metric.value;
       dailyAgg.min = Math.min(dailyAgg.min, metric.value);
@@ -258,7 +284,7 @@ async function aggregateMetrics(metrics: any[]): Promise<void> {
     const batch = dbAdmin.batch();
     
     for (const [key, agg] of Object.entries(aggregations)) {
-      agg.average = agg.sum / agg.count;
+      (agg as AggregationBucket).average = agg.sum / Math.max(1, agg.count);
       
       const docRef = aggregatesRef.doc(key);
       batch.set(docRef, agg, { merge: true });
@@ -275,8 +301,8 @@ async function aggregateMetrics(metrics: any[]): Promise<void> {
 }
 
 // Helper function to aggregate metrics data for response
-function aggregateMetricsData(metrics: any[]): Record<string, any> {
-  const aggregation: Record<string, any> = {};
+function aggregateMetricsData(metrics: StoredMetric[]): Record<string, { count: number; sum: number; min: number; max: number; average?: number; values: Array<{ value: number; timestamp: string | Date; labels?: Record<string, string> }>; p50?: number; p95?: number; p99?: number } > {
+  const aggregation: Record<string, { count: number; sum: number; min: number; max: number; average?: number; values: Array<{ value: number; timestamp: string | Date; labels?: Record<string, string> }>; p50?: number; p95?: number; p99?: number }> = {};
 
   for (const metric of metrics) {
     if (!aggregation[metric.type]) {
@@ -289,7 +315,7 @@ function aggregateMetricsData(metrics: any[]): Record<string, any> {
       };
     }
 
-    const agg = aggregation[metric.type];
+    const agg = aggregation[metric.type]!;
     agg.count++;
     agg.sum += metric.value;
     agg.min = Math.min(agg.min, metric.value);
@@ -306,7 +332,7 @@ function aggregateMetricsData(metrics: any[]): Record<string, any> {
     agg.average = agg.sum / agg.count;
     
     // Sort values for percentile calculation
-    const sortedValues = agg.values.map((v: any) => v.value).sort((a: number, b: number) => a - b);
+    const sortedValues = agg.values.map((v) => v.value).sort((a: number, b: number) => a - b);
     agg.p50 = percentile(sortedValues, 0.5);
     agg.p95 = percentile(sortedValues, 0.95);
     agg.p99 = percentile(sortedValues, 0.99);

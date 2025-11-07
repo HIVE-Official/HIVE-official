@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
+  <defs>
+    <path id="hive-core" d="M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z"/>
+
+    <!-- Base metal body -->
+    <linearGradient id="platinum-base" x1="77.77" y1="250.09" x2="1352.47" y2="1284.35" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fafbfc"/>
+      <stop offset=".1" stop-color="#e9ebef"/>
+      <stop offset=".22" stop-color="#d4d6da"/>
+      <stop offset=".39" stop-color="#b7b9be"/>
+      <stop offset=".65" stop-color="#a2a4aa"/>
+      <stop offset=".84" stop-color="#e6e7ea"/>
+      <stop offset="1" stop-color="#b9bbc0"/>
+    </linearGradient>
+
+    <!-- Facet reflections -->
+    <linearGradient id="facet-light" x1="198.32" y1="906.61" x2="884.09" y2="454.75" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".75"/>
+      <stop offset=".24" stop-color="#dfe0e4" stop-opacity=".35"/>
+      <stop offset=".58" stop-color="#b9bbbf" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#97989d" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="facet-dark" x1="695.23" y1="1242.14" x2="1385.56" y2="826.22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6c6d72" stop-opacity=".55"/>
+      <stop offset=".22" stop-color="#8e8f94" stop-opacity=".35"/>
+      <stop offset=".63" stop-color="#c5c6cb" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#eef0f2" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Spectral highlights -->
+    <radialGradient id="specular-top" cx="493.46" cy="275.08" r="347.62" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".9"/>
+      <stop offset=".4" stop-color="#f0f2f6" stop-opacity=".35"/>
+      <stop offset=".78" stop-color="#d2d4d8" stop-opacity=".06"/>
+      <stop offset="1" stop-color="#b7b9bd" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="specular-bottom" cx="1075.51" cy="1150.19" r="372.2" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".72"/>
+      <stop offset=".28" stop-color="#eceef1" stop-opacity=".32"/>
+      <stop offset=".59" stop-color="#c3c4c9" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#9ea0a5" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Edge polish -->
+    <linearGradient id="edge-polish" x1="335.19" y1="1180.47" x2="1042.16" y2="1591.25" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8f9095" stop-opacity=".65"/>
+      <stop offset=".46" stop-color="#e5e6e8" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#fdfdfd" stop-opacity=".62"/>
+    </linearGradient>
+
+    <!-- Inner shadow for depth -->
+    <radialGradient id="inner-shadow" cx="750" cy="760" r="640" gradientUnits="userSpaceOnUse">
+      <stop offset=".6" stop-color="#09090b" stop-opacity="0"/>
+      <stop offset=".92" stop-color="#09090c" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#08080a" stop-opacity=".45"/>
+    </radialGradient>
+
+    <!-- Sparkle gradient -->
+    <radialGradient id="sparkle" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".35" stop-color="#ffffff" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <clipPath id="logo-clip">
+      <use href="#hive-core"/>
+    </clipPath>
+
+    <filter id="soft-glow" x="-6%" y="-5.8%" width="112%" height="111.6%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feComposite in="blur" in2="SourceGraphic" operator="lighter"/>
+    </filter>
+
+    <filter id="start-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+
+    <linearGradient id="streak" x1="-10" y1="0" x2="310" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#soft-glow)">
+    <!-- Base -->
+    <use href="#hive-core" fill="url(#platinum-base)"/>
+
+    <!-- Inner depth -->
+    <use href="#hive-core" fill="url(#inner-shadow)" opacity=".45"/>
+
+    <!-- High sheen overlays -->
+    <g clip-path="url(#logo-clip)">
+      <path d="M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v162.58l-374.52-215.84-633.4,365.81-5.53.33-259.55-150.31-.28-303.16,262.27-150.84,262.47,150.64v-173.76s111.81-64.31,111.81-64.31v-173.77L432.83,133.2Z" fill="url(#facet-light)" opacity=".8"/>
+      <path d="M1183,880.07l-447.54,258.27,262.5,152.01c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-147.63l-336.03-191.64c-12.45,85.11-3.4,130.52-3.4,130.52Z" fill="url(#facet-dark)" opacity=".7"/>
+    </g>
+
+    <!-- Specular hits -->
+    <path d="M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,206.45c101.41-55.28,219.59-119.65,336.06-181.86,103.45-55.15,204.06-108.82,287.16-149.18v-11.88L432.83,133.2Z" fill="url(#specular-top)"/>
+    <path d="M1196.07,918.89l-453.3,262.04,256.09,147.06c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-147.63l-309.56-176.52c-6.11,70.81-17.7,108.99-17.7,108.99Z" fill="url(#specular-bottom)" opacity=".9"/>
+
+    <!-- Edge polish -->
+    <use href="#hive-core" fill="none" stroke="url(#edge-polish)" stroke-width="22" stroke-linejoin="round"/>
+
+    <!-- Facet divider lines -->
+    <g opacity=".35" stroke="#ffffff" stroke-width="2">
+      <path d="M170.08,514.97c87.63-38.2,213.25-95.23,329.2-150.6"/>
+      <path d="M806.63,215.1c114.74,53.65,227.57,119.19,331.19,178.67 54.02,31.31,107.02,62.08,158.87,92.02"/>
+      <path d="M743.14,761.53l435.07,248.5"/>
+      <path d="M170.36,818.13l257.78,148.4"/>
+      <path d="M712.12,1144.34l307.18,176.18"/>
+    </g>
+
+    <!-- Glint streaks -->
+    <g clip-path="url(#logo-clip)" opacity=".7">
+      <rect x="190" y="460" width="320" height="14" fill="url(#streak)" transform="rotate(-26 350 467)"/>
+      <rect x="980" y="980" width="340" height="16" fill="url(#streak)" transform="rotate(21 1150 988)"/>
+      <rect x="680" y="670" width="300" height="10" fill="url(#streak)" transform="rotate(12 830 675)"/>
+    </g>
+
+    <!-- Sparkles -->
+    <g fill="url(#sparkle)" opacity=".9">
+      <g transform="translate(375 560) scale(1.5)">
+        <path d="M0,0l14,6,12-6-12-6Z"/>
+        <circle cx="0" cy="0" r="22" filter="url(#start-glow)"/>
+      </g>
+      <g transform="translate(1185 470) scale(1.6)">
+        <path d="M0,0l18,7,12-7-12-7Z"/>
+        <circle cx="0" cy="0" r="28" filter="url(#start-glow)"/>
+      </g>
+      <g transform="translate(980 1015) scale(1.25)">
+        <path d="M0,0l12,5,10-5-10-5Z"/>
+        <circle cx="0" cy="0" r="20" filter="url(#start-glow)"/>
+      </g>
+      <g transform="translate(620 1220) scale(1.1)">
+        <path d="M0,0l10,4,8-4-8-4Z"/>
+        <circle cx="0" cy="0" r="16" filter="url(#start-glow)"/>
+      </g>
+    </g>
+  </g>
+</svg>

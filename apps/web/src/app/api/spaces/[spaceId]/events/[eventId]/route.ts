@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { z } from "zod";
-import { dbAdmin } from "@/lib/firebase-admin";
-import { getAuth } from "firebase-admin/auth";
-import { getAuthTokenFromRequest } from "@/lib/auth";
-import { logger } from "@/lib/logger";
-import { ApiResponseHelper, HttpStatus, ErrorCodes } from "@/lib/api-response-types";
+import { z } from 'zod';
+import type { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore';
+import { dbAdmin } from '@/lib/firebase-admin';
+import { logger } from '@/lib/logger';
+import {
+  withAuthAndErrors,
+  withAuthValidationAndErrors,
+  getUserId,
+  type AuthenticatedRequest,
+} from '@/lib/middleware';
+import { ApiResponseHelper, HttpStatus } from '@/lib/api-response-types';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import { requireSpaceMembership } from '@/lib/space-security';
 
 const UpdateEventSchema = z.object({
   title: z.string().min(1).max(200).optional(),
@@ -29,337 +34,270 @@ const UpdateEventSchema = z.object({
   status: z.enum(['draft', 'published', 'ongoing', 'completed', 'cancelled']).optional(),
 });
 
-const db = dbAdmin;
+async function loadEvent(spaceId: string, eventId: string) {
+  const eventDoc = await dbAdmin
+    .collection('spaces')
+    .doc(spaceId)
+    .collection('events')
+    .doc(eventId)
+    .get();
 
-// GET /api/spaces/[spaceId]/events/[eventId] - Get specific event
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; eventId: string }> }
+  if (!eventDoc.exists) {
+    return { ok: false as const, status: HttpStatus.NOT_FOUND, message: 'Event not found' };
+  }
+
+  const eventData = eventDoc.data();
+  if (!eventData) {
+    return { ok: false as const, status: HttpStatus.NOT_FOUND, message: 'Event data missing' };
+  }
+
+  if (eventData.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+    logger.error('SECURITY: Cross-campus event access blocked', {
+      eventId,
+      spaceId,
+      eventCampusId: eventData.campusId,
+      currentCampusId: CURRENT_CAMPUS_ID,
+    });
+    return { ok: false as const, status: HttpStatus.FORBIDDEN, message: 'Access denied' };
+  }
+
+  return { ok: true as const, eventDoc, eventData };
+}
+
+async function serializeEvent(
+  spaceId: string,
+  eventDoc: DocumentSnapshot<DocumentData>,
+  eventData: DocumentData,
+  userId: string,
 ) {
+  const organizerDoc = await dbAdmin.collection('users').doc(eventData.organizerId).get();
+  const organizer = organizerDoc.exists ? organizerDoc.data() : null;
+
+  const rsvpCollection = dbAdmin
+    .collection('spaces')
+    .doc(spaceId)
+    .collection('events')
+    .doc(eventDoc.id)
+    .collection('rsvps');
+
+  const rsvpSnapshot = await rsvpCollection.where('status', '==', 'going').get();
+  const userRsvpDoc = await rsvpCollection.doc(userId).get();
+
+  return {
+    id: eventDoc.id,
+    ...eventData,
+    organizer: organizer
+      ? {
+          id: organizerDoc.id,
+          fullName: organizer.fullName,
+          handle: organizer.handle,
+          photoURL: organizer.photoURL,
+        }
+      : null,
+    currentAttendees: rsvpSnapshot.size,
+    userRSVP: userRsvpDoc.exists ? userRsvpDoc.data()?.status : null,
+  };
+}
+
+export const GET = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; eventId: string }> },
+  respond,
+) => {
   try {
     const { spaceId, eventId } = await params;
-    
-    // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
+    const userId = getUserId(request);
+
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(membership.error, code, { status: membership.status });
     }
 
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    // Check if user is member of the space
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
+    const event = await loadEvent(spaceId, eventId);
+    if (!event.ok) {
+      const code = event.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(event.message, code, { status: event.status });
     }
 
-    // Get the event
-    const eventDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .get();
+    const serialized = await serializeEvent(spaceId, event.eventDoc, event.eventData, userId);
 
-    if (!eventDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const eventData = eventDoc.data()!;
-
-    // Get organizer info
-    const organizerDoc = await db
-      .collection("users")
-      .doc(eventData.organizerId)
-      .get();
-    const organizer = organizerDoc.exists ? organizerDoc.data() : null;
-
-    // Get RSVP count
-    const rsvpSnapshot = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .collection("rsvps")
-      .where("status", "==", "going")
-      .get();
-
-    // Get user's RSVP status
-    const userRsvpDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .collection("rsvps")
-      .doc(decodedToken.uid)
-      .get();
-
-    const userRsvpStatus = userRsvpDoc.exists ? userRsvpDoc.data()?.status : null;
-
-    const event = {
-      id: eventDoc.id,
-      ...eventData,
-      organizer: organizer
-        ? {
-            id: organizerDoc.id,
-            fullName: organizer.fullName,
-            handle: organizer.handle,
-            photoURL: organizer.photoURL,
-          }
-        : null,
-      currentAttendees: rsvpSnapshot.size,
-      userRSVP: userRsvpStatus,
-    };
-
-    return NextResponse.json({ event });
+    return respond.success({ event: serialized });
   } catch (error) {
     logger.error(
       `Error fetching event at /api/spaces/[spaceId]/events/[eventId]`,
-      error instanceof Error ? error : new Error(String(error))
+      error instanceof Error ? error : new Error(String(error)),
     );
-    return NextResponse.json(ApiResponseHelper.error("Failed to fetch event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
-
-// PATCH /api/spaces/[spaceId]/events/[eventId] - Update event
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; eventId: string }> }
-) {
-  try {
-    const { spaceId, eventId } = await params;
-    
-    // Get auth header and verify token
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(ApiResponseHelper.error("Unauthorized", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const token = authHeader.substring(7);
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    // Get the event to check permissions
-    const eventDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .get();
-
-    if (!eventDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const eventData = eventDoc.data()!;
-
-    // Check if user can edit this event
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const memberRole = memberDoc.data()?.role;
-    const canEditEvent = 
-      eventData.organizerId === decodedToken.uid || // Event organizer
-      ['owner', 'admin', 'moderator'].includes(memberRole); // Space leaders
-
-    if (!canEditEvent) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to edit this event", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const body = (await request.json()) as unknown;
-    const validatedData = UpdateEventSchema.parse(body);
-
-    // Validate dates if provided
-    if (validatedData.startDate && validatedData.endDate) {
-      const startDate = new Date(validatedData.startDate);
-      const endDate = new Date(validatedData.endDate);
-      
-      if (endDate <= startDate) {
-        return NextResponse.json(ApiResponseHelper.error("End date must be after start date", "INVALID_INPUT"), { status: HttpStatus.BAD_REQUEST });
-      }
-    }
-
-    // Prepare update data
-    const updateData: any = {
-      ...validatedData,
-      updatedAt: new Date(),
-      updatedBy: decodedToken.uid,
-    };
-
-    // Convert date strings to Date objects
-    if (validatedData.startDate) {
-      updateData.startDate = new Date(validatedData.startDate);
-    }
-    if (validatedData.endDate) {
-      updateData.endDate = new Date(validatedData.endDate);
-    }
-    if (validatedData.rsvpDeadline) {
-      updateData.rsvpDeadline = new Date(validatedData.rsvpDeadline);
-    }
-
-    // Update the event
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .update(updateData);
-
-    // Log the action
-    await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("activity")
-      .add({
-        type: 'event_updated',
-        performedBy: decodedToken.uid,
-        targetEventId: eventId,
-        details: {
-          updatedFields: Object.keys(validatedData),
-        },
-        timestamp: new Date(),
-      });
-
-    logger.info(`Event updated: ${eventId} in space ${spaceId} by ${decodedToken.uid}`);
-
-    return NextResponse.json(ApiResponseHelper.success({
-      message: "Event updated successfully",
-      eventId,
-    }));
-
-  } catch (error: any) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: "Invalid event data",
-          details: error.errors,
-        },
-        { status: HttpStatus.BAD_REQUEST }
-      );
-    }
-
-    logger.error("Error updating event:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to update event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-  }
-}
-
-// DELETE /api/spaces/[spaceId]/events/[eventId] - Delete event
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ spaceId: string; eventId: string }> }
-) {
-  try {
-    const { spaceId, eventId } = await params;
-    
-    // Get and validate auth token
-    const token = getAuthTokenFromRequest(request);
-    if (!token) {
-      return NextResponse.json(ApiResponseHelper.error("Authentication required", "UNAUTHORIZED"), { status: HttpStatus.UNAUTHORIZED });
-    }
-
-    const auth = getAuth();
-    const decodedToken = await auth.verifyIdToken(token);
-
-    // Get the event to check permissions
-    const eventDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .get();
-
-    if (!eventDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Event not found", "RESOURCE_NOT_FOUND"), { status: HttpStatus.NOT_FOUND });
-    }
-
-    const eventData = eventDoc.data()!;
-
-    // Check if user can delete this event
-    const memberDoc = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("members")
-      .doc(decodedToken.uid)
-      .get();
-
-    if (!memberDoc.exists) {
-      return NextResponse.json(ApiResponseHelper.error("Not a member of this space", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    const memberRole = memberDoc.data()?.role;
-    const canDeleteEvent = 
-      eventData.organizerId === decodedToken.uid || // Event organizer
-      ['owner', 'admin'].includes(memberRole); // Space owners and admins only
-
-    if (!canDeleteEvent) {
-      return NextResponse.json(ApiResponseHelper.error("Insufficient permissions to delete this event", "FORBIDDEN"), { status: HttpStatus.FORBIDDEN });
-    }
-
-    // Delete all RSVPs for this event
-    const rsvpSnapshot = await db
-      .collection("spaces")
-      .doc(spaceId)
-      .collection("events")
-      .doc(eventId)
-      .collection("rsvps")
-      .get();
-
-    const batch = db.batch();
-    rsvpSnapshot.docs.forEach((doc) => {
-      batch.delete(doc.ref);
+    return respond.error('Failed to fetch event', 'INTERNAL_ERROR', {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
     });
+  }
+});
 
-    // Delete the event
-    const eventRef = db
-      .collection("spaces")
+export const PATCH = withAuthValidationAndErrors(
+  UpdateEventSchema,
+  async (
+    request: AuthenticatedRequest,
+    { params }: { params: Promise<{ spaceId: string; eventId: string }> },
+    body,
+    respond,
+  ) => {
+    try {
+      const { spaceId, eventId } = await params;
+      const userId = getUserId(request);
+
+      const membership = await requireSpaceMembership(spaceId, userId);
+      if (!membership.ok) {
+        const code =
+          membership.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+        return respond.error(membership.error, code, { status: membership.status });
+      }
+
+      const load = await loadEvent(spaceId, eventId);
+      if (!load.ok) {
+        const code = load.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+        return respond.error(load.message, code, { status: load.status });
+      }
+
+      const eventData = load.eventData;
+      const memberRole = membership.membership.role as string | undefined;
+      const canEdit =
+        eventData.organizerId === userId || ['owner', 'admin', 'moderator'].includes(memberRole || '');
+
+      if (!canEdit) {
+        return respond.error('Insufficient permissions to edit this event', 'FORBIDDEN', {
+          status: HttpStatus.FORBIDDEN,
+        });
+      }
+
+      if (body.startDate && body.endDate) {
+        const startDate = new Date(body.startDate);
+        const endDate = new Date(body.endDate);
+        if (endDate <= startDate) {
+          return respond.error('End date must be after start date', 'INVALID_INPUT', {
+            status: HttpStatus.BAD_REQUEST,
+          });
+        }
+      }
+
+      const updateData: Record<string, unknown> = {
+        ...body,
+        updatedAt: new Date(),
+        updatedBy: userId,
+      };
+
+      if (body.startDate) {
+        updateData.startDate = new Date(body.startDate);
+      }
+      if (body.endDate) {
+        updateData.endDate = new Date(body.endDate);
+      }
+      if (body.rsvpDeadline) {
+        updateData.rsvpDeadline = new Date(body.rsvpDeadline);
+      }
+
+      await load.eventDoc.ref.update(updateData);
+
+      await dbAdmin
+        .collection('spaces')
+        .doc(spaceId)
+        .collection('activity')
+        .add({
+          type: 'event_updated',
+          performedBy: userId,
+          targetEventId: eventId,
+          details: {
+            updatedFields: Object.keys(body),
+          },
+          timestamp: new Date(),
+        });
+
+      logger.info(`Event updated: ${eventId} in space ${spaceId} by ${userId}`);
+
+      return respond.success({
+        message: 'Event updated successfully',
+        eventId,
+      });
+    } catch (error) {
+      logger.error('Error updating event', error instanceof Error ? error : new Error(String(error)));
+      return respond.error('Failed to update event', 'INTERNAL_ERROR', {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+      });
+    }
+  },
+);
+
+export const DELETE = withAuthAndErrors(async (
+  request: AuthenticatedRequest,
+  { params }: { params: Promise<{ spaceId: string; eventId: string }> },
+  respond,
+) => {
+  try {
+    const { spaceId, eventId } = await params;
+    const userId = getUserId(request);
+
+    const membership = await requireSpaceMembership(spaceId, userId);
+    if (!membership.ok) {
+      const code =
+        membership.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(membership.error, code, { status: membership.status });
+    }
+
+    const load = await loadEvent(spaceId, eventId);
+    if (!load.ok) {
+      const code = load.status === HttpStatus.NOT_FOUND ? 'RESOURCE_NOT_FOUND' : 'FORBIDDEN';
+      return respond.error(load.message, code, { status: load.status });
+    }
+
+    const memberRole = membership.membership.role as string | undefined;
+    const canDelete =
+      load.eventData.organizerId === userId || ['owner', 'admin'].includes(memberRole || '');
+
+    if (!canDelete) {
+      return respond.error('Insufficient permissions to delete this event', 'FORBIDDEN', {
+        status: HttpStatus.FORBIDDEN,
+      });
+    }
+
+    const rsvps = await dbAdmin
+      .collection('spaces')
       .doc(spaceId)
-      .collection("events")
-      .doc(eventId);
-    
-    batch.delete(eventRef);
+      .collection('events')
+      .doc(eventId)
+      .collection('rsvps')
+      .get();
 
-    // Commit the batch
+    const batch = dbAdmin.batch();
+    for (const doc of rsvps.docs) {
+      batch.delete(doc.ref);
+    }
+    batch.delete(load.eventDoc.ref);
+
     await batch.commit();
 
-    // Log the action
-    await db
-      .collection("spaces")
+    await dbAdmin
+      .collection('spaces')
       .doc(spaceId)
-      .collection("activity")
+      .collection('activity')
       .add({
         type: 'event_deleted',
-        performedBy: decodedToken.uid,
+        performedBy: userId,
         targetEventId: eventId,
         details: {
-          eventTitle: eventData.title,
-          eventType: eventData.type,
+          eventTitle: load.eventData.title,
+          eventType: load.eventData.type,
         },
         timestamp: new Date(),
       });
 
-    logger.info(`Event deleted: ${eventId} from space ${spaceId} by ${decodedToken.uid}`);
+    logger.info(`Event deleted: ${eventId} from space ${spaceId} by ${userId}`);
 
-    return NextResponse.json(ApiResponseHelper.success({
-      message: "Event deleted successfully",
-    }));
-
-  } catch (error: any) {
-    logger.error("Error deleting event:", error);
-    return NextResponse.json(ApiResponseHelper.error("Failed to delete event", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
+    return respond.success({ message: 'Event deleted successfully' });
+  } catch (error) {
+    logger.error('Error deleting event', error instanceof Error ? error : new Error(String(error)));
+    return respond.error('Failed to delete event', 'INTERNAL_ERROR', {
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    });
   }
-}
+});

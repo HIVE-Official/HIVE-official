@@ -5,7 +5,6 @@ declare const hiveButtonVariants: (props?: {
     size?: "default" | "icon" | "sm" | "lg" | "xl";
 } & import("class-variance-authority/types").ClassProp) => string;
 export interface HiveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof hiveButtonVariants> {
-    asChild?: boolean;
     loading?: boolean;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;

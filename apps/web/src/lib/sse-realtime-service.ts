@@ -433,3 +433,4 @@ export class SSERealtimeService {
 
 // Export singleton instance
 export const sseRealtimeService = new SSERealtimeService();
+import 'server-only';

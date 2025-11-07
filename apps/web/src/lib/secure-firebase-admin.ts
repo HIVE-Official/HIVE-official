@@ -1,3 +1,4 @@
+import 'server-only';
 /**
  * PRODUCTION-SECURE Firebase Admin SDK initialization
  * NO CREDENTIAL LOGGING - SECURE CREDENTIAL HANDLING

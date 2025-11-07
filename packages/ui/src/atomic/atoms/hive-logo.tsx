@@ -19,6 +19,8 @@ const hiveLogoVariants = cva(
         dark: "text-[var(--hive-text-primary)]",
         gradient: "bg-gradient-to-r from-[var(--hive-brand-primary)] to-[var(--hive-brand-secondary)] bg-clip-text text-transparent",
         monochrome: "text-[var(--hive-text-primary)]",
+        platinum: "text-[#E5E4E2]",
+        aurora: "bg-gradient-to-r from-[#00c6ff] via-[#7fffd4] to-[#f9d423] bg-clip-text text-transparent",
       },
       animated: {
         none: "",
@@ -56,6 +58,9 @@ const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
     target,
     ...props
   }, ref) => {
+    const isAurora = variant === "aurora"
+    const gradientId = React.useId()
+
     const logoContent = (
       <div
         ref={ref}
@@ -76,11 +81,81 @@ const HiveLogo = React.forwardRef<HTMLDivElement, HiveLogoProps>(
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            {isAurora && (
+              <defs>
+                <linearGradient
+                  id={`${gradientId}-aurora-gradient`}
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#00c6ff">
+                    <animate
+                      attributeName="stop-color"
+                      values="#00c6ff;#7fffd4;#f9d423;#00c6ff"
+                      dur="6s"
+                      repeatCount="indefinite"
+                    />
+                  </stop>
+                  <stop offset="50%" stopColor="#7fffd4">
+                    <animate
+                      attributeName="stop-color"
+                      values="#7fffd4;#f9d423;#00c6ff;#7fffd4"
+                      dur="6s"
+                      repeatCount="indefinite"
+                    />
+                  </stop>
+                  <stop offset="100%" stopColor="#f9d423">
+                    <animate
+                      attributeName="stop-color"
+                      values="#f9d423;#00c6ff;#7fffd4;#f9d423"
+                      dur="6s"
+                      repeatCount="indefinite"
+                    />
+                  </stop>
+                  <animateTransform
+                    attributeName="gradientTransform"
+                    type="rotate"
+                    from="0 .5 .5"
+                    to="360 .5 .5"
+                    dur="12s"
+                    repeatCount="indefinite"
+                  />
+                </linearGradient>
+                <radialGradient
+                  id={`${gradientId}-aurora-glow`}
+                  cx="50%"
+                  cy="50%"
+                  r="50%"
+                >
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.45)" />
+                  <stop offset="70%" stopColor="rgba(124,255,212,0.25)" />
+                  <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+                </radialGradient>
+              </defs>
+            )}
             {/* HIVE official logo path */}
             <path
               d="M432.83,133.2l373.8,216.95v173.77s-111.81,64.31-111.81,64.31v-173.76l-262.47-150.64-262.27,150.84.28,303.16,259.55,150.31,5.53-.33,633.4-365.81,374.52,215.84v433.92l-372.35,215.04h-2.88l-372.84-215.99-.27-174.53,112.08-63.56v173.76c87.89,49.22,174.62,101.14,262.48,150.69l261.99-151.64v-302.41s-261.51-151.27-261.51-151.27l-2.58.31-635.13,366.97c-121.32-69.01-241.36-140.28-362.59-209.44-4.21-2.4-8.42-5.15-13.12-6.55v-433.92l375.23-216h.96Z"
-              fill="currentColor"
+              fill={isAurora ? `url(#${gradientId}-aurora-gradient)` : "currentColor"}
             />
+            {isAurora && (
+              <circle
+                cx="750"
+                cy="750"
+                r="620"
+                fill={`url(#${gradientId}-aurora-glow)`}
+                opacity="0"
+              >
+                <animate
+                  attributeName="opacity"
+                  values="0;0.35;0"
+                  dur="6s"
+                  repeatCount="indefinite"
+                />
+              </circle>
+            )}
           </svg>
         )}
         {showText && (

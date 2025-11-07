@@ -140,7 +140,8 @@ export class AdvancedAuthSecurity {
    */
   private async reportHighRiskEvent(event: SecurityEvent): Promise<void> {
     try {
-      await fetch('/api/security/alert', {
+      const { secureApiFetch } = await import('./secure-auth-utils');
+      await secureApiFetch('/api/security/alert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(event)

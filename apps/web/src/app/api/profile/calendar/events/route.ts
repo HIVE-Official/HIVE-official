@@ -3,6 +3,8 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/structured-logger";
 import { z } from 'zod';
 import * as admin from 'firebase-admin';
+import { CURRENT_CAMPUS_ID } from '@/lib/secure-firebase-queries';
+import { HttpStatus } from '@/lib/api-response-types';
 
 // Validation schemas
 const createEventSchema = z.object({
@@ -99,13 +101,15 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
 
     const eventsSnapshot = await query.limit(50).get();
 
-    const events = eventsSnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        ...data,
-      };
-    });
+    const events = eventsSnapshot.docs
+      .map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+        } as Record<string, any>;
+      })
+      .filter(event => !event.campusId || event.campusId === CURRENT_CAMPUS_ID);
 
     return respond.success({ events });
   } catch (error) {
@@ -113,11 +117,11 @@ export const GET = withAuthAndErrors(async (request: AuthenticatedRequest, conte
       `Failed to fetch calendar events for user ${userId}`,
       error instanceof Error ? error : new Error(String(error))
     );
-    return respond.error(
-      'Failed to fetch calendar events',
-      'INTERNAL_ERROR',
-      { status: 500 }
-    );
+      return respond.error(
+        'Failed to fetch calendar events',
+        'INTERNAL_ERROR',
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
+      );
   }
 });
 
@@ -149,7 +153,7 @@ export const POST = withAuthValidationAndErrors(
       const start = new Date(eventData.startDate);
       const end = new Date(eventData.endDate);
       if (end <= start) {
-        return respond.error('End date must be after start date', 'VALIDATION_ERROR', { status: 400 });
+        return respond.error('End date must be after start date', 'VALIDATION_ERROR', { status: HttpStatus.BAD_REQUEST });
       }
 
       // Create event in Firestore
@@ -161,6 +165,7 @@ export const POST = withAuthValidationAndErrors(
 
       const event = {
         ...eventData,
+        campusId: CURRENT_CAMPUS_ID,
         status: 'confirmed',
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -186,7 +191,7 @@ export const POST = withAuthValidationAndErrors(
       return respond.error(
         'Failed to create calendar event',
         'INTERNAL_ERROR',
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   }
@@ -214,7 +219,9 @@ export const PUT = withAuthValidationAndErrors(
         const start = new Date(updates.startDate);
         const end = new Date(updates.endDate);
         if (end <= start) {
-          return respond.error('End date must be after start date', 'VALIDATION_ERROR', { status: 400 });
+          return respond.error('End date must be after start date', 'VALIDATION_ERROR', {
+            status: HttpStatus.BAD_REQUEST,
+          });
         }
       }
 
@@ -227,12 +234,22 @@ export const PUT = withAuthValidationAndErrors(
 
       const eventDoc = await eventRef.get();
       if (!eventDoc.exists) {
-        return respond.error('Event not found', 'RESOURCE_NOT_FOUND', { status: 404 });
+        return respond.error('Event not found', 'RESOURCE_NOT_FOUND', {
+          status: HttpStatus.NOT_FOUND,
+        });
+      }
+
+      const eventData = eventDoc.data();
+      if (eventData?.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+        return respond.error('Access denied for this campus', 'FORBIDDEN', {
+          status: HttpStatus.FORBIDDEN,
+        });
       }
 
       await eventRef.update({
         ...updates,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        campusId: CURRENT_CAMPUS_ID,
       });
 
       return respond.success({ message: 'Event updated successfully' });
@@ -245,7 +262,7 @@ export const PUT = withAuthValidationAndErrors(
       return respond.error(
         'Failed to update calendar event',
         'INTERNAL_ERROR',
-        { status: 500 }
+        { status: HttpStatus.INTERNAL_SERVER_ERROR }
       );
     }
   }
@@ -264,7 +281,9 @@ export const DELETE = withAuthAndErrors(async (request: AuthenticatedRequest, co
   const eventId = searchParams.get('id');
 
   if (!eventId) {
-    return respond.error('Event ID is required', 'VALIDATION_ERROR', { status: 400 });
+    return respond.error('Event ID is required', 'VALIDATION_ERROR', {
+      status: HttpStatus.BAD_REQUEST,
+    });
   }
 
   try {
@@ -283,7 +302,16 @@ export const DELETE = withAuthAndErrors(async (request: AuthenticatedRequest, co
 
     const eventDoc = await eventRef.get();
     if (!eventDoc.exists) {
-      return respond.error('Event not found', 'RESOURCE_NOT_FOUND', { status: 404 });
+      return respond.error('Event not found', 'RESOURCE_NOT_FOUND', {
+        status: HttpStatus.NOT_FOUND,
+      });
+    }
+
+    const eventData = eventDoc.data();
+    if (eventData?.campusId && eventData.campusId !== CURRENT_CAMPUS_ID) {
+      return respond.error('Access denied for this campus', 'FORBIDDEN', {
+        status: HttpStatus.FORBIDDEN,
+      });
     }
 
     await eventRef.delete();
@@ -298,7 +326,7 @@ export const DELETE = withAuthAndErrors(async (request: AuthenticatedRequest, co
     return respond.error(
       'Failed to delete calendar event',
       'INTERNAL_ERROR',
-      { status: 500 }
+      { status: HttpStatus.INTERNAL_SERVER_ERROR }
     );
   }
 });

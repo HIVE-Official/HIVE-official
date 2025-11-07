@@ -1,0 +1,47 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "noEmit": false
+  },
+  "include": [
+    "src/index.ts",
+    "index.ts",
+    "index.build.ts",
+    "src/lib/utils.ts",
+    "src/atomic/atoms/button.tsx",
+    "src/atomic/atoms/card.tsx",
+    "src/atomic/atoms/badge.tsx",
+    "src/atomic/atoms/hive-logo.tsx",
+    "src/atomic/atoms/label.tsx",
+    "src/atomic/atoms/avatar.tsx",
+    "src/atomic/atoms/simple-avatar.tsx",
+    "src/atomic/atoms/media-thumb.tsx",
+    "src/atomic/atoms/percent-bar.tsx",
+    "src/components/ui/input-otp.tsx",
+    "src/atomic/molecules/stat-card.tsx",
+    "src/atomic/molecules/tag-list.tsx",
+    "src/atomic/molecules/notification-card.tsx"
+    ,"src/atomic/molecules/description-list.tsx"
+    ,"src/atomic/molecules/progress-list.tsx"
+    ,"src/atomic/molecules/table.tsx"
+    ,"src/atomic/molecules/rail-widget.tsx"
+    ,"src/atomic/molecules/now-card.tsx"
+    ,"src/atomic/molecules/today-drawer.tsx"
+    ,"src/atomic/organisms/spaces-skeletons.tsx"
+    ,"src/atomic/organisms/composer-chat.tsx"
+    ,"src/atomic/organisms/post-card.tsx"
+  ],
+  "exclude": [
+    "**/*.stories.*",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "src/atomic/organisms/**",
+    "src/atomic/templates/**",
+    "src/atomic/molecules/**.stories.*",
+    "node_modules",
+    "dist"
+  ]
+}

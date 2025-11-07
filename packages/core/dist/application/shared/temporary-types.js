@@ -1,22 +1,14 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PLACED_TOOL_COLLECTION_NAME = exports.tryDecodePlacementCompositeId = exports.decodePlacementCompositeId = exports.encodePlacementCompositeId = exports.getPlacementDocPath = exports.getPlacementCollectionPath = exports.PlacementSettingsSchema = exports.PlacementPermissionsSchema = exports.PlacementTargetType = exports.PlacedToolSchema = exports.validateToolStructure = exports.determineChangeType = exports.getNextVersion = exports.canUserViewTool = exports.canUserEditTool = exports.generateShareToken = exports.createToolDefaults = exports.ToolVersionSchema = exports.ToolMetadataSchema = exports.ToolConfigSchema = exports.ToolStatus = exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.validateElementConfig = exports.ElementInstanceSchema = exports.ElementType = exports.Space = exports.SpaceType = exports.Participation = exports.Ritual = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.EnhancedProfile = exports.EnhancedSpace = exports.EnhancedRitual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
+exports.getProfileCompleteness = getProfileCompleteness;
+exports.getDefaultActionCodeSettings = getDefaultActionCodeSettings;
+exports.validateEmailDomain = validateEmailDomain;
 /**
  * Temporary type exports for backward compatibility
  * These re-export from proper domain models
  * This file will be deleted once all references are updated
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShareToolSchema = exports.UpdateToolSchema = exports.CreateToolSchema = exports.ToolSchema = exports.Space = exports.SpaceType = exports.Participation = exports.Ritual = exports.FeedFilter = exports.FeedItem = exports.Connection = exports.EnhancedProfile = exports.EnhancedSpace = exports.EnhancedRitual = exports.EnhancedFeed = exports.ConnectionId = exports.CampusId = exports.RitualId = exports.SpaceName = exports.SpaceId = exports.ProfileId = void 0;
-exports.getProfileCompleteness = getProfileCompleteness;
-exports.getDefaultActionCodeSettings = getDefaultActionCodeSettings;
-exports.validateEmailDomain = validateEmailDomain;
-exports.canUserEditTool = canUserEditTool;
-exports.canUserViewTool = canUserViewTool;
-exports.getNextVersion = getNextVersion;
-exports.determineChangeType = determineChangeType;
-exports.validateToolStructure = validateToolStructure;
-exports.validateElementConfig = validateElementConfig;
-exports.generateShareToken = generateShareToken;
-exports.createToolDefaults = createToolDefaults;
 // Re-export from proper domain models
 var profile_id_value_1 = require("../../domain/profile/value-objects/profile-id.value");
 Object.defineProperty(exports, "ProfileId", { enumerable: true, get: function () { return profile_id_value_1.ProfileId; } });
@@ -288,71 +280,35 @@ class Space {
     }
 }
 exports.Space = Space;
-// Tool-related schemas and validators
-exports.ToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-exports.CreateToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-exports.UpdateToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-exports.ShareToolSchema = {
-    parse: (data) => data,
-    safeParse: (data) => ({ success: true, data })
-};
-// Tool utility functions
-function canUserEditTool(tool, userId) {
-    return tool.creatorId === userId ||
-        (tool.permissions?.canEdit || []).includes(userId);
-}
-function canUserViewTool(tool, userId) {
-    return tool.settings?.isPublic ||
-        tool.creatorId === userId ||
-        (tool.permissions?.canView || []).includes(userId);
-}
-function getNextVersion(currentVersion) {
-    const parts = currentVersion.split('.');
-    const patch = parseInt(parts[2] || '0', 10);
-    return `${parts[0]}.${parts[1]}.${patch + 1}`;
-}
-function determineChangeType(changes) {
-    // Simple heuristic for now
-    if (changes.elements?.length > 0)
-        return 'minor';
-    if (changes.settings)
-        return 'patch';
-    return 'patch';
-}
-function validateToolStructure(tool) {
-    return !!(tool.name && tool.elements && Array.isArray(tool.elements));
-}
-function validateElementConfig(element) {
-    return !!(element.type && element.config);
-}
-function generateShareToken(toolId, userId) {
-    return Buffer.from(`${toolId}:${userId}:${Date.now()}`).toString('base64');
-}
-function createToolDefaults() {
-    return {
-        version: '1.0.0',
-        elements: [],
-        settings: {
-            isPublic: false,
-            allowComments: true,
-            allowSharing: true,
-            requireAuth: false
-        },
-        permissions: {
-            canEdit: [],
-            canView: [],
-            canShare: [],
-            canDelete: []
-        }
-    };
-}
+var elements_1 = require("../../domain/creation/elements");
+Object.defineProperty(exports, "ElementType", { enumerable: true, get: function () { return elements_1.ElementType; } });
+Object.defineProperty(exports, "ElementInstanceSchema", { enumerable: true, get: function () { return elements_1.ElementInstanceSchema; } });
+Object.defineProperty(exports, "validateElementConfig", { enumerable: true, get: function () { return elements_1.validateElementConfig; } });
+var tool_1 = require("../../domain/creation/tool");
+Object.defineProperty(exports, "ToolSchema", { enumerable: true, get: function () { return tool_1.ToolSchema; } });
+Object.defineProperty(exports, "CreateToolSchema", { enumerable: true, get: function () { return tool_1.CreateToolSchema; } });
+Object.defineProperty(exports, "UpdateToolSchema", { enumerable: true, get: function () { return tool_1.UpdateToolSchema; } });
+Object.defineProperty(exports, "ShareToolSchema", { enumerable: true, get: function () { return tool_1.ShareToolSchema; } });
+Object.defineProperty(exports, "ToolStatus", { enumerable: true, get: function () { return tool_1.ToolStatus; } });
+Object.defineProperty(exports, "ToolConfigSchema", { enumerable: true, get: function () { return tool_1.ToolConfigSchema; } });
+Object.defineProperty(exports, "ToolMetadataSchema", { enumerable: true, get: function () { return tool_1.ToolMetadataSchema; } });
+Object.defineProperty(exports, "ToolVersionSchema", { enumerable: true, get: function () { return tool_1.ToolVersionSchema; } });
+Object.defineProperty(exports, "createToolDefaults", { enumerable: true, get: function () { return tool_1.createToolDefaults; } });
+Object.defineProperty(exports, "generateShareToken", { enumerable: true, get: function () { return tool_1.generateShareToken; } });
+Object.defineProperty(exports, "canUserEditTool", { enumerable: true, get: function () { return tool_1.canUserEditTool; } });
+Object.defineProperty(exports, "canUserViewTool", { enumerable: true, get: function () { return tool_1.canUserViewTool; } });
+Object.defineProperty(exports, "getNextVersion", { enumerable: true, get: function () { return tool_1.getNextVersion; } });
+Object.defineProperty(exports, "determineChangeType", { enumerable: true, get: function () { return tool_1.determineChangeType; } });
+Object.defineProperty(exports, "validateToolStructure", { enumerable: true, get: function () { return tool_1.validateToolStructure; } });
+var placement_1 = require("../../domain/creation/placement");
+Object.defineProperty(exports, "PlacedToolSchema", { enumerable: true, get: function () { return placement_1.PlacedToolSchema; } });
+Object.defineProperty(exports, "PlacementTargetType", { enumerable: true, get: function () { return placement_1.PlacementTargetType; } });
+Object.defineProperty(exports, "PlacementPermissionsSchema", { enumerable: true, get: function () { return placement_1.PlacementPermissionsSchema; } });
+Object.defineProperty(exports, "PlacementSettingsSchema", { enumerable: true, get: function () { return placement_1.PlacementSettingsSchema; } });
+Object.defineProperty(exports, "getPlacementCollectionPath", { enumerable: true, get: function () { return placement_1.getPlacementCollectionPath; } });
+Object.defineProperty(exports, "getPlacementDocPath", { enumerable: true, get: function () { return placement_1.getPlacementDocPath; } });
+Object.defineProperty(exports, "encodePlacementCompositeId", { enumerable: true, get: function () { return placement_1.encodePlacementCompositeId; } });
+Object.defineProperty(exports, "decodePlacementCompositeId", { enumerable: true, get: function () { return placement_1.decodePlacementCompositeId; } });
+Object.defineProperty(exports, "tryDecodePlacementCompositeId", { enumerable: true, get: function () { return placement_1.tryDecodePlacementCompositeId; } });
+Object.defineProperty(exports, "PLACED_TOOL_COLLECTION_NAME", { enumerable: true, get: function () { return placement_1.PLACED_TOOL_COLLECTION_NAME; } });
 //# sourceMappingURL=temporary-types.js.map
