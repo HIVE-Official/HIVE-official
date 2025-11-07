@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { FeedComposerSheet, type MediaFile } from './feed-composer-sheet';
-import { Switch } from '../atoms/switch';
-import { Label } from '../atoms/label';
+import { Switch } from '../../00-Global/atoms/switch';
+import { Label } from '../../00-Global/atoms/label';
 
 export interface SpacePostComposerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSubmit"> {

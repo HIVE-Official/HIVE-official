@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { Badge } from "../../atomic/atoms/badge";
-import { Button } from "../../atomic/atoms/button";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
 import { Surface } from "../../layout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/atoms/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
 import { cn } from "../../lib/utils";
 
 export interface HiveLabWorkflow {

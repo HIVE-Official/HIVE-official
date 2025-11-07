@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   Badge,
   Button,
@@ -9,7 +9,7 @@ import {
   ShieldIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-} from '../atoms';
+} from '../../00-Global/atoms';
 
 export interface SpaceLeader {
   id: string;

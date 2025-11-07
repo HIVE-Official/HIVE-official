@@ -1,13 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
   Badge,
-} from '../atoms';
+} from '../../00-Global/atoms';
 import { FeedSpaceChip } from '../molecules/feed-space-chip';
 import { FeedMediaPreview, type MediaItem } from '../molecules/feed-media-preview';
 import {

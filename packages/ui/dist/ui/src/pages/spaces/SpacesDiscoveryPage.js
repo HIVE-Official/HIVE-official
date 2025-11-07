@@ -1,8 +1,8 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-import { Button } from "../../atomic/atoms/button.js";
-import { Badge } from "../../atomic/atoms/badge.js";
-import { Surface } from "../../layout/index.js";
-import { SpaceCard } from "./SpaceCard.js";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Surface } from "../../layout";
+import { SpaceCard } from "./SpaceCard";
 const DEFAULT_FEATURED = [
     {
         id: "robotics",

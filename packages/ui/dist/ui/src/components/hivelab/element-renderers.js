@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useState } from 'react';
-import { Input, Button, Card, CardContent, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Progress, } from '../../atomic/atoms/index.js';
+import { Input, Button, Card, CardContent, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Progress, } from '../../atomic';
 import { Search, Filter, Users, Calendar, Tag, FileText, Bell, MapPin, } from 'lucide-react';
 // Search Input Element
 export function SearchInputElement({ config, onChange }) {

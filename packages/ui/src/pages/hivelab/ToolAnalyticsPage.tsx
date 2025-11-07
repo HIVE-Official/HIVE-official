@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Card, Grid } from '../../atomic/atoms';
+import { Button, Card, Grid } from '../../atomic';
 import { ArrowLeft, Download, Star, Users, Activity, Share, MessageSquare, TrendingUp } from 'lucide-react';
 
 export interface ToolAnalyticsData {

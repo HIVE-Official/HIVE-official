@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Card } from '../atoms/card';
-import { Button } from '../atoms/button';
+import { Card } from '../../00-Global/atoms/card';
+import { Button } from '../../00-Global/atoms/button';
 import { PercentBar } from '../atoms/percent-bar';
 
 export interface FeatureUsageStats {

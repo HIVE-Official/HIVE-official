@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { Badge } from "../../atomic/atoms/badge";
-import { Button } from "../../atomic/atoms/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/atoms/avatar";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/00-Global/atoms/avatar";
 import { Surface } from "../../layout";
 import { cn } from "../../lib/utils";
 

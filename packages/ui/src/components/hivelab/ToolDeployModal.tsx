@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../atomic/atoms';
+import { Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../atomic';
 import { ArrowLeft, CheckCircle, Rocket, Settings, Shield, Users as UsersIcon, User as UserIcon } from 'lucide-react';
 
 export type DeploymentTarget = {

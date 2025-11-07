@@ -1,12 +1,12 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-import { Button } from "../../atomic/atoms/button.js";
-import { Input } from "../../atomic/atoms/input.js";
-import { Textarea } from "../../atomic/atoms/textarea.js";
-import { Checkbox } from "../../atomic/atoms/checkbox.js";
-import { Label } from "../../atomic/atoms/label.js";
-import { Surface } from "../../layout/index.js";
-import { Badge } from "../../atomic/atoms/badge.js";
-import { cn } from "../../lib/utils.js";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Input } from "../../atomic/00-Global/atoms/input";
+import { Textarea } from "../../atomic/00-Global/atoms/textarea";
+import { Checkbox } from "../../atomic/00-Global/atoms/checkbox";
+import { Label } from "../../atomic/00-Global/atoms/label";
+import { Surface } from "../../layout";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { cn } from "../../lib/utils";
 const DEFAULT_STEPS = [
     {
         id: "identity",

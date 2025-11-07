@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Badge } from "../../atomic/atoms/badge.js";
-import { Button } from "../../atomic/atoms/button.js";
-import { Avatar, AvatarFallback, AvatarImage, } from "../../atomic/atoms/avatar.js";
-import { Surface } from "../../layout/index.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/atoms/tabs.js";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Avatar, AvatarFallback, AvatarImage, } from "../../atomic/00-Global/atoms/avatar";
+import { Surface } from "../../layout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
 const DEFAULT_STATS = [
     { label: "Spaces", value: "12" },
     { label: "Rituals hosted", value: "38" },

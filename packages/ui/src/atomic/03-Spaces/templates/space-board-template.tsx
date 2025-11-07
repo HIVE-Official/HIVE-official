@@ -1,13 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { SpaceHeader } from '../molecules/space-header';
 import { SpaceAboutWidget, type SpaceAboutData } from '../molecules/space-about-widget';
 import { SpaceToolsWidget, type SpaceTool } from '../molecules/space-tools-widget';
 import { SpacePostComposer } from '../organisms/space-post-composer';
 import { FeedVirtualizedList, type FeedItem } from '../organisms/feed-virtualized-list';
-import { Button, PinIcon } from '../atoms';
+import { Button, PinIcon } from '../../00-Global/atoms';
 import type { MediaFile } from '../organisms/feed-composer-sheet';
 
 export interface PinnedPost {

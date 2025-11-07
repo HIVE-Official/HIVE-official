@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Skeleton } from "../../atomic/atoms/skeleton";
+import { Skeleton } from "../../atomic/00-Global/atoms/skeleton";
 import { Surface } from "../../layout";
 
 export const ToolsLoadingSkeleton: React.FC = () => (

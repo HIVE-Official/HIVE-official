@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card } from '../atoms/card';
+import { Card } from '../../00-Global/atoms/card';
 
 export interface RitualLaunchCountdownProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;

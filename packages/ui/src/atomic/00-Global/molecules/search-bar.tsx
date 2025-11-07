@@ -28,9 +28,9 @@
  */
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Input } from '../atoms/input';
-import { SearchIcon, XIcon, LoaderIcon } from '../atoms/icon-library';
+import { cn } from '../../../lib/utils';
+import { Input } from '../../00-Global/atoms/input';
+import { SearchIcon, XIcon, LoaderIcon } from '../../00-Global/atoms/icon-library';
 
 export interface SearchBarProps {
   /**

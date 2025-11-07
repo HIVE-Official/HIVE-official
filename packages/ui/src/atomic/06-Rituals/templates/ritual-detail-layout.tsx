@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import type { RitualDetailView } from '@hive/core';
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button';
-import { Card } from '../atoms/card';
-import { Badge } from '../atoms/badge';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../00-Global/atoms/button';
+import { Card } from '../../00-Global/atoms/card';
+import { Badge } from '../../00-Global/atoms/badge';
 import { PercentBar } from '../atoms/percent-bar';
 import { Clock, Calendar, Users, TrendingUp, ArrowLeft } from 'lucide-react';
 import { RitualTournamentBracket, type TournamentMatchup } from '../organisms/ritual-tournament-bracket';

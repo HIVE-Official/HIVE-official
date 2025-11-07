@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Card } from '../atoms/card';
-import { Button } from '../atoms/button';
-import { Badge } from '../atoms/badge';
-import { cn } from '../../lib/utils';
+import { Card } from '../../00-Global/atoms/card';
+import { Button } from '../../00-Global/atoms/button';
+import { Badge } from '../../00-Global/atoms/badge';
+import { cn } from '../../../lib/utils';
 
 export interface SurvivalMatchup {
   id: string;

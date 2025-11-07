@@ -1,12 +1,12 @@
 import * as React from "react";
 
-import { Button } from "../../atomic/atoms/button";
-import { Input } from "../../atomic/atoms/input";
-import { Textarea } from "../../atomic/atoms/textarea";
-import { Checkbox } from "../../atomic/atoms/checkbox";
-import { Label } from "../../atomic/atoms/label";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Input } from "../../atomic/00-Global/atoms/input";
+import { Textarea } from "../../atomic/00-Global/atoms/textarea";
+import { Checkbox } from "../../atomic/00-Global/atoms/checkbox";
+import { Label } from "../../atomic/00-Global/atoms/label";
 import { Surface } from "../../layout";
-import { Badge } from "../../atomic/atoms/badge";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
 import { cn } from "../../lib/utils";
 
 export interface OnboardingStep {

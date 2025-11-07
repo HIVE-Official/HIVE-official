@@ -24,7 +24,7 @@
  */
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   MediaViewer,
   MediaViewerTrigger,
@@ -32,7 +32,7 @@ import {
   MediaViewerViewport,
   MediaViewerClose,
 } from '../atoms/media-viewer';
-import { PlayIcon } from '../atoms/icon-library';
+import { PlayIcon } from '../../00-Global/atoms/icon-library';
 
 export interface MediaItem {
   /**

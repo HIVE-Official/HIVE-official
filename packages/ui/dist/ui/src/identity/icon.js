@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils.js";
+import { cn } from "../lib/utils";
 const wrapperVariants = cva("relative inline-flex shrink-0 select-none items-center justify-center align-middle transition-transform duration-200 ease-out", {
     variants: {
         size: {

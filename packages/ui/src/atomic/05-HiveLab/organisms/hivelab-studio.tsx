@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '../atoms';
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Global/atoms';
 import { HiveLabElementPalette } from '../molecules/hivelab-element-palette';
 import { HiveLabInspectorPanel } from '../molecules/hivelab-inspector-panel';
 import { HiveLabLintPanel, type LintIssue } from '../molecules/hivelab-lint-panel';

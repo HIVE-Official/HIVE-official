@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   Badge,
   Button,
@@ -10,7 +10,7 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-} from '../atoms';
+} from '../../00-Global/atoms';
 
 export interface SpaceTool {
   id: string;

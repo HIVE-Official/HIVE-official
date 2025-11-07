@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
   Progress,
-} from '../../atomic/atoms';
+} from '../../atomic';
 import {
   Search,
   Filter,

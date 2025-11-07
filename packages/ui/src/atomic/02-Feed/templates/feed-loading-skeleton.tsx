@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Skeleton } from '../atoms/skeleton';
+import { cn } from '../../../lib/utils';
+import { Skeleton } from '../../00-Global/atoms/skeleton';
 
 export interface FeedLoadingSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   count?: number;

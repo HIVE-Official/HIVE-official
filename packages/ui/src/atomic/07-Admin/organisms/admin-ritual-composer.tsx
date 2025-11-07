@@ -8,11 +8,11 @@ import {
   createDefaultConfig,
   type RitualComposerInput,
 } from '@hive/core';
-import { Button } from '../../atoms/button';
-import { Input } from '../../atoms/input';
-import { Textarea } from '../../atoms/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/select';
-import { Label } from '../../atoms/label';
+import { Button } from '../../00-Global/atoms/button';
+import { Input } from '../../00-Global/atoms/input';
+import { Textarea } from '../../00-Global/atoms/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../00-Global/atoms/select';
+import { Label } from '../../00-Global/atoms/label';
 import { cn } from '../../../lib/utils';
 
 const STEP_TITLES = ['Details', 'Schedule', 'Presentation', 'Configuration', 'Review'];

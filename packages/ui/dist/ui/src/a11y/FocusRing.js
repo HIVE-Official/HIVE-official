@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "../lib/utils.js";
+import { cn } from "../lib/utils";
 /**
  * FocusRing ensures every interactive element renders a consistent, high-contrast outline
  * that respects reduced motion and user theme tokens.

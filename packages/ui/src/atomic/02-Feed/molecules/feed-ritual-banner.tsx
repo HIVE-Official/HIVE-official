@@ -26,10 +26,10 @@
  */
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button';
-import { Progress } from '../atoms/progress';
-import { SparklesIcon, UsersIcon, CheckIcon } from '../atoms/icon-library';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../00-Global/atoms/button';
+import { Progress } from '../../00-Global/atoms/progress';
+import { SparklesIcon, UsersIcon, CheckIcon } from '../../00-Global/atoms/icon-library';
 
 export interface FeedRitualBannerProps {
   /**

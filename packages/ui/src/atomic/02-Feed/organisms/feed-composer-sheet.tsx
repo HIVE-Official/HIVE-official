@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   Sheet,
   SheetContent,
@@ -19,7 +19,7 @@ import {
   ImageIcon,
   XIcon,
   LoaderIcon,
-} from '../atoms';
+} from '../../00-Global/atoms';
 
 export interface ComposerSpace {
   id: string;

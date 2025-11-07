@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { Button } from "../../atomic/atoms/button";
-import { Badge } from "../../atomic/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
 import { Surface } from "../../layout";
 import { SpaceCard, type SpaceCardData } from "./SpaceCard";
 

@@ -26,7 +26,7 @@
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import { X } from 'lucide-react';
 
 export interface KeyboardShortcut {

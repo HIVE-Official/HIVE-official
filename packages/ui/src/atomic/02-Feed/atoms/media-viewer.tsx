@@ -3,7 +3,7 @@
 import React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 
 export type MediaViewerItem =
   | { id: string; type: 'image'; src: string; alt?: string; caption?: string }

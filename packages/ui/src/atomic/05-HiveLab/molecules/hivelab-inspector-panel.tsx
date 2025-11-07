@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Label, Input, Button } from '../atoms';
+import { Card, CardContent, Label, Input, Button } from '../../00-Global/atoms';
 
 export interface HiveLabInspectorPanelProps {
   selectedName?: string;

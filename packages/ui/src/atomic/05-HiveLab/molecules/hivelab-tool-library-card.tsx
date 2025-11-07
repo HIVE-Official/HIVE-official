@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Button, Badge } from '../atoms';
+import { Card, CardContent, Button, Badge } from '../../00-Global/atoms';
 
 export interface HiveLabToolLibraryCardProps {
   name: string;

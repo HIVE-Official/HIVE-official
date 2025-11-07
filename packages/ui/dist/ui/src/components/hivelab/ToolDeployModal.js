@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
-import { Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../atomic/atoms/index.js';
+import { Button, Card, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../../atomic';
 import { ArrowLeft, CheckCircle, Rocket, Settings, Shield, Users as UsersIcon, User as UserIcon } from 'lucide-react';
 export function ToolDeployModal({ open, onOpenChange, toolName, availableTargets, onDeploy, initialConfig }) {
     const [step, setStep] = React.useState('target');

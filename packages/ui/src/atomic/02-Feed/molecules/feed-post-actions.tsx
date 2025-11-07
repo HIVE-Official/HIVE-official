@@ -29,13 +29,13 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   HeartIcon,
   MessageCircleIcon,
   BookmarkIcon,
   ShareIcon,
-} from '../atoms/icon-library';
+} from '../../00-Global/atoms/icon-library';
 
 export interface FeedPostActionsProps {
   /**
@@ -164,7 +164,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           )}
         >
           {count > 999 ? `${(count / 1000).toFixed(1)}k` : count}
-        </span>
+        </motion.span>
       )}
     </motion.button>
   );

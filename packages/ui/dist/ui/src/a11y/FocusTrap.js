@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../lib/utils.js";
+import { cn } from "../lib/utils";
 const FOCUSABLE_SELECTORS = [
     "a[href]",
     "area[href]",

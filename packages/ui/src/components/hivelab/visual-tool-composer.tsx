@@ -14,7 +14,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '../../atomic/atoms';
+} from '../../atomic';
 import {
   ArrowRight,
   Box,

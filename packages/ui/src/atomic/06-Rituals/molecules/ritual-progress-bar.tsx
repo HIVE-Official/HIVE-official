@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Progress } from '../atoms/progress';
-import { CheckCircleIcon } from '../atoms';
+import { cn } from '../../../lib/utils';
+import { Progress } from '../../00-Global/atoms/progress';
+import { CheckCircleIcon } from '../../00-Global/atoms';
 
 export interface RitualMilestone {
   percentage: number;

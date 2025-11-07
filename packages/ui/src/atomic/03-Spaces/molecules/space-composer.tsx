@@ -8,8 +8,8 @@
 
 import React, { useState } from 'react';
 import { Plus, Image, Calendar, Wrench } from 'lucide-react';
-import { Button } from '../atoms/button';
-import { Textarea } from '../atoms/textarea';
+import { Button } from '../../00-Global/atoms/button';
+import { Textarea } from '../../00-Global/atoms/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,

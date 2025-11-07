@@ -34,7 +34,7 @@ export {
   // Actions
   Plus as PlusIcon,
   X as XIcon,
-  Check as CheckIcon,
+  Check as LucideCheck,
   ChevronDown as ChevronDownIcon,
   ChevronUp as ChevronUpIcon,
   ChevronLeft as ChevronLeftIcon,

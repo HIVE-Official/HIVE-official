@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { SparklesIcon } from '../atoms/icon-library';
-import { Button } from '../atoms/button';
+import { cn } from '../../../lib/utils';
+import { SparklesIcon } from '../../00-Global/atoms/icon-library';
+import { Button } from '../../00-Global/atoms/button';
 
 export interface EmptyStateCompactProps {
   /**

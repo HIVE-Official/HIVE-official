@@ -12,7 +12,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Bell, BellRing } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 
 // Motion components (assuming they exist in the shell)
 interface MotionDivProps extends React.HTMLAttributes<HTMLDivElement> {

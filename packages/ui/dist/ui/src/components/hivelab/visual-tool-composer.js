@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useCallback, useRef, useState } from 'react';
-import { Alert, AlertDescription, Badge, Button, Card, CardContent, Input, Label, Tabs, TabsContent, TabsList, TabsTrigger, } from '../../atomic/atoms/index.js';
+import { Alert, AlertDescription, Badge, Button, Card, CardContent, Input, Label, Tabs, TabsContent, TabsList, TabsTrigger, } from '../../atomic';
 import { ArrowRight, Box, CheckCircle, Copy, Eye, Grid, Layers, Link, Maximize2 as Resize, Move, Play, Save, Settings, Trash2, } from 'lucide-react';
-import { ElementRegistry, initializeElementSystem, } from '../../lib/hivelab/element-system.js';
-import { cn } from '../../lib/utils.js';
+import { ElementRegistry, initializeElementSystem, } from '../../lib/hivelab/element-system';
+import { cn } from '../../lib/utils';
 export function VisualToolComposer({ onSave, onPreview, onCancel, initialComposition, userId, }) {
     const [toolName, setToolName] = useState(initialComposition?.name || '');
     const [toolDescription, setToolDescription] = useState(initialComposition?.description || '');

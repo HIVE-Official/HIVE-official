@@ -1,9 +1,9 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
-import { Badge } from "../../atomic/atoms/badge.js";
-import { Button } from "../../atomic/atoms/button.js";
-import { Surface } from "../../layout/index.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/atoms/tabs.js";
-import { cn } from "../../lib/utils.js";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Surface } from "../../layout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
+import { cn } from "../../lib/utils";
 const STATUS_TONE = {
     draft: "bg-[var(--hive-background-tertiary,#171827)] text-[var(--hive-text-secondary,#c5c7d8)]",
     live: "bg-[rgba(34,197,94,0.15)] text-[var(--hive-status-success-text,#bff3cb)]",

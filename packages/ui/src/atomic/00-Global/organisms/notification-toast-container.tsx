@@ -1,14 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import {
   CheckCircleIcon,
   AlertTriangleIcon,
   InfoIcon,
   XIcon,
-} from '../atoms';
+} from '../../00-Global/atoms';
 
 export interface ToastNotification {
   id: string;

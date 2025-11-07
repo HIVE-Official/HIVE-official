@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import type { RitualFeedBanner as RitualFeedBannerData } from '@hive/core';
-import { cn } from '../../lib/utils';
-import { Button } from '../atoms/button';
-import { Card } from '../atoms/card';
+import { cn } from '../../../lib/utils';
+import { Button } from '../../00-Global/atoms/button';
+import { Card } from '../../00-Global/atoms/card';
 import { Clock, UserPlus } from 'lucide-react';
 
 export interface RitualFeedBannerCardProps {

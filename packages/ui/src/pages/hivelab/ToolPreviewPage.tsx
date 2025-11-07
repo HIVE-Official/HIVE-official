@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Button, Card } from '../../atomic/atoms';
+import { Button, Card } from '../../atomic';
 import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from 'lucide-react';
 import type { ToolComposition } from '../../lib/hivelab/element-system';
 

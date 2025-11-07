@@ -35,8 +35,8 @@
 import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
-import { XIcon, CheckIcon, AlertCircleIcon, AlertTriangleIcon, InfoIcon } from './icon-library';
+import { cn } from '../../../lib/utils';
+import { XIcon, LucideCheck, AlertCircleIcon, AlertTriangleIcon, InfoIcon } from '../../00-Global/atoms/icon-library';
 
 // Toast viewport (container positioned in top-right)
 export const ToastViewport = React.forwardRef<
@@ -99,7 +99,7 @@ export const ToastIcon = React.forwardRef<
 >(({ className, variant, ...props }, ref) => {
   const Icon = {
     default: InfoIcon,
-    success: CheckIcon,
+    success: LucideCheck,
     error: AlertCircleIcon,
     warning: AlertTriangleIcon,
   }[variant || 'default'];

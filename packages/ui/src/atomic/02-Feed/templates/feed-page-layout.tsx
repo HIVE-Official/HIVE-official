@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Button, PlusIcon, UsersIcon, AlertCircleIcon } from '../atoms';
-import { LiveRegion } from '../../a11y/LiveRegion';
+import { cn } from '../../../lib/utils';
+import { Button, PlusIcon, UsersIcon, AlertCircleIcon } from '../../00-Global/atoms';
+import { LiveRegion } from '../../../a11y/LiveRegion';
 import { FeedFilterBar } from '../molecules/feed-filter-bar';
 import { FeedVirtualizedList, type FeedItem } from '../organisms/feed-virtualized-list';
 import { FeedLoadingSkeleton } from './feed-loading-skeleton';

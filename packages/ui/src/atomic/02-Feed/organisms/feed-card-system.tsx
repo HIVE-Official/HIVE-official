@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '../../../lib/utils';
 import {
   Badge,
   Button,
@@ -11,7 +11,7 @@ import {
   MegaphoneIcon,
   AlertTriangleIcon,
   ChevronRightIcon,
-} from '../atoms';
+} from '../../00-Global/atoms';
 
 export type FeedSystemVariant = 'ritual' | 'announcement' | 'urgent';
 

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Skeleton } from "../../atomic/atoms/skeleton.js";
-import { Surface } from "../../layout/index.js";
+import { Skeleton } from "../../atomic/00-Global/atoms/skeleton";
+import { Surface } from "../../layout";
 /**
  * ProfileViewLoadingSkeleton mirrors the profile overview layout with shimmering placeholders.
  */

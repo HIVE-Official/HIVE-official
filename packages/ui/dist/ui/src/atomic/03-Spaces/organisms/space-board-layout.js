@@ -1,0 +1,16 @@
+'use client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import * as React from 'react';
+import { cn } from '../../lib/utils';
+import { Button, PinIcon } from '../atoms';
+import { SpaceHeader } from '../molecules/space-header';
+import { FeedVirtualizedList } from './feed-virtualized-list';
+export const SpaceBoardLayout = React.forwardRef(({ spaceId, spaceName, spaceIcon, memberCount, isMember, isLeader = false, pinnedPosts = [], onPinnedPostClick, showComposer = true, onCompose, feedItems, renderFeedItem, onLoadMore, hasMore = false, isLoading = false, onJoin, onLeave, onShare, className, ...props }, ref) => {
+    return (_jsxs("div", { ref: ref, className: cn('flex min-h-screen flex-col', className), ...props, children: [_jsx(SpaceHeader, { space: {
+                    id: spaceId,
+                    name: spaceName,
+                    iconUrl: spaceIcon,
+                }, memberCount: memberCount, membershipState: isMember ? 'joined' : 'not_joined', isLeader: isLeader, onJoin: !isMember && onJoin ? () => onJoin(spaceId) : undefined, onLeave: isMember && onLeave ? () => onLeave(spaceId) : undefined, onShare: onShare }), _jsx("main", { className: "flex-1 bg-[var(--hive-background-primary)]", children: _jsxs("div", { className: "mx-auto max-w-3xl px-4 py-6", children: [showComposer && isMember && (_jsx("div", { className: "mb-6", children: _jsx(Button, { variant: "secondary", className: "w-full justify-start text-[var(--hive-text-tertiary)] hover:text-[var(--hive-text-primary)]", onClick: onCompose, children: _jsx("span", { className: "text-left", children: "Share something with the space..." }) }) })), pinnedPosts.length > 0 && (_jsxs("div", { className: "mb-6 space-y-2", children: [_jsxs("div", { className: "flex items-center gap-2 px-2", children: [_jsx(PinIcon, { className: "h-4 w-4 text-[var(--hive-brand-primary)]" }), _jsx("span", { className: "text-xs font-semibold uppercase tracking-[0.16em] text-[var(--hive-text-tertiary)]", children: "Pinned Posts" })] }), _jsx("div", { className: "space-y-2", children: pinnedPosts.map((post) => (_jsx("button", { onClick: () => onPinnedPostClick?.(post.id), className: "group flex w-full items-start gap-3 rounded-xl border-l-4 border-[var(--hive-brand-primary)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 96%,transparent)] p-4 text-left transition-colors hover:bg-[color-mix(in_srgb,var(--hive-background-secondary) 92%,transparent)]", children: _jsxs("div", { className: "flex-1 space-y-1", children: [_jsx("h3", { className: "text-sm font-semibold text-[var(--hive-text-primary)]", children: post.title }), _jsxs("p", { className: "text-xs text-[var(--hive-text-tertiary)]", children: [post.author, " \u2022 ", post.timeAgo] })] }) }, post.id))) })] })), _jsx(FeedVirtualizedList, { items: feedItems, renderItem: renderFeedItem, onLoadMore: onLoadMore, hasMore: hasMore, isLoading: isLoading })] }) })] }));
+});
+SpaceBoardLayout.displayName = 'SpaceBoardLayout';
+//# sourceMappingURL=space-board-layout.js.map

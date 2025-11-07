@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Badge } from '../atoms';
+import { Card, CardContent, Badge } from '../../00-Global/atoms';
 
 export interface LintIssue { level: 'warning' | 'error'; message: string }
 export interface HiveLabLintPanelProps { issues?: LintIssue[] }
