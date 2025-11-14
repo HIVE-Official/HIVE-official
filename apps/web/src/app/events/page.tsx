@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import { Button, Card, Badge } from "@hive/ui";
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from '@hive/ui';
 import { 
   Calendar, 
   Plus, 

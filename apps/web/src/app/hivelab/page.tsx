@@ -12,7 +12,7 @@ interface Tool {
   name: string;
   description: string;
 }
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from '@hive/ui';
 import { Zap, Code, Palette, Database, BarChart3, Users, Rocket, ArrowLeft, Wrench } from 'lucide-react';
 
 export default function HiveLabPage() {

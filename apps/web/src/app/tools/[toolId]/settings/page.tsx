@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, Grid } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from '@hive/ui';
 import { ArrowLeft, Settings as _Settings, Lock, Eye as _Eye, EyeOff as _EyeOff, Users, Globe, Shield as _Shield, Trash2, Copy, Download, Upload as _Upload, AlertTriangle, Save, Share2, Bell } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";
 

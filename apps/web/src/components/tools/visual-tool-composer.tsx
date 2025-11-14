@@ -11,7 +11,7 @@ const Tabs = ({ children, defaultValue, className = "", ...props }: any) => <div
 const TabsContent = ({ children, value, className = "", ...props }: any) => <div className={className} {...props}>{children}</div>;
 const TabsList = ({ children, className = "", ...props }: any) => <div className={`flex space-x-2 ${className}`} {...props}>{children}</div>;
 const TabsTrigger = ({ children, value, className = "", ...props }: any) => <button className={`px-3 py-1 ${className}`} {...props}>{children}</button>;
-import { Alert, AlertDescription } from '@/components/temp-stubs';
+import { Alert, AlertDescription } from '@hive/ui';
 import {
   Plus,
   Search,
