@@ -8,9 +8,7 @@ import {
   SpacePostComposer,
   SpaceAboutWidget,
   SpaceToolsWidget,
-  FeedCardPost,
   type SpaceMembershipState,
-  type FeedCardPostData,
 } from '@hive/ui';
 import { SpaceBoardSkeleton } from '@hive/ui';
 import { secureApiFetch } from '@/lib/secure-auth-utils';
@@ -112,40 +110,6 @@ export default function SpaceBoardPage() {
       timeAgo: formatDistanceToNow(new Date(p.createdAt), { addSuffix: true }),
     }));
 
-  // Transform post -> card data
-  const toCardData = (post: any): FeedCardPostData => ({
-    id: post.id,
-    author: {
-      id: post.author?.id || post.authorId,
-      name: post.author?.name || 'Anonymous',
-      avatarUrl: post.author?.avatarUrl,
-      role: post.author?.badges?.[0],
-      verified: post.author?.isVerified,
-    },
-    space: {
-      id: spaceId,
-      name: space?.name || 'Space',
-      color: 'var(--hive-brand-primary)'
-    },
-    content: {
-      headline: post.type === 'link' ? (post.content || '').split('\n')[0] : undefined,
-      body: post.content,
-      media: post.attachments?.map((a: any) => ({ id: a.id, type: a.type, url: a.url, thumbnailUrl: a.thumbnailUrl })),
-      tags: post.tags,
-    },
-    stats: {
-      upvotes: post.engagement?.likes || 0,
-      comments: post.engagement?.comments || 0,
-      isUpvoted: !!post.engagement?.hasLiked,
-      isBookmarked: !!post.engagement?.hasBookmarked,
-    },
-    meta: {
-      timeAgo: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }),
-      isPinned: !!post.isPinned,
-      isEdited: !!post.isEdited,
-    },
-  });
-
   // Right-rail data mappers
   const aboutData = {
     spaceId: spaceId,
@@ -221,16 +185,24 @@ export default function SpaceBoardPage() {
           {/* Feed list */}
           <div className="flex flex-col gap-4">
             {posts.map((post: any) => (
-              <FeedCardPost
+              <div
                 key={post.id}
-                post={toCardData(post)}
-                onOpen={() => {/* TODO: open post detail */}}
-                onSpaceClick={() => router.push(`/spaces/${spaceId}`)}
-                onUpvote={(id) => likePost(id)}
-                onComment={(id) => {/* open composer targeted to comment */}}
-                onBookmark={(id) => bookmarkPost(id)}
-                onShare={(id) => sharePost(id)}
-              />
+                className="rounded-xl border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-semibold text-[var(--hive-text-primary)]">
+                      {post.author?.name || 'Anonymous'}
+                    </div>
+                    <div className="text-xs text-[var(--hive-text-tertiary)]">
+                      {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 text-sm text-[var(--hive-text-primary)] whitespace-pre-wrap">
+                  {post.content}
+                </div>
+              </div>
             ))}
 
             {/* Load more */}

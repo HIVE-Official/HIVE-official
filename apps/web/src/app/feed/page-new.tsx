@@ -29,44 +29,19 @@ import { secureApiFetch } from '@/lib/secure-auth-utils';
 // Import new @hive/ui components
 import {
   FeedPageLayout,
-  FeedCardPost,
-  FeedCardEvent,
-  FeedCardTool,
   FeedCardSystem,
   RitualStrip,
   KeyboardShortcutsOverlay,
   AriaLiveRegion,
   type FeedItem,
-  type FeedCardPostData,
-  type FeedCardEventData,
-  type FeedCardToolData,
   type FeedCardSystemData,
   Button,
 } from '@hive/ui';
 
 /**
- * Transform useFeed Post → FeedItem for FeedVirtualizedList
+ * Transform useFeed Post → FeedCardSystemData for unified cards
  */
-function transformPostToFeedItem(post: Post): FeedItem {
-  return {
-    id: post.id,
-    type: post.type === 'text' || post.type === 'image' || post.type === 'video' || post.type === 'link'
-      ? 'post'
-      : post.type === 'event'
-      ? 'event'
-      : post.type === 'tool'
-      ? 'tool'
-      : post.type === 'announcement'
-      ? 'system'
-      : 'post',
-    data: post,
-  };
-}
-
-/**
- * Transform useFeed Post → FeedCardPostData for FeedCardPost
- */
-function transformPostToCardData(post: Post): FeedCardPostData {
+function transformPostToSystemCard(post: Post): FeedCardSystemData {
   return {
     id: post.id,
     author: {
@@ -80,15 +55,13 @@ function transformPostToCardData(post: Post): FeedCardPostData {
       ? {
           id: post.spaceId,
           name: post.spaceName || 'Space',
-          color: 'var(--hive-brand-primary)', // TODO: Get from space data
-        }
-      : {
-          id: 'campus',
-          name: 'Campus',
           color: 'var(--hive-brand-primary)',
-        },
+        }
+      : undefined,
     content: {
-      headline: post.type === 'link' ? post.content.split('\n')[0] : undefined,
+      title:
+        post.content.split('\n')[0] ||
+        (post.type === 'event' ? 'Event' : 'Post'),
       body: post.content,
       media: post.attachments?.map((attachment: Attachment) => ({
         id: attachment.id,
@@ -107,6 +80,12 @@ function transformPostToCardData(post: Post): FeedCardPostData {
     },
     meta: {
       timeAgo: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true }),
+      kind:
+        post.type === 'event'
+          ? 'event'
+          : post.type === 'tool'
+          ? 'tool'
+          : 'post',
       isPinned: post.isPinned,
       isEdited: post.isEdited,
     },
@@ -157,9 +136,14 @@ export default function FeedPage() {
     types: activeFilter === 'all' ? undefined : [activeFilter],
   });
 
-  // Transform posts → feed items
-  const feedItems = React.useMemo(
-    () => posts.map(transformPostToFeedItem),
+  // Transform posts → feed items (system-style cards for now)
+  const feedItems = React.useMemo<FeedItem[]>(
+    () =>
+      posts.map((post) => ({
+        id: post.id,
+        type: 'system',
+        data: transformPostToSystemCard(post),
+      })),
     [posts]
   );
 
@@ -448,65 +432,19 @@ export default function FeedPage() {
   };
 
   // Render individual feed items
-  const renderFeedItem = React.useCallback((item: FeedItem, _index: number) => {
-    const post = item.data as Post;
-
-    // Render based on card type
-    switch (item.type) {
-      case 'post': {
-        const cardData = transformPostToCardData(post);
-        return (
-          <FeedCardPost
-            post={cardData}
-            onOpen={handleCardOpen}
-            onSpaceClick={handleSpaceClick}
-            onUpvote={handleUpvote}
-            onComment={handleComment}
-            onBookmark={handleBookmark}
-            onShare={handleShare}
-          />
-        );
-      }
-
-      case 'event': {
-        const eventData = transformEvent(post);
-        return (
-          <FeedCardEvent
-            event={eventData}
-            onViewDetails={() => handleCardOpen(post.id)}
-            onToggleRsvp={() => toast({ title: 'RSVP updated', type: 'success' })}
-            onSpaceClick={handleSpaceClick}
-          />
-        );
-      }
-
-      case 'tool': {
-        const toolData = transformTool(post);
-        return (
-          <FeedCardTool
-            tool={toolData}
-            onOpenTool={() => handleCardOpen(post.id)}
-            onPreview={() => handleCardOpen(post.id)}
-            onSpaceClick={handleSpaceClick}
-          />
-        );
-      }
-
-      case 'system': {
-        const card = transformSystem(post);
-        return (
-          <FeedCardSystem
-            card={card}
-            onAction={() => handleCardOpen(post.id)}
-            onDismiss={() => {}}
-          />
-        );
-      }
-
-      default:
-        return null;
-    }
-  }, [handleCardOpen, handleSpaceClick, handleUpvote, handleComment, handleBookmark, handleShare]);
+  const renderFeedItem = React.useCallback(
+    (item: FeedItem, _index: number) => {
+      const card = item.data as FeedCardSystemData;
+      return (
+        <FeedCardSystem
+          card={card}
+          onAction={() => handleCardOpen(card.id)}
+          onDismiss={() => {}}
+        />
+      );
+    },
+    [handleCardOpen]
+  );
 
   return (
     <>

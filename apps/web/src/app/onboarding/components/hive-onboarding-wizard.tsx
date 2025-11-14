@@ -9,14 +9,12 @@ import { useAuth } from "@hive/auth-logic";
 import { useOnboardingBridge, type OnboardingData } from "@/lib/onboarding-bridge-temp";
 import { motion } from 'framer-motion';
 import {
-  AuthOnboardingLayout,
   Badge,
   HiveCard,
   HiveCardContent,
   HiveCardHeader,
   HiveCardTitle,
   HiveLogo,
-  OnboardingFrame,
 } from "@hive/ui";
 
 import type { HiveOnboardingData } from "./types";
@@ -601,21 +599,31 @@ export function HiveOnboardingWizard() {
   );
 
   return (
-    <AuthOnboardingLayout mode={mode} headerSlot={headerSlot} footerSlot={footerSlot}>
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] px-4 py-8">
+      <div className="mb-6 flex items-center justify-between">
+        {headerSlot}
+      </div>
       <div className="flex w-full flex-col gap-8 lg:flex-row">
         <div className="flex-1">
-          <OnboardingFrame
-            step={currentStep}
-            totalSteps={safeTotalSteps}
-            title={activeStep?.title ?? "Onboarding"}
-            description={activeStep?.description}
-            mode={mode}
-            onBack={isFirstStep ? undefined : goBack}
-            onContinue={handleContinue}
-            continueLabel={isLastStep ? "Finish setup" : "Continue"}
-            continueDisabled={!canGoNext() || isSubmitting}
-            isSubmitting={isSubmitting}
-          >
+          <div className="rounded-2xl border border-[var(--hive-border-primary)]/50 bg-[var(--hive-background-elevated)] p-5">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h1 className="text-lg font-semibold text-[var(--hive-text-primary)]">
+                  {activeStep?.title ?? "Onboarding"}
+                </h1>
+                {activeStep?.description && (
+                  <p className="mt-1 text-xs text-[var(--hive-text-secondary)]">
+                    {activeStep.description}
+                  </p>
+                )}
+              </div>
+              <div className="hidden items-center gap-2 text-xs text-[var(--hive-text-muted)] sm:flex">
+                <span>
+                  Step {currentStep + 1} of {safeTotalSteps}
+                </span>
+              </div>
+            </div>
+
             <MobileSummary currentStep={stepNumber} totalSteps={safeTotalSteps} stepTitle={activeStep?.title} />
 
             {error && (
@@ -635,7 +643,26 @@ export function HiveOnboardingWizard() {
                 <StepComponent data={data} updateData={updateData} onNext={handleContinue} />
               </motion.div>
             )}
-          </OnboardingFrame>
+
+            <div className="mt-6 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={goBack}
+                disabled={isFirstStep || isSubmitting}
+                className="text-xs text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)] disabled:opacity-50"
+              >
+                {isFirstStep ? ' ' : 'Back'}
+              </button>
+              <button
+                type="button"
+                onClick={handleContinue}
+                disabled={!canGoNext() || isSubmitting}
+                className="rounded-full bg-[var(--hive-brand-primary)] px-5 py-2 text-xs font-medium text-black hover:bg-hive-champagne disabled:opacity-60"
+              >
+                {isLastStep ? 'Finish setup' : 'Continue'}
+              </button>
+            </div>
+          </div>
         </div>
 
         <aside className="hidden w-full max-w-sm flex-col gap-5 lg:flex">
@@ -649,6 +676,6 @@ export function HiveOnboardingWizard() {
         <CampusMessageCard />
         <ProfilePreviewCard data={data} />
       </div>
-    </AuthOnboardingLayout>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import type { RitualDetailView } from '@hive/core';
-import { RitualDetailLayout, Button } from '@hive/ui';
+import { Button } from '@hive/ui';
 import { secureApiFetch } from '@/lib/secure-auth-utils';
 import { useSession } from '../../../hooks/use-session';
 import { ErrorBoundary } from '../../../components/error-boundary';
@@ -100,71 +100,30 @@ function RitualDetailPageContent() {
   };
 
   return (
-    <RitualDetailLayout
-      ritual={data}
-      onPrimaryAction={handlePrimary}
-      onBack={() => router.push('/rituals')}
-      onTournamentVote={async (matchupId, choice) => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/vote`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ matchupId, choice }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-      onFeatureUnlock={async () => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/feature-usage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'use' }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-      onLeakReveal={async (clueId) => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/leak`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'reveal', clueId }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-      onLotteryEnter={async () => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/lottery`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'enter' }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-      onUnlockContribute={async () => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/unlock`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'contribute', value: 1 }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-      onSurvivalVote={async (matchupId, competitorId) => {
-        try {
-          const res = await secureApiFetch(`/api/rituals/${ritualId}/survival/vote`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ matchupId, competitorId }),
-          });
-          if (res.ok) await refetch();
-        } catch {}
-      }}
-    />
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]">
+      <div className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8">
+        <button
+          type="button"
+          className="text-sm text-[var(--hive-text-secondary)] hover:text-[var(--hive-text-primary)]"
+          onClick={() => router.push('/rituals')}
+        >
+          ← Back to rituals
+        </button>
+        <div className="rounded-2xl border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] p-6">
+          <h1 className="text-2xl font-semibold">{data.title}</h1>
+          {data.subtitle && (
+            <p className="mt-1 text-sm text-[var(--hive-text-secondary)]">
+              {data.subtitle}
+            </p>
+          )}
+          {data.description && (
+            <p className="mt-4 text-sm text-[var(--hive-text-primary)] whitespace-pre-wrap">
+              {data.description}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

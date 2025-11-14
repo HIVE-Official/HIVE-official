@@ -6,13 +6,8 @@ export const dynamic = 'force-dynamic';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@hive/auth-logic';
-import {
-  HiveLabExperience,
-  hiveLabOverviewMock,
-  hiveLabModeCopy,
-  Skeleton,
-} from '@hive/ui';
-import type { ToolComposition, HiveLabView } from '@hive/ui';
+import { Skeleton } from '@hive/ui';
+import type { ToolComposition } from '@hive/ui';
 import { apiClient } from '@/lib/api-client';
 import { DeployModalProvider } from './DeployModalProvider';
 import { logger } from '@/lib/logger';
@@ -179,39 +174,19 @@ export default function HiveLabPage() {
     return null;
   }
 
-  const overviewConfig = useMemo(() => {
-    return {
-      ...hiveLabOverviewMock,
-      hero: {
-        ...hiveLabOverviewMock.hero,
-        title: 'HiveLab',
-        description:
-          'Visual tool composer for campus utilities. Build with elements, deploy to spaces, solve real problems collaboratively.',
-      },
-      // TODO: Fetch real stats from API
-      // stats: await fetchHiveLabStats(),
-    };
-  }, []);
-
-  // If mobile and visual requested, force overview but show notice
-  const resolvedInitialMode = isMobileBlocked && initialMode === 'visual' ? 'overview' : initialMode;
-
   const currentToolId = searchParams.get('toolId') || undefined;
 
   return (
     <DeployModalProvider toolId={currentToolId}>
-      <HiveLabExperience
-        initialMode={resolvedInitialMode}
-        overviewConfig={overviewConfig}
-        modeCopy={hiveLabModeCopy}
-        userId={user.uid}
-        onModeChange={handleModeChange}
-        composerProps={{
-          userId: user.uid,
-          onSave: handleToolSave,
-          onPreview: handleToolPreview,
-        }}
-      />
+      <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex items-center justify-center px-4">
+        <div className="max-w-xl space-y-6 text-center">
+          <h1 className="text-3xl font-semibold">HiveLab is coming online</h1>
+          <p className="text-sm text-[var(--hive-text-secondary)]">
+            The visual tool composer is being wired to the new campus tools APIs. You can still
+            access tools you&apos;ve already installed from the Tools tab.
+          </p>
+        </div>
+      </div>
     </DeployModalProvider>
   );
 }

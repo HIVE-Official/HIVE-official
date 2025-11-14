@@ -15,16 +15,12 @@ import {
   Card,
   Button,
   Switch,
-  FormField,
   HiveConfirmModal,
   Badge,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-  FormLabel,
-  FormControl,
-  FormDescription
 } from "@hive/ui";
 import { ProfileContextProvider, useProfileContext } from '@/components/profile/ProfileContextProvider';
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -365,60 +361,48 @@ function ProfileSettingsContent() {
               </h3>
               
               <div className="space-y-4">
-                <FormField>
-                  <FormLabel>Space Invitations</FormLabel>
-                  <FormControl>
+                {[
+                  {
+                    key: 'spaceInvites',
+                    label: 'Space Invitations',
+                    description: "Get notified when you're invited to join a space",
+                  },
+                  {
+                    key: 'eventReminders',
+                    label: 'Event Reminders',
+                    description: 'Reminders for upcoming events and meetings',
+                  },
+                  {
+                    key: 'toolUpdates',
+                    label: 'Tool Updates',
+                    description: 'New tool launches and updates from builders',
+                  },
+                  {
+                    key: 'weeklyDigest',
+                    label: 'Weekly Digest',
+                    description: "Summary of your week's activity and highlights",
+                  },
+                  {
+                    key: 'securityAlerts',
+                    label: 'Security Alerts',
+                    description: 'Important security and account notifications',
+                  },
+                ].map((item) => (
+                  <div key={item.key} className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm text-white">{item.label}</div>
+                      <p className="text-xs text-[var(--hive-text-muted)]">{item.description}</p>
+                    </div>
                     <Switch
-                    checked={notificationSettings.email.spaceInvites}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'spaceInvites', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Get notified when you're invited to join a space</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Event Reminders</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.email.eventReminders}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'eventReminders', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Reminders for upcoming events and meetings</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Tool Updates</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.email.toolUpdates}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'toolUpdates', checked)}
-                  />
-                </FormControl>
-                <FormDescription>New tool launches and updates from builders</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Weekly Digest</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.email.weeklyDigest}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'weeklyDigest', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Summary of your week's activity and highlights</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Security Alerts</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.email.securityAlerts}
-                    onCheckedChange={(checked) => handleNotificationChange('email', 'securityAlerts', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Important security and account notifications</FormDescription>
-                </FormField>
+                      checked={
+                        notificationSettings.email[item.key as keyof NotificationSettings['email']]
+                      }
+                      onCheckedChange={(checked) =>
+                        handleNotificationChange('email', item.key, checked)
+                      }
+                    />
+                  </div>
+                ))}
               </div>
             </Card>
 
@@ -428,40 +412,39 @@ function ProfileSettingsContent() {
                 <Smartphone className="h-5 w-5 text-[var(--hive-brand-primary)]" />
                 Push Notifications
               </h3>
-              
               <div className="space-y-4">
-                <FormField>
-                  <FormLabel>Space Activity</FormLabel>
-                  <FormControl>
+                {[
+                  {
+                    key: 'spaceActivity',
+                    label: 'Space Activity',
+                    description: 'Real-time notifications for space updates',
+                  },
+                  {
+                    key: 'toolLaunches',
+                    label: 'Tool Launches',
+                    description: 'Notifications when new tools are available',
+                  },
+                  {
+                    key: 'directMessages',
+                    label: 'Direct Messages',
+                    description: 'Instant notifications for direct messages',
+                  },
+                ].map((item) => (
+                  <div key={item.key} className="CI flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm text-white">{item.label}</div>
+                      <p className="text-xs text-[var(--hive-text-muted)]">{item.description}</p>
+                    </div>
                     <Switch
-                    checked={notificationSettings.push.spaceActivity}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'spaceActivity', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Real-time notifications for space updates</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Tool Launches</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.push.toolLaunches}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'toolLaunches', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Notifications when new tools are available</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Direct Messages</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={notificationSettings.push.directMessages}
-                    onCheckedChange={(checked) => handleNotificationChange('push', 'directMessages', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Instant notifications for direct messages</FormDescription>
-                </FormField>
+                      checked={
+                        notificationSettings.push[item.key as keyof NotificationSettings['push']]
+                      }
+                      onCheckedChange={(checked) =>
+                        handleNotificationChange('push', item.key, checked)
+                      }
+                    />
+                  </div>
+                ))}
               </div>
             </Card>
           </TabsContent>
@@ -476,60 +459,48 @@ function ProfileSettingsContent() {
               </h3>
               
               <div className="space-y-4">
-                <FormField>
-                  <FormLabel>Show Activity Feed</FormLabel>
-                  <FormControl>
+                {[
+                  {
+                    key: 'showActivity',
+                    label: 'Show Activity Feed',
+                    description: 'Let others see your recent activity and interactions',
+                  },
+                  {
+                    key: 'showSpaces',
+                    label: 'Show Spaces',
+                    description: "Display the spaces you're part of on your profile",
+                  },
+                  {
+                    key: 'showConnections',
+                    label: 'Show Connections',
+                    description: 'Display your connections and network on your profile',
+                  },
+                  {
+                    key: 'showOnlineStatus',
+                    label: 'Show Online Status',
+                    description: "Let others see when you're active on HIVE",
+                  },
+                  {
+                    key: 'allowDirectMessages',
+                    label: 'Allow Direct Messages',
+                    description: 'Let other students send you direct messages',
+                  },
+                ].map((item) => (
+                  <div key={item.key} className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm text-white">{item.label}</div>
+                      <p className="text-xs text-[var(--hive-text-muted)]">{item.description}</p>
+                    </div>
                     <Switch
-                    checked={privacySettings.showActivity}
-                    onCheckedChange={(checked) => handlePrivacyChange('showActivity', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Let others see your recent activity and interactions</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Show Spaces</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={privacySettings.showSpaces}
-                    onCheckedChange={(checked) => handlePrivacyChange('showSpaces', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Display the spaces you're part of on your profile</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Show Connections</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={privacySettings.showConnections}
-                    onCheckedChange={(checked) => handlePrivacyChange('showConnections', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Display your connections and network on your profile</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Show Online Status</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={privacySettings.showOnlineStatus}
-                    onCheckedChange={(checked) => handlePrivacyChange('showOnlineStatus', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Let others see when you're active on HIVE</FormDescription>
-                </FormField>
-                
-                <FormField>
-                  <FormLabel>Allow Direct Messages</FormLabel>
-                  <FormControl>
-                    <Switch
-                    checked={privacySettings.allowDirectMessages}
-                    onCheckedChange={(checked) => handlePrivacyChange('allowDirectMessages', checked)}
-                  />
-                </FormControl>
-                <FormDescription>Let other students send you direct messages</FormDescription>
-                </FormField>
+                      checked={
+                        privacySettings[item.key as keyof PrivacySettings] as boolean
+                      }
+                      onCheckedChange={(checked) =>
+                        handlePrivacyChange(item.key as keyof PrivacySettings, checked)
+                      }
+                    />
+                  </div>
+                ))}
               </div>
             </Card>
 
@@ -546,9 +517,16 @@ function ProfileSettingsContent() {
                   Ghost Mode helps you stay focused during finals, study sessions, or when you need a break from social interactions while still accessing your tools and spaces.
                 </p>
                 
-                <FormField>
-                  <FormLabel>Enable Ghost Mode</FormLabel>
-                  <FormControl>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-sm text-white">Enable Ghost Mode</div>
+                      <p className="text-xs text-[var(--hive-text-muted)]">
+                        {privacySettings.ghostMode.enabled
+                          ? "You're currently in ghost mode - reduced visibility across campus"
+                          : "Temporarily reduce your visibility and campus social presence"}
+                      </p>
+                    </div>
                     <div className="flex items-center gap-3">
                       <Switch
                         checked={privacySettings.ghostMode.enabled}
@@ -560,13 +538,8 @@ function ProfileSettingsContent() {
                         </Badge>
                       )}
                     </div>
-                  </FormControl>
-                  <FormDescription>
-                    {privacySettings.ghostMode.enabled
-                      ? "You're currently in ghost mode - reduced visibility across campus"
-                      : "Temporarily reduce your visibility and campus social presence"}
-                  </FormDescription>
-                </FormField>
+                  </div>
+                </div>
               </div>
             </Card>
           </TabsContent>
@@ -580,37 +553,40 @@ function ProfileSettingsContent() {
               </h3>
               
               <div className="space-y-4">
-                <FormField>
-                  <FormLabel>Theme</FormLabel>
-                  <FormControl>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-white">Theme</span>
                     <div className="flex items-center gap-2">
                       <Badge variant={accountSettings.theme === 'dark' ? 'primary' : 'secondary'}>
                         Dark
                       </Badge>
-                      <span className="text-sm text-gray-400">(Currently locked to dark theme for vBETA)</span>
                     </div>
-                  </FormControl>
-                  <FormDescription>Choose your preferred color scheme</FormDescription>
-                </FormField>
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    (Currently locked to dark theme for vBETA)
+                  </p>
+                </div>
                 
-                <FormField>
-                  <FormLabel>Email Frequency</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-2">
-                      {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
-                        <Badge
-                          key={freq}
-                          variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}
-                          className="cursor-pointer"
-                          onClick={() => handleAccountChange('emailFrequency', freq)}
-                        >
-                          {freq}
-                        </Badge>
-                      ))}
-                    </div>
-                  </FormControl>
-                  <FormDescription>How often you receive email updates</FormDescription>
-                </FormField>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm text-white">Email Frequency</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {['immediate', 'daily', 'weekly', 'never'].map((freq) => (
+                      <Badge
+                        key={freq}
+                        variant={accountSettings.emailFrequency === freq ? 'primary' : 'secondary'}
+                        className="cursor-pointer"
+                        onClick={() => handleAccountChange('emailFrequency', freq)}
+                      >
+                        {freq}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    How often you receive email updates
+                  </p>
+                </div>
               </div>
             </Card>
 

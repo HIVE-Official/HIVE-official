@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { AuthOnboardingLayout, Button, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle, Input, HiveLogo } from "@hive/ui";
+import { Button, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle, Input, HiveLogo } from "@hive/ui";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const dynamic = "force-dynamic";
@@ -215,8 +215,11 @@ function LoginContent() {
   );
 
   return (
-    <AuthOnboardingLayout mode={mode} headerSlot={headerSlot} footerSlot={footerSlot}>
-      <div className="w-full space-y-6">
+    <div className="min-h-screen bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)] flex items-center justify-center px-4">
+      <div className="w-full max-w-xl space-y-6">
+        <div className="mb-6 flex items-center justify-between">
+          {headerSlot}
+        </div>
         <AnimatePresence mode="wait">
           {step === "school" && (
             <motion.div
@@ -400,8 +403,11 @@ function LoginContent() {
             </motion.div>
           )}
         </AnimatePresence>
+        <div className="mt-8">
+          {footerSlot}
+        </div>
       </div>
-    </AuthOnboardingLayout>
+    </div>
   );
 }
 

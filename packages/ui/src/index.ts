@@ -58,8 +58,17 @@ export {
   AvatarImage,
   AvatarFallback,
 } from "./atomic/00-Global/atoms/avatar";
-export { HiveCard } from "./atomic/00-Global/atoms/hive-card";
+export {
+  HiveCard,
+  HiveCardHeader,
+  HiveCardFooter,
+  HiveCardTitle,
+  HiveCardDescription,
+  HiveCardContent,
+} from "./atomic/00-Global/atoms/hive-card";
+export { HiveLogo } from "./atomic/00-Global/atoms/hive-logo";
 export { Grid } from "./atomic/00-Global/atoms/grid";
+export { Switch } from "./atomic/00-Global/atoms/switch";
 export {
   InputOTP,
   InputOTPGroup,
@@ -73,6 +82,38 @@ export {
   InfoIcon,
   XIcon,
 } from "./atomic/00-Global/atoms/icon-library";
+export {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "./atomic/00-Global/atoms/alert";
+export {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./atomic/00-Global/atoms/dialog";
+export { AriaLiveRegion } from "./atomic/00-Global/atoms/aria-live-region";
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "./atomic/00-Global/atoms/tabs";
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from "./atomic/00-Global/atoms/command";
 
 // Additional atoms
 export { MediaThumb } from "./atomic/02-Feed/atoms/media-thumb";
@@ -89,6 +130,20 @@ export type {
   PostCardListItemProps,
   PostOverlayProps
 } from "./atomic/02-Feed/atoms/post-card";
+export { KeyboardShortcutsOverlay } from "./atomic/00-Global/molecules/keyboard-shortcuts-overlay";
+
+// Layout molecules
+export {
+  PageContainer,
+  PageHeader,
+  PageTitle,
+  PageDescription,
+  PageContent,
+  PageFooter,
+} from "./atomic/00-Global/molecules/page-container";
+
+// Modal molecules
+export { HiveConfirmModal } from "./atomic/00-Global/molecules/hive-confirm-modal";
 
 // Universal Shell (navigation) - Removed (not used in production)
 // export {

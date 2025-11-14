@@ -10,7 +10,6 @@ import {
   AdminMetricCard,
   AuditLogList,
   ModerationQueue,
-  AdminRitualComposer,
   type AdminNavItem,
   type ModerationQueueItem,
   type AuditLogEvent,
