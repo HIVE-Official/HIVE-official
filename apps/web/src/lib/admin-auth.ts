@@ -53,6 +53,7 @@ export async function isAdmin(userId: string, userEmail?: string): Promise<boole
       return true;
     }
   } catch (error) {
+    console.error('[AdminAuth] Failed to verify Firebase custom claims for user:', userId, error);
   }
 
   // Check Firestore admins collection
@@ -63,6 +64,7 @@ export async function isAdmin(userId: string, userEmail?: string): Promise<boole
       return true;
     }
   } catch (error) {
+    console.error('[AdminAuth] Failed to check Firestore admins collection for user:', userId, error);
   }
 
   return false;
@@ -89,7 +91,7 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
   try {
     const auth = getAuth();
     const userRecord = await auth.getUser(userId);
-    
+
     // Get custom claims for permissions
     const customClaims = userRecord.customClaims || {};
     const role = customClaims.role || 'admin';
@@ -103,6 +105,7 @@ export async function getAdminUser(userId: string): Promise<AdminUser | null> {
       lastLogin: new Date(),
     };
   } catch (error) {
+    console.error('[AdminAuth] Failed to fetch admin user details for user:', userId, error);
     return null;
   }
 }
@@ -141,9 +144,11 @@ export async function verifyAdminToken(request: NextRequest): Promise<AdminUser 
       const decodedToken = await auth.verifyIdToken(token);
       return await getAdminUser(decodedToken.uid);
     } catch (authError) {
+      console.error('[AdminAuth] Failed to verify admin ID token:', authError);
       return null;
     }
   } catch (error) {
+    console.error('[AdminAuth] Unexpected error verifying admin token:', error);
     return null;
   }
 }
@@ -192,5 +197,6 @@ export async function logAdminActivity(
   try {
     // TODO: Implement admin activity logging to database
   } catch (error) {
+    console.error('[AdminAuth] Failed to log admin activity:', { adminId, action, details }, error);
   }
 }
