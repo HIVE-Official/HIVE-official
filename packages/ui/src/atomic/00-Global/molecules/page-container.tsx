@@ -81,7 +81,7 @@ export interface PageContainerProps
   subtitle?: string;
   breadcrumbs?: Array<{
     label: string;
-    icon?: React.ComponentType<unknown>;
+    icon?: React.ComponentType<{ className?: string }>;
   }>;
   actions?: React.ReactNode;
 }
