@@ -211,6 +211,37 @@ export type {
   FeedSystemVariant,
 } from "./atomic/02-Feed/organisms/feed-card-system";
 
+export { FeedCardPost } from "./atomic/02-Feed/organisms/feed-card-post";
+export type {
+  FeedCardPostProps,
+  FeedCardPostData,
+  FeedCardPostCallbacks,
+  FeedCardAuthor,
+  FeedCardSpace,
+  FeedCardPostStats,
+  FeedCardPostContent,
+  FeedCardPostMeta,
+} from "./atomic/02-Feed/organisms/feed-card-post";
+
+export { FeedCardEvent } from "./atomic/02-Feed/organisms/feed-card-event";
+export type {
+  FeedCardEventProps,
+  FeedCardEventData,
+  FeedCardEventCallbacks,
+  FeedCardEventMeta,
+  FeedCardEventStats,
+  FeedEventStatus,
+} from "./atomic/02-Feed/organisms/feed-card-event";
+
+export { FeedCardTool } from "./atomic/02-Feed/organisms/feed-card-tool";
+export type {
+  FeedCardToolProps,
+  FeedCardToolData,
+  FeedCardToolCallbacks,
+  FeedCardToolMeta,
+  FeedCardToolStats,
+} from "./atomic/02-Feed/organisms/feed-card-tool";
+
 export { FeedComposerSheet } from "./atomic/02-Feed/organisms/feed-composer-sheet";
 export type {
   FeedComposerSheetProps,
