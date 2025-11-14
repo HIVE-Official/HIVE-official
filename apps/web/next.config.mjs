@@ -164,8 +164,8 @@ const nextConfig = {
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 "img-src 'self' data: blob: https://firebasestorage.googleapis.com https://storage.googleapis.com",
                 "font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com",
-                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://vercel.live wss://ws-us3.pusher.com",
-                "frame-src 'self' https://*.firebaseapp.com",
+                "connect-src 'self' https://*.firebaseio.com https://firebase.googleapis.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://vercel.live wss://ws-us3.pusher.com",
+                "frame-src 'self' https://*.firebaseapp.com https://vercel.live",
               ].join('; ')
             }
           ] : []),
