@@ -6,15 +6,15 @@ import type {
 } from "react";
 import { Calendar, Clock, Play, Sparkles } from "lucide-react";
 
-import { Button } from "../atoms/button";
+import { Button } from "../../00-Global/atoms/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../atoms/card";
-import { Progress } from "../atoms/progress";
-import { cn } from "../../lib/utils";
+} from "../../00-Global/atoms/card";
+import { Progress } from "../../00-Global/atoms/progress";
+import { cn } from "../../../lib/utils";
 
 export type RailWidgetVariant = "action" | "progress" | "eventNow";
 

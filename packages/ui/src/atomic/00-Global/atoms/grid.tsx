@@ -1,1 +1,1 @@
-export { Grid, gridVariants, Columns, columnsVariants } from "../../layout/grid";
+export { Grid, gridVariants, Columns, columnsVariants } from "../../../layout/grid";

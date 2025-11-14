@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from "../../../lib/utils";
-import { Badge } from "../../atoms/badge";
+import { cn } from "../../../lib/utils.js";
+import { Badge } from "../../00-Global/atoms/badge.js";
 export function AdminShell({ title, subtitle, campusName, navItems, actions, children, banner, footer, className, navFooter, onSelectNavItem, }) {
     return (_jsxs("div", { className: cn("flex min-h-screen w-full bg-[var(--hive-background-primary)] text-[var(--hive-text-primary)]", className), children: [_jsx(AdminNavRail, { campusName: campusName, items: navItems, footer: navFooter, onSelect: onSelectNavItem }), _jsxs("div", { className: "relative flex min-h-screen flex-1 flex-col bg-[linear-gradient(135deg,rgba(10,10,10,0.92)_0%,rgba(20,20,25,0.88)_50%,rgba(10,10,10,0.92)_100%)]", children: [_jsx(AdminTopBar, { title: title, subtitle: subtitle, campusName: campusName, actions: actions }), _jsx(AdminMobileNav, { items: navItems, onSelect: onSelectNavItem }), banner && (_jsx("div", { className: "border-b border-white/10 bg-white/[0.03] px-4 py-3 md:px-8", children: banner })), _jsx("main", { className: "flex-1 px-4 pb-16 pt-8 md:px-8", children: children }), footer && (_jsx("footer", { className: "border-t border-white/10 bg-black/40 px-4 py-6 md:px-8", children: footer }))] })] }));
 }

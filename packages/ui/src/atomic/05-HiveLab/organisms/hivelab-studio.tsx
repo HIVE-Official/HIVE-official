@@ -3,8 +3,8 @@ import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Globa
 import { HiveLabElementPalette } from '../molecules/hivelab-element-palette';
 import { HiveLabInspectorPanel } from '../molecules/hivelab-inspector-panel';
 import { HiveLabLintPanel, type LintIssue } from '../molecules/hivelab-lint-panel';
-import { VisualToolComposer } from '../../components/hivelab/visual-tool-composer';
-import type { ToolComposition, ElementDefinition } from '../../lib/hivelab/element-system';
+import { VisualToolComposer } from '../../../components/hivelab/visual-tool-composer';
+import type { ToolComposition, ElementDefinition } from '../../../lib/hivelab/element-system';
 
 export interface HiveLabStudioProps {
   userId: string;

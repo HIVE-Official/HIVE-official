@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { useWelcomeMat } from "../../hooks/use-welcome-mat";
+import { cn } from "../../../lib/utils";
+import { useWelcomeMat } from "../../../hooks/use-welcome-mat";
 import { Button } from "../atoms/button";
 import { Badge } from "../atoms/badge";
 import { Progress } from "../atoms/progress";

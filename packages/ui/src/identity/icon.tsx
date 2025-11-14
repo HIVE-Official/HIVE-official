@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 
 const wrapperVariants = cva(
   "relative inline-flex shrink-0 select-none items-center justify-center align-middle transition-transform duration-200 ease-out",

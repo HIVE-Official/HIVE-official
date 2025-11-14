@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 const MediaViewerRoot = DialogPrimitive.Root;
 const MediaViewerTrigger = DialogPrimitive.Trigger;
 const MediaViewerClose = DialogPrimitive.Close;

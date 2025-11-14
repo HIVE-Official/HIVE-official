@@ -27,7 +27,8 @@ export type { FeedComposerSheetProps, ComposerSpace, MediaFile } from './src/ato
 export { FeedVirtualizedList } from './src/atomic/02-Feed/organisms/feed-virtualized-list';
 export type { FeedVirtualizedListProps, FeedItem } from './src/atomic/02-Feed/organisms/feed-virtualized-list';
 export { SpaceBoardLayout } from './src/atomic/03-Spaces/organisms/space-board-layout';
-export type { SpaceBoardLayoutProps, PinnedPost } from './src/atomic/03-Spaces/organisms/space-board-layout';
+export type { SpaceBoardLayoutProps } from './src/atomic/03-Spaces/organisms/space-board-layout';
+export type { PinnedPost } from './src/atomic/03-Spaces/molecules/pinned-posts-stack';
 export { NotificationToastContainer } from './src/atomic/00-Global/organisms/notification-toast-container';
 export type { NotificationToastContainerProps, ToastNotification } from './src/atomic/00-Global/organisms/notification-toast-container';
 export { FeedCardPost, FeedCardEvent, FeedCardTool, FeedCardSystem, } from './src/atomic';

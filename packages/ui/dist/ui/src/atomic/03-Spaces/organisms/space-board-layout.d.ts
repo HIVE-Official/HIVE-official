@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type FeedItem } from './feed-virtualized-list';
+import { type FeedItem } from '../../02-Feed/organisms/feed-virtualized-list';
 export interface PinnedPost {
     id: string;
     title: string;

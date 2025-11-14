@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "../../../lib/utils";
-import { Badge } from "../../atoms/badge";
+import { Badge } from "../../00-Global/atoms/badge";
 
 type IconComponent = React.ComponentType<{ className?: string }>;
 

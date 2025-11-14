@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { SimpleAvatar } from "../atoms/simple-avatar";
-import { cn } from "../../lib/utils";
+import { SimpleAvatar } from "../atoms/simple-avatar.js";
+import { cn } from "../../../lib/utils.js";
 /**
  * Overlapping avatar group with optional "+N" overflow indicator.
  */

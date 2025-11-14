@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card, CardContent, Button, Badge } from '../atoms';
+import { Card, CardContent, Button, Badge } from '../../00-Global/atoms/index.js';
 export function HiveLabToolLibraryCard({ name, description, category, installs, rating, onUse }) {
     return (_jsx(Card, { className: "bg-hive-background-tertiary border-hive-border-default h-full flex flex-col", children: _jsxs(CardContent, { className: "p-4 flex-1 flex flex-col gap-2", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsx("div", { className: "text-sm font-semibold text-white truncate", title: name, children: name }), category && _jsx(Badge, { tone: "muted", variant: "pill", children: category })] }), _jsx("div", { className: "text-sm text-hive-text-tertiary line-clamp-2", children: description }), _jsxs("div", { className: "mt-auto flex items-center justify-between text-xs text-hive-text-tertiary", children: [_jsx("span", { children: typeof installs === 'number' ? `${installs} installs` : '' }), _jsx("span", { children: typeof rating === 'number' ? `★ ${rating.toFixed(1)}` : '' })] }), _jsx(Button, { size: "sm", className: "mt-2", onClick: onUse, children: "Use template" })] }) }));
 }

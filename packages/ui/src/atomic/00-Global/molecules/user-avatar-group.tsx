@@ -3,7 +3,7 @@
 import { CSSProperties } from "react";
 
 import { SimpleAvatar } from "../atoms/simple-avatar";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export interface UserAvatarGroupUser {
   id: string;

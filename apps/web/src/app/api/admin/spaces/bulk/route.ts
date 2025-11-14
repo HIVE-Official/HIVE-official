@@ -6,7 +6,6 @@ import { dbAdmin } from '@/lib/firebase-admin';
 import { logger } from "@/lib/logger";
 import { ApiResponseHelper, HttpStatus, ErrorCodes as _ErrorCodes } from "@/lib/api-response-types";
 import { withSecureAuth } from '@/lib/api-auth-secure';
-import { NextResponse } from 'next/server';
 
 /**
  * Admin Bulk Space Operations API

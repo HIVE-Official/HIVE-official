@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils.js";
 export const DescriptionList = React.forwardRef(function DescriptionList({ items, variant = "grid", columns = 2, tone = "default", className, ...props }, ref) {
     const gridCols = variant === "grid"
         ? columns === 3

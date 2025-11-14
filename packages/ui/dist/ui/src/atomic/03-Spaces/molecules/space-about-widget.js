@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Badge, Button, UsersIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon, } from '../atoms';
+import { cn } from '@/lib/utils';
+import { Badge, Button, UsersIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon, } from '../../00-Global/atoms/index.js';
 export const SpaceAboutWidget = React.forwardRef(({ data, collapsible = true, defaultCollapsed = false, onJoin, onLeave, onLeaderClick, className, ...props }, ref) => {
     const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
     const { memberCount, leaders, category, createdDate, isPublic, isMember } = data;

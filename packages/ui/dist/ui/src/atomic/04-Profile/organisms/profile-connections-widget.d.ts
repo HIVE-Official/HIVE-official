@@ -1,4 +1,4 @@
-import { type PrivacyLevel } from "../molecules/privacy-control";
+import { type PrivacyLevel } from "../../00-Global/molecules/privacy-control";
 export interface ProfileConnectionItem {
     id: string;
     name: string;

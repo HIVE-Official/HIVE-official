@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { cn } from "../lib/utils";
-import { useMeasure } from "./useMeasure";
+import { cn } from "@/lib/utils";
+import { useMeasure } from "./useMeasure.js";
 /**
  * Measure attaches a ResizeObserver to the rendered element and provides live bounds via render props.
  */

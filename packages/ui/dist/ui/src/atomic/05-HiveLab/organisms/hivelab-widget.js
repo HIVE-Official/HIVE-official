@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Hammer, PlusCircle } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Button } from "../atoms/button";
+import { cn } from "../../../lib/utils.js";
+import { Card } from "../../00-Global/atoms/card.js";
+import { Button } from "../../00-Global/atoms/button.js";
 export function HiveLabWidget({ hasAccess = false, isSpaceLeader = false, toolsCreated = 0, toolsUsed = 0, leadingSpaces = [], onRequestAccess, onOpenStudio, className, }) {
     const description = hasAccess
         ? "Create campus tools with HiveLab Studio. Publish workflows, forms, and automation for your spaces."

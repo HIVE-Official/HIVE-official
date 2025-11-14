@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
 import {
   ProfileIdentityWidget,
   ProfileActivityWidget,
@@ -16,8 +16,8 @@ import {
   type ProfileConnectionItem,
 } from "../organisms/profile-widgets";
 import type { ProfileSystem } from "@hive/core/types/profile-system";
-import type { PrivacyLevel } from "../molecules/privacy-control";
-import type { PresenceStatus } from "../atoms/presence-indicator";
+import type { PrivacyLevel } from "../../00-Global/molecules/privacy-control";
+import type { PresenceStatus } from "@/atomic/02-Feed/atoms/presence-indicator";
 
 export interface ProfileViewLayoutProps {
   profile: ProfileSystem;
@@ -103,6 +103,10 @@ export function ProfileViewLayout({
     <div className={cn("space-y-6", className)}>
       <ProfileIdentityWidget
         profile={{
+          id: profile.userId,
+          handle: profile.handle,
+          displayName: profile.identity.academic.name,
+          campusId: profile.campusId,
           identity: {
             id: profile.userId,
             fullName: profile.identity.academic.name,

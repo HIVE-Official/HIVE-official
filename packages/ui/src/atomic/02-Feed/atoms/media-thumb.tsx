@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Play, Image as ImageIcon, Video, Music } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export type MediaThumbType = "image" | "video" | "audio";
 

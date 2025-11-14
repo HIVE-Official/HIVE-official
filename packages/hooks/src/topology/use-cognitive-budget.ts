@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-// Leverage monorepo JSON tokens directly via package export (tsconfig enables resolveJsonModule)
-import slotKit from '@hive/tokens/topology/slot-kit.json';
+import { slotKit } from '@hive/tokens';
 
 type SurfaceKey = keyof typeof slotKit.cognitiveBudgets;
 type CognitiveBudget = Partial<{

@@ -29,8 +29,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * ```
  */
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { XIcon } from '../atoms/icon-library';
+import { cn } from '@/lib/utils';
+import { XIcon } from '../../00-Global/atoms/icon-library.js';
 export const FilterChips = React.forwardRef(({ chips, selectedIds, onChange, multiSelect = true, showClearAll = true, className, }, ref) => {
     const handleChipClick = (chipId) => {
         if (multiSelect) {

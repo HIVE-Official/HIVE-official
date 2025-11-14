@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface VirtualListProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   items: readonly T[];

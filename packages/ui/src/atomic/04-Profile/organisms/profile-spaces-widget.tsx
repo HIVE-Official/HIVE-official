@@ -3,12 +3,12 @@
 import * as React from "react";
 import { Building2, Users, Sparkles } from "lucide-react";
 
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
 import {
   PrivacyControl,
   type PrivacyLevel,
-} from "../molecules/privacy-control";
+} from "../../00-Global/molecules/privacy-control";
 
 export interface ProfileSpaceItem {
   id: string;

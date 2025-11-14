@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export type NavigationLayout = "sidebar" | "rail" | "bottom" | "inline";
 
@@ -213,7 +213,7 @@ export interface SidebarNavSection {
   items: NavigationNode[];
 }
 
-export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface SidebarNavProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   sections: SidebarNavSection[];
   activeId?: string;
   onSelect?: (
@@ -272,7 +272,7 @@ export function SidebarNav({
 }
 
 export interface NavigationRailProps
-  extends React.HTMLAttributes<HTMLElement> {
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   items: NavigationNode[];
   activeId?: string;
   onSelect?: (
@@ -338,7 +338,7 @@ export function NavigationRail({
   );
 }
 
-export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface BottomNavProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   items: NavigationNode[];
   activeId?: string;
   onSelect?: (

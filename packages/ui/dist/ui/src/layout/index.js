@@ -1,10 +1,10 @@
-export { Surface, surfaceVariants } from "./surface";
-export { Container, containerVariants } from "./container";
-export { Stack, HStack, VStack, Cluster, stackVariants, } from "./stack";
-export { Grid, Columns, gridVariants, columnsVariants, } from "./grid";
-export { ScrollArea, ScrollViewport, } from "./scroll-area";
-export { Separator, separatorVariants } from "./separator";
-export { Spacer } from "./spacer";
-export { PageHeader, SectionHeader, } from "./page-header";
-export { ViewportSafeArea, } from "./viewport-safe-area";
+export { Surface, surfaceVariants } from "./surface.js";
+export { Container, containerVariants } from "./container.js";
+export { Stack, HStack, VStack, Cluster, stackVariants, } from "./stack.js";
+export { Grid, Columns, gridVariants, columnsVariants, } from "./grid.js";
+export { ScrollArea, ScrollViewport, } from "./scroll-area.js";
+export { Separator, separatorVariants } from "./separator.js";
+export { Spacer } from "./spacer.js";
+export { PageHeader, SectionHeader, } from "./page-header.js";
+export { ViewportSafeArea, } from "./viewport-safe-area.js";
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils.js";
 const hiveLogoVariants = cva("inline-flex items-center justify-center font-bold", {
     variants: {
         size: {

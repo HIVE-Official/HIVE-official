@@ -1,4 +1,4 @@
-import { type ElementDefinition } from '../../lib/hivelab/element-system';
+import { type ElementDefinition } from '../../../lib/hivelab/element-system';
 export interface HiveLabElementPaletteProps {
     onDragStart?: (element: ElementDefinition) => void;
     onInsert?: (element: ElementDefinition) => void;

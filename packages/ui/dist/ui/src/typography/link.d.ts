@@ -1,8 +1,8 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const linkVariants: (props?: {
-    tone?: "brand" | "muted" | "danger" | "neutral" | "inverse";
-    size?: "sm" | "lg" | "md";
+    tone?: "danger" | "muted" | "inverse" | "brand" | "neutral";
+    size?: "sm" | "md" | "lg";
     weight?: "medium" | "semibold" | "regular";
     underline?: "none" | "always" | "hover";
     subtle?: boolean;

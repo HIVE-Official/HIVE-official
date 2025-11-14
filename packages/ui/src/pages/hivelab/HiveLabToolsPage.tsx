@@ -4,7 +4,7 @@ import { Badge } from "../../atomic/00-Global/atoms/badge";
 import { Button } from "../../atomic/00-Global/atoms/button";
 import { Surface } from "../../layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface HiveLabWorkflow {
   id: string;

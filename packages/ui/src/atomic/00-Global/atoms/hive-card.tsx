@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+import { cn } from "../../../lib/utils"
 
 const hiveCardVariants = cva(
   "rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200",

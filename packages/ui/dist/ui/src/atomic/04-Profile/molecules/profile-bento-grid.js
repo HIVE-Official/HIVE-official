@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Activity, Calendar, GripVertical, Maximize2, Minimize2, Search, Settings, TrendingUp, Users, Zap, } from "lucide-react";
-import { Button } from "../atoms/button";
-import { Card } from "../atoms/card";
-import { cn } from "../../lib/utils";
+import { Button } from "../../00-Global/atoms/button.js";
+import { Card } from "../../00-Global/atoms/card.js";
+import { cn } from "../../../lib/utils.js";
 const DEFAULT_LAYOUT = {
     cards: [
         {

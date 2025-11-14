@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
-import { HiveButton, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle } from "../../atoms";
+import { Button, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle } from "../../atoms.js";
 export function VerifyLinkStatusCard({ status, message, onRetry, onContinue, onStartOver, }) {
     const renderIcon = () => {
         switch (status) {
@@ -20,13 +20,13 @@ export function VerifyLinkStatusCard({ status, message, onRetry, onContinue, onS
             return null;
         }
         if (status === "success-existing" && onContinue) {
-            return (_jsx(HiveButton, { className: "w-full", onClick: onContinue, children: "Go to your feed" }));
+            return (_jsx(Button, { className: "w-full", onClick: onContinue, children: "Go to your feed" }));
         }
         if (status === "success-new" && onContinue) {
-            return (_jsx(HiveButton, { className: "w-full", onClick: onContinue, children: "Finish onboarding" }));
+            return (_jsx(Button, { className: "w-full", onClick: onContinue, children: "Finish onboarding" }));
         }
         if (status === "expired" || status === "error") {
-            return (_jsxs("div", { className: "space-y-2", children: [onRetry && (_jsx(HiveButton, { className: "w-full", onClick: onRetry, children: "Send a new magic link" })), onStartOver && (_jsx(HiveButton, { variant: "ghost", className: "w-full", onClick: onStartOver, children: "Start over" }))] }));
+            return (_jsxs("div", { className: "space-y-2", children: [onRetry && (_jsx(Button, { className: "w-full", onClick: onRetry, children: "Send a new magic link" })), onStartOver && (_jsx(Button, { variant: "ghost", className: "w-full", onClick: onStartOver, children: "Start over" }))] }));
         }
         return null;
     };

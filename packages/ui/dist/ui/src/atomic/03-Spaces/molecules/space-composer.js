@@ -7,10 +7,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { useState } from 'react';
 import { Plus, Image, Calendar, Wrench } from 'lucide-react';
-import { Button } from '../../00-Global/atoms/button';
-import { Textarea } from '../../00-Global/atoms/textarea';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from '../molecules/dropdown-menu';
-import { MotionDiv } from '../motion-safe';
+import { Button } from '../../00-Global/atoms/button.js';
+import { Textarea } from '../../00-Global/atoms/textarea.js';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from '../../00-Global/molecules/dropdown-menu.js';
+import { MotionDiv } from '../../../shells/motion-safe.js';
 const HIVE_EASING = {
     reveal: [0.23, 1, 0.32, 1],
     interactive: [0.25, 0.46, 0.45, 0.94],

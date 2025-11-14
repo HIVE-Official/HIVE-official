@@ -1,4 +1,4 @@
-import type { ToolComposition } from '../../lib/hivelab/element-system';
+import type { ToolComposition } from '../../../lib/hivelab/element-system';
 export interface HiveLabStudioProps {
     userId: string;
     initialComposition?: ToolComposition;

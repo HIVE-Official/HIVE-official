@@ -6,14 +6,14 @@ import type {
 } from "react";
 import { CalendarDays, MapPin } from "lucide-react";
 
-import { Button } from "../atoms/button";
+import { Button } from "../../00-Global/atoms/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../atoms/card";
-import { cn } from "../../lib/utils";
+} from "../../00-Global/atoms/card";
+import { cn } from "../../../lib/utils";
 
 export interface NowCardProps
   extends HTMLAttributes<HTMLDivElement> {

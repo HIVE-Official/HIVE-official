@@ -21,6 +21,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  useToast,
 } from '@hive/ui';
 import {
   RITUAL_TEMPLATES,
@@ -30,7 +31,6 @@ import {
   type RitualTemplateId,
 } from '@hive/core';
 import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 type WizardStep = 'template' | 'basic' | 'config' | 'presentation' | 'review';
 

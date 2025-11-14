@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { motion } from "framer-motion";
-import { cn } from "../../lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+import { cn } from "../../../lib/utils.js";
+import { Avatar, AvatarImage, AvatarFallback } from "../../00-Global/atoms/avatar.js";
 // ============================================================================
 // Animation Variants (HIVE Motion Design)
 // ============================================================================

@@ -10,13 +10,13 @@ import {
   Users,
 } from "lucide-react";
 
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Button } from "../atoms/button";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
+import { Button } from "../../00-Global/atoms/button";
 import {
   PrivacyControl,
   type PrivacyLevel,
-} from "../molecules/privacy-control";
+} from "../../00-Global/molecules/privacy-control";
 
 export type ProfileActivityType =
   | "post"

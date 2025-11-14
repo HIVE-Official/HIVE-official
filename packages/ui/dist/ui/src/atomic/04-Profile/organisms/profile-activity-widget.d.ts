@@ -1,4 +1,4 @@
-import { type PrivacyLevel } from "../molecules/privacy-control";
+import { type PrivacyLevel } from "../../00-Global/molecules/privacy-control";
 export type ProfileActivityType = "post" | "comment" | "connection" | "space_join" | "ritual" | "other";
 export interface ProfileActivityItem {
     id: string;

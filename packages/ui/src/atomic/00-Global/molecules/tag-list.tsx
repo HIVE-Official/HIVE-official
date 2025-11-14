@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "../atoms/badge";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export interface TagListProps {
   tags: string[];

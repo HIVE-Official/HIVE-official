@@ -1,11 +1,11 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Avatar, AvatarFallback, AvatarImage, Badge, } from '../atoms';
-import { FeedSpaceChip } from '../molecules/feed-space-chip';
-import { FeedMediaPreview } from '../molecules/feed-media-preview';
-import { FeedPostActions, } from '../molecules/feed-post-actions';
+import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage, Badge, } from '../../00-Global/atoms/index.js';
+import { FeedSpaceChip } from '../molecules/feed-space-chip.js';
+import { FeedMediaPreview } from '../molecules/feed-media-preview.js';
+import { FeedPostActions, } from '../molecules/feed-post-actions.js';
 const clampCopy = (copy) => copy?.trim();
 export const FeedCardPost = React.forwardRef(({ post, layout = 'default', className, showSpaceChip = true, onOpen, onSpaceClick, onUpvote, onComment, onBookmark, onShare, ...props }, ref) => {
     const { author, content, space, stats, meta } = post;

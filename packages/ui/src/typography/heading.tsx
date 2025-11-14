@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -61,28 +61,37 @@ export interface HeadingProps
 
 export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
   ({ className, level = 2, children, tone, align, weight, uppercase, ...props }, ref) => {
-    const Component = `h${level}` as keyof JSX.IntrinsicElements;
     const defaultWeight: HeadingVariantProps["weight"] =
       weight ?? (level <= 3 ? "semibold" : "medium");
 
-    return (
-      <Component
-        ref={ref as never}
-        className={cn(
-          levelStyles[level],
-          headingVariants({
-            tone,
-            align,
-            weight: defaultWeight,
-            uppercase,
-          }),
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </Component>
+    const classes = cn(
+      levelStyles[level],
+      headingVariants({
+        tone,
+        align,
+        weight: defaultWeight,
+        uppercase,
+      }),
+      className
     );
+
+    // Use switch to avoid type issues with dynamic component
+    switch (level) {
+      case 1:
+        return <h1 ref={ref} className={classes} {...props}>{children}</h1>;
+      case 2:
+        return <h2 ref={ref} className={classes} {...props}>{children}</h2>;
+      case 3:
+        return <h3 ref={ref} className={classes} {...props}>{children}</h3>;
+      case 4:
+        return <h4 ref={ref} className={classes} {...props}>{children}</h4>;
+      case 5:
+        return <h5 ref={ref} className={classes} {...props}>{children}</h5>;
+      case 6:
+        return <h6 ref={ref} className={classes} {...props}>{children}</h6>;
+      default:
+        return <h2 ref={ref} className={classes} {...props}>{children}</h2>;
+    }
   }
 );
 Heading.displayName = "Heading";

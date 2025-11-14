@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 /**
  * VirtualList renders large collections efficiently by only mounting the items currently visible.
  * Basic fixed-height virtualisation keeps dependencies small for Edge deployments.

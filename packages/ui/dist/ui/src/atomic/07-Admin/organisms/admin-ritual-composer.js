@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { z } from 'zod';
 import { RitualArchetype, RitualComposerSchema, createDefaultConfig, } from '@hive/core';
-import { Button } from '../../00-Global/atoms/button';
-import { Input } from '../../00-Global/atoms/input';
-import { Textarea } from '../../00-Global/atoms/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../00-Global/atoms/select';
-import { Label } from '../../00-Global/atoms/label';
-import { cn } from '../../../lib/utils';
+import { Button } from '../../00-Global/atoms/button.js';
+import { Input } from '../../00-Global/atoms/input.js';
+import { Textarea } from '../../00-Global/atoms/textarea.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../00-Global/atoms/select.js';
+import { Label } from '../../00-Global/atoms/label.js';
+import { cn } from '@/lib/utils';
 const STEP_TITLES = ['Details', 'Schedule', 'Presentation', 'Configuration', 'Review'];
 export const AdminRitualComposer = ({ initialValue, onSubmit, onCancel, isSubmitting = false, }) => {
     const [step, setStep] = React.useState(0);

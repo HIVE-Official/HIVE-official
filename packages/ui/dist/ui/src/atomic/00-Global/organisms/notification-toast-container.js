@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { CheckCircleIcon, AlertTriangleIcon, InfoIcon, XIcon, } from '../atoms';
+import { CheckCircleIcon, AlertTriangleIcon, InfoIcon, XIcon, } from '../../00-Global/atoms/index.js';
 const getToastIcon = (type) => {
     switch (type) {
         case 'success':

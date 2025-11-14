@@ -7,7 +7,7 @@ import { Checkbox } from "../../atomic/00-Global/atoms/checkbox";
 import { Label } from "../../atomic/00-Global/atoms/label";
 import { Surface } from "../../layout";
 import { Badge } from "../../atomic/00-Global/atoms/badge";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface OnboardingStep {
   id: string;

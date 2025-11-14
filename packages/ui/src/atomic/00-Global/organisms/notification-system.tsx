@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { NotificationBell } from "../atoms/notification-bell";
+import { cn } from "../../../lib/utils";
+import { NotificationBell } from "../../02-Feed/atoms/notification-bell";
 import {
   Popover,
   PopoverTrigger,

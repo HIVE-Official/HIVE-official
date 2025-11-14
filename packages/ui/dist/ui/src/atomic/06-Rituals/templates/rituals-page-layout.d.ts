@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { type RitualFeedBannerCardProps } from '../organisms/ritual-feed-banner';
 export interface RitualData {
     id: string;
     name: string;
@@ -18,7 +17,6 @@ export interface RitualData {
 export interface RitualsPageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
     rituals: RitualData[];
     featuredRitual?: RitualData;
-    featuredRitualBanner?: RitualFeedBannerCardProps['banner'];
     onRitualJoin?: (ritualId: string) => void;
     onRitualView?: (ritualId: string) => void;
     onBannerAction?: (href: string) => void;

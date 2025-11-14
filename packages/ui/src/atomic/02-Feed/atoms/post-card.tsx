@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { motion, type Variants } from "framer-motion";
-import { cn } from "../../lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+import { cn } from "../../../lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "../../00-Global/atoms/avatar";
 
 // ============================================================================
 // Animation Variants (HIVE Motion Design)

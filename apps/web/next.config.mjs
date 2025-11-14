@@ -426,7 +426,7 @@ const nextConfig = {
       config.optimization.innerGraph = true;
     }
 
-    // Resolve workspace packages to source files and handle node: imports
+    // Resolve workspace packages to built dist files and handle node: imports
     config.resolve.alias = {
       ...config.resolve.alias,
       // Ensure explicit resolution for react-easy-crop from workspace root
@@ -441,12 +441,12 @@ const nextConfig = {
       'node:crypto': false,
       'node:os': 'os',
       'node:url': 'url',
-      // Workspace packages
-      "@hive/ui": path.resolve(__dirname, "../../packages/ui/src"),
-      "@hive/core": path.resolve(__dirname, "../../packages/core/src"), 
-      "@hive/hooks": path.resolve(__dirname, "../../packages/hooks/src"), 
-      "@hive/auth-logic": path.resolve(__dirname, "../../packages/auth-logic/src"),
-      "@hive/firebase": path.resolve(__dirname, "../../packages/firebase/src"),
+      // Workspace packages - use package roots so package.json exports are respected
+      "@hive/ui": path.resolve(__dirname, "../../packages/ui"),
+      "@hive/core": path.resolve(__dirname, "../../packages/core"),
+      "@hive/hooks": path.resolve(__dirname, "../../packages/hooks"),
+      "@hive/auth-logic": path.resolve(__dirname, "../../packages/auth-logic"),
+      "@hive/firebase": path.resolve(__dirname, "../../packages/firebase"),
     };
 
     return config;

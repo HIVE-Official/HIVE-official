@@ -29,7 +29,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import {
   HeartIcon,
   MessageCircleIcon,
@@ -153,7 +153,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       {count !== undefined && count > 0 && (
         <motion.span
           key={count}
-          initial={!isInitialMount.current && count !== wasActive ? { scale: 1.2, opacity: 0.7 } : false}
+          initial={!isInitialMount.current && isActive !== wasActive ? { scale: 1.2, opacity: 0.7 } : false}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           className={cn(

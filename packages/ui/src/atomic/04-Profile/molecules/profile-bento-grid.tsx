@@ -19,9 +19,9 @@ import {
   Zap,
 } from "lucide-react";
 
-import { Button } from "../atoms/button";
-import { Card } from "../atoms/card";
-import { cn } from "../../lib/utils";
+import { Button } from "../../00-Global/atoms/button";
+import { Card } from "../../00-Global/atoms/card";
+import { cn } from "../../../lib/utils";
 
 type GridCard = {
   id: string;

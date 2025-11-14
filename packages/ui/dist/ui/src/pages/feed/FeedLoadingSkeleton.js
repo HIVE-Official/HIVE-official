@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Skeleton } from "../../atomic/00-Global/atoms/skeleton";
-import { Surface } from "../../layout";
+import { Skeleton } from "../../atomic/00-Global/atoms/skeleton.js";
+import { Surface } from "../../layout/index.js";
 /**
  * FeedLoadingSkeleton renders the loading experience for the campus feed.
  * It mirrors the FeedPage layout with shimmering placeholders.

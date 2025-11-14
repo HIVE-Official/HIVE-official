@@ -8,8 +8,8 @@
 
 import React from 'react';
 import { Pin } from 'lucide-react';
-import { MotionDiv } from '../motion-safe';
-import { HiveCard } from '../atoms/hive-card';
+import { MotionDiv } from '../../../shells/motion-safe';
+import { HiveCard } from '../../00-Global/atoms/hive-card';
 
 export interface PinnedPost {
   id: string;
@@ -61,7 +61,7 @@ export function PinnedPostsStack({ posts, onPostClick }: PinnedPostsStackProps) 
             }}
           >
             <HiveCard
-              variant="ghost"
+              variant="default"
               className="border-l-4 border-l-hive-brand-primary bg-hive-brand-primary/5 hover:bg-hive-brand-primary/8 transition-colors cursor-pointer"
               onClick={() => onPostClick?.(post.id)}
             >

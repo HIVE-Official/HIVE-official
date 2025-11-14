@@ -519,6 +519,7 @@ function AdminDashboardContent() {
   );
 
   return (
+    <>
     <AdminShell
       title="Campus Command Center"
       subtitle="Real-time health, campaigns, and moderation across UB campus."
@@ -773,6 +774,7 @@ function AdminDashboardContent() {
           </SheetContent>
         ) : null}
       </Sheet>
+    </>
   );
 }
 

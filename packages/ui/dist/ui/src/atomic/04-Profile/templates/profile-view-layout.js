@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { ProfileIdentityWidget, ProfileActivityWidget, ProfileSpacesWidget, ProfileConnectionsWidget, ProfileCompletionCard, HiveLabWidget, } from "../organisms/profile-widgets";
+import { cn } from "../../../lib/utils.js";
+import { Card } from "../../00-Global/atoms/card.js";
+import { ProfileIdentityWidget, ProfileActivityWidget, ProfileSpacesWidget, ProfileConnectionsWidget, ProfileCompletionCard, HiveLabWidget, } from "../organisms/profile-widgets.js";
 const widgetLevel = (profile, widget, fallback) => {
     const widgets = profile.widgets;
     const level = widgets?.[widget]?.level ?? profile.privacy?.visibilityLevel;
@@ -33,6 +33,10 @@ export function ProfileViewLayout({ profile, isOwnProfile = false, activities = 
     }, [extendedProfile.presence?.status, profile.presence?.isOnline, profile.presence?.beacon]);
     const lastSeen = extendedProfile.presence?.lastSeen ?? profile.presence?.lastActive ?? null;
     return (_jsxs("div", { className: cn("space-y-6", className), children: [_jsx(ProfileIdentityWidget, { profile: {
+                    id: profile.userId,
+                    handle: profile.handle,
+                    displayName: profile.identity.academic.name,
+                    campusId: profile.campusId,
                     identity: {
                         id: profile.userId,
                         fullName: profile.identity.academic.name,

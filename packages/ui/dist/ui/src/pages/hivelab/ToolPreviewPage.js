@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { Button, Card } from '../../atomic';
+import { Button, Card } from '../../atomic/index.js';
 import { ArrowLeft, Play, Edit, Settings, Eye, Maximize2, Minimize2, RefreshCw, Code2 } from 'lucide-react';
 export function ToolPreviewPage({ composition, initialMode = 'preview', onBack, onEdit, onRun, onOpenSettings, renderRuntime, }) {
     const [previewMode, setPreviewMode] = React.useState(initialMode);

@@ -275,17 +275,3 @@ export const GET = withSecureAuth(async (request: NextRequest, token) => {
     return NextResponse.json(ApiResponseHelper.error("Failed to get builder requests", "INTERNAL_ERROR"), { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }, { requireAdmin: true });
-    // Enforce campus isolation: verify the request's target space is on current campus
-    try {
-      const spaceRef = dbAdmin
-        .collection('spaces')
-        .doc(requestData.spaceType)
-        .collection('spaces')
-        .doc(requestData.spaceId);
-      const spaceDoc = await spaceRef.get();
-      if (!spaceDoc.exists || (spaceDoc.data()?.campusId && spaceDoc.data()!.campusId !== CURRENT_CAMPUS_ID)) {
-        return NextResponse.json(ApiResponseHelper.error('Access denied - campus mismatch', 'FORBIDDEN'), { status: HttpStatus.FORBIDDEN });
-      }
-    } catch (e) {
-      return NextResponse.json(ApiResponseHelper.error('Failed to validate space campus', 'INTERNAL_ERROR'), { status: HttpStatus.INTERNAL_SERVER_ERROR });
-    }

@@ -26,10 +26,10 @@
  */
 
 import * as React from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '../../00-Global/atoms/button';
 import { Progress } from '../../00-Global/atoms/progress';
-import { SparklesIcon, UsersIcon, CheckIcon } from '../../00-Global/atoms/icon-library';
+import { SparklesIcon, UsersIcon, LucideCheck } from '../../00-Global/atoms/icon-library';
 
 export interface FeedRitualBannerProps {
   /**
@@ -143,7 +143,7 @@ export const FeedRitualBanner = React.forwardRef<HTMLDivElement, FeedRitualBanne
             >
               {isParticipating ? (
                 <>
-                  <CheckIcon className="mr-2 h-4 w-4" />
+                  <LucideCheck className="mr-2 h-4 w-4" />
                   Participating
                 </>
               ) : (

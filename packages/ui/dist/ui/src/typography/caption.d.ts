@@ -4,7 +4,7 @@ declare const captionVariants: (props?: {
     tone?: "primary" | "muted" | "inverse" | "accent";
     size?: "sm" | "xs";
     weight?: "medium" | "semibold";
-    align?: "center" | "end" | "start";
+    align?: "end" | "center" | "start";
 } & import("class-variance-authority/types").ClassProp) => string;
 type CaptionVariantProps = VariantProps<typeof captionVariants>;
 export interface CaptionProps extends React.HTMLAttributes<HTMLSpanElement>, CaptionVariantProps {

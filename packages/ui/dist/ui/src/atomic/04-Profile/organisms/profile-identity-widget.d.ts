@@ -1,5 +1,5 @@
-import { type PresenceStatus } from "../atoms/presence-indicator";
-import { type PrivacyLevel } from "../molecules/privacy-control";
+import { type PresenceStatus } from "../../02-Feed/atoms/presence-indicator";
+import { type PrivacyLevel } from "../../00-Global/molecules/privacy-control";
 import type { UIProfile } from "./profile-types";
 export interface ProfileIdentityWidgetProps {
     profile: UIProfile;

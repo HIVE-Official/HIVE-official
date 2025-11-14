@@ -15,8 +15,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '../molecules/dropdown-menu';
-import { MotionDiv } from '../motion-safe';
+} from '../../00-Global/molecules/dropdown-menu';
+import { MotionDiv } from '../../../shells/motion-safe';
 
 export interface SpaceComposerProps {
   /** Space name for context */

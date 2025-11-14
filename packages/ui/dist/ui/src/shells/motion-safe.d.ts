@@ -1,10 +1,11 @@
-import React from 'react';
-import { type MotionProps } from 'framer-motion';
-export declare const MotionDiv: React.ForwardRefExoticComponent<Omit<MotionProps & React.HTMLProps<HTMLDivElement>, "ref"> & React.RefAttributes<HTMLDivElement>>;
-export declare const MotionSpan: React.ForwardRefExoticComponent<Omit<MotionProps & React.HTMLProps<HTMLSpanElement>, "ref"> & React.RefAttributes<HTMLSpanElement>>;
-export declare const MotionButton: React.ForwardRefExoticComponent<MotionProps & React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement>>;
-export declare const MotionLink: React.ForwardRefExoticComponent<MotionProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & React.RefAttributes<HTMLAnchorElement>>;
-export declare const MotionNav: React.ForwardRefExoticComponent<MotionProps & React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>;
-export declare const MotionAside: React.ForwardRefExoticComponent<MotionProps & React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>>;
-export { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, type MotionProps } from "framer-motion";
+import type * as React from "react";
+type MotionComponent<E extends Element, P> = React.ForwardRefExoticComponent<MotionProps & P & React.RefAttributes<E>>;
+export declare const MotionDiv: MotionComponent<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>;
+export declare const MotionSpan: MotionComponent<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>;
+export declare const MotionButton: MotionComponent<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>;
+export declare const MotionLink: MotionComponent<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement>>;
+export declare const MotionNav: MotionComponent<HTMLElement, React.HTMLAttributes<HTMLElement>>;
+export declare const MotionAside: MotionComponent<HTMLElement, React.HTMLAttributes<HTMLElement>>;
+export { AnimatePresence };
 //# sourceMappingURL=motion-safe.d.ts.map

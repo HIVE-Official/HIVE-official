@@ -24,9 +24,11 @@ export const POST = withSecureAuth(async (request: NextRequest, token) => {
     const toolId = reqData?.toolId as string | undefined;
     if (!toolId) {
       return NextResponse.json({ success: false, error: 'Invalid request data' }, { status: 400 });
+    }
     const toolDoc = await dbAdmin.collection('tools').doc(toolId).get();
     if (!toolDoc.exists) {
       return NextResponse.json({ success: false, error: 'Tool not found' }, { status: 404 });
+    }
     const now = new Date().toISOString();
     const reviewerId = token?.uid || 'unknown';
     const newStatus = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'changes_requested';
@@ -79,6 +81,7 @@ export const POST = withSecureAuth(async (request: NextRequest, token) => {
       }
     } else if (action === 'reject') {
       toolUpdate = { ...toolUpdate, status: 'rejected' };
+    }
     await dbAdmin.collection('tools').doc(toolId).update(toolUpdate);
     // Notify requester
     try {
@@ -105,6 +108,7 @@ export const POST = withSecureAuth(async (request: NextRequest, token) => {
       reviewAction: action,
       timestamp: now,
       metadata: { requestId }
+    });
     return NextResponse.json({ success: true, status: newStatus });
   } catch (error) {
     logger.error('Admin tools review action error', { error: error instanceof Error ? error : new Error(String(error)) });

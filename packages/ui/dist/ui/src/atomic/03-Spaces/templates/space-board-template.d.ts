@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type SpaceTool } from '../molecules/space-tools-widget';
-import { type FeedItem } from '../organisms/feed-virtualized-list';
-import type { MediaFile } from '../organisms/feed-composer-sheet';
+import { type FeedItem } from '../../02-Feed/organisms/feed-virtualized-list';
+import type { MediaFile } from '../../02-Feed/organisms/feed-composer-sheet';
 export interface PinnedPost {
     id: string;
     title: string;

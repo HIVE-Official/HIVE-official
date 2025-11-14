@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export type DescriptionListVariant = "grid" | "stacked" | "inline";
 export type DescriptionListTone = "default" | "subtle";

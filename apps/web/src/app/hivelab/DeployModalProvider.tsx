@@ -4,7 +4,7 @@ import * as React from 'react';
 import { apiClient } from '@/lib/api-client';
 import { useAuth } from '@hive/auth-logic';
 import { useRouter } from 'next/navigation';
-import { ToolDeployModal } from '../../../../packages/ui/src/components/hivelab/ToolDeployModal';
+import { ToolDeployModal } from '@hive/ui';
 
 type Target = { id: string; name: string; type: 'profile' | 'space'; description?: string };
 

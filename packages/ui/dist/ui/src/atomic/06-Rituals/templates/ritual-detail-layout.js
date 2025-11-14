@@ -1,21 +1,21 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Button } from '../../00-Global/atoms/button';
-import { Card } from '../../00-Global/atoms/card';
-import { Badge } from '../../00-Global/atoms/badge';
-import { PercentBar } from '../atoms/percent-bar';
+import { cn } from '@/lib/utils';
+import { Button } from '../../00-Global/atoms/button.js';
+import { Card } from '../../00-Global/atoms/card.js';
+import { Badge } from '../../00-Global/atoms/badge.js';
+import { PercentBar } from '../../02-Feed/atoms/percent-bar.js';
 import { Clock, Calendar, Users, TrendingUp, ArrowLeft } from 'lucide-react';
-import { RitualTournamentBracket } from '../organisms/ritual-tournament-bracket';
-import { RitualFeatureDrop } from '../organisms/ritual-feature-drop';
-import { RitualFoundingClass } from '../organisms/ritual-founding-class';
-import { RitualRuleInversion } from '../organisms/ritual-rule-inversion';
-import { RitualLeak } from '../organisms/ritual-leak';
-import { RitualLaunchCountdown } from '../organisms/ritual-launch-countdown';
-import { RitualBetaLottery } from '../organisms/ritual-beta-lottery';
-import { RitualUnlockChallenge } from '../organisms/ritual-unlock-challenge';
-import { RitualSurvival } from '../organisms/ritual-survival';
+import { RitualTournamentBracket } from '../organisms/ritual-tournament-bracket.js';
+import { RitualFeatureDrop } from '../organisms/ritual-feature-drop.js';
+import { RitualFoundingClass } from '../organisms/ritual-founding-class.js';
+import { RitualRuleInversion } from '../organisms/ritual-rule-inversion.js';
+import { RitualLeak } from '../organisms/ritual-leak.js';
+import { RitualLaunchCountdown } from '../organisms/ritual-launch-countdown.js';
+import { RitualBetaLottery } from '../organisms/ritual-beta-lottery.js';
+import { RitualUnlockChallenge } from '../organisms/ritual-unlock-challenge.js';
+import { RitualSurvival } from '../organisms/ritual-survival.js';
 const statusBadgeTone = {
     draft: 'bg-white/10 text-white/70 border-white/20',
     upcoming: 'bg-[var(--hive-brand-primary)]/10 text-[var(--hive-brand-primary)] border-[var(--hive-brand-primary)]/20',

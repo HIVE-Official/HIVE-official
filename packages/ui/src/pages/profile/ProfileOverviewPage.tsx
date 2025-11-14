@@ -9,7 +9,7 @@ import {
 } from "../../atomic/00-Global/atoms/avatar";
 import { Surface } from "../../layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface ProfileHighlight {
   id: string;

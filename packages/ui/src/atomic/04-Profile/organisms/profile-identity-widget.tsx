@@ -3,19 +3,19 @@
 import * as React from "react";
 import { Camera, GraduationCap, MapPin, Users } from "lucide-react";
 
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Avatar, AvatarImage, AvatarFallback } from "../atoms/avatar";
-import { Badge } from "../atoms/badge";
-import { Button } from "../atoms/button";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
+import { Avatar, AvatarImage, AvatarFallback } from "../../00-Global/atoms/avatar";
+import { Badge } from "../../00-Global/atoms/badge";
+import { Button } from "../../00-Global/atoms/button";
 import {
   PresenceIndicator,
   type PresenceStatus,
-} from "../atoms/presence-indicator";
+} from "../../02-Feed/atoms/presence-indicator";
 import {
   PrivacyControl,
   type PrivacyLevel,
-} from "../molecules/privacy-control";
+} from "../../00-Global/molecules/privacy-control";
 import type { UIProfile } from "./profile-types";
 
 const presenceText = (status?: PresenceStatus, lastSeen?: Date | null) => {
@@ -77,7 +77,7 @@ export function ProfileIdentityWidget({
   }, [lastSeen]);
 
   const academicYear = profile.academic.academicYear
-    ? profile.academic.academicYear.charAt(0).toUpperCase() + profile.academic.academicYear.slice(1)
+    ? String(profile.academic.academicYear).charAt(0).toUpperCase() + String(profile.academic.academicYear).slice(1)
     : undefined;
 
   const housing = profile.academic.housing;
@@ -111,7 +111,7 @@ export function ProfileIdentityWidget({
             )}
           </Avatar>
           <div className="absolute -right-2 -bottom-2">
-            <PresenceIndicator status={presenceStatus} lastActiveAt={parsedLastSeen ?? undefined} />
+            <PresenceIndicator status={presenceStatus} />
           </div>
           {isOwnProfile && onEditPhoto ? (
             <Button

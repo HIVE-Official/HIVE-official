@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils.js";
 const hiveCardVariants = cva("rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200", {
     variants: {
         variant: {

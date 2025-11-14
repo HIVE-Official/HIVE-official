@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type MediaFile } from './feed-composer-sheet';
+import { type MediaFile } from '../../02-Feed/organisms/feed-composer-sheet';
 export interface SpacePostComposerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSubmit"> {
     spaceId: string;
     spaceName: string;

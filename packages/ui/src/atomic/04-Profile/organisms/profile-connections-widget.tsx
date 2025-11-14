@@ -3,12 +3,12 @@
 import * as React from "react";
 import { Link2, UserPlus } from "lucide-react";
 
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
 import {
   PrivacyControl,
   type PrivacyLevel,
-} from "../molecules/privacy-control";
+} from "../../00-Global/molecules/privacy-control";
 
 export interface ProfileConnectionItem {
   id: string;

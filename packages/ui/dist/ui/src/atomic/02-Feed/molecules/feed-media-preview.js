@@ -23,9 +23,9 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
  * ```
  */
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { MediaViewer, MediaViewerContent, MediaViewerViewport, MediaViewerClose, } from '../atoms/media-viewer';
-import { PlayIcon } from '../atoms/icon-library';
+import { cn } from '@/lib/utils';
+import { MediaViewer, MediaViewerContent, MediaViewerViewport, MediaViewerClose, } from '../atoms/media-viewer.js';
+import { PlayIcon } from '../../00-Global/atoms/icon-library.js';
 export const FeedMediaPreview = React.forwardRef(({ media, className, rounded = true }, ref) => {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [lightboxOpen, setLightboxOpen] = React.useState(false);

@@ -2,7 +2,7 @@
 // Auth hooks - REMOVED: use useUnifiedAuth from @hive/ui instead
 // export { useAuth } from './use-auth';
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useNavigationVariant = exports.useToolBuilderVariant = exports.useFeatureFlags = exports.useDebounce = exports.useProfile = exports.useSpaces = exports.useOnboardingAnalytics = exports.useCreationAnalytics = exports.useAnalytics = void 0;
+exports.useCognitiveBudget = exports.useNavigationVariant = exports.useToolBuilderVariant = exports.useFeatureFlags = exports.useDebounce = exports.useProfile = exports.useSpaces = exports.useOnboardingAnalytics = exports.useCreationAnalytics = exports.useAnalytics = void 0;
 // Analytics hooks
 var use_analytics_1 = require("./use-analytics");
 Object.defineProperty(exports, "useAnalytics", { enumerable: true, get: function () { return use_analytics_1.useAnalytics; } });
@@ -24,4 +24,7 @@ var use_feature_flags_1 = require("./use-feature-flags");
 Object.defineProperty(exports, "useFeatureFlags", { enumerable: true, get: function () { return use_feature_flags_1.useFeatureFlags; } });
 Object.defineProperty(exports, "useToolBuilderVariant", { enumerable: true, get: function () { return use_feature_flags_1.useToolBuilderVariant; } });
 Object.defineProperty(exports, "useNavigationVariant", { enumerable: true, get: function () { return use_feature_flags_1.useNavigationVariant; } });
+// Topology budgets
+var use_cognitive_budget_1 = require("./topology/use-cognitive-budget");
+Object.defineProperty(exports, "useCognitiveBudget", { enumerable: true, get: function () { return use_cognitive_budget_1.useCognitiveBudget; } });
 //# sourceMappingURL=index.js.map

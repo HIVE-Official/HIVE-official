@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { Button } from "../atoms/button";
+import { Button } from "../../00-Global/atoms/button";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../atoms/sheet";
+} from "../../00-Global/atoms/sheet";
 import { RailWidget } from "./rail-widget";
 
 export interface TodayDrawerProps {

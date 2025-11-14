@@ -13,8 +13,8 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "../../atoms/card";
-import { Button } from "../../atoms/button";
+} from "../../00-Global/atoms/card";
+import { Button } from "../../00-Global/atoms/button";
 
 type IconComponent = React.ComponentType<{ className?: string }>;
 

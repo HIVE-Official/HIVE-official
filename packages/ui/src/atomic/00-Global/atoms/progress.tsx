@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+import { cn } from "../../../lib/utils"
 
 const progressVariants = cva(
   "relative h-4 w-full overflow-hidden rounded-full bg-[var(--hive-background-tertiary)]",

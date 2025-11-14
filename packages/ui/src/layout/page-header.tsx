@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 import { HStack, Stack } from "./stack";
 
 type HeaderAlign = "start" | "center" | "end";

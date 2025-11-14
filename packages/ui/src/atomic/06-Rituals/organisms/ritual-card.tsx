@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import { RitualProgressBar } from '../molecules/ritual-progress-bar';
 import { Button } from '../../00-Global/atoms';
 import { Calendar, Users, Clock, CheckCircle2 } from 'lucide-react';

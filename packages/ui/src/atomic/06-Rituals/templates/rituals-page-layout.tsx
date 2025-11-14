@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import { RitualCard } from '../organisms/ritual-card';
-import { RitualFeedBannerCard, type RitualFeedBannerCardProps } from '../organisms/ritual-feed-banner';
+// import { RitualFeedBannerCard, type RitualFeedBannerCardProps } from '../organisms/ritual-feed-banner';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Global/atoms/tabs';
 import { Sparkles, Calendar, CheckCircle2 } from 'lucide-react';
 
@@ -26,7 +26,7 @@ export interface RitualData {
 export interface RitualsPageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
   rituals: RitualData[];
   featuredRitual?: RitualData;
-  featuredRitualBanner?: RitualFeedBannerCardProps['banner'];
+  // featuredRitualBanner?: RitualFeedBannerCardProps['banner']; // Temporarily disabled
   onRitualJoin?: (ritualId: string) => void;
   onRitualView?: (ritualId: string) => void;
   onBannerAction?: (href: string) => void;
@@ -48,10 +48,10 @@ export const RitualsPageLayout = React.forwardRef<HTMLDivElement, RitualsPageLay
     {
       rituals,
       featuredRitual,
-      featuredRitualBanner,
+      // featuredRitualBanner, // Temporarily disabled
       onRitualJoin,
       onRitualView,
-      onBannerAction,
+      // onBannerAction, // Temporarily disabled (related to featuredRitualBanner)
       defaultTab = 'active',
       isLoading = false,
       className,
@@ -128,9 +128,7 @@ export const RitualsPageLayout = React.forwardRef<HTMLDivElement, RitualsPageLay
                   Featured
                 </span>
               </div>
-              {featuredRitualBanner ? (
-                <RitualFeedBannerCard banner={featuredRitualBanner} onAction={onBannerAction} />
-              ) : featuredRitual ? (
+              {featuredRitual ? (
                 <RitualCard
                   ritual={featuredRitual}
                   variant="featured"

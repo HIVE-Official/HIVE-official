@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils.js";
-const linkVariants = cva("[font-family:var(--hive-font-family-sans,'Geist Sans',system-ui,sans-serif)] inline-flex items-center gap-2 leading-snug transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--hive-interactive-focus,#FACC15)] focus-visible:ring-offset-[var(--hive-background-primary)] underline-offset-[0.3em]", {
+import { cn } from "@/lib/utils";
+const linkVariants = cva("[font-family:var(--hive-font-family-sans,'Geist Sans',system-ui,sans-serif)] inline-flex items-center gap-2 leading-snug transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-[var(--hive-background-primary)] underline-offset-[0.3em]", {
     variants: {
         tone: {
             brand: "text-[var(--hive-brand-primary)] hover:text-[var(--hive-brand-primary)]/85",

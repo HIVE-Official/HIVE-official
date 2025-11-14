@@ -58,6 +58,14 @@ export {
   AvatarImage,
   AvatarFallback,
 } from "./atomic/00-Global/atoms/avatar";
+export { HiveCard } from "./atomic/00-Global/atoms/hive-card";
+export { Grid } from "./atomic/00-Global/atoms/grid";
+export {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator
+} from "./components/ui/input-otp";
 export {
   CheckCircleIcon,
   MegaphoneIcon,
@@ -193,13 +201,13 @@ export type {
   RitualMilestone,
 } from "./atomic/06-Rituals/molecules/ritual-progress-bar";
 
-export { PrivacyControl, BulkPrivacyControl } from "./atomic/03-Spaces/molecules/privacy-control";
+export { PrivacyControl, BulkPrivacyControl } from "./atomic/00-Global/molecules/privacy-control";
 export type {
   PrivacyControlProps,
   PrivacyLevel,
   BulkPrivacyControlProps,
   BulkPrivacyControlWidget,
-} from "./atomic/03-Spaces/molecules/privacy-control";
+} from "./atomic/00-Global/molecules/privacy-control";
 
 // Sheets
 export {
@@ -240,14 +248,14 @@ export type {
 } from "./atomic/07-Admin/organisms";
 
 export {
-  AdminRitualComposer,
-  type AdminRitualComposerProps,
+  // AdminRitualComposer,
+  // type AdminRitualComposerProps,
 } from "./atomic/07-Admin/organisms";
 
-export {
-  RitualFeedBannerCard,
-  type RitualFeedBannerCardProps,
-} from "./atomic/06-Rituals/organisms/ritual-feed-banner";
+// export {
+//   RitualFeedBannerCard,
+//   type RitualFeedBannerCardProps,
+// } from "./atomic/06-Rituals/organisms/ritual-feed-banner";
 
 // Profile Molecules
 export { ProfileBentoGrid } from "./atomic/04-Profile/molecules/profile-bento-grid";
@@ -293,10 +301,10 @@ export type {
   RitualData,
 } from "./atomic/06-Rituals/templates/rituals-page-layout";
 
-export { RitualDetailLayout } from "./atomic/06-Rituals/templates/ritual-detail-layout";
-export type {
-  RitualDetailLayoutProps,
-} from "./atomic/06-Rituals/templates/ritual-detail-layout";
+// export { RitualDetailLayout } from "./atomic/06-Rituals/templates/ritual-detail-layout";
+// export type {
+//   RitualDetailLayoutProps,
+// } from "./atomic/06-Rituals/templates/ritual-detail-layout";
 
 export { ProfileViewLayout } from "./atomic/04-Profile/templates/profile-view-layout";
 export type { ProfileViewLayoutProps } from "./atomic/04-Profile/templates/profile-view-layout";

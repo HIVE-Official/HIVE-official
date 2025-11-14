@@ -9,7 +9,7 @@
  * - Variable urgency indicators
  */
 import React from 'react';
-import { HiveNotification } from '../../types/notifications';
+import { HiveNotification } from '../../../types/notifications';
 export interface NotificationItemProps {
     /** Notification data */
     notification: HiveNotification;

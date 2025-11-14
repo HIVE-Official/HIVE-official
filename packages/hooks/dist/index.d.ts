@@ -5,4 +5,5 @@ export { useSpaces } from './use-spaces';
 export { useProfile } from './use-profile';
 export { useDebounce } from './use-debounce';
 export { useFeatureFlags, useToolBuilderVariant, useNavigationVariant } from './use-feature-flags';
+export { useCognitiveBudget } from './topology/use-cognitive-budget';
 //# sourceMappingURL=index.d.ts.map

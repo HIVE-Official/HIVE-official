@@ -1,3 +1,3 @@
 'use client';
-export { PresenceDot as PresenceIndicator, presenceVariants as presenceIndicatorVariants, } from "../../identity/presence";
+export { PresenceDot as PresenceIndicator, presenceVariants as presenceIndicatorVariants, } from "../../../identity/presence.js";
 //# sourceMappingURL=presence-indicator.js.map

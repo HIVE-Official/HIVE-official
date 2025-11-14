@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, CardContent, Input, Label, Button } from '../../00-Global/atoms';
-import { ElementRegistry, initializeElementSystem, type ElementDefinition } from '../../lib/hivelab/element-system';
+import { ElementRegistry, initializeElementSystem, type ElementDefinition } from '../../../lib/hivelab/element-system';
 
 export interface HiveLabElementPaletteProps {
   onDragStart?: (element: ElementDefinition) => void;

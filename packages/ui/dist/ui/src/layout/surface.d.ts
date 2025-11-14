@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
 declare const surfaceVariants: (props?: {
-    tone?: "glass" | "default" | "inverted" | "contrast" | "subtle";
+    tone?: "glass" | "default" | "contrast" | "subtle" | "inverted";
     elevation?: "sm" | "md" | "lg" | "flat";
     padding?: "sm" | "md" | "lg" | "xl" | "none" | "xs";
     radius?: "md" | "lg" | "full";

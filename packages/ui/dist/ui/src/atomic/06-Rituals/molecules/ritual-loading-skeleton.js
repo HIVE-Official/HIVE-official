@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../../00-Global/atoms/card';
-import { Skeleton } from '../../00-Global/atoms/skeleton';
-import { cn } from '../../lib/utils';
+import { Card } from '../../00-Global/atoms/card.js';
+import { Skeleton } from '../../00-Global/atoms/skeleton.js';
+import { cn } from '@/lib/utils';
 export const RitualLoadingSkeleton = ({ variant = 'card', className, ...props }) => {
     if (variant === 'banner') {
         return (_jsx(Card, { className: cn('border-white/10 bg-white/5 p-5', className), ...props, children: _jsxs("div", { className: "flex items-center gap-4", children: [_jsx(Skeleton, { className: "h-12 w-12 rounded-full" }), _jsxs("div", { className: "flex-1", children: [_jsx(Skeleton, { className: "mb-2 h-5 w-48" }), _jsx(Skeleton, { className: "h-4 w-64" })] }), _jsx(Skeleton, { className: "h-10 w-24 rounded-lg" })] }) }));

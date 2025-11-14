@@ -2,9 +2,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { Users, Globe, Lock, Ghost } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Button } from "../atoms/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "../atoms/select";
+import { cn } from "@/lib/utils";
+import { Button } from "@/atomic/00-Global/atoms/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/atomic/00-Global/atoms/select";
 const PRIVACY_LEVELS = [
     {
         value: "public",

@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '../atoms';
-import { HiveLabElementPalette } from '../molecules/hivelab-element-palette';
-import { HiveLabInspectorPanel } from '../molecules/hivelab-inspector-panel';
-import { HiveLabLintPanel } from '../molecules/hivelab-lint-panel';
-import { VisualToolComposer } from '../../components/hivelab/visual-tool-composer';
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Global/atoms/index.js';
+import { HiveLabElementPalette } from '../molecules/hivelab-element-palette.js';
+import { HiveLabInspectorPanel } from '../molecules/hivelab-inspector-panel.js';
+import { HiveLabLintPanel } from '../molecules/hivelab-lint-panel.js';
+import { VisualToolComposer } from '../../../components/hivelab/visual-tool-composer.js';
 export function HiveLabStudio({ userId, initialComposition, onSave, onPreview, onCancel }) {
     const [selectedName, setSelectedName] = React.useState(undefined);
     const [selectedConfig, setSelectedConfig] = React.useState(undefined);

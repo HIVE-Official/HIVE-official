@@ -30,6 +30,7 @@ export const GET = withSecureAuth(async (request: NextRequest) => {
       const data = doc.data() as any;
       const cat = (data.category || 'uncategorized') as string;
       categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+    }
     const topCategories = Array.from(categoryCounts.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5)
       .map(([category, count]) => ({ category, count }));
     const overview = {

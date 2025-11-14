@@ -8,9 +8,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Button, Badge } from '@hive/ui';
+import { Card, Button, Badge, useToast } from '@hive/ui';
 import { Plus, Play, Pause, StopCircle, Eye, Edit2, Trash2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import type { RitualUnion } from '@hive/core';
 
 export default function RitualsPage() {

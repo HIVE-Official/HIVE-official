@@ -12,4 +12,5 @@ export * from './motion';
 export * from './effects';
 export * from './css-generator';
 export * from './tailwind-config';
+export * from './topology/slot-kit';
 //# sourceMappingURL=index.js.map

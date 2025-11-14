@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Card } from '../../00-Global/atoms/card';
 import { Button } from '../../00-Global/atoms/button';
-import { PercentBar } from '../atoms/percent-bar';
+import { PercentBar } from '../../02-Feed/atoms/percent-bar';
 
 export interface FeatureUsageStats {
   installs?: number;

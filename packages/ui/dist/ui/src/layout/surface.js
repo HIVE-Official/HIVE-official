@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 const surfaceVariants = cva("relative rounded-2xl border border-[var(--hive-border-subtle)] bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)] transition-[box-shadow,transform] duration-200 ease-out", {
     variants: {
         tone: {

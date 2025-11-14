@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../lib/utils";
-import { HStack, Stack } from "./stack";
+import { cn } from "@/lib/utils";
+import { HStack, Stack } from "./stack.js";
 const stackAlignmentClass = {
     start: "items-start",
     center: "items-center",

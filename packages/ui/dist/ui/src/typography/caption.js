@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../lib/utils.js";
+import { cn } from "@/lib/utils";
 const captionVariants = cva("[font-family:var(--hive-font-family-sans,'Geist Sans',system-ui,sans-serif)] uppercase tracking-[0.22em] text-[var(--hive-text-muted)] antialiased", {
     variants: {
         tone: {

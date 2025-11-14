@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../atoms/card";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 
 export interface StatCardProps {
   label: string;

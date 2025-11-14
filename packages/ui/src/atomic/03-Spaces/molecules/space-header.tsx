@@ -27,8 +27,8 @@
 import React from 'react';
 import { Users, MoreVertical, Check, Loader2, Share2 } from 'lucide-react';
 import { Button } from '../../00-Global/atoms/button';
-import { MotionDiv } from '../motion-safe';
-import { cn } from '../../../lib/utils';
+import { MotionDiv } from '../../../shells/motion-safe';
+import { cn } from '@/lib/utils';
 
 export type SpaceMembershipState = 'not_joined' | 'joined' | 'pending' | 'loading';
 

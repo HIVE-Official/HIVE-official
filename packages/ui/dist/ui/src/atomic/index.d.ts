@@ -10,7 +10,6 @@
  * - 06-Rituals: Campus-wide events
  * - 07-Admin: Admin dashboard
  */
-export * from './00-Global/atoms/action-sheet';
 export * from './00-Global/atoms/alert';
 export * from './00-Global/atoms/aria-live-region';
 export * from './00-Global/atoms/avatar';
@@ -85,16 +84,16 @@ export * from './03-Spaces/atoms/top-bar-nav';
 export * from './03-Spaces/molecules/navigation-primitives';
 export * from './03-Spaces/molecules/now-card';
 export * from './03-Spaces/molecules/pinned-posts-stack';
-export * from './03-Spaces/molecules/privacy-control';
+export * from './00-Global/molecules/privacy-control';
 export * from './03-Spaces/molecules/rail-widget';
 export * from './03-Spaces/molecules/space-about-widget';
 export * from './03-Spaces/molecules/space-composer';
 export * from './03-Spaces/molecules/space-header';
 export * from './03-Spaces/molecules/space-tools-widget';
 export * from './03-Spaces/molecules/today-drawer';
-export * from './03-Spaces/organisms/space-board-layout';
+export type { SpaceBoardLayoutProps } from './03-Spaces/organisms/space-board-layout';
 export * from './03-Spaces/organisms/space-post-composer';
-export * from './03-Spaces/templates/space-board-template';
+export type { SpaceBoardTemplateProps } from './03-Spaces/templates/space-board-template';
 export * from './04-Profile/molecules/profile-bento-grid';
 export * from './04-Profile/organisms/profile-activity-widget';
 export * from './04-Profile/organisms/profile-completion-card';
@@ -115,7 +114,6 @@ export * from './06-Rituals/molecules/ritual-progress-bar';
 export * from './06-Rituals/organisms/ritual-beta-lottery';
 export * from './06-Rituals/organisms/ritual-card';
 export * from './06-Rituals/organisms/ritual-feature-drop';
-export * from './06-Rituals/organisms/ritual-feed-banner';
 export * from './06-Rituals/organisms/ritual-founding-class';
 export * from './06-Rituals/organisms/ritual-launch-countdown';
 export * from './06-Rituals/organisms/ritual-leak';
@@ -124,10 +122,8 @@ export * from './06-Rituals/organisms/ritual-strip';
 export * from './06-Rituals/organisms/ritual-survival';
 export * from './06-Rituals/organisms/ritual-tournament-bracket';
 export * from './06-Rituals/organisms/ritual-unlock-challenge';
-export * from './06-Rituals/templates/ritual-detail-layout';
 export * from './06-Rituals/templates/rituals-page-layout';
 export * from './07-Admin/organisms/admin-dashboard-primitives';
-export * from './07-Admin/organisms/admin-ritual-composer';
 export * from './07-Admin/organisms/admin-shell';
 export type { FeedCardPostData, FeedCardPostCallbacks } from './02-Feed/organisms/feed-card-post';
 export type { FeedCardEventData, FeedCardEventCallbacks } from './02-Feed/organisms/feed-card-event';

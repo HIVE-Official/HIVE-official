@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../../00-Global/atoms/card';
-import { Button } from '../../00-Global/atoms/button';
-import { Badge } from '../../00-Global/atoms/badge';
-import { cn } from '../../lib/utils';
+import { Card } from '../../00-Global/atoms/card.js';
+import { Button } from '../../00-Global/atoms/button.js';
+import { Badge } from '../../00-Global/atoms/badge.js';
+import { cn } from '@/lib/utils';
 export const RitualBetaLottery = ({ title = 'Beta Lottery', description, feature, slots, applicants, entryDeadline, drawingDate, hasEntered = false, isWinner = false, isDrawn = false, onEnter, onViewDemo, className, ...props }) => {
     const oddsPercent = applicants > 0 ? Math.round((slots / applicants) * 100) : 100;
     return (_jsxs(Card, { className: cn('border-white/10 bg-white/5 p-5', className), ...props, children: [_jsxs("div", { className: "mb-2 flex items-center justify-between", children: [_jsx("div", { className: "text-xs uppercase tracking-[0.18em] text-white/50", children: "Beta Lottery" }), isDrawn && (_jsx(Badge, { variant: isWinner ? 'default' : 'secondary', children: isWinner ? '🎉 Winner!' : 'Drawing Complete' }))] }), _jsx("h3", { className: "text-lg font-semibold text-white", children: title || feature.name }), description && _jsx("p", { className: "mt-1 text-sm text-white/70", children: description }), _jsxs("div", { className: "my-4 rounded-lg border border-white/20 bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-4", children: [_jsxs("div", { className: "mb-2 flex items-center justify-between", children: [_jsx("div", { className: "text-sm font-semibold text-white", children: feature.name }), feature.teaser.images.length > 0 && (_jsx("div", { className: "flex gap-1", children: feature.teaser.images.slice(0, 3).map((img, idx) => (_jsx("div", { className: "h-8 w-8 rounded border border-white/20 bg-white/10", style: {

@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Button } from '../../00-Global/atoms/button';
-import { Card } from '../../00-Global/atoms/card';
+import { cn } from '@/lib/utils';
+import { Button } from '../../00-Global/atoms/button.js';
+import { Card } from '../../00-Global/atoms/card.js';
 import { Clock, UserPlus } from 'lucide-react';
 export const RitualFeedBannerCard = ({ banner, onAction }) => {
     const timeRemaining = React.useMemo(() => {

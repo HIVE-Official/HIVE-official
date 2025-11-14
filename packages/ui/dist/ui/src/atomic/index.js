@@ -12,148 +12,144 @@
  */
 // === 00-GLOBAL (Foundation Components) ===
 // Atoms
-export * from './00-Global/atoms/action-sheet';
-export * from './00-Global/atoms/alert';
-export * from './00-Global/atoms/aria-live-region';
-export * from './00-Global/atoms/avatar';
-export * from './00-Global/atoms/badge';
-export * from './00-Global/atoms/button';
-export * from './00-Global/atoms/card';
-export * from './00-Global/atoms/check-icon';
-export * from './00-Global/atoms/checkbox';
-export * from './00-Global/atoms/command';
-export * from './00-Global/atoms/context-menu';
-export * from './00-Global/atoms/date-time-picker';
-export * from './00-Global/atoms/dialog';
-export * from './00-Global/atoms/file-upload';
-export * from './00-Global/atoms/grid';
-export * from './00-Global/atoms/hive-card';
-export * from './00-Global/atoms/hive-confirm-modal';
-export * from './00-Global/atoms/hive-logo';
-export * from './00-Global/atoms/hive-modal';
-export * from './00-Global/atoms/icon-library';
-export * from './00-Global/atoms/input';
-export * from './00-Global/atoms/label';
-export * from './00-Global/atoms/popover';
-export * from './00-Global/atoms/progress';
-export * from './00-Global/atoms/select';
-export * from './00-Global/atoms/sheet';
-export * from './00-Global/atoms/simple-avatar';
-export * from './00-Global/atoms/skeleton';
-export * from './00-Global/atoms/slider';
-export * from './00-Global/atoms/switch';
-export * from './00-Global/atoms/tabs';
-export * from './00-Global/atoms/textarea';
-export * from './00-Global/atoms/toast';
-export * from './00-Global/atoms/tooltip';
+// export * from './00-Global/atoms/action-sheet'; // TODO: Create action-sheet component
+export * from './00-Global/atoms/alert.js';
+export * from './00-Global/atoms/aria-live-region.js';
+export * from './00-Global/atoms/avatar.js';
+export * from './00-Global/atoms/badge.js';
+export * from './00-Global/atoms/button.js';
+export * from './00-Global/atoms/card.js';
+export * from './00-Global/atoms/check-icon.js';
+export * from './00-Global/atoms/checkbox.js';
+export * from './00-Global/atoms/command.js';
+export * from './00-Global/atoms/context-menu.js';
+export * from './00-Global/atoms/date-time-picker.js';
+export * from './00-Global/atoms/dialog.js';
+export * from './00-Global/atoms/file-upload.js';
+export * from './00-Global/atoms/grid.js';
+export * from './00-Global/atoms/hive-card.js';
+export * from './00-Global/atoms/hive-confirm-modal.js';
+export * from './00-Global/atoms/hive-logo.js';
+export * from './00-Global/atoms/hive-modal.js';
+export * from './00-Global/atoms/icon-library.js';
+export * from './00-Global/atoms/input.js';
+export * from './00-Global/atoms/label.js';
+export * from './00-Global/atoms/popover.js';
+export * from './00-Global/atoms/progress.js';
+export * from './00-Global/atoms/select.js';
+export * from './00-Global/atoms/sheet.js';
+export * from './00-Global/atoms/simple-avatar.js';
+export * from './00-Global/atoms/skeleton.js';
+export * from './00-Global/atoms/slider.js';
+export * from './00-Global/atoms/switch.js';
+export * from './00-Global/atoms/tabs.js';
+export * from './00-Global/atoms/textarea.js';
+export * from './00-Global/atoms/toast.js';
+export * from './00-Global/atoms/tooltip.js';
 // Molecules
-export * from './00-Global/molecules/description-list';
-export * from './00-Global/molecules/dropdown-menu';
-export * from './00-Global/molecules/empty-state-compact';
-export * from './00-Global/molecules/filter-chips';
-export * from './00-Global/molecules/keyboard-shortcuts-overlay';
-export * from './00-Global/molecules/kpi-delta';
-export * from './00-Global/molecules/notification-card';
-export * from './00-Global/molecules/notification-dropdown';
-export * from './00-Global/molecules/progress-list';
-export * from './00-Global/molecules/search-bar';
-export * from './00-Global/molecules/stat-card';
-export * from './00-Global/molecules/table';
-export * from './00-Global/molecules/tag-list';
-export * from './00-Global/molecules/user-avatar-group';
+export * from './00-Global/molecules/description-list.js';
+export * from './00-Global/molecules/dropdown-menu.js';
+export * from './00-Global/molecules/empty-state-compact.js';
+export * from './00-Global/molecules/filter-chips.js';
+export * from './00-Global/molecules/keyboard-shortcuts-overlay.js';
+export * from './00-Global/molecules/kpi-delta.js';
+export * from './00-Global/molecules/notification-card.js';
+export * from './00-Global/molecules/notification-dropdown.js';
+export * from './00-Global/molecules/progress-list.js';
+export * from './00-Global/molecules/search-bar.js';
+export * from './00-Global/molecules/stat-card.js';
+export * from './00-Global/molecules/table.js';
+export * from './00-Global/molecules/tag-list.js';
+export * from './00-Global/molecules/user-avatar-group.js';
 // Organisms
-export * from './00-Global/organisms/notification-system';
-export * from './00-Global/organisms/notification-toast-container';
-export * from './00-Global/organisms/welcome-mat';
+export * from './00-Global/organisms/notification-system.js';
+export * from './00-Global/organisms/notification-toast-container.js';
+export * from './00-Global/organisms/welcome-mat.js';
 // === 02-FEED (Feed Discovery & Engagement) ===
 // Atoms
-export * from './02-Feed/atoms/media-thumb';
-export * from './02-Feed/atoms/media-viewer';
-export * from './02-Feed/atoms/notification-bell';
-export * from './02-Feed/atoms/notification-item';
-export * from './02-Feed/atoms/percent-bar';
-export * from './02-Feed/atoms/post-card';
-export * from './02-Feed/atoms/presence-indicator';
+export * from './02-Feed/atoms/media-thumb.js';
+export * from './02-Feed/atoms/media-viewer.js';
+export * from './02-Feed/atoms/notification-bell.js';
+export * from './02-Feed/atoms/notification-item.js';
+export * from './02-Feed/atoms/percent-bar.js';
+export * from './02-Feed/atoms/post-card.js';
+export * from './02-Feed/atoms/presence-indicator.js';
 // Molecules
-export * from './02-Feed/molecules/feed-filter-bar';
-export * from './02-Feed/molecules/feed-media-preview';
-export * from './02-Feed/molecules/feed-post-actions';
-export * from './02-Feed/molecules/feed-ritual-banner';
-export * from './02-Feed/molecules/feed-space-chip';
+export * from './02-Feed/molecules/feed-filter-bar.js';
+export * from './02-Feed/molecules/feed-media-preview.js';
+export * from './02-Feed/molecules/feed-post-actions.js';
+export * from './02-Feed/molecules/feed-ritual-banner.js';
+export * from './02-Feed/molecules/feed-space-chip.js';
 // Organisms
-export * from './02-Feed/organisms/feed-card-event';
-export * from './02-Feed/organisms/feed-card-post';
-export * from './02-Feed/organisms/feed-card-system';
-export * from './02-Feed/organisms/feed-card-tool';
-export * from './02-Feed/organisms/feed-composer-sheet';
-export * from './02-Feed/organisms/feed-virtualized-list';
+export * from './02-Feed/organisms/feed-card-event.js';
+export * from './02-Feed/organisms/feed-card-post.js';
+export * from './02-Feed/organisms/feed-card-system.js';
+export * from './02-Feed/organisms/feed-card-tool.js';
+export * from './02-Feed/organisms/feed-composer-sheet.js';
+export * from './02-Feed/organisms/feed-virtualized-list.js';
 // Templates
-export * from './02-Feed/templates/feed-loading-skeleton';
-export * from './02-Feed/templates/feed-page-layout';
+export * from './02-Feed/templates/feed-loading-skeleton.js';
+export * from './02-Feed/templates/feed-page-layout.js';
 // === 03-SPACES (Community Hubs) ===
 // Atoms
-export * from './03-Spaces/atoms/top-bar-nav';
+export * from './03-Spaces/atoms/top-bar-nav.js';
 // Molecules
-export * from './03-Spaces/molecules/navigation-primitives';
-export * from './03-Spaces/molecules/now-card';
-export * from './03-Spaces/molecules/pinned-posts-stack';
-export * from './03-Spaces/molecules/privacy-control';
-export * from './03-Spaces/molecules/rail-widget';
-export * from './03-Spaces/molecules/space-about-widget';
-export * from './03-Spaces/molecules/space-composer';
-export * from './03-Spaces/molecules/space-header';
-export * from './03-Spaces/molecules/space-tools-widget';
-export * from './03-Spaces/molecules/today-drawer';
-// Organisms
-export * from './03-Spaces/organisms/space-board-layout';
-export * from './03-Spaces/organisms/space-post-composer';
-// Templates
-export * from './03-Spaces/templates/space-board-template';
+export * from './03-Spaces/molecules/navigation-primitives.js';
+export * from './03-Spaces/molecules/now-card.js';
+export * from './03-Spaces/molecules/pinned-posts-stack.js';
+export * from './00-Global/molecules/privacy-control.js';
+export * from './03-Spaces/molecules/rail-widget.js';
+export * from './03-Spaces/molecules/space-about-widget.js';
+export * from './03-Spaces/molecules/space-composer.js';
+export * from './03-Spaces/molecules/space-header.js';
+export * from './03-Spaces/molecules/space-tools-widget.js';
+export * from './03-Spaces/molecules/today-drawer.js';
+export * from './03-Spaces/organisms/space-post-composer.js';
 // === 04-PROFILE (Campus Identity) ===
 // Molecules
-export * from './04-Profile/molecules/profile-bento-grid';
+export * from './04-Profile/molecules/profile-bento-grid.js';
 // Organisms
-export * from './04-Profile/organisms/profile-activity-widget';
-export * from './04-Profile/organisms/profile-completion-card';
-export * from './04-Profile/organisms/profile-connections-widget';
-export * from './04-Profile/organisms/profile-identity-widget';
-export * from './04-Profile/organisms/profile-spaces-widget';
+export * from './04-Profile/organisms/profile-activity-widget.js';
+export * from './04-Profile/organisms/profile-completion-card.js';
+export * from './04-Profile/organisms/profile-connections-widget.js';
+export * from './04-Profile/organisms/profile-identity-widget.js';
+export * from './04-Profile/organisms/profile-spaces-widget.js';
 // Templates
-export * from './04-Profile/templates/profile-view-layout';
+export * from './04-Profile/templates/profile-view-layout.js';
 // === 05-HIVELAB (No-Code Builder) ===
 // Molecules
-export * from './05-HiveLab/molecules/hivelab-element-palette';
-export * from './05-HiveLab/molecules/hivelab-inspector-panel';
-export * from './05-HiveLab/molecules/hivelab-lint-panel';
-export * from './05-HiveLab/molecules/hivelab-tool-library-card';
+export * from './05-HiveLab/molecules/hivelab-element-palette.js';
+export * from './05-HiveLab/molecules/hivelab-inspector-panel.js';
+export * from './05-HiveLab/molecules/hivelab-lint-panel.js';
+export * from './05-HiveLab/molecules/hivelab-tool-library-card.js';
 // Organisms
-export * from './05-HiveLab/organisms/hivelab-studio';
-export * from './05-HiveLab/organisms/hivelab-widget';
+export * from './05-HiveLab/organisms/hivelab-studio.js';
+export * from './05-HiveLab/organisms/hivelab-widget.js';
 // === 06-RITUALS (Campus-Wide Events) ===
 // Molecules
-export * from './06-Rituals/molecules/ritual-empty-state';
-export * from './06-Rituals/molecules/ritual-error-state';
-export * from './06-Rituals/molecules/ritual-loading-skeleton';
-export * from './06-Rituals/molecules/ritual-progress-bar';
+export * from './06-Rituals/molecules/ritual-empty-state.js';
+export * from './06-Rituals/molecules/ritual-error-state.js';
+export * from './06-Rituals/molecules/ritual-loading-skeleton.js';
+export * from './06-Rituals/molecules/ritual-progress-bar.js';
 // Organisms
-export * from './06-Rituals/organisms/ritual-beta-lottery';
-export * from './06-Rituals/organisms/ritual-card';
-export * from './06-Rituals/organisms/ritual-feature-drop';
-export * from './06-Rituals/organisms/ritual-feed-banner';
-export * from './06-Rituals/organisms/ritual-founding-class';
-export * from './06-Rituals/organisms/ritual-launch-countdown';
-export * from './06-Rituals/organisms/ritual-leak';
-export * from './06-Rituals/organisms/ritual-rule-inversion';
-export * from './06-Rituals/organisms/ritual-strip';
-export * from './06-Rituals/organisms/ritual-survival';
-export * from './06-Rituals/organisms/ritual-tournament-bracket';
-export * from './06-Rituals/organisms/ritual-unlock-challenge';
+export * from './06-Rituals/organisms/ritual-beta-lottery.js';
+export * from './06-Rituals/organisms/ritual-card.js';
+export * from './06-Rituals/organisms/ritual-feature-drop.js';
+// export * from './06-Rituals/organisms/ritual-feed-banner.js';
+export * from './06-Rituals/organisms/ritual-founding-class.js';
+export * from './06-Rituals/organisms/ritual-launch-countdown.js';
+export * from './06-Rituals/organisms/ritual-leak.js';
+export * from './06-Rituals/organisms/ritual-rule-inversion.js';
+export * from './06-Rituals/organisms/ritual-strip.js';
+export * from './06-Rituals/organisms/ritual-survival.js';
+export * from './06-Rituals/organisms/ritual-tournament-bracket.js';
+export * from './06-Rituals/organisms/ritual-unlock-challenge.js';
 // Templates
-export * from './06-Rituals/templates/ritual-detail-layout';
-export * from './06-Rituals/templates/rituals-page-layout';
+// export * from './06-Rituals/templates/ritual-detail-layout.js';
+export * from './06-Rituals/templates/rituals-page-layout.js';
 // === 07-ADMIN (Admin Dashboard) ===
 // Organisms
-export * from './07-Admin/organisms/admin-dashboard-primitives';
-export * from './07-Admin/organisms/admin-ritual-composer';
-export * from './07-Admin/organisms/admin-shell';
+export * from './07-Admin/organisms/admin-dashboard-primitives.js';
+// export * from './07-Admin/organisms/admin-ritual-composer.js';
+export * from './07-Admin/organisms/admin-shell.js';
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Activity, CalendarClock, ChevronRight, Heart, MessageCircle, Users, } from "lucide-react";
-import { cn } from "../../lib/utils";
-import { Card } from "../atoms/card";
-import { Button } from "../atoms/button";
-import { PrivacyControl, } from "../molecules/privacy-control";
+import { cn } from "../../../lib/utils.js";
+import { Card } from "../../00-Global/atoms/card.js";
+import { Button } from "../../00-Global/atoms/button.js";
+import { PrivacyControl, } from "../../00-Global/molecules/privacy-control.js";
 const ICON_MAP = {
     post: MessageCircle,
     comment: MessageCircle,

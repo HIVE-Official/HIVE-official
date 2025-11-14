@@ -28,8 +28,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../../lib/utils';
-import { HeartIcon, MessageCircleIcon, BookmarkIcon, ShareIcon, } from '../atoms/icon-library';
+import { cn } from '@/lib/utils';
+import { HeartIcon, MessageCircleIcon, BookmarkIcon, ShareIcon, } from '../../00-Global/atoms/icon-library.js';
 const ActionButton = ({ icon: Icon, count, isActive, onClick, label, compact = false, activeColor = 'var(--hive-brand-primary)', isToggle = false, }) => {
     // Track if this is the first mount to avoid initial animation
     const isInitialMount = React.useRef(true);
@@ -46,7 +46,7 @@ const ActionButton = ({ icon: Icon, count, isActive, onClick, label, compact = f
         // Instant tap feedback (< 16ms perceived latency)
         whileTap: { scale: 0.95 }, transition: { type: 'spring', stiffness: 400, damping: 25 }, children: [_jsx(motion.div, { animate: isActive ? { scale: 1.1 } : { scale: 1 }, transition: { type: 'spring', stiffness: 400, damping: 15 }, children: _jsx(Icon, { className: cn('h-5 w-5 transition-colors duration-150', isActive && 'fill-current'), style: {
                         color: isActive ? activeColor : 'var(--hive-text-secondary)',
-                    } }) }), count !== undefined && count > 0 && (_jsx(motion.span, { initial: !isInitialMount.current && count !== wasActive ? { scale: 1.2, opacity: 0.7 } : false, animate: { scale: 1, opacity: 1 }, transition: { type: 'spring', stiffness: 400, damping: 20 }, className: cn('text-sm font-medium tabular-nums transition-colors', isActive
+                    } }) }), count !== undefined && count > 0 && (_jsx(motion.span, { initial: !isInitialMount.current && isActive !== wasActive ? { scale: 1.2, opacity: 0.7 } : false, animate: { scale: 1, opacity: 1 }, transition: { type: 'spring', stiffness: 400, damping: 20 }, className: cn('text-sm font-medium tabular-nums transition-colors', isActive
                     ? 'text-[var(--hive-text-primary)]'
                     : 'text-[var(--hive-text-secondary)] group-hover:text-[var(--hive-text-primary)]'), children: count > 999 ? `${(count / 1000).toFixed(1)}k` : count }, count))] }));
 };

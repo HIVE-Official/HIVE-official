@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '../../lib/utils';
-import { Badge, Button, ClockIcon, MapPinIcon, UsersIcon, } from '../atoms';
-import { FeedSpaceChip } from '../molecules/feed-space-chip';
-import { FeedMediaPreview } from '../molecules/feed-media-preview';
+import { cn } from '@/lib/utils';
+import { Badge, Button, ClockIcon, MapPinIcon, UsersIcon, } from '../../00-Global/atoms/index.js';
+import { FeedSpaceChip } from '../molecules/feed-space-chip.js';
+import { FeedMediaPreview } from '../molecules/feed-media-preview.js';
 const statusBadgeCopy = {
     upcoming: 'Upcoming',
     today: 'Today @ UB',

@@ -27,7 +27,7 @@
 
 import * as React from 'react';
 import { format } from 'date-fns';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { Input } from './input';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';

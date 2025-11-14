@@ -23,7 +23,7 @@ export interface SidebarNavSection {
     label?: string;
     items: NavigationNode[];
 }
-export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface SidebarNavProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
     sections: SidebarNavSection[];
     activeId?: string;
     onSelect?: (item: NavigationNode, event: React.MouseEvent<HTMLElement>) => void;
@@ -31,7 +31,7 @@ export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
     footer?: React.ReactNode;
 }
 export declare function SidebarNav({ sections, activeId, onSelect, header, footer, className, ...props }: SidebarNavProps): import("react/jsx-runtime").JSX.Element;
-export interface NavigationRailProps extends React.HTMLAttributes<HTMLElement> {
+export interface NavigationRailProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
     items: NavigationNode[];
     activeId?: string;
     onSelect?: (item: NavigationNode, event: React.MouseEvent<HTMLElement>) => void;
@@ -39,7 +39,7 @@ export interface NavigationRailProps extends React.HTMLAttributes<HTMLElement> {
     label?: string;
 }
 export declare function NavigationRail({ items, activeId, onSelect, footerItems, label, className, ...props }: NavigationRailProps): import("react/jsx-runtime").JSX.Element;
-export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface BottomNavProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
     items: NavigationNode[];
     activeId?: string;
     onSelect?: (item: NavigationNode, event: React.MouseEvent<HTMLElement>) => void;
