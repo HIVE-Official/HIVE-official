@@ -293,6 +293,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
+  // Use Node.js runtime for Firebase Admin SDK and setInterval support
+  runtime: 'nodejs',
   matcher: [
     /*
      * Match all request paths except:
