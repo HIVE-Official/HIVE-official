@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button } from '@hive/ui';
-import { Alert } from "@/components/temp-stubs";
+import { Alert } from '@hive/ui';
 import { AlertTriangle, Trash2, Shield } from 'lucide-react';
 
 interface ConfirmationModalProps {

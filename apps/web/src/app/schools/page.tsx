@@ -7,8 +7,7 @@ import React, { useState, useEffect } from 'react';
 // import { useRouter } from 'next/navigation';
 import { Search, Users, ArrowRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiveButton } from '@hive/ui';
-import { SchoolsPageHeader } from '../../components/temp-stubs';
+import { HiveButton, HiveLogo } from '@hive/ui';
 
 
 interface School {
@@ -375,7 +374,14 @@ export default function SchoolsPage() {
       }} />
       
       {/* Header */}
-      <SchoolsPageHeader onComingSoonClick={() => setIsComingSoonOpen(true)} />
+      <div className="bg-black border-b border-white/10 p-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <HiveLogo variant="white" size="sm" />
+            <div className="text-xl font-bold text-white">HIVE</div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <div className="relative z-10 max-w-6xl mx-auto p-6 py-12">

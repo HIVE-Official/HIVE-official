@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from '@hive/ui';
 // LiveToolRuntime not exported from @hive/ui yet
 import { ArrowLeft, Settings, Share, Download, Activity, Zap, Clock, AlertCircle } from "lucide-react";
 import { useFeatureFlags } from "@hive/hooks";

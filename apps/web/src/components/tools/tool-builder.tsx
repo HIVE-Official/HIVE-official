@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Card, Button, Input, Label, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Badge, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from "@hive/ui";
-import { Alert, AlertDescription } from "@/components/temp-stubs";
+import { Alert, AlertDescription } from '@hive/ui';
 import {
   Code,
   Save,

@@ -3,7 +3,7 @@
 // Global analytics type declaration
 declare global {
   interface Window {
-    gtag?: (command: string, ...args: any[]) => void;
+    gtag?: (command: string, eventName: string, parameters?: Record<string, unknown>) => void;
   }
 }
 
@@ -44,8 +44,24 @@ import { useToast } from '@hive/ui';
 import { useFeedConfig } from '@/lib/feed-config';
 import { differenceInDays } from 'date-fns';
 
+// Extended user type with all profile fields
+interface ExtendedUser {
+  uid: string;
+  fullName?: string;
+  handle?: string;
+  avatarUrl?: string;
+  createdAt?: string;
+  bio?: string;
+  major?: string;
+  year?: string;
+  interests?: string[];
+  spaces?: string[];
+  totalLikes?: number;
+  postsToday?: number;
+}
+
 // Fetch rituals data
-async function fetchRituals(user: any, getAuthToken: () => Promise<string | null>) {
+async function fetchRituals(user: { uid: string } | null, getAuthToken: () => Promise<string | null>) {
   if (!user) return { rituals: [], participation: [] };
 
   try {
@@ -65,14 +81,14 @@ async function fetchRituals(user: any, getAuthToken: () => Promise<string | null
       participation: data.participation || []
     };
   } catch (error) {
+    console.error('[Feed] Error fetching rituals:', error);
     return { rituals: [], participation: [] };
   }
 }
 
 export default function FeedPage() {
   const { user, getAuthToken } = useAuth();
-  // const { toast } = useToast(); // TODO: Fix toast typing issues
-  const toast = (message: any) => {};
+  const { toast } = useToast();
   const isAuthenticated = !!user;
   const [feedFilter, setFeedFilter] = useState<'all' | 'following' | 'spaces' | 'academic'>('all');
   const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'trending'>('recent');
@@ -86,8 +102,8 @@ export default function FeedPage() {
     if (!user) return null;
 
     // Calculate account age
-    const accountAge = (user as any).createdAt
-      ? differenceInDays(new Date(), new Date((user as any).createdAt))
+    const accountAge = (user as ExtendedUser).createdAt
+      ? differenceInDays(new Date(), new Date((user as ExtendedUser).createdAt))
       : 0;
 
     // Calculate profile completeness (0-100)
@@ -96,20 +112,20 @@ export default function FeedPage() {
       const fields = [
         user.fullName,
         user.handle,
-        (user as any).bio,
+        (user as ExtendedUser).bio,
         user.avatarUrl,
-        (user as any).major,
-        (user as any).year,
-        (user as any).interests?.length > 0
+        (user as ExtendedUser).major,
+        (user as ExtendedUser).year,
+        (user as ExtendedUser).interests?.length > 0
       ];
       fields.forEach(field => { if (field) complete++; });
       return Math.round((complete / fields.length) * 100);
     })();
 
     // TODO: These would come from user's actual data in production
-    const spaceMemberships = (user as any).spaces?.length || 0;
-    const engagementScore = (user as any).totalLikes || 0;
-    const postsToday = (user as any).postsToday || 0;
+    const spaceMemberships = (user as ExtendedUser).spaces?.length || 0;
+    const engagementScore = (user as ExtendedUser).totalLikes || 0;
+    const postsToday = (user as ExtendedUser).postsToday || 0;
 
     return {
       profileCompleteness,
@@ -146,11 +162,32 @@ export default function FeedPage() {
   const rituals = ritualsData?.rituals || [];
   const participation = ritualsData?.participation || [];
 
+  // Ritual type definition
+  interface Ritual {
+    id: string;
+    status: 'active' | 'upcoming' | 'completed';
+    title: string;
+    subtitle?: string;
+    description: string;
+    color?: string;
+    accentColor?: string;
+    icon?: string;
+    endDate?: string;
+    participantCount?: number;
+    progress?: {
+      current: number;
+      target: number;
+      label?: string;
+    };
+    leaderboard?: unknown[];
+    milestones?: unknown[];
+  }
+
   // Transform rituals for horizontal cards if needed
   const ritualCards = useMemo(() => {
     if (!feedConfig?.activeRitual?.displayMode || !rituals.length) return [];
 
-    return rituals.map((ritual: any) => ({
+    return rituals.map((ritual: Ritual) => ({
       id: ritual.id,
       type: ritual.status === 'active' ? 'active' : ritual.status === 'upcoming' ? 'upcoming' : 'completed',
       title: ritual.title,
@@ -276,6 +313,7 @@ export default function FeedPage() {
     try {
       await likePost(postId);
     } catch (error) {
+      console.error('[FeedPage] Failed to like post:', error);
     }
   }, [likePost, trackReliefMoment]);
 
@@ -284,6 +322,7 @@ export default function FeedPage() {
     try {
       await commentOnPost(postId, content);
     } catch (error) {
+      console.error('[FeedPage] Failed to comment on post:', error);
     }
   }, [commentOnPost, trackReliefMoment]);
 
@@ -293,6 +332,7 @@ export default function FeedPage() {
       await sharePost(postId);
       // Show success message or handle share UI
     } catch (error) {
+      console.error('[FeedPage] Failed to share post:', error);
     }
   }, [sharePost, trackReliefMoment]);
 
@@ -422,7 +462,7 @@ export default function FeedPage() {
           <>
             {feedConfig?.activeRitual?.displayMode === 'stories' && (
               <RitualStoriesStrip
-                rituals={rituals.map((ritual: any) => ({
+                rituals={rituals.map((ritual: Ritual) => ({
                   ...ritual,
                   participation: participation.find((p: any) => p.ritualId === ritual.id)
                 }))}
@@ -439,7 +479,7 @@ export default function FeedPage() {
             {feedConfig?.activeRitual?.displayMode === 'both' && (
               <>
                 <RitualStoriesStrip
-                  rituals={rituals.map((ritual: any) => ({
+                  rituals={rituals.map((ritual: Ritual) => ({
                     ...ritual,
                     participation: participation.find((p: any) => p.ritualId === ritual.id)
                   }))}

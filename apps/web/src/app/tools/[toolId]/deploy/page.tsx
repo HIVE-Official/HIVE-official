@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Card, Button } from "@hive/ui";
-import { Alert as _Alert } from "@/components/temp-stubs";
+import { Alert as _Alert } from '@hive/ui';
 import { 
   ArrowLeft, 
   User, 

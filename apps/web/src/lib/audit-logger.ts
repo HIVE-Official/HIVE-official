@@ -84,8 +84,13 @@ class AuditLogger {
   private readonly FLUSH_INTERVAL = 5000; // 5 seconds
 
   private constructor() {
-    // Set up periodic flush
-    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+    // Set up periodic flush only in non-serverless environments
+    // Vercel and AWS Lambda are stateless, so setInterval doesn't work properly
+    if (typeof process !== 'undefined' &&
+        process.versions &&
+        process.versions.node &&
+        !process.env.VERCEL &&
+        !process.env.AWS_LAMBDA_FUNCTION_NAME) {
       this.flushInterval = setInterval(() => {
         this.flush().catch(console.error);
       }, this.FLUSH_INTERVAL);
@@ -99,6 +104,7 @@ class AuditLogger {
         this.flush().catch(console.error);
       });
     }
+    // In serverless environments, we rely on buffer size triggers and manual flush
   }
 
   static getInstance(): AuditLogger {

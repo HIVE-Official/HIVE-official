@@ -21,8 +21,13 @@ const failedLoginAttempts = new Map<string, number>();
 // Cleanup old entries every 5 minutes
 let cleanupInterval: NodeJS.Timeout | null = null;
 
-// Only set up cleanup in Node.js environment (not browser)
-if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+// Only set up cleanup in Node.js environment (not browser) and NOT in serverless (Vercel)
+// Vercel functions are stateless, so setInterval doesn't work properly
+if (typeof process !== 'undefined' &&
+    process.versions &&
+    process.versions.node &&
+    !process.env.VERCEL &&
+    !process.env.AWS_LAMBDA_FUNCTION_NAME) {
   cleanupInterval = setInterval(() => {
     const now = Date.now();
     const oneHourAgo = now - 60 * 60 * 1000;
@@ -56,6 +61,28 @@ if (typeof process !== 'undefined' && process.versions && process.versions.node)
   // Ensure interval is cleared on process exit
   if (cleanupInterval) {
     cleanupInterval.unref(); // Allow process to exit even with interval running
+  }
+}
+
+// For serverless environments, perform cleanup on-demand during checkRateLimit
+function performCleanupIfNeeded(): void {
+  // Only run cleanup occasionally (10% chance) to avoid overhead
+  if (Math.random() > 0.9) {
+    const now = Date.now();
+    const oneHourAgo = now - 60 * 60 * 1000;
+
+    // Clean up old entries from both stores
+    for (const [key, entry] of rateLimitStore.entries()) {
+      if (entry.lastAttempt < oneHourAgo) {
+        rateLimitStore.delete(key);
+      }
+    }
+
+    for (const [key, entry] of adminRateLimitStore.entries()) {
+      if (entry.lastAttempt < oneHourAgo) {
+        adminRateLimitStore.delete(key);
+      }
+    }
   }
 }
 
@@ -93,6 +120,9 @@ export function checkRateLimit(config: RateLimitConfig): {
   const { windowMs, maxRequests, identifier, isAdmin = false } = config;
   const store = isAdmin ? adminRateLimitStore : rateLimitStore;
   const now = Date.now();
+
+  // Perform on-demand cleanup in serverless environments
+  performCleanupIfNeeded();
 
   const entry = store.get(identifier);
 

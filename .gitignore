@@ -30,6 +30,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# TypeScript compiled outputs (should not be committed)
+apps/web/src/**/*.js
+apps/web/src/**/*.js.map
+apps/web/src/**/*.d.ts
+apps/web/src/**/*.d.ts.map
+
 # Runtime data
 pids
 *.pid

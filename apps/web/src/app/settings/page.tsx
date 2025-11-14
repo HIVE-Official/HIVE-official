@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
 // import { NavigationPreferences } from "@hive/ui"; // TODO: Fix NavigationPreferences integration
-import { PageContainer } from "@/components/temp-stubs";
+import { PageContainer } from '@hive/ui';
 import { Settings, User, Bell, Shield, Palette, Globe, Smartphone, LogOut, Download, Trash2, Navigation } from 'lucide-react';
 import { useSession } from '../../hooks/use-session';
 // Temp fix for chunk 2073 useRef errors

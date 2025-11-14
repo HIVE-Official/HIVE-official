@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@hive/ui';
-import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from '@/components/temp-stubs';
+import { HiveModal, HiveModalContent, HiveModalHeader, HiveModalTitle, HiveModalFooter } from '@hive/ui';
 import { 
   Layout, 
   Palette, 
