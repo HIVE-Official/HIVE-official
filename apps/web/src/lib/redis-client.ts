@@ -21,11 +21,11 @@ export function initializeRedis(): Redis | null {
 
   try {
     const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
-    
+
     if (!redisUrl) {
-      if (process.env.NODE_ENV === 'production') {
-        throw new Error('Redis URL is required in production');
-      }
+      // Use in-memory fallback if Redis is not configured
+      // This allows the app to build and run without Redis
+      console.warn('Redis URL not configured, using in-memory fallback for caching/rate limiting');
       return null;
     }
 
@@ -78,11 +78,8 @@ export function initializeRedis(): Redis | null {
 
     return redis;
   } catch (error) {
-    
-    if (process.env.NODE_ENV === 'production') {
-      throw error;
-    }
-    
+    // Log error but don't throw - use in-memory fallback
+    console.error('Redis initialization failed, using in-memory fallback:', error);
     return null;
   }
 }
@@ -261,10 +258,8 @@ export class RedisService {
 // Export singleton instance
 export const redisService = new RedisService();
 
-// Initialize Redis on module load
-if (process.env.NODE_ENV === 'production' || process.env.REDIS_URL) {
-  initializeRedis();
-}
+// Note: Redis initialization is lazy - it happens on first use
+// This prevents build-time errors when Redis is not configured
 
 // Cleanup on process exit
 process.on('SIGTERM', () => {
