@@ -13,14 +13,26 @@ export { Skeleton } from "./atomic/00-Global/atoms/skeleton.js";
 export { Badge } from "./atomic/00-Global/atoms/badge.js";
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, } from "./atomic/00-Global/atoms/card.js";
 export { Avatar, AvatarImage, AvatarFallback, } from "./atomic/00-Global/atoms/avatar.js";
-export { HiveCard } from "./atomic/00-Global/atoms/hive-card.js";
+export { HiveCard, HiveCardHeader, HiveCardFooter, HiveCardTitle, HiveCardDescription, HiveCardContent, } from "./atomic/00-Global/atoms/hive-card.js";
+export { HiveLogo } from "./atomic/00-Global/atoms/hive-logo.js";
 export { Grid } from "./atomic/00-Global/atoms/grid.js";
+export { Switch } from "./atomic/00-Global/atoms/switch.js";
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./components/ui/input-otp.js";
 export { CheckCircleIcon, MegaphoneIcon, AlertTriangleIcon, InfoIcon, XIcon, } from "./atomic/00-Global/atoms/icon-library.js";
+export { Alert, AlertTitle, AlertDescription, } from "./atomic/00-Global/atoms/alert.js";
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, } from "./atomic/00-Global/atoms/dialog.js";
+export { AriaLiveRegion } from "./atomic/00-Global/atoms/aria-live-region.js";
+export { Tabs, TabsList, TabsTrigger, TabsContent, } from "./atomic/00-Global/atoms/tabs.js";
+export { Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandShortcut, CommandSeparator, } from "./atomic/00-Global/atoms/command.js";
 // Additional atoms
 export { MediaThumb } from "./atomic/02-Feed/atoms/media-thumb.js";
 export { PercentBar, VoteBar } from "./atomic/02-Feed/atoms/percent-bar.js";
 export { PostCardListItem, PostCardSkeleton, PostOverlay } from "./atomic/02-Feed/atoms/post-card.js";
+export { KeyboardShortcutsOverlay } from "./atomic/00-Global/molecules/keyboard-shortcuts-overlay.js";
+// Layout molecules
+export { PageContainer, PageHeader, PageTitle, PageDescription, PageContent, PageFooter, } from "./atomic/00-Global/molecules/page-container.js";
+// Modal molecules
+export { HiveConfirmModal } from "./atomic/00-Global/molecules/hive-confirm-modal.js";
 // Universal Shell (navigation) - Removed (not used in production)
 // export {
 //   UniversalShell,
@@ -46,6 +58,9 @@ export { SpaceHeader } from "./atomic/03-Spaces/molecules/space-header.js";
 // New P0 Components - Feed, Spaces, Rituals (Nov 2024)
 // Feed Organisms
 export { FeedCardSystem } from "./atomic/02-Feed/organisms/feed-card-system.js";
+export { FeedCardPost } from "./atomic/02-Feed/organisms/feed-card-post.js";
+export { FeedCardEvent } from "./atomic/02-Feed/organisms/feed-card-event.js";
+export { FeedCardTool } from "./atomic/02-Feed/organisms/feed-card-tool.js";
 export { FeedComposerSheet } from "./atomic/02-Feed/organisms/feed-composer-sheet.js";
 export { FeedVirtualizedList } from "./atomic/02-Feed/organisms/feed-virtualized-list.js";
 export { NotificationToastContainer } from "./atomic/00-Global/organisms/notification-toast-container.js";

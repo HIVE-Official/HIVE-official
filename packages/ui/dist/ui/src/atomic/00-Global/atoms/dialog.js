@@ -1,26 +1,22 @@
-import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
-import { HiveModal, HiveModalHeader, HiveModalTitle, HiveModalDescription, HiveModalContent, HiveModalFooter } from './hive-modal.js';
-// Dialog is just an alias for HiveModal
-export const Dialog = HiveModal;
-// DialogContent wraps the entire modal content
-export const DialogContent = ({ children, className }) => {
-    const props = {};
-    if (className !== undefined)
-        props.className = className;
-    return _jsx(HiveModalContent, { ...props, children: children });
-};
-// DialogHeader maps to HiveModalHeader
-export const DialogHeader = HiveModalHeader;
-// DialogTitle maps to HiveModalTitle
-export const DialogTitle = HiveModalTitle;
-// DialogDescription maps to HiveModalDescription
-export const DialogDescription = HiveModalDescription;
-// DialogFooter maps to HiveModalFooter
-export const DialogFooter = HiveModalFooter;
-// DialogTrigger is a button that opens the dialog
-export const DialogTrigger = ({ children, asChild: _asChild, ..._props }) => {
-    // In a real implementation, this would integrate with Dialog state
-    // For now, it's just a passthrough
-    return _jsx(_Fragment, { children: children });
-};
+'use client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "../../../lib/utils.js";
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
+const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (_jsx(DialogPrimitive.Overlay, { ref: ref, className: cn("fixed inset-0 z-50 bg-black/60 backdrop-blur-sm", "data-[state=open]:animate-in data-[state=closed]:animate-out", "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className), ...props })));
+DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+const DialogContent = React.forwardRef(({ className, children, ...props }, ref) => (_jsxs(DialogPortal, { children: [_jsx(DialogOverlay, {}), _jsx(DialogPrimitive.Content, { ref: ref, className: cn("fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4", "border border-[var(--hive-border-default)]", "bg-[var(--hive-background-secondary)] text-[var(--hive-text-primary)]", "shadow-hive-level3", "data-[state=open]:animate-in data-[state=closed]:animate-out", "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95", "sm:rounded-xl sm:p-6 p-5", className), ...props, children: children })] })));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
+const DialogHeader = ({ className, ...props }) => (_jsx("div", { className: cn("flex flex-col space-y-1.5 text-left", className), ...props }));
+DialogHeader.displayName = "DialogHeader";
+const DialogFooter = ({ className, ...props }) => (_jsx("div", { className: cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2", className), ...props }));
+DialogFooter.displayName = "DialogFooter";
+const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (_jsx(DialogPrimitive.Title, { ref: ref, className: cn("text-lg font-semibold leading-none tracking-tight", "text-[var(--hive-text-primary)]", className), ...props })));
+DialogTitle.displayName = DialogPrimitive.Title.displayName;
+const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (_jsx(DialogPrimitive.Description, { ref: ref, className: cn("text-sm text-[var(--hive-text-secondary)]", className), ...props })));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+export { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, };
 //# sourceMappingURL=dialog.js.map

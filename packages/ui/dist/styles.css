@@ -1417,6 +1417,9 @@ body {
 .max-w-none{
   max-width: none;
 }
+.max-w-screen-2xl{
+  max-width: 1536px;
+}
 .max-w-screen-lg{
   max-width: 1024px;
 }
@@ -5770,12 +5773,26 @@ body {
     align-items: flex-end;
   }
 
+  .sm\:justify-end{
+    justify-content: flex-end;
+  }
+
   .sm\:justify-between{
     justify-content: space-between;
   }
 
+  .sm\:space-x-2 > :not([hidden]) ~ :not([hidden]){
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .sm\:rounded-lg{
     border-radius: var(--radius);
+  }
+
+  .sm\:rounded-xl{
+    border-radius: 0.75rem;
   }
 
   .sm\:rounded-l-3xl{
@@ -5786,6 +5803,10 @@ body {
   .sm\:rounded-r-3xl{
     border-top-right-radius: 1.5rem;
     border-bottom-right-radius: 1.5rem;
+  }
+
+  .sm\:p-6{
+    padding: 1.5rem;
   }
 
   .sm\:px-10{
