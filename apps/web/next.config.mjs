@@ -30,8 +30,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // Disable static page generation to avoid SSR hook errors
-  output: 'standalone',
+  // Standard output for Vercel deployment
+  // output: 'standalone', // Commented out for Vercel deployment
 
   // App directory is now stable in Next.js 15, no experimental flag needed
   // Tell Next.js where to find the app directory
