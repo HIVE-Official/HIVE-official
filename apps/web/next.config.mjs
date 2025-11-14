@@ -160,11 +160,11 @@ const nextConfig = {
               key: 'Content-Security-Policy',
               value: [
                 "default-src 'self'",
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.firebaseapp.com https://*.googleapis.com https://*.vercel-scripts.com",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.firebaseapp.com https://*.googleapis.com https://*.vercel-scripts.com https://vercel.live https://www.googletagmanager.com",
                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                 "img-src 'self' data: blob: https://firebasestorage.googleapis.com https://storage.googleapis.com",
                 "font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com",
-                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com",
+                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://vercel.live wss://ws-us3.pusher.com",
                 "frame-src 'self' https://*.firebaseapp.com",
               ].join('; ')
             }
