@@ -264,5 +264,4 @@ export interface UseProfileReturn {
 }
 export type HiveProfile = ProfileSystem;
 export type UnifiedHiveProfile = ProfileSystem;
-export * from './profile-system';
 //# sourceMappingURL=profile-system.d.ts.map

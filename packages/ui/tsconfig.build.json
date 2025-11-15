@@ -4,7 +4,10 @@
     "outDir": "./dist",
     "declaration": true,
     "emitDeclarationOnly": false,
-    "noEmit": false
+    "noEmit": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "index.ts",
@@ -17,6 +20,8 @@
     "**/*.test.*",
     "**/*.spec.*",
     "node_modules",
-    "dist"
+    "dist",
+    "src/atomic/04-Profile/molecules/profile-bento-grid.tsx",
+    "src/atomic/04-Profile/templates/profile-view-layout.tsx"
   ]
 }
