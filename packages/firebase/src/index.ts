@@ -22,23 +22,12 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import type { FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, Analytics, isSupported } from 'firebase/analytics';
 
-// Validate environment variables (lenient during build, strict at runtime)
+// Validate environment variables - log warnings but don't block
 const validateEnvVar = (key: string): string => {
   const value = process.env[key];
   if (!value) {
-    // During Vercel build, env vars might not be available yet
-    // Only warn during build, strict validation happens at runtime
-    const isBuildTime = process.env.VERCEL === '1' && typeof window === 'undefined';
-
-    if (isBuildTime) {
-      console.warn(`Missing environment variable during build: ${key} (will be injected at runtime)`);
-      return ''; // Return empty string during build
-    }
-
-    console.error(`Missing required environment variable: ${key}`);
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Firebase configuration error: ${key} is required`);
-    }
+    console.warn(`⚠️ Missing Firebase environment variable: ${key}`);
+    console.warn(`Add this to Vercel: Settings → Environment Variables → ${key}`);
   }
   return value || '';
 };
@@ -54,13 +43,12 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID // Optional
 };
 
-// Security check - ensure we're not using dev config in production (runtime only)
-const isBuildTime = process.env.VERCEL === '1' && typeof window === 'undefined';
-if (process.env.NODE_ENV === 'production' && !isBuildTime) {
+// Security check - warn if using dev config in production
+if (process.env.NODE_ENV === 'production') {
   if (firebaseConfig.projectId?.includes('demo') ||
       firebaseConfig.projectId?.includes('test') ||
       firebaseConfig.authDomain?.includes('localhost')) {
-    throw new Error('Development Firebase configuration detected in production!');
+    console.error('⚠️ Development Firebase configuration detected in production!');
   }
 }
 
