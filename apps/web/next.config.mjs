@@ -160,11 +160,11 @@ const nextConfig = {
               key: 'Content-Security-Policy',
               value: [
                 "default-src 'self'",
-                "script-src 'self' https://*.firebaseapp.com https://*.googleapis.com",
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.firebaseapp.com https://*.googleapis.com https://www.googletagmanager.com",
                 "style-src 'self' 'unsafe-inline'",
                 "img-src 'self' data: https://firebasestorage.googleapis.com https://storage.googleapis.com",
                 "font-src 'self'",
-                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com",
+                "connect-src 'self' https://*.firebaseio.com https://*.firebase.googleapis.com https://*.firebaseapp.com https://firebaseinstallations.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.google-analytics.com",
                 "frame-src 'self' https://*.firebaseapp.com",
               ].join('; ')
             }
