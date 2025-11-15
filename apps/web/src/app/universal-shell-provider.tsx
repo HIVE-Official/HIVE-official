@@ -55,7 +55,7 @@ export function UniversalShellProvider({ children }: { children: React.ReactNode
 
   const notificationsPayload = React.useMemo(
     () =>
-      realtimeNotifications.map(notification => ({
+      (realtimeNotifications ?? []).map(notification => ({
         ...notification,
         timestamp: {
           toDate: () => notification.timestamp.toDate(),
@@ -349,17 +349,17 @@ export function UniversalShellProvider({ children }: { children: React.ReactNode
 
   const desktopNavItems: ShellNavItem[] = React.useMemo(() => {
     const cloneItems = (items: ShellNavItem[]): ShellNavItem[] =>
-      items.map((item) => ({
+      (items ?? []).map((item) => ({
         ...item,
         children: item.children ? cloneItems(item.children) : undefined,
       }));
 
-    const items = cloneItems(DEFAULT_SIDEBAR_NAV_ITEMS);
+    const items = cloneItems(DEFAULT_SIDEBAR_NAV_ITEMS ?? []);
     return isLeader ? items : items.filter((item) => item.id !== 'hivelab');
   }, [isLeader]);
 
   const mobileNavItems: ShellMobileNavItem[] = React.useMemo(() => {
-    const items = DEFAULT_MOBILE_NAV_ITEMS.map((item) => ({ ...item }));
+    const items = (DEFAULT_MOBILE_NAV_ITEMS ?? []).map((item) => ({ ...item }));
     return isLeader ? items : items.filter((item) => item.id !== 'hivelab');
   }, [isLeader]);
 
