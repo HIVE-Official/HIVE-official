@@ -30,7 +30,7 @@ const RESEND_DELAY_MS = 30_000;
 
 function LoginContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const _router = useRouter();
 
   const initialSchool: School | null = useMemo(() => {
     const id = searchParams?.get("schoolId");

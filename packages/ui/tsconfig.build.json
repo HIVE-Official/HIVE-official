@@ -20,8 +20,6 @@
     "**/*.test.*",
     "**/*.spec.*",
     "node_modules",
-    "dist",
-    "src/atomic/04-Profile/molecules/profile-bento-grid.tsx",
-    "src/atomic/04-Profile/templates/profile-view-layout.tsx"
+    "dist"
   ]
 }

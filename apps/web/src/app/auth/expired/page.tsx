@@ -8,13 +8,13 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 // Temporarily using temp-stubs to avoid SSG useRef errors
 // import { Button, HiveCard, HiveLogo, Input, HiveModal, HiveModalContent } from '@hive/ui';
-const Button = ({ children, variant = "default", size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
+const Button = ({ children, variant: _variant = "default", size: _size = "default", className = "", disabled = false, onClick, ...props }: any) => <button className={`px-4 py-2 rounded font-medium transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'} ${className}`} disabled={disabled} onClick={onClick} {...props}>{children}</button>;
 const HiveCard = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg ${className}`} {...props}>{children}</div>;
-const HiveLogo = ({ size = "default", variant = "gradient", showText = false, ...props }: any) => <div className="flex items-center gap-2" {...props}><div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center"><span className="text-black font-bold text-sm">H</span></div>{showText && <span className="font-bold text-white">HIVE</span>}</div>;
+const HiveLogo = ({ size: _size = "default", variant: _variant = "gradient", showText = false, ...props }: any) => <div className="flex items-center gap-2" {...props}><div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center"><span className="text-black font-bold text-sm">H</span></div>{showText && <span className="font-bold text-white">HIVE</span>}</div>;
 const Input = ({ type = "text", className = "", ...props }: any) => <input type={type} className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`} {...props} />;
-const HiveModal = ({ children, open, onOpenChange, size = "default", ...props }: any) => open ? <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => onOpenChange && onOpenChange(false)} {...props}>{children}</div> : null;
+const HiveModal = ({ children, open, onOpenChange, size: _size = "default", ...props }: any) => open ? <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={() => onOpenChange && onOpenChange(false)} {...props}>{children}</div> : null;
 const HiveModalContent = ({ children, className = "", ...props }: any) => <div className={`relative bg-gray-900 rounded-lg p-6 max-w-md mx-4 ${className}`} onClick={(e) => e.stopPropagation()} {...props}>{children}</div>;
-import { Clock, AlertTriangle, ArrowLeft, RefreshCw, Mail, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
+import { Clock, ArrowLeft, RefreshCw, CheckCircle2, Loader2, ShieldAlert } from 'lucide-react';
 // Temporarily removing framer-motion for SSR issues
 // import { motion, AnimatePresence } from 'framer-motion';
 

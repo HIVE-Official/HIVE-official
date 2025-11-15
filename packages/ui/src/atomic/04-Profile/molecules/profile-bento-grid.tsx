@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { BentoGridLayout, ProfileSystem, GridSize } from "@hive/core";
+import type { BentoGridLayout, ProfileSystem, GridSize } from "@hive/core/types/profile-system";
 import {
   Activity,
   Calendar,

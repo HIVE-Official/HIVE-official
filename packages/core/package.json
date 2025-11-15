@@ -16,6 +16,12 @@
       "require": "./dist/server.js",
       "import": "./dist/server.js",
       "default": "./dist/server.js"
+    },
+    "./types/profile-system": {
+      "types": "./dist/types/profile-system.d.ts",
+      "require": "./dist/types/profile-system.js",
+      "import": "./dist/types/profile-system.js",
+      "default": "./dist/types/profile-system.js"
     }
   },
   "files": [
