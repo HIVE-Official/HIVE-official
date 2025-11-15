@@ -22,28 +22,26 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import type { FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, Analytics, isSupported } from 'firebase/analytics';
 
-// Validate environment variables
-const validateEnvVar = (key: string): string => {
-  const value = process.env[key];
-  if (!value) {
-    console.error(`Missing required environment variable: ${key}`);
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Firebase configuration error: ${key} is required`);
-    }
-  }
-  return value || '';
+// Firebase configuration - IMPORTANT: Use direct references for Next.js build-time inlining
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || '',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '',
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || '' // Optional
 };
 
-// Firebase configuration with validation
-const firebaseConfig = {
-  apiKey: validateEnvVar('NEXT_PUBLIC_FIREBASE_API_KEY'),
-  authDomain: validateEnvVar('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN'),
-  projectId: validateEnvVar('NEXT_PUBLIC_FIREBASE_PROJECT_ID'),
-  storageBucket: validateEnvVar('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: validateEnvVar('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: validateEnvVar('NEXT_PUBLIC_FIREBASE_APP_ID'),
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID // Optional
-};
+// Validate configuration in production
+if (process.env.NODE_ENV === 'production') {
+  const requiredVars = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+  const missing = requiredVars.filter(key => !firebaseConfig[key as keyof typeof firebaseConfig]);
+  if (missing.length > 0) {
+    console.error(`Missing Firebase environment variables: ${missing.join(', ')}`);
+    throw new Error(`Firebase configuration error: ${missing.join(', ')} required`);
+  }
+}
 
 // Security check - ensure we're not using dev config in production
 if (process.env.NODE_ENV === 'production') {
