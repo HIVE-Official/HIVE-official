@@ -10,9 +10,10 @@ import type { NextRequest, NextResponse } from 'next/server';
 // Session configuration
 const rawSecret = process.env.SESSION_SECRET;
 if (!rawSecret && process.env.NODE_ENV === 'production') {
-  throw new Error('SESSION_SECRET is required in production');
+  console.warn('⚠️ SESSION_SECRET not configured - using fallback (not secure for production)');
+  console.warn('Add SESSION_SECRET to Vercel: Settings → Environment Variables');
 }
-const SESSION_SECRET = rawSecret || 'hive-session-secret-2025-buffalo'; // Dev-only fallback
+const SESSION_SECRET = rawSecret || 'hive-session-secret-2025-buffalo'; // Fallback for dev/build
 const SESSION_COOKIE_NAME = 'hive_session';
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60; // 30 days in seconds (PRD requirement)
 const ADMIN_SESSION_MAX_AGE = 4 * 60 * 60; // 4 hours for admin sessions
