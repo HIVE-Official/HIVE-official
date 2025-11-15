@@ -1,1 +1,0 @@
-{"version":3,"file":"UniversalShell.d.ts","sourceRoot":"","sources":["../../../../src/shells/UniversalShell.tsx"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,OAAO,KAAK,MAAM,OAAO,CAAC;AAE1B,UAAU,mBAAmB;IAC3B,QAAQ,EAAE,KAAK,CAAC,SAAS,CAAC;CAC3B;AAED,QAAA,MAAM,cAAc,EAAE,KAAK,CAAC,EAAE,CAAC,mBAAmB,CAEjD,CAAC;AAEF,eAAe,cAAc,CAAC"}

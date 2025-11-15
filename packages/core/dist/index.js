@@ -96,6 +96,8 @@ Object.defineProperty(exports, "auth", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "storage", { enumerable: true, get: function () { return firebase_1.storage; } });
 // Server-side utilities
 __exportStar(require("./server"), exports);
+// Types and Interfaces - Specific exports to avoid conflicts
+__exportStar(require("./types/profile-system"), exports);
 // Utilities
 __exportStar(require("./utils/activity-tracker"), exports);
 __exportStar(require("./utils/privacy-utils"), exports);
