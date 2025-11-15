@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "../../lib/utils"
 import { MinusIcon } from "@radix-ui/react-icons"
 
 type SlotState = { char: string; hasFakeCaret: boolean; isActive: boolean }

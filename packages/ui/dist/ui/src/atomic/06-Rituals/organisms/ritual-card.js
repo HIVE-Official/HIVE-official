@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { RitualProgressBar } from '../molecules/ritual-progress-bar.js';
-import { Button } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { RitualProgressBar } from '../molecules/ritual-progress-bar';
+import { Button } from '../../00-Global/atoms';
 import { Calendar, Users, Clock, CheckCircle2 } from 'lucide-react';
 /**
  * RitualCard

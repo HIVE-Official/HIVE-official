@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { SparklesIcon } from '../../00-Global/atoms/icon-library.js';
-import { Button } from '../../00-Global/atoms/button.js';
+import { cn } from '../../../lib/utils';
+import { SparklesIcon } from '../../00-Global/atoms/icon-library';
+import { Button } from '../../00-Global/atoms/button';
 export const EmptyStateCompact = React.forwardRef(({ icon, title, description, actionLabel, onAction, className }, ref) => {
     const contentIcon = React.useMemo(() => {
         if (icon === null)

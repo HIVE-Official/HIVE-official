@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 // Temporarily using temp-stubs to avoid SSG useRef errors in chunk 2073
-// import { Card, Button, Badge, Tabs, TabsList, TabsTrigger, TabsContent } from '@hive/ui';
+// import { Card, Button, Badge, TabsContent } from '@hive/ui';
 const Card = ({ children, className = "", ...props }: any) => <div className={`border rounded-lg p-4 ${className}`} {...props}>{children}</div>;
 const Button = ({ children, variant = "default", size = "default", className = "", ...props }: any) => <button className={`px-4 py-2 rounded ${className}`} {...props}>{children}</button>;
 const Badge = ({ children, variant = "default", className = "", ...props }: any) => <span className={`inline-flex items-center px-2 py-1 rounded text-xs ${className}`} {...props}>{children}</span>;

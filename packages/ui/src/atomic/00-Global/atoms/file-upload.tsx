@@ -28,7 +28,7 @@
  */
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { UploadIcon, XIcon, ImageIcon, VideoIcon, FileIcon } from '../../00-Global/atoms/icon-library';
 
 const formatFileSizeLimit = (bytes: number) =>

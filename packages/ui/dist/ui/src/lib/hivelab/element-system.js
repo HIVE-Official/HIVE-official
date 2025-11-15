@@ -1,5 +1,5 @@
 // HIVE Element System - Composable building blocks for tools
-import { renderElement } from '../../components/hivelab/element-renderers.js';
+import { renderElement } from '../../components/hivelab/element-renderers';
 // Core Element Registry
 export class ElementRegistry {
     constructor() {

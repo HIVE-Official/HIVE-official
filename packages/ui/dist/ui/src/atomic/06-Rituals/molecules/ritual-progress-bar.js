@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Progress } from '../../00-Global/atoms/progress.js';
-import { CheckCircleIcon } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { Progress } from '../../00-Global/atoms/progress';
+import { CheckCircleIcon } from '../../00-Global/atoms';
 const defaultMilestones = [
     { percentage: 25, label: '25%', isCompleted: false },
     { percentage: 50, label: '50%', isCompleted: false },

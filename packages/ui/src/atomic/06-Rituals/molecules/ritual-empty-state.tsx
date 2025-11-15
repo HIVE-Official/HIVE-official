@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Card } from '../../00-Global/atoms/card';
 import { Button } from '../../00-Global/atoms/button';
 import { Sparkles } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 export interface RitualEmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: string;

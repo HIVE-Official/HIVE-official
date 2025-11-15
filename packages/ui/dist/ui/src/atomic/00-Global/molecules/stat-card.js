@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card, CardDescription, CardHeader, CardTitle, } from "../atoms/card.js";
-import { cn } from "../../../lib/utils.js";
+import { Card, CardDescription, CardHeader, CardTitle, } from "../atoms/card";
+import { cn } from "../../../lib/utils";
 /**
  * Elevated stat card with optional delta and icon slot.
  */

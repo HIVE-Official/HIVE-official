@@ -5,8 +5,8 @@
 
 "use client";
 
-import React, { useState, useCallback } from 'react';
-import { Button as Button, HiveCard as Card, CardContent, HiveBadge as Badge } from "@hive/ui";
+import React, { useState, useCallback } from "react";
+import { Button as Button, HiveCard as Card, CardContent, Badge } from "@hive/ui";
 import { 
   MessageSquare, 
   Zap, 

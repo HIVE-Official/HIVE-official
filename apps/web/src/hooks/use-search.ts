@@ -154,7 +154,7 @@ export function useSearch(options: UseSearchOptions = {}): UseSearchReturn {
         toast({
           title: "Search failed",
           description: "Please try again",
-          variant: "destructive"
+          type: "error"
         });
       }
     } finally {

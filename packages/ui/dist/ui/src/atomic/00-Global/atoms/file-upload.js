@@ -27,8 +27,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * ```
  */
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { UploadIcon, XIcon, ImageIcon, VideoIcon, FileIcon } from '../../00-Global/atoms/icon-library.js';
+import { cn } from '../../../lib/utils';
+import { UploadIcon, XIcon, ImageIcon, VideoIcon, FileIcon } from '../../00-Global/atoms/icon-library';
 const formatFileSizeLimit = (bytes) => (bytes / (1024 * 1024)).toFixed(0);
 const isImageFile = (file) => file.type.startsWith('image/');
 const isVideoFile = (file) => file.type.startsWith('video/');

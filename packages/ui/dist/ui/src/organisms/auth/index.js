@@ -1,5 +1,5 @@
-export * from "./LoginSchoolSelectionCard.js";
-export * from "./LoginEmailCard.js";
-export * from "./LoginLinkSentCard.js";
-export * from "./VerifyLinkStatusCard.js";
+export * from "./LoginSchoolSelectionCard";
+export * from "./LoginEmailCard";
+export * from "./LoginLinkSentCard";
+export * from "./VerifyLinkStatusCard";
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Play, Image as ImageIcon, Video, Music } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 /**
  * Lightweight media thumbnail for images/video/audio with overlay badges.
  * Button-based for keyboard accessibility; surface-agnostic.

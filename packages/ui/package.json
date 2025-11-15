@@ -60,6 +60,7 @@
     "storybook": "node scripts/prepare-storybook.cjs && storybook dev -p 6006",
     "storybook-6008": "node scripts/prepare-storybook.cjs && storybook dev -p 6008",
     "lint": "npx eslint . --max-warnings 0",
+    "typecheck": "npx tsc --noEmit",
     "typecheck:strict": "npx tsc -p tsconfig.strict.json --noEmit",
     "clean": "rm -rf dist",
     "audit:components": "tsx src/scripts/component-audit.ts",

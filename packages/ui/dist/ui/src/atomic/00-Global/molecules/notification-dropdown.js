@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../../lib/utils.js";
-import { Button } from "../atoms/button.js";
-import { NotificationCard } from "./notification-card.js";
+import { cn } from "../../../lib/utils";
+import { Button } from "../atoms/button";
+import { NotificationCard } from "./notification-card";
 const DEFAULT_EMPTY_STATE = (_jsxs("div", { className: "flex flex-col items-center justify-center gap-2 py-10 text-center", children: [_jsx("span", { className: "text-sm font-medium text-[var(--hive-text-secondary)]", children: "You\u2019re all caught up" }), _jsx("p", { className: "max-w-[220px] text-xs text-[var(--hive-text-tertiary)]", children: "Check back later for updates from your spaces, classes, and tools." })] }));
 const LoadingState = () => (_jsx("div", { className: "space-y-3 py-6", children: Array.from({ length: 3 }).map((_, index) => (_jsx("div", { className: "h-16 animate-pulse rounded-xl bg-[color-mix(in_srgb,var(--hive-border) 15%,transparent)]" }, index))) }));
 function normalizeTimestamp(input) {

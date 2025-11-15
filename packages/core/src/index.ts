@@ -105,7 +105,7 @@ export { app, db, auth, storage } from "./firebase";
 export * from "./server";
 
 // Types and Interfaces - Specific exports to avoid conflicts
-export type { ProfileSystem, HiveProfile, UnifiedHiveProfile } from "./types/profile-system";
+export type { ProfileSystem, HiveProfile, UnifiedHiveProfile, GridSize, BentoGridLayout } from "./types/profile-system";
 
 // Utilities
 export * from "./utils/activity-tracker";

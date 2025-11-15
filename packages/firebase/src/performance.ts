@@ -4,10 +4,11 @@
  */
 
 import { FirebaseApp } from 'firebase/app';
-import { getPerformance, Performance, trace } from 'firebase/performance';
+import { getPerformance, trace } from 'firebase/performance';
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import type { FirebasePerformance } from 'firebase/performance';
 
-let performance: Performance | null = null;
+let performance: FirebasePerformance | null = null;
 let analytics: any = null;
 
 /**
@@ -257,13 +258,13 @@ export async function trackAPICall<T>(
   apiCall: () => Promise<T>
 ): Promise<T> {
   const trace = await startTrace(`api_${apiName}`);
-  const startTime = performance?.now() || 0;
+  const startTime = typeof window !== 'undefined' ? window.performance?.now() || 0 : 0;
 
   try {
     const result = await apiCall();
 
     if (trace) {
-      const endTime = performance?.now() || 0;
+      const endTime = typeof window !== 'undefined' ? window.performance?.now() || 0 : 0;
       const duration = endTime - startTime;
 
       trackMetric(trace, 'duration_ms', duration);

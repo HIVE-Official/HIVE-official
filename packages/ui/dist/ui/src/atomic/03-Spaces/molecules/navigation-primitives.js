@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const layoutClassMap = {
     sidebar: "w-full justify-between px-3 py-2 text-left min-h-[44px] text-sm",
     inline: "justify-start px-3 py-1.5 min-h-[40px] text-sm",

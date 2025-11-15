@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Tabs, TabsContent, TabsList, TabsTrigger, Badge } from '@hive/ui';
+import { Button, Input, Badge } from '@hive/ui';
 import { useAuth } from '@hive/auth-logic';
 import { db } from '@hive/core';
 import {

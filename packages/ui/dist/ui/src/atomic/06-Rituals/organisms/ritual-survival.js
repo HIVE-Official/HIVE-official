@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Card } from '../../00-Global/atoms/card.js';
-import { Button } from '../../00-Global/atoms/button.js';
-import { Badge } from '../../00-Global/atoms/badge.js';
-import { cn } from '@/lib/utils';
+import { Card } from '../../00-Global/atoms/card';
+import { Button } from '../../00-Global/atoms/button';
+import { Badge } from '../../00-Global/atoms/badge';
+import { cn } from '../../../lib/utils';
 export const RitualSurvival = ({ title = 'Survival Mode', roundName = 'Round 1', timeRemaining, currentMatchups, eliminatedCount = 0, survivorsCount = 0, onVote, isLive = false, className, ...props }) => {
     return (_jsxs(Card, { className: cn('border-white/10 bg-white/5 p-5', className), ...props, children: [_jsxs("div", { className: "mb-4 flex items-center justify-between", children: [_jsxs("div", { children: [_jsxs("div", { className: "flex items-center gap-2", children: [_jsx("h3", { className: "text-lg font-semibold text-white", children: title }), isLive && (_jsx(Badge, { variant: "destructive", className: "animate-pulse", children: "\u26A1 LIVE" }))] }), _jsx("p", { className: "mt-1 text-sm text-white/60", children: roundName })] }), timeRemaining && (_jsxs("div", { className: "text-right", children: [_jsx("div", { className: "text-2xl font-bold text-[var(--ritual-urgent,#FF6B6B)]", children: timeRemaining }), _jsx("div", { className: "text-xs text-white/50", children: "remaining" })] }))] }), _jsxs("div", { className: "mb-4 grid grid-cols-2 gap-3", children: [_jsxs("div", { className: "rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-center", children: [_jsxs("div", { className: "text-2xl font-bold text-red-400", children: ["\u274C ", eliminatedCount] }), _jsx("div", { className: "text-xs text-white/60", children: "Eliminated" })] }), _jsxs("div", { className: "rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-center", children: [_jsxs("div", { className: "text-2xl font-bold text-green-400", children: ["\u2705 ", survivorsCount] }), _jsx("div", { className: "text-xs text-white/60", children: "Advancing" })] })] }), _jsx("div", { className: "space-y-3", children: currentMatchups.map((matchup) => (_jsxs("div", { className: cn('rounded-lg border p-3', matchup.status === 'active'
                         ? 'border-yellow-500/40 bg-yellow-500/5'

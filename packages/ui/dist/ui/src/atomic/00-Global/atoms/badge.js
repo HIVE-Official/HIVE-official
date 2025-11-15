@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { cva } from "class-variance-authority";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const badgeVariants = cva("inline-flex items-center rounded-full border border-[var(--hive-border-default)] px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--hive-interactive-focus)] focus:ring-offset-2", {
     variants: {
         variant: {
@@ -28,6 +28,11 @@ const badgeVariants = cva("inline-flex items-center rounded-full border border-[
             "tool-tag": "bg-pink-100 text-pink-800 border-pink-300 hover:bg-pink-200",
             leadership: "bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200",
         },
+        size: {
+            xs: "px-1.5 py-0.5 text-[10px]",
+            sm: "px-2 py-0.5 text-xs",
+            md: "px-2.5 py-0.5 text-xs",
+        },
         tone: {
             default: "",
             muted: "bg-[color-mix(in_srgb,var(--hive-background-tertiary) 85%,transparent)] text-[var(--hive-text-secondary)] border-[color-mix(in_srgb,var(--hive-border-default) 60%,transparent)]",
@@ -36,11 +41,12 @@ const badgeVariants = cva("inline-flex items-center rounded-full border border-[
     },
     defaultVariants: {
         variant: "default",
+        size: "md",
         tone: "default",
     },
 });
-function Badge({ className, variant, tone, ...props }) {
-    return (_jsx("div", { className: cn(badgeVariants({ variant, tone }), className), ...props }));
+function Badge({ className, variant, tone, size, ...props }) {
+    return (_jsx("div", { className: cn(badgeVariants({ variant, tone, size }), className), ...props }));
 }
 export { Badge, badgeVariants };
 //# sourceMappingURL=badge.js.map

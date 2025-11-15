@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 /**
  * SkipToContent provides a focusable link that lets keyboard and assistive technology users jump directly
  * to the primary page content, bypassing navigation chrome.

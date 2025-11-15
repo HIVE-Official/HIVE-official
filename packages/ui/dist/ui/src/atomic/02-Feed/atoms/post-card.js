@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { motion } from "framer-motion";
-import { cn } from "../../../lib/utils.js";
-import { Avatar, AvatarImage, AvatarFallback } from "../../00-Global/atoms/avatar.js";
+import { cn } from "../../../lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "../../00-Global/atoms/avatar";
 // ============================================================================
 // Animation Variants (HIVE Motion Design)
 // ============================================================================
@@ -53,8 +53,8 @@ const imageVariants = {
 // PostCard Component (HIVE Design System - Vercel/OpenAI inspired)
 // ============================================================================
 export const PostCardListItem = React.forwardRef(({ post, onOpen, onMoreOptions, onRepostClick, onShare, onUpvoteClick, className, ...props }, ref) => {
-    const hasMedia = post.media && post.media.length > 0;
-    const firstMedia = hasMedia ? post.media[0] : null;
+    const hasMedia = !!post.media?.length;
+    const firstMedia = post.media?.[0] ?? null;
     const isUpvoted = post.votes?.my === "up";
     return (_jsxs(motion.article, { ref: ref, initial: "hidden", animate: "visible", whileHover: "hover", variants: cardVariants, className: cn(
         // HIVE Design: Clean card with subtle border

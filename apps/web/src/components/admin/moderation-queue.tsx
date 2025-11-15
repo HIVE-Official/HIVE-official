@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Textarea, Alert, AlertDescription, Progress, Tabs, TabsContent, TabsList, TabsTrigger,  } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Textarea } from '@hive/ui';
 import { secureApiFetch } from '@/lib/secure-auth-utils';
 import {
   AlertTriangle,
@@ -324,64 +324,55 @@ export function ModerationQueue() {
           <div className="flex items-center space-x-4">
             <Filter className="h-5 w-5 text-gray-400" />
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="under_review">Under Review</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="dismissed">Dismissed</SelectItem>
-                <SelectItem value="escalated">Escalated</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="spam">Spam</SelectItem>
-                <SelectItem value="harassment">Harassment</SelectItem>
-                <SelectItem value="hate_speech">Hate Speech</SelectItem>
-                <SelectItem value="inappropriate_content">
-                  Inappropriate
-                </SelectItem>
-                <SelectItem value="misinformation">Misinformation</SelectItem>
-                <SelectItem value="violence">Violence</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={severityFilter} onValueChange={setSeverityFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Severity" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Severities</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={assignmentFilter}
-              onValueChange={setAssignmentFilter}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-40 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white"
             >
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Assignment" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Reports</SelectItem>
-                <SelectItem value="me">My Reports</SelectItem>
-                <SelectItem value="unassigned">Unassigned</SelectItem>
-              </SelectContent>
-            </Select>
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="under_review">Under Review</option>
+              <option value="resolved">Resolved</option>
+              <option value="dismissed">Dismissed</option>
+              <option value="escalated">Escalated</option>
+            </select>
+
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-40 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white"
+            >
+              <option value="all">All Categories</option>
+              <option value="spam">Spam</option>
+              <option value="harassment">Harassment</option>
+              <option value="hate_speech">Hate Speech</option>
+              <option value="inappropriate_content">Inappropriate</option>
+              <option value="misinformation">Misinformation</option>
+              <option value="violence">Violence</option>
+              <option value="other">Other</option>
+            </select>
+
+            <select
+              value={severityFilter}
+              onChange={(e) => setSeverityFilter(e.target.value)}
+              className="w-40 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white"
+            >
+              <option value="all">All Severities</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+
+            <select
+              value={assignmentFilter}
+              onChange={(e) => setAssignmentFilter(e.target.value)}
+              className="w-40 rounded-md border border-white/20 bg-white/5 px-3 py-2 text-sm text-white"
+            >
+              <option value="all">All Reports</option>
+              <option value="me">My Reports</option>
+              <option value="unassigned">Unassigned</option>
+            </select>
           </div>
         </CardContent>
       </Card>

@@ -7,6 +7,7 @@
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
+    "typecheck": "npx tsc --noEmit",
     "lint": "eslint src/app/start src/app/landing src/components/landing src/app/auth src/app/page.tsx --max-warnings 200",
     "lint:src": "eslint src --max-warnings 100",
     "lint:api": "eslint src/app/api --max-warnings 20",

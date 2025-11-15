@@ -2,14 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getSecureAuthHeaders, handleAuthError } from '../lib/secure-auth-utils';
-import { 
-  HiveProfile, 
-  HiveProfileUpdateData,
-  HiveProfileDashboard,
-  getProfileCompleteness,
-  DEFAULT_PRIVACY_SETTINGS,
-  DEFAULT_BUILDER_INFO
+import type {
+  HiveProfile,
 } from '@hive/core';
+import { getProfileCompleteness } from '@hive/core/types/profile-system';
 import { useSession } from './use-session';
 
 interface HiveProfileState {
@@ -51,7 +47,7 @@ interface CalendarConflict {
 
 interface HiveProfileActions {
   loadProfile: () => Promise<void>;
-  updateProfile: (data: HiveProfileUpdateData) => Promise<boolean>;
+  updateProfile: (data: Partial<HiveProfile>) => Promise<boolean>;
   uploadAvatar: (file: File) => Promise<string | null>;
   toggleGhostMode: (enabled: boolean) => Promise<void>;
   refreshDashboard: () => Promise<void>;
@@ -63,6 +59,34 @@ interface HiveProfileActions {
   getCalendarEvents: (startDate?: string, endDate?: string) => Promise<CalendarEvent[]>;
   detectConflicts: (newEvent?: Partial<CalendarEvent>) => Promise<CalendarConflict[]>;
   resolveConflict: (conflictId: string, resolution: string, eventId?: string, newTime?: string) => Promise<boolean>;
+}
+
+// Minimal dashboard shape used by this hook (local only)
+interface HiveProfileDashboard {
+  profile: HiveProfile;
+  recentSpaces: Array<{
+    id: string;
+    name: string;
+    type: string;
+    lastActivity?: string;
+    memberCount: number;
+    role: string;
+  }>;
+  recentTools: Array<unknown>;
+  recentActivity: Array<{
+    id: string;
+    type: 'space';
+    action: string;
+    title?: string;
+    timestamp: string;
+  }>;
+  upcomingEvents: Array<{
+    id: string;
+    title: string;
+    startDate: string;
+    type: string;
+    spaceId?: string;
+  }>;
 }
 
 // API response interfaces

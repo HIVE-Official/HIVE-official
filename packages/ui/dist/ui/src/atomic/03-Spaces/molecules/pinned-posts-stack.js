@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Pin } from 'lucide-react';
-import { MotionDiv } from '../../../shells/motion-safe.js';
-import { HiveCard } from '../../00-Global/atoms/hive-card.js';
+import { MotionDiv } from '../../../shells/motion-safe';
+import { HiveCard } from '../../00-Global/atoms/hive-card';
 const HIVE_EASING = {
     reveal: [0.23, 1, 0.32, 1],
 };

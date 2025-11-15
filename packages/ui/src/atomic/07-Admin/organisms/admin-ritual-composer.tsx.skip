@@ -13,7 +13,7 @@ import { Input } from '../../00-Global/atoms/input';
 import { Textarea } from '../../00-Global/atoms/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../00-Global/atoms/select';
 import { Label } from '../../00-Global/atoms/label';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 const STEP_TITLES = ['Details', 'Schedule', 'Presentation', 'Configuration', 'Review'];
 

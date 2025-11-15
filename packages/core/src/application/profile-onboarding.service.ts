@@ -303,7 +303,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
     major?: string,
     interests: string[] = []
   ): Promise<Result<any[]>> {
-    const suggestions = [];
+    const suggestions: any[] = [];
 
     // Get spaces by major
     if (major) {
@@ -346,7 +346,11 @@ export class ProfileOnboardingService extends BaseApplicationService {
     description: string;
     priority: number;
   }> {
-    const steps = [];
+    const steps: Array<{
+      action: string;
+      description: string;
+      priority: number;
+    }> = [];
     const profileData = profile.toDTO();
 
     if (!profileData.personalInfo.profilePhoto) {
@@ -389,7 +393,7 @@ export class ProfileOnboardingService extends BaseApplicationService {
   }
 
   private generateOnboardingWarnings(data: OnboardingData): string[] {
-    const warnings = [];
+    const warnings: string[] = [];
 
     if (!data.bio) {
       warnings.push('Adding a bio helps others learn more about you');

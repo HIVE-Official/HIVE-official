@@ -10,9 +10,15 @@ import { useAuth } from '@hive/auth-logic';
 import type {
   Connection,
   Friend,
-  FriendRequest,
-  UserConnections
-} from '@hive/core';
+} from '@hive/core/types/profile-system';
+
+interface FriendRequest {
+  id: string;
+  fromUserId: string;
+  toUserId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+}
 
 interface ConnectionsState {
   connections: Connection[];

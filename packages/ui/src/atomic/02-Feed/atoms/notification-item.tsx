@@ -24,7 +24,7 @@ import {
   Trophy,
   Eye
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { HiveNotification } from '../../../types/notifications';
 
 // Motion components

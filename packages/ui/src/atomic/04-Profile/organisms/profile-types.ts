@@ -3,7 +3,7 @@
  * Type definitions for profile components
  */
 
-import type { PresenceStatus } from "@/atomic/02-Feed/atoms/presence-indicator";
+import type { PresenceStatus } from "../../02-Feed/atoms/presence-indicator";
 
 export interface UIProfile {
   id: string;

@@ -1,10 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Badge } from "../../atomic/00-Global/atoms/badge.js";
-import { Button } from "../../atomic/00-Global/atoms/button.js";
-import { Avatar, AvatarFallback, AvatarImage, } from "../../atomic/00-Global/atoms/avatar.js";
-import { Surface } from "../../layout/index.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs.js";
-import { cn } from "@/lib/utils";
+import { Badge } from "../../atomic/00-Global/atoms/badge";
+import { Button } from "../../atomic/00-Global/atoms/button";
+import { Avatar, AvatarFallback, AvatarImage, } from "../../atomic/00-Global/atoms/avatar";
+import { Surface } from "../../layout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
+import { cn } from "../../lib/utils";
 const DEFAULT_POSTS = [
     {
         id: "ritual-prep",

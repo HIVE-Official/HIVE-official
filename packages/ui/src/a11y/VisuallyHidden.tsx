@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 const visuallyHiddenStyles: React.CSSProperties = {
   position: "absolute",
@@ -14,22 +14,17 @@ const visuallyHiddenStyles: React.CSSProperties = {
   borderWidth: 0,
 };
 
-export type VisuallyHiddenProps = React.HTMLAttributes<HTMLElement> & {
-  /**
-   * Element type to render. Defaults to `span`.
-   */
-  as?: React.ElementType;
-};
+export type VisuallyHiddenProps = React.HTMLAttributes<HTMLSpanElement>;
 
 /**
  * VisuallyHidden hides content from sighted users while keeping it available to assistive technology.
  * Useful for screen-reader-only labels, descriptions, or announcements.
  */
-export const VisuallyHidden = React.forwardRef<HTMLElement, VisuallyHiddenProps>(
-  ({ as: Component = "span", className, style, ...props }, ref) => {
+export const VisuallyHidden = React.forwardRef<HTMLSpanElement, VisuallyHiddenProps>(
+  ({ className, style, ...props }, ref) => {
     return (
-      <Component
-        ref={ref as React.Ref<any>}
+      <span
+        ref={ref}
         className={cn("hive-visually-hidden", className)}
         style={{ ...visuallyHiddenStyles, ...style }}
         {...props}
@@ -39,4 +34,3 @@ export const VisuallyHidden = React.forwardRef<HTMLElement, VisuallyHiddenProps>
 );
 
 VisuallyHidden.displayName = "VisuallyHidden";
-

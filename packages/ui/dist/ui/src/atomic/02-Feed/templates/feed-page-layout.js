@@ -1,12 +1,12 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Button, PlusIcon, UsersIcon, AlertCircleIcon } from '../../00-Global/atoms/index.js';
-import { LiveRegion } from '../../../a11y/LiveRegion.js';
-import { FeedFilterBar } from '../molecules/feed-filter-bar.js';
-import { FeedVirtualizedList } from '../organisms/feed-virtualized-list.js';
-import { FeedLoadingSkeleton } from './feed-loading-skeleton.js';
+import { cn } from '../../../lib/utils';
+import { Button, PlusIcon, UsersIcon, AlertCircleIcon } from '../../00-Global/atoms';
+import { LiveRegion } from '../../../a11y/LiveRegion';
+import { FeedFilterBar } from '../molecules/feed-filter-bar';
+import { FeedVirtualizedList } from '../organisms/feed-virtualized-list';
+import { FeedLoadingSkeleton } from './feed-loading-skeleton';
 /**
  * Get user-friendly error messages based on error type
  */

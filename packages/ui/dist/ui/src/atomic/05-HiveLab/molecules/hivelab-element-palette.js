@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { Card, CardContent, Input, Label, Button } from '../../00-Global/atoms/index.js';
-import { initializeElementSystem } from '../../../lib/hivelab/element-system.js';
+import { Card, CardContent, Input, Label, Button } from '../../00-Global/atoms';
+import { initializeElementSystem } from '../../../lib/hivelab/element-system';
 export function HiveLabElementPalette({ onDragStart, onInsert }) {
     const [query, setQuery] = React.useState('');
     const [elements, setElements] = React.useState([]);

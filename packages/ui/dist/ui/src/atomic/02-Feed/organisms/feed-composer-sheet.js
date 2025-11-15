@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, Button, Textarea, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, ImageIcon, XIcon, LoaderIcon, } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, Button, Textarea, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, ImageIcon, XIcon, LoaderIcon, } from '../../00-Global/atoms';
 export const FeedComposerSheet = React.forwardRef(({ open, onOpenChange, spaces, selectedSpaceId, onSpaceChange, onSubmit, isSubmitting = false, maxLength = 5000, allowMedia = true, className, customFooter, }, ref) => {
     const [content, setContent] = React.useState('');
     const [selectedSpace, setSelectedSpace] = React.useState(selectedSpaceId || '');

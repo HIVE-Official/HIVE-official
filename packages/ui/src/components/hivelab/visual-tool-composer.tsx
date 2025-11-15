@@ -40,7 +40,7 @@ import {
   initializeElementSystem,
   type ToolComposition,
 } from '../../lib/hivelab/element-system';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export interface VisualToolComposerProps {
   onSave: (composition: ToolComposition) => Promise<void> | void;

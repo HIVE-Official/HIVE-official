@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 // Stub types for presence (full implementation temporarily disabled)
 export type PresenceStatus = "online" | "away" | "offline" | "ghost";

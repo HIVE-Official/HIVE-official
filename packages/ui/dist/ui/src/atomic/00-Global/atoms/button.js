@@ -2,7 +2,7 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const buttonVariants = cva("inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-[background,transform,color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--hive-background-primary)] disabled:pointer-events-none disabled:opacity-40 border border-transparent", {
     variants: {
         variant: {

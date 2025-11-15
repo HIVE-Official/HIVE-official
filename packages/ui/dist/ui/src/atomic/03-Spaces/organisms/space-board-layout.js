@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Button, PinIcon } from '../../00-Global/atoms/index.js';
-import { SpaceHeader } from '../molecules/space-header.js';
-import { FeedVirtualizedList } from '../../02-Feed/organisms/feed-virtualized-list.js';
+import { cn } from '../../../lib/utils';
+import { Button, PinIcon } from '../../00-Global/atoms';
+import { SpaceHeader } from '../molecules/space-header';
+import { FeedVirtualizedList } from '../../02-Feed/organisms/feed-virtualized-list';
 export const SpaceBoardLayout = React.forwardRef(({ spaceId, spaceName, spaceIcon, memberCount, isMember, isLeader = false, pinnedPosts = [], onPinnedPostClick, showComposer = true, onCompose, feedItems, renderFeedItem, onLoadMore, hasMore = false, isLoading = false, onJoin, onLeave, onShare, className, ...props }, ref) => {
     return (_jsxs("div", { ref: ref, className: cn('flex min-h-screen flex-col', className), ...props, children: [_jsx(SpaceHeader, { space: {
                     id: spaceId,

@@ -37,6 +37,11 @@ declare const useModal: () => ModalContextType;
 interface ToastContextType {
     toasts: ToastConfig[];
     showToast: (toast: Omit<ToastConfig, 'id'>) => string;
+    /**
+     * Convenience alias matching the `useToast().toast(...)` pattern
+     * used across the apps. Internally delegates to `showToast`.
+     */
+    toast: (toast: Omit<ToastConfig, 'id'>) => string;
     removeToast: (id: string) => void;
     clearToasts: () => void;
 }

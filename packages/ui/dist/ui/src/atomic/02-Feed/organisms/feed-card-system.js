@@ -2,8 +2,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { Badge, Button, XIcon, SparklesIcon, MegaphoneIcon, AlertTriangleIcon, ChevronRightIcon, } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { Badge, Button, XIcon, SparklesIcon, MegaphoneIcon, AlertTriangleIcon, ChevronRightIcon, } from '../../00-Global/atoms';
 const cardVariants = cva('group relative overflow-hidden rounded-2xl border transition-all duration-240', {
     variants: {
         variant: {

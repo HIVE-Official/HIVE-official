@@ -37,8 +37,8 @@ export default function RitualsPage() {
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to load rituals',
-        variant: 'destructive',
+        message: 'Failed to load rituals',
+        type: 'error',
       });
     } finally {
       setIsLoading(false);
@@ -55,14 +55,15 @@ export default function RitualsPage() {
       if (!res.ok) throw new Error('Failed to update ritual');
       toast({
         title: 'Success',
-        description: `Ritual phase updated to ${newPhase}`,
+        message: `Ritual phase updated to ${newPhase}`,
+        type: 'success',
       });
       fetchRituals();
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to update ritual phase',
-        variant: 'destructive',
+        message: 'Failed to update ritual phase',
+        type: 'error',
       });
     }
   };

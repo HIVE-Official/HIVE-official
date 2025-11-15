@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Badge, Button, ToolIcon, SparklesIcon, DownloadIcon, UsersIcon, } from '../../00-Global/atoms/index.js';
-import { FeedSpaceChip } from '../molecules/feed-space-chip.js';
+import { cn } from '../../../lib/utils';
+import { Badge, Button, ToolIcon, SparklesIcon, DownloadIcon, UsersIcon, } from '../../00-Global/atoms';
+import { FeedSpaceChip } from '../molecules/feed-space-chip';
 const formatNumber = (value) => {
     if (!value || value <= 0)
         return null;

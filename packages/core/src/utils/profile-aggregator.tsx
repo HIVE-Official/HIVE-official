@@ -198,7 +198,7 @@ class ProfileAggregator {
       value?: unknown;
     }>;
   }): Promise<Record<string, unknown>[]> {
-    const results = [];
+    const results: Record<string, unknown>[] = [];
 
     if (updates.privacy) {
       results.push(await this.updatePrivacySettings(updates.privacy));

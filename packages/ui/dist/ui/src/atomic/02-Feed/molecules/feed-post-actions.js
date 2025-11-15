@@ -28,8 +28,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { HeartIcon, MessageCircleIcon, BookmarkIcon, ShareIcon, } from '../../00-Global/atoms/icon-library.js';
+import { cn } from '../../../lib/utils';
+import { HeartIcon, MessageCircleIcon, BookmarkIcon, ShareIcon, } from '../../00-Global/atoms/icon-library';
 const ActionButton = ({ icon: Icon, count, isActive, onClick, label, compact = false, activeColor = 'var(--hive-brand-primary)', isToggle = false, }) => {
     // Track if this is the first mount to avoid initial animation
     const isInitialMount = React.useRef(true);

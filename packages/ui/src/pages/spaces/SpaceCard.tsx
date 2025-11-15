@@ -4,7 +4,7 @@ import { Badge } from "../../atomic/00-Global/atoms/badge";
 import { Button } from "../../atomic/00-Global/atoms/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../atomic/00-Global/atoms/avatar";
 import { Surface } from "../../layout";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export interface SpaceCardHost {
   name: string;
@@ -157,4 +157,3 @@ export function SpaceCard({ space, ctaLabel = "Join space", onJoin }: SpaceCardP
     </Surface>
   );
 }
-

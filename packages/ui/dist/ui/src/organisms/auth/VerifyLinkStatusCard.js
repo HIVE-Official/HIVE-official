@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
-import { Button, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle } from "../../atoms.js";
+import { Button, HiveCard, HiveCardContent, HiveCardHeader, HiveCardTitle } from "../../atoms";
 export function VerifyLinkStatusCard({ status, message, onRetry, onContinue, onStartOver, }) {
     const renderIcon = () => {
         switch (status) {

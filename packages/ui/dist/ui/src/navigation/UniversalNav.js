@@ -7,7 +7,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 // Universal Navigation Bar
 export const UniversalNavBar = ({ items, orientation = 'horizontal', variant = 'default', className }) => {

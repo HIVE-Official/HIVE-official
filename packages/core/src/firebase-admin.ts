@@ -2,7 +2,7 @@ import * as admin from "firebase-admin";
 
 // Environment detection
 function getCurrentEnvironment(): "development" | "staging" | "production" {
-  const env = process.env.NODE_ENV || "development";
+  const env = (process.env.NODE_ENV as string) || "development";
   const vercelEnv = process.env.VERCEL_ENV;
 
   if (vercelEnv === "production") return "production";

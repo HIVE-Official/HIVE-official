@@ -3,12 +3,19 @@
  * Uses the new feed listener infrastructure with CQRS pattern
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { feedListener, FeedUpdate, FeedListenerOptions } from '@hive/core/infrastructure/realtime/feed-listener';
-import { GetFeedQuery, GetFeedQueryHandler } from '@hive/core/application/feed/queries/get-feed.query';
-import { FirebaseUnitOfWork } from '@hive/core/infrastructure/repositories/firebase/unit-of-work';
-import { useAuth } from '@hive/auth-logic';
-import { useToast } from './use-toast';
+import { useEffect, useState, useCallback, useRef } from "react";
+import {
+  feedListener,
+  FeedUpdate,
+  FeedListenerOptions,
+} from "@hive/core/infrastructure/realtime/feed-listener";
+import { GetFeedQueryHandler } from "@hive/core/application/feed/queries/get-feed.query";
+import type {
+  GetFeedQuery,
+  GetFeedQueryResult,
+} from "@hive/core/application/feed/queries/get-feed.query";
+import { useAuth } from "@hive/auth-logic";
+import { useToast } from "./use-toast";
 
 interface UseRealtimeFeedOptions {
   filter?: 'all' | 'my_spaces' | 'trending' | 'events' | 'rituals';
@@ -54,28 +61,15 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
 
     try {
       // Use CQRS to get initial feed
-      const query = new GetFeedQuery(
-        options.filter || 'all',
-        options.limitCount || 50,
-        0,
+      const query: GetFeedQuery = {
         userId,
-        campusId
-      );
+        campusId,
+        limit: options.limitCount || 50,
+        offset: 0,
+      };
 
-      const unitOfWork = new FirebaseUnitOfWork();
-      const queryHandler = new GetFeedQueryHandler(
-        unitOfWork.feeds,
-        unitOfWork.spaces,
-        unitOfWork.profiles
-      );
-
-      const result = await queryHandler.execute(query);
-
-      if (result.isFailure) {
-        throw new Error(result.error);
-      }
-
-      const feedData = result.getValue();
+      const queryHandler = new GetFeedQueryHandler();
+      const feedData: GetFeedQueryResult = await queryHandler.execute(query);
 
       if (mountedRef.current) {
         // Convert CQRS result to FeedUpdate format
@@ -103,13 +97,13 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
         setOffset(feedData.nextOffset);
       }
     } catch (err) {
-      console.error('Failed to load feed:', err);
+      console.error("Failed to load feed:", err);
       if (mountedRef.current) {
         setError(err as Error);
         toast({
           title: "Failed to load feed",
           description: "Please try again later",
-          variant: "destructive"
+          type: "error",
         });
       }
     } finally {
@@ -159,19 +153,20 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
             toast({
               title: "New posts available",
               description: `${updates.length} new ${updates.length === 1 ? 'post' : 'posts'}`,
+              type: "info",
               duration: 3000
             });
           }
         }
       },
       onError: (err) => {
-        console.error('Real-time feed error:', err);
+        console.error("Real-time feed error:", err);
         setIsRealtime(false);
         if (mountedRef.current) {
           toast({
             title: "Real-time updates paused",
             description: "Connection issue detected",
-            variant: "destructive"
+            type: "error",
           });
         }
       }
@@ -198,48 +193,38 @@ export function useRealtimeFeed(options: UseRealtimeFeedOptions = {}): UseRealti
     setLoading(true);
 
     try {
-      const query = new GetFeedQuery(
-        options.filter || 'all',
-        options.limitCount || 50,
-        offset,
+      const query: GetFeedQuery = {
         userId,
-        campusId
-      );
+        campusId,
+        limit: options.limitCount || 50,
+        offset,
+      };
 
-      const unitOfWork = new FirebaseUnitOfWork();
-      const queryHandler = new GetFeedQueryHandler(
-        unitOfWork.feeds,
-        unitOfWork.spaces,
-        unitOfWork.profiles
-      );
+      const queryHandler = new GetFeedQueryHandler();
+      const feedData: GetFeedQueryResult = await queryHandler.execute(query);
 
-      const result = await queryHandler.execute(query);
+      const newItems: FeedUpdate[] = feedData.items.map(item => ({
+        id: item.id,
+        type: item.type,
+        content: {
+          text: item.content.text,
+          mediaUrls: item.content.mediaUrls,
+          authorId: item.content.author.id,
+          authorName: item.content.author.name,
+          authorHandle: item.content.author.handle,
+          authorAvatar: item.content.author.avatar
+        },
+        spaceId: item.source.type === "space" ? item.source.id : undefined,
+        spaceName: item.source.name,
+        engagement: item.engagement,
+        isPromoted: item.isPromoted,
+        createdAt: item.createdAt,
+        relevanceScore: item.relevanceScore
+      }));
 
-      if (result.isSuccess) {
-        const feedData = result.getValue();
-        const newItems: FeedUpdate[] = feedData.items.map(item => ({
-          id: item.id,
-          type: item.type,
-          content: {
-            text: item.content.text,
-            mediaUrls: item.content.mediaUrls,
-            authorId: item.content.author.id,
-            authorName: item.content.author.name,
-            authorHandle: item.content.author.handle,
-            authorAvatar: item.content.author.avatar
-          },
-          spaceId: item.source.type === 'space' ? item.source.id : undefined,
-          spaceName: item.source.name,
-          engagement: item.engagement,
-          isPromoted: item.isPromoted,
-          createdAt: item.createdAt,
-          relevanceScore: item.relevanceScore
-        }));
-
-        setFeed(prev => [...prev, ...newItems]);
-        setHasMore(feedData.hasMore);
-        setOffset(feedData.nextOffset);
-      }
+      setFeed(prev => [...prev, ...newItems]);
+      setHasMore(feedData.hasMore);
+      setOffset(feedData.nextOffset);
     } catch (err) {
       console.error('Failed to load more:', err);
     } finally {

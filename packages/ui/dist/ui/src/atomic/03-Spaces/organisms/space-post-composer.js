@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { FeedComposerSheet } from '../../02-Feed/organisms/feed-composer-sheet.js';
-import { Switch } from '../../00-Global/atoms/switch.js';
-import { Label } from '../../00-Global/atoms/label.js';
+import { cn } from '../../../lib/utils';
+import { FeedComposerSheet } from '../../02-Feed/organisms/feed-composer-sheet';
+import { Switch } from '../../00-Global/atoms/switch';
+import { Label } from '../../00-Global/atoms/label';
 /**
  * SpacePostComposer
  *

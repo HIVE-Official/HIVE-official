@@ -5,8 +5,8 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
+import React, { useState, useEffect, useCallback } from "react";
+import { Button as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
   AlertTriangle,
@@ -90,7 +90,7 @@ interface NonCompliantSpace {
 const ALLOWED_SPACE_CONFIGURATIONS: Record<ValidSpaceType, {
   label: string;
   description: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<{ className?: string }>;
   allowedSubTypes: ValidSpaceSubType[];
   maxInstances: number | 'unlimited';
   systemGenerated: boolean;

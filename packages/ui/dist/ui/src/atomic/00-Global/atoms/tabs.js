@@ -3,7 +3,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cva } from "class-variance-authority";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const tabsListVariants = cva("inline-flex h-10 items-center justify-center rounded-md bg-[var(--hive-background-secondary)] p-1 text-[var(--hive-text-secondary)]", {
     variants: {
         variant: {
@@ -52,16 +52,17 @@ function Tabs({ value, defaultValue, onValueChange, variant = "default", childre
     }, [isControlled, onValueChange]);
     const triggerRefs = React.useRef(new Map());
     const listRef = React.useRef(null);
+    const contextVariant = variant ?? "default";
     const contextValue = React.useMemo(() => ({
         value: currentValue,
         onValueChange: handleValueChange,
-        variant,
+        variant: contextVariant,
         registerRef: (val, el) => {
             triggerRefs.current.set(val, el);
         },
         listRef,
         getRef: (val) => triggerRefs.current.get(val) ?? null,
-    }), [currentValue, handleValueChange, variant]);
+    }), [currentValue, handleValueChange, contextVariant]);
     return (_jsx(TabsContext.Provider, { value: contextValue, children: _jsx("div", { className: cn("w-full", className), children: children }) }));
 }
 const TabsList = React.forwardRef(({ className, variant, ...props }, ref) => {

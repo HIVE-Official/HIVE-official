@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Card, Badge, Input, Avatar } from '@hive/ui';
+import { Button, Card, Badge, Input, Avatar, AvatarImage } from '@hive/ui';
 import { useRealtimeFeed } from '@/hooks/use-realtime-feed';
 import { useRealtimeSpaces } from '@/hooks/use-realtime-spaces';
 import { useRealtimeComments } from '@/hooks/use-realtime-comments';
@@ -74,10 +74,10 @@ export function RealtimeDemo() {
                 {onlineUsers.slice(0, 3).map((user) => (
                   <Avatar
                     key={user.userId}
-                    src={user.avatar}
-                    alt={user.name}
-                    className="h-8 w-8 border-2 border-white"
-                  />
+                    className="h-8 w-8 border-2 border-white rounded-full overflow-hidden"
+                  >
+                    <AvatarImage src={user.avatar ?? undefined} alt={user.name} />
+                  </Avatar>
                 ))}
                 {onlineUsers.length > 3 && (
                   <div className="h-8 w-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">

@@ -175,6 +175,18 @@ export type {
   ToastNotification,
 } from "./atomic/00-Global/organisms/notification-toast-container";
 
+// Notification system primitives
+export { NotificationSystem } from "./atomic/00-Global/organisms/notification-system";
+export type {
+  NotificationSystemProps,
+  NotificationListItem,
+} from "./atomic/00-Global/organisms/notification-system";
+
+// Welcome mat (onboarding surface)
+export { WelcomeMat } from "./atomic/00-Global/organisms/welcome-mat";
+export type { WelcomeMatProps } from "./atomic/00-Global/organisms/welcome-mat";
+export { useWelcomeMat } from "./hooks/use-welcome-mat";
+
 // HiveLab: Visual composer (desktop-first)
 export { VisualToolComposer } from "./components/hivelab/visual-tool-composer";
 export type { VisualToolComposerProps } from "./components/hivelab/visual-tool-composer";

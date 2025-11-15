@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const switchVariants = cva("peer inline-flex shrink-0 cursor-pointer items-center rounded-full border border-[color-mix(in_srgb,var(--hive-border-subtle) 58%,#ffd700 28%)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 74%,#ffd700 16%)] transition-[background,border,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,215,0,0.45)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--hive-background-primary)] disabled:cursor-not-allowed disabled:opacity-40 data-[state=unchecked]:bg-[color-mix(in_srgb,var(--hive-background-tertiary) 66%,#ffd700 12%)] data-[state=unchecked]:border-[color-mix(in_srgb,var(--hive-border-default) 68%,#ffd700 18%)]", {
     variants: {
         variant: {

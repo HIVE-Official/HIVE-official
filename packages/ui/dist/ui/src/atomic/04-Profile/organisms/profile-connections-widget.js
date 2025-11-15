@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Link2, UserPlus } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
-import { Card } from "../../00-Global/atoms/card.js";
-import { PrivacyControl, } from "../../00-Global/molecules/privacy-control.js";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
+import { PrivacyControl, } from "../../00-Global/molecules/privacy-control";
 const connectionLabel = (item) => {
     if (item.sharedSpaces?.length) {
         return `${item.sharedSpaces.length} shared spaces`;

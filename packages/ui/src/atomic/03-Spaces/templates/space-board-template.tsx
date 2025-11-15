@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { SpaceHeader } from '../molecules/space-header';
 import { SpaceAboutWidget, type SpaceAboutData } from '../molecules/space-about-widget';
 import { SpaceToolsWidget, type SpaceTool } from '../molecules/space-tools-widget';

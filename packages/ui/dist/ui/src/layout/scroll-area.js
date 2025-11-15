@@ -1,6 +1,6 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 const defaultState = { atStart: true, atEnd: false };
 export const ScrollArea = React.forwardRef(({ className, children, orientation = "vertical", showShadows = true, inertial = true, ...props }, forwardedRef) => {
     const internalRef = React.useRef(null);

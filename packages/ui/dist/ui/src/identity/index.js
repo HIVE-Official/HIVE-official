@@ -1,3 +1,3 @@
-export { Icon, iconWrapperVariants } from "./icon.js";
-export { PresenceDot, presenceVariants as presenceDotVariants, } from "./presence.js";
+export { Icon, iconWrapperVariants } from "./icon";
+export { PresenceDot, presenceVariants as presenceDotVariants, } from "./presence";
 //# sourceMappingURL=index.js.map

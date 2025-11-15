@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { CheckCircle, Sparkles } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
-import { Card } from "../../00-Global/atoms/card.js";
-import { Button } from "../../00-Global/atoms/button.js";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
+import { Button } from "../../00-Global/atoms/button";
 const DEFAULT_STEPS = [
     { id: "avatar", title: "Add a profile photo" },
     { id: "bio", title: "Share a short bio" },

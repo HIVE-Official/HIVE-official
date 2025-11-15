@@ -1,11 +1,11 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../../lib/utils.js";
-import { NotificationBell } from "../../02-Feed/atoms/notification-bell.js";
-import { Popover, PopoverTrigger, PopoverContent, } from "../atoms/popover.js";
-import { NotificationDropdown, } from "../molecules/notification-dropdown.js";
-import { NotificationToastContainer, } from "./notification-toast-container.js";
+import { cn } from "../../../lib/utils";
+import { NotificationBell } from "../../02-Feed/atoms/notification-bell";
+import { Popover, PopoverTrigger, PopoverContent, } from "../atoms/popover";
+import { NotificationDropdown, } from "../molecules/notification-dropdown";
+import { NotificationToastContainer, } from "./notification-toast-container";
 const toastTypeByPriority = {
     urgent: "error",
     high: "warning",

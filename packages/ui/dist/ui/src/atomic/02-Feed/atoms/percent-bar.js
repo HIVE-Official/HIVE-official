@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from "../../../lib/utils.js";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../00-Global/atoms/tooltip.js";
+import { cn } from "../../../lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../00-Global/atoms/tooltip";
 /** Horizontal segmented distribution bar with optional tooltips */
 export function PercentBar({ segments = [], value, total, showLabels = false, rounded = true, ariaLabel = "Distribution", className, ...props }) {
     const isSingleValue = typeof value === "number" && segments.length === 0;

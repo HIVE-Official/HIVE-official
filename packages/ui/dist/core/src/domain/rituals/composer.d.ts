@@ -20,15 +20,15 @@ export declare const RitualComposerSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
     }>>;
@@ -39,16 +39,16 @@ export declare const RitualComposerSchema: z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     config?: Record<string, any>;
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype;
     startsAt?: string;
     endsAt?: string;
@@ -58,16 +58,16 @@ export declare const RitualComposerSchema: z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     config?: Record<string, any>;
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype;
     startsAt?: string;
     endsAt?: string;

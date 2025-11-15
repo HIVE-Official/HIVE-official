@@ -189,7 +189,7 @@ export class EnhancedProfile extends AggregateRoot<EnhancedProfileProps> {
   }
 
   get photos(): string[] {
-    const photos = [];
+    const photos: string[] = [];
     if (this.props.personalInfo.profilePhoto) {
       photos.push(this.props.personalInfo.profilePhoto);
     }

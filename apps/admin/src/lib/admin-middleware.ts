@@ -29,7 +29,7 @@ export async function withAdminAuth(
     clientIP
   );
 
-  return handler(request, authResult.admin);
+  return handler(request, authResult.admin!);
 }
 
 /**

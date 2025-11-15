@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 const captionVariants = cva(
   "[font-family:var(--hive-font-family-sans,'Geist Sans',system-ui,sans-serif)] uppercase tracking-[0.22em] text-[var(--hive-text-muted)] antialiased",

@@ -1,7 +1,7 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Badge } from "../atoms/badge.js";
-import { cn } from "../../../lib/utils.js";
+import { Badge } from "../atoms/badge";
+import { cn } from "../../../lib/utils";
 /**
  * Compact tag list that collapses overflow into a "+N" badge.
  */

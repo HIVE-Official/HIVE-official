@@ -5,7 +5,7 @@ import { Card } from '../../00-Global/atoms/card';
 import { Button } from '../../00-Global/atoms/button';
 import { Badge } from '../../00-Global/atoms/badge';
 import { PercentBar } from '../../02-Feed/atoms/percent-bar';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 export interface UnlockMilestone {
   threshold: number;

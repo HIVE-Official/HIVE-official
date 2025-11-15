@@ -502,7 +502,7 @@ export class SpaceDiscoveryService extends BaseApplicationService {
 
   private generateSuggestedActions(space: EnhancedSpace): Array<{ action: string; description: string }> {
     const spaceData = space.toData();
-    const actions = [];
+    const actions: Array<{ action: string; description: string }> = [];
 
     if (spaceData.posts.length > 0) {
       actions.push({

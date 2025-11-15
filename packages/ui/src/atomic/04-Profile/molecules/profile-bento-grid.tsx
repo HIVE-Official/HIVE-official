@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type {
-  BentoGridLayout,
-  ProfileSystem,
-  GridSize,
-} from "@hive/core/types/profile-system";
+import type { BentoGridLayout, ProfileSystem, GridSize } from "@hive/core";
 import {
   Activity,
   Calendar,
@@ -94,10 +90,15 @@ const DEFAULT_LAYOUT: GridLayout = {
       visible: true,
     },
   ],
-  lastModified: null,
+  lastModified: new Date(),
 };
 
-const CARD_CONFIGS = {
+const CARD_CONFIGS: Record<string, {
+  title: string;
+  icon: typeof Users;
+  color: string;
+  borderColor: string;
+}> = {
   spaces_hub: {
     title: "My Spaces",
     icon: Users,

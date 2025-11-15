@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { RitualProgressBar } from '../molecules/ritual-progress-bar';
 import { Button } from '../../00-Global/atoms';
 import { ChevronRight, Sparkles } from 'lucide-react';

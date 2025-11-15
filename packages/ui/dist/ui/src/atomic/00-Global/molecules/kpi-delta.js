@@ -1,6 +1,6 @@
 "use client";
 import { jsxs as _jsxs } from "react/jsx-runtime";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 /**
  * KPI delta pill that color-codes positive/negative trends.
  */

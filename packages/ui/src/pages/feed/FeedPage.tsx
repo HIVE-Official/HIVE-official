@@ -9,7 +9,7 @@ import {
 } from "../../atomic/00-Global/atoms/avatar";
 import { Surface } from "../../layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atomic/00-Global/atoms/tabs";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export interface FeedPostAuthor {
   name: string;
@@ -205,7 +205,7 @@ const DEFAULT_ACTIONS: Array<{ id: string; label: string; description: string }>
   { id: "build", label: "Prototype in HiveLab", description: "Spin up a tool or automation." },
 ];
 
-const STATUS_TONE: Record<FeedRitual["status"], string> = {
+const STATUS_TONE: Record<NonNullable<FeedRitual["status"]>, string> = {
   live: "bg-[var(--hive-status-success)]/20 text-[var(--hive-status-success-text,#bef0c2)]",
   "up-next": "bg-[var(--hive-brand-primary,#ffd166)]/15 text-[var(--hive-brand-primary,#ffd166)]",
   prep: "bg-[var(--hive-text-muted,#9aa3b6)]/15 text-[var(--hive-text-muted,#9aa3b6)]",
@@ -498,4 +498,3 @@ export function FeedPage({
     </div>
   );
 }
-

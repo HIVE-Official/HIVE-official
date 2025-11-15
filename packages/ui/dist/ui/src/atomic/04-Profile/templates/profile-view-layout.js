@@ -1,9 +1,9 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
-import { cn } from "../../../lib/utils.js";
-import { Card } from "../../00-Global/atoms/card.js";
-import { ProfileIdentityWidget, ProfileActivityWidget, ProfileSpacesWidget, ProfileConnectionsWidget, ProfileCompletionCard, HiveLabWidget, } from "../organisms/profile-widgets.js";
+import { cn } from "../../../lib/utils";
+import { Card } from "../../00-Global/atoms/card";
+import { ProfileIdentityWidget, ProfileActivityWidget, ProfileSpacesWidget, ProfileConnectionsWidget, ProfileCompletionCard, HiveLabWidget, } from "../organisms/profile-widgets";
 const widgetLevel = (profile, widget, fallback) => {
     const widgets = profile.widgets;
     const level = widgets?.[widget]?.level ?? profile.privacy?.visibilityLevel;

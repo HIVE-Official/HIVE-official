@@ -93,16 +93,18 @@ function Tabs({
   const triggerRefs = React.useRef(new Map<string, HTMLButtonElement | null>())
   const listRef = React.useRef<HTMLDivElement | null>(null)
 
+  const contextVariant: TabsContextValue["variant"] = variant ?? "default"
+
   const contextValue = React.useMemo(() => ({
     value: currentValue,
     onValueChange: handleValueChange,
-    variant,
+    variant: contextVariant,
     registerRef: (val: string, el: HTMLButtonElement | null) => {
       triggerRefs.current.set(val, el)
     },
     listRef,
     getRef: (val: string) => triggerRefs.current.get(val) ?? null,
-  }), [currentValue, handleValueChange, variant])
+  }), [currentValue, handleValueChange, contextVariant])
 
   return (
     <TabsContext.Provider value={contextValue}>

@@ -27,6 +27,7 @@ for file in src/atomic/00-Global/**/*.tsx src/atomic/00-Global/**/*.ts; do
     if [ -f "$file" ] && [[ ! "$file" =~ \.stories\.tsx$ ]]; then
         # Replace @/lib/utils with ../../../lib/utils
         sed -i '' 's|from "@/lib/utils"|from "../../../lib/utils"|g' "$file"
+        sed -i '' "s|from '@/lib/utils'|from '../../../lib/utils'|g" "$file"
 
         # Replace @/atomic/... with relative paths based on file location
         if [[ "$file" =~ atoms/ ]]; then
@@ -53,6 +54,7 @@ for slice in 02-Feed 03-Spaces 04-Profile 05-HiveLab 06-Rituals 07-Admin; do
         if [ -f "$file" ] && [[ ! "$file" =~ \.stories\.tsx$ ]]; then
             # Replace @/lib/utils with ../../../lib/utils
             sed -i '' 's|from "@/lib/utils"|from "../../../lib/utils"|g' "$file"
+            sed -i '' "s|from '@/lib/utils'|from '../../../lib/utils'|g" "$file"
 
             # Replace @/atomic/00-Global/atoms/... with ../../00-Global/atoms/...
             sed -i '' 's|from "@/atomic/00-Global/atoms/\([^"]*\)"|from "../../00-Global/atoms/\1"|g' "$file"

@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { Check } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",

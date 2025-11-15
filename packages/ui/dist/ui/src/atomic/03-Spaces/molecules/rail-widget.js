@@ -1,10 +1,10 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Calendar, Clock, Play, Sparkles } from "lucide-react";
-import { Button } from "../../00-Global/atoms/button.js";
-import { Card, CardContent, CardHeader, CardTitle, } from "../../00-Global/atoms/card.js";
-import { Progress } from "../../00-Global/atoms/progress.js";
-import { cn } from "../../../lib/utils.js";
+import { Button } from "../../00-Global/atoms/button";
+import { Card, CardContent, CardHeader, CardTitle, } from "../../00-Global/atoms/card";
+import { Progress } from "../../00-Global/atoms/progress";
+import { cn } from "../../../lib/utils";
 const defaultTitle = {
     action: "Quick Action",
     progress: "Progress",

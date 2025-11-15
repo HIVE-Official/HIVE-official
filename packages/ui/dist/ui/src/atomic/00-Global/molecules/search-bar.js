@@ -27,9 +27,9 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * ```
  */
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Input } from '../../00-Global/atoms/input.js';
-import { SearchIcon, XIcon, LoaderIcon } from '../../00-Global/atoms/icon-library.js';
+import { cn } from '../../../lib/utils';
+import { Input } from '../../00-Global/atoms/input';
+import { SearchIcon, XIcon, LoaderIcon } from '../../00-Global/atoms/icon-library';
 export const SearchBar = React.forwardRef(({ value, onChange, onSearch, placeholder = 'Search posts, spaces, people...', isLoading = false, debounceMs = 300, className, size = 'md', }, ref) => {
     const [localValue, setLocalValue] = React.useState(value);
     const debounceTimerRef = React.useRef();

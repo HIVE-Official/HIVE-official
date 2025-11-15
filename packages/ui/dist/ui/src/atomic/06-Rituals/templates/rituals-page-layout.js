@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { RitualCard } from '../organisms/ritual-card.js';
-// import { RitualFeedBannerCard, type RitualFeedBannerCardProps } from '../organisms/ritual-feed-banner.js';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Global/atoms/tabs.js';
+import { cn } from '../../../lib/utils';
+import { RitualCard } from '../organisms/ritual-card';
+// import { RitualFeedBannerCard, type RitualFeedBannerCardProps } from '../organisms/ritual-feed-banner';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../00-Global/atoms/tabs';
 import { Sparkles, Calendar, CheckCircle2 } from 'lucide-react';
 /**
  * RitualsPageLayout

@@ -1,5 +1,5 @@
 import { type ProfileActivityItem, type ProfileSpaceItem, type ProfileConnectionItem } from "../organisms/profile-widgets";
-import type { ProfileSystem } from "@hive/core/types/profile-system";
+import type { ProfileSystem } from "@hive/core";
 import type { PrivacyLevel } from "../../00-Global/molecules/privacy-control";
 export interface ProfileViewLayoutProps {
     profile: ProfileSystem;

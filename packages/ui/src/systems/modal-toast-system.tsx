@@ -7,7 +7,7 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 
 // Modal Types
 export interface ModalConfig {
@@ -58,6 +58,11 @@ const useModal = () => useContext(ModalContext);
 interface ToastContextType {
   toasts: ToastConfig[];
   showToast: (toast: Omit<ToastConfig, 'id'>) => string;
+  /**
+   * Convenience alias matching the `useToast().toast(...)` pattern
+   * used across the apps. Internally delegates to `showToast`.
+   */
+  toast: (toast: Omit<ToastConfig, 'id'>) => string;
   removeToast: (id: string) => void;
   clearToasts: () => void;
 }
@@ -65,6 +70,7 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType>({
   toasts: [],
   showToast: () => '',
+  toast: () => '',
   removeToast: () => {},
   clearToasts: () => {},
 });
@@ -128,7 +134,16 @@ const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   }, []);
 
   return (
-    <ToastContext.Provider value={{ toasts, showToast, removeToast, clearToasts }}>
+    <ToastContext.Provider
+      value={{
+        toasts,
+        showToast,
+        // Alias to support `{ toast } = useToast()` usage
+        toast: showToast,
+        removeToast,
+        clearToasts,
+      }}
+    >
       {children}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </ToastContext.Provider>

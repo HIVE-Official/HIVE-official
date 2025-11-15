@@ -43,13 +43,13 @@ export declare const AdminSpacesByTypeSchema: z.ZodRecord<z.ZodString, z.ZodObje
     members: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
     active?: number;
-    members?: number;
     total?: number;
+    members?: number;
     dormant?: number;
 }, {
     active?: number;
-    members?: number;
     total?: number;
+    members?: number;
     dormant?: number;
 }>>;
 export declare const AdminSpacesStatisticsSchema: z.ZodObject<{
@@ -63,13 +63,13 @@ export declare const AdminSpacesStatisticsSchema: z.ZodObject<{
         members: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         active?: number;
-        members?: number;
         total?: number;
+        members?: number;
         dormant?: number;
     }, {
         active?: number;
-        members?: number;
         total?: number;
+        members?: number;
         dormant?: number;
     }>>;
     hasBuilders: z.ZodNumber;
@@ -82,8 +82,8 @@ export declare const AdminSpacesStatisticsSchema: z.ZodObject<{
     dormant?: number;
     byType?: Record<string, {
         active?: number;
-        members?: number;
         total?: number;
+        members?: number;
         dormant?: number;
     }>;
     hasBuilders?: number;
@@ -96,8 +96,8 @@ export declare const AdminSpacesStatisticsSchema: z.ZodObject<{
     dormant?: number;
     byType?: Record<string, {
         active?: number;
-        members?: number;
         total?: number;
+        members?: number;
         dormant?: number;
     }>;
     hasBuilders?: number;
@@ -114,17 +114,17 @@ export declare const AdminBuilderRequestsStatisticsSchema: z.ZodObject<{
     approvalRate: z.ZodNumber;
     averageResponseTime: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    pending?: number;
     urgent?: number;
     total?: number;
+    pending?: number;
     approved?: number;
     rejected?: number;
     approvalRate?: number;
     averageResponseTime?: number;
 }, {
-    pending?: number;
     urgent?: number;
     total?: number;
+    pending?: number;
     approved?: number;
     rejected?: number;
     approvalRate?: number;
@@ -233,13 +233,13 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
             members: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }>>;
         hasBuilders: z.ZodNumber;
@@ -252,8 +252,8 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         dormant?: number;
         byType?: Record<string, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }>;
         hasBuilders?: number;
@@ -266,8 +266,8 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         dormant?: number;
         byType?: Record<string, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }>;
         hasBuilders?: number;
@@ -284,17 +284,17 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         approvalRate: z.ZodNumber;
         averageResponseTime: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        pending?: number;
         urgent?: number;
         total?: number;
+        pending?: number;
         approved?: number;
         rejected?: number;
         approvalRate?: number;
         averageResponseTime?: number;
     }, {
-        pending?: number;
         urgent?: number;
         total?: number;
+        pending?: number;
         approved?: number;
         rejected?: number;
         approvalRate?: number;
@@ -361,25 +361,14 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         dormant?: number;
         byType?: Record<string, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }>;
         hasBuilders?: number;
         totalMembers?: number;
         averageMembers?: number;
         activationRate?: number;
-    };
-    users?: {
-        active?: number;
-        inactive?: number;
-        total?: number;
-        byMajor?: Record<string, number>;
-        byYear?: Record<string, number>;
-        growth?: {
-            lastWeek?: number;
-            lastMonth?: number;
-        };
     };
     system?: {
         status?: string;
@@ -395,10 +384,21 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         };
         lastUpdated?: string;
     };
+    users?: {
+        active?: number;
+        inactive?: number;
+        total?: number;
+        byMajor?: Record<string, number>;
+        byYear?: Record<string, number>;
+        growth?: {
+            lastWeek?: number;
+            lastMonth?: number;
+        };
+    };
     builderRequests?: {
-        pending?: number;
         urgent?: number;
         total?: number;
+        pending?: number;
         approved?: number;
         rejected?: number;
         approvalRate?: number;
@@ -411,25 +411,14 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         dormant?: number;
         byType?: Record<string, {
             active?: number;
-            members?: number;
             total?: number;
+            members?: number;
             dormant?: number;
         }>;
         hasBuilders?: number;
         totalMembers?: number;
         averageMembers?: number;
         activationRate?: number;
-    };
-    users?: {
-        active?: number;
-        inactive?: number;
-        total?: number;
-        byMajor?: Record<string, number>;
-        byYear?: Record<string, number>;
-        growth?: {
-            lastWeek?: number;
-            lastMonth?: number;
-        };
     };
     system?: {
         status?: string;
@@ -445,10 +434,21 @@ export declare const AdminDashboardStatisticsSchema: z.ZodObject<{
         };
         lastUpdated?: string;
     };
+    users?: {
+        active?: number;
+        inactive?: number;
+        total?: number;
+        byMajor?: Record<string, number>;
+        byYear?: Record<string, number>;
+        growth?: {
+            lastWeek?: number;
+            lastMonth?: number;
+        };
+    };
     builderRequests?: {
-        pending?: number;
         urgent?: number;
         total?: number;
+        pending?: number;
         approved?: number;
         rejected?: number;
         approvalRate?: number;
@@ -468,14 +468,14 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         name?: string;
         version?: string;
-        campusId?: string;
         environment?: string;
+        campusId?: string;
         university?: string;
     }, {
         name?: string;
         version?: string;
-        campusId?: string;
         environment?: string;
+        campusId?: string;
         university?: string;
     }>;
     statistics: z.ZodObject<{
@@ -527,13 +527,13 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
                 members: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>>;
             hasBuilders: z.ZodNumber;
@@ -546,8 +546,8 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
@@ -560,8 +560,8 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
@@ -578,17 +578,17 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             approvalRate: z.ZodNumber;
             averageResponseTime: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;
             averageResponseTime?: number;
         }, {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;
@@ -655,25 +655,14 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
             totalMembers?: number;
             averageMembers?: number;
             activationRate?: number;
-        };
-        users?: {
-            active?: number;
-            inactive?: number;
-            total?: number;
-            byMajor?: Record<string, number>;
-            byYear?: Record<string, number>;
-            growth?: {
-                lastWeek?: number;
-                lastMonth?: number;
-            };
         };
         system?: {
             status?: string;
@@ -689,10 +678,21 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             };
             lastUpdated?: string;
         };
+        users?: {
+            active?: number;
+            inactive?: number;
+            total?: number;
+            byMajor?: Record<string, number>;
+            byYear?: Record<string, number>;
+            growth?: {
+                lastWeek?: number;
+                lastMonth?: number;
+            };
+        };
         builderRequests?: {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;
@@ -705,25 +705,14 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
             totalMembers?: number;
             averageMembers?: number;
             activationRate?: number;
-        };
-        users?: {
-            active?: number;
-            inactive?: number;
-            total?: number;
-            byMajor?: Record<string, number>;
-            byYear?: Record<string, number>;
-            growth?: {
-                lastWeek?: number;
-                lastMonth?: number;
-            };
         };
         system?: {
             status?: string;
@@ -739,10 +728,21 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             };
             lastUpdated?: string;
         };
+        users?: {
+            active?: number;
+            inactive?: number;
+            total?: number;
+            byMajor?: Record<string, number>;
+            byYear?: Record<string, number>;
+            growth?: {
+                lastWeek?: number;
+                lastMonth?: number;
+            };
+        };
         builderRequests?: {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;
@@ -756,8 +756,8 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
     platform?: {
         name?: string;
         version?: string;
-        campusId?: string;
         environment?: string;
+        campusId?: string;
         university?: string;
     };
     statistics?: {
@@ -767,25 +767,14 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
             totalMembers?: number;
             averageMembers?: number;
             activationRate?: number;
-        };
-        users?: {
-            active?: number;
-            inactive?: number;
-            total?: number;
-            byMajor?: Record<string, number>;
-            byYear?: Record<string, number>;
-            growth?: {
-                lastWeek?: number;
-                lastMonth?: number;
-            };
         };
         system?: {
             status?: string;
@@ -801,10 +790,21 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             };
             lastUpdated?: string;
         };
+        users?: {
+            active?: number;
+            inactive?: number;
+            total?: number;
+            byMajor?: Record<string, number>;
+            byYear?: Record<string, number>;
+            growth?: {
+                lastWeek?: number;
+                lastMonth?: number;
+            };
+        };
         builderRequests?: {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;
@@ -818,8 +818,8 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
     platform?: {
         name?: string;
         version?: string;
-        campusId?: string;
         environment?: string;
+        campusId?: string;
         university?: string;
     };
     statistics?: {
@@ -829,25 +829,14 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             dormant?: number;
             byType?: Record<string, {
                 active?: number;
-                members?: number;
                 total?: number;
+                members?: number;
                 dormant?: number;
             }>;
             hasBuilders?: number;
             totalMembers?: number;
             averageMembers?: number;
             activationRate?: number;
-        };
-        users?: {
-            active?: number;
-            inactive?: number;
-            total?: number;
-            byMajor?: Record<string, number>;
-            byYear?: Record<string, number>;
-            growth?: {
-                lastWeek?: number;
-                lastMonth?: number;
-            };
         };
         system?: {
             status?: string;
@@ -863,10 +852,21 @@ export declare const AdminDashboardResponseSchema: z.ZodObject<{
             };
             lastUpdated?: string;
         };
+        users?: {
+            active?: number;
+            inactive?: number;
+            total?: number;
+            byMajor?: Record<string, number>;
+            byYear?: Record<string, number>;
+            growth?: {
+                lastWeek?: number;
+                lastMonth?: number;
+            };
+        };
         builderRequests?: {
-            pending?: number;
             urgent?: number;
             total?: number;
+            pending?: number;
             approved?: number;
             rejected?: number;
             approvalRate?: number;

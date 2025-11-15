@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, Badge, Button, Input, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Textarea } from '@hive/ui';
+import { Card, CardContent, CardHeader, CardTitle, Badge, Button, Input, Textarea, Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@hive/ui';
 import { secureApiFetch } from '@/lib/secure-auth-utils';
 import Link from 'next/link';
 import { AlertTriangle, CheckCircle, Server, Settings, ListChecks } from 'lucide-react';
@@ -227,14 +227,29 @@ export default function HivelabAdminPage() {
         </div>
       )}
 
-      <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
-        <TabsList>
-          <TabsTrigger value="catalog">Catalog</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="deployments">Deployments</TabsTrigger>
-        </TabsList>
+      <div className="flex gap-2 border-b border-white/10 mb-6">
+        <Button
+          variant={tab === 'catalog' ? 'default' : 'ghost'}
+          onClick={() => setTab('catalog')}
+        >
+          Catalog
+        </Button>
+        <Button
+          variant={tab === 'reviews' ? 'default' : 'ghost'}
+          onClick={() => setTab('reviews')}
+        >
+          Reviews
+        </Button>
+        <Button
+          variant={tab === 'deployments' ? 'default' : 'ghost'}
+          onClick={() => setTab('deployments')}
+        >
+          Deployments
+        </Button>
+      </div>
 
-        <TabsContent value="catalog" className="space-y-4">
+      {tab === 'catalog' && (
+        <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold">Tool Catalog</h2>
             <div className="flex items-center gap-2">
@@ -359,9 +374,11 @@ export default function HivelabAdminPage() {
             <Button size="sm" variant="outline" disabled={catPage===0} onClick={() => setCatPage(p => Math.max(0, p-1))}>Prev</Button>
             <Button size="sm" variant="outline" onClick={() => setCatPage(p => p+1)}>Next</Button>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="reviews" className="space-y-4">
+      {tab === 'reviews' && (
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Pending Reviews</h2>
             <div className="flex items-center gap-2">
@@ -421,9 +438,11 @@ export default function HivelabAdminPage() {
               </tbody>
             </table>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        <TabsContent value="deployments" className="space-y-4">
+      {tab === 'deployments' && (
+        <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold">Active Deployments</h2>
             <div className="flex items-center gap-2">
@@ -507,25 +526,25 @@ export default function HivelabAdminPage() {
               </tbody>
             </table>
           </div>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Catalog actions */}
-        <TabsContent value="catalog">
-          <div className="mt-2 text-xs text-white/50">Click tool status badge to publish/hide.</div>
-        </TabsContent>
-      </Tabs>
+      {/* Catalog actions */}
+      {tab === 'catalog' && (
+        <div className="mt-2 text-xs text-white/50">Click tool status badge to publish/hide.</div>
+      )}
 
-      {/* Request Changes Dialog */}
-      <Dialog open={showChanges} onOpenChange={setShowChanges}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Request Changes</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
+      {/* Request Changes Sheet */}
+      <Sheet open={showChanges} onOpenChange={setShowChanges}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Request Changes</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-3 mt-4">
             <p className="text-sm text-white/70">Provide feedback for the tool owner.</p>
             <Textarea placeholder="Describe required changes..." value={changeNotes} onChange={(e) => setChangeNotes(e.target.value)} className="min-h-[120px] bg-transparent border-white/15" />
           </div>
-          <DialogFooter>
+          <SheetFooter className="mt-6">
             <Button variant="outline" onClick={() => setShowChanges(false)}>Cancel</Button>
             <Button onClick={async () => {
               if (!selectedReview) return;
@@ -538,9 +557,9 @@ export default function HivelabAdminPage() {
                 toastError('Failed to request changes');
               }
             }}>Submit</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

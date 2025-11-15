@@ -98,7 +98,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     },
     ref
   ) => {
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+    const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
     const combinedRef = React.useMemo(() => {
       return (node: HTMLTextAreaElement) => {
         if (typeof ref === "function") {

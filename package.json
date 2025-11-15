@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint --filter=@hive/ui --filter=web",
+    "lint": "turbo run lint",
     "lint:fix": "pnpm -w run lint:web --fix || true",
     "lint:quick": "turbo run lint --filter=!web",
     "lint:web": "eslint --config apps/web/eslint.config.mjs apps/web/src --max-warnings 50",

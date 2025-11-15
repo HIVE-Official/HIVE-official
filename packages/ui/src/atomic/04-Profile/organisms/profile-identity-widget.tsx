@@ -51,14 +51,14 @@ export function ProfileIdentityWidget({
   isOwnProfile = false,
   presenceStatus = "offline",
   lastSeen,
-  campusLabel = profile.academic.campusId?.replace(/-/g, " ") ?? "UB",
-  completionPercentage = profile.metadata?.completionPercentage ?? 0,
+  campusLabel,
+  completionPercentage,
   onEditPhoto,
-  privacyLevel = profile.widgets?.myActivity?.level as PrivacyLevel | undefined,
+  privacyLevel,
   onPrivacyChange,
   className,
 }: ProfileIdentityWidgetProps) {
-  const displayName = profile.identity.fullName || "Student";
+  const displayName = profile.identity?.fullName || "Student";
   const initials = React.useMemo(() => {
     return displayName
       .split(" ")
@@ -76,11 +76,20 @@ export function ProfileIdentityWidget({
     return Number.isNaN(parsed.getTime()) ? null : parsed;
   }, [lastSeen]);
 
-  const academicYear = profile.academic.academicYear
+  const academicYear = profile.academic?.academicYear
     ? String(profile.academic.academicYear).charAt(0).toUpperCase() + String(profile.academic.academicYear).slice(1)
     : undefined;
 
-  const housing = profile.academic.housing;
+  const housing = profile.academic?.housing;
+
+  const resolvedCampusLabel =
+    campusLabel ?? profile.academic?.campusId?.replace(/-/g, " ") ?? "UB";
+
+  const resolvedCompletionPercentage =
+    completionPercentage ?? profile.metadata?.completionPercentage ?? 0;
+
+  const resolvedPrivacyLevel: PrivacyLevel | undefined =
+    privacyLevel ?? (profile.widgets?.myActivity?.level as PrivacyLevel | undefined);
 
   return (
     <Card
@@ -94,7 +103,7 @@ export function ProfileIdentityWidget({
       {isOwnProfile && onPrivacyChange ? (
         <div className="absolute right-4 top-4">
           <PrivacyControl
-            level={privacyLevel ?? "public"}
+            level={resolvedPrivacyLevel ?? "public"}
             onLevelChange={onPrivacyChange}
             compact
           />
@@ -104,7 +113,7 @@ export function ProfileIdentityWidget({
       <div className="flex flex-col gap-5 md:flex-row md:items-center">
         <div className="relative">
           <Avatar className="h-24 w-24 border-2 border-[color-mix(in_srgb,var(--hive-brand-primary,#facc15) 28%,transparent)]">
-            {profile.identity.avatarUrl ? (
+            {profile.identity?.avatarUrl ? (
               <AvatarImage src={profile.identity.avatarUrl} alt={displayName} />
             ) : (
               <AvatarFallback>{initials}</AvatarFallback>
@@ -130,7 +139,7 @@ export function ProfileIdentityWidget({
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="text-2xl font-semibold text-[var(--hive-text-primary,#f7f7ff)]">{displayName}</h2>
             <Badge variant="primary" className="uppercase tracking-[0.32em]">
-              {campusLabel}
+              {resolvedCampusLabel}
             </Badge>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--hive-text-secondary,#c0c2cc)]">
@@ -140,10 +149,10 @@ export function ProfileIdentityWidget({
                 {academicYear}
               </span>
             ) : null}
-            {profile.academic.major ? (
+            {profile.academic?.major ? (
               <span>{profile.academic.major}</span>
             ) : null}
-            {profile.academic.graduationYear ? (
+            {profile.academic?.graduationYear ? (
               <span className="inline-flex items-center gap-1 text-xs uppercase tracking-[0.28em] text-[color-mix(in_srgb,var(--hive-text-muted,#8e90a2) 90%,transparent)]">
                 Class of {profile.academic.graduationYear}
               </span>
@@ -178,12 +187,12 @@ export function ProfileIdentityWidget({
         <div className="mt-6">
           <div className="flex items-center justify-between text-xs uppercase tracking-[0.32em] text-[var(--hive-text-muted,#8e90a2)]">
             <span>Profile completeness</span>
-            <span className="text-[var(--hive-brand-primary,#facc15)]">{Math.round(completionPercentage)}%</span>
+            <span className="text-[var(--hive-brand-primary,#facc15)]">{Math.round(resolvedCompletionPercentage)}%</span>
           </div>
           <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--hive-background-tertiary,#141522) 75%,transparent)]">
             <div
               className="h-full rounded-full bg-[color-mix(in_srgb,var(--hive-brand-primary,#facc15) 90%,transparent)] transition-[width] duration-500"
-              style={{ width: `${Math.min(100, Math.max(0, completionPercentage))}%` }}
+              style={{ width: `${Math.min(100, Math.max(0, resolvedCompletionPercentage))}%` }}
             />
           </div>
         </div>

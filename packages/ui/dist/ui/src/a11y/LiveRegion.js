@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
-import { VisuallyHidden } from "./VisuallyHidden.js";
+import { VisuallyHidden } from "./VisuallyHidden";
 /**
  * LiveRegion announces dynamic updates to assistive technology using aria-live.
  * Useful for toasts, async status updates, and background operations.

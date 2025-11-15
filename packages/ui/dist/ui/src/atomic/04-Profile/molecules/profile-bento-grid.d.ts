@@ -1,4 +1,4 @@
-import type { BentoGridLayout, ProfileSystem } from "@hive/core/types/profile-system";
+import type { BentoGridLayout, ProfileSystem } from "@hive/core";
 export interface ProfileBentoGridProps {
     profile: ProfileSystem;
     editable?: boolean;

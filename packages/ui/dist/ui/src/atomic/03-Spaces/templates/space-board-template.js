@@ -1,13 +1,13 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { SpaceHeader } from '../molecules/space-header.js';
-import { SpaceAboutWidget } from '../molecules/space-about-widget.js';
-import { SpaceToolsWidget } from '../molecules/space-tools-widget.js';
-import { SpacePostComposer } from '../organisms/space-post-composer.js';
-import { FeedVirtualizedList } from '../../02-Feed/organisms/feed-virtualized-list.js';
-import { Button, PinIcon } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { SpaceHeader } from '../molecules/space-header';
+import { SpaceAboutWidget } from '../molecules/space-about-widget';
+import { SpaceToolsWidget } from '../molecules/space-tools-widget';
+import { SpacePostComposer } from '../organisms/space-post-composer';
+import { FeedVirtualizedList } from '../../02-Feed/organisms/feed-virtualized-list';
+import { Button, PinIcon } from '../../00-Global/atoms';
 /**
  * SpaceBoardTemplate
  *

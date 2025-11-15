@@ -2,7 +2,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { CheckCircle2, Circle, Dot, XCircle } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../../lib/utils";
 export const ProgressList = React.forwardRef(function ProgressList({ steps, compact = false, className, ...props }, ref) {
     return (_jsx("ul", { ref: ref, className: cn("relative space-y-3", className), ...props, children: steps.map((step, idx) => (_jsxs("li", { className: "relative pl-7", children: [idx < steps.length - 1 ? (_jsx("span", { "aria-hidden": true, className: "absolute left-3.5 top-6 block h-[calc(100%-1.5rem)] w-px bg-[color-mix(in_srgb,var(--hive-border-subtle,#2E2F39)_60%,transparent)]" })) : null, _jsx(StepIndicator, { state: step.state }), _jsxs("div", { className: "space-y-1", children: [_jsx("div", { className: cn("text-sm font-medium", step.state === "blocked"
                                 ? "text-[var(--hive-status-error)]"

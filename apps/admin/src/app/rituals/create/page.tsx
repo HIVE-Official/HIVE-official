@@ -16,11 +16,6 @@ import {
   Input,
   Label,
   Textarea,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   useToast,
 } from '@hive/ui';
 import {
@@ -111,15 +106,16 @@ export default function CreateRitualPage() {
 
       toast({
         title: 'Ritual Created!',
-        description: `${ritualData.title} has been created and will start in 1 hour.`,
+        message: `${ritualData.title} has been created and will start in 1 hour.`,
+        type: 'success',
       });
 
       router.push('/rituals');
     } catch (error) {
       toast({
         title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to create ritual',
-        variant: 'destructive',
+        message: error instanceof Error ? error.message : 'Failed to create ritual',
+        type: 'error',
       });
     } finally {
       setIsSubmitting(false);
@@ -250,19 +246,16 @@ export default function CreateRitualPage() {
                 </div>
                 <div>
                   <Label htmlFor="visibility" className="text-white">Visibility</Label>
-                  <Select
+                  <select
+                    id="visibility"
                     value={ritualData.visibility || 'public'}
-                    onValueChange={(value) => setRitualData({ ...ritualData, visibility: value })}
+                    onChange={(e) => setRitualData({ ...ritualData, visibility: e.target.value })}
+                    className="mt-1 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white focus:border-[var(--hive-brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--hive-brand-primary)]"
                   >
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="invite_only">Invite Only</SelectItem>
-                      <SelectItem value="secret">Secret</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <option value="public">Public</option>
+                    <option value="invite_only">Invite Only</option>
+                    <option value="secret">Secret</option>
+                  </select>
                 </div>
               </div>
             </div>

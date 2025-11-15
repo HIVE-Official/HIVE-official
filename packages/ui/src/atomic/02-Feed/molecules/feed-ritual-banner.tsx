@@ -26,7 +26,7 @@
  */
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { Button } from '../../00-Global/atoms/button';
 import { Progress } from '../../00-Global/atoms/progress';
 import { SparklesIcon, UsersIcon, LucideCheck } from '../../00-Global/atoms/icon-library';

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Card } from '../../00-Global/atoms/card';
 import { Button } from '../../00-Global/atoms/button';
 import { Badge } from '../../00-Global/atoms/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 export interface LotteryFeature {
   id: string;

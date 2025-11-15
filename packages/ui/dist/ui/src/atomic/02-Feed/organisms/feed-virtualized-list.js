@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Skeleton } from '../../00-Global/atoms/skeleton.js';
+import { cn } from '../../../lib/utils';
+import { Skeleton } from '../../00-Global/atoms/skeleton';
 export const FeedVirtualizedList = React.forwardRef(({ items, renderItem, onLoadMore, hasMore = false, isLoading = false, loadingSkeletonCount = 3, estimatedItemHeight = 200, className, ...props }, ref) => {
     const loadMoreRef = React.useRef(null);
     // Intersection Observer for infinite scroll

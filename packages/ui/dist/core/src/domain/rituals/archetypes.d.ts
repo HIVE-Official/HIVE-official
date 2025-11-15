@@ -453,16 +453,16 @@ export declare const RitualSchema: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -494,19 +494,19 @@ export declare const RitualSchema: z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
     config?: Record<string, any>;
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -525,19 +525,19 @@ export declare const RitualSchema: z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
     config?: Record<string, any>;
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -574,16 +574,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -724,12 +724,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -754,8 +756,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FoundingClass;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -774,12 +774,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -804,8 +806,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FoundingClass;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -841,16 +841,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -889,26 +889,26 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                     text: z.ZodString;
                 }, "strip", z.ZodTypeAny, {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 }, {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 }>>;
             }, "strip", z.ZodTypeAny, {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
             }, {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -961,8 +961,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -989,8 +989,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -1019,8 +1019,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -1049,8 +1049,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -1080,12 +1080,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1096,8 +1098,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -1121,8 +1123,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.LaunchCountdown;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -1141,12 +1141,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1157,8 +1159,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -1182,8 +1184,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.LaunchCountdown;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -1219,16 +1219,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -1505,12 +1505,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1553,8 +1555,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.BetaLottery;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -1573,12 +1573,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1621,8 +1623,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.BetaLottery;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -1658,16 +1658,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -1704,12 +1704,12 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             }, {
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             }>;
             reward: z.ZodObject<{
                 type: z.ZodUnion<[z.ZodLiteral<"ritual">, z.ZodLiteral<"feature">, z.ZodLiteral<"content">, z.ZodLiteral<"prize">]>;
@@ -1785,7 +1785,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -1816,7 +1816,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -1849,7 +1849,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -1882,7 +1882,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -1912,12 +1912,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1932,7 +1934,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -1956,8 +1958,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.UnlockChallenge;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -1976,12 +1976,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -1996,7 +1998,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -2020,8 +2022,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.UnlockChallenge;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -2057,16 +2057,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -2118,14 +2118,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 notifications: z.ZodBoolean;
                 commentary: z.ZodArray<z.ZodString, "many">;
             }, "strip", z.ZodTypeAny, {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             }, {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             }>;
             elimination: z.ZodObject<{
@@ -2177,9 +2177,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2207,9 +2207,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2239,9 +2239,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2271,9 +2271,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2300,12 +2300,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -2320,9 +2322,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2343,8 +2345,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Survival;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -2363,12 +2363,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -2383,9 +2385,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -2406,8 +2408,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Survival;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -2443,16 +2443,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -2676,12 +2676,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -2717,8 +2719,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Leak;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -2737,12 +2737,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -2778,8 +2780,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Leak;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -2815,16 +2815,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -2859,12 +2859,12 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 selection: z.ZodUnion<[z.ZodLiteral<"all">, z.ZodLiteral<"opt_in">, z.ZodLiteral<"admin_pick">]>;
                 seeding: z.ZodUnion<[z.ZodLiteral<"random">, z.ZodLiteral<"by_size">, z.ZodLiteral<"by_activity">, z.ZodLiteral<"manual">]>;
             }, "strip", z.ZodTypeAny, {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
             }, {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3087,7 +3087,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3142,7 +3142,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3199,7 +3199,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3256,7 +3256,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3311,12 +3311,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -3330,7 +3332,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3379,8 +3381,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Tournament;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -3399,12 +3399,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -3418,7 +3420,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -3467,8 +3469,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Tournament;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -3504,16 +3504,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -3594,11 +3594,11 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 scope: z.ZodUnion<[z.ZodLiteral<"all">, z.ZodLiteral<"early_adopters">, z.ZodLiteral<"space_leaders">, z.ZodLiteral<"custom">]>;
                 maxParticipants: z.ZodOptional<z.ZodNumber>;
             }, "strip", z.ZodTypeAny, {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             }, {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             }>;
             analytics: z.ZodObject<{
                 trackUsage: z.ZodBoolean;
@@ -3645,15 +3645,15 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 }, "strip", z.ZodTypeAny, {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }, {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }>, "many">;
                 incentive: z.ZodOptional<z.ZodString>;
             }, "strip", z.ZodTypeAny, {
@@ -3662,9 +3662,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             }, {
@@ -3673,9 +3673,9 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             }>;
@@ -3731,17 +3731,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -3784,17 +3784,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -3839,17 +3839,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -3894,17 +3894,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -3934,12 +3934,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -3966,17 +3968,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -4000,8 +4002,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FeatureDrop;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4020,12 +4020,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -4052,17 +4054,17 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -4086,8 +4088,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FeatureDrop;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4123,16 +4123,16 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     }, {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
@@ -4247,7 +4247,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 anonymousAvatarStyle: z.ZodString;
             }, "strip", z.ZodTypeAny, {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4264,7 +4264,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 anonymousAvatarStyle?: string;
             }, {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4288,12 +4288,12 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                     keywords: z.ZodArray<z.ZodString, "many">;
                 }, "strip", z.ZodTypeAny, {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 }, {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 }>;
                 postRitualCleanup: z.ZodObject<{
                     enabled: z.ZodBoolean;
@@ -4312,8 +4312,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4324,8 +4324,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4366,11 +4366,11 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 posts: z.ZodNumber;
                 comments: z.ZodNumber;
             }, "strip", z.ZodTypeAny, {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             }, {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             }>;
             moderationActivity: z.ZodObject<{
                 flagged: z.ZodNumber;
@@ -4399,7 +4399,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4419,8 +4419,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4440,8 +4440,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4464,7 +4464,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4484,8 +4484,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4505,8 +4505,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4531,7 +4531,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4551,8 +4551,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4572,8 +4572,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4598,7 +4598,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4618,8 +4618,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4639,8 +4639,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4655,12 +4655,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -4682,7 +4684,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4702,8 +4704,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4723,8 +4725,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4733,8 +4735,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.RuleInversion;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4753,12 +4753,14 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -4780,7 +4782,7 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -4800,8 +4802,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -4821,8 +4823,8 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -4831,8 +4833,6 @@ export declare const RitualUnionSchema: z.ZodUnion<[z.ZodObject<{
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.RuleInversion;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4853,12 +4853,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -4883,8 +4885,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FoundingClass;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4903,12 +4903,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -4919,8 +4921,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -4944,8 +4946,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.LaunchCountdown;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -4964,12 +4964,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5012,8 +5014,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.BetaLottery;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5032,12 +5032,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5052,7 +5054,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -5076,8 +5078,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.UnlockChallenge;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5096,12 +5096,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5116,9 +5118,9 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -5139,8 +5141,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Survival;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5159,12 +5159,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5200,8 +5202,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Leak;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5220,12 +5220,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5239,7 +5241,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -5288,8 +5290,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Tournament;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5308,12 +5308,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5340,17 +5342,17 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -5374,8 +5376,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FeatureDrop;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5394,12 +5394,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5421,7 +5423,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -5441,8 +5443,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -5462,8 +5464,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -5472,8 +5474,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.RuleInversion;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5492,12 +5492,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5522,8 +5524,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FoundingClass;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5542,12 +5542,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5558,8 +5560,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
             dailyUnlocks?: {
                 content?: {
                     text?: string;
-                    image?: string;
                     video?: string;
+                    image?: string;
                 };
                 daysRemaining?: number;
                 reveal?: string;
@@ -5583,8 +5585,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.LaunchCountdown;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5603,12 +5603,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5651,8 +5653,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.BetaLottery;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5671,12 +5671,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5691,7 +5693,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 current?: number;
                 target?: number;
                 deadline?: string;
-                metric?: "custom" | "posts" | "comments" | "votes" | "joins";
+                metric?: "custom" | "comments" | "posts" | "votes" | "joins";
             };
             reward?: {
                 type?: "content" | "ritual" | "feature" | "prize";
@@ -5715,8 +5717,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.UnlockChallenge;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5735,12 +5735,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5755,9 +5757,9 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 startTime?: string;
             }[];
             liveUpdates?: {
+                notifications?: boolean;
                 realTime?: boolean;
                 updateInterval?: number;
-                notifications?: boolean;
                 commentary?: string[];
             };
             elimination?: {
@@ -5778,8 +5780,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Survival;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5798,12 +5798,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5839,8 +5841,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Leak;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5859,12 +5859,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5878,7 +5880,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 specialPerks?: string[];
             };
             participants?: {
-                type?: "spaces" | "custom" | "majors" | "dorms" | "years";
+                type?: "spaces" | "custom" | "years" | "majors" | "dorms";
                 count?: number;
                 selection?: "all" | "opt_in" | "admin_pick";
                 seeding?: "manual" | "random" | "by_size" | "by_activity";
@@ -5927,8 +5929,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.Tournament;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -5947,12 +5947,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -5979,17 +5981,17 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 questions?: {
                     id?: string;
                     type?: "rating" | "nps" | "multiple_choice" | "open_text";
+                    required?: boolean;
                     options?: string[];
                     prompt?: string;
-                    required?: boolean;
                 }[];
                 incentive?: string;
             };
             framingStrategy?: "limited_edition" | "exclusive_access" | "beta_test" | "game";
             urgencyMessage?: string;
             eligibility?: {
-                maxParticipants?: number;
                 scope?: "all" | "custom" | "early_adopters" | "space_leaders";
+                maxParticipants?: number;
             };
             analytics?: {
                 metrics?: {
@@ -6013,8 +6015,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.FeatureDrop;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;
@@ -6033,12 +6033,14 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
     presentation?: {
         icon?: string;
         accentColor?: string;
-        bannerImage?: string;
         ctaLabel?: string;
+        bannerImage?: string;
         ctaLink?: string;
         videoUrl?: string;
         spotlightSpaceId?: string;
     };
+    description?: string;
+    subtitle?: string;
     campusId?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -6060,7 +6062,7 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
             }[];
             anonymity?: {
                 enabled?: boolean;
-                scope?: "all" | "posts" | "comments" | "reactions";
+                scope?: "all" | "comments" | "posts" | "reactions";
                 identityStripping?: {
                     removeAvatar?: boolean;
                     removeHandle?: boolean;
@@ -6080,8 +6082,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 strategy?: "increased_capacity" | "pre_moderation" | "community_flags";
                 autoModRules?: {
                     enabled?: boolean;
-                    sensitivity?: "medium" | "low" | "high";
                     keywords?: string[];
+                    sensitivity?: "medium" | "high" | "low";
                 };
                 postRitualCleanup?: {
                     enabled?: boolean;
@@ -6101,8 +6103,8 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
                 revertedAt?: string;
             }[];
             contentCreated?: {
-                posts?: number;
                 comments?: number;
+                posts?: number;
             };
             moderationActivity?: {
                 flagged?: number;
@@ -6111,8 +6113,6 @@ export declare function parseRitualUnion(input: unknown): z.SafeParseReturnType<
         };
     };
     slug?: string;
-    subtitle?: string;
-    description?: string;
     archetype?: RitualArchetype.RuleInversion;
     phase?: "ended" | "active" | "draft" | "announced" | "cooldown";
     startsAt?: string;

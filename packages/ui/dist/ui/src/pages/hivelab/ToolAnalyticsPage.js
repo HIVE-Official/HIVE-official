@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Button, Card, Grid } from '../../atomic/index.js';
+import { Button, Card, Grid } from '../../atomic';
 import { ArrowLeft, Download, Star, Users, Activity, Share, MessageSquare, TrendingUp } from 'lucide-react';
 const MetricCard = ({ title, value, change, icon: Icon, format = 'number' }) => {
     const formatValue = (val) => {

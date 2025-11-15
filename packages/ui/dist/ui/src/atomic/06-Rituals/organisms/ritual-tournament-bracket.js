@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { Card } from '../../00-Global/atoms/card.js';
-import { Button } from '../../00-Global/atoms/button.js';
-import { cn } from '@/lib/utils';
+import { Card } from '../../00-Global/atoms/card';
+import { Button } from '../../00-Global/atoms/button';
+import { cn } from '../../../lib/utils';
 export const RitualTournamentBracket = ({ title = 'Tournament', matchups, currentRound, onVote, className, ...props }) => {
     const rounds = React.useMemo(() => {
         const grouped = {};

@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 const wrapperVariants = cva("relative inline-flex shrink-0 select-none items-center justify-center align-middle transition-transform duration-200 ease-out", {
     variants: {
         size: {
@@ -60,7 +60,7 @@ export const Icon = React.forwardRef(({ as: Component, className, iconClassName,
         interactive: interactive ? true : false,
         disabled,
     }), className);
-    const svgClasses = cn("transition-colors duration-200", iconSizeClass[size], iconClassName);
+    const svgClasses = cn("transition-colors duration-200", iconSizeClass[size ?? "md"], iconClassName);
     const toneValue = toneColor[tone] ?? toneColor.primary;
     const surfaceStyle = {};
     switch (surface) {

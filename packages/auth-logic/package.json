@@ -5,6 +5,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
+    "typecheck": "npx tsc --noEmit",
     "lint": "npx eslint . --max-warnings 10",
     "test": "cd ../.. && npx vitest run --config packages/auth-logic/vitest.config.ts packages/auth-logic/src"
   },

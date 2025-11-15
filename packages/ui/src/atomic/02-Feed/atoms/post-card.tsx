@@ -133,8 +133,8 @@ export interface PostCardListItemProps extends React.ComponentProps<typeof motio
 
 export const PostCardListItem = React.forwardRef<HTMLDivElement, PostCardListItemProps>(
   ({ post, onOpen, onMoreOptions, onRepostClick, onShare, onUpvoteClick, className, ...props }, ref) => {
-    const hasMedia = post.media && post.media.length > 0;
-    const firstMedia = hasMedia ? post.media[0] : null;
+    const hasMedia = !!post.media?.length;
+    const firstMedia = post.media?.[0] ?? null;
     const isUpvoted = post.votes?.my === "up";
 
     return (

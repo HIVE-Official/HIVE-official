@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 const levelStyles = {
     1: "text-[var(--hive-font-size-display-lg)] leading-[var(--hive-line-height-tight)]",
     2: "text-[var(--hive-font-size-display-md)] leading-[var(--hive-line-height-tight)]",

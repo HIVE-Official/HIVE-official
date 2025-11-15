@@ -2,9 +2,10 @@ import type {
   ProfileSystem,
   Connection,
   Friend,
-  ConnectionType,
   BentoGridLayout,
+  Badge,
 } from "@hive/core/types/profile-system";
+import { ConnectionType } from "@hive/core/types/profile-system";
 
 type ViewerMeta = {
   relationship: "self" | "friend" | "connection" | "campus";
@@ -161,11 +162,11 @@ const buildGrid = (grid: ProfileV2ApiResponse["grid"]): BentoGridLayout => ({
   lastModified: toDate(grid.lastModified ?? Date.now()),
 });
 
-const buildBadges = (badges: string[] | undefined) => {
+const buildBadges = (badges: string[] | undefined): Badge[] => {
   if (!Array.isArray(badges)) return [];
-  return badges.map((badge, index) => ({
+  return badges.map((badge, index): Badge => ({
     id: badge,
-    type: 'builder',
+    type: "builder",
     name: badge,
     description: badge,
     earnedAt: new Date(Date.now() - index * 86400000),
@@ -178,7 +179,7 @@ export const profileApiResponseToProfileSystem = (payload: ProfileV2ApiResponse)
   const now = new Date();
   const { friends, others, summaries } = buildConnections(connections);
   const suggestions = buildSuggestions(intelligence?.suggestions);
-  const primaryStats = stats ?? profile.stats ?? {};
+  const primaryStats = (stats ?? profile.stats ?? {}) as any;
 
   const system: ProfileSystem = {
     userId: profile.id,

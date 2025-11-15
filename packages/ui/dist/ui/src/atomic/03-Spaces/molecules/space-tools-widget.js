@@ -1,8 +1,8 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Badge, Button, ZapIcon, ClockIcon, ChevronRightIcon, ChevronDownIcon, ChevronUpIcon, } from '../../00-Global/atoms/index.js';
+import { cn } from '../../../lib/utils';
+import { Badge, Button, ZapIcon, ClockIcon, ChevronRightIcon, ChevronDownIcon, ChevronUpIcon, } from '../../00-Global/atoms';
 export const SpaceToolsWidget = React.forwardRef(({ data, maxVisible = 3, collapsible = true, defaultCollapsed = false, onToolClick, onViewAll, className, ...props }, ref) => {
     const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
     const visibleTools = data.tools.slice(0, maxVisible);

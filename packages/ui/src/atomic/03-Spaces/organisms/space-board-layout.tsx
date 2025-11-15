@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { Button, PinIcon } from '../../00-Global/atoms';
 import { SpaceHeader } from '../molecules/space-header';
 import { FeedVirtualizedList, type FeedItem } from '../../02-Feed/organisms/feed-virtualized-list';

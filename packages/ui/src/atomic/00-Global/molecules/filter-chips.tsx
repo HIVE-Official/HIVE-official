@@ -30,7 +30,7 @@
  */
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 import { XIcon } from '../../00-Global/atoms/icon-library';
 
 export interface FilterChip {

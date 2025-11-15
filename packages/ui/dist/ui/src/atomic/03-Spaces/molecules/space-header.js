@@ -1,9 +1,9 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Users, MoreVertical, Check, Loader2, Share2 } from 'lucide-react';
-import { Button } from '../../00-Global/atoms/button.js';
-import { MotionDiv } from '../../../shells/motion-safe.js';
-import { cn } from '@/lib/utils';
+import { Button } from '../../00-Global/atoms/button';
+import { MotionDiv } from '../../../shells/motion-safe';
+import { cn } from '../../../lib/utils';
 const HIVE_EASING = {
     reveal: [0.23, 1, 0.32, 1],
     interactive: [0.25, 0.46, 0.45, 0.94],

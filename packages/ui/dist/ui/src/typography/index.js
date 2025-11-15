@@ -1,5 +1,5 @@
-export { Text, textVariants } from "./text.js";
-export { Heading, headingVariants } from "./heading.js";
-export { Caption, captionVariants } from "./caption.js";
-export { Link, linkVariants } from "./link.js";
+export { Text, textVariants } from "./text";
+export { Heading, headingVariants } from "./heading";
+export { Caption, captionVariants } from "./caption";
+export { Link, linkVariants } from "./link";
 //# sourceMappingURL=index.js.map

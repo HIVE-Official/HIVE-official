@@ -6,7 +6,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 const ModalContext = createContext({
     modals: [],
     openModal: () => '',
@@ -17,6 +17,7 @@ const useModal = () => useContext(ModalContext);
 const ToastContext = createContext({
     toasts: [],
     showToast: () => '',
+    toast: () => '',
     removeToast: () => { },
     clearToasts: () => { },
 });
@@ -59,7 +60,14 @@ const ToastProvider = ({ children }) => {
     const clearToasts = useCallback(() => {
         setToasts([]);
     }, []);
-    return (_jsxs(ToastContext.Provider, { value: { toasts, showToast, removeToast, clearToasts }, children: [children, _jsx(ToastContainer, { toasts: toasts, onRemove: removeToast })] }));
+    return (_jsxs(ToastContext.Provider, { value: {
+            toasts,
+            showToast,
+            // Alias to support `{ toast } = useToast()` usage
+            toast: showToast,
+            removeToast,
+            clearToasts,
+        }, children: [children, _jsx(ToastContainer, { toasts: toasts, onRemove: removeToast })] }));
 };
 // Modal Renderer Component
 const ModalRenderer = ({ modal, onClose }) => {

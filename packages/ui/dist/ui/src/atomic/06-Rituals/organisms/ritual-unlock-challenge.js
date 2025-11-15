@@ -1,10 +1,10 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { Card } from '../../00-Global/atoms/card.js';
-import { Button } from '../../00-Global/atoms/button.js';
-import { Badge } from '../../00-Global/atoms/badge.js';
-import { PercentBar } from '../../02-Feed/atoms/percent-bar.js';
-import { cn } from '@/lib/utils';
+import { Card } from '../../00-Global/atoms/card';
+import { Button } from '../../00-Global/atoms/button';
+import { Badge } from '../../00-Global/atoms/badge';
+import { PercentBar } from '../../02-Feed/atoms/percent-bar';
+import { cn } from '../../../lib/utils';
 export const RitualUnlockChallenge = ({ title = 'Unlock Challenge', description, goalMetric, targetValue, currentValue, deadline, reward, milestones = [], recentActivity = [], onContribute, encouragement = 'We can do this!', className, ...props }) => {
     const percentComplete = Math.min(100, Math.round((currentValue / targetValue) * 100));
     const remaining = Math.max(0, targetValue - currentValue);

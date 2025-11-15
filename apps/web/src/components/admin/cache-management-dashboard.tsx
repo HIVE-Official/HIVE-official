@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '@hive/ui';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hive/ui';
+import { Tabs, TabsTrigger } from '@hive/ui';
 import { Badge } from '@hive/ui';
 import { Button } from '@hive/ui';
 import { secureApiFetch } from '@/lib/secure-auth-utils';

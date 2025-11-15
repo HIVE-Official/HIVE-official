@@ -229,55 +229,59 @@ export function useRealtimeRitual(ritualId: string | null) {
     unsubscribersRef.current.set('milestones', unsubscribeMilestones);
 
     // 4. Listen to recent ritual activity
-    const { getCurrentCampusId } = await import('@/lib/campus-isolation');
-    const recentActivityQuery = query(
-      collection(db, 'ritual_action_completions'),
-      where('ritualId', '==', ritualId),
-      where('campusId', '==', getCurrentCampusId()),
-      orderBy('completedAt', 'desc'),
-      limit(10)
-    );
+    (async () => {
+      const { getCurrentCampusId } = await import("@/lib/campus-isolation");
+      const recentActivityQuery = query(
+        collection(db, "ritual_action_completions"),
+        where("ritualId", "==", ritualId),
+        where("campusId", "==", getCurrentCampusId()),
+        orderBy("completedAt", "desc"),
+        limit(10)
+      );
 
-    const unsubscribeActivity = onSnapshot(recentActivityQuery, (snapshot) => {
-      const recentActivity = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          type: 'complete_action' as const,
-          userId: data.userId,
-          userName: data.userName || 'Anonymous',
-          timestamp: data.completedAt?.toDate() || new Date(),
-          actionId: data.actionId
-        };
-      });
+      const unsubscribeActivity = onSnapshot(recentActivityQuery, (snapshot) => {
+        const recentActivity = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            type: "complete_action" as const,
+            userId: data.userId,
+            userName: data.userName || "Anonymous",
+            timestamp: data.completedAt?.toDate() || new Date(),
+            actionId: data.actionId
+          };
+        });
 
-      setRitualData(prev => prev ? {
-        ...prev,
-        recentActivity
-      } : prev);
+        setRitualData(prev => prev ? {
+          ...prev,
+          recentActivity
+        } : prev);
 
-      // Broadcast new activity
-      snapshot.docChanges().forEach(change => {
-        if (change.type === 'added') {
-          const activityData = change.doc.data();
-          const completedAt = activityData.completedAt?.toDate();
+        // Broadcast new activity
+        snapshot.docChanges().forEach(change => {
+          if (change.type === "added") {
+            const activityData = change.doc.data();
+            const completedAt = activityData.completedAt?.toDate();
 
-          // Only broadcast very recent activity (last 10 seconds)
-          if (completedAt && Date.now() - completedAt.getTime() < 10000) {
-            setLiveUpdates(prev => [...prev.slice(-4), {
-              type: 'activity',
-              data: {
-                userId: activityData.userId,
-                userName: activityData.userName || 'Someone',
-                actionId: activityData.actionId
-              },
-              timestamp: new Date()
-            }]);
+            // Only broadcast very recent activity (last 10 seconds)
+            if (completedAt && Date.now() - completedAt.getTime() < 10000) {
+              setLiveUpdates(prev => [...prev.slice(-4), {
+                type: "activity",
+                data: {
+                  userId: activityData.userId,
+                  userName: activityData.userName || "Someone",
+                  actionId: activityData.actionId
+                },
+                timestamp: new Date()
+              }]);
+            }
           }
-        }
+        });
       });
-    });
 
-    unsubscribersRef.current.set('activity', unsubscribeActivity);
+      unsubscribersRef.current.set("activity", unsubscribeActivity);
+    })().catch(error => {
+      console.error("Failed to set up recent ritual activity listener:", error);
+    });
 
     // Cleanup function
     return () => {

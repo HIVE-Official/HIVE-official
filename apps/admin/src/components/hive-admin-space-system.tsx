@@ -5,8 +5,9 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, HiveBadge as Badge } from "@hive/ui";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button as Button, HiveCard as Card, CardContent, CardHeader, CardTitle, Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 import { 
   GraduationCap,
@@ -279,13 +280,16 @@ const SpaceCard: React.FC<{
             <SubtypeIcon className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-semibold text-white truncate">{space.name}</h3>
-              <div className={`w-2 h-2 rounded-full ${getStatusColor(space.status)}`} />
-              {space.isSystemGenerated && (
-                <Shield className="w-4 h-4 text-blue-400" title="System Generated" />
-              )}
-            </div>
+              <div className="flex items-center space-x-2 mb-1">
+                <h3 className="font-semibold text-white truncate">{space.name}</h3>
+                <div className={`w-2 h-2 rounded-full ${getStatusColor(space.status)}`} />
+                {space.isSystemGenerated && (
+                  <Shield
+                    className="w-4 h-4 text-blue-400"
+                    aria-label="System Generated"
+                  />
+                )}
+              </div>
             <div className="flex items-center space-x-2 text-sm text-gray-400">
               <span className="capitalize">{space.subtype.replace('_', ' ')}</span>
               <span>•</span>

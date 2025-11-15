@@ -1,8 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { ArrowDownRight, ArrowUpRight, Clock, Dot, Minus, ShieldAlert, } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
-import { Card, CardContent, CardHeader, CardTitle, } from "../../00-Global/atoms/card.js";
-import { Button } from "../../00-Global/atoms/button.js";
+import { cn } from "../../../lib/utils";
+import { Card, CardContent, CardHeader, CardTitle, } from "../../00-Global/atoms/card";
+import { Button } from "../../00-Global/atoms/button";
 export function AdminMetricCard({ title, value, format = typeof value === "number" ? "number" : "string", currency = "USD", delta, icon: Icon, description, footer, subtle = false, }) {
     const formattedValue = formatMetricValue(value, format, currency);
     const deltaTone = delta?.tone ?? (delta && delta.value < 0

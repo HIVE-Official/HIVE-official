@@ -32,6 +32,11 @@ export { FeedVirtualizedList } from "./atomic/02-Feed/organisms/feed-virtualized
 export type { FeedVirtualizedListProps, FeedItem, } from "./atomic/02-Feed/organisms/feed-virtualized-list";
 export { NotificationToastContainer } from "./atomic/00-Global/organisms/notification-toast-container";
 export type { NotificationToastContainerProps, ToastNotification, } from "./atomic/00-Global/organisms/notification-toast-container";
+export { NotificationSystem } from "./atomic/00-Global/organisms/notification-system";
+export type { NotificationSystemProps, NotificationListItem, } from "./atomic/00-Global/organisms/notification-system";
+export { WelcomeMat } from "./atomic/00-Global/organisms/welcome-mat";
+export type { WelcomeMatProps } from "./atomic/00-Global/organisms/welcome-mat";
+export { useWelcomeMat } from "./hooks/use-welcome-mat";
 export { VisualToolComposer } from "./components/hivelab/visual-tool-composer";
 export type { VisualToolComposerProps } from "./components/hivelab/visual-tool-composer";
 export { SpaceAboutWidget } from "./atomic/03-Spaces/molecules/space-about-widget";

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Card } from '../../00-Global/atoms/card';
 import { Skeleton } from '../../00-Global/atoms/skeleton';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 
 export interface RitualLoadingSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'banner' | 'card' | 'detail';

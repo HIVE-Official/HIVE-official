@@ -12,7 +12,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  */
 import React, { useState } from 'react';
 import { Clock, Users, Heart, Trash2, ExternalLink, AlertCircle, Sparkles, MessageCircle, Trophy, Eye } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../../lib/utils';
 const MotionDiv = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("div", { ref: ref, className: className, ...props, children: children })));
 MotionDiv.displayName = 'MotionDiv';
 const MotionButton = React.forwardRef(({ className, children, ...props }, ref) => (_jsx("button", { ref: ref, className: className, ...props, children: children })));

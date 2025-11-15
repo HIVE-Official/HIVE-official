@@ -3,8 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from "react";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
-import { MotionDiv, AnimatePresence } from "../../../shells/motion-safe.js";
+import { cn } from "../../../lib/utils";
+import { MotionDiv, AnimatePresence } from "../../../shells/motion-safe";
 const selectVariants = cva("inline-flex w-full items-center justify-between gap-2 rounded-[32px] border border-[var(--hive-border-default)] bg-[var(--hive-background-secondary)] px-5 py-2.5 text-sm text-[var(--hive-text-primary)] transition-[border,background,box-shadow] duration-200 ease-out placeholder:text-[var(--hive-text-muted)] focus:outline-none focus-visible:border-[var(--hive-border-focus)] focus-visible:ring-2 focus-visible:ring-[var(--hive-interactive-focus)] focus-visible:ring-offset-0 focus-visible:shadow-[0_0_28px_rgba(255,255,255,0.15)] disabled:cursor-not-allowed disabled:opacity-60", {
     variants: {
         variant: {

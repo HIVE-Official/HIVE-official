@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button as Button, HiveBadge as Badge } from "@hive/ui";
+import { Button as Button, Badge } from "@hive/ui";
 import { useAdminAuth } from "@/lib/auth";
 
 interface BuilderRequest {

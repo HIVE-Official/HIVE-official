@@ -1,7 +1,7 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import * as React from 'react';
-import { Card } from '../../00-Global/atoms/card.js';
+import { Card } from '../../00-Global/atoms/card';
 export const RitualLaunchCountdown = ({ title = 'Launch Countdown', targetTime, ...props }) => {
     const [label, setLabel] = React.useState('');
     React.useEffect(() => {

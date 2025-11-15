@@ -16,15 +16,15 @@ export declare const ToolSchema: z.ZodObject<{
     name?: string;
     version?: string;
     status?: "draft" | "published" | "archived";
-    config?: any;
     metadata?: Record<string, any>;
+    config?: any;
 }, {
     id?: string;
     name?: string;
     version?: string;
     status?: "draft" | "published" | "archived";
-    config?: any;
     metadata?: Record<string, any>;
+    config?: any;
 }>;
 export type Tool = z.infer<typeof ToolSchema>;
 export declare const CreateToolSchema: z.ZodObject<{
@@ -49,25 +49,25 @@ export declare const UpdateToolSchema: z.ZodObject<{
     name?: string;
     version?: string;
     status?: "draft" | "published" | "archived";
-    config?: any;
     metadata?: Record<string, any>;
+    config?: any;
 }, {
     id?: string;
     name?: string;
     version?: string;
     status?: "draft" | "published" | "archived";
-    config?: any;
     metadata?: Record<string, any>;
+    config?: any;
 }>;
 export declare const ShareToolSchema: z.ZodObject<{
     toolId: z.ZodString;
     expiresAt: z.ZodOptional<z.ZodDate>;
 }, "strip", z.ZodTypeAny, {
-    expiresAt?: Date;
     toolId?: string;
+    expiresAt?: Date;
 }, {
-    expiresAt?: Date;
     toolId?: string;
+    expiresAt?: Date;
 }>;
 export declare function createToolDefaults(partial?: Partial<Tool>): Tool;
 export declare function generateShareToken(): string;
