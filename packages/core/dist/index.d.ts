@@ -35,7 +35,7 @@ export * from "./stores/useAppStore";
 export * from "./feature-flags";
 export { app, db, auth, storage } from "./firebase";
 export * from "./server";
-export type { ProfileSystem, HiveProfile, UnifiedHiveProfile, GridSize, BentoGridLayout } from "./types/profile-system";
+export * from "./types/profile-system";
 export * from "./utils/activity-tracker";
 export * from "./utils/privacy-utils";
 export * from "./utils/profile-aggregator";

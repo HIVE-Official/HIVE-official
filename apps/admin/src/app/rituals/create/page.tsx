@@ -21,7 +21,6 @@ import {
 import {
   RITUAL_TEMPLATES,
   getAvailableTemplates,
-  RitualArchetype,
   type RitualTemplate,
   type RitualTemplateId,
 } from '@hive/core';
@@ -35,12 +34,13 @@ export default function CreateRitualPage() {
 
   const [currentStep, setCurrentStep] = useState<WizardStep>('template');
   const [selectedTemplate, setSelectedTemplate] = useState<RitualTemplate | null>(null);
-  const [ritualData, setRitualData] = useState<any>({});
+  const [ritualData, setRitualData] = useState<Record<string, unknown>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Mock: Get current user count (in production, fetch from API)
   const currentUsers = 150;
-  const availableTemplates = getAvailableTemplates(currentUsers);
+  // Available templates calculated based on user count
+  getAvailableTemplates(currentUsers);
 
   const steps: { id: WizardStep; label: string; number: number }[] = [
     { id: 'template', label: 'Choose Template', number: 1 },
@@ -102,7 +102,7 @@ export default function CreateRitualPage() {
         throw new Error(error.error || 'Failed to create ritual');
       }
 
-      const { data } = await res.json();
+      await res.json();
 
       toast({
         title: 'Ritual Created!',

@@ -15,7 +15,7 @@ import {
   type ProfileSpaceItem,
   type ProfileConnectionItem,
 } from "../organisms/profile-widgets";
-import type { ProfileSystem } from "@hive/core";
+import type { ProfileSystem } from "@hive/core/types/profile-system";
 import type { PrivacyLevel } from "../../00-Global/molecules/privacy-control";
 import type { PresenceStatus } from "../../02-Feed/atoms/presence-indicator";
 

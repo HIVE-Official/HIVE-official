@@ -370,6 +370,3 @@ export interface UseProfileReturn {
 // Backwards compatibility type aliases
 export type HiveProfile = ProfileSystem;
 export type UnifiedHiveProfile = ProfileSystem;
-
-// Export all types
-export * from './profile-system';

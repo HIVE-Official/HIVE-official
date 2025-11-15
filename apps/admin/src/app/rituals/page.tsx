@@ -9,7 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Badge, useToast } from '@hive/ui';
-import { Plus, Play, Pause, StopCircle, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Play, Pause, StopCircle, Eye } from 'lucide-react';
 import type { RitualUnion } from '@hive/core';
 
 export default function RitualsPage() {
@@ -34,7 +34,7 @@ export default function RitualsPage() {
       if (!res.ok) throw new Error('Failed to fetch rituals');
       const { data } = await res.json();
       setRituals(data || []);
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         message: 'Failed to load rituals',
@@ -59,7 +59,7 @@ export default function RitualsPage() {
         type: 'success',
       });
       fetchRituals();
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         message: 'Failed to update ritual phase',

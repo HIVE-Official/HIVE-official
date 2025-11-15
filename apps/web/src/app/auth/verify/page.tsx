@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 
 // Force dynamic rendering to avoid SSG issues with auth
 export const dynamic = "force-dynamic";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@hive/auth-logic";
 import { Button } from "@hive/ui";

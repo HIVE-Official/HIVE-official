@@ -33,6 +33,7 @@
       "@/*": ["./src/*"],
       "@hive/core": ["../core/src"],
       "@hive/core/*": ["../core/src/*"],
+      "@hive/core/types/profile-system": ["../core/src/types/profile-system"],
       "@hive/hooks": ["../hooks/src"],
       "@hive/hooks/*": ["../hooks/src/*"],
       "@hive/auth-logic": ["../auth-logic/src"],

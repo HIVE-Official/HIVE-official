@@ -1,1 +1,0 @@
-{"version":3,"file":"DomainEvent.base.d.ts","sourceRoot":"","sources":["../../../../../../../core/src/domain/shared/base/DomainEvent.base.ts"],"names":[],"mappings":"AAAA;;;GAGG;AACH,8BAAsB,WAAW;IAC/B,SAAgB,UAAU,EAAE,IAAI,CAAC;IACjC,SAAgB,WAAW,EAAE,MAAM,CAAC;IAEpC,SAAS,aAAa,WAAW,EAAE,MAAM;IAKzC,QAAQ,CAAC,YAAY,IAAI,MAAM;CAChC"}
