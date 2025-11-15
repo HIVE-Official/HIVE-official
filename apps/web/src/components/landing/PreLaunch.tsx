@@ -38,7 +38,7 @@ function getTargetUtcMsForNov1MidnightET(now: Date): number {
     second: "2-digit",
     hour12: false
   });
-  const parts = dtf.formatToParts(probe);
+  const parts = dtf.formatToParts?.(probe) ?? [];
   const tzName = parts.find((p) => p.type === "timeZoneName")?.value ?? "GMT-4"; // Reasonable default near Nov 1
   const offsetMinutes = parseGmtOffsetToMinutes(tzName) ?? -240; // -04:00 default
   // Local(ET) -> UTC: add the absolute offset minutes when sign is negative, subtract when positive

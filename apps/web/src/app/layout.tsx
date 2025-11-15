@@ -20,12 +20,13 @@ import { verifySession } from "../lib/session";
 export const metadata: Metadata = {
   title: "HIVE",
   description: "The social platform for builders.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    viewportFit: "cover", // Enable safe area insets for notch support
-  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover" as const, // Enable safe area insets for notch support
 };
 
 export default async function RootLayout({
