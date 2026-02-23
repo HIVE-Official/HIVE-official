@@ -489,7 +489,7 @@ export default function EventsPage() {
           {filteredEvents.map((event) => (
             <Card 
               key={event.id} 
-              className="p-6 bg-hive-background-overlay border-hive-border-default hover:bg-hive-background-interactive transition-all duration-200 cursor-pointer"
+              className="p-6 bg-hive-background-overlay border-hive-border-default hover:bg-hive-background-interactive hover:border-zinc-600 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer"
               onClick={() => setShowEventDetails(event.id)}
             >
               {/* Event Header */}
