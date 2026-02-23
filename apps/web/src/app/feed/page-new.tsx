@@ -36,6 +36,7 @@ import {
   RitualStrip,
   KeyboardShortcutsOverlay,
   AriaLiveRegion,
+  HiveModal,
   type FeedItem,
   type FeedCardPostData,
   type FeedCardEventData,
@@ -43,6 +44,14 @@ import {
   type FeedCardSystemData,
   Button,
 } from '@hive/ui';
+import {
+  X,
+  Calendar,
+  MapPin,
+  Users,
+  Clock,
+  ExternalLink,
+} from 'lucide-react';
 
 /**
  * Transform useFeed Post → FeedItem for FeedVirtualizedList
@@ -133,6 +142,9 @@ export default function FeedPage() {
     timeRemaining?: string;
     isParticipating: boolean;
   } | null>(null);
+
+  // Event detail modal state
+  const [selectedEventPost, setSelectedEventPost] = React.useState<Post | null>(null);
 
   // Accessibility state
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = React.useState(false);
@@ -270,8 +282,13 @@ export default function FeedPage() {
 
   // Interaction handlers
   const handleCardOpen = React.useCallback((postId: string) => {
-    router.push(`/events/${postId}`);
-  }, [router]);
+    const post = posts.find((p) => p.id === postId);
+    if (post?.type === 'event') {
+      setSelectedEventPost(post);
+    } else if (post?.spaceId) {
+      router.push(`/spaces/${post.spaceId}`);
+    }
+  }, [posts, router]);
 
   const handleSpaceClick = React.useCallback((spaceId: string) => {
     router.push(`/spaces/${spaceId}`);
@@ -610,6 +627,232 @@ export default function FeedPage() {
           </div>
         </div>
       )}
+
+      {/* Event Detail Modal */}
+      {selectedEventPost && (
+        <EventDetailSheet
+          post={selectedEventPost}
+          onClose={() => setSelectedEventPost(null)}
+          onRsvp={() => {
+            toast({ title: 'RSVP updated', type: 'success' });
+            setSelectedEventPost(null);
+          }}
+          onSpaceClick={(spaceId) => {
+            setSelectedEventPost(null);
+            router.push(`/spaces/${spaceId}`);
+          }}
+        />
+      )}
     </>
+  );
+}
+
+/* ─── Inline Event Detail Sheet ─── */
+
+function EventDetailSheet({
+  post,
+  onClose,
+  onRsvp,
+  onSpaceClick,
+}: {
+  post: Post;
+  onClose: () => void;
+  onRsvp: () => void;
+  onSpaceClick: (spaceId: string) => void;
+}) {
+  const ev = post.event as Record<string, unknown> | undefined;
+  const loc = post.location as Record<string, unknown> | undefined;
+
+  const title = String(ev?.title || post.content.split('\n')[0] || 'Event');
+  const description = String(ev?.description || post.content || '');
+  const locationName = String(ev?.location || loc?.name || 'TBD');
+  const locationAddress = loc?.address ? String(loc.address) : undefined;
+  const virtualLink = ev?.virtualLink ? String(ev.virtualLink) : undefined;
+  const startTime = ev?.startTime ? new Date(String(ev.startTime)) : undefined;
+  const endTime = ev?.endTime ? new Date(String(ev.endTime)) : undefined;
+  const capacity = ev?.capacity ? Number(ev.capacity) : undefined;
+  const attendingCount = ev?.attendingCount ? Number(ev.attendingCount) : 0;
+  const isAttending = Boolean(ev?.isAttending);
+  const isSoldOut = Boolean(ev?.isSoldOut);
+
+  const spotsLeft = capacity ? Math.max(capacity - attendingCount, 0) : null;
+  const capacityPercent = capacity && capacity > 0 ? Math.min((attendingCount / capacity) * 100, 100) : 0;
+
+  const formatDate = (d: Date) =>
+    d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const formatTime = (d: Date) =>
+    d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+  const getRelativeDay = (d: Date) => {
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) return 'Today';
+    const tomorrow = new Date(now.getTime() + 86400000);
+    if (d.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
+    return null;
+  };
+
+  const relativeDay = startTime ? getRelativeDay(startTime) : null;
+
+  return (
+    <HiveModal open onOpenChange={() => onClose()} size="md">
+      <div className="max-h-[85vh] overflow-y-auto overscroll-contain">
+        {/* Header */}
+        <div className="relative px-6 pt-6 pb-5">
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 z-10 rounded-full bg-white/[0.06] p-2 text-zinc-400 transition-colors hover:bg-white/[0.1] hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+
+          {/* Badges */}
+          <div className="mb-4 flex items-center gap-2">
+            {relativeDay && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--hive-brand-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--hive-brand-primary)]">
+                {relativeDay}
+              </span>
+            )}
+            {post.spaceId && (
+              <button
+                onClick={() => onSpaceClick(post.spaceId!)}
+                className="inline-flex items-center rounded-full bg-white/[0.04] px-3 py-1 text-xs text-[var(--hive-brand-primary)] hover:bg-white/[0.08] transition-colors"
+              >
+                {post.spaceName || 'Space'}
+              </button>
+            )}
+          </div>
+
+          {/* Title */}
+          <h2 className="text-2xl font-bold leading-tight text-white pr-8">{title}</h2>
+
+          {/* Author */}
+          <div className="mt-3 flex items-center gap-2 text-sm">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-700 text-xs font-medium text-white">
+              {post.author.name?.charAt(0)?.toUpperCase() || '?'}
+            </div>
+            <span className="text-zinc-300">{post.author.name}</span>
+            <span className="text-zinc-500">@{post.author.handle}</span>
+          </div>
+        </div>
+
+        <div className="mx-6 border-t border-zinc-800" />
+
+        {/* Date & Location */}
+        <div className="grid grid-cols-1 gap-0 sm:grid-cols-2">
+          {startTime && (
+            <div className="flex items-start gap-3 px-6 py-4">
+              <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.04]">
+                <Calendar className="h-4 w-4 text-[var(--hive-brand-primary)]" />
+              </div>
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">When</p>
+                <p className="mt-0.5 text-sm font-medium text-white">{formatDate(startTime)}</p>
+                <p className="text-sm text-zinc-400">
+                  {formatTime(startTime)}
+                  {endTime && <> – {formatTime(endTime)}</>}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-start gap-3 px-6 py-4">
+            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.04]">
+              <MapPin className="h-4 w-4 text-[var(--hive-brand-primary)]" />
+            </div>
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Where</p>
+              <p className="mt-0.5 text-sm font-medium text-white">{locationName}</p>
+              {locationAddress && <p className="text-sm text-zinc-400">{locationAddress}</p>}
+              {virtualLink && (
+                <a
+                  href={virtualLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 text-sm text-[var(--hive-brand-primary)] hover:underline"
+                >
+                  Join virtual link
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Capacity */}
+        {capacity && capacity > 0 && (
+          <div className="mx-6 rounded-xl bg-white/[0.03] p-4">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-[var(--hive-brand-primary)]" />
+                <span className="font-medium text-white">
+                  {attendingCount}<span className="text-zinc-500">/{capacity}</span> attending
+                </span>
+              </div>
+              {isSoldOut || spotsLeft === 0 ? (
+                <span className="text-xs font-medium text-red-400">Full</span>
+              ) : (
+                <span className="text-xs text-zinc-500">{spotsLeft} spots left</span>
+              )}
+            </div>
+            <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  isSoldOut || spotsLeft === 0
+                    ? 'bg-red-500'
+                    : capacityPercent > 80
+                    ? 'bg-amber-500'
+                    : 'bg-[var(--hive-brand-primary)]'
+                }`}
+                style={{ width: `${capacityPercent}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Description */}
+        {description && (
+          <div className="px-6 pt-5 pb-1">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-2">About</p>
+            <p className="text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap">{description}</p>
+          </div>
+        )}
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 px-6 pt-4">
+            {post.tags.map((tag) => (
+              <span key={tag} className="rounded-full bg-white/[0.04] px-2.5 py-1 text-xs text-zinc-400">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="sticky bottom-0 mt-5 border-t border-zinc-800 bg-[var(--hive-background-secondary)] px-6 py-4">
+          <div className="flex items-center gap-2">
+            <Button
+              variant={isAttending ? 'secondary' : 'brand'}
+              size="md"
+              onClick={onRsvp}
+              className="flex-1"
+            >
+              <Users className="mr-1.5 h-4 w-4" />
+              {isAttending ? "You're Going" : isSoldOut ? 'Join Waitlist' : 'RSVP'}
+            </Button>
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/events/${post.id}`);
+              }}
+              className="text-zinc-400"
+            >
+              Share
+            </Button>
+          </div>
+        </div>
+      </div>
+    </HiveModal>
   );
 }
