@@ -270,9 +270,8 @@ export default function FeedPage() {
 
   // Interaction handlers
   const handleCardOpen = React.useCallback((postId: string) => {
-    // TODO: Open post detail modal or navigate to post page
-    console.log('Open post:', postId);
-  }, []);
+    router.push(`/events/${postId}`);
+  }, [router]);
 
   const handleSpaceClick = React.useCallback((spaceId: string) => {
     router.push(`/spaces/${spaceId}`);

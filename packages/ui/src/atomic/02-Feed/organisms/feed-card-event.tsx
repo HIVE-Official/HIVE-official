@@ -86,12 +86,19 @@ export const FeedCardEvent = React.forwardRef<HTMLDivElement, FeedCardEventProps
         ? `${stats.attendingCount}/${stats.capacity} going`
         : `${stats.attendingCount} going`;
 
+    const handleCardClick = (e: React.MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a')) return;
+      onViewDetails?.(event.id);
+    };
+
     return (
       <article
         ref={ref}
         role="article"
+        onClick={handleCardClick}
         className={cn(
-          'group relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--hive-border-default) 70%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 96%,transparent)] shadow-[0_24px_45px_rgba(5,7,13,0.35)] transition-colors hover:border-[color-mix(in_srgb,var(--hive-border-default) 40%,transparent)]',
+          'group relative cursor-pointer overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--hive-border-default) 70%,transparent)] bg-[color-mix(in_srgb,var(--hive-background-secondary) 96%,transparent)] shadow-[0_24px_45px_rgba(5,7,13,0.35)] transition-all duration-200 hover:border-[color-mix(in_srgb,var(--hive-border-default) 40%,transparent)] hover:scale-[1.005] active:scale-[0.998]',
           className
         )}
         {...props}
